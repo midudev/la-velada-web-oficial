@@ -1,6 +1,6 @@
 <h3 align="center">Bienvenidos a</h3>
 
-![Logo - La Velada IV]()
+![Logo - La Velada IV](https://raw.githubusercontent.com/midudev/la-velada-web-oficial/main/public/hero-logo.svg)
 
 # Proyecto oficial de código abierto
 
