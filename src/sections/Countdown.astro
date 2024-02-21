@@ -1,41 +1,30 @@
 ---
 import LaVeladaLogo from "@/icons/la-velada.astro"
+import Date from "@/components/Date.astro"
 
 const TIMESTAMP_END = 1709575200000
 ---
 
-<section class="my-32 flex flex-col gap-y-10 justify-center items-center">
+<section class="my-32 flex flex-col gap-y-10 justify-center items-center"> 
   <LaVeladaLogo class="text-primary" />
 
   <div
     class="flex flex-row gap-x-1 text-primary uppercase font-semibold"
     data-date={TIMESTAMP_END}
   >
-    <div class="flex flex-col justify-center items-center gap-y-2 w-16">
-      <span class="text-4xl tabular-nums" data-days>00</span>
-      <span class="text-xs text-center">Días</span>
-    </div>
-
+    <Date time="00" date_type="Días" atribute={{ "data-days": "data-days" }}/>
+    
     <span aria-hidden="true" class="mt-1 text-xl">:</span>
-
-    <div class="flex flex-col justify-center items-center gap-y-2 w-16">
-      <span class="text-4xl tabular-nums" data-hours>00</span>
-      <span class="text-xs text-center">Horas</span>
-    </div>
-
+    
+    <Date time="00" date_type="Horas" atribute={{ "data-hours": "data-hours" }}/>
+    
     <span aria-hidden="true" class="mt-1 text-xl">:</span>
-
-    <div class="flex flex-col justify-center items-center gap-y-2 w-16">
-      <span class="text-4xl tabular-nums" data-minutes>00</span>
-      <span class="text-xs text-center">Minutos</span>
-    </div>
-
+    
+    <Date time="00" date_type="Minutos" atribute={{ "data-minutes": "data-minutes" }}/>
+    
     <span aria-hidden="true" class="mt-1 text-xl">:</span>
-
-    <div class="flex flex-col justify-center items-center gap-y-2 w-16">
-      <span class="text-4xl tabular-nums" data-seconds>00</span>
-      <span class="text-xs text-center">Segundos</span>
-    </div>
+    
+    <Date time="00" date_type="Segundos" atribute={{ "data-seconds": "data-seconds" }}/>
   </div>
 </section>
 
