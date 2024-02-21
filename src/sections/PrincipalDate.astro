@@ -3,8 +3,8 @@
 >
   <h2 class="uppercase text-5xl font-semibold">
     <span class="date"> 4 de marzo</span>
-    <span aria-hidden class="hidden md:inline mx-1">·</span>
-    <br aria-hidden class="block md:hidden" />
+    <span aria-hidden="true" class="hidden md:inline mx-1">·</span>
+    <br aria-hidden="true" class="block md:hidden" />
     <span class="time"></span>
   </h2>
 
@@ -47,7 +47,8 @@
 
   const dateFormatOptions = {
     day: "numeric",
-    month: "long"
+    month: "long",
+    timeZone: USER_TZ
   }
 
   // Se usa la configuración regional "en-GB" para mostrar la abreviatura de la zona horaria (CET, PST, EST...) y no su valor en GMT
