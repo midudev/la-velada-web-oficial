@@ -1,34 +1,11 @@
 <section
-  class="mt-32 mx-auto flex flex-col justify-center items-center text-center text-primary"
+  class="animate-fade-in animate-delay-500 mt-32 mx-auto flex flex-col justify-center items-center text-center text-primary"
 >
   <h2 class="uppercase text-5xl font-semibold">
-    4 de marzo<span aria-hidden class="hidden md:inline mx-1">·</span><br
-      aria-hidden
-      class="block md:hidden"
-    /><span>
-      <script is:inline>
-        const END_DATE = 1709575200000
-        const d = new Date(END_DATE)
-        const date = d.toLocaleTimeString("es", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-
-        // get current timezone
-        const tzOffset = d.getTimezoneOffset() / 60
-        const diff = tzOffset * -1
-        const gmt = diff > 0 ? `GMT+${diff}` : `GMT-${Math.abs(diff)}`
-
-        const TZ_DICTIONARY = {
-          "GMT+1": "CET",
-        }
-
-        const tz = TZ_DICTIONARY[gmt] ?? gmt
-
-        const selfScript = document.currentScript
-        selfScript.parentNode.innerHTML = `${date}H ${tz}`
-      </script>
-    </span>
+    <span class="date"> 4 de marzo</span>
+    <span aria-hidden="true" class="hidden md:inline mx-1">·</span>
+    <br aria-hidden="true" class="block md:hidden" />
+    <span class="time"></span>
   </h2>
 
   <h3 class="uppercase text-2xl font-medium flex flex-col max-w-sm mt-6">
@@ -50,3 +27,42 @@
     Entradas agotadas
   </a>
 </section>
+
+<script is:inline>
+  const $dateSpan = document.querySelector(".date")
+  const $timeSpan = document.querySelector(".time")
+
+  const USER_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const DATE_TIMESTAMP = 1709575200000
+  const date = new Date(DATE_TIMESTAMP)
+
+  const timeFormatOptions = {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false,
+    timeZone: USER_TZ,
+    timeZoneName: "short"
+  }
+
+  const dateFormatOptions = {
+    day: "numeric",
+    month: "long",
+    timeZone: USER_TZ
+  }
+
+  // Se usa la configuración regional "en-GB" para mostrar la abreviatura de la zona horaria (CET, PST, EST...) y no su valor en GMT
+  const time = new Intl.DateTimeFormat("en-GB", timeFormatOptions)
+    .formatToParts(date)
+    .map(({ type, value }) => {
+      if (type === "literal" && value === " ") {
+        return "H "
+      }
+      return value
+    })
+    .join("")
+
+  const day = new Intl.DateTimeFormat("es-ES", dateFormatOptions).format(date)
+
+  $dateSpan.innerHTML = day
+  $timeSpan.innerHTML = time
+</script>
