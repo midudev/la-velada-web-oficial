@@ -1,5 +1,5 @@
 <section
-  class="animate-fade-in animate-delay-500 mt-32 mx-auto flex flex-col justify-center items-center text-center text-primary"
+  class="animate-fade-in animate-delay-500 mt-32 mx-auto flex flex-col place-items-center text-center text-primary"
 >
   <h2 class="uppercase text-5xl font-semibold">
     <time class="date"> 4 de marzo</time>
@@ -61,7 +61,7 @@
     hour12: false
   }
 
-  // Se usa la configuración regional "en-GB" para mostrar la abreviatura de la zona horaria (CET, PST, EST...) y no su valor en GMT
+  // The "en-GB" locale is used to display the time zone abbreviation (CET, PST, EST...) and not its value in GMT
   const time = new Intl.DateTimeFormat("en-GB", timeFormatOptions)
     .formatToParts(date)
     .map(({ type, value }) => {
