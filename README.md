@@ -4,19 +4,20 @@
 
 # Proyecto oficial de código abierto
 
-## Descripción
-La Velada IV es una competición de boxeo que enfrenta a Streamers, Creadores de Contenido y otras Celebridades sobre un ring.
+## ✏️ Descripción
 
-## Características Principales
-- **Detalles del Evento:** Obtén información detallada sobre la fecha, hora, ubicación y artistas participantes.
-- **Compra de Boletos:** Permite a los usuarios dirigirlos a la compra de boletos fácilmente.
-- **Redes Sociales:** Conoce las redes oficiales donde podrás informarte sobre el evento.
+La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de contenido y otras celebridades sobre un ring.
 
-## Capturas de Pantalla
-![Captura de Pantalla 1]()
-![Captura de Pantalla 2]()
+## 🌟 Características principales
 
-## Contribuir
+- **Detalles del evento**: Obtén información detallada sobre la fecha, hora, ubicación y artistas participantes.
+- **Compra de boletos**: Permite a los usuarios dirigirlos a la compra de boletos fácilmente.
+- **Redes sociales**: Conoce las redes oficiales donde podrás informarte sobre el evento.
+
+## 🚀 Contribuir
+
+[Guía de contribución](CONTRIBUTING.md)
+
 ¡Contribuciones son bienvenidas! Si encuentras errores o tienes sugerencias de mejora, por favor abre un issue o envía un pull request.
 
 ## 🛠️ Stack
@@ -24,10 +25,8 @@ La Velada IV es una competición de boxeo que enfrenta a Streamers, Creadores de
 - [**Astro**](https://astro.build/) - The web framework for content-driven websites.
 - [**Typescript**](https://www.typescriptlang.org/) - JavaScript with syntax for types.
 - [**Tailwind CSS**](https://tailwindcss.com/) - A utility-first CSS framework for rapidly building custom designs.
-- [**@midudev/tailwind-animations**](https://tailwindcss-animations.vercel.app) - Easy peasy animations for your Tailwind project.
+- [**@midudev/tailwind-animations**](https://tailwindcss-animations.vercel.app/) - Easy peasy animations for your Tailwind project.
 
 ## 👑 Contribuidores
 
-<a href="https://github.com/midudev/la-velada-web-oficial/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=midudev/la-velada-web-oficial" />
-</a>
+[![Contribuidores](https://contrib.rocks/image?repo=midudev/la-velada-web-oficial)](https://github.com/midudev/la-velada-web-oficial/graphs/contributors)
