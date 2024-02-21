@@ -6,8 +6,8 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				'primary': '#333',
-				'secondary': '#ddd',
+				'primary': 'rgba(var(--color-primary))',
+				'secondary': 'rgba(var(--color-secondary))',
 				'twitch': '#6441a4'
 			}
 		},

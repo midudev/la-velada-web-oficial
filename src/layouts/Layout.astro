@@ -44,6 +44,7 @@ const descriptionPage =
     <meta name="googlebot" content="index, follow" />
   </head>
   <body>
+    <Noise />
     <div class="max-w-6xl px-2 lg:px-10 pt-20 md:pt-32 mx-auto">
       <slot />
     </div>
@@ -51,8 +52,18 @@ const descriptionPage =
 </html>
 
 <style is:global>
+  :root {
+    --color-primary: 12, 12, 12;
+    --color-secondary: 221, 221, 221;
+  }
+
+  .dark {
+    --color-primary: 221, 221, 221;
+    --color-secondary: 12, 12, 12;
+  }
+
   html {
     font-family: "Jost Variable", system-ui, sans-serif;
-    background: #ddd url("/concrete.png") repeat;
+    background: rgb(var(--color-secondary));
   }
 </style>

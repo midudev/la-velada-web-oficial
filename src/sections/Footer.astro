@@ -1,8 +1,14 @@
+---
+import ThemeToggle from "@/components/ThemeToggle.astro"
+import InstagramIcon from "@/icons/instagram.astro"
+import TwitterIcon from "@/icons/twitter.astro"
+---
+
 <footer
   class="mt-20 w-full border-primary border-t-2 flex flex-col md:flex-row place-items-center md:justify-between pt-6 pb-20"
 >
   <span class="text-primary text-center">
-    © 2024 La Velada del Año <span aria-hidden="true" class="hidden md:inline">|</span
+    &#169; 2024 La Velada del Año <span aria-hidden="true" class="hidden md:inline">|</span
     ><br aria-hidden="true" class="block md:hidden" /> Todos los derechos reservados.
   </span>
   <span aria-hidden="true" class="md:hidden border-primary border-t-2 w-full mt-6 pt-6"></span>
@@ -15,7 +21,7 @@
         href="https://www.instagram.com/infolavelada"
         class="hover:scale-125 hover:opacity-70 transition inline-block"
       >
-        <img src="./instagram.svg" loading="lazy" alt="Logo de Instagram" />
+        <TwitterIcon class="text-primary/80" />
       </a>
     </li>
     <li>
@@ -25,8 +31,11 @@
         rel="noopener"
         href="https://x.com/infoLaVelada"
       >
-        <img src="./x.svg" loading="lazy" alt="Logo de X, previamente conocido como Twitter" />
+        <InstagramIcon class="text-primary/80" />
       </a>
+    </li>
+    <li>
+      <ThemeToggle />
     </li>
   </ul>
 </footer>
