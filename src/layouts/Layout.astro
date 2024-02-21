@@ -55,4 +55,17 @@ const descriptionPage =
     font-family: "Jost Variable", system-ui, sans-serif;
     background: #ddd url("/concrete.png") repeat;
   }
+
+  /* Hiding class, making content visible only to screen readers but not visually */
+  /* "sr" meaning "screen-reader" */
+
+  .sr-only:not(:focus):not(:active) {
+    clip: rect(0 0 0 0); 
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap; 
+    width: 1px;
+  }
 </style>
