@@ -19,43 +19,42 @@ import PrincipalDate from "@/sections/PrincipalDate.astro"
 </Layout>
 
 <script defer>
-  const container = document.querySelector('[data-container]')
-  const allowedKeys = {
-    37: 'left',
-    38: 'up',
-    39: 'right',
-    40: 'down',
-    65: 'a',
-    66: 'b'
-  }
+  const container = document.querySelector("[data-container]")
+
   const konamiCode = [
-    'up',
-    'up',
-    'down',
-    'down',
-    'left',
-    'right',
-    'left',
-    'right',
-    'b',
-    'a'
+    "ArrowUp",
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowLeft",
+    "ArrowRight",
+    "b",
+    "a",
   ]
   let konamiCodePosition = 0
 
-  document.addEventListener('keydown', ({ keyCode }) => {
-    const key = allowedKeys[keyCode]
+  document.addEventListener("keydown", ({ key }) => {
     const requiredKey = konamiCode[konamiCodePosition]
 
-    if (key != requiredKey) return konamiCodePosition = 0
+    if (key != requiredKey) {
+      konamiCodePosition = 0
+      return
+    }
+
     konamiCodePosition++
 
     if (konamiCodePosition != konamiCode.length) return
-    container.style.transform = 'rotateY(360deg)'
-    container.style.transition = 'transform 3s ease'
-    container.addEventListener('transitionend', () => {
-      container.style.transition = 'none'
-      container.style.transform = 'rotateY(0deg)'
+
+    container.style.transform = "rotateY(360deg)"
+    container.style.transition = "transform 3s ease"
+
+    container.addEventListener("transitionend", () => {
+      container.style.transition = "none"
+      container.style.transform = "rotateY(0deg)"
     })
+
     konamiCodePosition = 0
   })
 </script>
