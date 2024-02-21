@@ -24,7 +24,7 @@
    npm install -g pnpm
    ```
 
-3. Instala las dependencias (`pnpm install`):
+3. Instala las dependencias:
 
    ```sh
    pnpm install
