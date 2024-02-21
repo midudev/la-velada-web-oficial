@@ -28,13 +28,13 @@
   </a>
 </section>
 
-<script is:inline>
+<script>
+  import { EVENT_TIMESTAMP } from '@/consts/event-date'
   const $dateSpan = document.querySelector(".date")
   const $timeSpan = document.querySelector(".time")
 
   const USER_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const DATE_TIMESTAMP = 1709575200000
-  const date = new Date(DATE_TIMESTAMP)
+  const date = new Date(EVENT_TIMESTAMP)
 
   const timeFormatOptions = {
     hour: "numeric",
