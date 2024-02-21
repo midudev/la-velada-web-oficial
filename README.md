@@ -19,4 +19,15 @@ La Velada IV es una competición de boxeo que enfrenta a Streamers, Creadores de
 ## Contribuir
 ¡Contribuciones son bienvenidas! Si encuentras errores o tienes sugerencias de mejora, por favor abre un issue o envía un pull request.
 
-<p align="center">Desarrollado por: MiduDev</p>
+## 🛠️ Stack
+
+- [**Astro**](https://astro.build/) - The web framework for content-driven websites.
+- [**Typescript**](https://www.typescriptlang.org/) - JavaScript with syntax for types.
+- [**Tailwind CSS**](https://tailwindcss.com/) - A utility-first CSS framework for rapidly building custom designs.
+- [**@midudev/tailwind-animations**](https://tailwindcss-animations.vercel.app) - Easy peasy animations for your Tailwind project.
+
+## 👑 Contribuidores
+
+<a href="https://github.com/midudev/la-velada-web-oficial/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=midudev/la-velada-web-oficial" />
+</a>
