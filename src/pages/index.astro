@@ -1,6 +1,8 @@
 ---
 import Layout from "@/layouts/Layout.astro"
 
+import KonamiCode from "@/components/KonamiCode.astro"
+
 import Countdown from "@/sections/Countdown.astro"
 import Footer from "@/sections/Footer.astro"
 import Hero from "@/sections/Hero.astro"
@@ -16,45 +18,5 @@ import PrincipalDate from "@/sections/PrincipalDate.astro"
     <Countdown />
   </main>
   <Footer />
+  <KonamiCode />
 </Layout>
-
-<script defer>
-  const container = document.querySelector("[data-container]")
-
-  const konamiCode = [
-    "ArrowUp",
-    "ArrowUp",
-    "ArrowDown",
-    "ArrowDown",
-    "ArrowLeft",
-    "ArrowRight",
-    "ArrowLeft",
-    "ArrowRight",
-    "b",
-    "a",
-  ]
-  let konamiCodePosition = 0
-
-  document.addEventListener("keydown", ({ key }) => {
-    const requiredKey = konamiCode[konamiCodePosition]
-
-    if (key != requiredKey) {
-      konamiCodePosition = 0
-      return
-    }
-
-    konamiCodePosition++
-
-    if (konamiCodePosition != konamiCode.length) return
-
-    container.style.transform = "rotateY(360deg)"
-    container.style.transition = "transform 3s ease"
-
-    container.addEventListener("transitionend", () => {
-      container.style.transition = "none"
-      container.style.transform = "rotateY(0deg)"
-    })
-
-    konamiCodePosition = 0
-  })
-</script>
