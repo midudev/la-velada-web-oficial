@@ -28,29 +28,29 @@
   </a>
 </section>
 
-<script is:inline>
+<script>
+  import { EVENT_TIMESTAMP } from "@/consts/event-date"
   const $dateSpan = document.querySelector(".date")
   const $timeSpan = document.querySelector(".time")
 
   const USER_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const DATE_TIMESTAMP = 1709575200000
-  const date = new Date(DATE_TIMESTAMP)
+  const date = new Date(EVENT_TIMESTAMP)
 
-  const timeFormatOptions = {
+  const timeFormatOptions: Intl.DateTimeFormatOptions = {
     hour: "numeric",
     minute: "numeric",
     hour12: false,
     timeZone: USER_TZ,
-    timeZoneName: "short"
+    timeZoneName: "short",
   }
 
-  const dateFormatOptions = {
+  const dateFormatOptions: Intl.DateTimeFormatOptions = {
     day: "numeric",
     month: "long",
-    timeZone: USER_TZ
+    timeZone: USER_TZ,
   }
 
-  const validDatetimeAttrOptions = {
+  const validDatetimeAttrOptions: Intl.DateTimeFormatOptions = {
     timeZone: USER_TZ,
     year: "numeric",
     month: "2-digit",
@@ -58,7 +58,7 @@
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hour12: false
+    hour12: false,
   }
 
   // The "en-GB" locale is used to display the time zone abbreviation (CET, PST, EST...) and not its value in GMT
@@ -84,8 +84,10 @@
     validDatetimeAttrOptions
   ).format(date)
 
-  $dateSpan.innerHTML = day
-  $dateSpan.setAttribute("datetime", validDatetime)
-  $timeSpan.innerHTML = time
-  $timeSpan.setAttribute("datetime", validDatetime)
+  if ($dateSpan != null && $timeSpan != null) {
+    $dateSpan.innerHTML = day
+    $dateSpan.setAttribute("datetime", validDatetime)
+    $timeSpan.innerHTML = time
+    $timeSpan.setAttribute("datetime", validDatetime)
+  }
 </script>
