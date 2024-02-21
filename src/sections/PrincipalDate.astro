@@ -50,6 +50,17 @@
     timeZone: USER_TZ
   }
 
+  const validDatetimeAttrOptions = {
+    timeZone: USER_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  }
+
   // Se usa la configuración regional "en-GB" para mostrar la abreviatura de la zona horaria (CET, PST, EST...) y no su valor en GMT
   const time = new Intl.DateTimeFormat("en-GB", timeFormatOptions)
     .formatToParts(date)
@@ -63,6 +74,18 @@
 
   const day = new Intl.DateTimeFormat("es-ES", dateFormatOptions).format(date)
 
+  /**
+   * Se usa la configuración regional "en-CA" para obtener de forma más fácil el formato `yyyy-mm-dd`
+   * source: https://stackoverflow.com/a/63490548
+   * El datetime strings válido usado es: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time#a_valid_local_date_and_time_string
+   */
+  const validDatetime = new Intl.DateTimeFormat(
+    "en-CA",
+    validDatetimeAttrOptions
+  ).format(date)
+
   $dateSpan.innerHTML = day
+  $dateSpan.setAttribute("datetime", validDatetime)
   $timeSpan.innerHTML = time
+  $timeSpan.setAttribute("datetime", validDatetime)
 </script>
