@@ -31,8 +31,24 @@ const { title } = Astro.props
 </html>
 
 <style is:global>
+  :root {
+    --color-primary: #333;
+    --color-secondary: #ddd;
+  }
+
   html {
     font-family: "Jost Variable", system-ui, sans-serif;
     background: #ddd;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-primary: #ddd;
+      --color-secondary: #333;
+    }
+
+    html {
+      background: #111;
+    }
   }
 </style>
