@@ -1,6 +1,6 @@
-<h3 align="center">Bienvenidos a</h3>
+<h3 align="center">Bienvenidos a la...</h3>
 
-![Logo - La Velada IV](https://raw.githubusercontent.com/midudev/la-velada-web-oficial/main/public/hero-logo.svg)
+![Logo - La Velada IV](https://github.com/midudev/la-velada-web-oficial/assets/1561955/4f76305d-9ed2-40b8-b189-355235f5ad6e)
 
 # Proyecto oficial de código abierto
 
@@ -13,8 +13,7 @@ La Velada IV es una competición de boxeo que enfrenta a Streamers, Creadores de
 - **Redes Sociales:** Conoce las redes oficiales donde podrás informarte sobre el evento.
 
 ## Capturas de Pantalla
-![Captura de Pantalla 1](/public/Desktop_README.png)
-![Captura de Pantalla 2](/public/Mobile_README.png)
+![Captura de Pantalla de la web en móvil](/public/Mobile_README.png)
 
 ## Contribuir
 ¡Contribuciones son bienvenidas! Si encuentras errores o tienes sugerencias de mejora, por favor abre un issue o envía un pull request.
@@ -28,6 +27,12 @@ La Velada IV es una competición de boxeo que enfrenta a Streamers, Creadores de
 
 ## 👑 Contribuidores
 
-<a href="https://github.com/midudev/la-velada-web-oficial/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=midudev/la-velada-web-oficial" />
-</a>
+**¡Gracias a todos los colaboradores que han hecho posible este proyecto!**
+
+**¿Quieres ser un colaborador?**
+
+Consulta nuestra [guía de contribución](https://github.com/midudev/la-velada-web-oficial/blob/master/CONTRIBUTING.md) para saber cómo puedes empezar.
+
+**Imagen de colaboradores:**
+
+[![Contribuidores](https://contrib.rocks/image?repo=midudev/la-velada-web-oficial&theme=flat)](https://github.com/midudev/la-velada-web-oficial/graphs/contributors)
