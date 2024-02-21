@@ -1,17 +1,17 @@
 <section
-  class="animate-fade-in animate-delay-500 mt-32 mx-auto flex flex-col justify-center items-center text-center text-primary"
+  class="animate-fade-in animate-delay-500 mt-32 mx-auto flex flex-col place-items-center text-center text-primary"
 >
-  <h2 class="uppercase text-5xl font-semibold">
-    <span class="date"> 4 de marzo</span>
+  <div class="uppercase text-5xl font-semibold">
+    <time class="date"> 4 de marzo</time>
     <span aria-hidden="true" class="hidden md:inline mx-1">·</span>
     <br aria-hidden="true" class="block md:hidden" />
-    <span class="time"></span>
-  </h2>
+    <time class="time"></time>
+  </div>
 
-  <h3 class="uppercase text-2xl font-medium flex flex-col max-w-sm mt-6">
+  <h2 class="uppercase text-2xl font-medium flex flex-col max-w-sm mt-6">
     <span>Evento de Presentación</span>
     <span>Teatro Victoria (Barcelona)</span>
-  </h3>
+  </h2>
 
   <a
     class={`
@@ -28,29 +28,40 @@
   </a>
 </section>
 
-<script is:inline>
+<script>
+  import { EVENT_TIMESTAMP } from "@/consts/event-date"
   const $dateSpan = document.querySelector(".date")
   const $timeSpan = document.querySelector(".time")
 
   const USER_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const DATE_TIMESTAMP = 1709575200000
-  const date = new Date(DATE_TIMESTAMP)
+  const date = new Date(EVENT_TIMESTAMP)
 
-  const timeFormatOptions = {
+  const timeFormatOptions: Intl.DateTimeFormatOptions = {
     hour: "numeric",
     minute: "numeric",
     hour12: false,
     timeZone: USER_TZ,
-    timeZoneName: "short"
+    timeZoneName: "short",
   }
 
-  const dateFormatOptions = {
+  const dateFormatOptions: Intl.DateTimeFormatOptions = {
     day: "numeric",
     month: "long",
-    timeZone: USER_TZ
+    timeZone: USER_TZ,
   }
 
-  // Se usa la configuración regional "en-GB" para mostrar la abreviatura de la zona horaria (CET, PST, EST...) y no su valor en GMT
+  const validDatetimeAttrOptions: Intl.DateTimeFormatOptions = {
+    timeZone: USER_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }
+
+  // The "en-GB" locale is used to display the time zone abbreviation (CET, PST, EST...) and not its value in GMT
   const time = new Intl.DateTimeFormat("en-GB", timeFormatOptions)
     .formatToParts(date)
     .map(({ type, value }) => {
@@ -63,6 +74,20 @@
 
   const day = new Intl.DateTimeFormat("es-ES", dateFormatOptions).format(date)
 
-  $dateSpan.innerHTML = day
-  $timeSpan.innerHTML = time
+  /**
+   * Se usa la configuración regional "en-CA" para obtener de forma más fácil el formato `yyyy-mm-dd`
+   * source: https://stackoverflow.com/a/63490548
+   * El datetime strings válido usado es: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time#a_valid_local_date_and_time_string
+   */
+  const validDatetime = new Intl.DateTimeFormat(
+    "en-CA",
+    validDatetimeAttrOptions
+  ).format(date)
+
+  if ($dateSpan != null && $timeSpan != null) {
+    $dateSpan.innerHTML = day
+    $dateSpan.setAttribute("datetime", validDatetime)
+    $timeSpan.innerHTML = time
+    $timeSpan.setAttribute("datetime", validDatetime)
+  }
 </script>

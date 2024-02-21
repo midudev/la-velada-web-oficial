@@ -1,16 +1,15 @@
 ---
 import LaVeladaLogo from "@/icons/la-velada.astro"
 import Date from "@/components/Date.astro"
-
-const TIMESTAMP_END = 1709575200000
+import { EVENT_TIMESTAMP } from "@/consts/event-date";
 ---
 
-<section class="my-32 flex flex-col gap-y-10 justify-center items-center">
+<section class="my-32 flex flex-col gap-y-10 place-items-center">
   <LaVeladaLogo class="text-primary" />
 
   <div
     class="flex flex-row gap-x-1 text-primary uppercase font-semibold"
-    data-date={TIMESTAMP_END}
+    data-date={EVENT_TIMESTAMP}
   >
     <Date time="00" dateType="Días" atribute={{ "data-days": "" }} />
 
