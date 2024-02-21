@@ -50,7 +50,7 @@
     timeZone: USER_TZ
   }
 
-  // Se usa la configuración regional "en-GB" para mostrar la abreviatura de la zona horaria (CET, PST, EST...) y no su valor en GMT
+  // The "en-GB" locale is used to display the time zone abbreviation (CET, PST, EST...) and not its value in GMT
   const time = new Intl.DateTimeFormat("en-GB", timeFormatOptions)
     .formatToParts(date)
     .map(({ type, value }) => {
