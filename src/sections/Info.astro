@@ -10,7 +10,22 @@
       rel="nofollow noopener"
       class="hover:scale-125 hover:opacity-70 transition inline-block"
     >
-      <img src="./twitch.svg" alt="Logo de Twitch" />
+      <svg
+        class="twitch text-primary"
+        width="78"
+        height="91"
+        fill="none"
+        viewBox="0 0 78 91"
+        ><path
+          fill="currentColor"
+          d="M16.6001.600098.600098 16.6001v57.6H19.8001v16l16-16h12.8l28.8-28.8V.600098h-60.8Z"
+        ></path><path
+          fill="#fff"
+          d="m58.2003 55 12.8-12.8V7h-51.2v48h12.8v12.8l12.8-12.8h12.8Z"
+        ></path><path
+          fill="currentColor"
+          d="M39 19.8h6.4V39H39V19.8Zm22.4 0V39H55V19.8h6.4Z"></path>
+      </svg>
     </a>
   </div>
 
@@ -30,7 +45,7 @@
     >
       <h4>
         <a
-          class="hover:text-purple-800 transition hover:scale-110 inline-block"
+          class="hover:text-twitch transition hover:scale-110 inline-block"
           href="https://twitch.tv/ibai"
           target="_blank"
           rel="nofollow noopener"
@@ -47,3 +62,19 @@
     </article>
   </div>
 </section>
+
+<style>
+  svg {
+    view-timeline-name: --twitch;
+    view-timeline-axis: block;
+
+    animation-timeline: --twitch;
+    animation-name: show;
+  }
+
+  @keyframes show {
+    to {
+      @apply text-twitch;
+    }
+  }
+</style>
