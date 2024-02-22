@@ -20,7 +20,7 @@
         fill="currentColor"
         d="M16.6001.600098.600098 16.6001v57.6H19.8001v16l16-16h12.8l28.8-28.8V.600098h-60.8Z"
       ></path><path
-        fill="#fff"
+        fill="var(--background-color)"
         d="m58.2003 55 12.8-12.8V7h-51.2v48h12.8v12.8l12.8-12.8h12.8Z"
       ></path><path
         fill="currentColor"
@@ -32,7 +32,7 @@
     class="grid uppercase text-center gap-x-10 [grid-template-columns:1fr] md:grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))] lg:[grid-template-columns:1fr_1.5fr_1fr]"
   >
     <article
-      class="order-2 md:flex-grow md:order-none flex place-items-center text-xl py-10 md:py-12 lg:py-20 px-5 sm:px-10 border-y-2 border-primary"
+      class="order-2 md:flex-grow md:order-none flex justify-center text-xl text-center py-10 md:py-12 lg:py-20 px-10 border-y-2 border-primary"
     >
       <h3 class="text-balance">
         Presentación, Pesaje, Entrevista y Cara a Cara
@@ -40,7 +40,7 @@
     </article>
 
     <article
-      class="order-1 md:flex-1 md:order-none flex place-items-center text-4xl py-10 md:py-12 lg:py-20 px-5 sm:px-10 border-t-2 md:border-y-2 border-primary"
+      class="order-1 md:flex-1 md:order-none flex justify-center text-4xl py-10 md:py-12 lg:py-20 px-10 lg:px-0 border-t-2 md:border-y-2 border-primary"
     >
       <h3>
         <a
@@ -55,7 +55,7 @@
     </article>
 
     <article
-      class="order-3 md:order-none text-xl py-10 sm:py-12 md:py-12 lg:py-20 px-10 border-b-2 md:border-y-2 border-primary flex place-items-center"
+      class="order-3 md:order-none text-xl py-10 sm:py-12 md:py-12 lg:py-20 px-10 border-b-2 md:border-y-2 border-primary flex justify-center"
     >
       <h3 class="text-balance">
         Con la presencia de los boxeadores y las boxeadoras
@@ -68,13 +68,15 @@
   svg {
     animation-timeline: view();
     animation-name: show;
+    animation-timing-function: ease-in;
   }
 
   .twitch-link {
     display: inline-block;
 
-    animation-timeline: view();
+    animation-timeline: view(block);
     animation-name: show;
+    animation-timing-function: ease-in;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -84,8 +86,16 @@
   }
 
   @keyframes show {
-    to {
-      @apply text-twitch z-[999999];
+    from {
+      @apply text-primary;
+    }
+
+    50% {
+      @apply text-twitch;
+    }
+
+    100% {
+      @apply text-twitch;
     }
   }
 </style>
