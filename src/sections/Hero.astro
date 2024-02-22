@@ -1,14 +1,20 @@
 ---
 import HeroLogo from "@/components/HeroLogo.astro"
+import { LANDING_PAGE } from "@/i18n/landing-page";
+import { useTranslations } from "@/i18n/useTranslations";
+
+const { lang } = Astro.props
+
+const t = useTranslations(LANDING_PAGE, lang, 'hero')
 ---
 
 <section class="flex flex-col place-items-center gap-9">
-  <h1 class="sr-only">Presentación de la Velada del Año IV</h1>
+  <h1 class="sr-only">{t('hero.presentation_of_velada')}</h1>
   <span
     class="animate-fade-in animate-delay-300 text-xl uppercase text-secondary bg-primary px-6 py-1 font-medium"
     aria-hidden="true"
   >
-    Presentación de la
+    {t('hero.presentation_of')}
   </span>
   <HeroLogo
     class="text-primary animate-fade-in-up w-[300px] h-auto md:w-[600px]"

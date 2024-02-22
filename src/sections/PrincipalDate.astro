@@ -1,5 +1,11 @@
 ---
+import { LANDING_PAGE } from '@/i18n/landing-page';
+import { useTranslations } from '@/i18n/useTranslations';
 import CalendarScriptAndStyles from '../components/CalendarScriptAndStyles.astro'
+
+const { lang } = Astro.props
+
+const t = useTranslations(LANDING_PAGE, lang, 'principal_date')
 ---
 
 <CalendarScriptAndStyles />
@@ -15,12 +21,12 @@ import CalendarScriptAndStyles from '../components/CalendarScriptAndStyles.astro
   </div>
 
   <h2 class="uppercase text-2xl font-medium flex flex-col max-w-sm mt-6">
-    <span>Evento de Presentación</span>
+    <span>{t('principal_date.presentation_event')}</span>
     <a href="https://maps.app.goo.gl/RFzHUVDhRqdQaTAo8" 
       class="hover:scale-110 hover:opacity-60 transition inline-block" 
       target="_blank" 
       rel="noopener">
-      Teatro Victoria (Barcelona)
+      {t('principal_date.victoria_theater')}
     </a>
   </h2>
 
@@ -36,7 +42,7 @@ import CalendarScriptAndStyles from '../components/CalendarScriptAndStyles.astro
 			target="_blank"
 			rel="noopener noreferrer"
 		>
-			Entradas agotadas
+      {t('principal_date.available_tickets')}
 		</a>
 
 		<button
@@ -48,7 +54,7 @@ import CalendarScriptAndStyles from '../components/CalendarScriptAndStyles.astro
 				transition inline-block
 			`}
 		>
-			Agregar al calendario
+      {t('principal_date.add_to_calendar')}
 		</button>
 	</div>
 </section>

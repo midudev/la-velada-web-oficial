@@ -1,18 +1,23 @@
 ---
 import SelectLanguage from "@/components/SelectLanguage.astro";
+import { LANDING_PAGE } from "@/i18n/landing-page";
+import { useTranslations } from "@/i18n/useTranslations";
+
+const { lang } = Astro.props
+const t = useTranslations(LANDING_PAGE, lang, 'footer')
 ---
 
 <footer
   class="mt-20 w-full border-primary border-t-2 flex flex-col md:flex-row place-items-center md:justify-between pt-6 pb-20"
 >
   <span class="text-primary text-center">
-    © 2024 La Velada del Año <span aria-hidden="true" class="hidden md:inline">|</span
-    ><br aria-hidden="true" class="block md:hidden" /> Todos los derechos reservados.
+    {t('footer.la_velada_of_year')} <span aria-hidden="true" class="hidden md:inline">|</span
+    ><br aria-hidden="true" class="block md:hidden" /> {t('footer.all_rights_reserved')}
   </span>
   <span aria-hidden="true" class="md:hidden border-primary border-t-2 w-full mt-6 pt-6"></span>
 
   <div class='flex items-center gap-x-4'>
-    <SelectLanguage />
+    <SelectLanguage lang={lang}/>
     <nav>
       <ul class="flex flex-row gap-x-6 items-center">
         <li>
@@ -22,7 +27,7 @@ import SelectLanguage from "@/components/SelectLanguage.astro";
             href="https://www.instagram.com/infolavelada"
             class="hover:scale-125 hover:opacity-70 transition"
           >
-            <img src="./instagram.svg" width="48px" height="48px" loading="lazy" alt="Instagram de la velada" />
+          <img src="./instagram.svg" width="48px" height="48px" loading="lazy" alt={t('footer.instagram_logo')}/>
           </a>
         </li>
         <li>
@@ -32,7 +37,7 @@ import SelectLanguage from "@/components/SelectLanguage.astro";
             rel="noopener"
             href="https://x.com/infoLaVelada"
           >
-            <img src="./x.svg" height="32px" width="35px" loading="lazy" alt="Twitter de la velada" />
+            <img src="./x.svg" height="32px" width="35px" loading="lazy" alt={t('footer.x_logo')} />
           </a>
         </li>
       </ul>
