@@ -64,12 +64,14 @@ const descriptionPage =
     position: fixed;
     top: 0;
     bottom: 0;
+    left: 0;
     z-index: 1;
   }
 </style>
 
 <script>
   import * as THREE from "three";
+import { textChangeRangeIsUnchanged } from "typescript";
   var camera, scene, renderer, particles, control, light, clock;
   const canvas = document.getElementById("smoke-canvas")
 
@@ -90,14 +92,17 @@ const descriptionPage =
       50,
       window.innerWidth / window.innerHeight,
       1,
-      100,
+      200,
     );
     camera.position.z = 5;
     scene.add(camera);
 
-    light = new THREE.DirectionalLight(0xff00ff, 1.0);
+    light = new THREE.DirectionalLight(0x333333, 2);
     light.position.set(-1, 0, 1);
     scene.add(light);
+
+    const ambientLight = new THREE.AmbientLight(0xdddddd, 4);
+    scene.add(ambientLight);
 
     const tex = new THREE.TextureLoader().load("/smoke.png");
     const material = new THREE.MeshLambertMaterial({
@@ -109,7 +114,7 @@ const descriptionPage =
     const geometry = new THREE.PlaneGeometry(5, 5);
     particles = [];
 
-    const size = 5;
+    const size = 7;
 
     for (let i = 0; i < 40; i++) {
       const particle = new THREE.Mesh(geometry, material);
