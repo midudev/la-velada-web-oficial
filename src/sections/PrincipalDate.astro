@@ -1,6 +1,10 @@
+---
+import Countdown from "@/sections/Countdown.astro"
+---
 <section
-  class="animate-fade-in animate-delay-500 mt-32 mx-auto flex flex-col place-items-center text-center text-primary"
+  class="animate-fade-in animate-delay-500 mx-auto flex flex-col place-items-center text-center text-primary"
 >
+  <Countdown />
   <div class="uppercase text-5xl font-semibold">
     <time class="date"> 4 de marzo</time>
     <span aria-hidden="true" class="hidden md:inline mx-1">·</span>
@@ -29,7 +33,7 @@
 </section>
 
 <script>
-  import { EVENT_TIMESTAMP } from "@/consts/event-date"
+  const EVENT_TIMESTAMP = 1709575200000
   const $dateSpan = document.querySelector(".date")
   const $timeSpan = document.querySelector(".time")
 
