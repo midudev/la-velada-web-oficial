@@ -71,9 +71,9 @@ const descriptionPage =
 
 <script>
   import * as THREE from "three";
-import { textChangeRangeIsUnchanged } from "typescript";
-  var camera, scene, renderer, particles, control, light, clock;
-  const canvas = document.getElementById("smoke-canvas")
+
+  let camera, scene, renderer, particles, control, light, clock;
+  const canvas = document.getElementById("smoke-canvas");
 
   init();
 
@@ -81,7 +81,7 @@ import { textChangeRangeIsUnchanged } from "typescript";
     clock = new THREE.Clock();
 
     renderer = new THREE.WebGLRenderer({
-      canvas: canvas
+      canvas: canvas,
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
