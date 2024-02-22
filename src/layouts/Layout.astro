@@ -63,6 +63,10 @@ const descriptionPage =
     scroll-behavior: smooth;
   }
 
+  body {
+    overscroll-behavior: none;
+  }
+
   /* Hiding class, making content visible only to screen readers but not visually */
   /* "sr" meaning "screen-reader" */
   .sr-only:not(:focus):not(:active) {
@@ -83,6 +87,8 @@ const descriptionPage =
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: theme("colors.primary");
+    border: 2px solid transparent;
+    background-clip: content-box;
   }
 
   ::-webkit-scrollbar-track {
