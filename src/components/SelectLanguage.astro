@@ -1,0 +1,31 @@
+---
+import { DEFAULT_LANG, LANGUAGES } from "i18n/languages";
+
+---
+
+<select
+  name='languages'
+  id="lang"
+  aria-label="Selecciona el lenguaje"
+  class={`
+  border-primary border-2 font-medium uppercase text-lg
+  px-4 py-1 bg-[#ddd] hover:bg-slate-300 transition outline-none
+`}>
+  {Object.entries(LANGUAGES).map(([key, value]) => (
+    <option
+      lang={key}
+      value={key}
+      selected={key === DEFAULT_LANG}
+    >
+      {value}
+    </option>
+  ))}
+</select>
+
+<script>
+  const $languageSelect = document.querySelector('[name="languages"]') as HTMLElement
+  $languageSelect.addEventListener('change', (e: any) => {
+    const langToNavigate = e.currentTarget.value
+    document.location = `${document.location.href}${langToNavigate}`
+  })
+</script>
