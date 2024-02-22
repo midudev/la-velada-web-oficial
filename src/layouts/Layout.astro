@@ -117,4 +117,29 @@ const descriptionPage =
   ::-webkit-scrollbar-corner {
     background: var(--background-image);
   }
+
+  @keyframes pulsarYBrillar {
+    0% {
+      transform: scale(1);
+      filter: brightness(100%);
+    }
+    50% {
+      transform: scale(1.1);
+      filter: brightness(150%);
+    }
+    100% {
+      transform: scale(1);
+      filter: brightness(100%);
+    }
+  }
+
+  .mi-svg {
+    animation: pulsarYBrillar 4s infinite; 
+    transform-origin: center; 
+  }
+  
+  .mi-svg path {
+    fill: currentColor; 
+  }
 </style>
+
