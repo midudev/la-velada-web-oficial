@@ -123,9 +123,10 @@ const descriptionPage =
   .smoke-canvas {
     position: fixed;
     top: 0;
+    right: 0;
     bottom: 0;
     left: 0;
-    z-index: 1;
+    background-color: #333;
   }
 </style>
 
@@ -140,6 +141,11 @@ const descriptionPage =
     light: THREE.DirectionalLight,
     clock: THREE.Clock;
   const canvas = document.getElementById("smoke-canvas");
+  const isDark =
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  console.log(isDark);
 
   init();
 
@@ -164,11 +170,22 @@ const descriptionPage =
     camera.position.z = 5;
     scene.add(camera);
 
-    light = new THREE.DirectionalLight(0x333333, 2);
+    const backgroundColor = new THREE.Color(0x333333);
+    scene.background = backgroundColor;
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+
+    light = new THREE.DirectionalLight(0xdddddd, 1);
     light.position.set(-1, 0, 1);
     scene.add(light);
 
-    const ambientLight = new THREE.AmbientLight(0xdddddd, 4);
+    const ambientLight = new THREE.AmbientLight(0x333333, 1);
     scene.add(ambientLight);
 
     const tex = new THREE.TextureLoader().load("/smoke.png");
