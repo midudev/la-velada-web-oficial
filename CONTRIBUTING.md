@@ -2,7 +2,7 @@
 
 ## Bienvenido a 'La velada del año 4' 🌌
 
-¡Estamos encantados de que estés interesado en contribuir a nuestro proyecto! Este documento te guiará a través de los pasos necesarios para aportar tu valioso trabajo a 'La velada del año 4', un proyecto desarrollado con Astro JS. Queremos hacer de este proceso algo sencillo y transparente, así que aquí tienes una guía paso a paso.
+¡Estamos encantados de que estés interesado en contribuir a nuestro proyecto! Este documento te guiará a través de los pasos necesarios para aportar tu valioso trabajo a 'La velada del año 4', un proyecto desarrollado con Astro. Queremos hacer de este proceso algo sencillo y transparente, así que aquí tienes una guía paso a paso.
 
 ### Primeros pasos 🚀
 
@@ -36,6 +36,7 @@
 
 ### Buenas prácticas 🌟
 
+- **Revisa los PRs abiertos** para asegurarte de que no estás trabajando en algo que ya está en progreso.
 - **Mantén tus commits limpios y descriptivos**.
 - **Sigue las convenciones de código del proyecto**.
 - **Actualiza tu rama con frecuencia** para mantenerla al día con la rama principal del proyecto.

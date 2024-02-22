@@ -17,10 +17,12 @@ const descriptionPage =
     <meta charset="UTF-8" />
     <meta name="description" content={descriptionPage} />
     <meta name="viewport" content="width=device-width" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="https://lavelada.es" />
     <title>{title}</title>
     <meta name="viewport" content="width=device-width" />
+    <link rel="preload" as="image" href="/concrete.png" />
     <meta
       name="keywords"
       content="velada, streamers, creadores, Ibai, boxeo, midudev"
@@ -54,6 +56,9 @@ const descriptionPage =
   :root {
     --color-primary: 12, 12, 12;
     --color-secondary: 221, 221, 221;
+    
+    --background-color: --color-primary;
+    --background-image: var(--background-color) url("/concrete.png") repeat;
   }
 
   .dark {
@@ -63,11 +68,14 @@ const descriptionPage =
 
   html {
     font-family: "Jost Variable", system-ui, sans-serif;
-    background: rgb(var(--color-secondary));
+    background: var(--background-image);
+    scroll-behavior: smooth;
+    perspective: 2000px;
+    overflow-x: hidden;
   }
 
   body {
-    perspective: 2000px;
+    overscroll-behavior: none;
   }
 
   /* Hiding class, making content visible only to screen readers but not visually */
@@ -80,5 +88,25 @@ const descriptionPage =
     position: absolute;
     white-space: nowrap;
     width: 1px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: theme("colors.primary");
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background-image);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--background-image);
   }
 </style>
