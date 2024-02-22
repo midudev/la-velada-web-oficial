@@ -11,7 +11,7 @@
     aria-label="Síguelo en directo twitch.tv/ibai"
   >
     <svg
-      class="twitch text-primary"
+      class="twitch text-primary detect-in-viewport"
       width="78"
       height="91"
       fill="none"
@@ -49,7 +49,10 @@
           target="_blank"
           rel="nofollow noopener"
         >
-          Síguelo en directo <span class="twitch-link">twitch.tv/ibai</span>
+          Síguelo en directo <span
+            class="twitch-link detect-in-viewport transition-colors"
+            >twitch.tv/ibai</span
+          >
         </a>
       </h3>
     </article>
@@ -64,44 +67,26 @@
   </div>
 </section>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Función para detectar si es un dispositivo móvil
-  const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
-
-  if (isMobile()) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('text-twitch'); 
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      rootMargin: '0px',
-      threshold: 0.1,
-    });
-
-    document.querySelectorAll('.twitch, .twitch-link').forEach((el) => {
-      observer.observe(el);
-    });
-  }
-});
-
-</script>
 <style>
+  .twitch-link,
   svg {
-    animation-timeline: view();
-    animation-name: show;
-    animation-timing-function: ease-in;
+    @apply text-twitch;
   }
 
-  .twitch-link {
-    display: inline-block;
+  @supports (animation-timeline: view()) {
+    svg {
+      animation-timeline: view();
+      animation-name: show;
+      animation-timing-function: ease-in;
+    }
 
-    animation-timeline: view(block);
-    animation-name: show;
-    animation-timing-function: ease-in;
+    .twitch-link {
+      display: inline-block;
+
+      animation-timeline: view(block);
+      animation-name: show;
+      animation-timing-function: ease-in;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -123,8 +108,4 @@ document.addEventListener('DOMContentLoaded', () => {
       @apply text-twitch;
     }
   }
-
-  .text-twitch {
-  color: #6441a4; /* Asume que este es el color de Twitch */
-}
 </style>
