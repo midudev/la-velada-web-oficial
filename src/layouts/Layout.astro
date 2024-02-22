@@ -45,6 +45,13 @@ const descriptionPage =
     <meta name="googlebot" content="index, follow" />
   </head>
   <body>
+    <div class="relative container mx-auto w-full -z-10">
+      <img
+        aria-hidden="true"
+        src="/lights.svg"
+        class="absolute left-0 top-0 transform-gpu w-screen brightness-0 dark:brightness-200"
+      />
+    </div>
     <div class="max-w-6xl px-2 lg:px-10 pt-20 md:pt-32 mx-auto">
       <slot />
     </div>
@@ -66,7 +73,7 @@ const descriptionPage =
     --color-secondary: #333;
     --color-twitch: #a270ff;
 
-    --background-image: var(--color-secondary);
+    --background-image: var(--background-color) url("/concrete-dark.png") repeat;
   }
 
   html {
@@ -75,9 +82,6 @@ const descriptionPage =
     scroll-behavior: smooth;
     perspective: 2000px;
     overflow-x: hidden;
-  }
-
-  body {
     overscroll-behavior: none;
   }
 
