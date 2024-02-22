@@ -1,3 +1,11 @@
+---
+import { LANDING_PAGE } from "@/i18n/landing-page";
+import { useTranslations } from "@/i18n/useTranslations";
+
+const { lang } = Astro.props
+const t = useTranslations(LANDING_PAGE, lang, 'principal_date')
+---
+
 <button
   id="add-to-calendar"
   class={`
@@ -7,7 +15,7 @@
     transition inline-block
   `}
 >
-  Agregar al calendario
+  {t('principal_date.add_to_calendar')}
 </button>
 
 <script is:inline>

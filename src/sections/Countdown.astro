@@ -1,14 +1,20 @@
 ---
 import LaVeladaLogo from "@/icons/la-velada.astro"
 import Date from "@/components/Date.astro"
-import { EVENT_TIMESTAMP } from "@/consts/event-date"
+import { EVENT_TIMESTAMP } from "@/consts/event-date";
+
+import { LANDING_PAGE } from "@/i18n/landing-page";
+import { useTranslations } from "@/i18n/useTranslations";
+
+const { lang } = Astro.props
+const t = useTranslations(LANDING_PAGE, lang, 'countdown')
 ---
 
 <section class="my-0 lg:my-32 flex flex-col gap-y-10 place-items-center">
   <p
     class="uppercase text-lg font-medium text-primary opacity-80 text-center text-balance"
   >
-    Para el Evento de Presentación faltan...
+    {t('countdown.are_still_missing')}
   </p>
 
   <LaVeladaLogo class="text-primary" />
@@ -17,19 +23,19 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
     class="flex flex-row gap-x-1 text-primary uppercase font-semibold"
     data-date={EVENT_TIMESTAMP}
   >
-    <Date time="00" dateType="Días" attribute={{ "data-days": "" }} />
+    <Date time="00" dateType={t('countdown.days')} attribute={{ "data-days": "" }} />
 
     <span aria-hidden="true" class="mt-1 text-xl">:</span>
 
-    <Date time="00" dateType="Horas" attribute={{ "data-hours": "" }} />
+    <Date time="00" dateType={t('countdown.hours')} attribute={{ "data-hours": "" }} />
 
     <span aria-hidden="true" class="mt-1 text-xl">:</span>
 
-    <Date time="00" dateType="Minutos" attribute={{ "data-minutes": "" }} />
+    <Date time="00" dateType={t('countdown.minutes')} attribute={{ "data-minutes": "" }} />
 
     <span aria-hidden="true" class="mt-1 text-xl">:</span>
 
-    <Date time="00" dateType="Segundos" attribute={{ "data-seconds": "" }} />
+    <Date time="00" dateType={t('countdown.seconds')} attribute={{ "data-seconds": "" }} />
   </div>
 </section>
 
