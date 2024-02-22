@@ -1,6 +1,5 @@
 ---
 import "@fontsource-variable/jost"
-import Noise from "@/components/Noise.astro"
 
 interface Props {
   title: string
@@ -17,10 +16,12 @@ const descriptionPage =
     <meta charset="UTF-8" />
     <meta name="description" content={descriptionPage} />
     <meta name="viewport" content="width=device-width" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="https://lavelada.es" />
     <title>{title}</title>
     <meta name="viewport" content="width=device-width" />
+    <link rel="preload" as="image" href="/concrete.png" />
     <meta
       name="keywords"
       content="velada, streamers, creadores, Ibai, boxeo, midudev"
@@ -51,8 +52,52 @@ const descriptionPage =
 </html>
 
 <style is:global>
+  :root {
+    --background-color: #ddd;
+    --background-image: var(--background-color) url("/concrete.png") repeat;
+  }
+
   html {
     font-family: "Jost Variable", system-ui, sans-serif;
-    background: #ddd url("/concrete.png") repeat;
+    background: var(--background-image);
+    scroll-behavior: smooth;
+    perspective: 2000px;
+    overflow-x: hidden;
+  }
+
+  body {
+    overscroll-behavior: none;
+  }
+
+  /* Hiding class, making content visible only to screen readers but not visually */
+  /* "sr" meaning "screen-reader" */
+  .sr-only:not(:focus):not(:active) {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: theme("colors.primary");
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background-image);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--background-image);
   }
 </style>
