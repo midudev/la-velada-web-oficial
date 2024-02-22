@@ -1,5 +1,9 @@
 ---
+import { LANDING_PAGE } from "@/i18n/landing-page";
+import { useTranslations } from "@/i18n/useTranslations";
 
+const { lang } = Astro.props
+const t = useTranslations(LANDING_PAGE, lang, 'info')
 ---
 
 <section class="flex font-medium text-primary gap-y-10 my-32 flex-col">
@@ -8,7 +12,7 @@
     target="_blank"
     rel="nofollow noopener"
     class="hover:scale-125 hover:opacity-70 transition mx-auto"
-    aria-label="Síguelo en directo twitch.tv/ibai"
+    aria-label={t('info.follow_it_in_stream')}
   >
     <svg
       class="twitch text-primary"
@@ -35,7 +39,7 @@
       class="order-2 md:flex-grow md:order-none flex justify-center text-xl text-center py-10 md:py-12 lg:py-20 px-10 border-y-2 border-primary"
     >
       <h3 class="text-balance">
-        Presentación, Pesaje, Entrevista y Cara a Cara
+        {t('info.presentation_interview_and_face_to_face')}
       </h3>
     </article>
 
@@ -49,7 +53,7 @@
           target="_blank"
           rel="nofollow noopener"
         >
-          Síguelo en directo <span class="twitch-link">twitch.tv/ibai</span>
+          {t('info.follow_it_in_stream')}
         </a>
       </h3>
     </article>
@@ -58,7 +62,7 @@
       class="order-3 md:order-none text-xl py-10 sm:py-12 md:py-12 lg:py-20 px-10 border-b-2 md:border-y-2 border-primary flex justify-center"
     >
       <h3 class="text-balance">
-        Con la presencia de los boxeadores y las boxeadoras
+        {t('info.with_presence_of_boxers')}
       </h3>
     </article>
   </div>

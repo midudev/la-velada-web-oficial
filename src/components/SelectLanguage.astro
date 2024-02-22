@@ -1,5 +1,7 @@
 ---
 import { DEFAULT_LANG, LANGUAGES } from "@/i18n/languages";
+
+const { lang } = Astro.props
 ---
 
 <select
@@ -14,7 +16,7 @@ import { DEFAULT_LANG, LANGUAGES } from "@/i18n/languages";
     <option
       lang={key}
       value={key === DEFAULT_LANG ? '' : key}
-      selected={key === DEFAULT_LANG}
+      selected={key === lang}
     >
       {value}
     </option>
@@ -25,6 +27,7 @@ import { DEFAULT_LANG, LANGUAGES } from "@/i18n/languages";
   const $languageSelect = document.querySelector('[name="languages"]') as HTMLElement
   $languageSelect.addEventListener('change', (e: any) => {
     const langToNavigate = e.currentTarget.value
-    document.location = `${document.location.href}${langToNavigate}`
+
+    document.location = `${window.location.origin}/${langToNavigate}`
   })
 </script>

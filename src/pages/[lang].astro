@@ -8,11 +8,17 @@ import Footer from "@/sections/Footer.astro"
 import Hero from "@/sections/Hero.astro"
 import Info from "@/sections/Info.astro"
 import PrincipalDate from "@/sections/PrincipalDate.astro"
+import { Languages, LANGUAGES } from "@/i18n/languages"
 
-const lang = 'es'
+export function getStaticPaths() {
+const langPaths = Object.keys(LANGUAGES).map(lang => ({ params: { lang } }))
+return langPaths
+}
+
+const { lang } = Astro.params
 ---
 
-<Layout lang={lang} >
+<Layout lang={lang as Languages} >
   <Hero lang={lang} />
   <main>
     <PrincipalDate lang={lang} />

@@ -16,9 +16,9 @@ export function useTranslations<K extends string, S extends string>(
   dictionary: Dictionary<K>,
   lang: Languages,
   section?: S // <- only to infer the codes of the section
-): (key: SectionKeys<S, K>) => string | undefined {
+): (key: SectionKeys<S, K>) => string {
 
-  return (key: SectionKeys<S, K>) =>  {
+  return (key: SectionKeys<S, K>) => {
     if(!(key in dictionary[DEFAULT_LANG]))
       throw new Error(`Key: "${key}" not exist in default lang`)
 
@@ -27,6 +27,6 @@ export function useTranslations<K extends string, S extends string>(
       !(key in dictionary[lang as DefaultLang])
     ) lang = DEFAULT_LANG
 
-    return dictionary[lang as DefaultLang][key]
+    return dictionary[lang as DefaultLang][key] as string
   }
 }

@@ -2,43 +2,46 @@
 import "@fontsource-variable/jost"
 
 interface Props {
-  title: string
+  lang: Languages
 }
 
-const { title } = Astro.props
-const descriptionPage =
-  "Evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos"
+import { LANDING_PAGE } from "@/i18n/landing-page";
+import { useTranslations } from "@/i18n/useTranslations";
+import { Languages } from "@/i18n/languages";
+
+const { lang } = Astro.props
+const t = useTranslations(LANDING_PAGE, lang, 'meta')
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content={descriptionPage} />
+    <meta name="description" content={t('meta.description')} />
     <meta name="viewport" content="width=device-width" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="https://lavelada.es" />
-    <title>{title}</title>
+    <title>{t('meta.title')}</title>
     <meta name="viewport" content="width=device-width" />
     <link rel="preload" as="image" href="/concrete.png" />
     <meta
       name="keywords"
-      content="velada, streamers, creadores, Ibai, boxeo, midudev"
+      content={t('meta.keywords')}
     />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@infoLaVelada" />
     <meta name="twitter:creator" content="@ibai" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={descriptionPage} />
-    <meta name="twitter:image" content="/og.webp" />
+    <meta name="twitter:title" content={t('meta.title')} />
+    <meta name="twitter:description" content={t('meta.description')} />
+    <meta name="twitter:image" content={t('meta.og:image')} />
 
-    <meta name="og:image" content="/og.webp" />
-    <meta name="og:title" content={title} />
-    <meta name="og:description" content={descriptionPage} />
+    <meta name="og:image" content={t('meta.og:image')}/>
+    <meta name="og:title" content={t('meta.title')} />
+    <meta name="og:description" content={t('meta.description')} />
     <meta name="og:url" content="https://lavelada.es" />
-    <meta name="og:site_name" content="La Velada 4" />
+    <meta name="og:site_name" content={t('meta.og:site_name')} />
     <meta name="og:type" content="website" />
     <meta name="og:locale" content="es_ES" />
     <meta name="robots" content="index, follow" />
