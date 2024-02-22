@@ -6,11 +6,12 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				'primary': '#333',
-				'secondary': '#ddd',
-				'twitch': '#6441a4'
+				'primary': 'var(--color-primary)',
+				'secondary': 'var(--color-secondary)',
+				'twitch': 'var(--color-twitch)'
 			}
 		},
 	},
+	darkMode: 'class',
 	plugins: [animations],
 }
