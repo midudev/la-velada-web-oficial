@@ -2,17 +2,18 @@
 import { EVENT_TIMESTAMP } from "@/consts/event-date"
 
 const NOW = new Date().getTime()
+const domain = new URL(Astro.request.url).hostname
 ---
 
 {
   NOW >= EVENT_TIMESTAMP ? (
     <div class="mt-32 flex justify-center items-center">
       <iframe
-        src="https://player.twitch.tv/?channel=ibai&parent=localhost"
+        src={`https://player.twitch.tv/?channel=ibai&parent=${domain}`}
         width="1280"
         height="720"
         allowfullscreen
-      ></iframe>
+      />
     </div>
   ) : null
 }
