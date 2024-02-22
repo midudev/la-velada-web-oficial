@@ -11,7 +11,7 @@
     aria-label="Síguelo en directo twitch.tv/ibai"
   >
     <svg
-      class="twitch text-primary"
+      class="twitch text-primary detect-in-viewport"
       width="78"
       height="91"
       fill="none"
@@ -20,7 +20,7 @@
         fill="currentColor"
         d="M16.6001.600098.600098 16.6001v57.6H19.8001v16l16-16h12.8l28.8-28.8V.600098h-60.8Z"
       ></path><path
-        fill="#fff"
+        fill="var(--background-color)"
         d="m58.2003 55 12.8-12.8V7h-51.2v48h12.8v12.8l12.8-12.8h12.8Z"
       ></path><path
         fill="currentColor"
@@ -49,7 +49,10 @@
           target="_blank"
           rel="nofollow noopener"
         >
-          Síguelo en directo <span class="twitch-link">twitch.tv/ibai</span>
+          Síguelo en directo <span
+            class="twitch-link detect-in-viewport transition-colors"
+            >twitch.tv/ibai</span
+          >
         </a>
       </h3>
     </article>
@@ -65,18 +68,25 @@
 </section>
 
 <style>
+  .twitch-link,
   svg {
-    animation-timeline: view();
-    animation-name: show;
-    animation-timing-function: ease-in;
+    @apply text-twitch;
   }
 
-  .twitch-link {
-    display: inline-block;
+  @supports (animation-timeline: view()) {
+    svg {
+      animation-timeline: view();
+      animation-name: show;
+      animation-timing-function: ease-in;
+    }
 
-    animation-timeline: view(block);
-    animation-name: show;
-    animation-timing-function: ease-in;
+    .twitch-link {
+      display: inline-block;
+
+      animation-timeline: view(block);
+      animation-name: show;
+      animation-timing-function: ease-in;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
