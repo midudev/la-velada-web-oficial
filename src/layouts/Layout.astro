@@ -1,13 +1,14 @@
 ---
-import "@fontsource-variable/jost";
+import "@fontsource-variable/jost"
 
 interface Props {
   title: string;
 }
 
-const { title } = Astro.props;
+
+const { title } = Astro.props
 const descriptionPage =
-  "Evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos";
+  "Evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos"
 ---
 
 <!doctype html>
@@ -16,25 +17,25 @@ const descriptionPage =
     <meta charset="UTF-8" />
     <meta name="description" content={descriptionPage} />
     <meta name="viewport" content="width=device-width" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="https://lavelada.es" />
     <title>{title}</title>
     <meta name="viewport" content="width=device-width" />
-    <meta
-      name="keywords"
-      content="velada, streamers, creadores, Ibai, boxeo, midudev"
-    />
+    <link rel="preload" as="image" href="/concrete.png" />
+    <meta name="keywords" content="velada, streamers, creadores, Ibai, boxeo, midudev" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@infoLaVelada" />
-    <meta name="twitter:creator" content="@midudev" />
-    <meta name="twitter:title" content=`La velada 4: ${descriptionPage}` />
+    <meta name="twitter:creator" content="@ibai" />
+    <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={descriptionPage} />
-    <meta name="twitter:image" content="/og.webp" />
-    <meta name="og:image" content="/og.webp" />
-    <meta name="og:title" content=`La velada 4: ${descriptionPage}` />
+    <meta name="twitter:image" content="/og.jpg" />
+
+    <meta name="og:image" content="/og.jpg" />
+    <meta name="og:title" content={title} />
     <meta name="og:description" content={descriptionPage} />
     <meta name="og:url" content="https://lavelada.es" />
-    <meta name="og:site_name" content="La velada 4" />
+    <meta name="og:site_name" content="La Velada 4" />
     <meta name="og:type" content="website" />
     <meta name="og:locale" content="es_ES" />
     <meta name="robots" content="index, follow" />
@@ -48,10 +49,70 @@ const descriptionPage =
   </body>
 </html>
 
+<script is:inline type="module">
+  // detect support scroll timeline
+  if (!("scrollTimeline" in window)) {
+    import("https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js")
+  }
+</script>
+
 <style is:global>
+  :root {
+    --color-primary: #333;
+    --color-secondary: #ddd;
+    --color-twitch: #6441a4;
+
+    --background-color: var(--color-secondary);
+    --background-image: var(--background-color) url("/concrete.png") repeat;
+  }
+
+  .dark {
+    --color-primary: #ddd;
+    --color-secondary: #333;
+    --color-twitch: #a270ff;
+
+    --background-image: var(--background-color) url("/concrete-dark.png") repeat;
+  }
+
   html {
     font-family: "Jost Variable", system-ui, sans-serif;
-    background: #ddd;
+    background: var(--background-image);
+    scroll-behavior: smooth;
+    perspective: 2000px;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+  }
+
+  /* Hiding class, making content visible only to screen readers but not visually */
+  /* "sr" meaning "screen-reader" */
+  .sr-only:not(:focus):not(:active) {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: theme("colors.primary");
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background-image);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--background-image);
   }
 
   #content {
