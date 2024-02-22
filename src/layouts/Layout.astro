@@ -16,10 +16,12 @@ const descriptionPage =
     <meta charset="UTF-8" />
     <meta name="description" content={descriptionPage} />
     <meta name="viewport" content="width=device-width" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="https://lavelada.es" />
     <title>{title}</title>
     <meta name="viewport" content="width=device-width" />
+    <link rel="preload" as="image" href="/concrete.png" />
     <meta
       name="keywords"
       content="velada, streamers, creadores, Ibai, boxeo, midudev"
@@ -30,9 +32,9 @@ const descriptionPage =
     <meta name="twitter:creator" content="@ibai" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={descriptionPage} />
-    <meta name="twitter:image" content="/og.webp" />
+    <meta name="twitter:image" content="/og.jpg" />
 
-    <meta name="og:image" content="/og.webp" />
+    <meta name="og:image" content="/og.jpg" />
     <meta name="og:title" content={title} />
     <meta name="og:description" content={descriptionPage} />
     <meta name="og:url" content="https://lavelada.es" />
@@ -43,20 +45,45 @@ const descriptionPage =
     <meta name="googlebot" content="index, follow" />
   </head>
   <body>
-    <div class="max-w-6xl px-2 lg:px-10 pt-20 md:pt-32 mx-auto">
+    <div class="relative container mx-auto w-full -z-10">
+      <img
+        aria-hidden="true"
+        src="/lights.svg"
+        class="absolute left-0 top-0 opacity-0 transform-gpu w-screen brightness-0 dark:brightness-200"
+        onload="this.classList.add('animate-fade-in', 'animate-duration-500')"
+      />
+    </div>
+    <div class="max-w-6xl px-2 lg:px-10 pt-16 md:pt-20 mx-auto">
       <slot />
     </div>
   </body>
 </html>
 
 <style is:global>
-  html {
-    font-family: "Jost Variable", system-ui, sans-serif;
-    background: #ddd url("/concrete.png") repeat;
+  :root {
+    --color-primary: #333;
+    --color-secondary: #ddd;
+    --color-twitch: #6441a4;
+
+    --background-color: var(--color-secondary);
+    --background-image: var(--background-color) url("/concrete.png") repeat;
   }
 
-  body {
+  .dark {
+    --color-primary: #ddd;
+    --color-secondary: #333;
+    --color-twitch: #a270ff;
+
+    --background-image: var(--background-color) url("/concrete-dark.png") repeat;
+  }
+
+  html {
+    font-family: "Jost Variable", system-ui, sans-serif;
+    background: var(--background-image);
+    scroll-behavior: smooth;
     perspective: 2000px;
+    overflow-x: hidden;
+    overscroll-behavior: none;
   }
 
   /* Hiding class, making content visible only to screen readers but not visually */
@@ -69,5 +96,25 @@ const descriptionPage =
     position: absolute;
     white-space: nowrap;
     width: 1px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: theme("colors.primary");
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background-image);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--background-image);
   }
 </style>
