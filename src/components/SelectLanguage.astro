@@ -1,6 +1,5 @@
 ---
 import { DEFAULT_LANG, LANGUAGES } from "@/i18n/languages";
-
 ---
 
 <select
@@ -14,7 +13,7 @@ import { DEFAULT_LANG, LANGUAGES } from "@/i18n/languages";
   {Object.entries(LANGUAGES).map(([key, value]) => (
     <option
       lang={key}
-      value={key}
+      value={key === DEFAULT_LANG ? '' : key}
       selected={key === DEFAULT_LANG}
     >
       {value}
