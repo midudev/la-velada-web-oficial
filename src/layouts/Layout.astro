@@ -1,5 +1,6 @@
 ---
 import "@fontsource-variable/jost"
+import Noise from "@/components/Noise.astro"
 
 interface Props {
   title: string
@@ -53,8 +54,16 @@ const descriptionPage =
 
 <style is:global>
   :root {
-    --background-color: #ddd;
+    --color-primary: 12, 12, 12;
+    --color-secondary: 221, 221, 221;
+    
+    --background-color: --color-primary;
     --background-image: var(--background-color) url("/concrete.png") repeat;
+  }
+
+  .dark {
+    --color-primary: 221, 221, 221;
+    --color-secondary: 12, 12, 12;
   }
 
   html {
