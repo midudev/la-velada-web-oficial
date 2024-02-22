@@ -11,7 +11,7 @@
     aria-label="Síguelo en directo twitch.tv/ibai"
   >
     <svg
-      class="twitch text-primary dark:text-secondary"
+      class="twitch text-primary"
       width="78"
       height="91"
       fill="none"
@@ -68,13 +68,15 @@
   svg {
     animation-timeline: view();
     animation-name: show;
+    animation-timing-function: ease-in;
   }
 
   .twitch-link {
     display: inline-block;
 
-    animation-timeline: view();
+    animation-timeline: view(block);
     animation-name: show;
+    animation-timing-function: ease-in;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -84,8 +86,16 @@
   }
 
   @keyframes show {
-    to {
-      @apply text-twitch z-[999999];
+    from {
+      @apply text-primary;
+    }
+
+    50% {
+      @apply text-twitch;
+    }
+
+    100% {
+      @apply text-twitch;
     }
   }
 </style>
