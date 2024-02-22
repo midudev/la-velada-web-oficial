@@ -1,4 +1,4 @@
-import { DEFAULT_LANG, DefaultLang, Languages } from "./languages"
+import { DEFAULT_LANG, type DefaultLang, type Languages } from "./languages"
 
 type SectionKeys<S extends string, K extends string> =
   K extends `${S}${infer Rest}` ? K : never
