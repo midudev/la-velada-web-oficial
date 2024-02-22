@@ -1,29 +1,30 @@
 ---
-import "@fontsource-variable/jost"
-import Noise from "@/components/Noise.astro"
+import "@fontsource-variable/jost";
+import Noise from "@/components/Noise.astro";
 
 interface Props {
-  title: string
+  title: string;
 }
 
-const { title } = Astro.props
-const descriptionPage = "Evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos"
+const { title } = Astro.props;
+const descriptionPage =
+  "Evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos";
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="description"
-      content={descriptionPage}
-    />
+    <meta name="description" content={descriptionPage} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="https://lavelada.es" />
     <title>{title}</title>
     <meta name="viewport" content="width=device-width" />
-    <meta name="keywords" content="velada, streamers, creadores, Ibai, boxeo, midudev" />
+    <meta
+      name="keywords"
+      content="velada, streamers, creadores, Ibai, boxeo, midudev"
+    />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@infoLaVelada" />
     <meta name="twitter:creator" content="@midudev" />
@@ -41,8 +42,8 @@ const descriptionPage = "Evento de boxeo entre streamers y creadores de contenid
     <meta name="googlebot" content="index, follow" />
   </head>
   <body>
-    <Noise />
-    <div class="max-w-6xl px-2 lg:px-10 pt-20 md:pt-32 mx-auto">
+    <canvas id="smoke-canvas" class="smoke-canvas"></canvas>
+    <div id="content" class="max-w-6xl px-2 lg:px-10 pt-20 md:pt-32 mx-auto">
       <slot />
     </div>
   </body>
@@ -53,4 +54,87 @@ const descriptionPage = "Evento de boxeo entre streamers y creadores de contenid
     font-family: "Jost Variable", system-ui, sans-serif;
     background: #ddd;
   }
+
+  #content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .smoke-canvas {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+  }
 </style>
+
+<script>
+  import * as THREE from "three";
+  var camera, scene, renderer, particles, control, light, clock;
+  const canvas = document.getElementById("smoke-canvas")
+
+  init();
+
+  function init() {
+    clock = new THREE.Clock();
+
+    renderer = new THREE.WebGLRenderer({
+      canvas: canvas
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera(
+      50,
+      window.innerWidth / window.innerHeight,
+      1,
+      100,
+    );
+    camera.position.z = 5;
+    scene.add(camera);
+
+    light = new THREE.DirectionalLight(0xff00ff, 1.0);
+    light.position.set(-1, 0, 1);
+    scene.add(light);
+
+    const tex = new THREE.TextureLoader().load("/smoke.png");
+    const material = new THREE.MeshLambertMaterial({
+      color: 0xffffff,
+      depthWrite: false,
+      map: tex,
+      transparent: true,
+    });
+    const geometry = new THREE.PlaneGeometry(5, 5);
+    particles = [];
+
+    const size = 5;
+
+    for (let i = 0; i < 40; i++) {
+      const particle = new THREE.Mesh(geometry, material);
+      particle.position.set(
+        (Math.random() - 0.5) * size,
+        (Math.random() - 0.5) * size,
+        (Math.random() - 0.5) * size,
+      );
+      particle.rotation.z = Math.random() * Math.PI * 2;
+      scene.add(particle);
+      particles.push(particle);
+    }
+
+    renderer.setAnimationLoop(update);
+  }
+
+  function update() {
+    const dt = clock.getDelta();
+    if (particles) {
+      particles.forEach((particle) => {
+        const z = particle.rotation.z;
+        particle.lookAt(camera.position);
+        particle.rotation.z = z + dt * 0.1;
+      });
+    }
+    renderer.render(scene, camera);
+  }
+</script>
