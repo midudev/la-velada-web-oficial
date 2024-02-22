@@ -12,5 +12,6 @@ export default {
 			}
 		},
 	},
+	darkMode: 'class',
 	plugins: [animations],
 }

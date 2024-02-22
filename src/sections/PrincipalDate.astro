@@ -1,5 +1,5 @@
 ---
-import CalendarScriptAndStyles from '../components/CalendarScriptAndStyles.astro'
+import CalendarScriptAndStyles from "../components/CalendarScriptAndStyles.astro"
 ---
 
 <CalendarScriptAndStyles />
@@ -16,41 +16,43 @@ import CalendarScriptAndStyles from '../components/CalendarScriptAndStyles.astro
 
   <h2 class="uppercase text-2xl font-medium flex flex-col max-w-sm mt-6">
     <span>Evento de Presentación</span>
-    <a href="https://maps.app.goo.gl/RFzHUVDhRqdQaTAo8" 
-      class="hover:scale-110 hover:opacity-60 transition inline-block" 
-      target="_blank" 
-      rel="noopener">
+    <a
+      href="https://maps.app.goo.gl/RFzHUVDhRqdQaTAo8"
+      class="hover:scale-110 hover:opacity-60 transition inline-block"
+      target="_blank"
+      rel="noopener"
+    >
       Teatro Victoria (Barcelona)
     </a>
   </h2>
 
   <div class="flex flex-col md:flex-row items-center mt-6 gap-6">
-		<a
-			class={`
+    <a
+      class={`
 				border-primary border-2 font-medium uppercase text-lg
 				px-4 py-1
-				hover:bg-slate-300 hover:scale-110
+				hover:bg-primary hover:text-secondary hover:scale-110
 				transition inline-block
 			`}
-			href="https://www.teatrevictoria.com/es/cartelera/c/190_la-velada-del-ano-4.html"
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			Entradas agotadas
-		</a>
+      href="https://www.teatrevictoria.com/es/cartelera/c/190_la-velada-del-ano-4.html"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Entradas agotadas
+    </a>
 
-		<button
-			id="add-to-calendar"
-			class={`
+    <button
+      id="add-to-calendar"
+      class={`
 				border-primary border-2 font-medium uppercase text-lg
 				px-4 py-1
-				hover:bg-slate-300 hover:scale-110
+				hover:bg-primary hover:text-secondary hover:scale-110
 				transition inline-block
 			`}
-		>
-			Agregar al calendario
-		</button>
-	</div>
+    >
+      Agregar al calendario
+    </button>
+  </div>
 </section>
 
 <script>
@@ -61,11 +63,11 @@ import CalendarScriptAndStyles from '../components/CalendarScriptAndStyles.astro
   const USER_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone
   const date = new Date(EVENT_TIMESTAMP)
 
-	const eventHasPassed = EVENT_TIMESTAMP < Date.now()
+  const eventHasPassed = EVENT_TIMESTAMP < Date.now()
 
-	if (eventHasPassed) {
-		document.getElementById("add-to-calendar")?.remove()
-	}
+  if (eventHasPassed) {
+    document.getElementById("add-to-calendar")?.remove()
+  }
 
   const timeFormatOptions: Intl.DateTimeFormatOptions = {
     hour: "numeric",
