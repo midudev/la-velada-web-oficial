@@ -58,7 +58,7 @@
       class="order-3 md:order-none text-xl py-10 sm:py-12 md:py-12 lg:py-20 px-10 border-b-2 md:border-y-2 border-primary flex justify-center"
     >
       <h3 class="text-balance">
-        Con la presencia de los boxeadores y boxeadoras
+        Con la presencia de los boxeadores y las boxeadoras
       </h3>
     </article>
   </div>
@@ -68,13 +68,15 @@
   svg {
     animation-timeline: view();
     animation-name: show;
+    animation-timing-function: ease-in;
   }
 
   .twitch-link {
     display: inline-block;
 
-    animation-timeline: view();
+    animation-timeline: view(block);
     animation-name: show;
+    animation-timing-function: ease-in;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -84,8 +86,16 @@
   }
 
   @keyframes show {
-    to {
-      @apply text-twitch z-[999999];
+    from {
+      @apply text-primary;
+    }
+
+    50% {
+      @apply text-twitch;
+    }
+
+    100% {
+      @apply text-twitch;
     }
   }
 </style>
