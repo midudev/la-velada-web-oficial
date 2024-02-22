@@ -1,20 +1,20 @@
 ---
-import CalendarScriptAndStyles from "../components/CalendarScriptAndStyles.astro"
+import CalendarButton from "../components/CalendarButton.astro"
 ---
 
-<CalendarScriptAndStyles />
-
 <section
-  class="animate-fade-in animate-delay-500 mt-32 mx-auto flex flex-col place-items-center text-center text-primary"
+  class="animate-fade-in animate-delay-500 mt-16 md:mt-32 mx-auto flex flex-col place-items-center text-center text-primary"
 >
-  <div class="uppercase text-5xl font-semibold">
+  <div class="uppercase text-3xl md:text-5xl font-semibold">
     <time class="date"> 4 de marzo</time>
     <span aria-hidden="true" class="hidden md:inline mx-1">·</span>
     <br aria-hidden="true" class="block md:hidden" />
     <time class="time"></time>
   </div>
 
-  <h2 class="uppercase text-2xl font-medium flex flex-col max-w-sm mt-6">
+  <h2
+    class="uppercase text-lg lg:text-2xl font-medium flex flex-col max-w-sm mt-6"
+  >
     <span>Evento de Presentación</span>
     <a
       href="https://maps.app.goo.gl/RFzHUVDhRqdQaTAo8"
@@ -41,17 +41,7 @@ import CalendarScriptAndStyles from "../components/CalendarScriptAndStyles.astro
       Entradas agotadas
     </a>
 
-    <button
-      id="add-to-calendar"
-      class={`
-				border-primary border-2 font-medium uppercase text-lg
-				px-4 py-1
-				hover:bg-primary hover:text-secondary hover:scale-110
-				transition inline-block
-			`}
-    >
-      Agregar al calendario
-    </button>
+    <CalendarButton />
   </div>
 </section>
 
