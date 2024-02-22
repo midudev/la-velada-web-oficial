@@ -1,5 +1,7 @@
 ---
 import CalendarScriptAndStyles from "../components/CalendarScriptAndStyles.astro"
+import CalendarButton from "../components/CalendarButton.astro"
+      
 
 import { LANDING_PAGE } from "@/i18n/landing-page";
 import { useTranslations } from "@/i18n/useTranslations";
@@ -7,8 +9,6 @@ import { useTranslations } from "@/i18n/useTranslations";
 const { lang } = Astro.props
 const t = useTranslations(LANDING_PAGE, lang, 'principal_date')
 ---
-
-<CalendarScriptAndStyles />
 
 <section
   class="animate-fade-in animate-delay-500 mt-16 md:mt-32 mx-auto flex flex-col place-items-center text-center text-primary"
@@ -49,17 +49,9 @@ const t = useTranslations(LANDING_PAGE, lang, 'principal_date')
       {t('principal_date.available_tickets')}
     </a>
 
-    <button
-      id="add-to-calendar"
-      class={`
-				border-primary border-2 font-medium uppercase text-lg
-				px-4 py-1
-				hover:bg-primary hover:text-secondary hover:scale-110
-				transition inline-block
-			`}
-    >
-      {t('principal_date.add_to_calendar')}
-    </button>
+
+    <CalendarButton />
+
   </div>
 </section>
 
