@@ -8,7 +8,7 @@ export default {
 			colors: {
 				'primary': 'var(--color-primary)',
 				'secondary': 'var(--color-secondary)',
-				'twitch': '#6441a4'
+				'twitch': 'var(--color-twitch)'
 			}
 		},
 	},
