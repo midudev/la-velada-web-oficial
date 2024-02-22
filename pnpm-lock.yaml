@@ -7,10 +7,10 @@ settings:
 dependencies:
   '@astrojs/check':
     specifier: 0.5.5
-    version: 0.5.5(typescript@5.3.3)
+    version: 0.5.5(prettier-plugin-astro@0.13.0)(prettier@3.2.5)(typescript@5.3.3)
   '@astrojs/tailwind':
     specifier: 5.1.0
-    version: 5.1.0(astro@4.4.1)(tailwindcss@3.4.1)
+    version: 5.1.0(astro@4.4.2)(tailwindcss@3.4.1)
   '@fontsource-variable/jost':
     specifier: 5.0.17
     version: 5.0.17
@@ -18,11 +18,22 @@ dependencies:
     specifier: 0.0.7
     version: 0.0.7(tailwindcss@3.4.1)
   astro:
-    specifier: 4.4.1
-    version: 4.4.1(typescript@5.3.3)
+    specifier: 4.4.2
+    version: 4.4.2(typescript@5.3.3)
   tailwindcss:
     specifier: 3.4.1
     version: 3.4.1
+
+devDependencies:
+  prettier:
+    specifier: 3.2.5
+    version: 3.2.5
+  prettier-plugin-astro:
+    specifier: 0.13.0
+    version: 0.13.0
+  prettier-plugin-tailwindcss:
+    specifier: 0.5.11
+    version: 0.5.11(prettier-plugin-astro@0.13.0)(prettier@3.2.5)
   typescript:
     specifier: 5.3.3
     version: 5.3.3
@@ -42,13 +53,13 @@ packages:
       '@jridgewell/trace-mapping': 0.3.22
     dev: false
 
-  /@astrojs/check@0.5.5(typescript@5.3.3):
+  /@astrojs/check@0.5.5(prettier-plugin-astro@0.13.0)(prettier@3.2.5)(typescript@5.3.3):
     resolution: {integrity: sha512-05LjyUB14Cv2mkLNqY4r2igI2eu0bq/HcKCfFNIoBPLyNW7VUDr9tciD9VJXXT3s0e6JHneIs6bQW5ipjmaRcw==}
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
     dependencies:
-      '@astrojs/language-server': 2.7.5(typescript@5.3.3)
+      '@astrojs/language-server': 2.7.5(prettier-plugin-astro@0.13.0)(prettier@3.2.5)(typescript@5.3.3)
       chokidar: 3.6.0
       fast-glob: 3.3.2
       kleur: 4.1.5
@@ -59,6 +70,9 @@ packages:
       - prettier-plugin-astro
     dev: false
 
+  /@astrojs/compiler@1.8.2:
+    resolution: {integrity: sha512-o/ObKgtMzl8SlpIdzaxFnt7SATKPxu4oIP/1NL+HDJRzxfJcAkOTAb/ZKMRyULbz4q+1t2/DAebs2Z1QairkZw==}
+
   /@astrojs/compiler@2.5.3:
     resolution: {integrity: sha512-jzj01BRv/fmo+9Mr2FhocywGzEYiyiP2GVHje1ziGNU6c97kwhYGsnvwMkHrncAy9T9Vi54cjaMK7UE4ClX4vA==}
     dev: false
@@ -67,7 +81,7 @@ packages:
     resolution: {integrity: sha512-06DD2ZnItMwUnH81LBLco3tWjcZ1lGU9rLCCBaeUCGYe9cI0wKyY2W3kDyoW1I6GmcWgt1fu+D1CTvz+FIKf8A==}
     dev: false
 
-  /@astrojs/language-server@2.7.5(typescript@5.3.3):
+  /@astrojs/language-server@2.7.5(prettier-plugin-astro@0.13.0)(prettier@3.2.5)(typescript@5.3.3):
     resolution: {integrity: sha512-iMfZ3UaqTgIL+z/eUDOppRa1bGUAteWRihbWq5mGAgvr/hu384ZXUKJcqV3BBux0MBsRXwjxzrC2dJu9IpAaoA==}
     hasBin: true
     peerDependencies:
@@ -87,10 +101,12 @@ packages:
       '@volar/language-service': 2.0.4
       '@volar/typescript': 2.0.4
       fast-glob: 3.3.2
+      prettier: 3.2.5
+      prettier-plugin-astro: 0.13.0
       volar-service-css: 0.0.30(@volar/language-service@2.0.4)
       volar-service-emmet: 0.0.30(@volar/language-service@2.0.4)
       volar-service-html: 0.0.30(@volar/language-service@2.0.4)
-      volar-service-prettier: 0.0.30(@volar/language-service@2.0.4)
+      volar-service-prettier: 0.0.30(@volar/language-service@2.0.4)(prettier@3.2.5)
       volar-service-typescript: 0.0.30(@volar/language-service@2.0.4)(@volar/typescript@2.0.4)
       volar-service-typescript-twoslash-queries: 0.0.30(@volar/language-service@2.0.4)
       vscode-html-languageservice: 5.1.2
@@ -127,13 +143,13 @@ packages:
       prismjs: 1.29.0
     dev: false
 
-  /@astrojs/tailwind@5.1.0(astro@4.4.1)(tailwindcss@3.4.1):
+  /@astrojs/tailwind@5.1.0(astro@4.4.2)(tailwindcss@3.4.1):
     resolution: {integrity: sha512-BJoCDKuWhU9FT2qYg+fr6Nfb3qP4ShtyjXGHKA/4mHN94z7BGcmauQK23iy+YH5qWvTnhqkd6mQPQ1yTZTe9Ig==}
     peerDependencies:
       astro: ^3.0.0 || ^4.0.0
       tailwindcss: ^3.0.24
     dependencies:
-      astro: 4.4.1(typescript@5.3.3)
+      astro: 4.4.2(typescript@5.3.3)
       autoprefixer: 10.4.17(postcss@8.4.35)
       postcss: 8.4.35
       postcss-load-config: 4.0.2(postcss@8.4.35)
@@ -1029,8 +1045,8 @@ packages:
     resolution: {integrity: sha512-I1jXZMjAgCMmxT4qxXfPXa6SthSoE8h6gkSI9BGGNv8mP8G/v0blc+qFnZu6K42vTOiuME596QaLO0TP3Lk0xg==}
     dev: false
 
-  /astro@4.4.1(typescript@5.3.3):
-    resolution: {integrity: sha512-nJLgNg8UXKBJYXjWtekgv1TYZES++LAdShgyKL8L5yJMeiqlDSO+/Laq5VfRKoL9hzBdyolJMB0WDE/+bRZytg==}
+  /astro@4.4.2(typescript@5.3.3):
+    resolution: {integrity: sha512-r1djG61ABvZ9n73vaTW6nTKnMvWY1LQhPpBtzoA2OI2RAk/ptzsqK9ozkAG1qXO2bW3NLJi6pfMxxpngNAALyQ==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
@@ -3016,6 +3032,72 @@ packages:
       which-pm: 2.0.0
     dev: false
 
+  /prettier-plugin-astro@0.13.0:
+    resolution: {integrity: sha512-5HrJNnPmZqTUNoA97zn4gNQv9BgVhv+et03314WpQ9H9N8m2L9OSV798olwmG2YLXPl1iSstlJCR1zB3x5xG4g==}
+    engines: {node: ^14.15.0 || >=16.0.0}
+    dependencies:
+      '@astrojs/compiler': 1.8.2
+      prettier: 3.2.5
+      sass-formatter: 0.7.9
+
+  /prettier-plugin-tailwindcss@0.5.11(prettier-plugin-astro@0.13.0)(prettier@3.2.5):
+    resolution: {integrity: sha512-AvI/DNyMctyyxGOjyePgi/gqj5hJYClZ1avtQvLlqMT3uDZkRbi4HhGUpok3DRzv9z7Lti85Kdj3s3/1CeNI0w==}
+    engines: {node: '>=14.21.3'}
+    peerDependencies:
+      '@ianvs/prettier-plugin-sort-imports': '*'
+      '@prettier/plugin-pug': '*'
+      '@shopify/prettier-plugin-liquid': '*'
+      '@trivago/prettier-plugin-sort-imports': '*'
+      prettier: ^3.0
+      prettier-plugin-astro: '*'
+      prettier-plugin-css-order: '*'
+      prettier-plugin-import-sort: '*'
+      prettier-plugin-jsdoc: '*'
+      prettier-plugin-marko: '*'
+      prettier-plugin-organize-attributes: '*'
+      prettier-plugin-organize-imports: '*'
+      prettier-plugin-style-order: '*'
+      prettier-plugin-svelte: '*'
+      prettier-plugin-twig-melody: '*'
+    peerDependenciesMeta:
+      '@ianvs/prettier-plugin-sort-imports':
+        optional: true
+      '@prettier/plugin-pug':
+        optional: true
+      '@shopify/prettier-plugin-liquid':
+        optional: true
+      '@trivago/prettier-plugin-sort-imports':
+        optional: true
+      prettier-plugin-astro:
+        optional: true
+      prettier-plugin-css-order:
+        optional: true
+      prettier-plugin-import-sort:
+        optional: true
+      prettier-plugin-jsdoc:
+        optional: true
+      prettier-plugin-marko:
+        optional: true
+      prettier-plugin-organize-attributes:
+        optional: true
+      prettier-plugin-organize-imports:
+        optional: true
+      prettier-plugin-style-order:
+        optional: true
+      prettier-plugin-svelte:
+        optional: true
+      prettier-plugin-twig-melody:
+        optional: true
+    dependencies:
+      prettier: 3.2.5
+      prettier-plugin-astro: 0.13.0
+    dev: true
+
+  /prettier@3.2.5:
+    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
+    engines: {node: '>=14'}
+    hasBin: true
+
   /prismjs@1.29.0:
     resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
     engines: {node: '>=6'}
@@ -3265,9 +3347,17 @@ packages:
       queue-microtask: 1.2.3
     dev: false
 
+  /s.color@0.0.15:
+    resolution: {integrity: sha512-AUNrbEUHeKY8XsYr/DYpl+qk5+aM+DChopnWOPEzn8YKzOhv4l2zH6LzZms3tOZP3wwdOyc0RmTciyi46HLIuA==}
+
   /safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
     dev: false
+
+  /sass-formatter@0.7.9:
+    resolution: {integrity: sha512-CWZ8XiSim+fJVG0cFLStwDvft1VI7uvXdCNJYXhDvowiv+DsbD1nXLiQ4zrE5UBvj5DWZJ93cwN0NX5PMsr1Pw==}
+    dependencies:
+      suf-log: 2.5.3
 
   /section-matter@1.0.0:
     resolution: {integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==}
@@ -3495,6 +3585,11 @@ packages:
       ts-interface-checker: 0.1.13
     dev: false
 
+  /suf-log@2.5.3:
+    resolution: {integrity: sha512-KvC8OPjzdNOe+xQ4XWJV2whQA0aM1kGVczMQ8+dStAO6KfEB140JEVQ9dE76ONZ0/Ylf67ni4tILPJB41U0eow==}
+    dependencies:
+      s.color: 0.0.15
+
   /supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
     engines: {node: '>=4'}
@@ -3661,7 +3756,6 @@ packages:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: false
 
   /unherit@3.0.1:
     resolution: {integrity: sha512-akOOQ/Yln8a2sgcLj4U0Jmx0R5jpIg2IUyRrWOzmEbjBtGzBdHtSeFKgoEcoH4KYIG/Pb8GQ/BwtYm0GCq1Sqg==}
@@ -3902,7 +3996,7 @@ packages:
       vscode-uri: 3.0.8
     dev: false
 
-  /volar-service-prettier@0.0.30(@volar/language-service@2.0.4):
+  /volar-service-prettier@0.0.30(@volar/language-service@2.0.4)(prettier@3.2.5):
     resolution: {integrity: sha512-Qdc5Zc0y4hJmJbpIQ52cSDjs0uvVug/e2nuL/XZWPJM6Cr5/3RjjoRVKtDQbKItFYlGk+JH+LSXvwQeD5TXZqg==}
     peerDependencies:
       '@volar/language-service': ~2.0.1
@@ -3914,6 +4008,7 @@ packages:
         optional: true
     dependencies:
       '@volar/language-service': 2.0.4
+      prettier: 3.2.5
       vscode-uri: 3.0.8
     dev: false
 
