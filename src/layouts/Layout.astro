@@ -1,13 +1,13 @@
 ---
-import "@fontsource-variable/jost"
+import "@fontsource-variable/jost";
 
 interface Props {
-  title: string
+  title: string;
 }
 
-const { title } = Astro.props
+const { title } = Astro.props;
 const descriptionPage =
-  "Evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos"
+  "Evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos";
 ---
 
 <!doctype html>
@@ -69,76 +69,83 @@ const descriptionPage =
 </style>
 
 <script>
-  import * as THREE from "three"
+  import * as THREE from "three";
 
-  let camera, scene, renderer, particles, control, light, clock
-  const canvas = document.getElementById("smoke-canvas")
+  let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    particles: THREE.Mesh[],
+    control,
+    light: THREE.DirectionalLight,
+    clock: THREE.Clock;
+  const canvas = document.getElementById("smoke-canvas");
 
-  init()
+  init();
 
   function init() {
-    clock = new THREE.Clock()
+    clock = new THREE.Clock();
 
     renderer = new THREE.WebGLRenderer({
-      canvas: canvas,
-    })
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    document.body.appendChild(renderer.domElement)
+      canvas: canvas as HTMLElement,
+    });
 
-    scene = new THREE.Scene()
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(
       50,
       window.innerWidth / window.innerHeight,
       1,
       200,
-    )
-    camera.position.z = 5
-    scene.add(camera)
+    );
+    camera.position.z = 5;
+    scene.add(camera);
 
-    light = new THREE.DirectionalLight(0x333333, 2)
-    light.position.set(-1, 0, 1)
-    scene.add(light)
+    light = new THREE.DirectionalLight(0x333333, 2);
+    light.position.set(-1, 0, 1);
+    scene.add(light);
 
-    const ambientLight = new THREE.AmbientLight(0xdddddd, 4)
-    scene.add(ambientLight)
+    const ambientLight = new THREE.AmbientLight(0xdddddd, 4);
+    scene.add(ambientLight);
 
-    const tex = new THREE.TextureLoader().load("/smoke.png")
+    const tex = new THREE.TextureLoader().load("/smoke.png");
     const material = new THREE.MeshLambertMaterial({
       color: 0xffffff,
       depthWrite: false,
       map: tex,
       transparent: true,
-    })
-    const geometry = new THREE.PlaneGeometry(5, 5)
-    particles = []
+    });
+    const geometry = new THREE.PlaneGeometry(5, 5);
+    particles = [];
 
-    const size = 7
+    const size = 7;
 
     for (let i = 0; i < 40; i++) {
-      const particle = new THREE.Mesh(geometry, material)
+      const particle = new THREE.Mesh(geometry, material);
       particle.position.set(
         (Math.random() - 0.5) * size,
         (Math.random() - 0.5) * size,
         (Math.random() - 0.5) * size,
-      )
-      particle.rotation.z = Math.random() * Math.PI * 2
-      scene.add(particle)
-      particles.push(particle)
+      );
+      particle.rotation.z = Math.random() * Math.PI * 2;
+      scene.add(particle);
+      particles.push(particle);
     }
 
-    renderer.setAnimationLoop(update)
+    renderer.setAnimationLoop(update);
   }
 
   function update() {
-    const dt = clock.getDelta()
+    const dt = clock.getDelta();
     if (particles) {
       particles.forEach((particle) => {
-        const z = particle.rotation.z
-        particle.lookAt(camera.position)
-        particle.rotation.z = z + dt * 0.1
-      })
+        const z = particle.rotation.z;
+        particle.lookAt(camera.position);
+        particle.rotation.z = z + dt * 0.1;
+      });
     }
-    renderer.render(scene, camera)
+    renderer.render(scene, camera);
   }
 </script>
