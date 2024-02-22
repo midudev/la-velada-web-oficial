@@ -1,7 +1,18 @@
-<div class="mt-32 flex justify-center items-center">
-  <iframe
-    src="https://player.twitch.tv/?channel=ibai&parent=localhost"
-    width="1280"
-    height="720"
-    allowfullscreen></iframe>
-</div>
+---
+import { EVENT_TIMESTAMP } from "@/consts/event-date"
+
+const NOW = new Date().getTime()
+---
+
+{
+  NOW >= EVENT_TIMESTAMP ? (
+    <div class="mt-32 flex justify-center items-center">
+      <iframe
+        src="https://player.twitch.tv/?channel=ibai&parent=localhost"
+        width="1280"
+        height="720"
+        allowfullscreen
+      ></iframe>
+    </div>
+  ) : null
+}
