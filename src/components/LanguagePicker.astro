@@ -1,0 +1,33 @@
+---
+import { DEFAULT_LANG, LANGUAGES } from "@/i18n/languages";
+
+const { lang } = Astro.props
+---
+
+<select
+  name='languages'
+  id="lang"
+  aria-label="Selecciona el lenguaje"
+  class={`
+  border-primary border-2 font-medium uppercase text-lg
+  px-4 py-1 bg-[#ddd] hover:bg-slate-300 transition outline-none
+`}>
+  {Object.entries(LANGUAGES).map(([key, value]) => (
+    <option
+      lang={key}
+      value={key === DEFAULT_LANG ? '' : key}
+      selected={key === lang}
+    >
+      {value}
+    </option>
+  ))}
+</select>
+
+<script>
+  const $languageSelect = document.querySelector('[name="languages"]') as HTMLElement
+  $languageSelect.addEventListener('change', (e: any) => {
+    const langToNavigate = e.currentTarget.value
+
+    document.location = `${window.location.origin}/${langToNavigate}`
+  })
+</script>
