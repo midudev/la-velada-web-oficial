@@ -1,4 +1,4 @@
-<h3 align="center">Bienvenidos a la...</h3>
+<h1 align="center">Bienvenidos a la...</h1>
 
 ![Logo - La Velada IV](https://github.com/midudev/la-velada-web-oficial/assets/1561955/4f76305d-9ed2-40b8-b189-355235f5ad6e)
 
