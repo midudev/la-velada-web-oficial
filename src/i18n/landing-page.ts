@@ -19,6 +19,7 @@ export const LANDING_PAGE = {
     'info.presentation_interview_and_face_to_face': 'Presentación, Pesaje, Entrevista y Cara a Cara',
     'info.with_presence_of_boxers': 'Con la presencia de los boxeadores y boxeadoras',
 
+    'countdown.are_still_missing': 'Para el Evento de Presentación faltan...',
     'countdown.days': 'Días',
     'countdown.hours': 'Horas',
     'countdown.minutes': 'Minutos',
@@ -49,6 +50,7 @@ export const LANDING_PAGE = {
     'info.presentation_interview_and_face_to_face': 'Presentation, Weigh-In, Interview and Face-to-Face',
     'info.with_presence_of_boxers': 'With the presence of both male and female boxers',
 
+    'countdown.are_still_missing': 'For the Presentation Event are missing....',
     'countdown.days': 'Days',
     'countdown.hours': 'Hours',
     'countdown.minutes': 'Minutes',
