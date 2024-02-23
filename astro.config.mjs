@@ -10,7 +10,7 @@ export default defineConfig({
   }),
   vite: {
     build: {
-      assetsInlineLimit: 30000,
+      cssMinify: "lightningcss",
     },
   },
   output: "hybrid",
