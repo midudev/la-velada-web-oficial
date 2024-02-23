@@ -5,14 +5,14 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 ---
 
 <section class="my-0 lg:my-32 flex flex-col gap-y-10 place-items-center">
-  
+
   <LaVeladaLogo class="text-primary" />
   <p
     class="uppercase text-lg font-medium text-primary opacity-80 text-center text-balance"
   >
     Para el Evento de Presentación faltan
   </p>
-  
+
   <div
     class="flex flex-row gap-x-1 text-primary uppercase font-semibold"
     data-date={EVENT_TIMESTAMP}
@@ -43,10 +43,10 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
     const $countdown = document.querySelector("[data-date]")
     if (!$countdown) return
 
-    const $days = $countdown.querySelector("[data-days]")
-    const $hours = $countdown.querySelector("[data-hours]")
-    const $minutes = $countdown.querySelector("[data-minutes]")
-    const $seconds = $countdown.querySelector("[data-seconds]")
+    const $days = $countdown.querySelector("[data-days]") as HTMLSpanElement
+  	const $hours = $countdown.querySelector("[data-hours]") as HTMLSpanElement
+    const $minutes = $countdown.querySelector("[data-minutes]") as HTMLSpanElement
+    const $seconds = $countdown.querySelector("[data-seconds]") as HTMLSpanElement
 
     const timestamp = $countdown.getAttribute("data-date")
     if (!timestamp) return
@@ -61,21 +61,10 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
       const now = Date.now()
       const diff = date - now
 
-      if ($days instanceof HTMLElement) {
-        $days.innerText = formatTime(diff / DAY)
-      }
-
-      if ($hours instanceof HTMLElement) {
-        $hours.innerText = formatTime((diff % DAY) / HOUR)
-      }
-
-      if ($minutes instanceof HTMLElement) {
-        $minutes.innerText = formatTime((diff % HOUR) / MINUTE)
-      }
-
-      if ($seconds instanceof HTMLElement) {
-        $seconds.innerText = formatTime((diff % MINUTE) / SECOND)
-      }
+			$days.innerText = formatTime(diff / DAY)
+			$hours.innerText = formatTime((diff % DAY) / HOUR)
+			$minutes.innerText = formatTime((diff % HOUR) / MINUTE)
+			$seconds.innerText = formatTime((diff % MINUTE) / SECOND)
     }
 
     setInterval(updateCountdown, SECOND)
