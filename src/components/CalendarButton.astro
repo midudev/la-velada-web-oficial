@@ -25,6 +25,8 @@
     iCalFileName: "Reminder-Event",
   }
 
+  let status
+
   function loadStyle(src) {
     return new Promise(function (resolve, reject) {
       let link = document.createElement("link")
@@ -39,12 +41,19 @@
   }
 
   const button = document.querySelector("#add-to-calendar")
-  button?.addEventListener("click", () => {
-    Promise.all([
-      import("/js/add-to-calendar.js"),
-      loadStyle("/css/add-to-calendar.css"),
-    ]).then(() => {
-      atcb_action(config, button)
-    })
+  button?.addEventListener("click", async () => {
+    if(status === "loading") return 
+	if(!status) {
+	  const text = button.innerHTML
+	  button.innerHTML = "Cargando..."
+	  status = "loading"
+      await Promise.all([
+		import("/js/add-to-calendar.js"),
+		loadStyle("/css/add-to-calendar.css"),
+	  ])
+	  status = "loaded"
+	  button.innerHTML = text
+	}
+	atcb_action(config, button)
   })
 </script>
