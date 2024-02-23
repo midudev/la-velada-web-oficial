@@ -70,7 +70,7 @@ export function initSmokeBackground(isDark: boolean) {
   scene.add(directionalLight1);
 
 
-  const tex = new THREE.TextureLoader().load("/smoke2.jpg");
+  const tex = new THREE.TextureLoader().load("/smoke.png");
   const material = new THREE.MeshLambertMaterial({
     color: CONFIG.material.color,
     depthWrite: false,
