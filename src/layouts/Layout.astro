@@ -44,14 +44,38 @@ const descriptionPage =
     <meta name="googlebot" content="index, follow" />
   </head>
   <body>
-    <canvas id="smoke-canvas" class="smoke-canvas"></canvas>
+    <div class="top-0 fixed">
+      <canvas id="smoke-canvas" class="smoke-canvas"> </canvas>
+      <div class="overlay"></div>
+    </div>
     <div id="content" class="max-w-6xl px-2 lg:px-10 pt-20 md:pt-32 mx-auto">
       <slot />
     </div>
   </body>
 </html>
 
-<script src="../lib/smoke.ts"></script>
+<script is:inline type="module">
+  import { initSmokeBackground } from "../../src/lib/smoke";
+
+  let isDark = localStorage.getItem("theme") === "dark";
+
+  initSmokeBackground(isDark);
+
+  const html = document.documentElement;
+
+  const observe = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      isDark = localStorage.getItem("theme") === "dark";
+      initSmokeBackground(!!isDark);
+      console.log(isDark);
+    });
+  });
+
+  observe.observe(html, {
+    attributes: true,
+  });
+</script>
+
 <script is:inline type="module">
   // detect support scroll timeline
   if (!("scrollTimeline" in window)) {
@@ -79,7 +103,8 @@ const descriptionPage =
 
   html {
     font-family: "Jost Variable", system-ui, sans-serif;
-    background: var(--background-image);
+    /* background: var(--background-image); */
+    background-color: var(--color-secondary);
     scroll-behavior: smooth;
     perspective: 2000px;
     overflow-x: hidden;
@@ -124,7 +149,26 @@ const descriptionPage =
   }
 
   .smoke-canvas {
-    position: fixed;
+    position: relative;
     top: 0;
+    bottom: 0;
+    height: 100vh;
+  }
+
+  .overlay {
+    position: absolute;
+    background: linear-gradient(
+      to bottom,
+      var(--color-secondary) 100%,
+      transparent 0%
+    );
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      var(--color-secondary) 100%
+    );
+    width: 100%;
+    bottom: 0;
+    height: 50%;
   }
 </style>
