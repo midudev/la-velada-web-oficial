@@ -4,7 +4,7 @@ import Date from "@/components/Date.astro"
 import { EVENT_TIMESTAMP } from "@/consts/event-date"
 ---
 
-<section class="my-0 lg:my-32 flex flex-col gap-y-10 place-items-center">
+<section class="my-0 lg:my-32 flex flex-col gap-y-10 place-items-center" id="counterSection">
   
   <LaVeladaLogo class="text-primary" />
   <p
@@ -34,6 +34,10 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 </section>
 
 <script>
+  import { setupIntersectionObserver } from "@/utils/intersection-observer";
+
+  setupIntersectionObserver("counterSection", "animate-fade-in-up");
+
   const SECOND = 1000
   const MINUTE = SECOND * 60
   const HOUR = MINUTE * 60
