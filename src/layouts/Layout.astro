@@ -3,26 +3,25 @@ import "@fontsource-variable/jost"
 
 interface Props {
   title: string
+  description: string
 }
 
-const { title } = Astro.props
-const descriptionPage =
-  "Evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos"
+const { title, description } = Astro.props
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
     <title>{title}</title>
-  
+
     <meta charset="UTF-8" />
-    <meta name="description" content={descriptionPage} />
+    <meta name="description" content={description} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="https://lavelada.es" />
     <meta name="viewport" content="width=device-width" />
-    
-    <meta
+
+	<meta
       name="keywords"
       content="velada, streamers, creadores, Ibai, boxeo, midudev"
     />
@@ -31,12 +30,12 @@ const descriptionPage =
     <meta name="twitter:site" content="@infoLaVelada" />
     <meta name="twitter:creator" content="@ibai" />
     <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={descriptionPage} />
+    <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content="/og.jpg" />
 
     <meta name="og:image" content="/og.jpg" />
     <meta name="og:title" content={title} />
-    <meta name="og:description" content={descriptionPage} />
+    <meta name="og:description" content={description} />
     <meta name="og:url" content="https://lavelada.es" />
     <meta name="og:site_name" content="La Velada 4" />
     <meta name="og:type" content="website" />
