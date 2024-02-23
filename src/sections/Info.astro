@@ -32,19 +32,19 @@
     class="grid uppercase text-center gap-x-10 [grid-template-columns:1fr] md:grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))] lg:[grid-template-columns:1fr_1.5fr_1fr]"
   >
     <article
-      class="order-2 md:flex-grow md:order-none flex justify-center text-xl text-center py-10 md:py-12 lg:py-20 px-6 border-y-2 border-primary"
+      class="order-2 md:flex-grow md:order-none flex justify-center items-center text-xl text-center py-10 md:py-12 lg:py-20 md:px-0 px-10 border-y-2 border-primary"
     >
-      <h3 class="text-balance flex items-center">
+      <h3 class="text-balance md:max-w-[250px]">
         Presentación, Pesaje, Entrevista y Cara a Cara
       </h3>
     </article>
 
     <article
-      class="order-1 md:flex-1 md:order-none flex justify-center text-4xl py-10 md:py-12 lg:py-20 px-10 lg:px-0 border-t-2 md:border-y-2 border-primary"
+      class="order-1 md:flex-1 md:order-none flex justify-center items-center text-3xl lg:text-4xl py-10 md:py-12 lg:py-20 px-10 md:px-0 lg:px-0 border-t-2 md:border-y-2 border-primary"
     >
-      <h3 class="flex items-center">
+      <h3 class="md:max-w-[250px]">
         <a
-          class="hover:text-twitch transition hover:scale-110 inline-block"
+          class="hover:text-twitch transition-transform hover:scale-110 inline-block"
           href="https://twitch.tv/ibai"
           target="_blank"
           rel="nofollow noopener"
@@ -58,9 +58,9 @@
     </article>
 
     <article
-      class="order-3 md:order-none text-xl py-10 sm:py-12 md:py-12 lg:py-20 px-6 border-b-2 md:border-y-2 border-primary flex justify-center"
+      class="order-3 md:order-none text-xl py-10 sm:py-12 md:py-12 lg:py-20 px-10 md:px-0 border-b-2 md:border-y-2 border-primary flex justify-center items-center"
     >
-      <h3 class="text-balance flex items-center">
+      <h3 class="text-balance md:max-w-[250px]">
         Con la presencia de los boxeadores y las boxeadoras
       </h3>
     </article>
@@ -80,9 +80,7 @@
       animation-timing-function: ease-in;
     }
 
-    .twitch-link {
-      display: inline-block;
-
+    :not(a:hover) > .twitch-link {
       animation-timeline: view(block);
       animation-name: show;
       animation-timing-function: ease-in;

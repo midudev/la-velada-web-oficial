@@ -45,12 +45,13 @@ const descriptionPage =
     <meta name="googlebot" content="index, follow" />
   </head>
   <body>
-    <div class="relative container mx-auto w-fit -z-10">
+    <div class="relative container mx-auto w-full -z-10 overflow-x-clip">
       <img
         aria-hidden="true"
         src="/lights.svg"
-        class="absolute scale-150 left-12 lg:scale-100 lg:left-0 top-0 opacity-0 transform-gpu w-screen brightness-0 dark:brightness-200"
+        class="absolute md:scale-125 lg:scale-100 lg:left-0 top-0 opacity-0 transform-gpu w-screen brightness-0 dark:brightness-200"
         onload="this.classList.add('animate-fade-in', 'animate-duration-500')"
+        alt="Focos de luz"
       />
     </div>
     <div class="max-w-6xl px-2 lg:px-10 pt-16 md:pt-20 mx-auto">
@@ -81,7 +82,6 @@ const descriptionPage =
     font-family: "Jost Variable", system-ui, sans-serif;
     background: var(--background-image);
     scroll-behavior: smooth;
-    perspective: 2000px;
     overflow-x: hidden;
     overscroll-behavior: none;
   }
