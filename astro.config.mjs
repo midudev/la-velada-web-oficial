@@ -8,5 +8,10 @@ export default defineConfig({
   adapter: vercel({
     webAnalytics: { enabled: true },
   }),
+  vite: {
+    build: {
+      assetsInlineLimit: 10000,
+    },
+  },
   output: "hybrid",
 })
