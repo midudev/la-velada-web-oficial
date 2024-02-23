@@ -10,7 +10,7 @@ export default defineConfig({
   }),
   vite: {
     build: {
-      assetsInlineLimit: 10000,
+      assetsInlineLimit: 30000,
     },
   },
   output: "hybrid",
