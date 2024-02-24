@@ -22,10 +22,7 @@ const descriptionPage =
 		<link rel="canonical" href="https://lavelada.es" />
 		<meta name="viewport" content="width=device-width" />
 
-		<meta
-			name="keywords"
-			content="velada, streamers, creadores, Ibai, boxeo, midudev"
-		/>
+		<meta name="keywords" content="velada, streamers, creadores, Ibai, boxeo, midudev" />
 
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:site" content="@infoLaVelada" />
@@ -47,18 +44,18 @@ const descriptionPage =
 	</head>
 	<body>
 		<div id="background">
-			<div/>
+			<div></div>
 		</div>
-		<div class="relative container mx-auto w-screen -z-10 overflow-x-clip">
+		<div class="container relative -z-10 mx-auto w-screen overflow-x-clip">
 			<img
 				aria-hidden="true"
 				src="/lights.svg"
-				class="absolute md:scale-125 lg:scale-100 lg:left-0 top-0 opacity-0 transform-gpu w-screen brightness-0 dark:brightness-200"
+				class="absolute top-0 w-screen transform-gpu opacity-0 brightness-0 dark:brightness-200 md:scale-125 lg:left-0 lg:scale-100"
 				onload="this.classList.add('animate-fade-in', 'animate-duration-500')"
 				alt="Focos de luz"
 			/>
 		</div>
-		<div class="max-w-6xl px-2 lg:px-10 pt-16 md:pt-20 mx-auto">
+		<div class="mx-auto max-w-6xl px-2 pt-16 md:pt-20 lg:px-10">
 			<slot />
 		</div>
 	</body>
@@ -89,7 +86,7 @@ const descriptionPage =
 		scroll-behavior: smooth;
 		overflow-x: hidden;
 		overscroll-behavior: none;
-		background-color: var(--background-color)
+		background-color: var(--background-color);
 	}
 
 	/* Hiding class, making content visible only to screen readers but not visually */
@@ -117,11 +114,11 @@ const descriptionPage =
 	}
 
 	::-webkit-scrollbar-track {
-		background-color: var(--background-color)
+		background-color: var(--background-color);
 	}
 
 	::-webkit-scrollbar-corner {
-		background-color: var(--background-color)
+		background-color: var(--background-color);
 	}
 
 	#background {
@@ -132,7 +129,7 @@ const descriptionPage =
 		z-index: -1;
 	}
 
-	#background > div{
+	#background > div {
 		width: 100dvw;
 		height: 100dvh;
 		background-color: var(--color-bg);
@@ -145,7 +142,7 @@ const descriptionPage =
 
 	if (bgImageUrl) {
 		const bgImage = new Image()
-		bgImage.src = bgImageUrl?.[0]?.replaceAll?.("\"", "")
+		bgImage.src = bgImageUrl?.[0]?.replaceAll?.('"', "")
 
 		bgImage.onload = () => {
 			const $bg = document.querySelector("#background > div") as HTMLDivElement
