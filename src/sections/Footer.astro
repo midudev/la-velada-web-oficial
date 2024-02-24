@@ -2,6 +2,10 @@
 import ThemeToggle from "@/components/ThemeToggle.astro"
 import InstagramIcon from "@/icons/instagram.astro"
 import XIcon from "@/icons/x.astro"
+
+import { getI18n } from "../i18n"
+const { currentLocale = 'es' } = Astro
+const i18n = getI18n({currentLocale})
 ---
 
 <footer
@@ -11,7 +15,7 @@ import XIcon from "@/icons/x.astro"
     &#169; 2024 La Velada del Año <span
       aria-hidden="true"
       class="hidden md:inline">|</span
-    ><br aria-hidden="true" class="block md:hidden" /> Todos los derechos reservados.
+    ><br aria-hidden="true" class="block md:hidden" /> {i18n.ALL_RIGHTS_RESERVED}.
   </span>
   <span
     aria-hidden="true"

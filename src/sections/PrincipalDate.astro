@@ -1,13 +1,17 @@
 ---
 import CalendarButton from "../components/CalendarButton.astro"
 import MapMarkerIcon from "@/icons/map-marker.astro"
+
+import { getI18n } from "../i18n"
+const { currentLocale = 'es' } = Astro
+const i18n = getI18n({currentLocale})
 ---
 
 <section
   class="animate-fade-in animate-delay-500 mt-16 md:mt-32 mx-auto flex flex-col place-items-center text-center text-primary"
 >
   <div class="uppercase text-3xl md:text-5xl font-semibold">
-    <time class="date"> 4 de marzo</time>
+    <time class="date"> {i18n.DATE} </time>
     <span aria-hidden="true" class="hidden md:inline mx-1">·</span>
     <br aria-hidden="true" class="block md:hidden" />
     <time class="time"></time>
@@ -16,7 +20,7 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
   <h2
     class="uppercase text-lg lg:text-2xl font-medium flex flex-col max-w-sm mt-6"
   >
-    <span>Evento de Presentación</span>
+    <span>{i18n.LAUNCH_EVENT}</span>
     <a
       href="https://maps.app.goo.gl/RFzHUVDhRqdQaTAo8"
       class="hover:scale-110 hover:opacity-60 transition inline-block align-middle"
@@ -24,7 +28,7 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
       rel="noopener" 
       style="display: -webkit-box;"
     >
-        <MapMarkerIcon class="max-md:mt-1 md:mt-0.5 mr-1 md:size-6"></MapMarkerIcon> Teatro Victoria (Barcelona)
+        <MapMarkerIcon class="max-md:mt-1 md:mt-0.5 mr-1 md:size-6"></MapMarkerIcon> {i18n.PLACE}
     </a>
   </h2>
 
@@ -40,7 +44,7 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
       target="_blank"
       rel="noopener noreferrer"
     >
-      Entradas agotadas
+      {i18n.SOLD_OUT}
     </a>
 
     <CalendarButton />
