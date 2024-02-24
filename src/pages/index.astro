@@ -3,14 +3,17 @@ import Layout from "@/layouts/Layout.astro"
 
 import KonamiCode from "@/components/KonamiCode.astro"
 
+import { siteConfig } from "@/data/site.config"
 import Countdown from "@/sections/Countdown.astro"
 import Footer from "@/sections/Footer.astro"
 import Hero from "@/sections/Hero.astro"
 import Info from "@/sections/Info.astro"
 import PrincipalDate from "@/sections/PrincipalDate.astro"
+
+const { title, shortDescription, description } = siteConfig
 ---
 
-<Layout title="La Velada 4 - Evento de Boxeo de Ibai Llanos">
+<Layout title={title} shortDescription={shortDescription} description={description}>
   <Hero />
   <main>
     <PrincipalDate />
