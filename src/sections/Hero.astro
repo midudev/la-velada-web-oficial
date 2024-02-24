@@ -1,16 +1,18 @@
 ---
 import HeroLogo from "@/components/HeroLogo.astro"
+
+import { getI18n } from "../i18n"
+const { currentLocale = "es" } = Astro
+const i18n = getI18n({ currentLocale })
 ---
 
 <section class="flex flex-col place-items-center gap-4 lg:gap-9">
-  <h1 class="sr-only">Presentación de la Velada del Año IV</h1>
-  <span
-    class="animate-fade-in animate-delay-300 text-base lg:text-xl uppercase text-secondary bg-primary px-3 py-0.5 md:px-6 md:py-1 font-medium"
-    aria-hidden="true"
-  >
-    Presentación de la
-  </span>
-  <HeroLogo
-    class="text-primary animate-fade-in-up w-[300px] h-auto md:w-[500px]"
-  />
+	<h1 class="sr-only">{i18n.PRESENTATION_COMPLETE}</h1>
+	<span
+		class="animate-fade-in bg-primary px-3 py-0.5 text-base font-medium uppercase text-secondary animate-delay-300 md:px-6 md:py-1 lg:text-xl"
+		aria-hidden="true"
+	>
+		{i18n.PRESENTATION}
+	</span>
+	<HeroLogo class="h-auto w-[300px] animate-fade-in-up text-primary md:w-[500px]" />
 </section>

@@ -1,0 +1,26 @@
+---
+import Layout from "../layouts/Layout.astro"
+
+import KonamiCode from "../components/KonamiCode.astro"
+
+import Countdown from "../sections/Countdown.astro"
+import Footer from "../sections/Footer.astro"
+import Hero from "../sections/Hero.astro"
+import Info from "../sections/Info.astro"
+import PrincipalDate from "../sections/PrincipalDate.astro"
+
+import { getI18n } from "../i18n"
+const { currentLocale = 'es' } = Astro
+const i18n = getI18n({currentLocale})
+---
+
+<Layout title={i18n.SEO_TITLE}>
+  <Hero />
+  <main>
+    <PrincipalDate />
+    <Info />
+    <Countdown />
+  </main>
+  <Footer />
+  <KonamiCode />
+</Layout>

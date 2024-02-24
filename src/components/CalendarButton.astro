@@ -1,3 +1,9 @@
+---
+import { getI18n } from "../i18n"
+const { currentLocale = "es" } = Astro
+const i18n = getI18n({ currentLocale })
+---
+
 <button
 	id="add-to-calendar"
 	class:list={`
@@ -7,7 +13,7 @@
     hover:bg-primary hover:text-secondary
   `}
 >
-	Agregar al calendario
+	{i18n.ADD_TO_CALENDAR}
 </button>
 
 <script is:inline>
