@@ -19,7 +19,7 @@
     <br />
     <a href="https://github.com/midudev/la-velada-web-oficial/issues">Reportar Error</a>
     ·
-    <a href="https://github.com/midudev/la-velada-web-oficial/issues">Sugererir</a>
+    <a href="https://github.com/midudev/la-velada-web-oficial/issues">Sugererir algo</a>
   </p>
 </div>
 
@@ -63,7 +63,7 @@ Capturas de pantalla de `Web Oficial de La Velada IV`:
 
 <a name="prerequisites"></a>
 ### Prerequisitos
-* PNPM (Es nuestra recomendación por su eficiencia y rapidez)
+* PNPM (es nuestra recomendación por su eficiencia y rapidez)
 ```sh
   npm install -g pnpm
   ```
