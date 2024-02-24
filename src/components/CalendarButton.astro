@@ -1,0 +1,58 @@
+<button
+	id="add-to-calendar"
+	class:list={`
+    inline-block border-2 border-primary px-4 py-1
+    text-lg font-medium
+    uppercase transition hover:scale-110
+    hover:bg-primary hover:text-secondary
+  `}
+>
+	Agregar al calendario
+</button>
+
+<script is:inline>
+	const config = {
+		name: "🥊 La Velada del Año 4 - Evento de Presentación",
+		description:
+			"La presentación de La Velada del Año 4 está por comenzar.<br><br>Entra a Twitch y no te lo pierdas → [url]https://twitch.tv/ibai[/url]",
+		startDate: "2024-03-04",
+		endDate: "2024-03-04",
+		startTime: "19:00",
+		endTime: "22:00",
+		options: ["Google", "Apple", "Microsoft365", "MicrosoftTeams"],
+		timeZone: "Europe/Madrid",
+		trigger: "click",
+		iCalFileName: "Reminder-Event",
+	}
+
+	let status
+
+	function loadStyle(src) {
+		return new Promise((resolve, reject) => {
+			const link = document.createElement("link")
+			link.href = src
+			link.rel = "stylesheet"
+
+			link.onload = () => resolve(link)
+			link.onerror = () => reject(new Error(`Style load error for ${src}`))
+
+			document.head.append(link)
+		})
+	}
+
+	const button = document.querySelector("#add-to-calendar")
+	button?.addEventListener("click", async () => {
+		if (status === "loading") return
+
+		if (!status) {
+			const text = button.innerHTML
+			button.innerHTML = "Cargando..."
+			status = "loading"
+			await Promise.all([import("/js/add-to-calendar.js"), loadStyle("/css/add-to-calendar.css")])
+			status = "loaded"
+			button.innerHTML = text
+		}
+
+		window.atcb_action(config, button)
+	})
+</script>

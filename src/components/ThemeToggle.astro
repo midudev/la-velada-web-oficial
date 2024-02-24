@@ -1,13 +1,19 @@
 ---
-import ThemeIcon from "@/icons/theme.astro"
+import SunIcon from "@/icons/sun.astro"
+import MoonIcon from "@/icons/moon.astro"
 ---
 
 <button
   id="themeToggle"
-  class="hover:scale-125 hover:opacity-70 transition inline-block size-12 text-primary"
+  class="inline-flex text-primary transition hover:scale-125 hover:opacity-70"
 >
-  <ThemeIcon />
-  <span class="sr-only">Toggle theme</span>
+  <SunIcon
+    class="opacity-100 transition-transform dark:-rotate-90 dark:opacity-0"
+  />
+  <MoonIcon
+    class="absolute rotate-90 opacity-0 transition-transform dark:rotate-0 dark:opacity-100"
+  />
+  <span class="sr-only">Alternar tema</span>
 </button>
 
 <script is:inline>
