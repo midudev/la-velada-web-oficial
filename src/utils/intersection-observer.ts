@@ -1,6 +1,6 @@
 const INVISIBLE_TAILWIND_CLASS = 'invisible';
 
-export const setupIntersectionObserver = (elementId: string, animationClass: string, startInvisible: boolean) => {
+export const setupIntersectionObserver = (elementId: string, animationsClass: string[], startInvisible: boolean) => {
   const element = document.querySelector(`#${elementId}`);
   if (!element) return;
 
@@ -11,7 +11,7 @@ export const setupIntersectionObserver = (elementId: string, animationClass: str
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.classList.add(animationClass);
+        animationsClass.forEach(animationClass => entry.target.classList.add(animationClass));
         entry.target.classList.remove(INVISIBLE_TAILWIND_CLASS);
       }
     });

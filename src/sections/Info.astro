@@ -2,7 +2,7 @@
 
 ---
 
-<section class="flex font-medium text-primary gap-y-10 my-32 flex-col">
+<section class="flex font-medium text-primary gap-y-10 my-32 flex-col" id="infoSection">
   <a
     href="https://twitch.tv/ibai"
     target="_blank"
@@ -107,3 +107,10 @@
     }
   }
 </style>
+
+<script>
+  import { setupIntersectionObserver } from "@/utils/intersection-observer";
+
+  setupIntersectionObserver("infoSection", ["animate-fade-in-up", "animate-duration-500"], true);
+
+</script>
