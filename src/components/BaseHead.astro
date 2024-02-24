@@ -1,5 +1,4 @@
 ---
-import { siteConfig } from "@/data/site.config"
 
 export interface Props {
 	title: string
@@ -42,7 +41,7 @@ const siteTitle = `${title} ${titleSeparator} ${shortDescription}`
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={title} />
+<meta property="og:title" content={siteTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={socialImageURL} />
 
@@ -64,9 +63,9 @@ const siteTitle = `${title} ${titleSeparator} ${shortDescription}`
 <meta property="twitter:url" content={Astro.url} />
 <meta name="twitter:site" content="@infoLaVelada" />
 <meta name="twitter:creator" content="@ibai" />
-<meta property="twitter:title" content={title} />
+<meta property="twitter:title" content={siteTitle} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={socialImageURL} />
 
 <!-- RSS auto-discovery -->
-<link rel="alternate" type="application/rss+xml" title={siteConfig.title} href="/rss.xml" />
+<link rel="alternate" type="application/rss+xml" title={siteTitle} href="/rss.xml" />
