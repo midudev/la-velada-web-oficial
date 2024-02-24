@@ -113,7 +113,7 @@ Por favor, consulta nuestra [guía de contribución](https://github.com/midudev/
 
 **¡Gracias a todos los colaboradores que han hecho posible este proyecto!**
 
-[![Contribuidores](https://contrib.rocks/image?repo=midudev/la-velada-web-oficial&theme=flat)](https://github.com/midudev/la-velada-web-oficial/graphs/contributors)
+[![Contribuidores](https://contrib.rocks/image?repo=midudev/la-velada-web-oficial)](https://github.com/midudev/la-velada-web-oficial/graphs/contributors)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
