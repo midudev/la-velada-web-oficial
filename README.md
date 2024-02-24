@@ -15,11 +15,16 @@ La Velada IV es una competición de boxeo que enfrenta a Streamers, Creadores de
 - **Redes Sociales:** Conoce las redes oficiales donde podrás informarte sobre el evento.
 
 ## Capturas de Pantalla
+
 ![Captura de Pantalla de la web en móvil](/public/Mobile_README.png)
 
 ## Contribuir al proyecto
 
 ¡Contribuciones son bienvenidas! Si encuentras errores o tienes sugerencias de mejora, por favor abre un _issue_ o envía un _pull request_.
+
+Si quieres contribuir de una manera mas sencilla, puedes iniciar este proyecto desde Stackblitz usando tu cuenta de github.
+
+[![Abrir en Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/midudev/la-velada-web-oficial)
 
 Consulta nuestra [guía de contribución](https://github.com/midudev/la-velada-web-oficial/blob/master/CONTRIBUTING.md) para saber cómo puedes empezar.
 
