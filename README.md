@@ -101,8 +101,8 @@ Si tienes alguna sugerencia que podría mejorar el proyecto, por favor haz un [_
 
 Aquí tienes una guía rápida:
 
-1. Haz un Fork del Proyecto
-2. Clona tu fork (`git clone <URL del fork>`)
+1. Haz un [_fork_](https://github.com/midudev/la-velada-web-oficial/fork) del Proyecto
+2. Clona tu [_fork_](https://github.com/midudev/la-velada-web-oficial/fork) (`git clone <URL del fork>`)
 3. Añade el repositorio original como remoto (`git remote add upstream <URL del repositorio original>`)
 4. Crea tu Rama de Funcionalidad (`git checkout -b feature/CaracteristicaIncreible`)
 5. Realiza tus Cambios (`git commit -m 'Add: alguna CaracterísticaIncreible'`)
