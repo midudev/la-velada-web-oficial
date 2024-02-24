@@ -48,70 +48,87 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 </section>
 
 <script>
-	
-	import { EVENT_TIMESTAMP } from "@/consts/event-date"
+	import { EVENT_TIMESTAMP, timeZoneAbbreviations } from "@/consts/event-date"
 
-	const $dateSpan = document.querySelector(".date")
-	const $timeSpan = document.querySelector(".time")
-
-	const USER_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone
-	const date = new Date(EVENT_TIMESTAMP)
-
-	const eventHasPassed = EVENT_TIMESTAMP < Date.now()
-
-	if (eventHasPassed) {
-		document.getElementById("add-to-calendar")?.remove()
+	function getUserTimeZone(): string {
+		return Intl.DateTimeFormat().resolvedOptions().timeZone
 	}
 
-	const timeFormatOptions: Intl.DateTimeFormatOptions = {
-		hour: "numeric",
-		minute: "numeric",
-		hour12: false,
-		timeZone: USER_TZ,
-		timeZoneName: "short",
+	// Formatea la fecha del evento considerando la zona horaria del usuario
+	function formatEventDate(timestamp: number, timeZone: string): string {
+		const options: Intl.DateTimeFormatOptions = {
+			day: "numeric",
+			month: "long",
+			timeZone,
+		}
+		return new Intl.DateTimeFormat("es-ES", options).format(new Date(timestamp))
 	}
 
-	const dateFormatOptions: Intl.DateTimeFormatOptions = {
-		day: "numeric",
-		month: "long",
-		timeZone: USER_TZ,
+	// Formatea la hora del evento con el nombre de la zona horaria, ajustándose al formato de 24 horas
+	function formatEventTimeWithTimeZoneName(timestamp: number, timeZone: string): string {
+		const formattedTime = new Intl.DateTimeFormat("es-ES", {
+			hour: "numeric",
+			minute: "numeric",
+			hour12: false,
+			timeZone,
+		}).format(new Date(timestamp))
+
+		const timeZoneName =
+			timeZoneAbbreviations[timeZone] ||
+			new Intl.DateTimeFormat("es-ES", {
+				timeZone,
+				timeZoneName: "short",
+			})
+				.formatToParts(new Date(timestamp))
+				.find((part) => part.type === "timeZoneName")?.value
+
+		return `${formattedTime} ${timeZoneName}`
 	}
 
-	const validDatetimeAttrOptions: Intl.DateTimeFormatOptions = {
-		timeZone: USER_TZ,
-		year: "numeric",
-		month: "2-digit",
-		day: "2-digit",
-		hour: "2-digit",
-		minute: "2-digit",
-		second: "2-digit",
-		hour12: false,
+	// Genera un datetime válido para el atributo 'datetime' del elemento <time>, respetando la zona horaria
+	function formatValidDatetime(timestamp: number, timeZone: string): string {
+		const options: Intl.DateTimeFormatOptions = {
+			year: "numeric",
+			month: "2-digit",
+			day: "2-digit",
+			hour: "2-digit",
+			minute: "2-digit",
+			second: "2-digit",
+			timeZone,
+			hour12: false,
+		}
+		return new Intl.DateTimeFormat("en-CA", options).format(new Date(timestamp))
 	}
 
-	// The "en-GB" locale is used to display the time zone abbreviation (CET, PST, EST...) and not its value in GMT
-	const time = new Intl.DateTimeFormat("en-GB", timeFormatOptions)
-		.formatToParts(date)
-		.map(({ type, value }) => {
-			if (type === "literal" && value === " ") {
-				return "H "
-			}
-			return value
-		})
-		.join("")
+	function updateUI(dateString: string, timeString: string, validDatetime: string) {
+		const $dateSpan = document.querySelector(".date")
+		const $timeSpan = document.querySelector(".time")
 
-	const day = new Intl.DateTimeFormat("es-ES", dateFormatOptions).format(date)
-
-	/**
-	 * Se usa la configuración regional "en-CA" para obtener de forma más fácil el formato `yyyy-mm-dd`
-	 * source: https://stackoverflow.com/a/63490548
-	 * El datetime strings válido usado es: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time#a_valid_local_date_and_time_string
-	 */
-	const validDatetime = new Intl.DateTimeFormat("en-CA", validDatetimeAttrOptions).format(date)
-
-	if ($dateSpan != null && $timeSpan != null) {
-		$dateSpan.innerHTML = day
-		$dateSpan.setAttribute("datetime", validDatetime)
-		$timeSpan.innerHTML = time
-		$timeSpan.setAttribute("datetime", validDatetime)
+		if ($dateSpan != null && $timeSpan != null) {
+			$dateSpan.innerHTML = dateString
+			$dateSpan.setAttribute("datetime", validDatetime)
+			$timeSpan.innerHTML = timeString
+			$timeSpan.setAttribute("datetime", validDatetime)
+		}
 	}
+
+	function main() {
+		const USER_TZ = getUserTimeZone()
+		const formattedDate = formatEventDate(EVENT_TIMESTAMP, USER_TZ)
+		const formattedTime = formatEventTimeWithTimeZoneName(EVENT_TIMESTAMP, USER_TZ)
+		const validDatetime = formatValidDatetime(EVENT_TIMESTAMP, USER_TZ)
+
+		updateUI(formattedDate, formattedTime, validDatetime)
+	}
+
+	document.addEventListener("DOMContentLoaded", main)
+
+	 // Verifica si el evento ya ha pasado
+	 const eventHasPassed = EVENT_TIMESTAMP < Date.now()
+    if (eventHasPassed) {
+        const addToCalendarBtn = document.getElementById("add-to-calendar")
+        if (addToCalendarBtn) {
+            addToCalendarBtn.remove()
+        }
+    }
 </script>
