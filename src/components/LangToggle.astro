@@ -1,0 +1,35 @@
+---
+import SpainFlag from "@/components/flags/Spain.astro"
+import UnitedStatesFlag from "@/components/flags/UnitedStates.astro"
+---
+
+<button
+	id="langToggle"
+	class="inline-flex text-primary transition hover:scale-125 hover:opacity-70"
+>
+	<a id="esFlag" href="/">
+		<SpainFlag class="h-6 transition-transform" />
+	</a>
+	<a id="enFlag" href="/en">
+		<UnitedStatesFlag class="h-6 transition-transform" />
+	</a>
+	<span class="sr-only">Language</span>
+</button>
+
+<script is:inline>
+	function getLangFromUrl() {
+		const path = window.location.pathname
+		return path.includes("/en") ? "en" : "es"
+	}
+
+	const lang = getLangFromUrl()
+	document.addEventListener("DOMContentLoaded", function () {
+		if (lang === "es") {
+			document.getElementById("esFlag").classList.add("hidden")
+			document.getElementById("enFlag").classList.remove("hidden")
+		} else {
+			document.getElementById("esFlag").classList.remove("hidden")
+			document.getElementById("enFlag").classList.add("hidden")
+		}
+	})
+</script>
