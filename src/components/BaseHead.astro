@@ -1,0 +1,72 @@
+---
+import { siteConfig } from "@/data/site.config"
+
+export interface Props {
+	title: string
+	shortDescription: string
+	description: string
+	ogImage: string
+}
+
+const { title, shortDescription, description, ogImage } = Astro.props
+const canonicalURL = "https://lavelada.es"
+const socialImageURL = ogImage
+
+const titleSeparator = "•"
+
+const siteTitle = `${title} ${titleSeparator} ${shortDescription}`
+---
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="generator" content={Astro.generator} />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Primary Meta Tags -->
+<title>{siteTitle}</title>
+
+<meta name="robots" content="index, follow" />
+<meta name="revisit-after" content="7 days" />
+<meta name="googlebot" content="index, follow" />
+
+<!-- SEO -->
+<meta name="title" content={siteTitle} />
+<meta name="description" content={description} />
+<meta name="author" content="@ibai" />
+<meta name="keywords" content="velada, streamers, creadores, Ibai, boxeo, midudev" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={socialImageURL} />
+
+<!-- open graph /whatsapp -->
+<meta property="og:site_name" content={siteTitle} />
+<meta property="og:type" content="website" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="300" />
+<meta property="og:image:height" content="300" />
+<link itemprop="thumbnailUrl" href={socialImageURL} />
+
+<meta name="og:url" content="https://lavelada.es" />
+<meta name="og:site_name" content="La Velada 4" />
+<meta name="og:type" content="website" />
+<meta name="og:locale" content="es_ES" />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={Astro.url} />
+<meta name="twitter:site" content="@infoLaVelada" />
+<meta name="twitter:creator" content="@ibai" />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={socialImageURL} />
+
+<!-- RSS auto-discovery -->
+<link rel="alternate" type="application/rss+xml" title={siteConfig.title} href="/rss.xml" />
