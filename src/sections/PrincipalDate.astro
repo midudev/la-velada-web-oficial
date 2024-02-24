@@ -4,115 +4,111 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 ---
 
 <section
-  class="animate-fade-in animate-delay-500 mt-16 md:mt-32 mx-auto flex flex-col place-items-center text-center text-primary"
+	class="mx-auto mt-16 flex animate-fade-in flex-col place-items-center text-center text-primary animate-delay-[2s] md:mt-32"
 >
-  <div class="uppercase text-3xl md:text-5xl font-semibold">
-    <time class="date"> 4 de marzo</time>
-    <span aria-hidden="true" class="hidden md:inline mx-1">·</span>
-    <br aria-hidden="true" class="block md:hidden" />
-    <time class="time"></time>
-  </div>
+	<div class="text-3xl font-semibold uppercase md:text-5xl">
+		<time class="date"> 4 de marzo</time>
+		<span aria-hidden="true" class="mx-1 hidden md:inline">·</span>
+		<br aria-hidden="true" class="block md:hidden" />
+		<time class="time"></time>
+	</div>
 
-  <h2
-    class="uppercase text-lg lg:text-2xl font-medium flex flex-col max-w-sm mt-6"
-  >
-    <span>Evento de Presentación</span>
-    <a
-      href="https://maps.app.goo.gl/RFzHUVDhRqdQaTAo8"
-      class="hover:scale-110 hover:opacity-60 transition inline-block align-middle"
-      target="_blank"
-      rel="noopener" 
-      style="display: -webkit-box;"
-    >
-        <MapMarkerIcon class="max-md:mt-1 md:mt-0.5 mr-1 md:size-6"></MapMarkerIcon> Teatro Victoria (Barcelona)
-    </a>
-  </h2>
+	<h2 class="mt-6 flex max-w-sm flex-col text-lg font-medium uppercase lg:text-2xl">
+		<span>Evento de Presentación</span>
+		<a
+			href="https://maps.app.goo.gl/RFzHUVDhRqdQaTAo8"
+			class="inline-block align-middle transition hover:scale-110 hover:opacity-60"
+			target="_blank"
+			rel="noopener"
+			style="display: -webkit-box;"
+		>
+			<MapMarkerIcon class="mr-1 max-md:mt-1 md:mt-0.5 md:size-6" /> Teatro Victoria (Barcelona)
+		</a>
+	</h2>
 
-  <div class="flex flex-col md:flex-row items-center mt-6 gap-6">
-    <a
-      class={`
-				border-primary border-2 font-medium uppercase text-lg
-				px-4 py-1
-				hover:bg-primary hover:text-secondary hover:scale-110
-				transition inline-block
-			`}
-      href="https://www.teatrevictoria.com/es/cartelera/c/190_la-velada-del-ano-4.html"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Entradas agotadas
-    </a>
+	<div class="mt-6 flex flex-col items-center gap-6 md:flex-row">
+		<a
+			class:list={`
+                inline-block border-2 border-primary px-4 py-1
+                text-lg font-medium
+                uppercase transition hover:scale-110
+                hover:bg-primary hover:text-secondary
+            `}
+			href="https://www.teatrevictoria.com/es/cartelera/c/190_la-velada-del-ano-4.html"
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			Entradas agotadas
+		</a>
 
-    <CalendarButton />
-  </div>
+		<CalendarButton />
+	</div>
 </section>
 
 <script>
-  import { EVENT_TIMESTAMP } from "@/consts/event-date"
-  const $dateSpan = document.querySelector(".date")
-  const $timeSpan = document.querySelector(".time")
+	import { EVENT_TIMESTAMP } from "@/consts/event-date"
 
-  const USER_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const date = new Date(EVENT_TIMESTAMP)
+	const $dateSpan = document.querySelector(".date")
+	const $timeSpan = document.querySelector(".time")
 
-  const eventHasPassed = EVENT_TIMESTAMP < Date.now()
+	const USER_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone
+	const date = new Date(EVENT_TIMESTAMP)
 
-  if (eventHasPassed) {
-    document.getElementById("add-to-calendar")?.remove()
-  }
+	const eventHasPassed = EVENT_TIMESTAMP < Date.now()
 
-  const timeFormatOptions: Intl.DateTimeFormatOptions = {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: false,
-    timeZone: USER_TZ,
-    timeZoneName: "short",
-  }
+	if (eventHasPassed) {
+		document.getElementById("add-to-calendar")?.remove()
+	}
 
-  const dateFormatOptions: Intl.DateTimeFormatOptions = {
-    day: "numeric",
-    month: "long",
-    timeZone: USER_TZ,
-  }
+	const timeFormatOptions: Intl.DateTimeFormatOptions = {
+		hour: "numeric",
+		minute: "numeric",
+		hour12: false,
+		timeZone: USER_TZ,
+		timeZoneName: "short",
+	}
 
-  const validDatetimeAttrOptions: Intl.DateTimeFormatOptions = {
-    timeZone: USER_TZ,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }
+	const dateFormatOptions: Intl.DateTimeFormatOptions = {
+		day: "numeric",
+		month: "long",
+		timeZone: USER_TZ,
+	}
 
-  // The "en-GB" locale is used to display the time zone abbreviation (CET, PST, EST...) and not its value in GMT
-  const time = new Intl.DateTimeFormat("en-GB", timeFormatOptions)
-    .formatToParts(date)
-    .map(({ type, value }) => {
-      if (type === "literal" && value === " ") {
-        return "H "
-      }
-      return value
-    })
-    .join("")
+	const validDatetimeAttrOptions: Intl.DateTimeFormatOptions = {
+		timeZone: USER_TZ,
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+		hour12: false,
+	}
 
-  const day = new Intl.DateTimeFormat("es-ES", dateFormatOptions).format(date)
+	// The "en-GB" locale is used to display the time zone abbreviation (CET, PST, EST...) and not its value in GMT
+	const time = new Intl.DateTimeFormat("en-GB", timeFormatOptions)
+		.formatToParts(date)
+		.map(({ type, value }) => {
+			if (type === "literal" && value === " ") {
+				return "H "
+			}
+			return value
+		})
+		.join("")
 
-  /**
-   * Se usa la configuración regional "en-CA" para obtener de forma más fácil el formato `yyyy-mm-dd`
-   * source: https://stackoverflow.com/a/63490548
-   * El datetime strings válido usado es: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time#a_valid_local_date_and_time_string
-   */
-  const validDatetime = new Intl.DateTimeFormat(
-    "en-CA",
-    validDatetimeAttrOptions
-  ).format(date)
+	const day = new Intl.DateTimeFormat("es-ES", dateFormatOptions).format(date)
 
-  if ($dateSpan != null && $timeSpan != null) {
-    $dateSpan.innerHTML = day
-    $dateSpan.setAttribute("datetime", validDatetime)
-    $timeSpan.innerHTML = time
-    $timeSpan.setAttribute("datetime", validDatetime)
-  }
+	/**
+	 * Se usa la configuración regional "en-CA" para obtener de forma más fácil el formato `yyyy-mm-dd`
+	 * source: https://stackoverflow.com/a/63490548
+	 * El datetime strings válido usado es: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time#a_valid_local_date_and_time_string
+	 */
+	const validDatetime = new Intl.DateTimeFormat("en-CA", validDatetimeAttrOptions).format(date)
+
+	if ($dateSpan != null && $timeSpan != null) {
+		$dateSpan.innerHTML = day
+		$dateSpan.setAttribute("datetime", validDatetime)
+		$timeSpan.innerHTML = time
+		$timeSpan.setAttribute("datetime", validDatetime)
+	}
 </script>
