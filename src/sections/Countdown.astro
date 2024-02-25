@@ -5,14 +5,14 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 ---
 
 <section class="my-0 lg:my-32 flex flex-col gap-y-10 place-items-center">
-  
+
   <LaVeladaLogo class="text-primary" />
   <p
     class="uppercase text-lg font-medium text-primary opacity-80 text-center text-balance"
   >
     Para el Evento de Presentación faltan
   </p>
-  
+
   <div
     class="flex flex-row gap-x-1 text-primary uppercase font-semibold"
     data-date={EVENT_TIMESTAMP}
@@ -57,9 +57,16 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
       return Math.floor(time).toString().padStart(2, "0")
     }
 
+	let countdownInterval: number | undefined
+
     function updateCountdown() {
       const now = Date.now()
       const diff = date - now
+
+	  if (diff <= 0) {
+		clearInterval(countdownInterval)
+		return
+	  }
 
       if ($days instanceof HTMLElement) {
         $days.innerText = formatTime(diff / DAY)
@@ -78,7 +85,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
       }
     }
 
-    setInterval(updateCountdown, SECOND)
+	countdownInterval = setInterval(updateCountdown, SECOND)
     updateCountdown()
   }
 
