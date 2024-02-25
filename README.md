@@ -66,12 +66,12 @@ Capturas de pantalla de `Web Oficial de La Velada IV`:
 * PNPM (es nuestra recomendación por su eficiencia y rapidez)
 ```sh
   npm install -g pnpm
-  ```
+```
+
 * o NPM
 ```sh
   npm install npm@latest -g
-  ```
-	
+```
   
 <a name="installation"></a>
 ### Instalación
@@ -111,12 +111,17 @@ Aquí tienes una guía rápida:
 
 Por favor, consulta nuestra [guía de contribución](https://github.com/midudev/la-velada-web-oficial/blob/master/CONTRIBUTING.md) para saber cómo puedes empezar de la mejor manera y siguiendo [buenas prácticas](https://github.com/midudev/la-velada-web-oficial/blob/main/CONTRIBUTING.md#buenas-pr%C3%A1cticas-).
 
+### Contribuir desde Stackblitz
+
+Si quieres contribuir de una manera mas sencilla, puedes iniciar este proyecto desde _Stackblitz_ usando tu cuenta de GitHub:
+
+[![Abrir en Stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/midudev/la-velada-web-oficial)
+
 **¡Gracias a todos los colaboradores que han hecho posible este proyecto!**
 
 [![Contribuidores](https://contrib.rocks/image?repo=midudev/la-velada-web-oficial)](https://github.com/midudev/la-velada-web-oficial/graphs/contributors)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
-
 
 ## 🛠️ Stack
 
