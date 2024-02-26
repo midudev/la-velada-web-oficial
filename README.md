@@ -19,7 +19,7 @@
     <br />
     <a href="https://github.com/midudev/la-velada-web-oficial/issues">Reportar Error</a>
     ·
-    <a href="https://github.com/midudev/la-velada-web-oficial/issues">Sugererir algo</a>
+    <a href="https://github.com/midudev/la-velada-web-oficial/issues">Sugerir algo</a>
   </p>
 </div>
 
