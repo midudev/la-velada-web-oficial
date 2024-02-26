@@ -4,7 +4,7 @@ import Date from "@/components/Date.astro"
 import { EVENT_TIMESTAMP } from "@/consts/event-date"
 ---
 
-<section class="my-0 lg:my-32 flex flex-col gap-y-10 place-items-center">
+<section class="my-0 lg:my-32 flex flex-col gap-y-10 place-items-center" aria-label="cuenta atrás">
   
   <LaVeladaLogo class="text-primary" />
   <p
@@ -15,7 +15,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
   
   <div
     class="flex flex-row gap-x-1 text-primary uppercase font-semibold"
-    data-date={EVENT_TIMESTAMP}
+    data-date={EVENT_TIMESTAMP} role="timer"
   >
     <Date time="00" dateType="Días" attribute={{ "data-days": "" }} />
 
