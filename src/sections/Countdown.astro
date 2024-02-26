@@ -34,6 +34,8 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 </section>
 
 <script>
+import JSConfetti from 'js-confetti'
+
   const SECOND = 1000
   const MINUTE = SECOND * 60
   const HOUR = MINUTE * 60
@@ -60,6 +62,8 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
     function updateCountdown() {
       const now = Date.now()
       const diff = date - now
+      const $countdown = document.querySelector("[data-date]")
+      if (!$countdown) return
 
       if ($days instanceof HTMLElement) {
         $days.innerText = formatTime(diff / DAY)
@@ -76,9 +80,19 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
       if ($seconds instanceof HTMLElement) {
         $seconds.innerText = formatTime((diff % MINUTE) / SECOND)
       }
-    }
+      
+      if (diff < 1000) {
+        clearInterval(intervalId)
 
-    setInterval(updateCountdown, SECOND)
+        $countdown.innerHTML = "La velada ha comenzado! 🎉"
+        $countdown.className = "text-primary uppercase font-semibold animate-fade-in text-3xl"
+
+        const confetti = new JSConfetti()
+        confetti.addConfetti()
+      }
+    }
+    
+    const intervalId = setInterval(updateCountdown, SECOND)
     updateCountdown()
   }
 
