@@ -1,48 +1,37 @@
 <style>
 	@keyframes sprite {
-		25% {
+		to {
 			background-position: 100% 0;
-		}
-		25.1% {
-			background-position: 0 33%;
-		}
-		50% {
-			background-position: 100% 33%;
-		}
-		50.1% {
-			background-position: 0 66%;
-		}
-		100% {
-			background-position: 100% 66%;
 		}
 	}
 </style>
 
 <script>
-	
 	window.addEventListener("click", (ev) => {
-		const sound = new Audio("/hit.wav");
-		const { clientX: mouseX , clientY: mouseY } = ev;
-		const sprite = document.createElement("span");
-		const spriteCenter = 150 / 2;
+		const sound = new Audio("/hit.wav")
+		const { clientX: mouseX, clientY: mouseY } = ev
+		const sprite = document.createElement("span")
+		const spriteCenter = 300 / 2
+		const randomSprite = Math.ceil(Math.random() * 2)
 
-		sprite.style.cssText = /* css */`
+		sprite.style.cssText = /* css */ `
 			position: fixed;
 			top: ${mouseY - spriteCenter}px;
 			left: ${mouseX - spriteCenter}px;
-			width: 150px;
-			height: 150px;
+			width: 300px;
+			height: 300px;
 			display: inline-block;
-			background-image: url("/hit-sprite.png");
+			background-image: url("/sprite-${randomSprite}.png");
 			background-repeat: no-repeat;
 			background-position: 0 0;
-			animation: sprite 500ms steps(3);
+			filter: saturate(0.5);
+			animation: sprite 200ms steps(15, end);
 			z-index: 999;
 			pointer-events: none;
-		`;
-		
-		sound.play();
-		document.body.appendChild(sprite);
-		setTimeout(() => document.body.removeChild(sprite), 500);
-	});
+		`
+
+		sound.play()
+		document.body.appendChild(sprite)
+		setTimeout(() => document.body.removeChild(sprite), 500)
+	})
 </script>
