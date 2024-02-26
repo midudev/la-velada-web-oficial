@@ -1,0 +1,74 @@
+---
+interface Props {
+	title: string
+	otherTitle?: string
+	description: string
+	language?: string
+	favicon?: string
+	siteUrl?: string
+	image?: string
+	keywords?: string
+	twitter?: {
+		card: string
+		site: string
+		creator: string
+	}
+}
+
+const {
+	title,
+	otherTitle,
+	description,
+	language,
+	favicon,
+	siteUrl,
+	image,
+	keywords,
+	twitter,
+} = Astro.props
+
+const defaultTitle = "La Velada 4"
+const defaultFavicon = "/favicon.svg"
+const defaultImage = "/og.jpg"
+const dafaultLanguage = "es_ES"
+const defaultUrl = "https://lavelada.es"
+const defaultTwitter = {
+	card: "summary_large_image",
+	site: "@infoLaVelada",
+	creator: "@ibai",
+}
+const defaultKeywords = "velada, streamers, creadores, Ibai, boxeo, midudev"
+---
+
+<title>{title}</title>
+
+<meta charset="UTF-8" />
+<meta name="description" content={description} />
+
+<link rel="icon" type="image/svg+xml" href={favicon || defaultFavicon} />
+<link rel="canonical" href={siteUrl || defaultUrl} />
+<meta name="viewport" content="width=device-width" />
+
+<meta
+	name="keywords"
+	content={keywords || defaultKeywords}
+/>
+
+<meta name="twitter:card" content={twitter?.card || defaultTwitter.card} />
+<meta name="twitter:site" content={twitter?.site || defaultTwitter.site} />
+<meta name="twitter:creator" content={twitter?.creator || defaultTwitter.creator} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image || defaultImage} />
+
+<meta name="og:image" content={image || defaultImage} />
+<meta name="og:title" content={title} />
+<meta name="og:image:alt" content={title} />
+<meta name="og:description" content={description} />
+<meta name="og:url" content={siteUrl || defaultUrl} />
+<meta name="og:site_name" content={otherTitle || defaultTitle} />
+<meta name="og:type" content="website" />
+<meta name="og:locale" content={language || dafaultLanguage} />
+
+<meta name="robots" content="index, follow" />
+<meta name="googlebot" content="index, follow" />
