@@ -14,7 +14,7 @@
 ## Web oficial de La Velada IV
 
 La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de contenido y otras celebridades sobre un ring.\
-[Reportar error](https://github.com/midudev/la-velada-web-oficial/issues) · [Sugererir algo](https://github.com/midudev/la-velada-web-oficial/issues)
+[Reportar error](https://github.com/midudev/la-velada-web-oficial/issues) · [Sugerir algo](https://github.com/midudev/la-velada-web-oficial/issues)
 
 </div>
 
