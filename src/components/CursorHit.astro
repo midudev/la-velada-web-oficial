@@ -7,9 +7,8 @@
 </style>
 
 <script>
-	window.addEventListener("click", (ev) => {
+	function hitScreen(mouseX: number, mouseY: number) {
 		const sound = new Audio("/hit.wav")
-		const { clientX: mouseX, clientY: mouseY } = ev
 		const sprite = document.createElement("span")
 		const spriteCenter = 300 / 2
 		const randomSprite = Math.ceil(Math.random() * 2)
@@ -24,14 +23,29 @@
 			background-image: url("/sprite-${randomSprite}.png");
 			background-repeat: no-repeat;
 			background-position: 0 0;
-			filter: saturate(0.5);
-			animation: sprite 200ms steps(15, end);
+			animation: sprite 150ms steps(15, end);
 			z-index: 999;
 			pointer-events: none;
 		`
 
 		sound.play()
 		document.body.appendChild(sprite)
-		setTimeout(() => document.body.removeChild(sprite), 500)
-	})
+		setTimeout(() => document.body.removeChild(sprite), 200)
+	}
+
+	function isTouchDevice() {
+		return "ontouchstart" in window || navigator.maxTouchPoints > 0
+	}
+
+	if (isTouchDevice()) {
+		window.addEventListener("touchstart", (ev) => {
+			const { clientX: mouseX, clientY: mouseY } = ev.touches[0]
+			hitScreen(mouseX, mouseY)
+		})
+	} else {
+		window.addEventListener("click", (ev) => {
+			const { clientX: mouseX, clientY: mouseY } = ev
+			hitScreen(mouseX, mouseY)
+		})
+	}
 </script>
