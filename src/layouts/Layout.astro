@@ -2,120 +2,119 @@
 import "@fontsource-variable/jost"
 
 interface Props {
-  title: string
+	description: string
+	title: string
 }
 
-const { title } = Astro.props
-const descriptionPage =
-  "Evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos"
+const { title, description } = Astro.props
 ---
 
 <!doctype html>
 <html lang="es">
-  <head>
-    <title>{title}</title>
-  
-    <meta charset="UTF-8" />
-    <meta name="description" content={descriptionPage} />
+	<head>
+		<title>{title}</title>
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href="https://lavelada.es" />
-    <meta name="viewport" content="width=device-width" />
-    
-    <meta
-      name="keywords"
-      content="velada, streamers, creadores, Ibai, boxeo, midudev"
-    />
+		<meta charset="UTF-8" />
+		<meta name="description" content={description} />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@infoLaVelada" />
-    <meta name="twitter:creator" content="@ibai" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={descriptionPage} />
-    <meta name="twitter:image" content="/og.jpg" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="canonical" href="https://lavelada.es" />
+		<meta name="viewport" content="width=device-width" />
 
-    <meta name="og:image" content="/og.jpg" />
-    <meta name="og:title" content={title} />
-    <meta name="og:description" content={descriptionPage} />
-    <meta name="og:url" content="https://lavelada.es" />
-    <meta name="og:site_name" content="La Velada 4" />
-    <meta name="og:type" content="website" />
-    <meta name="og:locale" content="es_ES" />
+		<meta name="keywords" content="velada, streamers, creadores, Ibai, boxeo, midudev" />
 
-    <meta name="robots" content="index, follow" />
-    <meta name="googlebot" content="index, follow" />
-  </head>
-  <body>
-    <div class="relative container mx-auto w-screen -z-10 overflow-x-clip">
-      <img
-        aria-hidden="true"
-        src="/lights.svg"
-        class="absolute md:scale-125 lg:scale-100 lg:left-0 top-0 opacity-0 transform-gpu w-screen brightness-0 dark:brightness-200"
-        onload="this.classList.add('animate-fade-in', 'animate-duration-500')"
-        alt="Focos de luz"
-      />
-    </div>
-    <div class="max-w-6xl px-2 lg:px-10 pt-16 md:pt-20 mx-auto">
-      <slot />
-    </div>
-  </body>
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:site" content="@infoLaVelada" />
+		<meta name="twitter:creator" content="@IbaiLlanos" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content="/og.jpg" />
+
+		<meta name="og:image" content="/og.jpg" />
+		<meta name="og:title" content={title} />
+		<meta name="og:description" content={description} />
+		<meta name="og:url" content="https://lavelada.es" />
+		<meta name="og:site_name" content="La Velada 4" />
+		<meta name="og:type" content="website" />
+		<meta name="og:locale" content="es_ES" />
+
+		<meta name="robots" content="index, follow" />
+		<meta name="googlebot" content="index, follow" />
+	</head>
+
+	<body
+		class="[&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
+	>
+		<div class="container relative -z-10 mx-auto w-screen overflow-x-clip">
+			<img
+				aria-hidden="true"
+				src="/lights.svg"
+				class="absolute top-0 w-screen transform-gpu opacity-0 brightness-0 dark:brightness-200 md:scale-125 lg:left-0 lg:scale-100"
+				onload="this.classList.add('animate-fade-in', 'animate-duration-500')"
+				alt="Focos de luz"
+			/>
+		</div>
+		<div class="mx-auto max-w-6xl px-2 pt-16 md:pt-20 lg:px-10">
+			<slot />
+		</div>
+	</body>
 </html>
 
 <style is:global>
-  :root {
-    --color-primary: #333;
-    --color-secondary: #ddd;
-    --color-twitch: #6441a4;
+	:root {
+		--color-primary: #333;
+		--color-secondary: #ddd;
+		--color-twitch: #6441a4;
 
-    --background-color: var(--color-secondary);
-    --background-image: var(--background-color) url("/concrete.png") repeat;
-  }
+		--background-color: var(--color-secondary);
+		--background-image: var(--background-color) url("/concrete.png") repeat;
+	}
 
-  .dark {
-    --color-primary: #ddd;
-    --color-secondary: #333;
-    --color-twitch: #a270ff;
+	.dark {
+		--color-primary: #ddd;
+		--color-secondary: #333;
+		--color-twitch: #a270ff;
 
-    --background-image: var(--background-color) url("/concrete-dark.png") repeat;
-  }
+		--background-image: var(--background-color) url("/concrete-dark.png") repeat;
+	}
 
-  html {
-    font-family: "Jost Variable", system-ui, sans-serif;
-    background: var(--background-image);
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-    overscroll-behavior: none;
-  }
+	html {
+		font-family: "Jost Variable", system-ui, sans-serif;
+		background: var(--background-image);
+		scroll-behavior: smooth;
+		overflow-x: hidden;
+		overscroll-behavior: none;
+	}
 
-  /* Hiding class, making content visible only to screen readers but not visually */
-  /* "sr" meaning "screen-reader" */
-  .sr-only:not(:focus):not(:active) {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
-  }
+	/* Hiding class, making content visible only to screen readers but not visually */
+	/* "sr" meaning "screen-reader" */
+	.sr-only:not(:focus):not(:active) {
+		clip: rect(0 0 0 0);
+		clip-path: inset(50%);
+		height: 1px;
+		overflow: hidden;
+		position: absolute;
+		white-space: nowrap;
+		width: 1px;
+	}
 
-  ::-webkit-scrollbar {
-    width: 10px;
-    border-radius: 10px;
-  }
+	::-webkit-scrollbar {
+		width: 10px;
+		border-radius: 10px;
+	}
 
-  ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-color: theme("colors.primary");
-    border: 2px solid transparent;
-    background-clip: content-box;
-  }
+	::-webkit-scrollbar-thumb {
+		border-radius: 10px;
+		background-color: theme("colors.primary");
+		border: 2px solid transparent;
+		background-clip: content-box;
+	}
 
-  ::-webkit-scrollbar-track {
-    background: var(--background-image);
-  }
+	::-webkit-scrollbar-track {
+		background: var(--background-image);
+	}
 
-  ::-webkit-scrollbar-corner {
-    background: var(--background-image);
-  }
+	::-webkit-scrollbar-corner {
+		background: var(--background-image);
+	}
 </style>
