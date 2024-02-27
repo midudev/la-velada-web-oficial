@@ -4,97 +4,94 @@ import Date from "@/components/Date.astro"
 import { EVENT_TIMESTAMP } from "@/consts/event-date"
 ---
 
-<section class="my-0 lg:my-32 flex flex-col gap-y-10 place-items-center" aria-label="cuenta atrás">
-  
-  <LaVeladaLogo class="text-primary" />
-  <p
-    class="uppercase text-lg font-medium text-primary opacity-80 text-center text-balance"
-  >
-    Para el Evento de Presentación faltan
-  </p>
-  
-  <div
-    class="flex flex-row gap-x-1 text-primary uppercase font-semibold"
-    data-date={EVENT_TIMESTAMP} role="timer"
-  >
-    <Date time="00" dateType="Días" attribute={{ "data-days": "" }} />
+<section class="my-0 flex flex-col place-items-center gap-y-10 lg:my-32" aria-label="cuenta atrás">
+	<LaVeladaLogo class="text-primary" />
+	<p class="text-balance text-center text-lg font-medium uppercase text-primary opacity-80">
+		Para el Evento de Presentación faltan
+	</p>
 
-    <span aria-hidden="true" class="mt-1 text-xl">:</span>
+	<div
+		class="flex flex-row gap-x-1 font-semibold uppercase text-primary"
+		data-date={EVENT_TIMESTAMP}
+		role="timer"
+	>
+		<Date time="00" dateType="Días" attribute={{ "data-days": "" }} />
 
-    <Date time="00" dateType="Horas" attribute={{ "data-hours": "" }} />
+		<span aria-hidden="true" class="mt-1 text-xl">:</span>
 
-    <span aria-hidden="true" class="mt-1 text-xl">:</span>
+		<Date time="00" dateType="Horas" attribute={{ "data-hours": "" }} />
 
-    <Date time="00" dateType="Minutos" attribute={{ "data-minutes": "" }} />
+		<span aria-hidden="true" class="mt-1 text-xl">:</span>
 
-    <span aria-hidden="true" class="mt-1 text-xl">:</span>
+		<Date time="00" dateType="Minutos" attribute={{ "data-minutes": "" }} />
 
-    <Date time="00" dateType="Segundos" attribute={{ "data-seconds": "" }} />
-  </div>
+		<span aria-hidden="true" class="mt-1 text-xl">:</span>
+
+		<Date time="00" dateType="Segundos" attribute={{ "data-seconds": "" }} />
+	</div>
 </section>
 
 <script>
-import JSConfetti from 'js-confetti'
+	const SECOND = 1000
+	const MINUTE = SECOND * 60
+	const HOUR = MINUTE * 60
+	const DAY = HOUR * 24
 
-  const SECOND = 1000
-  const MINUTE = SECOND * 60
-  const HOUR = MINUTE * 60
-  const DAY = HOUR * 24
+	function init() {
+		const $countdown = document.querySelector("[data-date]")
+		if (!$countdown) return
 
-  function init() {
-    const $countdown = document.querySelector("[data-date]")
-    if (!$countdown) return
+		let intervalId: number
 
-    const $days = $countdown.querySelector("[data-days]")
-    const $hours = $countdown.querySelector("[data-hours]")
-    const $minutes = $countdown.querySelector("[data-minutes]")
-    const $seconds = $countdown.querySelector("[data-seconds]")
+		const $days = $countdown.querySelector("[data-days]")
+		const $hours = $countdown.querySelector("[data-hours]")
+		const $minutes = $countdown.querySelector("[data-minutes]")
+		const $seconds = $countdown.querySelector("[data-seconds]")
 
-    const timestamp = $countdown.getAttribute("data-date")
-    if (!timestamp) return
+		const timestamp = $countdown.getAttribute("data-date")
+		if (!timestamp) return
 
-    const date = new Date(+timestamp).getTime()
+		const date = new Date(+timestamp).getTime()
 
-    const formatTime = (time: number) => {
-      return Math.floor(time).toString().padStart(2, "0")
-    }
+		const formatTime = (time: number) => {
+			return Math.floor(time).toString().padStart(2, "0")
+		}
 
-    function updateCountdown() {
-      const now = Date.now()
-      const diff = date - now
-      const $countdown = document.querySelector("[data-date]")
-      if (!$countdown) return
+		function updateCountdown() {
+			const now = Date.now()
+			const diff = date - now
+			const $countdown = document.querySelector("[data-date]")
+			if (!$countdown) return
 
-      if ($days instanceof HTMLElement) {
-        $days.innerText = formatTime(diff / DAY)
-      }
+			if ($days instanceof HTMLElement) {
+				$days.innerText = formatTime(diff / DAY)
+			}
 
-      if ($hours instanceof HTMLElement) {
-        $hours.innerText = formatTime((diff % DAY) / HOUR)
-      }
+			if ($hours instanceof HTMLElement) {
+				$hours.innerText = formatTime((diff % DAY) / HOUR)
+			}
 
-      if ($minutes instanceof HTMLElement) {
-        $minutes.innerText = formatTime((diff % HOUR) / MINUTE)
-      }
+			if ($minutes instanceof HTMLElement) {
+				$minutes.innerText = formatTime((diff % HOUR) / MINUTE)
+			}
 
-      if ($seconds instanceof HTMLElement) {
-        $seconds.innerText = formatTime((diff % MINUTE) / SECOND)
-      }
-      
-      if (diff < 1000) {
-        clearInterval(intervalId)
+			if ($seconds instanceof HTMLElement) {
+				$seconds.innerText = formatTime((diff % MINUTE) / SECOND)
+			}
 
-        $countdown.innerHTML = "¡La velada ha comenzado! 🎉"
-        $countdown.className = "text-primary uppercase font-semibold animate-fade-in text-3xl"
+			clearInterval(intervalId)
 
-        const confetti = new JSConfetti()
-        confetti.addConfetti()
-      }
-    }
-    
-    const intervalId = setInterval(updateCountdown, SECOND)
-    updateCountdown()
-  }
+			$countdown.innerHTML = "¡La velada ha comenzado! 🎉"
+			$countdown.className = "text-primary uppercase font-semibold animate-fade-in text-3xl"
 
-  init()
+			import("canvas-confetti").then(({ default: confetti }) => {
+				confetti()
+			})
+		}
+
+		intervalId = setInterval(updateCountdown, SECOND)
+		updateCountdown()
+	}
+
+	init()
 </script>
