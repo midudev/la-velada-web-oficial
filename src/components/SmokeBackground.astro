@@ -6,7 +6,7 @@
 	const $bkg = document.getElementById("smoke-bkg")
 
 	let w = window.innerWidth
-	let h = window.innerHeight
+	let h = window.screen.height
 
 	const THEME = {
 		dark: {
@@ -88,7 +88,7 @@
 	})
 
 	function resize() {
-		h = window.innerHeight
+		h = window.screen.height
 		w = window.innerWidth
 		camera.aspect = w / h
 		camera.updateProjectionMatrix() // este metodo lo tenéis que ejecutar siempre que cambiais los parámetros de la cámara
