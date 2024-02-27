@@ -79,14 +79,16 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 				$seconds.innerText = formatTime((diff % MINUTE) / SECOND)
 			}
 
-			clearInterval(intervalId)
+			if (diff < 1000) {
+				clearInterval(intervalId)
 
-			$countdown.innerHTML = "¡La velada ha comenzado! 🎉"
-			$countdown.className = "text-primary uppercase font-semibold animate-fade-in text-3xl"
+				$countdown.innerHTML = "¡La velada ha comenzado! 🎉"
+				$countdown.className = "text-primary uppercase font-semibold animate-fade-in text-3xl"
 
-			import("canvas-confetti").then(({ default: confetti }) => {
-				confetti()
-			})
+				import("canvas-confetti").then(({ default: confetti }) => {
+					confetti()
+				})
+			}
 		}
 
 		intervalId = setInterval(updateCountdown, SECOND)
