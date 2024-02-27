@@ -1,53 +1,48 @@
 ---
 import SunIcon from "@/icons/sun.astro"
 import MoonIcon from "@/icons/moon.astro"
+import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
 ---
 
 <button
-  id="themeToggle"
-  class="inline-flex text-primary transition any-hover:scale-125 any-hover:opacity-70"
+	id="themeToggle"
+	class="inline-flex text-primary transition any-hover:scale-125 any-hover:opacity-70"
 >
-  <SunIcon
-    class="opacity-100 transition-transform dark:-rotate-90 dark:opacity-0"
-  />
-  <MoonIcon
-    class="absolute rotate-90 opacity-0 transition-transform dark:rotate-0 dark:opacity-100"
-  />
-  <span class="sr-only"></span>
+	<SunIcon class="opacity-100 transition-transform dark:-rotate-90 dark:opacity-0" />
+	<MoonIcon
+		class="absolute rotate-90 opacity-0 transition-transform dark:rotate-0 dark:opacity-100"
+	/>
+	<span class="sr-only"></span>
 </button>
 
-<script is:inline>
-  const getThemePreference = () => {
-    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-      return localStorage.getItem("theme")
-    }
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light"
-  }
-  const isDark = getThemePreference() === "dark"
-  document.documentElement.classList[isDark ? "add" : "remove"]("dark")
+<script is:inline define:vars={{ darkTheme: DARK_THEME, lightTheme: LIGHT_THEME }}>
+	const updateThemeMessage = (isDark) => {
+		const translation = isDark ? "oscuro" : "claro"
+		const actualThemeMsg = `Alternar tema, el tema actual es ${translation}`
+		const span = document.querySelector("span.sr-only")
+		span.innerHTML = actualThemeMsg
+	}
 
-  const handleToggleClick = () => {
-    const element = document.documentElement
-    element.classList.toggle("dark")
+	const getThemePreference = () => {
+		if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+			return localStorage.getItem("theme")
+		}
+		return window.matchMedia("(prefers-color-scheme: dark)").matches ? darkTheme : lightTheme
+	}
 
-    const isDark = element.classList.contains("dark")
-    localStorage.setItem("theme", isDark ? "dark" : "light")
+	const isDark = getThemePreference() === darkTheme
+	document.documentElement.classList[isDark ? "add" : "remove"](darkTheme)
 
-	updateThemeMessage(isDark ? "dark" : "light");
-  }
+	const handleToggleClick = () => {
+		const element = document.documentElement
+		element.classList.toggle(darkTheme)
 
-  document
-    .getElementById("themeToggle")
-    .addEventListener("click", handleToggleClick)
+		const isDark = element.classList.contains(darkTheme)
+		localStorage.setItem("theme", isDark ? darkTheme : lightTheme)
 
-  const updateThemeMessage = (theme) => {
-	const translation = theme === "dark" ? "oscuro" : "claro";
-	const actualThemeMsg = `Alternar tema, el tema actual es ${translation}`;
-	let span = document.querySelector("span.sr-only");
-	span.innerHTML = actualThemeMsg;
-  };
-  
-  updateThemeMessage(getThemePreference());
+		updateThemeMessage(isDark)
+	}
+
+	document.getElementById("themeToggle").addEventListener("click", handleToggleClick)
+	updateThemeMessage(getThemePreference())
 </script>
