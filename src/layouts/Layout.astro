@@ -2,12 +2,11 @@
 import "@fontsource-variable/jost"
 
 interface Props {
+	description: string
 	title: string
 }
 
-const { title } = Astro.props
-const descriptionPage =
-	"Web oficial de La Velada IV, evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos"
+const { title, description } = Astro.props
 ---
 
 <!doctype html>
@@ -16,7 +15,7 @@ const descriptionPage =
 		<title>{title}</title>
 
 		<meta charset="UTF-8" />
-		<meta name="description" content={descriptionPage} />
+		<meta name="description" content={description} />
 
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="canonical" href="https://lavelada.es" />
@@ -26,14 +25,14 @@ const descriptionPage =
 
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:site" content="@infoLaVelada" />
-		<meta name="twitter:creator" content="@ibai" />
+		<meta name="twitter:creator" content="@IbaiLlanos" />
 		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={descriptionPage} />
+		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content="/og.jpg" />
 
 		<meta name="og:image" content="/og.jpg" />
 		<meta name="og:title" content={title} />
-		<meta name="og:description" content={descriptionPage} />
+		<meta name="og:description" content={description} />
 		<meta name="og:url" content="https://lavelada.es" />
 		<meta name="og:site_name" content="La Velada 4" />
 		<meta name="og:type" content="website" />
@@ -42,6 +41,7 @@ const descriptionPage =
 		<meta name="robots" content="index, follow" />
 		<meta name="googlebot" content="index, follow" />
 	</head>
+
 	<body>
 		<div class="container relative -z-10 mx-auto w-screen overflow-x-clip">
 			<img
