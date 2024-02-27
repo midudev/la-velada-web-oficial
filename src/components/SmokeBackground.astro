@@ -117,7 +117,13 @@
 		renderer.setClearColor(currentTheme.background, 1)
 
 		smokeParticles.forEach((particle) => {
-			particle.material.opacity = currentTheme.opacity
+			if (!Array.isArray(particle.material)) {
+				particle.material.opacity = currentTheme.opacity
+			} else {
+				particle.material.forEach((material) => {
+					material.opacity = currentTheme.opacity
+				})
+			}
 		})
 	})
 </script>

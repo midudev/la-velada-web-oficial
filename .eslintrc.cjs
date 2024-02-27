@@ -61,7 +61,7 @@ module.exports = {
 				"astro/no-conflict-set-directives": "warn",
 				"astro/no-unused-define-vars-in-style": "warn",
 				"astro/no-unused-css-selector": "off",
-				"astro/prefer-class-list-directive": "warn",
+				"astro/prefer-class-list-directive": "off",
 				"astro/semi": ["warn", "never"],
 				"astro/jsx-a11y/anchor-is-valid": "warn",
 				"@stylistic/ts/indent": "off",
