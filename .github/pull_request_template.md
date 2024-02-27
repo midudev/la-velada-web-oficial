@@ -1,18 +1,18 @@
 ## Descripción
 
-[Describa brevemente los cambios realizados en esta solicitud de extracción.]
+<!-- Describa brevemente los cambios realizados en esta solicitud de extracción. -->
 
 ## Problema solucionado
 
-[Describa el problema o la tarea que aborda esta solicitud de extracción, si corresponde. Incluya el número de problema o enlace al problema si existe.]
+<!-- Describa el problema o la tarea que aborda esta solicitud de extracción, si corresponde. Incluya el número de problema o enlace al problema si existe. -->
 
 ## Cambios propuestos
 
-[Enumere los cambios específicos que ha realizado en el código, incluidas las nuevas características agregadas, las modificaciones existentes y cualquier eliminación de código. Proporcione una explicación clara de los cambios y su propósito.]
+<!-- Enumere los cambios específicos que ha realizado en el código, incluidas las nuevas características agregadas, las modificaciones existentes y cualquier eliminación de código. Proporcione una explicación clara de los cambios y su propósito. -->
 
 ## Capturas de pantalla (si corresponde)
 
-[Si los cambios afectan la apariencia visual de la landing page, incluya capturas de pantalla antes y después, si es posible.]
+<!-- Si los cambios afectan la apariencia visual de la landing page, incluya capturas de pantalla antes y después, si es posible. -->
 
 ## Comprobación de cambios
 
@@ -22,13 +22,13 @@
 
 ## Impacto potencial
 
-[Describa cualquier impacto potencial que estos cambios puedan tener, como posibles problemas de compatibilidad o cambios en el rendimiento.]
+<!-- Describa cualquier impacto potencial que estos cambios puedan tener, como posibles problemas de compatibilidad o cambios en el rendimiento. -->
 
 ## Contexto adicional
 
-[Agregue cualquier contexto adicional que considere relevante para esta solicitud de extracción.]
+<!-- Agregue cualquier contexto adicional que considere relevante para esta solicitud de extracción. -->
 
 ## Enlaces útiles
 
-- Documentación del proyecto: [Enlace a la documentación del proyecto, si está disponible.]
-- Código de referencia: [Enlace al código de referencia o a la sección relevante del código fuente, si es aplicable.]
+- Documentación del proyecto: <!-- Enlace a la documentación del proyecto, si está disponible. -->
+- Código de referencia: <!-- Enlace al código de referencia o a la sección relevante del código fuente, si es aplicable. -->

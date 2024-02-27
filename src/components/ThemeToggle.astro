@@ -5,7 +5,7 @@ import MoonIcon from "@/icons/moon.astro"
 
 <button
   id="themeToggle"
-  class="inline-flex text-primary transition hover:scale-125 hover:opacity-70"
+  class="inline-flex text-primary transition any-hover:scale-125 any-hover:opacity-70"
 >
   <SunIcon
     class="opacity-100 transition-transform dark:-rotate-90 dark:opacity-0"
@@ -13,7 +13,7 @@ import MoonIcon from "@/icons/moon.astro"
   <MoonIcon
     class="absolute rotate-90 opacity-0 transition-transform dark:rotate-0 dark:opacity-100"
   />
-  <span class="sr-only">Alternar tema</span>
+  <span class="sr-only"></span>
 </button>
 
 <script is:inline>
@@ -34,9 +34,20 @@ import MoonIcon from "@/icons/moon.astro"
 
     const isDark = element.classList.contains("dark")
     localStorage.setItem("theme", isDark ? "dark" : "light")
+
+	updateThemeMessage(isDark ? "dark" : "light");
   }
 
   document
     .getElementById("themeToggle")
     .addEventListener("click", handleToggleClick)
+
+  const updateThemeMessage = (theme) => {
+	const translation = theme === "dark" ? "oscuro" : "claro";
+	const actualThemeMsg = `Alternar tema, el tema actual es ${translation}`;
+	let span = document.querySelector("span.sr-only");
+	span.innerHTML = actualThemeMsg;
+  };
+  
+  updateThemeMessage(getThemePreference());
 </script>
