@@ -10,10 +10,10 @@
     animate()
     function init() {
         clock = new THREE.Clock()
-        renderer = new THREE.WebGLRenderer({ alpha: true }) // Fondo transparente
-        renderer.setSize(window.innerWidth, window.innerHeight) // Tamaño inicial igual al de la ventana
+        renderer = new THREE.WebGLRenderer({ alpha: true })
+        renderer.setSize(window.innerWidth, window.innerHeight)
         renderer.setPixelRatio(window.devicePixelRatio)
-        renderer.domElement.style.position = "fixed" // Posición fija
+        renderer.domElement.style.position = "fixed"
         scene = new THREE.Scene()
         camera = new THREE.PerspectiveCamera(
             75,
@@ -33,17 +33,17 @@
         light.position.set(-1, 1, 1)
         scene.add(light)
         const smokeTexture = new THREE.TextureLoader().load(
-            "/Smoke.webp"
+            "/smoke.webp"
         )
         const smokeMaterial = new THREE.MeshBasicMaterial({
             map: smokeTexture,
             transparent: true,
-            opacity: 0.5 // Ajusta la opacidad según lo necesites
+            opacity: 0.5
         })
         const smokeGeo = new THREE.PlaneGeometry(
             window.innerWidth,
             window.innerHeight
-        ) // Tamaño inicial igual al de la ventana
+        )
         smokeParticles = []
         for (let p = 0; p < 150; p++) {
             const particle = new THREE.Mesh(smokeGeo, smokeMaterial)
@@ -56,8 +56,8 @@
             scene.add(particle)
             smokeParticles.push(particle)
         }
-        const miDiv = document.getElementById("miDiv")
-        miDiv?.appendChild(renderer.domElement)
+        const smokeRender = document.getElementById("smoke")
+        smokeRender?.appendChild(renderer.domElement)
     }
     function animate() {
         const delta = clock.getDelta()
@@ -76,16 +76,15 @@
         mesh.position.z =
             100 + Math.sin(clock.getElapsedTime() * 0.02) * 500
         camera.aspect = window.innerWidth / window.innerHeight
-        camera.updateProjectionMatrix() // Actualizar la matriz de proyección de la cámara
-        renderer.setSize(window.innerWidth, window.innerHeight) // Ajustar el tamaño del renderizador
+        camera.updateProjectionMatrix() 
+        renderer.setSize(window.innerWidth, window.innerHeight) 
         renderer.render(scene, camera)
     }
-    // Manejar el evento de cambio de tamaño de la ventana
     window.addEventListener("resize", () => {
         camera.aspect = window.innerWidth / window.innerHeight
-        camera.updateProjectionMatrix() // Actualizar la matriz de proyección de la cámara
-        renderer.setSize(window.innerWidth, window.innerHeight) // Ajustar el tamaño del renderizador
+        camera.updateProjectionMatrix() 
+        renderer.setSize(window.innerWidth, window.innerHeight)
     })
     </script>
-       <div id="miDiv" class="absolute t-0 l-0  -z-[99999] dark:opacity-[0.3]">
+       <div id="smoke" class="absolute t-0 l-0  -z-[99999] dark:opacity-[0.3]">
        </div>
