@@ -20,12 +20,10 @@
 		const THEME = {
 			dark: {
 				background: 0x666666,
-				light: 0xffffff,
-				opacity: 1,
+				opacity: 0.1,
 			},
 			light: {
 				background: 0xeeeeee,
-				light: 0xffffff,
 				opacity: 0.1,
 			},
 		} as const
@@ -54,15 +52,9 @@
 		})
 		renderer.setSize(w, h)
 		// color de fondo
-		renderer.setClearColor(currentTheme.background, 1)
+		scene.background = new THREE.Color(currentTheme.background)
 
 		$bkg?.appendChild(renderer.domElement)
-
-		// añadir una luz directional
-		const light = new THREE.DirectionalLight(currentTheme.light, 0.5)
-		// posicion de la luz
-		light.position.set(-1, 3, 1)
-		scene.add(light)
 
 		const smokeParticles: THREE.Mesh[] = []
 
@@ -142,8 +134,7 @@
 		window.addEventListener("theme-changed", () => {
 			const themePreference = window.getThemePreference()
 			currentTheme = THEME[themePreference]
-			light.color.setHex(currentTheme.light)
-			renderer.setClearColor(currentTheme.background, 1)
+			scene.background = new THREE.Color(currentTheme.background)
 
 			smokeParticles.forEach((particle) => {
 				const smokeMaterial = particle.material as THREE.MeshLambertMaterial
