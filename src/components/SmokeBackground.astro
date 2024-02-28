@@ -12,6 +12,8 @@
 	if (!reducedMotion.matches) {
 		const $bkg = document.getElementById("smoke-bkg")
 
+		let animationFrameId: number = 0
+
 		let w = window.innerWidth
 		let h = window.screen.height
 
@@ -106,16 +108,28 @@
 		}
 
 		function animate() {
-			requestAnimationFrame(animate)
-
-			smokeParticles.forEach((particle) => {
-				particle.rotation.z += 0.001
-			})
+			animationFrameId = requestAnimationFrame(animate)
+			let count = smokeParticles.length
+			while (count--) {
+				smokeParticles[count].rotation.z += 0.001
+			}
 
 			renderer.render(scene, camera)
 		}
 
 		animate()
+
+		document.addEventListener("visibilitychange", () => {
+			if (document.hidden && animationFrameId !== 0) {
+				cancelAnimationFrame(animationFrameId)
+				animationFrameId = 0
+				return
+			}
+
+			if (animationFrameId === 0) {
+				animate()
+			}
+		})
 
 		// se va a disparar continuamente mientras hace el resize
 		window.addEventListener("resize", resize)
