@@ -6,7 +6,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 
 <section class="my-0 flex flex-col place-items-center gap-y-10 lg:my-32" aria-label="cuenta atrás">
 	<LaVeladaLogo class="text-primary" />
-	<p class="text-balance text-center text-lg font-medium uppercase text-primary opacity-80">
+	<p class="text-balance text-center text-lg font-medium uppercase text-primary opacity-80 countdown-text">
 		Para el Evento de Presentación faltan
 	</p>
 
@@ -120,8 +120,9 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 
 			if (diff < 1000) {
 				clearInterval(intervalId)
+				document.querySelector(".countdown-text")?.remove()
 
-				$countdown.innerHTML = "¡La velada ha comenzado! 🎉"
+				$countdown.innerHTML = "¡El evento de presentación ha empezado! 🎉"
 				$countdown.className = "text-primary uppercase font-semibold animate-fade-in text-3xl"
 
 				import("canvas-confetti").then(({ default: confetti }) => {
