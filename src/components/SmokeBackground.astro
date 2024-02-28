@@ -46,7 +46,12 @@
 		scene.add(camera)
 
 		// ▶️ renderizador
-		const renderer = new THREE.WebGLRenderer()
+		const renderer = new THREE.WebGLRenderer({
+			antialias: false,
+			alpha: true,
+			powerPreference: "low-power",
+			precision: "lowp",
+		})
 		renderer.setSize(w, h)
 		// color de fondo
 		renderer.setClearColor(currentTheme.background, 1)
