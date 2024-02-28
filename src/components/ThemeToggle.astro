@@ -34,6 +34,16 @@ import MoonIcon from "@/icons/moon.astro"
 		window.dispatchEvent(new Event("theme-changed"))
 	}
 
+	const handleThemePreferenceChange = (e) => {
+		const isDark = document.documentElement.classList.contains("dark")
+		const toggle = (e.matches && !isDark) || (!e.matches && isDark)
+		if (toggle) handleToggleClick()
+	}
+
+	const darkModePreference = window.matchMedia("(prefers-color-scheme: dark)")
+	darkModePreference.addEventListener("change", handleThemePreferenceChange)
+	darkModePreference.addListener(handleThemePreferenceChange) // backward compatibility
+
 	document.getElementById("themeToggle").addEventListener("click", handleToggleClick)
 	updateThemeMessage(window.getThemePreference())
 </script>
