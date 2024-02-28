@@ -58,7 +58,7 @@ const { title, description } = Astro.props
 		class="[&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
 		<SmokeBackground />
-		<div class="mx-auto max-w-6xl px-2 pt-16 md:pt-20 lg:px-10">
+		<div class="mx-auto max-w-6xl px-2 pt-16 md:pt-20 lg:px-10" id="main-content">
 			<slot />
 		</div>
 	</body>
@@ -71,7 +71,7 @@ const { title, description } = Astro.props
 		--color-twitch: #9146ff;
 		--color-twitch-ice: #f0f0ff;
 
-		--background-color: var(--color-secondary);
+		--background-color: #bbb;
 		--background-twitch: #000;
 		--background-image: var(--background-color) url("/concrete.png") repeat;
 	}
@@ -80,13 +80,14 @@ const { title, description } = Astro.props
 		--color-primary: #ddd;
 		--color-secondary: #333;
 
+    --background-color: #333;
 		--background-twitch: var(--color-twitch-ice);
 		--background-image: var(--background-color) url("/concrete-dark.png") repeat;
 	}
 
 	html {
 		font-family: "Jost Variable", system-ui, sans-serif;
-		background: var(--background-image);
+		background: var(--background-color);
 		scroll-behavior: smooth;
 		overflow-x: hidden;
 		overscroll-behavior: none;
