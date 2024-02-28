@@ -12,6 +12,10 @@
 	if (!reducedMotion.matches) {
 		const $bkg = document.getElementById("smoke-bkg")
 
+		let delta = 0
+		const clock = new THREE.Clock()
+		const interval = 1 / 30 // fps
+
 		let animationFrameId: number = 0
 
 		let w = window.innerWidth
@@ -106,12 +110,18 @@
 
 		function animate() {
 			animationFrameId = requestAnimationFrame(animate)
-			let count = smokeParticles.length
-			while (count--) {
-				smokeParticles[count].rotation.z += 0.001
-			}
+			delta += clock.getDelta()
 
-			renderer.render(scene, camera)
+			if (delta > interval) {
+				let count = smokeParticles.length
+				while (count--) {
+					smokeParticles[count].rotation.z += delta * 0.2
+				}
+
+				renderer.render(scene, camera)
+
+				delta = 0
+			}
 		}
 
 		animate()
