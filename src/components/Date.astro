@@ -1,14 +1,82 @@
 ---
 interface Props {
-	time: string
 	dateType: string
 	attribute: Record<string, string>
 }
 
-const { time, dateType, attribute } = Astro.props
+const { dateType, attribute } = Astro.props
 ---
 
 <div class="flex w-16 flex-col place-items-center gap-y-2">
-	<span class="text-4xl tabular-nums" {...attribute}>{time}</span>
+	<div class="relative overflow-hidden" {...attribute}>
+		<div class="float-left block h-10 w-auto overflow-hidden" data-first-group>
+			<div class="translate-y-0 transition-transform duration-[800ms]" data-wrapper>
+				<div class="h-10" data-num-0>
+					<span class="text-4xl tabular-nums">0</span>
+				</div>
+				<div class="h-10" data-num-1>
+					<span class="text-4xl tabular-nums">1</span>
+				</div>
+				<div class="h-10" data-num-2>
+					<span class="text-4xl tabular-nums">2</span>
+				</div>
+				<div class="h-10" data-num-3>
+					<span class="text-4xl tabular-nums">3</span>
+				</div>
+				<div class="h-10" data-num-4>
+					<span class="text-4xl tabular-nums">4</span>
+				</div>
+				<div class="h-10" data-num-5>
+					<span class="text-4xl tabular-nums">5</span>
+				</div>
+				<div class="h-10" data-num-6>
+					<span class="text-4xl tabular-nums">6</span>
+				</div>
+				<div class="h-10" data-num-7>
+					<span class="text-4xl tabular-nums">7</span>
+				</div>
+				<div class="h-10" data-num-8>
+					<span class="text-4xl tabular-nums">8</span>
+				</div>
+				<div class="h-10" data-num-9>
+					<span class="text-4xl tabular-nums">9</span>
+				</div>
+			</div>
+		</div>
+		<div class="float-left block h-10 w-auto overflow-hidden" data-second-group>
+			<div class="translate-y-0 transition-transform duration-[800ms]" data-wrapper>
+				<div class="h-10" data-num-0>
+					<span class="text-4xl tabular-nums">0</span>
+				</div>
+				<div class="h-10" data-num-1>
+					<span class="text-4xl tabular-nums">1</span>
+				</div>
+				<div class="h-10" data-num-2>
+					<span class="text-4xl tabular-nums">2</span>
+				</div>
+				<div class="h-10" data-num-3>
+					<span class="text-4xl tabular-nums">3</span>
+				</div>
+				<div class="h-10" data-num-4>
+					<span class="text-4xl tabular-nums">4</span>
+				</div>
+				<div class="h-10" data-num-5>
+					<span class="text-4xl tabular-nums">5</span>
+				</div>
+				<div class="h-10" data-num-6>
+					<span class="text-4xl tabular-nums">6</span>
+				</div>
+				<div class="h-10" data-num-7>
+					<span class="text-4xl tabular-nums">7</span>
+				</div>
+				<div class="h-10" data-num-8>
+					<span class="text-4xl tabular-nums">8</span>
+				</div>
+				<div class="h-10" data-num-9>
+					<span class="text-4xl tabular-nums">9</span>
+				</div>
+			</div>
+		</div>
+	</div>
 	<span class="text-center text-xs">{dateType}</span>
 </div>

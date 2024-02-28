@@ -1,4 +1,8 @@
-<div id="smoke-bkg" class="fixed top-0 -z-10 h-full w-full"></div>
+<div
+	id="smoke-bkg"
+	class="fixed top-0 -z-10 h-full w-full opacity-0 transition-opacity duration-500"
+>
+</div>
 
 <script>
 	import * as THREE from "three"
@@ -9,7 +13,7 @@
 		const $bkg = document.getElementById("smoke-bkg")
 
 		let w = window.innerWidth
-		let h = window.innerHeight
+		let h = window.screen.height
 
 		const THEME = {
 			dark: {
@@ -88,10 +92,12 @@
 				// añadimos la particula al array
 				smokeParticles.push(particle)
 			}
+
+			$bkg?.classList.remove("opacity-0")
 		})
 
 		function resize() {
-			h = window.innerHeight
+			h = window.screen.height
 			w = window.innerWidth
 			camera.aspect = w / h
 			camera.updateProjectionMatrix() // este metodo lo tenéis que ejecutar siempre que cambiais los parámetros de la cámara
@@ -120,13 +126,8 @@
 			renderer.setClearColor(currentTheme.background, 1)
 
 			smokeParticles.forEach((particle) => {
-				if (!Array.isArray(particle.material)) {
-					particle.material.opacity = currentTheme.opacity
-				} else {
-					particle.material.forEach((material) => {
-						material.opacity = currentTheme.opacity
-					})
-				}
+				const smokeMaterial = particle.material as THREE.MeshLambertMaterial
+				smokeMaterial.opacity = currentTheme.opacity
 			})
 		})
 	}

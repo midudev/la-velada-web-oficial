@@ -1,3 +1,7 @@
+---
+import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
+---
+
 <button
 	id="add-to-calendar"
 	class:list={`
@@ -11,7 +15,7 @@
 	Agregar al calendario
 </button>
 
-<script is:inline>
+<script is:inline define:vars={{ darkTheme: DARK_THEME, lightTheme: LIGHT_THEME }}>
 	const config = {
 		name: "🥊 La Velada del Año 4 - Evento de Presentación",
 		description:
@@ -54,7 +58,7 @@
 			button.innerHTML = text
 		}
 
-		const theme = document.documentElement.classList.contains("dark") ? "dark" : "light"
+		const theme = document.documentElement.classList.contains(darkTheme) ? darkTheme : lightTheme
 		config.lightMode = theme
 
 		window.atcb_action(config, button)
