@@ -1,5 +1,5 @@
 <script defer>
-	const container = document.querySelector("body")
+	const container = document.querySelector("#main-content")
 
 	const konamiCode = [
 		"ArrowUp",
@@ -28,11 +28,11 @@
 		if (konamiCodePosition !== konamiCode.length) return
 
 		container.style.transform = "rotateY(360deg)"
-		container.style.transition = "transform 3s ease"
+		container.style.transition = "transform 2s ease"
 
 		container.addEventListener("transitionend", () => {
-			container.style.transition = "none"
-			container.style.transform = "rotateY(0deg)"
+			container.style.transition = ""
+			container.style.transform = ""
 		})
 
 		konamiCodePosition = 0
