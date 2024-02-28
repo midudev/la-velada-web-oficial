@@ -15,19 +15,19 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 		data-date={EVENT_TIMESTAMP}
 		role="timer"
 	>
-		<Date time="00" dateType="Días" attribute={{ "data-days": "" }} />
+		<Date dateType="Días" attribute={{ "data-days": "" }} />
 
 		<span aria-hidden="true" class="mt-1 text-xl">:</span>
 
-		<Date time="00" dateType="Horas" attribute={{ "data-hours": "" }} />
+		<Date dateType="Horas" attribute={{ "data-hours": "" }} />
 
 		<span aria-hidden="true" class="mt-1 text-xl">:</span>
 
-		<Date time="00" dateType="Minutos" attribute={{ "data-minutes": "" }} />
+		<Date dateType="Minutos" attribute={{ "data-minutes": "" }} />
 
 		<span aria-hidden="true" class="mt-1 text-xl">:</span>
 
-		<Date time="00" dateType="Segundos" attribute={{ "data-seconds": "" }} />
+		<Date dateType="Segundos" attribute={{ "data-seconds": "" }} />
 	</div>
 </section>
 
@@ -43,10 +43,25 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 
 		let intervalId: number
 
-		const $days = $countdown.querySelector("[data-days]")
-		const $hours = $countdown.querySelector("[data-hours]")
-		const $minutes = $countdown.querySelector("[data-minutes]")
-		const $seconds = $countdown.querySelector("[data-seconds]")
+		const $days = {
+			firstDigit: $countdown.querySelector("[data-days] [data-first-group]"),
+			secondDigit: $countdown.querySelector("[data-days] [data-second-group]"),
+		}
+
+		const $hours = {
+			firstDigit: $countdown.querySelector("[data-hours] [data-first-group]"),
+			secondDigit: $countdown.querySelector("[data-hours] [data-second-group]"),
+		}
+
+		const $minutes = {
+			firstDigit: $countdown.querySelector("[data-minutes] [data-first-group]"),
+			secondDigit: $countdown.querySelector("[data-minutes] [data-second-group]"),
+		}
+
+		const $seconds = {
+			firstDigit: $countdown.querySelector("[data-seconds] [data-first-group]"),
+			secondDigit: $countdown.querySelector("[data-seconds] [data-second-group]"),
+		}
 
 		const timestamp = $countdown.getAttribute("data-date")
 		if (!timestamp) return
@@ -57,26 +72,50 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 			return Math.floor(time).toString().padStart(2, "0")
 		}
 
+		function animateDigit(group: HTMLElement, value: string) {
+			const wrapper = group.querySelector("[data-wrapper]")
+			const num = group.querySelector(`[data-num-${value}]`)
+
+			if (wrapper instanceof HTMLElement && num instanceof HTMLElement) {
+				wrapper.style.transform = `translateY(-${num.offsetTop}px)`
+			}
+		}
+
 		function updateCountdown() {
 			const now = Date.now()
 			const diff = date - now
 			const $countdown = document.querySelector("[data-date]")
 			if (!$countdown) return
 
-			if ($days instanceof HTMLElement) {
-				$days.innerText = formatTime(diff / DAY)
+			const days = formatTime(diff / DAY)
+			const hours = formatTime((diff % DAY) / HOUR)
+			const minutes = formatTime((diff % HOUR) / MINUTE)
+			const seconds = formatTime((diff % MINUTE) / SECOND)
+
+			if ($days.firstDigit instanceof HTMLElement && $days.secondDigit instanceof HTMLElement) {
+				animateDigit($days.firstDigit, days[0])
+				animateDigit($days.secondDigit, days[1])
 			}
 
-			if ($hours instanceof HTMLElement) {
-				$hours.innerText = formatTime((diff % DAY) / HOUR)
+			if ($hours.firstDigit instanceof HTMLElement && $hours.secondDigit instanceof HTMLElement) {
+				animateDigit($hours.firstDigit, hours[0])
+				animateDigit($hours.secondDigit, hours[1])
 			}
 
-			if ($minutes instanceof HTMLElement) {
-				$minutes.innerText = formatTime((diff % HOUR) / MINUTE)
+			if (
+				$minutes.firstDigit instanceof HTMLElement &&
+				$minutes.secondDigit instanceof HTMLElement
+			) {
+				animateDigit($minutes.firstDigit, minutes[0])
+				animateDigit($minutes.secondDigit, minutes[1])
 			}
 
-			if ($seconds instanceof HTMLElement) {
-				$seconds.innerText = formatTime((diff % MINUTE) / SECOND)
+			if (
+				$seconds.firstDigit instanceof HTMLElement &&
+				$seconds.secondDigit instanceof HTMLElement
+			) {
+				animateDigit($seconds.firstDigit, seconds[0])
+				animateDigit($seconds.secondDigit, seconds[1])
 			}
 
 			if (diff < 1000) {
