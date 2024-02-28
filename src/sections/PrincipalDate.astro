@@ -27,28 +27,68 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		</a>
 	</h2>
 
-	<div class="mt-6 flex flex-col items-center gap-6 md:flex-row">
+	<div class="scroll-horizontal mt-6 flex flex-col items-center gap-9 md:flex-row">
 		<a
-			class:list={`
-                inline-block border-2 border-primary px-4 py-1
-                text-lg font-medium
-                uppercase transition hover:scale-110
-                hover:bg-primary hover:text-secondary
-            `}
 			href="https://www.teatrevictoria.com/es/cartelera/c/190_la-velada-del-ano-4.html"
 			target="_blank"
 			rel="noopener noreferrer"
 			aria-label="entradas agotadas, se abrirá en una nueva pestaña"
 		>
-			Entradas agotadas
+			<span> Entradas agotadas </span>
 		</a>
 
 		<CalendarButton />
 	</div>
 </section>
 
+<style>
+	.scroll-horizontal > a {
+		background: transparent;
+		border: none;
+		padding: 10px 20px;
+		display: inline-block;
+		font-size: 20px;
+		font-weight: 600;
+		width: 20rem;
+		text-transform: uppercase;
+		cursor: pointer;
+		transform: skew(-21deg);
+		color: var(--color-primary);
+		border: 2px solid var(--color-primary);
+	}
+
+	.scroll-horizontal > a > span {
+		display: inline-block;
+		transform: skew(21deg);
+	}
+
+	.scroll-horizontal > a::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 100%;
+		left: 0;
+		background: var(--color-primary);
+		opacity: 0;
+		z-index: -1;
+		transition: all 0.5s;
+	}
+
+	.scroll-horizontal > a:hover {
+		color: var(--color-secondary);
+		scale: 1.1;
+		transform: skew(-21deg);
+	}
+
+	.scroll-horizontal > a:hover::before {
+		left: 0;
+		right: 0;
+		opacity: 1;
+	}
+</style>
+
 <script>
-	
 	import { EVENT_TIMESTAMP } from "@/consts/event-date"
 
 	const $dateSpan = document.querySelector(".date")
