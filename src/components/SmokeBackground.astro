@@ -24,7 +24,7 @@
 			light: {
 				background: 0xeeeeee,
 				light: 0xffffff,
-				opacity: 0.2,
+				opacity: 0.1,
 			},
 		} as const
 
@@ -40,7 +40,7 @@
 		// camara 📹
 		// 75 -> ángulo de visión
 		const camera = new THREE.PerspectiveCamera(75, w / h, 1, 1000)
-		camera.position.z = 10
+		camera.position.z = 500
 		scene.add(camera)
 
 		// ▶️ renderizador
@@ -74,7 +74,8 @@
 				opacity: currentTheme.opacity,
 			})
 
-			const NUM_OF_PARTICLES = 300
+			const NUM_OF_PARTICLES = 100
+
 			for (let p = 0; p < NUM_OF_PARTICLES; p++) {
 				// crear la malla con la geometria y el material
 				const particle = new THREE.Mesh(smokeGeo, smokeMaterial)
