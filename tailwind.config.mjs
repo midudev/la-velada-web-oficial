@@ -13,5 +13,7 @@ export default {
 		},
 	},
 	darkMode: 'class',
-	plugins: [animations],
+	plugins: [animations, function ({ addVariant }) {
+		addVariant("any-hover", "@media (any-hover: hover) { &:hover }")
+	}],
 }
