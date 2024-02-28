@@ -62,43 +62,40 @@
 
 		const smokeParticles: THREE.Mesh[] = []
 
-		const loader = new THREE.TextureLoader()
-		loader.crossOrigin = "" // <- en localhost no pasa nada, pero si desplegamos a un servidor, puede ser necesario
+		const smokeTexture = new THREE.TextureLoader().load("/smoke.webp")
 
-		loader.load("/smoke.webp", (texture) => {
-			// 1. geometria
-			// crear un plano geométrico de 300x300
-			const smokeGeo = new THREE.PlaneGeometry(300, 300)
+		// 1. geometria
+		// crear un plano geométrico de 300x300
+		const smokeGeo = new THREE.PlaneGeometry(300, 300)
 
-			// 2. material
-			const smokeMaterial = new THREE.MeshLambertMaterial({
-				map: texture,
-				transparent: true,
-				opacity: currentTheme.opacity,
-			})
-
-			const NUM_OF_PARTICLES = 100
-
-			for (let p = 0; p < NUM_OF_PARTICLES; p++) {
-				// crear la malla con la geometria y el material
-				const particle = new THREE.Mesh(smokeGeo, smokeMaterial)
-				// posicionar aleatoriamente
-				// en la x, y, z
-				particle.position.set(
-					Math.random() * 500 - 250, // X (de -250 a 250)
-					Math.random() * 500 - 250, // Y (de -250 a 250)
-					Math.random() * 1000 - 100 // Z (de -100 a 900)
-				)
-				// aleatoriamente la z
-				particle.rotation.z = Math.random() * 360
-				// añadimos la particula en la escena
-				scene.add(particle)
-				// añadimos la particula al array
-				smokeParticles.push(particle)
-			}
-
-			$bkg?.classList.remove("opacity-0")
+		// 2. material
+		const smokeMaterial = new THREE.MeshLambertMaterial({
+			map: smokeTexture,
+			transparent: true,
+			opacity: currentTheme.opacity,
 		})
+
+		const NUM_OF_PARTICLES = 100
+
+		for (let p = 0; p < NUM_OF_PARTICLES; p++) {
+			// crear la malla con la geometria y el material
+			const particle = new THREE.Mesh(smokeGeo, smokeMaterial)
+			// posicionar aleatoriamente
+			// en la x, y, z
+			particle.position.set(
+				Math.random() * 500 - 250, // X (de -250 a 250)
+				Math.random() * 500 - 250, // Y (de -250 a 250)
+				Math.random() * 1000 - 100 // Z (de -100 a 900)
+			)
+			// aleatoriamente la z
+			particle.rotation.z = Math.random() * 360
+			// añadimos la particula en la escena
+			scene.add(particle)
+			// añadimos la particula al array
+			smokeParticles.push(particle)
+		}
+
+		$bkg?.classList.remove("opacity-0")
 
 		function resize() {
 			h = window.screen.height
