@@ -1,4 +1,8 @@
-<div id="smoke-bkg" class="fixed top-0 -z-10 h-full w-full"></div>
+<div
+	id="smoke-bkg"
+	class="fixed top-0 -z-10 h-full w-full opacity-0 transition-opacity duration-500"
+>
+</div>
 
 <script>
 	import * as THREE from "three"
@@ -88,6 +92,8 @@
 				// añadimos la particula al array
 				smokeParticles.push(particle)
 			}
+
+			$bkg?.classList.remove("opacity-0")
 		})
 
 		function resize() {
@@ -120,7 +126,8 @@
 			renderer.setClearColor(currentTheme.background, 1)
 
 			smokeParticles.forEach((particle) => {
-				particle.material.opacity = currentTheme.opacity
+				const smokeMaterial = particle.material as THREE.MeshLambertMaterial
+				smokeMaterial.opacity = currentTheme.opacity
 			})
 		})
 	}
