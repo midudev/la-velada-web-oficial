@@ -1,5 +1,5 @@
 ---
-import SmokeBackground from "@/components/SmokeBackground.astro"
+import SmokeBackgroundCustom from "@/components/SmokeBackgroundCustom.astro"
 import "@fontsource-variable/jost"
 
 interface Props {
@@ -57,7 +57,7 @@ const { title, description } = Astro.props
 	<body
 		class="[&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
-		<SmokeBackground />
+		<SmokeBackgroundCustom verticalSpeed={0.05} rotationSpeed={0.0008} smokeTexturePath="/smoke.webp" />
 		<div class="mx-auto max-w-6xl px-2 pt-16 md:pt-20 lg:px-10" id="main-content">
 			<slot />
 		</div>
