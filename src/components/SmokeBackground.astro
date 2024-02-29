@@ -86,9 +86,17 @@
 		}
 	}
 
+	const secondsWaitToResize = 600;
+	let idTmWindowsResize = 0
+
 	window.addEventListener("resize", () => {
-		canvas.width = window.innerWidth
-		canvas.height = window.innerHeight + 100
+
+		window.clearTimeout(idTmWindowsResize)
+		idTmWindowsResize = window.setTimeout( () => {
+			canvas.width = window.innerWidth
+			canvas.height = window.innerHeight + 100
+		}, secondsWaitToResize)
+
 	})
 
 	smokeImage.onload = () => {
