@@ -86,9 +86,18 @@ const { title, description } = Astro.props
 	html {
 		font-family: "Jost Variable", system-ui, sans-serif;
 		background: var(--background-color);
-		scroll-behavior: smooth;
 		overflow-x: hidden;
 		overscroll-behavior: none;
+	}
+
+	main {
+		position: relative;
+	}
+
+	@media screen and (prefers-reduced-motion: no-preference) {
+		html {
+			scroll-behavior: smooth;
+		}
 	}
 
 	/* Hiding class, making content visible only to screen readers but not visually */
