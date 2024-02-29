@@ -19,7 +19,7 @@
 		let animationFrameId: number = 0
 
 		let w = window.innerWidth
-		let h = window.screen.height
+		let h = window.screen.height + 200
 
 		const THEME = {
 			dark: {
@@ -98,7 +98,7 @@
 		$bkg?.classList.remove("opacity-0")
 
 		function resize() {
-			h = window.screen.height
+			h = window.screen.height + 200
 			w = window.innerWidth
 			camera.aspect = w / h
 			camera.updateProjectionMatrix() // este metodo lo tenéis que ejecutar siempre que cambiais los parámetros de la cámara
