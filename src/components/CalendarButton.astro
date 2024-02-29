@@ -1,3 +1,7 @@
+---
+import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
+---
+
 <button
 	id="add-to-calendar"
 	class:list={`
@@ -6,12 +10,59 @@
 		uppercase transition hover:scale-110
 		hover:bg-primary hover:text-secondary
 	`}
-  	aria-label="agregar al calendario se abrirá ventana flotante"
+	aria-label="agregar al calendario se abrirá ventana flotante"
 >
-	Agregar al calendario
+	<span> Agregar al calendario</span>
 </button>
 
-<script is:inline>
+<style>
+	#add-to-calendar {
+		background: transparent;
+		border: none;
+		padding: 10px 20px;
+		display: inline-block;
+		font-size: 20px;
+		font-weight: 600;
+		width: 20rem;
+		text-transform: uppercase;
+		cursor: pointer;
+		transform: skew(-21deg);
+		color: var(--color-primary);
+		border: 2px solid var(--color-primary);
+	}
+
+	#add-to-calendar > span {
+		display: inline-block;
+		transform: skew(21deg);
+	}
+
+	#add-to-calendar::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 100%;
+		left: 0;
+		background: var(--color-primary);
+		opacity: 0;
+		z-index: -1;
+		transition: all 0.5s;
+	}
+
+	#add-to-calendar:hover {
+		color: var(--color-secondary);
+		scale: 1.1;
+		transform: skew(-21deg);
+	}
+
+	#add-to-calendar:hover::before {
+		left: 0;
+		right: 0;
+		opacity: 1;
+	}
+</style>
+
+<script is:inline define:vars={{ darkTheme: DARK_THEME, lightTheme: LIGHT_THEME }}>
 	const config = {
 		name: "🥊 La Velada del Año 4 - Evento de Presentación",
 		description:
@@ -54,7 +105,7 @@
 			button.innerHTML = text
 		}
 
-		const theme = document.documentElement.classList.contains("dark") ? "dark" : "light"
+		const theme = document.documentElement.classList.contains(darkTheme) ? darkTheme : lightTheme
 		config.lightMode = theme
 
 		window.atcb_action(config, button)
