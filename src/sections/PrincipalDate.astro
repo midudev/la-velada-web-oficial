@@ -41,8 +41,9 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 	</div>
 </section>
 
-<style>
-	.scroll-horizontal > a {
+<style is:global>
+	.scroll-horizontal > a,
+	.scroll-horizontal > #add-to-calendar {
 		background: transparent;
 		border: none;
 		padding: 10px 20px;
@@ -55,14 +56,17 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		transform: skew(-21deg);
 		color: var(--color-primary);
 		border: 2px solid var(--color-primary);
+		transition: scale 150ms ease-in-out;
 	}
 
-	.scroll-horizontal > a > span {
+	.scroll-horizontal > a > span,
+	.scroll-horizontal > #add-to-calendar > span {
 		display: inline-block;
 		transform: skew(21deg);
 	}
 
-	.scroll-horizontal > a::before {
+	.scroll-horizontal > a::before,
+	.scroll-horizontal > #add-to-calendar::before {
 		content: "";
 		position: absolute;
 		top: 0;
@@ -75,13 +79,15 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		transition: all 0.5s;
 	}
 
-	.scroll-horizontal > a:hover {
+	.scroll-horizontal > a:hover,
+	.scroll-horizontal > #add-to-calendar:hover {
 		color: var(--color-secondary);
 		scale: 1.1;
 		transform: skew(-21deg);
 	}
 
-	.scroll-horizontal > a:hover::before {
+	.scroll-horizontal > a:hover::before,
+	.scroll-horizontal > #add-to-calendar:hover::before {
 		left: 0;
 		right: 0;
 		opacity: 1;
@@ -164,12 +170,12 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 
 	document.addEventListener("DOMContentLoaded", main)
 
-	 // Verifica si el evento ya ha pasado
-	 const eventHasPassed = EVENT_TIMESTAMP < Date.now()
-    if (eventHasPassed) {
-        const addToCalendarBtn = document.getElementById("add-to-calendar")
-        if (addToCalendarBtn) {
-            addToCalendarBtn.remove()
-        }
-    }
+	// Verifica si el evento ya ha pasado
+	const eventHasPassed = EVENT_TIMESTAMP < Date.now()
+	if (eventHasPassed) {
+		const addToCalendarBtn = document.getElementById("add-to-calendar")
+		if (addToCalendarBtn) {
+			addToCalendarBtn.remove()
+		}
+	}
 </script>
