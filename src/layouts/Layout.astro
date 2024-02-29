@@ -1,4 +1,5 @@
 ---
+import SmokeBackground from "@/components/SmokeBackground.astro"
 import "@fontsource-variable/jost"
 
 interface Props {
@@ -28,9 +29,9 @@ const { title, description } = Astro.props
 		<meta name="twitter:creator" content="@IbaiLlanos" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
-		<meta name="twitter:image" content="/og.jpg" />
+		<meta name="twitter:image" content="https://lavelada.es/og.jpg" />
 
-		<meta name="og:image" content="/og.jpg" />
+		<meta name="og:image" content="https://lavelada.es/og.jpg" />
 		<meta name="og:title" content={title} />
 		<meta name="og:description" content={description} />
 		<meta name="og:url" content="https://lavelada.es" />
@@ -40,21 +41,24 @@ const { title, description } = Astro.props
 
 		<meta name="robots" content="index, follow" />
 		<meta name="googlebot" content="index, follow" />
+
+		<script is:inline>
+			window.getThemePreference = () => {
+				const localItem = typeof localStorage !== "undefined" && localStorage.getItem("theme")
+				if (localItem) return localItem
+				return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+			}
+
+			const isDark = window.getThemePreference() === "dark"
+			document.documentElement.classList.toggle("dark", isDark)
+		</script>
 	</head>
 
 	<body
 		class="[&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
-		<div class="container relative -z-10 mx-auto w-screen overflow-x-clip">
-			<img
-				aria-hidden="true"
-				src="/lights.svg"
-				class="absolute top-0 w-screen transform-gpu opacity-0 brightness-0 dark:brightness-200 md:scale-125 lg:left-0 lg:scale-100"
-				onload="this.classList.add('animate-fade-in', 'animate-duration-500')"
-				alt="Focos de luz"
-			/>
-		</div>
-		<div class="mx-auto max-w-6xl px-2 pt-16 md:pt-20 lg:px-10">
+		<SmokeBackground />
+		<div class="mx-auto max-w-6xl px-2 pt-16 md:pt-20 lg:px-10" id="main-content">
 			<slot />
 		</div>
 	</body>
@@ -64,26 +68,36 @@ const { title, description } = Astro.props
 	:root {
 		--color-primary: #333;
 		--color-secondary: #ddd;
-		--color-twitch: #6441a4;
+		--color-twitch: #9146ff;
+		--color-twitch-ice: #f0f0ff;
 
-		--background-color: var(--color-secondary);
-		--background-image: var(--background-color) url("/concrete.png") repeat;
+		--background-color: #bbb;
+		--background-twitch: #000;
 	}
 
 	.dark {
 		--color-primary: #ddd;
 		--color-secondary: #333;
-		--color-twitch: #a270ff;
 
-		--background-image: var(--background-color) url("/concrete-dark.png") repeat;
+		--background-color: #333;
+		--background-twitch: var(--color-twitch-ice);
 	}
 
 	html {
 		font-family: "Jost Variable", system-ui, sans-serif;
-		background: var(--background-image);
-		scroll-behavior: smooth;
+		background: var(--background-color);
 		overflow-x: hidden;
 		overscroll-behavior: none;
+	}
+
+	main {
+		position: relative;
+	}
+
+	@media screen and (prefers-reduced-motion: no-preference) {
+		html {
+			scroll-behavior: smooth;
+		}
 	}
 
 	/* Hiding class, making content visible only to screen readers but not visually */

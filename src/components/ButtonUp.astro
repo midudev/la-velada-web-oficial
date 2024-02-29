@@ -1,0 +1,45 @@
+<div class="fixed bottom-2 right-2 opacity-0 transition-opacity">
+	<button
+		id="scroll-to-top"
+		aria-label="Volver al inicio de la página"
+		class="group flex size-12 cursor-pointer items-center justify-center rounded-lg border-2 border-primary bg-black/10 text-primary backdrop-blur transition hover:scale-105"
+	>
+		<svg
+			stroke-width="2"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			fill="none"
+			class="h-6 w-6 -rotate-45 transition group-hover:-rotate-90"
+			width="20px"
+		>
+			<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linejoin="round" stroke-linecap="round"></path>
+		</svg>
+	</button>
+</div>
+
+<script>
+	let timeout: number = 0 // Identificador para clearTimeout
+	const $button = document.getElementById("scroll-to-top")
+
+	// Función para mostrar u ocultar el botón
+	function toggleScrollToTop() {
+		const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
+		const display = scrollTop > 20 ? "block" : "none"
+		if ($button) $button.parentElement?.classList.toggle("opacity-0", display === "none")
+	}
+
+	function throttledScrollHandler() {
+		if (timeout === 0) {
+			timeout = setTimeout(() => {
+				toggleScrollToTop()
+				timeout = 0
+			}, 100)
+		}
+	}
+
+	window.addEventListener("scroll", throttledScrollHandler)
+
+	$button?.addEventListener("click", () => {
+		window.scrollTo({ top: 0, behavior: "smooth" })
+	})
+</script>
