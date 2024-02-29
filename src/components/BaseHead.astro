@@ -1,4 +1,5 @@
 ---
+import { siteConfig } from '@/data/site.config'
 
 export interface Props {
 	title: string
@@ -7,8 +8,8 @@ export interface Props {
 	ogImage: string
 }
 
+const { author, ogLocale, type, keywords, canonicalUrl, twitterSite } = siteConfig
 const { title, shortDescription, description, ogImage } = Astro.props
-const canonicalURL = "https://lavelada.es"
 const socialImageURL = ogImage
 
 const titleSeparator = "•"
@@ -23,7 +24,7 @@ const siteTitle = `${title} ${titleSeparator} ${shortDescription}`
 <meta name="generator" content={Astro.generator} />
 
 <!-- Canonical URL -->
-<link rel="canonical" href={canonicalURL} />
+<link rel="canonical" href={canonicalUrl} />
 
 <!-- Primary Meta Tags -->
 <title>{siteTitle}</title>
@@ -35,11 +36,11 @@ const siteTitle = `${title} ${titleSeparator} ${shortDescription}`
 <!-- SEO -->
 <meta name="title" content={siteTitle} />
 <meta name="description" content={description} />
-<meta name="author" content="@ibai" />
-<meta name="keywords" content="velada, streamers, creadores, Ibai, boxeo, midudev" />
+<meta name="author" content={author} />
+<meta name="keywords" content={keywords} />
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={type} />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={siteTitle} />
 <meta property="og:description" content={description} />
@@ -47,28 +48,25 @@ const siteTitle = `${title} ${titleSeparator} ${shortDescription}`
 
 <!-- open graph /whatsapp -->
 <meta property="og:site_name" content={siteTitle} />
-<meta property="og:type" content="website" />
+<meta property="og:type" content={type} />
 <meta property="og:image:type" content="image/jpeg" />
-<meta property="og:image:width" content="300" />
-<meta property="og:image:height" content="300" />
+<meta property="og:image:width" content="256" />
+<meta property="og:image:height" content="256" />
 <link itemprop="thumbnailUrl" href={socialImageURL} />
 
-<meta name="og:url" content={canonicalURL} />
-<meta name="og:site_name" content="La Velada 4" />
-<meta name="og:type" content="website" />
-<meta name="og:locale" content="es_ES" />
+<meta name="og:url" content={canonicalUrl} />
+<meta name="og:site_name" content={siteTitle} />
+<meta name="og:type" content={type} />
+<meta name="og:locale" content={ogLocale} />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
-<meta name="twitter:site" content="@infoLaVelada" />
-<meta name="twitter:creator" content="@IbaiLlanos" />
+<meta name="twitter:site" content={twitterSite} />
+<meta name="twitter:creator" content={author} />
 <meta property="twitter:title" content={siteTitle} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={socialImageURL} />
-
-<!-- RSS auto-discovery -->
-<link rel="alternate" type="application/rss+xml" title={siteTitle} href="/rss.xml" />
 
 <script is:inline>
 	window.getThemePreference = () => {
