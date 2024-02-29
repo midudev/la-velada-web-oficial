@@ -12,8 +12,55 @@ import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
 	`}
 	aria-label="agregar al calendario se abrirá ventana flotante"
 >
-	Agregar al calendario
+	<span> Agregar al calendario</span>
 </button>
+
+<style>
+	#add-to-calendar {
+		background: transparent;
+		border: none;
+		padding: 10px 20px;
+		display: inline-block;
+		font-size: 20px;
+		font-weight: 600;
+		width: 20rem;
+		text-transform: uppercase;
+		cursor: pointer;
+		transform: skew(-21deg);
+		color: var(--color-primary);
+		border: 2px solid var(--color-primary);
+	}
+
+	#add-to-calendar > span {
+		display: inline-block;
+		transform: skew(21deg);
+	}
+
+	#add-to-calendar::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 100%;
+		left: 0;
+		background: var(--color-primary);
+		opacity: 0;
+		z-index: -1;
+		transition: all 0.5s;
+	}
+
+	#add-to-calendar:hover {
+		color: var(--color-secondary);
+		scale: 1.1;
+		transform: skew(-21deg);
+	}
+
+	#add-to-calendar:hover::before {
+		left: 0;
+		right: 0;
+		opacity: 1;
+	}
+</style>
 
 <script is:inline define:vars={{ darkTheme: DARK_THEME, lightTheme: LIGHT_THEME }}>
 	const config = {
