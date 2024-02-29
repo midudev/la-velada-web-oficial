@@ -29,9 +29,9 @@ const { title, description } = Astro.props
 		<meta name="twitter:creator" content="@IbaiLlanos" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
-		<meta name="twitter:image" content="/og.jpg" />
+		<meta name="twitter:image" content="https://lavelada.es/og.jpg" />
 
-		<meta name="og:image" content="/og.jpg" />
+		<meta name="og:image" content="https://lavelada.es/og.jpg" />
 		<meta name="og:title" content={title} />
 		<meta name="og:description" content={description} />
 		<meta name="og:url" content="https://lavelada.es" />
@@ -68,25 +68,36 @@ const { title, description } = Astro.props
 	:root {
 		--color-primary: #333;
 		--color-secondary: #ddd;
-		--color-twitch: #6441a4;
+		--color-twitch: #9146ff;
+		--color-twitch-ice: #f0f0ff;
 
-		--background-color: #bbb;
+		--background-color: #ddd;
+		--background-twitch: #000;
 	}
 
 	.dark {
 		--color-primary: #ddd;
 		--color-secondary: #333;
-		--color-twitch: #a270ff;
 
-		--background-color: #333;
+		--background-color: #222;
+		--background-twitch: var(--color-twitch-ice);
 	}
 
 	html {
 		font-family: "Jost Variable", system-ui, sans-serif;
 		background: var(--background-color);
-		scroll-behavior: smooth;
 		overflow-x: hidden;
 		overscroll-behavior: none;
+	}
+
+	main {
+		position: relative;
+	}
+
+	@media screen and (prefers-reduced-motion: no-preference) {
+		html {
+			scroll-behavior: smooth;
+		}
 	}
 
 	/* Hiding class, making content visible only to screen readers but not visually */
