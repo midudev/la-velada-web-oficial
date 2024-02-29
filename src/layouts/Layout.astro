@@ -1,62 +1,30 @@
 ---
 import SmokeBackground from "@/components/SmokeBackground.astro"
 import "@fontsource-variable/jost"
+import BaseHead from "@/components/BaseHead.astro"
 
 interface Props {
-	description: string
-	title: string
+  title: string
+  shortDescription: string
+  description: string
 }
 
-const { title, description } = Astro.props
+const { title, shortDescription, description } = Astro.props
 ---
 
 <!doctype html>
 <html lang="es">
-	<head>
-		<title>{title}</title>
-
-		<meta charset="UTF-8" />
-		<meta name="description" content={description} />
-
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="canonical" href="https://lavelada.es" />
-		<meta name="viewport" content="width=device-width" />
-
-		<meta name="keywords" content="velada, streamers, creadores, Ibai, boxeo, midudev" />
-
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:site" content="@infoLaVelada" />
-		<meta name="twitter:creator" content="@IbaiLlanos" />
-		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={description} />
-		<meta name="twitter:image" content="https://lavelada.es/og.jpg" />
-
-		<meta name="og:image" content="https://lavelada.es/og.jpg" />
-		<meta name="og:title" content={title} />
-		<meta name="og:description" content={description} />
-		<meta name="og:url" content="https://lavelada.es" />
-		<meta name="og:site_name" content="La Velada 4" />
-		<meta name="og:type" content="website" />
-		<meta name="og:locale" content="es_ES" />
-
-		<meta name="robots" content="index, follow" />
-		<meta name="googlebot" content="index, follow" />
-
-		<script is:inline>
-			window.getThemePreference = () => {
-				const localItem = typeof localStorage !== "undefined" && localStorage.getItem("theme")
-				if (localItem) return localItem
-				return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-			}
-
-			const isDark = window.getThemePreference() === "dark"
-			document.documentElement.classList.toggle("dark", isDark)
-		</script>
-	</head>
-
-	<body
-		class="[&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
-	>
+    <head>
+        <BaseHead
+			title={title}
+			shortDescription={shortDescription}
+			description={description}
+			ogImage="https://lavelada.es/og.jpg"
+		/>
+  	</head>
+    <body
+  		class="[&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
+    >
 		<SmokeBackground />
 		<div class="mx-auto max-w-6xl px-2 pt-16 md:pt-20 lg:px-10" id="main-content">
 			<slot />
