@@ -23,6 +23,8 @@ import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
 		const isDark = element.classList.contains(darkTheme)
 		localStorage.setItem("theme", isDark ? darkTheme : lightTheme)
 
+		document.documentElement.classList.add("theme-transition")
+
 		updateThemeMessage(isDark)
 	}
 
