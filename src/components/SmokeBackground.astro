@@ -86,13 +86,17 @@
 		}
 	}
 
-	window.addEventListener("resize", () => {
-		canvas.width = window.innerWidth
-		canvas.height = window.innerHeight + 100
-	})
+	const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
 
-	smokeImage.onload = () => {
-		init()
-		animate()
+	if (!reducedMotion.matches) {
+		window.addEventListener("resize", () => {
+			canvas.width = window.innerWidth
+			canvas.height = window.innerHeight + 100
+		})
+
+		smokeImage.onload = () => {
+			init()
+			animate()
+		}
 	}
 </script>
