@@ -22,15 +22,17 @@
 
 <style>
 	@supports (animation-timeline: view()) {
-		.stroke {
-			animation-timeline: view();
-			animation-name: showStroke;
-			animation-timing-function: linear;
-		}
-
 		.fill {
 			animation-timeline: view();
 			animation-name: showFill;
+			animation-timing-function: linear;
+		}
+	}
+
+	@supports (animation-timeline: scroll()) {
+		.stroke {
+			animation-timeline: scroll();
+			animation-name: showStroke;
 			animation-timing-function: linear;
 		}
 	}
@@ -43,11 +45,11 @@
 
 	@keyframes showStroke {
 		0%,
-		40% {
+		30% {
 			fill: var(--background-twitch);
 		}
 
-		50%,
+		40%,
 		100% {
 			fill: var(--color-twitch);
 		}
