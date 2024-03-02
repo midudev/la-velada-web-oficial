@@ -6,6 +6,7 @@
 	const NUM_PARTICLES = 50 // Número de partículas
 	const canvas = document.getElementById("smoke-canvas") as HTMLCanvasElement
 	const ctx = canvas.getContext("2d") as CanvasRenderingContext2D
+	let raf: number
 
 	if (canvas) {
 		canvas.width = window.innerWidth
@@ -73,7 +74,7 @@
 	}
 
 	function animate() {
-		requestAnimationFrame(animate)
+		raf = requestAnimationFrame(animate)
 
 		const now = Date.now()
 		const elapsed = now - then
@@ -92,6 +93,9 @@
 		window.addEventListener("resize", () => {
 			canvas.width = window.innerWidth
 			canvas.height = window.innerHeight + 100
+			cancelAnimationFrame(raf)
+			handleParticles()
+			animate()
 		})
 
 		smokeImage.onload = () => {
