@@ -1,4 +1,4 @@
-<div class="fixed bottom-2 right-2 opacity-0 transition-opacity">
+<div class="fixed bottom-2 right-2 opacity-0 hidden transition-opacity">
 	<button
 		id="scroll-to-top"
 		aria-label="Volver al inicio de la página"
@@ -25,7 +25,10 @@
 	function toggleScrollToTop() {
 		const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
 		const display = scrollTop > 20 ? "block" : "none"
-		if ($button) $button.parentElement?.classList.toggle("opacity-0", display === "none")
+		if ($button) {
+			$button.parentElement?.classList.toggle("opacity-0", display === "none")
+			$button.parentElement?.classList.toggle("hidden", display === "none")
+		}
 	}
 
 	function throttledScrollHandler() {
