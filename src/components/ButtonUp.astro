@@ -2,7 +2,7 @@
 	<button
 		id="scroll-to-top"
 		aria-label="Volver al inicio de la página"
-		class="group flex size-12 cursor-pointer items-center justify-center rounded-lg border-2 border-primary bg-black/10 text-primary backdrop-blur hover:scale-105 motion-safe:transition"
+		class="group flex size-12 cursor-default items-center justify-center rounded-lg border-2 border-primary bg-black/10 text-primary backdrop-blur hover:scale-105 motion-safe:transition"
 	>
 		<svg
 			stroke-width="2"
@@ -25,7 +25,10 @@
 	function toggleScrollToTop() {
 		const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
 		const display = scrollTop > 20 ? "block" : "none"
-		if ($button) $button.parentElement?.classList.toggle("opacity-0", display === "none")
+		if ($button) {
+			$button.parentElement?.classList.toggle("opacity-0", display === "none")
+			$button.classList.toggle("cursor-default", display === "none")
+		}
 	}
 
 	function throttledScrollHandler() {
