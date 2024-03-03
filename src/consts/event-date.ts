@@ -58,7 +58,7 @@ export const timeZoneAbbreviations: { [key: string]: string } = {
 	"America/Sao_Paulo": "BRT", // Brasilia Time
 	"America/Buenos_Aires": "ART", // Argentine Time
 	"America/Lima": "PET", // Peru Time
-	"America/Bogota": "COT", // Colombia Time
+	"America/Bogota": "COL", // Colombia Time
 	"America/Caracas": "VET", // Venezuelan Standard Time
 
 	// Additional Global Time Zones
