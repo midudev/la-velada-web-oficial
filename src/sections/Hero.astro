@@ -1,5 +1,6 @@
 ---
 import HeroLogo from "@/components/HeroLogo.astro"
+import BoxingGlovesColoured from "@/icons/boxing-gloves-coloured.astro"
 ---
 
 <section class="flex flex-col place-items-center gap-4 lg:gap-9">
@@ -10,5 +11,84 @@ import HeroLogo from "@/components/HeroLogo.astro"
 	>
 		Presentación de la
 	</span>
-	<HeroLogo class="h-auto w-[300px] text-primary md:w-[500px]" />
+	<div class="relative">
+		<HeroLogo class="h-auto w-[300px] text-primary md:w-[500px]" />
+		<div class="absolute left-0 top-0 h-full w-full" id="easter-egg">
+			<BoxingGlovesColoured id="glove-left" class="absolute w-2/5" />
+			<BoxingGlovesColoured id="glove-right" class="absolute w-2/5" />
+		</div>
+	</div>
 </section>
+<script></script>
+<style>
+	#easter-egg {
+		pointer-events: none;
+	}
+	#easter-egg #glove-left {
+		animation: glove-left 1.25s forwards ease-in-out;
+	}
+	#easter-egg #glove-right {
+		animation: glove-right 1.25s forwards ease-in-out;
+	}
+
+	@keyframes glove-left {
+		0% {
+			left: calc(-50vw + 25%);
+			top: 50%;
+			transform: translate(100%, -50%) rotate(90deg);
+			opacity: 0;
+		}
+		30% {
+			opacity: 1;
+		}
+		50% {
+			left: 50%;
+			top: 50%;
+			transform: translate(-100%, -50%) rotate(90deg);
+		}
+		100% {
+			left: -15%;
+			top: 75%;
+			transform: translate(0, 0) rotate(30deg);
+		}
+	}
+	@keyframes glove-right {
+		0% {
+			right: calc(-50vw + 25%);
+			top: 50%;
+			transform: translate(-100%, -50%) scaleY(-1) rotate(-90deg);
+			opacity: 0;
+		}
+		30% {
+			opacity: 1;
+		}
+		50% {
+			right: 50%;
+			top: 50%;
+			transform: translate(100%, -50%) scaleY(-1) rotate(-90deg);
+		}
+		100% {
+			right: -15%;
+			top: 75%;
+			transform: translate(0, 0) scaleY(-1) rotate(-150deg);
+		}
+	}
+
+	@keyframes shake {
+		0% {
+			transform: rotate(0deg);
+		}
+		5% {
+			transform: rotate(5deg);
+		}
+		50% {
+			transform: rotate(0deg);
+		}
+		75% {
+			transform: rotate(-5deg);
+		}
+		100% {
+			transform: rotate(0deg);
+		}
+	}
+</style>
