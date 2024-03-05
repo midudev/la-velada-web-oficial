@@ -1,58 +1,70 @@
-<div></div>
+<canvas id="noise" class="fixed top-0 -z-10 animate-fade-in"></canvas>
 
-<style>
-	div {
-		position: fixed;
-		background-color: rgba(0, 86, 0, 0.091);
-		background-image: url(/img/noise.png);
-		background-repeat: repeat;
-		inset: -50%;
-		height: 200vh;
-		width: 200%;
-		pointer-events: none;
+<script>
+	let wWidth, wHeight
+	const noiseData = []
+	let frame = 0
+	let loopTimeout
 
-		animation: noise 0.2s infinite;
+	const canvas = document.getElementById("noise")
+	const ctx = canvas.getContext("2d")
+
+	const createNoise = () => {
+		const idata = ctx.createImageData(wWidth, wHeight)
+		const buffer32 = new Uint32Array(idata.data.buffer)
+		let len = buffer32.length
+
+		while (len--) {
+			buffer32[len] = ((Math.random() * 150) | 0) << 24
+		}
+
+		noiseData.push(idata)
 	}
 
-	@keyframes noise {
-		0% {
-			transform: translate3d(0, 0, 0);
+	const paintNoise = () => {
+		if (frame === 9) {
+			frame = 0
+		} else {
+			frame++
 		}
-		10% {
-			transform: translate3d(-5%, -5%, 0);
-		}
-		20% {
-			transform: translate3d(-10%, 5%, 0);
-		}
-		30% {
-			transform: translate3d(5%, -10%, 0);
-		}
-		40% {
-			transform: translate3d(-5%, 15%, 0);
-		}
-		50% {
-			transform: translate3d(-10%, 5%, 0);
-		}
-		60% {
-			transform: translate3d(15%, 0, 0);
-		}
-		70% {
-			transform: translate3d(15%, 15%, 0);
-		}
-		80% {
-			transform: translate3d(10%, 5%, 0);
-		}
-		90% {
-			transform: translate3d(5%, 10%, 0);
-		}
-		100% {
-			transform: translate3d(0, 0, 0);
-		}
+
+		ctx.putImageData(noiseData[frame], 0, 0)
 	}
 
-	@media (prefers-reduced-motion: reduce) {
-		div {
-			animation: none;
-		}
+	const loop = () => {
+		paintNoise(frame)
+
+		loopTimeout = window.setTimeout(() => {
+			window.requestAnimationFrame(loop)
+		}, 1000 / 25)
 	}
-</style>
+
+	const setup = () => {
+		wWidth = window.innerWidth
+		wHeight = window.innerHeight
+
+		canvas.width = wWidth
+		canvas.height = wHeight
+
+		for (let i = 0; i < 10; i++) {
+			createNoise()
+		}
+
+		loop()
+	}
+
+	setup()
+
+	window.addEventListener(
+		"resize",
+		() => {
+			const resizeThrottle = window.setTimeout(() => {
+				window.clearTimeout(loopTimeout)
+				setup()
+			}, 200)
+
+			window.clearTimeout(resizeThrottle)
+		},
+		false
+	)
+</script>
