@@ -13,7 +13,6 @@ export default {
 			},
 		},
 	},
-	darkMode: "class",
 	plugins: [
 		animations,
 		function ({ addVariant }) {
