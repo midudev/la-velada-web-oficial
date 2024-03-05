@@ -8,27 +8,27 @@ const SPONSORS = [
 	{
 		id: "revolut",
 		name: "Revolut",
-		url: "https://revolut.com",
+		url: "https://revolut.com/",
 	},
 	{
 		id: "el-pozo",
 		name: "El Pozo",
-		url: "https://elpozo.com",
+		url: "https://elpozo.com/",
 	},
 	{
 		id: "grefusa",
 		name: "Grefusa",
-		url: "https://grefusa.com",
+		url: "https://grefusa.com/",
 	},
 	{
 		id: "spotify",
 		name: "Spotify",
-		url: "https://spotify.com",
+		url: "https://spotify.com/",
 	},
 	{
 		id: "cerave",
 		name: "Cerave",
-		url: "https://cerave.es",
+		url: "https://cerave.es/",
 	},
 	{
 		id: "prime",
@@ -38,12 +38,12 @@ const SPONSORS = [
 	{
 		id: "alsa",
 		name: "Alsa",
-		url: "https://alsa.es",
+		url: "https://alsa.es/",
 	},
 	{
 		id: "maxibon",
 		name: "Maxibon",
-		url: "https://maxibon.es",
+		url: "https://maxibon.es/",
 	},
 ]
 ---
@@ -58,11 +58,11 @@ const SPONSORS = [
 		{
 			SPONSORS.map(({ id, name, url }) => (
 				<a
-					class="group flex h-24 items-center justify-center bg-gradient-to-b from-white/10 via-transparent to-transparent hover:from-white/20 md:h-32"
+					class="group flex h-24 items-center justify-center md:h-32 relative overflow-hidden"
 					title={`Visita la página del patrocinador ${name}`}
 					href={url}
 					target="_blank"
-					rel="noopener noreferrer"
+					rel="noopener"
 				>
 					<img
 						loading="lazy"
@@ -75,3 +75,21 @@ const SPONSORS = [
 		}
 	</div>
 </section>
+<style>
+	a::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		display: block;
+		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent);
+		height: 50%;
+		transition: all 0.3s ease-in-out;
+	}
+
+	a:hover::before {
+		height: 100%;
+		-webkit-box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
+		-moz-box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
+		box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
+	}
+</style>
