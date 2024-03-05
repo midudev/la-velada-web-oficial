@@ -1,14 +1,15 @@
 ---
 import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
+import Action from "./Action.astro"
 ---
 
-<button
-	class="button-style"
+<Action
+	as="button"
 	id="add-to-calendar"
 	aria-label="agregar al calendario se abrirá ventana flotante"
 >
 	<span> Agregar al calendario</span>
-</button>
+</Action>
 
 <script is:inline define:vars={{ darkTheme: DARK_THEME, lightTheme: LIGHT_THEME }}>
 	const config = {
