@@ -1,14 +1,11 @@
 ---
 import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
+import Button from "@/components/Button.astro"
 ---
 
-<button
-	class="button-style"
-	id="add-to-calendar"
-	aria-label="agregar al calendario se abrirá ventana flotante"
->
-	<span> Agregar al calendario</span>
-</button>
+<Button id="add-to-calendar" ariaLabel="agregar al calendario se abrirá ventana flotante">
+	Agregar al calendario
+</Button>
 
 <script is:inline define:vars={{ darkTheme: DARK_THEME, lightTheme: LIGHT_THEME }}>
 	const config = {
