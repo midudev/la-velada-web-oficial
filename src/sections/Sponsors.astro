@@ -8,27 +8,27 @@ const SPONSORS = [
 	{
 		id: "revolut",
 		name: "Revolut",
-		url: "https://revolut.com",
+		url: "https://revolut.com/",
 	},
 	{
 		id: "el-pozo",
 		name: "El Pozo",
-		url: "https://elpozo.com",
+		url: "https://elpozo.com/",
 	},
 	{
 		id: "grefusa",
 		name: "Grefusa",
-		url: "https://grefusa.com",
+		url: "https://grefusa.com/",
 	},
 	{
 		id: "spotify",
 		name: "Spotify",
-		url: "https://spotify.com",
+		url: "https://spotify.com/",
 	},
 	{
 		id: "cerave",
 		name: "Cerave",
-		url: "https://cerave.es",
+		url: "https://cerave.es/",
 	},
 	{
 		id: "prime",
@@ -38,12 +38,12 @@ const SPONSORS = [
 	{
 		id: "alsa",
 		name: "Alsa",
-		url: "https://alsa.es",
+		url: "https://alsa.es/",
 	},
 	{
 		id: "maxibon",
 		name: "Maxibon",
-		url: "https://maxibon.es",
+		url: "https://maxibon.es/",
 	},
 ]
 ---
@@ -58,7 +58,7 @@ const SPONSORS = [
 		{
 			SPONSORS.map(({ id, name, url }) => (
 				<a
-					class="sponsor-link"
+					class="sponsor-link group relative flex h-24 items-center justify-center overflow-hidden md:h-32"
 					title={`Visita la página del patrocinador ${name}`}
 					href={url}
 					target="_blank"
@@ -75,7 +75,6 @@ const SPONSORS = [
 		}
 	</div>
 </section>
-
 <style>
 	.sponsor-link {
 		position: relative;
@@ -102,6 +101,10 @@ const SPONSORS = [
 
 	.sponsor-link:hover::before {
 		opacity: 1;
+		height: 100%;
+		box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
+		-webkit-box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
+		-moz-box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
 	}
 
 	.sponsor-logo {
