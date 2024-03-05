@@ -42,17 +42,6 @@ const { title, description } = Astro.props
 
 		<meta name="robots" content="index, follow" />
 		<meta name="googlebot" content="index, follow" />
-
-		<script is:inline>
-			window.getThemePreference = () => {
-				const localItem = typeof localStorage !== "undefined" && localStorage.getItem("theme")
-				if (localItem) return localItem
-				return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-			}
-
-			const isDark = window.getThemePreference() === "dark"
-			document.documentElement.classList.toggle("dark", isDark)
-		</script>
 	</head>
 
 	<body
@@ -71,21 +60,14 @@ const { title, description } = Astro.props
 
 <style is:global>
 	:root {
-		--color-primary: #333;
-		--color-secondary: #ddd;
-		--color-twitch: #9146ff;
-		--color-twitch-ice: #f0f0ff;
-
-		--background-color: #ddd;
-		--background-twitch: #000;
-	}
-
-	.dark {
 		--color-primary: #ddd;
 		--color-secondary: #333;
 
 		--background-color: #222;
 		--background-twitch: var(--color-twitch-ice);
+
+		--color-twitch: #9146ff;
+		--color-twitch-ice: #f0f0ff;
 	}
 
 	html {
