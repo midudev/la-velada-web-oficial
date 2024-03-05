@@ -1,6 +1,7 @@
 ---
-import CalendarButton from "../components/CalendarButton.astro"
+import CalendarButton from "@/components/CalendarButton.astro"
 import MapMarkerIcon from "@/icons/map-marker.astro"
+import Action from "@/components/Action.astro"
 ---
 
 <section
@@ -29,8 +30,8 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 
 	<footer class="scroll-horizontal items-top mt-6 flex flex-col gap-9 md:flex-row">
 		<div class="flex flex-col items-center justify-center gap-y-2">
-			<a
-				class="button-style"
+			<Action
+				as="a"
 				aria-disabled="true"
 				href="#"
 				target="_blank"
@@ -38,7 +39,7 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 				aria-label="entradas agotadas, se abrirá en una nueva pestaña"
 			>
 				<span> Comprar entradas </span>
-			</a>
+			</Action>
 			<span class="text-accent">Próximamente</span>
 		</div>
 		<div>
@@ -46,69 +47,6 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		</div>
 	</footer>
 </section>
-
-<style is:global>
-	.button-style {
-		background: transparent;
-		border: none;
-		padding: 10px 20px;
-		display: inline-block;
-		font-size: 20px;
-		font-weight: 600;
-		width: 20rem;
-		text-transform: uppercase;
-		cursor: pointer;
-		transform: skew(-21deg);
-		color: var(--color-primary);
-		border: 2px solid var(--color-primary);
-	}
-
-	.button-style[aria-disabled="true"] {
-		background: #666;
-		color: #111;
-		pointer-events: none;
-		border-color: #666;
-	}
-
-	.button-style > span {
-		display: inline-block;
-		transform: skew(21deg);
-	}
-
-	.button-style::before {
-		content: "";
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		right: 100%;
-		left: 0;
-		background: var(--color-primary);
-		opacity: 0;
-		z-index: -1;
-	}
-
-	.button-style:hover {
-		color: var(--color-secondary);
-		scale: 1.1;
-		transform: skew(-21deg);
-	}
-
-	.button-style:hover::before {
-		left: 0;
-		right: 0;
-		opacity: 1;
-	}
-
-	@media (prefers-reduced-motion: no-preference) {
-		.button-style {
-			transition: scale 150ms ease-in-out;
-		}
-
-		.button-style::before {
-			transition: all 0.5s;
-		}
-	}
-</style>
 
 <script>
 	import { EVENT_TIMESTAMP, timeZoneAbbreviations } from "@/consts/event-date"
