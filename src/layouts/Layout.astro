@@ -1,6 +1,6 @@
 ---
 import ButtonUp from "@/components/ButtonUp.astro"
-import SmokeBackground from "@/components/SmokeBackground.astro"
+import NoiseBackground from "@/components/NoiseBackground.astro"
 import "@fontsource-variable/jost"
 
 interface Props {
@@ -42,23 +42,13 @@ const { title, description } = Astro.props
 
 		<meta name="robots" content="index, follow" />
 		<meta name="googlebot" content="index, follow" />
-
-		<script is:inline>
-			window.getThemePreference = () => {
-				const localItem = typeof localStorage !== "undefined" && localStorage.getItem("theme")
-				if (localItem) return localItem
-				return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-			}
-
-			const isDark = window.getThemePreference() === "dark"
-			document.documentElement.classList.toggle("dark", isDark)
-		</script>
 	</head>
 
 	<body
 		class="[&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
-		<SmokeBackground />
+		<!-- <SmokeBackground /> -->
+		<NoiseBackground />
 		<div
 			class="mx-auto max-w-6xl px-2 pt-16 selection:bg-primary selection:text-secondary md:pt-20 lg:px-10"
 			id="main-content"
@@ -71,21 +61,20 @@ const { title, description } = Astro.props
 
 <style is:global>
 	:root {
-		--color-primary: #333;
-		--color-secondary: #ddd;
-		--color-twitch: #9146ff;
-		--color-twitch-ice: #f0f0ff;
-
-		--background-color: #ddd;
-		--background-twitch: #000;
-	}
-
-	.dark {
 		--color-primary: #ddd;
 		--color-secondary: #333;
+		--color-accent: #d5ff00;
 
-		--background-color: #222;
+		--background-color: #101010;
 		--background-twitch: var(--color-twitch-ice);
+
+		--color-twitch: #9146ff;
+		--color-twitch-ice: #f0f0ff;
+	}
+
+	@font-face {
+		font-family: Atomic;
+		src: url("/fonts/atomic.woff2") format("woff2");
 	}
 
 	html {
