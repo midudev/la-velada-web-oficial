@@ -1,6 +1,6 @@
 ---
-import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
 import Action from "./Action.astro"
+import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
 ---
 
 <Action
@@ -54,7 +54,9 @@ import Action from "./Action.astro"
 			button.innerHTML = text
 		}
 
-		config.lightMode = document.documentElement.classList.contains(darkTheme) ? darkTheme : lightTheme
+		config.lightMode = document.documentElement.classList.contains(darkTheme)
+			? darkTheme
+			: lightTheme
 
 		window.atcb_action(config, button)
 	})
