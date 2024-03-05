@@ -1,3 +1,7 @@
+---
+import TwitchLogo from "@/components/TwitchLogo.astro"
+---
+
 <section
 	class="my-32 flex flex-col gap-y-10 font-medium text-primary"
 	aria-label="descripción del evento"
@@ -6,24 +10,10 @@
 		href="https://twitch.tv/ibai"
 		target="_blank"
 		rel="nofollow noopener"
-		class="mx-auto transition hover:scale-125 hover:opacity-70"
+		class="mx-auto hover:scale-125 motion-safe:transition"
 		aria-label="síguelo en directo twitch.tv/ibai, se abrirá en una nueva pestaña"
 	>
-		<svg
-			class="twitch detect-in-viewport text-primary"
-			width="78"
-			height="91"
-			fill="none"
-			viewBox="0 0 78 91"
-			><path
-				fill="currentColor"
-				d="M16.6001.600098.600098 16.6001v57.6H19.8001v16l16-16h12.8l28.8-28.8V.600098h-60.8Z"
-			></path><path
-				fill="var(--background-color)"
-				d="m58.2003 55 12.8-12.8V7h-51.2v48h12.8v12.8l12.8-12.8h12.8Z"></path><path
-				fill="currentColor"
-				d="M39 19.8h6.4V39H39V19.8Zm22.4 0V39H55V19.8h6.4Z"></path>
-		</svg>
+		<TwitchLogo />
 	</a>
 
 	<div
@@ -39,18 +29,16 @@
 			class="order-1 flex items-center justify-center border-t-2 border-primary px-10 py-10 text-3xl md:order-none md:flex-1 md:border-y-2 md:px-0 md:py-12 lg:px-0 lg:py-20 lg:text-4xl"
 		>
 			<h3
-				class="md:max-w-[250px]"
+				class="flex justify-center md:max-w-[250px]"
 				aria-label="síguelo en directo twitch.tv/ibai, se abrirá en una nueva pestaña"
 			>
 				<a
-					class="inline-block transition-transform hover:scale-110 hover:text-twitch"
+					class="inline-block hover:scale-110 hover:text-twitch motion-safe:transition-transform"
 					href="https://twitch.tv/ibai"
 					target="_blank"
 					rel="nofollow noopener"
 				>
-					Síguelo en directo <span class="twitch-link detect-in-viewport transition-colors"
-						>twitch.tv/ibai</span
-					>
+					Síguelo en directo <span class="text-twitch transition-colors">twitch.tv/ibai</span>
 				</a>
 			</h3>
 		</article>
@@ -64,44 +52,3 @@
 		</article>
 	</div>
 </section>
-
-<style>
-	.twitch-link,
-	svg {
-		@apply text-twitch;
-	}
-
-	@supports (animation-timeline: view()) {
-		svg {
-			animation-timeline: view();
-			animation-name: show;
-			animation-timing-function: ease-in;
-		}
-
-		:not(a:hover) > .twitch-link {
-			animation-timeline: view(block);
-			animation-name: show;
-			animation-timing-function: ease-in;
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		svg {
-			animation-name: none;
-		}
-	}
-
-	@keyframes show {
-		from {
-			@apply text-primary;
-		}
-
-		50% {
-			@apply text-twitch;
-		}
-
-		100% {
-			@apply text-twitch;
-		}
-	}
-</style>

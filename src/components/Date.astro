@@ -1,14 +1,60 @@
 ---
 interface Props {
-  time: string
-  dateType: string
-  attribute: Record<string, string>
+	dateType: string
+	attribute: Record<string, string>
+	max: number
 }
 
-const { time, dateType, attribute } = Astro.props
+const { dateType, attribute } = Astro.props
+const maximumSplit = Astro.props.max.toString().split("")
+
+// + 1 porque hay que tener en cuenta el 0
+const maxFirst = Number.parseInt(maximumSplit[0]) + 1
+const maxSecond = 9
+
+// + 1 porque hay que tener en cuenta el 0 para las transiciones
+const firstDigitHeight = (1 / (maxFirst + 1)) * 100
+const secondDigitHeight = (1 / (maxFirst + 1)) * 100
 ---
 
-<div class="flex flex-col place-items-center gap-y-2 w-16">
-  <span class="text-4xl tabular-nums" {...attribute}>{time}</span>
-  <span class="text-xs text-center">{dateType}</span>
+<div class="flex w-16 flex-col place-items-center gap-y-2">
+	<div class="relative overflow-hidden" {...attribute}>
+		<div class="float-left block h-10 w-auto overflow-hidden" data-first-group>
+			<div
+				class="translate-y-0 transition-transform duration-[800ms] motion-reduce:duration-0"
+				data-wrapper
+			>
+				{
+					Array.from({ length: maxFirst }, () => 0).map((_, index) => (
+						// + 1 porque hay que tener en cuenta el 0 para las transiciones
+						<div data-num={index} style={`height: ${firstDigitHeight}%`}>
+							<span class="text-4xl tabular-nums">{index}</span>
+						</div>
+					))
+				}
+				<div style={`height: ${firstDigitHeight}%`} data-num-x0>
+					<span class="text-4xl tabular-nums">0</span>
+				</div>
+			</div>
+		</div>
+		<div class="float-left block h-10 w-auto overflow-hidden" data-second-group>
+			<div
+				class="translate-y-0 transition-transform duration-[800ms] motion-reduce:duration-0"
+				data-wrapper
+			>
+				{
+					Array.from({ length: maxSecond }, () => 0).map((_, index) => (
+						// + 1 porque hay que tener en cuenta el 0 para las transiciones
+						<div data-num={index} style={`height: ${secondDigitHeight}%`}>
+							<span class="text-4xl tabular-nums">{index}</span>
+						</div>
+					))
+				}
+				<div style={`height: ${secondDigitHeight}%`} data-num-x0>
+					<span class="text-4xl tabular-nums">0</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<span class="text-center text-xs">{dateType}</span>
 </div>
