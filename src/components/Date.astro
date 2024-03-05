@@ -2,78 +2,56 @@
 interface Props {
 	dateType: string
 	attribute: Record<string, string>
+	max: number
 }
 
 const { dateType, attribute } = Astro.props
+const maximumSplit = Astro.props.max.toString().split("")
+
+// + 1 porque hay que tener en cuenta el 0
+const maxFirst = Number.parseInt(maximumSplit[0]) + 1
+const maxSecond = 9
+
+// + 1 porque hay que tener en cuenta el 0 para las transiciones
+const firstDigitHeight = (1 / (maxFirst + 1)) * 100
+const secondDigitHeight = (1 / (maxFirst + 1)) * 100
 ---
 
 <div class="flex w-16 flex-col place-items-center gap-y-2">
 	<div class="relative overflow-hidden" {...attribute}>
 		<div class="float-left block h-10 w-auto overflow-hidden" data-first-group>
-			<div class="translate-y-0 transition-transform duration-[800ms]" data-wrapper>
-				<div class="h-10" data-num-0>
+			<div
+				class="translate-y-0 transition-transform duration-[800ms] motion-reduce:duration-0"
+				data-wrapper
+			>
+				{
+					Array.from({ length: maxFirst }, () => 0).map((_, index) => (
+						// + 1 porque hay que tener en cuenta el 0 para las transiciones
+						<div data-num={index} style={`height: ${firstDigitHeight}%`}>
+							<span class="text-4xl tabular-nums">{index}</span>
+						</div>
+					))
+				}
+				<div style={`height: ${firstDigitHeight}%`} data-num-x0>
 					<span class="text-4xl tabular-nums">0</span>
-				</div>
-				<div class="h-10" data-num-1>
-					<span class="text-4xl tabular-nums">1</span>
-				</div>
-				<div class="h-10" data-num-2>
-					<span class="text-4xl tabular-nums">2</span>
-				</div>
-				<div class="h-10" data-num-3>
-					<span class="text-4xl tabular-nums">3</span>
-				</div>
-				<div class="h-10" data-num-4>
-					<span class="text-4xl tabular-nums">4</span>
-				</div>
-				<div class="h-10" data-num-5>
-					<span class="text-4xl tabular-nums">5</span>
-				</div>
-				<div class="h-10" data-num-6>
-					<span class="text-4xl tabular-nums">6</span>
-				</div>
-				<div class="h-10" data-num-7>
-					<span class="text-4xl tabular-nums">7</span>
-				</div>
-				<div class="h-10" data-num-8>
-					<span class="text-4xl tabular-nums">8</span>
-				</div>
-				<div class="h-10" data-num-9>
-					<span class="text-4xl tabular-nums">9</span>
 				</div>
 			</div>
 		</div>
 		<div class="float-left block h-10 w-auto overflow-hidden" data-second-group>
-			<div class="translate-y-0 transition-transform duration-[800ms]" data-wrapper>
-				<div class="h-10" data-num-0>
+			<div
+				class="translate-y-0 transition-transform duration-[800ms] motion-reduce:duration-0"
+				data-wrapper
+			>
+				{
+					Array.from({ length: maxSecond }, () => 0).map((_, index) => (
+						// + 1 porque hay que tener en cuenta el 0 para las transiciones
+						<div data-num={index} style={`height: ${secondDigitHeight}%`}>
+							<span class="text-4xl tabular-nums">{index}</span>
+						</div>
+					))
+				}
+				<div style={`height: ${secondDigitHeight}%`} data-num-x0>
 					<span class="text-4xl tabular-nums">0</span>
-				</div>
-				<div class="h-10" data-num-1>
-					<span class="text-4xl tabular-nums">1</span>
-				</div>
-				<div class="h-10" data-num-2>
-					<span class="text-4xl tabular-nums">2</span>
-				</div>
-				<div class="h-10" data-num-3>
-					<span class="text-4xl tabular-nums">3</span>
-				</div>
-				<div class="h-10" data-num-4>
-					<span class="text-4xl tabular-nums">4</span>
-				</div>
-				<div class="h-10" data-num-5>
-					<span class="text-4xl tabular-nums">5</span>
-				</div>
-				<div class="h-10" data-num-6>
-					<span class="text-4xl tabular-nums">6</span>
-				</div>
-				<div class="h-10" data-num-7>
-					<span class="text-4xl tabular-nums">7</span>
-				</div>
-				<div class="h-10" data-num-8>
-					<span class="text-4xl tabular-nums">8</span>
-				</div>
-				<div class="h-10" data-num-9>
-					<span class="text-4xl tabular-nums">9</span>
 				</div>
 			</div>
 		</div>

@@ -1,4 +1,4 @@
-export const EVENT_TIMESTAMP = 1709575200000 as const
+export const EVENT_TIMESTAMP = 1720886400000 as const
 
 /*
  Mapeo de Abreviaturas de Zonas Horarias
@@ -54,12 +54,14 @@ export const timeZoneAbbreviations: { [key: string]: string } = {
 	"Africa/Cairo": "EET", // Eastern European Time (Egypt)
 	"Africa/Lagos": "WAT", // West Africa Time
 
-	// South America
+	// South America, for countries with one time zone we use the country code to improve readability
 	"America/Sao_Paulo": "BRT", // Brasilia Time
-	"America/Buenos_Aires": "ART", // Argentine Time
-	"America/Lima": "PET", // Peru Time
-	"America/Bogota": "COT", // Colombia Time
-	"America/Caracas": "VET", // Venezuelan Standard Time
+	"America/Buenos_Aires": "ARG", // Argentine Time
+	"America/Lima": "PE", // Peruvian Time
+	"America/Bogota": "COL", // Colombian Time
+	"America/Caracas": "VE", // Venezuelan Standard Time
+	"America/Montevideo": "UY", // Uruguayan Time
+	"America/Santiago": "CL", // Chilean Time
 
 	// Additional Global Time Zones
 	"Pacific/Auckland": "NZDT", // New Zealand Daylight Time
@@ -67,8 +69,6 @@ export const timeZoneAbbreviations: { [key: string]: string } = {
 	"Pacific/Fiji": "FJT", // Fiji Time
 	"Pacific/Tongatapu": "TOT", // Tonga Time
 	"Etc/UTC": "UTC", // Coordinated Universal Time
-	"America/Montevideo": "UYT", // Uruguay Time
-	"America/Santiago": "CLT", // Chile Time
 	"America/St_Johns": "NST", // Newfoundland Time
 	"Asia/Kathmandu": "NPT", // Nepal Time
 	"Asia/Yerevan": "AMT", // Armenia Time

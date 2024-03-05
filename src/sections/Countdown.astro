@@ -17,19 +17,19 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 		data-date={EVENT_TIMESTAMP}
 		role="timer"
 	>
-		<Date dateType="Días" attribute={{ "data-days": "" }} />
+		<Date dateType="Días" attribute={{ "data-days": "" }} max={99} />
 
 		<span aria-hidden="true" class="mt-1 text-xl">:</span>
 
-		<Date dateType="Horas" attribute={{ "data-hours": "" }} />
+		<Date dateType="Horas" attribute={{ "data-hours": "" }} max={23} />
 
 		<span aria-hidden="true" class="mt-1 text-xl">:</span>
 
-		<Date dateType="Minutos" attribute={{ "data-minutes": "" }} />
+		<Date dateType="Minutos" attribute={{ "data-minutes": "" }} max={59} />
 
 		<span aria-hidden="true" class="mt-1 text-xl">:</span>
 
-		<Date dateType="Segundos" attribute={{ "data-seconds": "" }} />
+		<Date dateType="Segundos" attribute={{ "data-seconds": "" }} max={59} />
 	</div>
 </section>
 
@@ -76,10 +76,27 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 
 		function animateDigit(group: HTMLElement, value: string) {
 			const wrapper = group.querySelector("[data-wrapper]")
-			const num = group.querySelector(`[data-num-${value}]`)
+			const num = group.querySelector(`[data-num="${value}"]`)
+			const xnum = group.querySelector("[data-num-x0]") // 0 añadido para la animación
 
-			if (wrapper instanceof HTMLElement && num instanceof HTMLElement) {
+			if (
+				wrapper instanceof HTMLElement &&
+				num instanceof HTMLElement &&
+				xnum instanceof HTMLElement
+			) {
 				wrapper.style.transform = `translateY(-${num.offsetTop}px)`
+
+				// Cuando cambie, volver arriba
+				if (value === "0") {
+					setTimeout(() => {
+						wrapper.classList.toggle("duration-[800ms]", false)
+						wrapper.classList.toggle("transition-transform", false)
+						wrapper.style.transform = `translateY(-${xnum.offsetTop}px)`
+					}, 800)
+				} else {
+					wrapper.classList.toggle("duration-[800ms]", true)
+					wrapper.classList.toggle("transition-transform", true)
+				}
 			}
 		}
 
@@ -125,7 +142,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 				document.querySelector(".countdown-text")?.remove()
 
 				$countdown.innerHTML = "¡El evento de presentación ha empezado! 🎉"
-				$countdown.className = "text-primary uppercase font-semibold animate-fade-in text-3xl"
+				$countdown.className = "text-primary uppercase font-semibold animate-fade-in text-3xl text-center"
 
 				import("canvas-confetti").then(({ default: confetti }) => {
 					confetti()

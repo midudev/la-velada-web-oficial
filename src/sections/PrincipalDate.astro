@@ -4,45 +4,51 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 ---
 
 <section
-	class="mx-auto mt-16 flex animate-fade-in flex-col place-items-center text-center text-primary animate-delay-[2s] md:mt-32"
+	class="mx-auto mt-16 flex animate-fade-in flex-col place-items-center text-center text-primary animate-delay-300 motion-reduce:animate-delay-[0s] motion-reduce:animate-duration-[0s] md:mt-32"
 >
-	<div class="text-3xl font-semibold uppercase md:text-5xl">
+	<header class="text-3xl font-semibold uppercase md:text-5xl">
 		<time class="date"></time>
-		<span aria-hidden="true" class="mx-1 hidden md:inline">·</span>
-		<br aria-hidden="true" class="block md:hidden" />
+		<span class="date-time-separator hidden">
+			<span aria-hidden="true" class="mx-1 hidden md:inline">·</span>
+			<br aria-hidden="true" class="block md:hidden" />
+		</span>
 		<time class="time"></time>
-	</div>
+	</header>
 
 	<h2 class="mt-6 flex max-w-sm flex-col text-lg font-medium uppercase lg:text-2xl">
-		<span>Evento de Presentación</span>
 		<a
-			href="https://maps.app.goo.gl/RFzHUVDhRqdQaTAo8"
-			class="inline-block align-middle transition hover:scale-110 hover:opacity-60"
+			class="flex"
+			href="https://maps.app.goo.gl/F1oAFhFjqnvTKtC18"
 			target="_blank"
 			rel="noopener"
-			style="display: -webkit-box;"
-			aria-label="ubicación del teatro en google maps, se abrirá en una nueva pestaña"
+			aria-label="ubicación del campo Santiago Bernabéu en google maps, se abrirá en una nueva pestaña"
 		>
-			<MapMarkerIcon class="mr-1 max-md:mt-1 md:mt-0.5 md:size-6" /> Teatro Victoria (Barcelona)
+			<MapMarkerIcon class="mr-1 max-md:mt-1 md:mt-0.5 md:size-6" /> Estadio Santiago Bernabéu
 		</a>
 	</h2>
 
-	<div class="scroll-horizontal mt-6 flex flex-col items-center gap-9 md:flex-row">
-		<a
-			href="https://www.teatrevictoria.com/es/cartelera/c/190_la-velada-del-ano-4.html"
-			target="_blank"
-			rel="noopener noreferrer"
-			aria-label="entradas agotadas, se abrirá en una nueva pestaña"
-		>
-			<span> Entradas agotadas </span>
-		</a>
-
-		<CalendarButton />
-	</div>
+	<footer class="scroll-horizontal items-top mt-6 flex flex-col gap-9 md:flex-row">
+		<div class="flex flex-col items-center justify-center gap-y-2">
+			<a
+				class="button-style"
+				aria-disabled="true"
+				href="#"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="entradas agotadas, se abrirá en una nueva pestaña"
+			>
+				<span> Comprar entradas </span>
+			</a>
+			<span class="text-accent">Próximamente</span>
+		</div>
+		<div>
+			<CalendarButton />
+		</div>
+	</footer>
 </section>
 
-<style>
-	.scroll-horizontal > a {
+<style is:global>
+	.button-style {
 		background: transparent;
 		border: none;
 		padding: 10px 20px;
@@ -57,12 +63,19 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		border: 2px solid var(--color-primary);
 	}
 
-	.scroll-horizontal > a > span {
+	.button-style[aria-disabled="true"] {
+		background: #666;
+		color: #111;
+		pointer-events: none;
+		border-color: #666;
+	}
+
+	.button-style > span {
 		display: inline-block;
 		transform: skew(21deg);
 	}
 
-	.scroll-horizontal > a::before {
+	.button-style::before {
 		content: "";
 		position: absolute;
 		top: 0;
@@ -72,19 +85,28 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		background: var(--color-primary);
 		opacity: 0;
 		z-index: -1;
-		transition: all 0.5s;
 	}
 
-	.scroll-horizontal > a:hover {
+	.button-style:hover {
 		color: var(--color-secondary);
 		scale: 1.1;
 		transform: skew(-21deg);
 	}
 
-	.scroll-horizontal > a:hover::before {
+	.button-style:hover::before {
 		left: 0;
 		right: 0;
 		opacity: 1;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.button-style {
+			transition: scale 150ms ease-in-out;
+		}
+
+		.button-style::before {
+			transition: all 0.5s;
+		}
 	}
 </style>
 
@@ -141,15 +163,29 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		return new Intl.DateTimeFormat("en-CA", options).format(new Date(timestamp))
 	}
 
-	function updateUI(dateString: string, timeString: string, validDatetime: string) {
+	function updateUI(
+		dateString: string,
+		timeString: string,
+		validDatetime: string,
+		{
+			showTime = true,
+		}: {
+			showTime?: boolean
+		}
+	) {
 		const $dateSpan = document.querySelector(".date")
 		const $timeSpan = document.querySelector(".time")
+		const $dateSeparator = document.querySelector(".date-time-separator")
 
-		if ($dateSpan != null && $timeSpan != null) {
+		if ($dateSpan != null) {
 			$dateSpan.innerHTML = dateString
 			$dateSpan.setAttribute("datetime", validDatetime)
+		}
+
+		if ($timeSpan != null && showTime) {
 			$timeSpan.innerHTML = timeString
 			$timeSpan.setAttribute("datetime", validDatetime)
+			$dateSeparator?.classList.remove("hidden")
 		}
 	}
 
@@ -159,17 +195,19 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		const formattedTime = formatEventTimeWithTimeZoneName(EVENT_TIMESTAMP, USER_TZ)
 		const validDatetime = formatValidDatetime(EVENT_TIMESTAMP, USER_TZ)
 
-		updateUI(formattedDate, formattedTime, validDatetime)
+		updateUI(formattedDate, formattedTime, validDatetime, {
+			showTime: false,
+		})
 	}
 
 	document.addEventListener("DOMContentLoaded", main)
 
-	 // Verifica si el evento ya ha pasado
-	 const eventHasPassed = EVENT_TIMESTAMP < Date.now()
-    if (eventHasPassed) {
-        const addToCalendarBtn = document.getElementById("add-to-calendar")
-        if (addToCalendarBtn) {
-            addToCalendarBtn.remove()
-        }
-    }
+	// Verifica si el evento ya ha pasado
+	const eventHasPassed = EVENT_TIMESTAMP < Date.now()
+	if (eventHasPassed) {
+		const addToCalendarBtn = document.getElementById("add-to-calendar")
+		if (addToCalendarBtn) {
+			addToCalendarBtn.remove()
+		}
+	}
 </script>
