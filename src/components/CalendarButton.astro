@@ -54,8 +54,7 @@ import Action from "./Action.astro"
 			button.innerHTML = text
 		}
 
-		const theme = document.documentElement.classList.contains(darkTheme) ? darkTheme : lightTheme
-		config.lightMode = theme
+		config.lightMode = document.documentElement.classList.contains(darkTheme) ? darkTheme : lightTheme
 
 		window.atcb_action(config, button)
 	})
