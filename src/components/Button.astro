@@ -1,0 +1,78 @@
+---
+interface Props {
+	id?: string
+	ariaLabel: string
+	disabled?: boolean
+}
+
+const { id, ariaLabel, disabled = false } = Astro.props
+---
+
+<button id={id} aria-label={ariaLabel} data-disabled={disabled}>
+	<span>
+		<slot />
+	</span>
+</button>
+
+<style>
+	button {
+		background: transparent;
+		border: none;
+		padding: 10px 20px;
+		display: inline-block;
+		font-size: 20px;
+		font-weight: 600;
+		width: 20rem;
+		text-transform: uppercase;
+		cursor: pointer;
+		transform: skew(-21deg);
+		color: var(--color-primary);
+		border: 2px solid var(--color-primary);
+	}
+
+	button[data-disabled] {
+		background: #666;
+		color: #111;
+		pointer-events: none;
+		border-color: #666;
+	}
+
+	button > span {
+		display: inline-block;
+		transform: skew(21deg);
+	}
+
+	button::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 100%;
+		left: 0;
+		background: var(--color-primary);
+		opacity: 0;
+		z-index: -1;
+	}
+
+	button:hover {
+		color: var(--color-secondary);
+		scale: 1.1;
+		transform: skew(-21deg);
+	}
+
+	button:hover::before {
+		left: 0;
+		right: 0;
+		opacity: 1;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		button {
+			transition: scale 150ms ease-in-out;
+		}
+
+		button::before {
+			transition: all 0.5s;
+		}
+	}
+</style>
