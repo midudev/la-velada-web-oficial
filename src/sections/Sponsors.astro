@@ -68,7 +68,7 @@ const SPONSORS = [
 						loading="lazy"
 						src={`/img/${id}.svg`}
 						alt={`Logo del patrocinador ${name}`}
-						class="w-30 h-auto transition group-hover:scale-110"
+						class="sponsor-logo w-30 h-auto transition group-hover:scale-110"
 					/>
 				</a>
 			))
@@ -84,25 +84,24 @@ const SPONSORS = [
 	.sponsor-link::before {
 		content: "";
 		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+		inset: 0;
+		display: block;
+		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, transparent);
 		opacity: 0;
-		transition: opacity 0.5s ease;
+		height: 50%;
+		transition: opacity 0.5s ease-in;
 	}
 
 	.sponsor-link:hover::before {
-		opacity: 1;
-		height: 100%;
+		opacity: 0.8;
+		height: 90%;
 		box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
 		-webkit-box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
 		-moz-box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
 	}
 
 	.sponsor-logo {
-		transition: transform 0.5s ease;
+		transition: transform 0.3s ease-in-out;
 	}
 
 	.sponsor-link:hover .sponsor-logo {
