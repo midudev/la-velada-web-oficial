@@ -58,7 +58,7 @@ const SPONSORS = [
 		{
 			SPONSORS.map(({ id, name, url }) => (
 				<a
-					class="group flex h-24 items-center justify-center bg-gradient-to-b from-white/10 via-transparent to-transparent hover:from-white/20 md:h-32"
+					class="sponsor-link"
 					title={`Visita la página del patrocinador ${name}`}
 					href={url}
 					target="_blank"
@@ -75,3 +75,40 @@ const SPONSORS = [
 		}
 	</div>
 </section>
+
+<style>
+	.sponsor-link {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 96px;
+		width: 100%;
+		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+		transition: all 0.5s ease;
+	}
+
+	.sponsor-link::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+		opacity: 0;
+		transition: opacity 0.5s ease;
+	}
+
+	.sponsor-link:hover::before {
+		opacity: 1;
+	}
+
+	.sponsor-logo {
+		transition: transform 0.5s ease;
+	}
+
+	.sponsor-link:hover .sponsor-logo {
+		transform: scale(1.1);
+	}
+</style>
