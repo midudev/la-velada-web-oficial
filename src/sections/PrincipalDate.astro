@@ -2,21 +2,22 @@
 import CalendarButton from "@/components/CalendarButton.astro"
 import MapMarkerIcon from "@/icons/map-marker.astro"
 import Action from "@/components/Action.astro"
+import Typography from "@/components/Typography.astro"
 ---
 
 <section
 	class="mx-auto mt-16 flex animate-fade-in flex-col place-items-center text-center text-primary animate-delay-300 motion-reduce:animate-delay-[0s] motion-reduce:animate-duration-[0s] md:mt-32"
 >
 	<header class="text-3xl font-semibold uppercase md:text-5xl">
-		<time class="date"></time>
+		<time class="date inline-block"></time>
 		<span class="date-time-separator hidden">
 			<span aria-hidden="true" class="mx-1 hidden md:inline">·</span>
 			<br aria-hidden="true" class="block md:hidden" />
 		</span>
-		<time class="time"></time>
+		<time class="time hidden"></time>
 	</header>
 
-	<h2 class="mt-6 flex max-w-sm flex-col text-lg font-medium uppercase lg:text-2xl">
+	<Typography as="h2" variant="h2" color="neutral" class:list={"mt-6 flex max-w-sm flex-col "}>
 		<a
 			class="flex"
 			href="https://maps.app.goo.gl/F1oAFhFjqnvTKtC18"
@@ -26,7 +27,7 @@ import Action from "@/components/Action.astro"
 		>
 			<MapMarkerIcon class="mr-1 max-md:mt-1 md:mt-0.5 md:size-6" /> Estadio Santiago Bernabéu
 		</a>
-	</h2>
+	</Typography>
 
 	<footer class="scroll-horizontal items-top mt-6 flex flex-col gap-9 md:flex-row">
 		<div class="flex flex-col items-center justify-center gap-y-2">
@@ -40,7 +41,9 @@ import Action from "@/components/Action.astro"
 			>
 				<span> Comprar entradas </span>
 			</Action>
-			<span class="text-accent">Próximamente</span>
+			<Typography as="span" variant="medium" color="primary" class:list={"text-center"}>
+				Próximamente
+			</Typography>
 		</div>
 		<div>
 			<CalendarButton />
@@ -123,6 +126,7 @@ import Action from "@/components/Action.astro"
 		if ($timeSpan != null && showTime) {
 			$timeSpan.innerHTML = timeString
 			$timeSpan.setAttribute("datetime", validDatetime)
+			$timeSpan?.classList.remove("hidden")
 			$dateSeparator?.classList.remove("hidden")
 		}
 	}
