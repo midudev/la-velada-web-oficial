@@ -7,7 +7,7 @@
 	let loopTimeout
 	let resizeThrottle
 
-	const canvas = document.getElementById("noise")
+	const canvas = document.getElementById("noise") as HTMLCanvasElement
 	const ctx = canvas.getContext("2d")
 
 	const createNoise = () => {
@@ -33,7 +33,7 @@
 	}
 
 	const loop = () => {
-		paintNoise(frame)
+		paintNoise()
 
 		loopTimeout = window.setTimeout(() => {
 			window.requestAnimationFrame(loop)
