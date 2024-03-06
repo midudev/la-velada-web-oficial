@@ -8,11 +8,13 @@ interface Props {
 const { videoId, title, backgroundImage } = Astro.props
 ---
 
-<lite-youtube videoid={videoId} style={`background-image: url('${backgroundImage}')`}>
-	<a href={`https://youtube.com/watch?v=${videoId}`} class="lty-playbtn" title="Play Video">
-		<span class="lyt-visually-hidden">{title}</span>
-	</a>
-</lite-youtube>
+<div class="lite-youtube-wrapper">
+	<lite-youtube videoid={videoId} style={`background-image: url('${backgroundImage}')`}>
+		<a href={`https://youtube.com/watch?v=${videoId}`} class="lty-playbtn" title="Play Video">
+			<span class="lyt-visually-hidden">{title}</span>
+		</a>
+	</lite-youtube>
+</div>
 
 <script>
 	/*
@@ -251,6 +253,11 @@ const { videoId, title, backgroundImage } = Astro.props
 </script>
 
 <style is:global>
+	.lite-youtube-wrapper {
+		position: relative;
+		background: linear-gradient(30deg, transparent, white, transparent);
+		padding: 2px;
+	}
 	lite-youtube {
 		background-color: #000;
 		position: relative;
@@ -262,9 +269,6 @@ const { videoId, title, backgroundImage } = Astro.props
 		aspect-ratio: 16/9;
 		width: 100%;
 		height: auto;
-		border: 2px solid;
-		border-image-slice: 1;
-		border-image-source: linear-gradient(30deg, #999, white, #999);
 	}
 
 	/* gradient */
