@@ -133,6 +133,7 @@ const { title, description } = Astro.props
 				50% 50%,
 				50% 50%;
 		}
+
 		to {
 			background-position:
 				350% 50%,
@@ -165,6 +166,7 @@ const { title, description } = Astro.props
 		position: absolute;
 		inset: 0;
 		opacity: 0.5;
+		transform: translateZ(0);
 	}
 
 	.lights::after {
@@ -173,8 +175,8 @@ const { title, description } = Astro.props
 		inset: 0;
 		background-size: 200%, 100%;
 		animation: lights 80s linear infinite;
-		background-attachment: fixed;
 		mix-blend-mode: difference;
 		background-image: var(--stripesDark), var(--rainbow);
+		transform: translateZ(0);
 	}
 </style>
