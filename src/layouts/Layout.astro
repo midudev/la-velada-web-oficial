@@ -45,10 +45,11 @@ const { title, description } = Astro.props
 	</head>
 
 	<body
-		class="[&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
+		class="dark [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
 		<!-- <SmokeBackground /> -->
 		<NoiseBackground />
+		<div class="lights"></div>
 		<div
 			class="mx-auto max-w-6xl px-2 pt-16 selection:bg-primary selection:text-secondary md:pt-20 lg:px-10"
 			id="main-content"
@@ -124,5 +125,56 @@ const { title, description } = Astro.props
 
 	::-webkit-scrollbar-corner {
 		background: var(--background-image);
+	}
+
+	@keyframes lights {
+		from {
+			background-position:
+				50% 50%,
+				50% 50%;
+		}
+		to {
+			background-position:
+				350% 50%,
+				350% 50%;
+		}
+	}
+
+	.lights {
+		--stripesDark: repeating-linear-gradient(
+			100deg,
+			#000 0%,
+			#000 7%,
+			transparent 10%,
+			transparent 12%,
+			#000 16%
+		);
+		--rainbow: repeating-linear-gradient(100deg, var(--color-accent) 10%, var(--color-accent) 30%);
+		background-size: 200%, 400%;
+		background-position:
+			50% 50%,
+			50% 50%;
+
+		background-image: var(--stripesDark), var(--rainbow);
+		filter: blur(10px) opacity(50%) saturate(200%);
+
+		mask-image: radial-gradient(ellipse at 100% 0%, black 40%, transparent 70%);
+
+		pointer-events: none;
+		z-index: -20;
+		position: absolute;
+		inset: 0;
+		opacity: 0.5;
+	}
+
+	.lights::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background-size: 200%, 100%;
+		animation: lights 80s linear infinite;
+		background-attachment: fixed;
+		mix-blend-mode: difference;
+		background-image: var(--stripesDark), var(--rainbow);
 	}
 </style>
