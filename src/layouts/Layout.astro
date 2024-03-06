@@ -46,15 +46,12 @@ const { title, description } = Astro.props
 	</head>
 
 	<body
-		class="selection:bg-accent dark [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
+		class="dark selection:bg-accent selection:text-secondary [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
 		<!-- <SmokeBackground /> -->
 		<NoiseBackground />
 		<LightsBackground />
-		<div
-			class="mx-auto max-w-6xl px-2 pt-16 selection:bg-primary selection:text-secondary md:pt-20 lg:px-10"
-			id="main-content"
-		>
+		<div class="mx-auto max-w-6xl px-2 pt-16 md:pt-20 lg:px-10" id="main-content">
 			<slot />
 		</div>
 		<ButtonUp />
