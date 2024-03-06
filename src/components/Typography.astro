@@ -7,7 +7,9 @@ type Props<Tag extends HTMLTag> = Polymorphic<{
 	color: ColorClasses
 	href?: string
 }>
+
 const { as: Tag, class: className, variant, color, href, ...props } = Astro.props
+
 const variantClasses = {
 	h2: "text-lg font-medium uppercase lg:text-2xl",
 	h3: "text-2xl font-semibold uppercase",
@@ -15,7 +17,6 @@ const variantClasses = {
 	medium: "text-md",
 } as const
 type VariantClasses = keyof typeof variantClasses
-
 const colorClasses = {
 	white: "text-white",
 	black: "text-black",
@@ -23,6 +24,7 @@ const colorClasses = {
 	neutral: "text-neutral-300",
 }
 type ColorClasses = keyof typeof colorClasses
+
 const classes = [variantClasses[variant as VariantClasses], colorClasses[color as ColorClasses], className]
 ---
 
