@@ -7,11 +7,19 @@ import HeroLogo from "@/components/HeroLogo.astro"
 	class="flex flex-col place-items-center gap-4 opacity-0 transition-opacity duration-1000 lg:gap-9"
 >
 	<h1 class="sr-only">Presentación de la Velada del Año IV</h1>
-	<h2 class="-rotate-6 font-atomic text-4xl text-white">twitch.tv/ibai</h2>
+	<a
+		class="-rotate-6 font-atomic text-4xl text-white underline-offset-8 transition hover:scale-110 hover:underline"
+		href="https://www.twitch.tv/ibai"
+		target="_blank"
+		rel="noopener"
+		title="Enlace al canal de Twitch de Ibai Llanos"
+		aria-label="Enlace al canal de Twitch de Ibai Llanos"
+		>twitch.tv/ibai
+	</a>
 	<div class="relative">
 		<img
 			class="absolute inset-0 -z-10 m-auto block h-auto w-full max-w-[400px] scale-[135%] md:scale-[175%]"
-			src="/img/drawn-x-logo.png"
+			src="/img/drawn-x-logo.webp"
 			alt="Logo dibujado a mano de La Velada del Año IV"
 		/>
 		<div
@@ -24,10 +32,10 @@ import HeroLogo from "@/components/HeroLogo.astro"
 </section>
 <script>
 	// Obtener el elemento del DOM
-	const hero = document.getElementById("hero")
+	const $hero = document.getElementById("hero")
 
 	// Después de 2 segundos, eliminar la clase 'opacity-100'
 	setTimeout(() => {
-		hero?.classList.add("opacity-100")
+		$hero?.classList.add("opacity-100")
 	}, 1000) // 1 segundos
 </script>
