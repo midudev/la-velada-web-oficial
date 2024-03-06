@@ -1,5 +1,6 @@
 ---
 import ButtonUp from "@/components/ButtonUp.astro"
+import LightsBackground from "@/components/LightsBackground.astro"
 import NoiseBackground from "@/components/NoiseBackground.astro"
 import "@fontsource-variable/jost"
 
@@ -45,10 +46,11 @@ const { title, description } = Astro.props
 	</head>
 
 	<body
-		class="[&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
+		class="dark [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
 		<!-- <SmokeBackground /> -->
 		<NoiseBackground />
+		<LightsBackground />
 		<div
 			class="mx-auto max-w-6xl px-2 pt-16 selection:bg-primary selection:text-secondary md:pt-20 lg:px-10"
 			id="main-content"
@@ -65,7 +67,7 @@ const { title, description } = Astro.props
 		--color-secondary: #333;
 		--color-accent: #d5ff00;
 
-		--background-color: #101010;
+		--background-color: #141800;
 		--background-twitch: var(--color-twitch-ice);
 
 		--color-twitch: #9146ff;
