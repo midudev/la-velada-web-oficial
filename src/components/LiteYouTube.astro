@@ -128,14 +128,16 @@ const { videoId, title, backgroundImage } = Astro.props
 		fetchYTPlayerApi() {
 			if (window.YT || (window.YT && window.YT.Player)) return
 
-			this.ytApiPromise = new Promise((res, rej) => {
+			/* global YT */ // Esta línea se agrega para declarar que YT es una variable global.
+			this.ytApiPromise = new Promise((resolve, reject) => {
+				// Cambia 'res' y 'rej' por 'resolve' y 'reject'.
 				const el = document.createElement("script")
 				el.src = "https://www.youtube.com/iframe_api"
 				el.async = true
 				el.onload = (_) => {
-					YT.ready(res)
+					YT.ready(resolve) // Asegúrate de que 'YT' sea reconocido como definido con el comentario global.
 				}
-				el.onerror = rej
+				el.onerror = reject
 				this.append(el)
 			})
 		}
@@ -238,7 +240,7 @@ const { videoId, title, backgroundImage } = Astro.props
 					// A pretty ugly hack since onerror won't fire on YouTube image 404. This is (probably) due to
 					// Youtube's style of returning data even with a 404 status. That data is a 120x90 placeholder image.
 					// … per "annoying yt 404 behavior" in the .md
-					const noAvailablePoster = e.target.naturalHeight == 90 && e.target.naturalWidth == 120
+					const noAvailablePoster = e.target.naturalHeight === 90 && e.target.naturalWidth === 120
 					if (noAvailablePoster) return
 
 					this.style.backgroundImage = `url("${webpUrl}")`
