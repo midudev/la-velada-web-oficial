@@ -8,7 +8,7 @@
 [![Issues][issues-shield]][issues-url]
 
 <a href="https://github.com/midudev/la-velada-web-oficial">
-  <img src="https://github.com/D4souls/la-velada-web-oficial/assets/67900366/0a20cc77-d9e9-4265-b9eb-640c1577f1f9" alt="Logo" width="800" />
+  <img src="./public/og.png" alt="Logo" width="800" />
 </a>
 
 ## Web oficial de La Velada IV
@@ -36,9 +36,9 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 - **Redes sociales**: Conoce las redes oficiales donde podrás informarte sobre el evento.
 
 ### Capturas de pantalla de la web de La Velada IV:
-![Captura de pantalla en móvil](https://github.com/D4souls/la-velada-web-oficial/assets/67900366/c58551f2-c072-42ac-86b5-129c3381b986)
 
-![Captura de pantalla en ordenador](https://github.com/D4souls/la-velada-web-oficial/assets/67900366/12c8e5db-7660-4c55-8133-669b3303d510)
+![Captura de pantalla en móvil](./public/Mobile_README.png)
+![Captura de pantalla en ordenador](./public/Desktop_README.png)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 

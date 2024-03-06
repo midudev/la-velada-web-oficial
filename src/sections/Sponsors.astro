@@ -58,17 +58,17 @@ const SPONSORS = [
 		{
 			SPONSORS.map(({ id, name, url }) => (
 				<a
-					class="group flex h-24 items-center justify-center md:h-32 relative overflow-hidden"
+					class="company-link group relative flex h-24 items-center justify-center overflow-hidden md:h-32"
 					title={`Visita la página del patrocinador ${name}`}
 					href={url}
 					target="_blank"
-					rel="noopener"
+					rel="noopener noreferrer"
 				>
 					<img
 						loading="lazy"
 						src={`/img/${id}.svg`}
 						alt={`Logo del patrocinador ${name}`}
-						class="w-30 h-auto transition group-hover:scale-110"
+						class="company-logo w-30 h-auto transition group-hover:scale-110"
 					/>
 				</a>
 			))
@@ -76,20 +76,33 @@ const SPONSORS = [
 	</div>
 </section>
 <style>
-	a::before {
-		content: '';
+	.company-link {
+		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+		transition: all 0.5s ease;
+	}
+
+	.company-link::before {
+		content: "";
 		position: absolute;
 		inset: 0;
 		display: block;
-		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent);
+		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, transparent);
+		opacity: 0;
 		height: 50%;
-		transition: all 0.3s ease-in-out;
+		transition: opacity 0.5s ease-in;
 	}
 
-	a:hover::before {
-		height: 100%;
-		-webkit-box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
-		-moz-box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
+	.company-link:hover::before {
+		opacity: 0.8;
+		height: 90%;
 		box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
+	}
+
+	.company-logo {
+		transition: transform 0.3s ease-in-out;
+	}
+
+	.company-link:hover .company-logo {
+		transform: scale(1.1);
 	}
 </style>
