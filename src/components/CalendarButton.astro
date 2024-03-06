@@ -1,6 +1,5 @@
 ---
 import Action from "./Action.astro"
-import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
 ---
 
 <Action
@@ -11,7 +10,7 @@ import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
 	<span> Agregar al calendario</span>
 </Action>
 
-<script is:inline define:vars={{ darkTheme: DARK_THEME, lightTheme: LIGHT_THEME }}>
+<script is:inline>
 	const config = {
 		name: "🥊 La Velada del Año 4 - El Evento del Año",
 		description:
@@ -53,10 +52,6 @@ import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
 			status = "loaded"
 			button.innerHTML = text
 		}
-
-		config.lightMode = document.documentElement.classList.contains(darkTheme)
-			? darkTheme
-			: lightTheme
 
 		window.atcb_action(config, button)
 	})
