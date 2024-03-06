@@ -1,7 +1,7 @@
 ---
 import CalendarButton from "@/components/CalendarButton.astro"
 import MapMarkerIcon from "@/icons/map-marker.astro"
-import Action from "@/components/Action.astro"
+import ButtonLink from '@/components/ButtonLink.astro'
 ---
 
 <section
@@ -30,20 +30,19 @@ import Action from "@/components/Action.astro"
 
 	<footer class="scroll-horizontal items-top mt-6 flex flex-col gap-9 md:flex-row">
 		<div class="flex flex-col items-center justify-center gap-y-2">
-			<Action
-				as="a"
-				aria-disabled="true"
+			<ButtonLink 
+			    content="Comprar entradas" 
 				href="#"
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="entradas agotadas, se abrirá en una nueva pestaña"
-			>
-				<span> Comprar entradas </span>
-			</Action>
+				ariaLabel="entradas agotadas, se abrirá en una nueva pestaña"
+			/>				
 			<span class="text-accent">Próximamente</span>
 		</div>
 		<div>
-			<CalendarButton />
+			<ButtonLink 
+			    content="Agregar al calendario" 
+				id="add-to-calendar"
+				ariaLabel="agregar al calendario se abrirá ventana flotante"
+			/>
 		</div>
 	</footer>
 </section>
