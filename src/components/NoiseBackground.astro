@@ -1,13 +1,14 @@
 <canvas id="noise" class="fixed top-0 -z-10 animate-fade-in"></canvas>
 
 <script>
-	let wWidth, wHeight
-	const noiseData = []
+	let wWidth:number
+	let wHeight:number
+	const noiseData: ImageData[] = [];
 	let frame = 0
-	let loopTimeout
-	let resizeThrottle
+	let loopTimeout: number;
+	let resizeThrottle: number;
 
-	const canvas = document.getElementById("noise")
+	const canvas = document.getElementById("noise") as HTMLCanvasElement
 	const ctx = canvas.getContext("2d")
 
 	const createNoise = () => {
@@ -33,7 +34,7 @@
 	}
 
 	const loop = () => {
-		paintNoise(frame)
+		paintNoise()
 
 		loopTimeout = window.setTimeout(() => {
 			window.requestAnimationFrame(loop)
