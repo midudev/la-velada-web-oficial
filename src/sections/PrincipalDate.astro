@@ -8,12 +8,12 @@ import Action from "@/components/Action.astro"
 	class="mx-auto mt-16 flex animate-fade-in flex-col place-items-center text-center text-primary animate-delay-300 motion-reduce:animate-delay-[0s] motion-reduce:animate-duration-[0s] md:mt-32"
 >
 	<header class="text-3xl font-semibold uppercase md:text-5xl">
-		<time class="date"></time>
+		<time class="date inline-block"></time>
 		<span class="date-time-separator hidden">
 			<span aria-hidden="true" class="mx-1 hidden md:inline">·</span>
 			<br aria-hidden="true" class="block md:hidden" />
 		</span>
-		<time class="time"></time>
+		<time class="time hidden"></time>
 	</header>
 
 	<h2 class="mt-6 flex max-w-sm flex-col text-lg font-medium uppercase lg:text-2xl">
@@ -123,6 +123,7 @@ import Action from "@/components/Action.astro"
 		if ($timeSpan != null && showTime) {
 			$timeSpan.innerHTML = timeString
 			$timeSpan.setAttribute("datetime", validDatetime)
+			$timeSpan?.classList.remove("hidden")
 			$dateSeparator?.classList.remove("hidden")
 		}
 	}
