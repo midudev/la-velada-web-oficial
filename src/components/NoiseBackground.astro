@@ -5,6 +5,7 @@
 	const noiseData = []
 	let frame = 0
 	let loopTimeout
+	let resizeThrottle
 
 	const canvas = document.getElementById("noise")
 	const ctx = canvas.getContext("2d")
@@ -41,10 +42,12 @@
 
 	const setup = () => {
 		wWidth = window.innerWidth
-		wHeight = window.innerHeight
+		wHeight = window.innerHeight + 100
 
 		canvas.width = wWidth
 		canvas.height = wHeight
+
+		noiseData.length = 0
 
 		for (let i = 0; i < 10; i++) {
 			createNoise()
@@ -58,12 +61,12 @@
 	window.addEventListener(
 		"resize",
 		() => {
-			const resizeThrottle = window.setTimeout(() => {
+			window.clearTimeout(resizeThrottle)
+
+			resizeThrottle = window.setTimeout(() => {
 				window.clearTimeout(loopTimeout)
 				setup()
 			}, 200)
-
-			window.clearTimeout(resizeThrottle)
 		},
 		false
 	)
