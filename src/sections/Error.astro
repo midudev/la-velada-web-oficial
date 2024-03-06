@@ -1,4 +1,5 @@
 ---
+import Action from "@/components/Action.astro"
 import HeroLogo from "@/components/HeroLogo.astro"
 
 const { error, message } = Astro.props
@@ -13,68 +14,7 @@ const { error, message } = Astro.props
 		<h1 class="text-5xl font-semibold uppercase text-white md:text-6xl">Error {error}</h1>
 		<h1 class="mt-5 text-2xl font-semibold uppercase md:text-4xl">{message}</h1>
 	</div>
-
-	<div
-		class="button-primary mt-10 flex flex-col items-center gap-9 text-center md:mt-20 md:flex-row"
+	<Action class="mt-5 text-center" href="/" aria-label="volver a la página principal" as="a"
+		>Volver</Action
 	>
-		<a href="/" aria-label="volver a la página principal">
-			<span>Volver</span>
-		</a>
-	</div>
 </section>
-
-<style is:global>
-	.button-primary > a {
-		background: transparent;
-		border: none;
-		padding: 10px 20px;
-		display: inline-block;
-		font-size: 20px;
-		font-weight: 600;
-		width: 20rem;
-		text-transform: uppercase;
-		cursor: pointer;
-		transform: skew(-21deg);
-		color: var(--color-primary);
-		border: 2px solid var(--color-primary);
-	}
-
-	.button-primary > a > span {
-		display: inline-block;
-		transform: skew(21deg);
-	}
-
-	.button-primary > a::before {
-		content: "";
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		right: 100%;
-		left: 0;
-		background: var(--color-primary);
-		opacity: 0;
-		z-index: -1;
-	}
-
-	.button-primary > a:hover {
-		color: var(--color-secondary);
-		scale: 1.1;
-		transform: skew(-21deg);
-	}
-
-	.button-primary > a:hover::before {
-		left: 0;
-		right: 0;
-		opacity: 1;
-	}
-
-	@media (prefers-reduced-motion: no-preference) {
-		.button-primary > a {
-			transition: scale 150ms ease-in-out;
-		}
-
-		.button-primary > a::before {
-			transition: all 0.5s;
-		}
-	}
-</style>

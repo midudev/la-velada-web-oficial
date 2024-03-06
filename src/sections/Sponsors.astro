@@ -1,4 +1,6 @@
 ---
+import Typography from "@/components/Typography.astro"
+
 const SPONSORS = [
 	{
 		id: "vicio",
@@ -11,14 +13,14 @@ const SPONSORS = [
 		url: "https://revolut.com/",
 	},
 	{
-		id: "el-pozo",
-		name: "El Pozo",
-		url: "https://elpozo.com/",
+		id: "prime",
+		name: "Prime",
+		url: "https://drinkprime.com/",
 	},
 	{
-		id: "grefusa",
-		name: "Grefusa",
-		url: "https://grefusa.com/",
+		id: "alsa",
+		name: "Alsa",
+		url: "https://alsa.es/",
 	},
 	{
 		id: "spotify",
@@ -31,14 +33,14 @@ const SPONSORS = [
 		url: "https://cerave.es/",
 	},
 	{
-		id: "prime",
-		name: "Prime",
-		url: "https://drinkprime.com/",
+		id: "el-pozo",
+		name: "El Pozo",
+		url: "https://elpozo.com/",
 	},
 	{
-		id: "alsa",
-		name: "Alsa",
-		url: "https://alsa.es/",
+		id: "grefusa",
+		name: "Grefusa",
+		url: "https://grefusa.com/",
 	},
 	{
 		id: "maxibon",
@@ -49,11 +51,12 @@ const SPONSORS = [
 ---
 
 <section class="my-40">
-	<h3 class="text-center text-2xl font-semibold uppercase text-white">Patrocinadores</h3>
-	<p class="mt-4 text-center text-xl text-neutral-300">
+	<Typography as="h3" variant="h3" color="white" class:list={"text-center"}>
+		Patrocinadores
+	</Typography>
+	<Typography as="p" variant="body" color="neutral" class:list={"mt-4 text-center"}>
 		La Velada puede llevarse a cabo gracias a la colaboración de...
-	</p>
-
+	</Typography>
 	<div class="mt-12 grid grid-cols-2 gap-8 md:grid-cols-3">
 		{
 			SPONSORS.map(({ id, name, url }) => (
@@ -68,11 +71,30 @@ const SPONSORS = [
 						loading="lazy"
 						src={`/img/${id}.svg`}
 						alt={`Logo del patrocinador ${name}`}
-						class="company-logo w-30 h-auto transition group-hover:scale-110"
+						class="company-logo w-30 h-auto transition group-hover:scale-110 px-4"
 					/>
 				</a>
 			))
 		}
+	</div>
+	<div class="mt-20 flex items-center justify-center gap-x-4">
+		<Typography as="h3" variant="body" color="neutral" class:list={"text-center"}>
+			Web Powered by
+		</Typography>
+
+		<a
+			class="transition hover:scale-110"
+			href="https://infojobs.net"
+			title="Ir a la página de InfoJobs"
+			target="_blank"
+		>
+			<img
+				loading="lazy"
+				src="/img/infojobs.svg"
+				alt="Logo de InfoJobs"
+				class="inline-block h-auto w-32"
+			/>
+		</a>
 	</div>
 </section>
 <style>
@@ -89,7 +111,9 @@ const SPONSORS = [
 		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, transparent);
 		opacity: 0;
 		height: 50%;
-		transition: opacity 0.5s ease-in;
+		transition:
+			opacity 0.2s ease-in-out,
+			height 0.2s ease-in-out;
 	}
 
 	.company-link:hover::before {

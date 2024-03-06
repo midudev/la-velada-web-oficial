@@ -1,22 +1,29 @@
-<canvas id="noise" class="fixed top-0 -z-10 animate-fade-in"></canvas>
+<canvas
+	id="noise"
+	aria-label="Background noise effect for display"
+	class="fixed top-0 -z-10 animate-fade-in"></canvas>
 
 <script>
-	let wWidth, wHeight
-	const noiseData = []
-	let frame = 0
-	let loopTimeout
-	let resizeThrottle
+	let wWidth: number, wHeight: number
+	const noiseData: ImageData[] = []
+	let frame: number = 0
+	let loopTimeout: number
+	let resizeThrottle: number
 
-	const canvas = document.getElementById("noise")
+	const canvas = document.getElementById("noise") as HTMLCanvasElement
 	const ctx = canvas.getContext("2d")
 
+	if (!ctx) {
+		throw new Error("2D context not supported or canvas not found")
+	}
+
 	const createNoise = () => {
-		const idata = ctx.createImageData(wWidth, wHeight)
-		const buffer32 = new Uint32Array(idata.data.buffer)
-		let len = buffer32.length
+		const idata: ImageData = ctx.createImageData(wWidth, wHeight)
+		const buffer32: Uint32Array = new Uint32Array(idata.data.buffer)
+		let len: number = buffer32.length
 
 		while (len--) {
-			buffer32[len] = ((Math.random() * 150) | 0) << 24
+			buffer32[len] = ((Math.random() * 70) | 0) << 24
 		}
 
 		noiseData.push(idata)
@@ -33,11 +40,11 @@
 	}
 
 	const loop = () => {
-		paintNoise(frame)
+		paintNoise()
 
 		loopTimeout = window.setTimeout(() => {
 			window.requestAnimationFrame(loop)
-		}, 1000 / 25)
+		}, 1000 / 25) as unknown as number
 	}
 
 	const setup = () => {
@@ -66,7 +73,7 @@
 			resizeThrottle = window.setTimeout(() => {
 				window.clearTimeout(loopTimeout)
 				setup()
-			}, 200)
+			}, 200) as unknown as number
 		},
 		false
 	)
