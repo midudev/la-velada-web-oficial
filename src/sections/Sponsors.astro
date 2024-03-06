@@ -1,4 +1,6 @@
 ---
+import Typography from "@/components/Typography.astro"
+
 const SPONSORS = [
 	{
 		id: "vicio",
@@ -49,11 +51,12 @@ const SPONSORS = [
 ---
 
 <section class="my-40">
-	<h3 class="text-center text-2xl font-semibold uppercase text-white">Patrocinadores</h3>
-	<p class="mt-4 text-center text-xl text-neutral-300">
+	<Typography as="h3" variant="h3" color="white" class:list={"text-center"}>
+		Patrocinadores
+	</Typography>
+	<Typography as="p" variant="body" color="neutral" class:list={"mt-4 text-center"}>
 		La Velada puede llevarse a cabo gracias a la colaboración de...
-	</p>
-
+	</Typography>
 	<div class="mt-12 grid grid-cols-2 gap-8 md:grid-cols-3">
 		{
 			SPONSORS.map(({ id, name, url }) => (
