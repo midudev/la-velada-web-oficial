@@ -1,0 +1,208 @@
+---
+import HeroLogo from "@/components/HeroLogo.astro";
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout
+	description="Web Oficial de La Velada del Año IV, evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos"
+	title="La Velada del Año 4 - Evento de Boxeo de Ibai Llanos"
+>
+	<section class="container flex flex-col place-items-center gap-4">
+		<div class="relative">
+			<img
+				class="absolute inset-0 -z-10 m-auto block h-auto w-full max-w-[150px] scale-[135%] md:scale-[175%]"
+				src="/img/drawn-x-logo.webp"
+				alt="Logo dibujado a mano de La Velada del Año IV"
+			/>
+			<div
+				class="absolute inset-0 -z-10 m-auto w-full rounded-full bg-black opacity-70 blur-2xl md:size-[150px]"
+			>
+			</div>
+			<HeroLogo class="h-auto w-[250px] text-primary md:w-[150px]" />
+			<HeroLogo class="absolute inset-0 -z-10 h-auto w-[250px] text-[#f1ffaa]/70 blur md:w-[150px]" />
+		</div>
+		<div class="select-container justify-center" id="selectContainer">
+		</div>
+	</section>
+</Layout>
+
+<style is:global>
+.select-container {
+  display: grid;
+  grid-template-columns: repeat(6, 100px);
+  grid-column-gap: 8px;
+  grid-row-gap: 8px;
+  margin: 1em auto 3em;
+  padding: 4px 4px;
+}
+@media screen and (max-width: 900px) {
+  .select-container {
+    grid-template-columns: repeat(4, 100px);
+  }
+}
+@media screen and (max-width: 600px) {
+  .select-container {
+    grid-template-columns: repeat(4, 76.9230769231px);
+  }
+}
+.character {
+  width: 100px;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  display: inline-flex;
+}
+@media screen and (max-width: 600px) {
+  .character {
+    width: 76.9230769231px;
+  }
+}
+.character:focus, .character:active {
+  outline: 0;
+}
+.character__name {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  display: none;
+}
+.character__img, .character__name {
+  margin: 0;
+  padding: 0;
+}
+.character__img {
+  filter: grayscale(0.84);
+  width: 100%;
+}
+.character.active {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+.character.active .character__name {
+  display: block;
+  width: 100%;
+  background: var(--color-primary);
+  color: BLACK;
+  /* opacity: 0.7; */
+  margin-top: 0.8em;
+  font-size: 0.7em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0.3em 0;
+}
+.character.active .character__img {
+  filter: grayscale(0);
+  outline: 4px solid var(--color-accent);;
+  animation: flash 300ms linear;
+}
+
+@keyframes flash {
+  0% {
+    filter: brightness(100%);
+  }
+  20% {
+    filter: brightness(150%);
+  }
+  40% {
+    filter: brightness(100%);
+  }
+  60% {
+    filter: brightness(150%);
+  }
+  80% {
+    filter: brightness(100%);
+  }
+  100% {
+    filter: brightness(150%);
+  }
+}
+
+	</style>
+
+<script>
+	const characters = [
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+	{
+		name: "Midu",
+		id: "midu",
+		imgSrc: 'https://avatars.githubusercontent.com/u/1561955'
+	},
+];
+
+characters.forEach(character => {
+	const newCharacter = document.createElement("button")
+	newCharacter.classList = "character"
+	newCharacter.id = character.id;
+	newCharacter.rel = character.name
+	newCharacter.innerHTML = `
+		<img class="character__img" src="${character.imgSrc}" />
+		<p class="character__name">${character.name}</p>
+	`;
+	newCharacter.addEventListener("click", () => {
+		if(document.querySelector(".character.active")) {
+			document.querySelector(".character.active").classList.remove("active")
+		}
+		newCharacter.classList.add("active")
+	})
+	document.getElementById("selectContainer").appendChild(newCharacter)
+})
+</script>
