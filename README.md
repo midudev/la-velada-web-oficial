@@ -35,10 +35,9 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 - **Compra de boletos**: Permite a los usuarios dirigirlos a la compra de boletos fácilmente.
 - **Redes sociales**: Conoce las redes oficiales donde podrás informarte sobre el evento.
 
-Capturas de pantalla de la web de La Velada IV:
+### Capturas de pantalla de la web de La Velada IV:
 
 ![Captura de pantalla en móvil](./public/Mobile_README.png)
-
 ![Captura de pantalla en ordenador](./public/Desktop_README.png)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
