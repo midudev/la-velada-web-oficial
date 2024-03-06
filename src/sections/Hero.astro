@@ -2,7 +2,10 @@
 import HeroLogo from "@/components/HeroLogo.astro"
 ---
 
-<section class="flex flex-col place-items-center gap-4 lg:gap-9">
+<section
+	id="hero"
+	class="flex flex-col place-items-center gap-4 opacity-0 transition-opacity duration-1000 lg:gap-9"
+>
 	<h1 class="sr-only">Presentación de la Velada del Año IV</h1>
 	<h2 class="-rotate-6 font-atomic text-4xl text-white">twitch.tv/ibai</h2>
 	<div class="relative">
@@ -19,3 +22,12 @@ import HeroLogo from "@/components/HeroLogo.astro"
 		<HeroLogo class="absolute inset-0 -z-10 h-auto w-[250px] text-[#f1ffaa]/70 blur md:w-[500px]" />
 	</div>
 </section>
+<script>
+	// Obtener el elemento del DOM
+	const hero = document.getElementById("hero")
+
+	// Después de 2 segundos, eliminar la clase 'opacity-100'
+	setTimeout(() => {
+		hero?.classList.add("opacity-100")
+	}, 300) // 1 segundos
+</script>

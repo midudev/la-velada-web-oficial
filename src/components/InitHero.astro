@@ -1,0 +1,128 @@
+<div id="smoke-bkg" class="pointer-events-none fixed top-0 z-10 h-full w-full">
+	<canvas id="smoke-canvas"></canvas>
+</div>
+
+<script>
+	const NUM_PARTICLES = 50 // Número de partículas
+	const canvas = document.getElementById("smoke-canvas") as HTMLCanvasElement
+	const ctx = canvas.getContext("2d") as CanvasRenderingContext2D
+	let raf: number
+
+	if (canvas) {
+		canvas.width = window.innerWidth
+		canvas.height = window.innerHeight + 100
+	}
+
+	const particles: Particle[] = []
+	const fps = 30 // Deseado FPS
+	const fpsInterval = 1000 / fps // Intervalo de tiempo entre fotogramas
+	let then = Date.now()
+	let smokeFinished = false // Variable para verificar si se ha completado el humo
+
+	// Carga la textura de humo
+	const smokeImage = new Image()
+	smokeImage.src = "/smoke.webp" // Asegúrate de que la ruta a la textura sea correcta
+
+	class Particle {
+		x: number
+		y: number
+		size: number
+		opacity: number
+		rotation: number
+		rotationSpeed: number
+		rotationDirection: number
+		speed: number
+
+		constructor() {
+			this.x = Math.random() * (canvas.width / 4) - canvas.width / 2
+			this.y = -Math.random() * 500 // Genera la coordenada y arriba de la pantalla
+			this.size = Math.random() * 3000 + 1000 // Ajustar para textura y 'z'
+			this.opacity = Math.random() * 0.8 // Opacidad inicial aleatoria
+			this.rotation = Math.random() * Math.PI * 4 // Rotación inicial aleatoria
+			this.rotationSpeed = Math.random() * 0.01 // Velocidad de rotación más rápida
+			this.rotationDirection = Math.random() < 0.5 ? -1 : 1 // Dirección aleatoria de la rotación
+			this.speed = Math.random() * 100 // Velocidad de desplazamiento más rápida
+		}
+
+		update() {
+			if (!smokeFinished) {
+				this.x += this.speed // Ajusta la velocidad de movimiento hacia la derecha
+				this.y += 1 // Ajusta la velocidad de movimiento hacia abajo
+
+				// Disminuir la opacidad gradualmente al pasar la mitad de la pantalla y desaparecer completamente después del 80%
+				if (this.x > canvas.width * 0.5 && this.x < canvas.width * 0.9) {
+					this.opacity -= 0.01 // Gradualmente disminuye la opacidad al pasar la mitad de la pantalla
+				} else if (this.x >= canvas.width * 0.8 || this.opacity <= 0) {
+					this.opacity = 0 // Desaparece por completo después del 80% de la pantalla o cuando la opacidad llega a cero
+				}
+
+				this.rotation += this.rotationSpeed * this.rotationDirection // Actualizar la rotación
+			}
+		}
+
+		draw() {
+			ctx.save() // Guardar el estado actual del contexto
+			ctx.translate(this.x + this.size / 2, this.y + this.size / 2) // Mover el origen al centro de la partícula
+			ctx.rotate(this.rotation) // Rotar
+			ctx.globalAlpha = this.opacity // Opacidad
+			ctx.drawImage(smokeImage, -this.size / 2, -this.size / 2, this.size, this.size) // Dibujar imagen
+			ctx.globalAlpha = 1.0 // Restablecer opacidad
+			ctx.restore() // Restaurar el estado original del contexto
+		}
+	}
+
+	function init() {
+		for (let i = 0; i < NUM_PARTICLES; i++) {
+			particles.push(new Particle())
+		}
+	}
+
+	function handleParticles() {
+		let finished = true
+		for (let i = 0; i < particles.length; i++) {
+			particles[i].update()
+			particles[i].draw()
+
+			if (particles[i].x < canvas.width * 1) {
+				finished = false // Si alguna partícula no ha alcanzado el 75%, aún no hemos terminado
+			}
+		}
+		smokeFinished = finished // Actualizamos el estado de finalización del humo
+	}
+
+	function animate() {
+		raf = requestAnimationFrame(animate)
+
+		const now = Date.now()
+		const elapsed = now - then
+
+		if (elapsed > fpsInterval) {
+			then = now - (elapsed % fpsInterval)
+
+			ctx.clearRect(0, 0, canvas.width, canvas.height)
+			handleParticles()
+
+			// Detenemos la animación si se ha completado el humo
+			if (smokeFinished) {
+				cancelAnimationFrame(raf)
+			}
+		}
+	}
+
+	const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+
+	if (!reducedMotion.matches) {
+		window.addEventListener("resize", () => {
+			canvas.width = window.innerWidth
+			canvas.height = window.innerHeight + 100
+			cancelAnimationFrame(raf)
+			handleParticles()
+			animate()
+		})
+
+		smokeImage.onload = () => {
+			init()
+			animate()
+		}
+	}
+</script>
