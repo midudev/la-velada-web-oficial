@@ -2,6 +2,7 @@
 import CalendarButton from "@/components/CalendarButton.astro"
 import MapMarkerIcon from "@/icons/map-marker.astro"
 import Action from "@/components/Action.astro"
+import Typography from "@/components/Typography.astro"
 ---
 
 <section
@@ -16,7 +17,7 @@ import Action from "@/components/Action.astro"
 		<time class="time hidden"></time>
 	</header>
 
-	<h2 class="mt-6 flex max-w-sm flex-col text-lg font-medium uppercase lg:text-2xl">
+	<Typography as="h2" variant="h2" color="neutral" class:list={"mt-6 flex max-w-sm flex-col "}>
 		<a
 			class="flex"
 			href="https://maps.app.goo.gl/F1oAFhFjqnvTKtC18"
@@ -26,7 +27,7 @@ import Action from "@/components/Action.astro"
 		>
 			<MapMarkerIcon class="mr-1 max-md:mt-1 md:mt-0.5 md:size-6" /> Estadio Santiago Bernabéu
 		</a>
-	</h2>
+	</Typography>
 
 	<footer class="scroll-horizontal items-top mt-6 flex flex-col gap-9 md:flex-row">
 		<div class="flex flex-col items-center justify-center gap-y-2">
@@ -40,7 +41,9 @@ import Action from "@/components/Action.astro"
 			>
 				<span> Comprar entradas </span>
 			</Action>
-			<span class="text-accent">Próximamente</span>
+			<Typography as="span" variant="medium" color="primary" class:list={"text-center"}>
+				Próximamente
+			</Typography>
 		</div>
 		<div>
 			<CalendarButton />
