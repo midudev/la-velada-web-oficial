@@ -58,7 +58,7 @@ const SPONSORS = [
 		{
 			SPONSORS.map(({ id, name, url }) => (
 				<a
-					class="company-link group relative flex h-24 items-center justify-center overflow-hidden md:h-32"
+					class="company-link group relative flex h-24 items-center justify-center overflow-hidden after:absolute after:bottom-0 after:left-0 after:h-full after:w-32 after:translate-x-[-400px] after:skew-x-[45deg] after:bg-white/10 hover:from-white/20 hover:after:animate-[glass-effect_.5s_ease-in-out] md:h-32"
 					title={`Visita la página del patrocinador ${name}`}
 					href={url}
 					target="_blank"
@@ -104,5 +104,22 @@ const SPONSORS = [
 
 	.company-link:hover .company-logo {
 		transform: scale(1.1);
+	}
+
+	@keyframes glass-effect {
+		0% {
+			background-color: #ffffff05;
+			transform: skewX(45deg) translateX(-400px);
+		}
+
+		50% {
+			background-color: #ffffff10;
+			transform: skewX(45deg) translateX(0px);
+		}
+
+		100% {
+			background-color: #ffffff05;
+			transform: skewX(45deg) translateX(400px);
+		}
 	}
 </style>
