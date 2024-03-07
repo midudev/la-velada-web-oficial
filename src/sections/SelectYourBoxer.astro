@@ -19,30 +19,33 @@ const listOfBoxers = BOXERS.map((boxer) => {
 		<article
 			class="relative flex w-full flex-col items-center justify-center"
 			style="view-transition-name: boxer;"
+			id="selectedBoxer"
 		>
 			<header
 				class="relative flex w-full flex-col items-center justify-center bg-center bg-no-repeat"
 				style="background-image: url('/img/effects/boxer-background.png'); background-size: 75%;"
 			>
 				<img
-					class="boxer-photo h-[600px] w-[480px] object-contain"
+					class="boxer-photo h-auto object-contain xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]"
 					alt="Fotografía de El Mariana"
 					src="/img/boxers/el-mariana-big.webp"
 					style="filter: drop-shadow(0 0 10px rgba(0, 0, 0, 1));"
 				/>
 				<img
-					class="boxer-title absolute bottom-14 h-auto w-[480px]"
+					class="boxer-title absolute bottom-14 h-auto xl:w-[19vw] 3xl:w-[480px]"
 					alt="El Mariana"
 					src="/img/boxers/el-mariana-title.webp"
 				/>
 				<img
-					class="boxer-flag h-20 w-24 object-contain object-center"
+					class="boxer-flag aspect-[3/2] h-auto w-20 object-contain object-center 3xl:w-24"
 					alt="Bandera de México"
 					src="/img/flags/mx.webp"
 				/>
 			</header>
 
-			<footer class="absolute bottom-0 flex w-full justify-between text-center text-white">
+			<footer
+				class="absolute bottom-0 hidden w-full justify-between text-center text-white xl:flex"
+			>
 				<div class="flex flex-col gap-y-2">
 					<h4 class="text-lg">País</h4>
 					<p class="text-lg font-bold">México</p>
@@ -66,27 +69,29 @@ const listOfBoxers = BOXERS.map((boxer) => {
 				</div>
 			</footer>
 		</article>
-		<aside class="mt-12 grid gap-x-10 gap-y-8">
-			{
-				listOfBoxers.map(({ id, name, country, countryName }) => (
-					<a
-						class="boxer-link group relative flex h-20 items-center justify-center"
-						title={`Visita la página del boxeador ${name}`}
-						href={"#"}
-						data-id={id}
-						data-name={name}
-						data-country={country}
-						data-country-name={countryName}
-					>
-						<img
-							loading="lazy"
-							src={`/img/boxers/${id}-small.png`}
-							alt={`Foto en pequeño del boxeador ${name}`}
-							class="boxer-image -mt-20 w-full object-contain px-2 transition group-hover:scale-110"
-						/>
-					</a>
-				))
-			}
+		<aside class="mt-12">
+			<nav class="grid h-28 gap-x-10 gap-y-8 xl:h-auto">
+				{
+					listOfBoxers.map(({ id, name, country, countryName }) => (
+						<a
+							class="boxer-link group relative flex h-24 w-24 flex-1 items-center justify-center xl:h-20 xl:min-w-0"
+							title={`Visita la página del boxeador ${name}`}
+							href={"#selectedBoxer"}
+							data-id={id}
+							data-name={name}
+							data-country={country}
+							data-country-name={countryName}
+						>
+							<img
+								loading="lazy"
+								src={`/img/boxers/${id}-small.png`}
+								alt={`Foto en pequeño del boxeador ${name}`}
+								class="boxer-image -mt-20 w-full object-contain px-2 transition group-hover:scale-110"
+							/>
+						</a>
+					))
+				}
+			</nav>
 		</aside>
 	</div>
 </section>
@@ -157,18 +162,36 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	.boxer-link:hover .boxer-image {
 		transform: scale(1.1);
 	}
-
-	aside {
-		display: grid;
-		grid-template-columns: repeat(12, 1fr);
-		grid-auto-rows: 40px;
+	/* aside {
+		display: flex;
+		max-width: 100vw;
+		overflow-x: scroll;
+	}
+	nav {
+		display: flex;
+		gap: 1rem;
 
 		a {
-			grid-column: span 2;
+			position: relative;
+		}
+	} */
 
-			&:nth-child(11n + 7) {
-				grid-column-start: 2;
-				grid-column-end: 4;
+	@media (min-width: 1280px) {
+		aside {
+			all: revert;
+		}
+		nav {
+			display: grid;
+			grid-template-columns: repeat(12, 1fr);
+			grid-auto-rows: 40px;
+
+			a {
+				grid-column: span 2;
+
+				&:nth-child(11n + 7) {
+					grid-column-start: 2;
+					grid-column-end: 4;
+				}
 			}
 		}
 	}
