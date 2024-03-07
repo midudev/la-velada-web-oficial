@@ -1,53 +1,6 @@
 ---
 import Typography from "@/components/Typography.astro"
-
-const SPONSORS = [
-	{
-		id: "vicio",
-		name: "Vicio",
-		url: "https://www.ganasdevicio.com/",
-	},
-	{
-		id: "revolut",
-		name: "Revolut",
-		url: "https://revolut.com/",
-	},
-	{
-		id: "prime",
-		name: "Prime",
-		url: "https://drinkprime.com/",
-	},
-	{
-		id: "alsa",
-		name: "Alsa",
-		url: "https://alsa.es/",
-	},
-	{
-		id: "spotify",
-		name: "Spotify",
-		url: "https://spotify.com/",
-	},
-	{
-		id: "cerave",
-		name: "Cerave",
-		url: "https://cerave.es/",
-	},
-	{
-		id: "el-pozo",
-		name: "El Pozo",
-		url: "https://elpozo.com/",
-	},
-	{
-		id: "grefusa",
-		name: "Grefusa",
-		url: "https://grefusa.com/",
-	},
-	{
-		id: "maxibon",
-		name: "Maxibon",
-		url: "https://maxibon.es/",
-	},
-]
+import { SPONSORS } from "@/consts/sponsors"
 ---
 
 <section class="my-40">
@@ -69,9 +22,9 @@ const SPONSORS = [
 				>
 					<img
 						loading="lazy"
-						src={`/img/${id}.svg`}
+						src={`/img/sponsors/${id}.svg`}
 						alt={`Logo del patrocinador ${name}`}
-						class="company-logo w-30 h-auto transition group-hover:scale-110"
+						class="company-logo w-30 h-auto px-4 transition group-hover:scale-110"
 					/>
 				</a>
 			))
@@ -90,7 +43,7 @@ const SPONSORS = [
 		>
 			<img
 				loading="lazy"
-				src="/img/infojobs.svg"
+				src="/img/sponsors/infojobs.svg"
 				alt="Logo de InfoJobs"
 				class="inline-block h-auto w-32"
 			/>
