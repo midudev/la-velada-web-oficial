@@ -53,6 +53,10 @@ const classes = [
 	)
 }
 
-<Tag class:list={classes} {...props}>
-	<slot />
-</Tag>
+{
+	Tag !== "h2" && Tag !== "h3" && Tag !== "p" && (
+		<Tag class:list={classes} {...props}>
+			<slot />
+		</Tag>
+	)
+}
