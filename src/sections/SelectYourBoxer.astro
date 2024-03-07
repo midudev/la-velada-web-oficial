@@ -69,12 +69,12 @@ const listOfBoxers = BOXERS.map((boxer) => {
 				</div>
 			</footer>
 		</article>
-		<aside class="mt-12">
-			<nav class="grid h-28 gap-x-10 gap-y-8 xl:h-auto">
+		<aside class="flex w-full flex-col">
+			<nav class="grid gap-x-10 gap-y-10">
 				{
 					listOfBoxers.map(({ id, name, country, countryName }) => (
 						<a
-							class="boxer-link group relative flex h-24 w-24 flex-1 items-center justify-center xl:h-20 xl:min-w-0"
+							class="boxer-link group relative flex h-20 items-center justify-center"
 							title={`Visita la página del boxeador ${name}`}
 							href={"#selectedBoxer"}
 							data-id={id}
@@ -86,7 +86,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 								loading="lazy"
 								src={`/img/boxers/${id}-small.png`}
 								alt={`Foto en pequeño del boxeador ${name}`}
-								class="boxer-image -mt-20 w-full object-contain px-2 transition group-hover:scale-110"
+								class="boxer-image h-full object-contain px-2 transition group-hover:scale-110"
 							/>
 						</a>
 					))
@@ -145,13 +145,12 @@ const listOfBoxers = BOXERS.map((boxer) => {
 		opacity: 0;
 		height: 50%;
 		transition:
-			opacity 0.2s ease-in-out,
+			opacity 0.3s ease-in-out,
 			height 0.2s ease-in-out;
 	}
 
 	.boxer-link:hover::before {
 		opacity: 0.8;
-		height: 90%;
 		box-shadow: 0 0px 3px rgba(50, 50, 50, 0.75);
 	}
 
@@ -162,28 +161,21 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	.boxer-link:hover .boxer-image {
 		transform: scale(1.1);
 	}
-	/* aside {
+	aside {
 		display: flex;
 		max-width: 100vw;
 		overflow-x: scroll;
 	}
-	nav {
-		display: flex;
-		gap: 1rem;
-
-		a {
-			position: relative;
-		}
-	} */
 
 	@media (min-width: 1280px) {
 		aside {
-			all: revert;
+			display: block;
+			max-width: none;
+			overflow: auto;
 		}
 		nav {
 			display: grid;
 			grid-template-columns: repeat(12, 1fr);
-			grid-auto-rows: 40px;
 
 			a {
 				grid-column: span 2;
