@@ -10,14 +10,14 @@ export const SPONSORS = [
 		url: "https://revolut.com/",
 	},
 	{
-		id: "el-pozo",
-		name: "El Pozo",
-		url: "https://elpozo.com/",
+		id: "prime",
+		name: "Prime",
+		url: "https://drinkprime.com/",
 	},
 	{
-		id: "grefusa",
-		name: "Grefusa",
-		url: "https://grefusa.com/",
+		id: "alsa",
+		name: "Alsa",
+		url: "https://alsa.es/",
 	},
 	{
 		id: "spotify",
@@ -30,14 +30,14 @@ export const SPONSORS = [
 		url: "https://cerave.es/",
 	},
 	{
-		id: "prime",
-		name: "Prime",
-		url: "https://drinkprime.com/",
+		id: "el-pozo",
+		name: "El Pozo",
+		url: "https://elpozo.com/",
 	},
 	{
-		id: "alsa",
-		name: "Alsa",
-		url: "https://alsa.es/",
+		id: "grefusa",
+		name: "Grefusa",
+		url: "https://grefusa.com/",
 	},
 	{
 		id: "maxibon",
