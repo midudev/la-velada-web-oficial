@@ -54,6 +54,17 @@ import Action from "./Action.astro"
 			button.innerHTML = text
 		}
 
+		async function obtenerModal() {
+			const parentModal = await document.getElementById("parent-modal")
+			const modalAddToCalendar = await document.getElementsByClassName("atcb-list-wrapper")
+
+			if (modalAddToCalendar.length > 0) {
+				parentModal.appendChild(modalAddToCalendar[0])
+				scrollTo(0, 0)
+			}
+		}
+		obtenerModal()
+
 		window.atcb_action(config, button)
 	})
 </script>
