@@ -33,9 +33,9 @@ const { videoId, title, backgroundImage } = Astro.props
 	 */
 	class LiteYTEmbed extends HTMLElement {
 		connectedCallback() {
-			this.videoId = this.getAttribute("videoid")
+							this.videoId = this.getAttribute("videoid");;;
 
-			let playBtnEl = this.querySelector(".lty-playbtn")
+			let playBtnEl = this.querySelector(".lty-playbtn");
 			// A label for the button takes priority over a [playlabel] attribute on the custom-element
 			this.playLabel =
 				(playBtnEl && playBtnEl.textContent.trim()) || this.getAttribute("playlabel") || "Play"
@@ -128,14 +128,15 @@ const { videoId, title, backgroundImage } = Astro.props
 		fetchYTPlayerApi() {
 			if (window.YT || (window.YT && window.YT.Player)) return
 
-			this.ytApiPromise = new Promise((res, rej) => {
+			/* global YT */
+			this.ytApiPromise = new Promise((resolve, reject) => {
 				const el = document.createElement("script")
 				el.src = "https://www.youtube.com/iframe_api"
 				el.async = true
 				el.onload = (_) => {
-					YT.ready(res)
+					YT.ready(resolve)
 				}
-				el.onerror = rej
+				el.onerror = reject
 				this.append(el)
 			})
 		}
@@ -238,7 +239,7 @@ const { videoId, title, backgroundImage } = Astro.props
 					// A pretty ugly hack since onerror won't fire on YouTube image 404. This is (probably) due to
 					// Youtube's style of returning data even with a 404 status. That data is a 120x90 placeholder image.
 					// … per "annoying yt 404 behavior" in the .md
-					const noAvailablePoster = e.target.naturalHeight == 90 && e.target.naturalWidth == 120
+					const noAvailablePoster = e.target.naturalHeight === 90 && e.target.naturalWidth === 120
 					if (noAvailablePoster) return
 
 					this.style.backgroundImage = `url("${webpUrl}")`
@@ -251,7 +252,7 @@ const { videoId, title, backgroundImage } = Astro.props
 </script>
 
 <style is:global>
-	lite-youtube {
+	lite-youtube     {
 		background-color: #000;
 		position: relative;
 		display: block;
