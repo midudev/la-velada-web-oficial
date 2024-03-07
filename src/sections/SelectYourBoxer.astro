@@ -72,7 +72,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 					<a
 						class="boxer-link group relative flex h-20 items-center justify-center"
 						title={`Visita la página del boxeador ${name}`}
-						href={`/boxers/${id}`}
+						href={"#"}
 						data-id={id}
 						data-name={name}
 						data-country={country}
@@ -99,8 +99,6 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
 	boxerLinks.forEach((link) => {
 		link.addEventListener("mouseenter", (event) => {
-			event.preventDefault()
-
 			const { id, name, country, countryName } = event.currentTarget?.dataset
 
 			const boxerSrc = `/img/boxers/${id}-big.webp`
