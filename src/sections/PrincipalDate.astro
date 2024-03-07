@@ -17,7 +17,12 @@ import Typography from "@/components/Typography.astro"
 		<time class="time hidden"></time>
 	</header>
 
-	<Typography as="h2" variant="h2" color="neutral" class:list={"mt-6 flex max-w-sm flex-col "}>
+	<Typography
+		as="h2"
+		variant="h2"
+		color="neutral"
+		class:list={"mt-6 flex max-w-sm flex-col transition-all duration-300 ease-in-out hover:text-accent hover:underline"}
+	>
 		<a
 			class="flex"
 			href="https://maps.app.goo.gl/F1oAFhFjqnvTKtC18"
@@ -29,9 +34,10 @@ import Typography from "@/components/Typography.astro"
 		</a>
 	</Typography>
 
-	<footer class="scroll-horizontal items-top mt-6 flex flex-col gap-9 md:flex-row">
-		<div class="flex flex-col items-center justify-center gap-y-2">
+	<footer class="scroll-horizontal items-top mt-6 flex w-full flex-col gap-9 xs:w-auto md:flex-row">
+		<div class="mx-auto flex w-[90%] flex-col items-center justify-center gap-y-2 xs:w-80">
 			<Action
+				class="!w-full !text-base xs:!text-xl"
 				as="a"
 				aria-disabled="true"
 				href="#"
@@ -45,7 +51,7 @@ import Typography from "@/components/Typography.astro"
 				Próximamente
 			</Typography>
 		</div>
-		<div>
+		<div class="mx-auto w-[90%] xs:w-80">
 			<CalendarButton />
 		</div>
 	</footer>
