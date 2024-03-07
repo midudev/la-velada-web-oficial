@@ -99,6 +99,8 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
 	boxerLinks.forEach((link) => {
 		link.addEventListener("mouseenter", (event) => {
+			event.preventDefault()
+
 			const { id, name, country, countryName } = event.currentTarget?.dataset
 
 			const boxerSrc = `/img/boxers/${id}-big.webp`
