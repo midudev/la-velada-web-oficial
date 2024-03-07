@@ -326,18 +326,46 @@ const { videoId, title, backgroundImage } = Astro.props
 		/* …but visually it's still the same size */
 		background: no-repeat center/100px 100px;
 		/* YT's actual play button svg */
-		background-image: url('data:image/svg+xml;utf8,<svg stroke="white" fill="white" stroke-width="0" viewBox="0 0 1024 1024"  xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M719.4 499.1l-296.1-215A15.9 15.9 0 0 0 398 297v430c0 13.1 14.8 20.5 25.3 12.9l296.1-215a15.9 15.9 0 0 0 0-25.8zm-257.6 134V390.9L628.5 512 461.8 633.1z"></path></svg>');
 		position: absolute;
 		cursor: pointer;
 		z-index: 1;
-		filter: grayscale(100%);
-		transition: filter 0.1s cubic-bezier(0, 0, 0.2, 1);
 		border: 0;
 	}
 
-	lite-youtube:hover > .lty-playbtn,
-	lite-youtube .lty-playbtn:focus {
-		filter: none;
+	lite-youtube > .lty-playbtn::after,
+	lite-youtube > .lty-playbtn::before {
+		content: "";
+		position: absolute;
+		top: calc(50% - 70px);
+		left: calc(50% - 70px);
+		width: 140px;
+		height: 140px;
+		transform: scale(1);
+		transition: transform 0.15s cubic-bezier(0, 0, 0.75, 2);
+	}
+	@media screen and (max-width: 720px) {
+		lite-youtube > .lty-playbtn::after,
+		lite-youtube > .lty-playbtn::before {
+			top: calc(50% - 40px);
+			left: calc(50% - 40px);
+			width: 80px;
+			height: 80px;
+		}
+	}
+	lite-youtube > .lty-playbtn::after {
+		transition-delay: 0.1s;
+		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 256 256" shape-rendering="geometricPrecision"><ellipse rx="118" ry="118" transform="translate(128 128)" fill="none" stroke="white" stroke-width="18"/></svg>');
+	}
+	lite-youtube > .lty-playbtn::before {
+		transition-delay: 0s;
+		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 256 256" shape-rendering="geometricPrecision"><polygon points="0,-90.907745 78.728416,45.453872 -78.728416,45.453872 0,-90.907745" transform="matrix(-.007822 0.75354-.999946-.01038 120 130)" fill="none" stroke="white" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+	}
+
+	lite-youtube:hover > .lty-playbtn::after,
+	lite-youtube .lty-playbtn:focus::after,
+	lite-youtube:hover > .lty-playbtn::before,
+	lite-youtube .lty-playbtn:focus::before {
+		transform: scale(1.1);
 	}
 
 	/* Post-click styles */
