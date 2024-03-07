@@ -1,4 +1,5 @@
 ---
+import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
 import ButtonUp from "@/components/ButtonUp.astro"
 import LightsBackground from "@/components/LightsBackground.astro"
 import NoiseBackground from "@/components/NoiseBackground.astro"
@@ -19,6 +20,8 @@ const { title, description } = Astro.props
 
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
+
+		<link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
 
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="canonical" href="https://lavelada.es" />
