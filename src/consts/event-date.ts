@@ -74,4 +74,4 @@ export const timeZoneAbbreviations: { [key: string]: string } = {
 	"Asia/Yerevan": "AMT", // Armenia Time
 	"Asia/Baku": "AZT", // Azerbaijan Time
 	"Asia/Karachi": "PKT", // Pakistan Standard Time
-}
+} as const
