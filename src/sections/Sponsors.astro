@@ -1,15 +1,14 @@
 ---
+import SectionTitle from "@/components/SectionTitle.astro"
 import Typography from "@/components/Typography.astro"
 import { SPONSORS } from "@/consts/sponsors"
 ---
 
 <section class="my-40">
-	<Typography as="h3" variant="h3" color="white" class:list={"text-center"}>
-		Patrocinadores
-	</Typography>
-	<Typography as="p" variant="body" color="neutral" class:list={"mt-4 text-center"}>
-		La Velada puede llevarse a cabo gracias a la colaboración de...
-	</Typography>
+	<SectionTitle
+		title="Patrocinadores"
+		description="La Velada puede llevarse a cabo gracias a la colaboración de..."
+	/>
 	<div class="mt-12 grid grid-cols-2 gap-8 md:grid-cols-3">
 		{
 			SPONSORS.map(({ id, name, url }) => (
