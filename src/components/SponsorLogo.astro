@@ -1,7 +1,8 @@
 ---
 import type { HTMLAttributes } from "astro/types"
-import type { SponsorId } from "./LogoCatalog"
-import { LogoCatalog } from "./LogoCatalog"
+
+import type { SponsorId } from "@/consts/sponsors-logo-catalog"
+import { SponsorsLogoCatalog } from "@/consts/sponsors-logo-catalog"
 
 interface Props extends HTMLAttributes<"svg"> {
 	/**
@@ -17,7 +18,7 @@ interface Props extends HTMLAttributes<"svg"> {
 
 const { logo = "alsa", class: className, ...rest } = Astro.props
 
-const logoDetails = LogoCatalog[logo]
+const logoDetails = SponsorsLogoCatalog[logo]
 
 const optionsToObject = (
 	options?: Array<{ attribute: string; value: string }>
