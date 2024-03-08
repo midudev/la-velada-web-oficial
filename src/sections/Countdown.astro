@@ -11,23 +11,23 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 	</p>
 
 	<div
-		class="grid w-full grid-cols-3 grid-rows-2 gap-x-6 gap-y-11 font-semibold uppercase text-primary"
+		class="flex w-full flex-col items-center justify-center gap-y-20 font-semibold uppercase text-primary md:flex-row lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-x-6 lg:gap-y-11"
 		data-date={EVENT_TIMESTAMP}
 		role="timer"
 	>
 		<Date
 			dateType="Días"
 			attribute={{ "data-days": "" }}
-			position="col-span-3 "
-			className="text-[20rem] text-accent"
-			height={"h-[25rem]"}
+			position="lg:col-span-3 "
+			className="text-7xl text-accent lg:text-[20rem]"
+			height={"h-[4rem] lg:h-[20rem]"}
 			max={129}
 		/>
 
 		<Date
 			dateType="Horas"
 			attribute={{ "data-hours": "" }}
-			className="text-6xl"
+			className="text-6xl "
 			height={"h-[3.80rem]"}
 			max={23}
 		/>
@@ -35,7 +35,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 		<Date
 			dateType="Minutos"
 			attribute={{ "data-minutes": "" }}
-			className="text-6xl"
+			className="text-6xl text-white/70"
 			height={"h-[3.80rem]"}
 			max={59}
 		/>
@@ -43,7 +43,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 		<Date
 			dateType="Segundos"
 			attribute={{ "data-seconds": "" }}
-			className="text-6xl"
+			className="text-6xl text-white/50"
 			height={"h-[3.80rem]"}
 			max={59}
 		/>
