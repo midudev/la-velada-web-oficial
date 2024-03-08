@@ -42,7 +42,13 @@ import Typography from "@/components/Typography.astro"
 			>
 				<span> Comprar entradas </span>
 			</Action>
-			<Typography as="span" variant="medium" color="primary" class:list={"text-center"}>
+			<Typography
+				as="span"
+				variant="medium"
+				color="primary"
+				class:list={"text-center"}
+				aria-label="Comprar Entradas Próximamente"
+			>
 				Próximamente
 			</Typography>
 		</div>
@@ -122,6 +128,7 @@ import Typography from "@/components/Typography.astro"
 		if ($dateSpan != null) {
 			$dateSpan.innerHTML = dateString
 			$dateSpan.setAttribute("datetime", validDatetime)
+			$dateSpan.setAttribute("tabindex", "0")
 		}
 
 		if ($timeSpan != null && showTime) {

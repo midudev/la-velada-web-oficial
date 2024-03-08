@@ -8,13 +8,24 @@ interface Props {
 const { videoId, title, backgroundImage } = Astro.props
 ---
 
-<lite-youtube videoid={videoId} style={`background-image: url('${backgroundImage}')`}>
+<lite-youtube
+	videoid={videoId}
+	style={`background-image: url('${backgroundImage}')`}
+	tabindex="0"
+	aria-label="PRESENTACIÓN VELADA DEL AÑO 4."
+	aria-describedby="Usa el asistente para reproducir el video. Si estás en una computadora, también puedes presionar la tecla Enter."
+>
 	<a href={`https://youtube.com/watch?v=${videoId}`} class="lty-playbtn" title="Play Video">
 		<span class="lyt-visually-hidden">{title}</span>
 	</a>
 </lite-youtube>
 
-<script>
+<script is:inline>
+	document.onkeydown = (event) => {
+		if (event.key === "Enter") {
+			document.activeElement.click()
+		}
+	}
 	/*
 	Component extracted from: https://github.com/paulirish/lite-youtube-embed/tree/master
 	*/
@@ -33,9 +44,9 @@ const { videoId, title, backgroundImage } = Astro.props
 	 */
 	class LiteYTEmbed extends HTMLElement {
 		connectedCallback() {
-							this.videoId = this.getAttribute("videoid");;;
+			this.videoId = this.getAttribute("videoid")
 
-			let playBtnEl = this.querySelector(".lty-playbtn");
+			let playBtnEl = this.querySelector(".lty-playbtn")
 			// A label for the button takes priority over a [playlabel] attribute on the custom-element
 			this.playLabel =
 				(playBtnEl && playBtnEl.textContent.trim()) || this.getAttribute("playlabel") || "Play"
@@ -252,7 +263,7 @@ const { videoId, title, backgroundImage } = Astro.props
 </script>
 
 <style is:global>
-	lite-youtube     {
+	lite-youtube {
 		background-color: #000;
 		position: relative;
 		display: block;
