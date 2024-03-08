@@ -21,7 +21,7 @@
 <script>
 	let timeout: number = 0 // Identificador para clearTimeout
 	const $button = document.getElementById("scroll-to-top")
-	const elementosTabindex = document.querySelectorAll("[tabindex]")
+	const tabindexElements = document.querySelectorAll("[tabindex]")
 
 	// Función para mostrar u ocultar el botón
 	function toggleScrollToTop() {
@@ -46,6 +46,6 @@
 
 	$button?.addEventListener("click", () => {
 		window.scrollTo({ top: 0, behavior: "smooth" })
-		elementosTabindex[0].focus()
+		tabindexElements[0].focus()
 	})
 </script>

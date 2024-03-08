@@ -8,24 +8,13 @@ interface Props {
 const { videoId, title, backgroundImage } = Astro.props
 ---
 
-<lite-youtube
-	videoid={videoId}
-	style={`background-image: url('${backgroundImage}')`}
-	tabindex="0"
-	aria-label="PRESENTACIÓN VELADA DEL AÑO 4."
-	aria-describedby="Usa el asistente para reproducir el video. Si estás en una computadora, también puedes presionar la tecla Enter."
->
+<lite-youtube videoid={videoId} style={`background-image: url('${backgroundImage}')`} tabindex="0">
 	<a href={`https://youtube.com/watch?v=${videoId}`} class="lty-playbtn" title="Play Video">
 		<span class="lyt-visually-hidden">{title}</span>
 	</a>
 </lite-youtube>
 
 <script is:inline>
-	document.onkeydown = (event) => {
-		if (event.key === "Enter") {
-			document.activeElement.click()
-		}
-	}
 	/*
 	Component extracted from: https://github.com/paulirish/lite-youtube-embed/tree/master
 	*/
