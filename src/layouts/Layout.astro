@@ -10,15 +10,17 @@ import SEO from "@/components/SEO.astro"
 interface Props {
 	description: string
 	title: string
+	preloadImgLCP?: string
 }
 
-const { title, description } = Astro.props
+const { title, description, preloadImgLCP } = Astro.props
 ---
 
 <!doctype html>
 <html lang="es">
 	<head>
 		<SEO title={title} description={description} jost={jost} />
+		{preloadImgLCP && <link rel="preload" href={preloadImgLCP} as="image" type="image/webp" crossorigin />}
 	</head>
 
 	<body
