@@ -1,4 +1,13 @@
-export const BOXERS = [
+type Boxer = {
+	id: string;
+	name: string;
+	age: number;
+	weight: number;
+	height: number;
+	country: string;
+};
+
+export const BOXERS: Boxer[]= [
 	{
 		id: "el-mariana",
 		name: "El Mariana",
