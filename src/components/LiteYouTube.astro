@@ -5,7 +5,11 @@ interface Props {
 	backgroundImage?: string
 }
 
-const { videoId, title, backgroundImage } = Astro.props
+const {
+	videoId,
+	title = "Reproducir presentación de La Velada del Año",
+	backgroundImage,
+} = Astro.props
 ---
 
 <lite-youtube
@@ -14,11 +18,7 @@ const { videoId, title, backgroundImage } = Astro.props
 	tabindex="0"
 	role="button"
 >
-	<a
-		href={`https://youtube.com/watch?v=${videoId}`}
-		class="lty-playbtn"
-		title="Reproducir presentación de La Velada del Año"
-	>
+	<a href={`https://youtube.com/watch?v=${videoId}`} class="lty-playbtn" title={title}>
 		<span class="lyt-visually-hidden">{title}</span>
 	</a>
 </lite-youtube>
