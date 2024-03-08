@@ -1,13 +1,14 @@
-type Boxer = {
-	id: string;
-	name: string;
-	age: number;
-	weight: number;
-	height: number;
-	country: string;
+interface Boxer {
+	id: string
+	name: string
+	age: number
+	weight: number
+	height: number
+	country: string
+	realName?: string
 };
 
-export const BOXERS: Boxer[]= [
+export const BOXERS: Boxer[] = [
 	{
 		id: "el-mariana",
 		name: "El Mariana",
@@ -200,7 +201,7 @@ export const BOXERS: Boxer[]= [
 	{
 		id: "carrera",
 		name: "Carreraaa",
-		realName: "Rodrigo Ezequiel Carrera",	
+		realName: "Rodrigo Ezequiel Carrera",
 		age: 23,
 		weight: 61,
 		height: 1.65,
