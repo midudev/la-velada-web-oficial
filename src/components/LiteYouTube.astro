@@ -289,6 +289,8 @@ const { videoId, title, backgroundImage } = Astro.props
 		border: 2px solid;
 		border-image-slice: 1;
 		border-image-source: linear-gradient(30deg, #999, white, #999);
+		transition: all 0.3s ease;
+		box-shadow: 0px 3px 15px 5px #000000a8;
 	}
 
 	/* gradient */
@@ -319,6 +321,12 @@ const { videoId, title, backgroundImage } = Astro.props
 		box-sizing: border-box;
 	}
 
+  
+	lite-youtube:hover {
+		border-image-source: linear-gradient(30deg, #767c00d1, #fff, #b9c201a1);
+		box-shadow: 0px 3px 15px 5px #000000e3;
+	}
+	
 	lite-youtube:hover::before {
 		color: white;
 	}
@@ -354,13 +362,14 @@ const { videoId, title, backgroundImage } = Astro.props
 		cursor: pointer;
 		z-index: 1;
 		filter: grayscale(100%);
-		transition: filter 0.1s cubic-bezier(0, 0, 0.2, 1);
+		transition: filter 0.1s cubic-bezier(0, 0, 0.2, 1), transform 0.3s ease;
 		border: 0;
 	}
 
 	lite-youtube:hover > .lty-playbtn,
 	lite-youtube .lty-playbtn:focus {
 		filter: none;
+		transform: scale(1.23);
 	}
 
 	/* Post-click styles */
