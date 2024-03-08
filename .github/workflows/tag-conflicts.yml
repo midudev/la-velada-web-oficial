@@ -15,8 +15,8 @@ jobs:
       - name: check if prs are dirty
         uses: eps1lon/actions-label-merge-conflict@releases/2.x
         with:
-          dirtyLabel: "PR: no se puede revisar, tiene conflictos"
-          removeOnDirtyLabel: "PR: lista para revisar"
+          dirtyLabel: "conflictos"
+          removeOnDirtyLabel: "conflictos"
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           commentOnDirty: "⚠️ Esta Pull Request tiene conflictos. Por favor, resuelvelos antes de que podamos evaluar los cambios."
           commentOnClean: "✅ ¡Los conflictos han sido resuletos! Un colaborador revisará pronto la Pull Request."
