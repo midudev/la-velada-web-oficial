@@ -289,6 +289,8 @@ const {
 		border: 2px solid;
 		border-image-slice: 1;
 		border-image-source: linear-gradient(30deg, #999, white, #999);
+		transition: all 0.3s ease;
+		box-shadow: 0px 3px 15px 5px #000000a8;
 	}
 
 	/* gradient */
@@ -319,6 +321,12 @@ const {
 		box-sizing: border-box;
 	}
 
+  
+	lite-youtube:hover {
+		border-image-source: linear-gradient(30deg, #767c00d1, #fff, #b9c201a1);
+		box-shadow: 0px 3px 15px 5px #000000e3;
+	}
+	
 	lite-youtube:hover::before {
 		color: white;
 	}
@@ -354,7 +362,7 @@ const {
 		cursor: pointer;
 		z-index: 1;
 		filter: grayscale(100%);
-		transition: filter 0.1s cubic-bezier(0, 0, 0.2, 1);
+		transition: filter 0.1s cubic-bezier(0, 0, 0.2, 1), transform 0.3s ease;
 		border: 0;
 	}
 
@@ -363,6 +371,7 @@ const {
 		background-image: url('data:image/svg+xml;utf8,<svg stroke="white" fill="greenyellow" stroke-width="0" viewBox="0 0 1024 1024"  xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M719.4 499.1l-296.1-215A15.9 15.9 0 0 0 398 297v430c0 13.1 14.8 20.5 25.3 12.9l296.1-215a15.9 15.9 0 0 0 0-25.8zm-257.6 134V390.9L628.5 512 461.8 633.1z"></path></svg>');
 		transition: .2s;
 		filter: none;
+		transform: scale(1.23);
 	}
 
 	/* Post-click styles */
