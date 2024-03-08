@@ -1,11 +1,13 @@
 ---
+import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
+
 interface Props {
 	title: string
 	description: string
-	jost: string
+	preloadImgLCP: string
 }
 
-const { title, description, jost } = Astro.props
+const { title, description, preloadImgLCP } = Astro.props
 ---
 
 <title>{title}</title>
@@ -14,6 +16,11 @@ const { title, description, jost } = Astro.props
 <meta name="description" content={description} />
 
 <link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
+{
+	preloadImgLCP && (
+		<link rel="preload" href={preloadImgLCP} as="image" type="image/webp" crossorigin />
+	)
+}
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="canonical" href="https://lavelada.es" />
