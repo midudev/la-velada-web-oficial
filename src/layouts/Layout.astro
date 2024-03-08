@@ -1,6 +1,5 @@
 ---
 import "@fontsource-variable/jost"
-import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
 
 import ButtonUp from "@/components/ButtonUp.astro"
 import LightsBackground from "@/components/LightsBackground.astro"
@@ -10,15 +9,16 @@ import SEO from "@/components/SEO.astro"
 interface Props {
 	description: string
 	title: string
+	preloadImgLCP?: string
 }
 
-const { title, description } = Astro.props
+const { title, description, preloadImgLCP } = Astro.props
 ---
 
 <!doctype html>
 <html lang="es">
 	<head>
-		<SEO title={title} description={description} jost={jost} />
+		<SEO title={title} description={description} preloadImgLCP={preloadImgLCP} />
 	</head>
 
 	<body
