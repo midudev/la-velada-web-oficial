@@ -1,53 +1,24 @@
 ---
-import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
+import "@fontsource-variable/jost"
+
 import ButtonUp from "@/components/ButtonUp.astro"
 import LightsBackground from "@/components/LightsBackground.astro"
 import NoiseBackground from "@/components/NoiseBackground.astro"
-import "@fontsource-variable/jost"
+import SEO from "@/components/SEO.astro"
 
 interface Props {
 	description: string
 	title: string
+	preloadImgLCP?: string
 }
 
-const { title, description } = Astro.props
+const { title, description, preloadImgLCP } = Astro.props
 ---
 
 <!doctype html>
 <html lang="es">
 	<head>
-		<title>{title}</title>
-
-		<meta charset="UTF-8" />
-		<meta name="description" content={description} />
-
-		<link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href="/fonts/atomic.woff2" as="font" type="font/woff2" crossorigin />
-
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="canonical" href="https://lavelada.es" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="theme-color" content="#d5ff00" />
-
-		<meta name="keywords" content="velada, streamers, creadores, Ibai, boxeo, midudev" />
-
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:site" content="@infoLaVelada" />
-		<meta name="twitter:creator" content="@IbaiLlanos" />
-		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={description} />
-		<meta name="twitter:image" content="https://lavelada.es/og.png" />
-
-		<meta name="og:image" content="https://lavelada.es/og.png" />
-		<meta name="og:title" content={title} />
-		<meta name="og:description" content={description} />
-		<meta name="og:url" content="https://lavelada.es" />
-		<meta name="og:site_name" content="La Velada 4" />
-		<meta name="og:type" content="website" />
-		<meta name="og:locale" content="es_ES" />
-
-		<meta name="robots" content="index, follow" />
-		<meta name="googlebot" content="index, follow" />
+		<SEO title={title} description={description} preloadImgLCP={preloadImgLCP} />
 	</head>
 
 	<body
@@ -63,73 +34,73 @@ const { title, description } = Astro.props
 			<slot />
 		</div>
 		<ButtonUp />
+		<style is:global>
+			:root {
+				--color-primary: #ddd;
+				--color-secondary: #333;
+				--color-accent: #d5ff00;
+
+				--background-color: #141800;
+				--background-twitch: var(--color-twitch-ice);
+
+				--color-twitch: #9146ff;
+				--color-twitch-ice: #f0f0ff;
+			}
+
+			@font-face {
+				font-family: Atomic;
+				font-display: swap;
+				src: url("/fonts/atomic.woff2") format("woff2");
+			}
+
+			html {
+				font-family: "Jost Variable", system-ui, sans-serif;
+				background: var(--background-color);
+				overflow-x: hidden;
+				overscroll-behavior: none;
+			}
+
+			main {
+				position: relative;
+			}
+
+			/* @media screen and (prefers-reduced-motion: no-preference) {
+html {
+scroll-behavior: smooth;
+}
+} */
+
+			/* Hiding class, making content visible only to screen readers but not visually */
+			/* "sr" meaning "screen-reader" */
+			.sr-only:not(:focus):not(:active) {
+				clip: rect(0 0 0 0);
+				clip-path: inset(50%);
+				height: 1px;
+				overflow: hidden;
+				position: absolute;
+				white-space: nowrap;
+				width: 1px;
+			}
+
+			::-webkit-scrollbar {
+				width: 10px;
+				border-radius: 10px;
+			}
+
+			::-webkit-scrollbar-thumb {
+				border-radius: 10px;
+				background-color: theme("colors.primary");
+				border: 2px solid transparent;
+				background-clip: content-box;
+			}
+
+			::-webkit-scrollbar-track {
+				background: var(--background-image);
+			}
+
+			::-webkit-scrollbar-corner {
+				background: var(--background-image);
+			}
+		</style>
 	</body>
 </html>
-
-<style is:global>
-	:root {
-		--color-primary: #ddd;
-		--color-secondary: #333;
-		--color-accent: #d5ff00;
-
-		--background-color: #141800;
-		--background-twitch: var(--color-twitch-ice);
-
-		--color-twitch: #9146ff;
-		--color-twitch-ice: #f0f0ff;
-	}
-
-	@font-face {
-		font-family: Atomic;
-		src: url("/fonts/atomic.woff2") format("woff2");
-	}
-
-	html {
-		font-family: "Jost Variable", system-ui, sans-serif;
-		background: var(--background-color);
-		overflow-x: hidden;
-		overscroll-behavior: none;
-	}
-
-	main {
-		position: relative;
-	}
-
-	/* @media screen and (prefers-reduced-motion: no-preference) {
-		html {
-			scroll-behavior: smooth;
-		}
-	} */
-
-	/* Hiding class, making content visible only to screen readers but not visually */
-	/* "sr" meaning "screen-reader" */
-	.sr-only:not(:focus):not(:active) {
-		clip: rect(0 0 0 0);
-		clip-path: inset(50%);
-		height: 1px;
-		overflow: hidden;
-		position: absolute;
-		white-space: nowrap;
-		width: 1px;
-	}
-
-	::-webkit-scrollbar {
-		width: 10px;
-		border-radius: 10px;
-	}
-
-	::-webkit-scrollbar-thumb {
-		border-radius: 10px;
-		background-color: theme("colors.primary");
-		border: 2px solid transparent;
-		background-clip: content-box;
-	}
-
-	::-webkit-scrollbar-track {
-		background: var(--background-image);
-	}
-
-	::-webkit-scrollbar-corner {
-		background: var(--background-image);
-	}
-</style>

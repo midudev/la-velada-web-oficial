@@ -8,14 +8,16 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	const countryName = COUNTRIES[country]?.name || ""
 	return { ...boxer, countryName }
 })
+
+const baseUrl = "#"
 ---
 
 <section class="my-40">
 	<Typography as="h3" variant="atomic-title" color="primary" class:list={"text-center"}>
-		ELIGE TU LUCHADOR
+		elige tu luchador
 	</Typography>
 
-	<div class="mt-40 flex flex-col items-center justify-center gap-8">
+	<div class="flex flex-col items-center justify-center gap-8">
 		<article
 			class="relative flex w-full flex-col items-center justify-center"
 			style="view-transition-name: boxer;"
@@ -25,7 +27,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 				style="background-image: url('/img/effects/boxer-background.png'); background-size: 75%;"
 			>
 				<img
-					class="boxer-photo h-[800px] w-[480px] object-contain"
+					class="boxer-photo h-[600px] w-[480px] object-contain"
 					alt="Fotografía de El Mariana"
 					src="/img/boxers/el-mariana-big.webp"
 					style="filter: drop-shadow(0 0 10px rgba(0, 0, 0, 1));"
@@ -47,7 +49,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 					<h4 class="text-lg">País</h4>
 					<p class="text-lg font-bold">México</p>
 					<a
-						href="#"
+						href={baseUrl}
 						class="mt-10 inline-block font-semibold text-accent transition hover:scale-110"
 					>
 						Ver combate
@@ -58,7 +60,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 					<h4 class="text-lg">Peso</h4>
 					<p class="text-lg font-bold">61 kg</p>
 					<a
-						href="#"
+						href={baseUrl}
 						class="mt-10 inline-block font-semibold text-accent transition hover:scale-110"
 					>
 						Ver perfil
@@ -66,13 +68,13 @@ const listOfBoxers = BOXERS.map((boxer) => {
 				</div>
 			</footer>
 		</article>
-		<aside class="mt-12 grid gap-x-10 gap-y-4">
+		<aside class="mt-12 grid gap-x-10 gap-y-8">
 			{
 				listOfBoxers.map(({ id, name, country, countryName }) => (
 					<a
 						class="boxer-link group relative flex h-20 items-center justify-center"
 						title={`Visita la página del boxeador ${name}`}
-						href={"#"}
+						href={baseUrl}
 						data-id={id}
 						data-name={name}
 						data-country={country}
@@ -99,7 +101,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
 	boxerLinks.forEach((link) => {
 		link.addEventListener("mouseenter", (event) => {
-			const { id, name, country, countryName } = event.currentTarget?.dataset
+			const { id, name, country, countryName } = (event.currentTarget as HTMLElement)?.dataset
 
 			const boxerSrc = `/img/boxers/${id}-big.webp`
 			const titleSrc = `/img/boxers/${id}-title.webp`
@@ -109,7 +111,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 			boxerCountry.src = `/img/flags/${country}.webp`
 
 			boxerPhoto.alt = `Fotografía de ${name}`
-			boxerTitle.alt = name
+			boxerTitle.alt = name!
 			boxerCountry.alt = `Bandera de ${countryName}`
 		})
 	})
