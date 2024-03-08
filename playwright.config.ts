@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { defineConfig, devices } from "@playwright/test"
 
-const URL = import.meta.env?.PUBLIC_BASE_URL || "https://lavelada.es/"
+// const URL = import.meta.env?.PUBLIC_BASE_URL || "https://lavelada.es/"
+const URL = "https://la-velada-web-oficial-git-fork-johnsi15-feat-676a37-midudev-pro.vercel.app/"
 
 /**
  * See https://playwright.dev/docs/test-configuration.
