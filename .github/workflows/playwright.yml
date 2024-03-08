@@ -20,7 +20,7 @@ jobs:
       - name: Run Playwright tests
         run: pnpm exec playwright test
         env:
-          BASE_URL: ${{ github.event.deployment_status.environment_url }}
+          PUBLIC_BASE_URL: ${{ github.event.deployment_status.environment_url }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
