@@ -6,7 +6,7 @@ interface Boxer {
 	height: number
 	country: string
 	realName?: string
-};
+}
 
 export const BOXERS_LEFT: Boxer[] = [
 	{
