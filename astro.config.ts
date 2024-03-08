@@ -8,6 +8,9 @@ export default defineConfig({
 	adapter: vercel({
 		webAnalytics: { enabled: true },
 	}),
+	build: {
+		inlineStylesheets: "always",
+	},
 	output: "hybrid",
 	vite: {
 		build: {
