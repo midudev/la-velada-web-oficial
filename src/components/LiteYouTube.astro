@@ -5,16 +5,28 @@ interface Props {
 	backgroundImage?: string
 }
 
-const { videoId, title, backgroundImage } = Astro.props
+const {
+	videoId,
+	title = "Reproducir presentación de La Velada del Año",
+	backgroundImage,
+} = Astro.props
 ---
 
-<lite-youtube videoid={videoId} style={`background-image: url('${backgroundImage}')`}>
-	<a href={`https://youtube.com/watch?v=${videoId}`} class="lty-playbtn" title="Play Video">
+<lite-youtube
+	videoid={videoId}
+	style={`background-image: url('${backgroundImage}')`}
+	tabindex="0"
+	role="button"
+>
+	<a href={`https://youtube.com/watch?v=${videoId}`} class="lty-playbtn" title={title}>
 		<span class="lyt-visually-hidden">{title}</span>
 	</a>
 </lite-youtube>
 
 <script>
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-nocheck
+
 	/*
 	Component extracted from: https://github.com/paulirish/lite-youtube-embed/tree/master
 	*/
@@ -38,7 +50,9 @@ const { videoId, title, backgroundImage } = Astro.props
 			let playBtnEl = this.querySelector(".lty-playbtn")
 			// A label for the button takes priority over a [playlabel] attribute on the custom-element
 			this.playLabel =
-				(playBtnEl && playBtnEl.textContent.trim()) || this.getAttribute("playlabel") || "Play"
+				(playBtnEl && playBtnEl.textContent.trim()) ||
+				this.getAttribute("playlabel") ||
+				"Reproducir presentación de La Velada del Año"
 
 			this.dataset.title = this.getAttribute("title") || ""
 
@@ -77,6 +91,9 @@ const { videoId, title, backgroundImage } = Astro.props
 			// TODO: In the future we could be like amp-youtube and silently swap in the iframe during idle time
 			//   We'd want to only do this for in-viewport or near-viewport ones: https://github.com/ampproject/amphtml/pull/5003
 			this.addEventListener("click", this.activate)
+
+			// For accessibility, handle keypresses as well
+			this.addEventListener("keydown", this.handleKeyPress)
 
 			// Chrome & Edge desktop have no problem with the basic YouTube Embed with ?autoplay=1
 			// However Safari desktop and most/all mobile browsers do not successfully track the user gesture of clicking through the creation/loading of the iframe,
@@ -203,6 +220,12 @@ const { videoId, title, backgroundImage } = Astro.props
 
 			// Set focus for a11y
 			iframeEl.focus()
+		}
+
+		handleKeyPress(event) {
+			if (event.key === "Enter") {
+				this.activate()
+			}
 		}
 
 		createBasicIframe() {
@@ -337,6 +360,8 @@ const { videoId, title, backgroundImage } = Astro.props
 
 	lite-youtube:hover > .lty-playbtn,
 	lite-youtube .lty-playbtn:focus {
+		background-image: url('data:image/svg+xml;utf8,<svg stroke="white" fill="greenyellow" stroke-width="0" viewBox="0 0 1024 1024"  xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M719.4 499.1l-296.1-215A15.9 15.9 0 0 0 398 297v430c0 13.1 14.8 20.5 25.3 12.9l296.1-215a15.9 15.9 0 0 0 0-25.8zm-257.6 134V390.9L628.5 512 461.8 633.1z"></path></svg>');
+		transition: .2s;
 		filter: none;
 	}
 
