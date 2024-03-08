@@ -48,7 +48,7 @@ interface LogoType {
 	paths: Array<LogoPath>
 }
 
-export const LogoCatalog: Record<SponsorId, LogoType> = {
+export const SponsorsLogoCatalog: Record<SponsorId, LogoType> = {
 	"alsa": {
 		viewBox: "0 0 101 38",
 		paths: [
@@ -199,4 +199,4 @@ export const LogoCatalog: Record<SponsorId, LogoType> = {
 			},
 		],
 	},
-}
+} as const
