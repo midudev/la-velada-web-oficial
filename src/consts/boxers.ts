@@ -1,13 +1,14 @@
-type Boxer = {
-	id: string;
-	name: string;
-	age: number;
-	weight: number;
-	height: number;
-	country: string;
-};
+interface Boxer {
+	id: string
+	name: string
+	age: number
+	realName: string
+	weight: number
+	height: number
+	country: string
+}
 
-export const BOXERS: Boxer[]= [
+export const BOXERS: Boxer[] = [
 	{
 		id: "el-mariana",
 		name: "El Mariana",
@@ -113,7 +114,7 @@ export const BOXERS: Boxer[]= [
 		realName: "Yoel Ramírez Pulido",
 		age: 29,
 		weight: 71,
-		height: 1.80,
+		height: 1.8,
 		country: "es",
 	},
 	{
@@ -149,7 +150,7 @@ export const BOXERS: Boxer[]= [
 		realName: "Alana Flores",
 		age: 23,
 		weight: 55,
-		height: 1.70,
+		height: 1.7,
 		country: "mx",
 	},
 	{
@@ -158,7 +159,7 @@ export const BOXERS: Boxer[]= [
 		realName: "Alicia González",
 		age: 28,
 		weight: 65, // No encontrado
-		height: 1.70, // No es seguro
+		height: 1.7, // No es seguro
 		country: "es",
 	},
 	{
@@ -194,13 +195,13 @@ export const BOXERS: Boxer[]= [
 		realName: "José Agustín Peréz Nuñéz",
 		age: 23,
 		weight: 62, // No es seguro
-		height: 1.70,
+		height: 1.7,
 		country: "es",
 	},
 	{
 		id: "carrera",
 		name: "Carreraaa",
-		realName: "Rodrigo Ezequiel Carrera",	
+		realName: "Rodrigo Ezequiel Carrera",
 		age: 23,
 		weight: 61,
 		height: 1.65,
