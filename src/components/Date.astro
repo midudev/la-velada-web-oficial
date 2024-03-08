@@ -22,21 +22,21 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 ---
 
 <div
-	class=`w-full ${position} -skew-x-6 flex flex-col items-center justify-center font-atomic bg-gradient-to-b from-white/5 via-transparent to-transparent `
+	class=`w-full ${position} text-center -skew-x-6 flex flex-col items-center justify-center font-atomic bg-gradient-to-b from-white/5 via-transparent to-transparent`
 >
 	<div class="relative -mt-48 flex overflow-hidden" {...attribute}>
-		<div class={` float-left block ${height} w-auto overflow-hidden`} data-first-group>
+		<div class={`float-left block ${height} overflow-hidden`} data-first-group>
 			<div class="" data-wrapper>
 				{
 					Array.from({ length: maxFirst + 1 }, () => 0).map((_, index) => (
 						// + 1 porque hay que tener en cuenta el 0 para las transiciones
 						<div data-num={index} style={`height: ${firstDigitHeight}%`}>
-							<span class={`tabular-nums ${className}`}>{index}</span>
+							<span class={`mx-3 tabular-nums ${className}`}>{index}</span>
 						</div>
 					))
 				}
 				<div style={{ height: `${firstDigitHeight}%`, transition: "height 0.3s ease" }} data-num-x0>
-					<span class={`tabular-nums ${className}`}>0</span>
+					<span class={`tabular-nums mx-3 ${className}`}>0</span>
 				</div>
 			</div>
 		</div>
@@ -49,7 +49,7 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 					Array.from({ length: maxSecond + 1 }, () => 0).map((_, index) => (
 						// + 1 porque hay que tener en cuenta el 0 para las transiciones
 						<div data-num={index} style={`height: ${secondDigitHeight}%`}>
-							<span class={`tabular-nums ${className}`}>{index}</span>
+							<span class={`mx-3 tabular-nums ${className}`}>{index}</span>
 						</div>
 					))
 				}
@@ -57,13 +57,13 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 					style={{ height: `${secondDigitHeight}%`, transition: "height 0.3s ease" }}
 					data-num-x0
 				>
-					<span class={`tabular-nums ${className} `}>0</span>
+					<span class={`tabular-nums mx-3 ${className} `}>0</span>
 				</div>
 			</div>
 		</div>
 		{
 			max > 99 && (
-				<div class={`float-left block ${height} w-auto overflow-hidden`} data-third-group>
+				<div class={`float-block px-3 ${height} w-auto overflow-hidden`} data-third-group>
 					<div
 						class="translate-y-0 transition-transform duration-[800ms] motion-reduce:duration-0"
 						data-wrapper
@@ -71,14 +71,14 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 						{Array.from({ length: maxThird + 1 }, () => 0).map((_, index) => (
 							// + 1 porque hay que tener en cuenta el 0 para las transiciones
 							<div data-num={index} style={`height: ${thirdDigitHeight}%`}>
-								<span class={`tabular-nums ${className}`}>{index}</span>
+								<span class={`mx-3 tabular-nums ${className}`}>{index}</span>
 							</div>
 						))}
 						<div
 							style={{ height: `${secondDigitHeight}%`, transition: "height 0.3s ease" }}
 							data-num-x0
 						>
-							<span class={`tabular-nums ${className} `}>0</span>
+							<span class={`mx-3 tabular-nums ${className} `}>0</span>
 						</div>
 					</div>
 				</div>
@@ -86,4 +86,3 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 		}
 	</div>
 </div>
-
