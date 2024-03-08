@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { defineConfig, devices } from "@playwright/test"
 
-const URL = import.meta.env?.PUBLIC_URL || "http://localhost:4321"
+const URL = import.meta.env?.PUBLIC_URL || "https://lavelada.es/"
 
 /**
  * See https://playwright.dev/docs/test-configuration.
