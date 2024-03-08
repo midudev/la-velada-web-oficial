@@ -8,7 +8,7 @@
 [![Issues][issues-shield]][issues-url]
 
 <a href="https://github.com/midudev/la-velada-web-oficial">
-  <img src="./public/img/github/og.png" alt="Logo" width="800" />
+  <img src="./public/img/github/og.jpg" alt="Logo" width="800" />
 </a>
 
 ## Web oficial de La Velada IV
@@ -21,11 +21,15 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 <details>
 <summary>Tabla de contenidos</summary>
 
-1. [Características principales](#características-principales)
-2. [Para empezar](#para-empezar)
-   - [Prerequisitos](#prerequisitos)
-   - [Instalación](#instalación)
-3. [Contribuir al proyecto](#contribuir-al-proyecto)
+- [Web oficial de La Velada IV](#web-oficial-de-la-velada-iv)
+- [Características principales](#características-principales)
+  - [Capturas de pantalla de la web de La Velada IV:](#capturas-de-pantalla-de-la-web-de-la-velada-iv)
+- [Para empezar](#para-empezar)
+  - [Prerequisitos](#prerequisitos)
+  - [Instalación](#instalación)
+- [Contribuir al proyecto](#contribuir-al-proyecto)
+  - [Contribuir desde Stackblitz](#contribuir-desde-stackblitz)
+- [🛠️ Stack](#️-stack)
 
 </details>
 
