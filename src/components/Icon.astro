@@ -1,0 +1,31 @@
+---
+import Github from "@/icons/github.astro"
+import Instagram from "@/icons/instagram.astro"
+import LaVelada from "@/icons/la-velada.astro"
+import MapMarker from "@/icons/map-marker.astro"
+import X from "@/icons/x.astro"
+
+const iconMap = {
+	"github": Github,
+	"instagram": Instagram,
+	"la-velada": LaVelada,
+	"map-marker": MapMarker,
+	"x": X,
+}
+
+interface Props {
+	name: keyof typeof iconMap
+}
+
+const { name, ...props } = Astro.props
+
+if (!(name in iconMap)) {
+	throw new Error(
+		`Icono "${name}" no encontrado. Por favor, asegúrate de que el nombre del icono sea correcto.`
+	)
+}
+
+const IconComponent = iconMap[name]
+---
+
+<IconComponent {...props} />
