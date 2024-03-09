@@ -12,7 +12,7 @@ import { SPONSORS } from "@/consts/sponsors"
 	</Typography>
 	<div class="mt-12 grid select-none grid-cols-2 gap-8 md:grid-cols-3">
 		{
-			SPONSORS.map(({ id, name, url }) => (
+			SPONSORS.map(({ id, name, url, image }) => (
 				<a
 					class="company-link group relative flex h-24 items-center justify-center overflow-hidden md:h-32"
 					title={`Visita la página del patrocinador ${name}`}
@@ -24,13 +24,15 @@ import { SPONSORS } from "@/consts/sponsors"
 						loading="lazy"
 						src={`/img/sponsors/${id}.svg`}
 						alt={`Logo del patrocinador ${name}`}
-						class="company-logo w-30 h-auto px-4 transition group-hover:scale-110"
+						width={image.width}
+						height={image.height}
+						class="company-logo px-4 transition group-hover:scale-110"
 					/>
 				</a>
 			))
 		}
 	</div>
-	<div class="mt-20 flex items-center justify-center gap-x-4">
+	<div class="mt-20 flex flex-col items-center justify-center gap-4 xs:flex-row">
 		<Typography as="h3" variant="body" color="neutral" class:list={"text-center"}>
 			Web patrocinada por
 		</Typography>
@@ -45,7 +47,9 @@ import { SPONSORS } from "@/consts/sponsors"
 				loading="lazy"
 				src="/img/sponsors/infojobs.svg"
 				alt="Logo de InfoJobs"
-				class="inline-block h-auto w-32 select-none"
+				width={128}
+				height={70}
+				class="inline-block select-none"
 			/>
 		</a>
 	</div>
