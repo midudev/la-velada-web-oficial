@@ -3,7 +3,6 @@ import vercel from "@astrojs/vercel/serverless"
 import { defineConfig } from "astro/config"
 
 import sitemap from "@astrojs/sitemap"
-import compress from "astro-compress"
 import { VitePWA } from "vite-plugin-pwa"
 
 // Helper imports
@@ -11,7 +10,7 @@ import { manifest, seoConfig } from "./src/utils/seoConfig"
 
 // https://astro.build/config
 export default defineConfig({
-	integrations: [tailwind(), sitemap(), compress()],
+	integrations: [tailwind(), sitemap()],
 	adapter: vercel({
 		webAnalytics: { enabled: true },
 	}),
