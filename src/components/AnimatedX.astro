@@ -141,19 +141,22 @@
 	>
 </span>
 <script>
+	type AnimatedXElement = SVGGElement | null
+
 	const INTERVAL_TIME = 100
 	const STROKES = { none: "none", accent: "var(--color-accent)" }
 
-	const $svgGroup1 = document.getElementById("layer1")
-	const $svgGroup2 = document.getElementById("layer2")
-	const $svgGroup3 = document.getElementById("layer3")
+	const $svgGroup1 = document.getElementById("layer1") as AnimatedXElement
+	const $svgGroup2 = document.getElementById("layer2") as AnimatedXElement
+	const $svgGroup3 = document.getElementById("layer3") as AnimatedXElement
 
 	setInterval(() => drawGroup([$svgGroup1, $svgGroup2, $svgGroup3]), INTERVAL_TIME)
 
-	function drawGroup($svgGroups: any): void {
-		$svgGroups.forEach((gElement: any) => {
+	function drawGroup($svgGroups: AnimatedXElement[]): void {
+		$svgGroups.forEach((gElement: AnimatedXElement) => {
+			if (gElement === null) return
 			const random = Math.floor(Math.random() * gElement.children.length)
-			const el = gElement.children[random]
+			const el = gElement.children[random] as SVGPathElement
 			const actualStroke = el.style.stroke
 			const hasNoStroke = actualStroke === STROKES.none
 
