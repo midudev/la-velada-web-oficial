@@ -37,7 +37,7 @@ import { SPONSORS } from "@/consts/sponsors"
 		</Typography>
 
 		<a
-			class="transition hover:scale-110"
+			class="transition hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"
 			href="https://infojobs.net"
 			title="Ir a la página de InfoJobs"
 			target="_blank"
@@ -70,6 +70,12 @@ import { SPONSORS } from "@/consts/sponsors"
 			height 0.2s ease-in-out;
 	}
 
+	@media (prefers-reduced-motion) {
+		.company-link::before {
+			transition: none;
+		}
+	}
+
 	.company-link:hover::before {
 		opacity: 0.8;
 		height: 90%;
@@ -78,5 +84,11 @@ import { SPONSORS } from "@/consts/sponsors"
 
 	.company-link:hover .company-logo {
 		transform: scale(1.1);
+	}
+
+	@media (prefers-reduced-motion) {
+		.company-link:hover .company-logo {
+			transform: scale(1);
+		}
 	}
 </style>
