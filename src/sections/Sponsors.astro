@@ -1,4 +1,5 @@
 ---
+import SponsorLogo from "@/components/SponsorLogo.astro"
 import Typography from "@/components/Typography.astro"
 import { SPONSORS } from "@/consts/sponsors"
 ---
@@ -12,7 +13,7 @@ import { SPONSORS } from "@/consts/sponsors"
 	</Typography>
 	<div class="mt-12 grid select-none grid-cols-2 gap-8 md:grid-cols-3">
 		{
-			SPONSORS.map(({ id, name, url, image }) => (
+			SPONSORS.filter(({ id }) => id !== "infojobs").map(({ id, name, url, image }) => (
 				<a
 					class="company-link group relative flex h-24 items-center justify-center overflow-hidden md:h-32"
 					title={`Visita la página del patrocinador ${name}`}
@@ -20,13 +21,11 @@ import { SPONSORS } from "@/consts/sponsors"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
-					<img
-						loading="lazy"
-						src={`/img/sponsors/${id}.svg`}
-						alt={`Logo del patrocinador ${name}`}
+					<SponsorLogo
+						logo={id}
 						width={image.width}
 						height={image.height}
-						class="company-logo px-4 transition group-hover:scale-110"
+						class:list={["company-logo px-4 text-white transition group-hover:scale-110"]}
 					/>
 				</a>
 			))
@@ -43,13 +42,11 @@ import { SPONSORS } from "@/consts/sponsors"
 			title="Ir a la página de InfoJobs"
 			target="_blank"
 		>
-			<img
-				loading="lazy"
-				src="/img/sponsors/infojobs.svg"
-				alt="Logo de InfoJobs"
+			<SponsorLogo
+				logo="infojobs"
 				width={128}
 				height={70}
-				class="inline-block select-none"
+				class="inline-block select-none text-white transition hover:text-accent"
 			/>
 		</a>
 	</div>
