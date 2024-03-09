@@ -1,14 +1,4 @@
-interface Sponsors {
-	id: string
-	name: string
-	url: string
-	image: {
-		width: number | string
-		height: number | string
-	}
-}
-
-export const SPONSORS: Sponsors[] = [
+export const SPONSORS = [
 	{
 		id: "vicio",
 		name: "Vicio",
