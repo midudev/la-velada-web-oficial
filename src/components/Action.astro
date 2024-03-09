@@ -6,7 +6,7 @@ type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }>
 const { as: Tag, class: className, ...props } = Astro.props
 ---
 
-<Tag class:list={["button-style *:duration-500", className]} {...props}>
+<Tag class:list={["button-style *:duration-500 motion-reduce:*:duration-0 ", className]} {...props}>
 	<span><slot /></span>
 </Tag>
 
@@ -75,4 +75,6 @@ const { as: Tag, class: className, ...props } = Astro.props
 			transition: transform 0.3s ease-out 0.1s;
 		}
 	}
+
+	@media (prefers-reduced-motion);
 </style>
