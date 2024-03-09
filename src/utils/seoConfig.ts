@@ -31,7 +31,7 @@ export const manifest: Partial<ManifestOptions> = {
 		"Web Oficial de La Velada del Año IV, evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos.",
 	theme_color: "#d5ff00",
 	background_color: "#d5ff00",
-	display: "minimal-ui",
+	display: "fullscreen",
 	icons: [
 		{
 			src: "/img/icons/favicon-192x192.png",
