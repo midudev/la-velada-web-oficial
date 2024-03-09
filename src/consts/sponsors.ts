@@ -14,8 +14,8 @@ export const SPONSORS: Sponsors[] = [
 		name: "Vicio",
 		url: "https://www.ganasdevicio.com/",
 		image: {
-			width: 128,
-			height: 70,
+			width: 164,
+			height: 35,
 		},
 	},
 	{
@@ -23,8 +23,8 @@ export const SPONSORS: Sponsors[] = [
 		name: "Revolut",
 		url: "https://revolut.com/",
 		image: {
-			width: 128,
-			height: 70,
+			width: 177,
+			height: 32,
 		},
 	},
 	{
@@ -32,8 +32,8 @@ export const SPONSORS: Sponsors[] = [
 		name: "Prime",
 		url: "https://drinkprime.com/",
 		image: {
-			width: 128,
-			height: 70,
+			width: 144,
+			height: 49,
 		},
 	},
 	{
@@ -41,8 +41,8 @@ export const SPONSORS: Sponsors[] = [
 		name: "Alsa",
 		url: "https://alsa.es/",
 		image: {
-			width: 128,
-			height: 70,
+			width: 133,
+			height: 38,
 		},
 	},
 	{
@@ -50,8 +50,8 @@ export const SPONSORS: Sponsors[] = [
 		name: "Spotify",
 		url: "https://spotify.com/",
 		image: {
-			width: 128,
-			height: 70,
+			width: 207,
+			height: 52,
 		},
 	},
 	{
@@ -59,8 +59,8 @@ export const SPONSORS: Sponsors[] = [
 		name: "Cerave",
 		url: "https://cerave.es/",
 		image: {
-			width: 128,
-			height: 70,
+			width: 180,
+			height: 53,
 		},
 	},
 	{
@@ -68,8 +68,8 @@ export const SPONSORS: Sponsors[] = [
 		name: "El Pozo",
 		url: "https://elpozo.com/",
 		image: {
-			width: 128,
-			height: 70,
+			width: 134,
+			height: 72,
 		},
 	},
 	{
@@ -77,8 +77,8 @@ export const SPONSORS: Sponsors[] = [
 		name: "Grefusa",
 		url: "https://grefusa.com/",
 		image: {
-			width: 128,
-			height: 70,
+			width: 144,
+			height: 69,
 		},
 	},
 	{
@@ -86,8 +86,8 @@ export const SPONSORS: Sponsors[] = [
 		name: "Maxibon",
 		url: "https://maxibon.es/",
 		image: {
-			width: 128,
-			height: 70,
+			width: 176,
+			height: 73,
 		},
 	},
 ] as const
