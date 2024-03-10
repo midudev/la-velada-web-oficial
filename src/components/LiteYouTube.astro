@@ -12,13 +12,14 @@ const {
 } = Astro.props
 ---
 
-<lite-youtube
-	videoid={videoId}
-	style={`background-image: url('${backgroundImage}')`}
-	tabindex="0"
-	role="button"
->
-	<a href={`https://youtube.com/watch?v=${videoId}`} class="lty-playbtn" title={title}>
+<lite-youtube videoid={videoId} style={`background-image: url('${backgroundImage}')`}>
+	<a
+		href={`https://youtube.com/watch?v=${videoId}`}
+		class="lty-playbtn"
+		title={title}
+		role="button"
+		tabindex="0"
+	>
 		<span class="lyt-visually-hidden">{title}</span>
 	</a>
 </lite-youtube>
