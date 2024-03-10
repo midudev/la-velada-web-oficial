@@ -6,7 +6,7 @@ import HeroLogo from "@/components/HeroLogo.astro"
 <section class="flex flex-col place-items-center gap-4 lg:gap-9">
 	<h1 class="sr-only bg-black/30">Presentación de la Velada del Año IV</h1>
 	<a
-		class:list={"underline-transition group -rotate-6 font-atomic text-2xl text-white underline-offset-8 transition-all duration-300 hover:scale-110 md:text-4xl"}
+		class:list={"underline-transition group -rotate-6 font-atomic text-2xl text-white underline-offset-8 transition-all duration-300 ease-in-out hover:scale-110 motion-reduce:transition-none motion-reduce:duration-0 md:text-4xl"}
 		href="https://www.twitch.tv/ibai"
 		target="_blank"
 		rel="noopener"
@@ -41,5 +41,20 @@ import HeroLogo from "@/components/HeroLogo.astro"
 	.underline-transition:hover {
 		background-size: 100% 3px;
 		background-position: 0 100%;
+	}
+
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			background-image: linear-gradient(transparent, transparent),
+				linear-gradient(to right, var(--color-twitch) 62.5%, var(--color-accent) 37.5%);
+			background-size: 0 3px;
+			background-position: 100% 100%;
+			background-repeat: no-repeat;
+			transition: background-size 0s;
+		}
+		.underline-transition:hover {
+			background-size: 100% 3px;
+			background-position: 0 100%;
+		}
 	}
 </style>
