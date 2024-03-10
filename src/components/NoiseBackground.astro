@@ -2,6 +2,14 @@
 ></canvas>
 
 <script>
+	import { createRenderer } from "@/scripts/renderer"
+
+	const urlSearchParams = new URLSearchParams(window.location.search)
+	const params = Object.fromEntries(urlSearchParams.entries())
+	const shader = params.shader ?? 0
+	const shadernum = Number.parseInt(shader)
+	createRenderer("#noise", shadernum)
+	/*
 	let wWidth: number, wHeight: number
 	const noiseData: ImageData[] = []
 	let frame: number = 0
@@ -74,5 +82,5 @@
 			}, 200) as unknown as number
 		},
 		false
-	)
+	) */
 </script>
