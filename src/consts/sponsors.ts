@@ -1,4 +1,37 @@
-export const SPONSORS = [
+type SponsorId =
+	| "vicio"
+	| "revolut"
+	| "prime"
+	| "alsa"
+	| "spotify"
+	| "cerave"
+	| "grefusa"
+	| "el-pozo"
+	| "maxibon"
+	| "infojobs"
+type SponsorName =
+	| "Vicio"
+	| "Revolut"
+	| "Prime"
+	| "Alsa"
+	| "Spotify"
+	| "Cerave"
+	| "Grefusa"
+	| "El Pozo"
+	| "Maxibon"
+	| "InfoJobs"
+
+interface Sponsors {
+	id: SponsorId
+	name: SponsorName
+	url: string
+	image: {
+		width: number
+		height: number
+	}
+}
+
+export const SPONSORS: Array<Sponsors> = [
 	{
 		id: "vicio",
 		name: "Vicio",
