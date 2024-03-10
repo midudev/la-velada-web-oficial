@@ -83,8 +83,6 @@ const {
 
 			this.addNoscriptIframe()
 
-			playBtnEl.removeAttribute("href")
-
 			// On hover (or tap), warm up the TCP connections we're (likely) about to use.
 			this.addEventListener("pointerover", LiteYTEmbed.warmConnections, { once: true })
 
@@ -210,6 +208,10 @@ const {
 
 		async activate() {
 			if (this.classList.contains("lyt-activated")) return
+			const playBtnEl = this.querySelector(".lty-playbtn")
+			if (playBtnEl && playBtnEl.hasAttribute("href")) {
+				playBtnEl.removeAttribute("href")
+			}
 			this.classList.add("lyt-activated")
 
 			if (this.needsYTApi) {
