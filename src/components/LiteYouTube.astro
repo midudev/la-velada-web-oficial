@@ -211,6 +211,10 @@ const {
 			if (this.classList.contains("lyt-activated")) return
 			this.classList.add("lyt-activated")
 
+			if (this.style.backgroundImage !== "unset") {
+				this.style.backgroundImage = "unset"
+			}
+
 			if (this.needsYTApi) {
 				return this.addYTPlayerIframe(this.getParams())
 			}
@@ -378,7 +382,6 @@ const {
 	/* Post-click styles */
 	lite-youtube.lyt-activated {
 		cursor: unset;
-		background-image: unset !important;
 	}
 	lite-youtube.lyt-activated::before,
 	lite-youtube.lyt-activated > .lty-playbtn {
