@@ -35,10 +35,15 @@ import HeroLogo from "@/components/HeroLogo.astro"
 		background-color: white;
 		transform-origin: left;
 		transform: scaleX(0);
-		transition: transform 0.2s ease-in-out;
+		transition: transform 0.3s ease-in-out;
 	}
 
 	a:hover::before {
 		transform: scaleX(1);
+	}
+
+	a:not(:hover)::before {
+		transform-origin: right;
+		transform: scaleX(0);
 	}
 </style>
