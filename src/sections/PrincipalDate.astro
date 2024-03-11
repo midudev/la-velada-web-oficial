@@ -188,4 +188,18 @@ import Typography from "@/components/Typography.astro"
 		background-size: 100% 3px;
 		background-position: 0 100%;
 	}
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			background-image: linear-gradient(transparent, transparent),
+				linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
+			background-size: 0 3px;
+			background-position: 100% 100%;
+			background-repeat: no-repeat;
+			transition: background-size 0s;
+		}
+		.underline-transition:hover {
+			background-size: 100% 3px;
+			background-position: 0 100%;
+		}
+	}
 </style>
