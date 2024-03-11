@@ -8,7 +8,7 @@
 [![Issues][issues-shield]][issues-url]
 
 <a href="https://github.com/midudev/la-velada-web-oficial">
-  <img src="./public/img/github/og.jpg" alt="Logo" width="800" />
+  <img src="./public/img/og.png" alt="Logo" width="800" />
 </a>
 
 ## Web oficial de La Velada IV
