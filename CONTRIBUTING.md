@@ -24,7 +24,7 @@
 
 #### 2. Trabaja en tus cambios
 
-- **Crea una nueva rama**: Antes de empezar a trabajar en tus cambios, crea una nueva rama utilizando `git checkout -b nombre-de-tu-rama`.
+- **Crea una nueva rama**: Antes de empezar a trabajar en tus cambios, crea una nueva rama utilizando `git switch -c nombre-de-tu-rama`.
 - **Desarrolla tus cambios**: Implementa tus cambios o mejoras en tu rama local. Asegúrate de seguir las prácticas y estándares de código del proyecto.
 - **Prueba tus cambios**: Ejecuta `pnpm run dev` para iniciar el servidor de desarrollo de Astro y revisa tus cambios en el navegador.
 
@@ -47,4 +47,3 @@
 Si tienes alguna pregunta o necesitas ayuda, no dudes en abrir un "issue" en el repositorio. Nuestro equipo y la comunidad estarán encantados de ayudarte.
 
 ¡Gracias por contribuir a 'La velada del año 4'! Juntos estamos construyendo algo increíble. 🚀
-
