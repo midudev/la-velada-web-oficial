@@ -5,16 +5,35 @@ interface Props {
 	backgroundImage?: string
 }
 
-const { videoId, title, backgroundImage } = Astro.props
+const {
+	videoId,
+	title = "Reproducir presentación de La Velada del Año",
+	backgroundImage,
+} = Astro.props
 ---
 
-<lite-youtube videoid={videoId} style={`background-image: url('${backgroundImage}')`}>
-	<a href={`https://youtube.com/watch?v=${videoId}`} class="lty-playbtn" title="Play Video">
+<lite-youtube
+	class="rounded-lg"
+	videoid={videoId}
+	style={`background-image: url('${backgroundImage}')`}
+	tabindex="0"
+	role="button"
+>
+  <a
+		href={`https://youtube.com/watch?v=${videoId}`}
+		class="lty-playbtn"
+		title={title}
+		role="button"
+		tabindex="0"
+	>
 		<span class="lyt-visually-hidden">{title}</span>
 	</a>
 </lite-youtube>
 
 <script>
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-nocheck
+
 	/*
 	Component extracted from: https://github.com/paulirish/lite-youtube-embed/tree/master
 	*/
@@ -38,7 +57,9 @@ const { videoId, title, backgroundImage } = Astro.props
 			let playBtnEl = this.querySelector(".lty-playbtn")
 			// A label for the button takes priority over a [playlabel] attribute on the custom-element
 			this.playLabel =
-				(playBtnEl && playBtnEl.textContent.trim()) || this.getAttribute("playlabel") || "Play"
+				(playBtnEl && playBtnEl.textContent.trim()) ||
+				this.getAttribute("playlabel") ||
+				"Reproducir presentación de La Velada del Año"
 
 			this.dataset.title = this.getAttribute("title") || ""
 
@@ -68,8 +89,6 @@ const { videoId, title, backgroundImage } = Astro.props
 
 			this.addNoscriptIframe()
 
-			playBtnEl.removeAttribute("href")
-
 			// On hover (or tap), warm up the TCP connections we're (likely) about to use.
 			this.addEventListener("pointerover", LiteYTEmbed.warmConnections, { once: true })
 
@@ -77,6 +96,9 @@ const { videoId, title, backgroundImage } = Astro.props
 			// TODO: In the future we could be like amp-youtube and silently swap in the iframe during idle time
 			//   We'd want to only do this for in-viewport or near-viewport ones: https://github.com/ampproject/amphtml/pull/5003
 			this.addEventListener("click", this.activate)
+
+			// For accessibility, handle keypresses as well
+			this.addEventListener("keydown", this.handleKeyPress)
 
 			// Chrome & Edge desktop have no problem with the basic YouTube Embed with ?autoplay=1
 			// However Safari desktop and most/all mobile browsers do not successfully track the user gesture of clicking through the creation/loading of the iframe,
@@ -128,14 +150,15 @@ const { videoId, title, backgroundImage } = Astro.props
 		fetchYTPlayerApi() {
 			if (window.YT || (window.YT && window.YT.Player)) return
 
-			this.ytApiPromise = new Promise((res, rej) => {
+			/* global YT */
+			this.ytApiPromise = new Promise((resolve, reject) => {
 				const el = document.createElement("script")
 				el.src = "https://www.youtube.com/iframe_api"
 				el.async = true
 				el.onload = (_) => {
-					YT.ready(res)
+					YT.ready(resolve)
 				}
-				el.onerror = rej
+				el.onerror = reject
 				this.append(el)
 			})
 		}
@@ -186,12 +209,21 @@ const { videoId, title, backgroundImage } = Astro.props
 			const params = new URLSearchParams(this.getAttribute("params") || [])
 			params.append("autoplay", "1")
 			params.append("playsinline", "1")
+			params.append("color", "white")
 			return params
 		}
 
 		async activate() {
 			if (this.classList.contains("lyt-activated")) return
+			const playBtnEl = this.querySelector(".lty-playbtn")
+			if (playBtnEl && playBtnEl.hasAttribute("href")) {
+				playBtnEl.removeAttribute("href")
+			}
 			this.classList.add("lyt-activated")
+
+			if (this.style.backgroundImage !== "unset") {
+				this.style.backgroundImage = "unset"
+			}
 
 			if (this.needsYTApi) {
 				return this.addYTPlayerIframe(this.getParams())
@@ -202,6 +234,12 @@ const { videoId, title, backgroundImage } = Astro.props
 
 			// Set focus for a11y
 			iframeEl.focus()
+		}
+
+		handleKeyPress(event) {
+			if (event.code === "Enter" || event.code === "Space") {
+				this.activate()
+			}
 		}
 
 		createBasicIframe() {
@@ -238,7 +276,7 @@ const { videoId, title, backgroundImage } = Astro.props
 					// A pretty ugly hack since onerror won't fire on YouTube image 404. This is (probably) due to
 					// Youtube's style of returning data even with a 404 status. That data is a 120x90 placeholder image.
 					// … per "annoying yt 404 behavior" in the .md
-					const noAvailablePoster = e.target.naturalHeight == 90 && e.target.naturalWidth == 120
+					const noAvailablePoster = e.target.naturalHeight === 90 && e.target.naturalWidth === 120
 					if (noAvailablePoster) return
 
 					this.style.backgroundImage = `url("${webpUrl}")`
@@ -262,9 +300,9 @@ const { videoId, title, backgroundImage } = Astro.props
 		aspect-ratio: 16/9;
 		width: 100%;
 		height: auto;
-		border: 2px solid;
-		border-image-slice: 1;
-		border-image-source: linear-gradient(30deg, #999, white, #999);
+		border: 2px solid var(--color-accent);
+		transition: all 0.3s ease;
+		box-shadow: 0px 0px 15px rgb(212, 255, 0, 0.1);
 	}
 
 	/* gradient */
@@ -323,20 +361,25 @@ const { videoId, title, backgroundImage } = Astro.props
 		width: 100%;
 		height: 100%;
 		/* …but visually it's still the same size */
-		background: no-repeat center/68px 48px;
+		background: no-repeat center/100px 100px;
 		/* YT's actual play button svg */
-		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>');
+		background-image: url('data:image/svg+xml;utf8,<svg stroke="white" fill="white" stroke-width="0" viewBox="0 0 1024 1024"  xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M719.4 499.1l-296.1-215A15.9 15.9 0 0 0 398 297v430c0 13.1 14.8 20.5 25.3 12.9l296.1-215a15.9 15.9 0 0 0 0-25.8zm-257.6 134V390.9L628.5 512 461.8 633.1z"></path></svg>');
 		position: absolute;
 		cursor: pointer;
 		z-index: 1;
 		filter: grayscale(100%);
-		transition: filter 0.1s cubic-bezier(0, 0, 0.2, 1);
+		transition:
+			filter 0.1s cubic-bezier(0, 0, 0.2, 1),
+			transform 0.3s ease;
 		border: 0;
 	}
 
 	lite-youtube:hover > .lty-playbtn,
 	lite-youtube .lty-playbtn:focus {
+		background-image: url('data:image/svg+xml;utf8,<svg stroke="white" fill="%23d5ff00" stroke-width="0" viewBox="0 0 1024 1024"  xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M719.4 499.1l-296.1-215A15.9 15.9 0 0 0 398 297v430c0 13.1 14.8 20.5 25.3 12.9l296.1-215a15.9 15.9 0 0 0 0-25.8zm-257.6 134V390.9L628.5 512 461.8 633.1z"></path></svg>');
+		transition: 0.2s;
 		filter: none;
+		transform: scale(1.23);
 	}
 
 	/* Post-click styles */

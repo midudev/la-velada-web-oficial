@@ -6,17 +6,15 @@ type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }>
 const { as: Tag, class: className, ...props } = Astro.props
 ---
 
-<Tag class:list={["button-style", className]} {...props}><slot /></Tag>
+<Tag class:list={["button-style *:duration-500", className]} {...props}>
+	<span><slot /></span>
+</Tag>
 
 <style>
 	.button-style {
-		background: transparent;
-		border: none;
 		padding: 10px 20px;
 		display: inline-block;
-		font-size: 20px;
 		font-weight: 600;
-		width: 20rem;
 		text-transform: uppercase;
 		cursor: pointer;
 		transform: skew(-21deg);
@@ -39,34 +37,42 @@ const { as: Tag, class: className, ...props } = Astro.props
 	.button-style::before {
 		content: "";
 		position: absolute;
-		top: 0;
-		bottom: 0;
-		right: 100%;
-		left: 0;
+		inset: -2px;
 		background: var(--color-primary);
-		opacity: 0;
-		z-index: -1;
+		transform: scaleX(0);
+		transform-origin: right; /* To end from left to right */
 	}
 
 	.button-style:hover {
 		color: var(--color-secondary);
 		scale: 1.1;
-		transform: skew(-21deg);
 	}
 
 	.button-style:hover::before {
-		left: 0;
-		right: 0;
-		opacity: 1;
+		transform: scaleX(1);
+		transform-origin: left; /* To start from left to right */
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
 		.button-style {
-			transition: scale 150ms ease-in-out;
+			transition:
+				color 0.15s ease-in,
+				scale 0.15s ease-in;
+		}
+		.button-style::before {
+			transition: transform 0.3s ease-in;
 		}
 
-		.button-style::before {
-			transition: all 0.5s;
+		/* Added delay to simulate a hover attempt */
+		.button-style:hover {
+			transition:
+				color 0.15s ease-out 0.1s,
+				scale 0.15s ease-out 0.1s;
+		}
+
+		/* Added delay to simulate a hover attempt */
+		.button-style:hover::before {
+			transition: transform 0.3s ease-out 0.1s;
 		}
 	}
 </style>
