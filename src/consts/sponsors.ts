@@ -90,4 +90,13 @@ export const SPONSORS: Sponsors[] = [
 			height: 73,
 		},
 	},
+	{
+		id: "infojobs",
+		name: "InfoJobs",
+		url: "https://infojobs.net",
+		image: {
+			width: 140,
+			height: 77,
+		},
+	},
 ] as const

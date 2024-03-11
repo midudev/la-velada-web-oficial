@@ -1,9 +1,10 @@
 ---
+import SponsorLogo from "@/components/SponsorLogo.astro"
 import Typography from "@/components/Typography.astro"
 import { SPONSORS } from "@/consts/sponsors"
 ---
 
-<section class="my-40">
+<section>
 	<Typography as="h3" variant="h3" color="white" class:list={"text-center"}>
 		Patrocinadores
 	</Typography>
@@ -12,21 +13,20 @@ import { SPONSORS } from "@/consts/sponsors"
 	</Typography>
 	<div class="mt-12 grid select-none grid-cols-2 gap-8 md:grid-cols-3">
 		{
-			SPONSORS.map(({ id, name, url, image }) => (
+			SPONSORS.filter(({ id }) => id !== "infojobs").map(({ id, name, url, image }) => (
 				<a
 					class="company-link group relative flex h-24 items-center justify-center overflow-hidden md:h-32"
 					title={`Visita la página del patrocinador ${name}`}
 					href={url}
 					target="_blank"
 					rel="noopener noreferrer"
+					aria-label={`Link con el logo de ${name} que lleva a ${url}`}
 				>
-					<img
-						loading="lazy"
-						src={`/img/sponsors/${id}.svg`}
-						alt={`Logo del patrocinador ${name}`}
+					<SponsorLogo
+						logo={id}
 						width={image.width}
 						height={image.height}
-						class="company-logo px-4 transition group-hover:scale-110"
+						class:list={["company-logo px-4 text-white transition group-hover:scale-110"]}
 					/>
 				</a>
 			))
@@ -39,17 +39,16 @@ import { SPONSORS } from "@/consts/sponsors"
 
 		<a
 			class="transition hover:scale-110"
-			href="https://infojobs.net"
+			href="https://www.infojobs.net"
 			title="Ir a la página de InfoJobs"
 			target="_blank"
+			aria-label="Link con el logo de Infojobs que lleva a https://www.infojobs.net"
 		>
-			<img
-				loading="lazy"
-				src="/img/sponsors/infojobs.svg"
-				alt="Logo de InfoJobs"
+			<SponsorLogo
+				logo="infojobs"
 				width={128}
 				height={70}
-				class="inline-block select-none"
+				class="inline-block select-none text-white transition hover:text-accent"
 			/>
 		</a>
 	</div>
