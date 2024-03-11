@@ -1,0 +1,51 @@
+---
+import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
+import RichResults from "./RichResults.astro"
+
+interface Props {
+	title: string
+	description: string
+	preloadImgLCP: string
+}
+
+const { title, description, preloadImgLCP } = Astro.props
+---
+
+<title>{title}</title>
+
+<meta charset="UTF-8" />
+<meta name="description" content={description} />
+
+<link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
+{
+	preloadImgLCP && (
+		<link rel="preload" href={preloadImgLCP} as="image" type="image/webp" crossorigin />
+	)
+}
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="canonical" href="https://lavelada.es" />
+<meta name="viewport" content="width=device-width" />
+<meta name="theme-color" content="#d5ff00" />
+
+<meta name="keywords" content="velada, streamers, creadores, Ibai, boxeo, midudev" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@infoLaVelada" />
+<meta name="twitter:creator" content="@IbaiLlanos" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content="https://lavelada.es/og.jpg" />
+
+<meta name="og:image" content="https://lavelada.es/og.jpg" />
+<meta name="og:title" content={title} />
+<meta name="og:description" content={description} />
+<meta name="og:url" content="https://lavelada.es" />
+<meta name="og:site_name" content="La Velada 4" />
+<meta name="og:type" content="website" />
+<meta name="og:locale" content="es_ES" />
+
+<meta name="robots" content="index, follow" />
+<meta name="googlebot" content="index, follow" />
+
+<RichResults />
