@@ -46,6 +46,16 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 
 ### Prerequisitos
 
+- NVM (recomendado para asegurar versión de Node) ver [documentación oficial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
+
+	```sh
+	nvm use
+	# o
+	nvm use <version>
+	```
+
+> Si quieres automatizar el proceso, puedes crear un script siguiendo la [documentación oficial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file)
+
 - PNPM (es nuestra recomendación por su eficiencia y rapidez)
 
   ```sh
