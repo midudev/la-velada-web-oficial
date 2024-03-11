@@ -12,8 +12,14 @@ const {
 } = Astro.props
 ---
 
-<lite-youtube videoid={videoId} style={`background-image: url('${backgroundImage}')`}>
-	<a
+<lite-youtube
+	class="rounded-lg"
+	videoid={videoId}
+	style={`background-image: url('${backgroundImage}')`}
+	tabindex="0"
+	role="button"
+>
+  <a
 		href={`https://youtube.com/watch?v=${videoId}`}
 		class="lty-playbtn"
 		title={title}
@@ -289,11 +295,9 @@ const {
 		aspect-ratio: 16/9;
 		width: 100%;
 		height: auto;
-		border: 2px solid;
-		border-image-slice: 1;
-		border-image-source: linear-gradient(30deg, #999, white, #999);
+		border: 2px solid var(--color-accent);
 		transition: all 0.3s ease;
-		box-shadow: 0px 3px 15px 5px #000000a8;
+		box-shadow: 0px 0px 15px rgb(212, 255, 0, 0.1);
 	}
 
 	/* gradient */
@@ -322,11 +326,6 @@ const {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		box-sizing: border-box;
-	}
-
-	lite-youtube:hover {
-		border-image-source: linear-gradient(30deg, #767c00d1, #fff, #b9c201a1);
-		box-shadow: 0px 3px 15px 5px #000000e3;
 	}
 
 	lite-youtube:hover::before {
