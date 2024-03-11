@@ -8,8 +8,8 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	const countryName = COUNTRIES[country]?.name || ""
 	return { ...boxer, countryName }
 })
-// el tiempo de transicion necesita la unidad por ello debe ser un string
-const msFadeLuchador = "1s"
+
+const msFadeLuchador = "10s"
 ---
 
 <section class="my-40">
@@ -33,13 +33,20 @@ const msFadeLuchador = "1s"
 				class="relative flex w-full flex-col items-center justify-center bg-center bg-no-repeat"
 				style="background-image: url('/img/effects/boxer-background.png'); background-size: 75%;"
 			>
-				<div class="fix-scanline relative		">
+			<div class="fix-scanline relative">
+
+				<picture
+					class={`scanline boxer-photo h-auto object-contain transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]`}
+				>
+					<source srcset="/img/boxers/el-mariana-big.webp" type="image/webp" />
+					<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
 					<img
-						class={`scanline relative boxer-photo h-auto object-contain transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]`}
+						class={`boxer-photo h-auto object-contain transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]`}
 						alt="Fotografía de El Mariana"
-						src="/img/boxers/el-mariana-big.webp"
+						src="/img/boxers/el-mariana-big.avif"
 						style="filter: drop-shadow(0 0 10px rgba(0, 0, 0, 1));"
 					/>
+				</picture>
 				</div>
 				<img
 					class={`boxer-title pointer-events-none absolute bottom-14 h-auto transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:w-[480px]`}
@@ -94,12 +101,16 @@ const msFadeLuchador = "1s"
 							data-country-name={countryName}
 						>
 							<div class="boxer-link-background" />
-							<img
-								loading="lazy"
-								src={`/img/boxers/${id}-small.png`}
-								alt={`Foto en pequeño del boxeador ${name}`}
-								class="boxer-image"
-							/>
+							<picture class="boxer-image">
+								<source srcset={`/img/boxers/${id}-small.avif`} type="image/avif" />
+								<source srcset={`/img/boxers/${id}-small.webp`} type="image/webp" />
+								<img
+									loading="lazy"
+									src={`/img/boxers/${id}-small.avif`}
+									alt={`Foto en pequeño del boxeador ${name}`}
+									class="boxer-image"
+								/>
+							</picture>
 						</button>
 					))
 				}
@@ -109,96 +120,29 @@ const msFadeLuchador = "1s"
 </section>
 
 <script>
-	// const article = document.querySelector("article") as HTMLElement
 	const boxerLinks = document.querySelectorAll(".boxer-link")
 	const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
-	const boxerPhoto = document.querySelector(".boxer-photo") as HTMLImageElement
+	const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
 	const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
 
-	const boxersNav = document.querySelector(".boxers-nav") as HTMLElement
-		boxersNav?.addEventListener("click", (event) => {
-		const target = event.target as HTMLElement
+	boxerLinks.forEach((link) => {
+		link.addEventListener("mouseenter", (event) => {
+			const { id, name, country, countryName } = (event.currentTarget as HTMLElement)?.dataset
 
-		if (target?.tagName !== "BUTTON" || target.dataset.selected === "true")
-			return null
+			const boxerSrc = `/img/boxers/${id}-big`
+			const titleSrc = `/img/boxers/${id}-title.webp`
 
-				boxerTitle.style.opacity = "0"
-				boxerPhoto.style.opacity = "0"
-				boxerCountry.style.opacity = "0"
-				// no es necesario usar un timeout hay un evento para detectar la transicion
-				const listenerTransition = () => {
-					boxerTitle.removeEventListener("transitionend", listenerTransition)
-					changeSelected(target.dataset)
-				}
-				boxerTitle.addEventListener("transitionend", listenerTransition)
-	})
-	function changeSelected(targetDataset: DOMStringMap) {
-			const { id: idSel, name, country, countryName } = targetDataset
-			const imagesToLoad = [boxerPhoto, boxerTitle, boxerCountry]
-			boxerLinks.forEach((link) => {
-				if (!(link instanceof HTMLElement))
-					return
-				if (link.dataset.id === idSel)
-				{
-					return	link.dataset.selected = "true"
-					}
-				link.dataset.selected = "false"
-			})
+			boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
+			boxerPhoto.getElementsByTagName("source")[1].srcset = `${boxerSrc}.webp`
+			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.avif`
+			boxerTitle.src = titleSrc
+			boxerCountry.src = `/img/flags/${country}.webp`
 
-			const ImagePromises = Promise.all(imagesToLoad.map((imageElem: HTMLImageElement) => new Promise(resolve => {
-            imageElem.addEventListener("load", () => {
-                resolve(imageElem)
-            })
-					}))
-				)
-				ImagePromises.then(() => {
-					setDataSelected()
-				})
-				boxerPhoto.src = `/img/boxers/${idSel}-big.webp`
-				boxerTitle.src = `/img/boxers/${idSel}-title.webp`
-				boxerCountry.src = `/img/flags/${country}.webp`
-				function setDataSelected() {
-					boxerPhoto.alt = `Fotografía de ${name}`
-					boxerTitle.alt = name!
-					boxerCountry.alt = `Bandera de ${countryName}`
-
-					boxerTitle.style.opacity = "1"
-					boxerPhoto.style.opacity = "1"
-					boxerCountry.style.opacity = "1"
-					boxerTitle.style.opacity = "1"
-					boxerPhoto.style.opacity = "1"
-					boxerCountry.style.opacity = "1"
-				}
-	}
-	const imagen = document.querySelector(".boxer-photo") as HTMLElement
-
-	function asideAnimation(event: MouseEvent) {
-		const rect = imagen.getBoundingClientRect()
-
-		const aside = document.querySelector(".boxers-aside") as HTMLElement
-		const blur = aside.querySelector(".blur") as HTMLElement
-		const footer = document.querySelector("#boxer-footer") as HTMLElement
-
-		const cursorPosY = event.clientY - rect.top
-		console.log(cursorPosY > rect.height * 0.8)
-		if (!(cursorPosY > rect.height * 1.2) && cursorPosY > rect.height * 0.7) {
-			blur.style.opacity = "1"
-			footer.style.opacity = "0"
-			aside.classList.add("up")
-		} else {
-			footer.style.opacity = "1"
-			blur.style.opacity = "0"
-			aside.classList.remove("up")
-		}
-	}
-
-	if (imagen) {
-		imagen.addEventListener("mousemove", function (event: MouseEvent) {
-			if (window.innerWidth > 1280) {
-				asideAnimation(event)
-			}
+			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
+			boxerTitle.alt = `${name}`
+			boxerCountry.alt = `Bandera de ${countryName}`
 		})
-	}
+	})
 </script>
 
 <style>
