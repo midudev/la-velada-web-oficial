@@ -26,7 +26,7 @@ export default {
 		animations,
 		function ({ addVariant }) {
 			addVariant("any-hover", "@media (any-hover: hover) { &:hover }")
-			addVariant("is-mobile", "@media (any-hover: none) { & }")
+			addVariant("mobile", "@media (any-hover: none) { & }")
 		},
 	],
 }
