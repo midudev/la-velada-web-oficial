@@ -1,14 +1,20 @@
-<canvas id="noise" aria-label="Efecto de ruido de fondo" class="fixed top-0 -z-10 animate-fade-in"
+<><canvas id="noise" aria-label="Efecto de ruido de fondo" class=" block fixed top-0 -z-10 animate-fade-in"
 ></canvas>
-
+<div class="fixed p-4 w-15 hidden flex-col top-0 left-0 bg-black text-white" id="debug">
+		<div class="flex justify-between gap-8 ">fps :<span id="fps">00.0</span></div>
+		<div class="flex justify-between gap-8 ">fr time:<span id="frametime">00.1</span></div>
+		<div class="flex justify-between gap-8 ">gpu:<span id="gpu">0.00</span></div>
+</div>
+<>
 <script>
 	import { createRenderer } from "@/scripts/renderer"
 
 	const urlSearchParams = new URLSearchParams(window.location.search)
 	const params = Object.fromEntries(urlSearchParams.entries())
 	const shader = params.shader ?? 0
+	const debug = params.debug === "true"
 	const shadernum = Number.parseInt(shader)
-	createRenderer("#noise", shadernum)
+	createRenderer("#noise", shadernum, debug)
 	/*
 	let wWidth: number, wHeight: number
 	const noiseData: ImageData[] = []

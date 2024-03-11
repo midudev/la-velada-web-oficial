@@ -1,13 +1,14 @@
 import { shaderImages } from "./const"
+import { createEventListener } from "./createEventListeners"
 import { createQuad } from "./createQuad"
 import { createTextures } from "./createTextures"
 import type { Uniforms } from "./createUniforms"
-import { createUniforms } from './createUniforms'
+import { createUniforms } from "./createUniforms"
 import type { ImagesLoaded } from "./loadImages"
 import { preloadImages } from "./loadImages"
-import shaders from './shaders'
+import shaders from "./shaders"
 
-export function createRenderer(canvasSelector: string, shadernum: number) {
+export function createRenderer(canvasSelector: string, shadernum: number, debug: boolean) {
 	const { gl, canvas } = setCanvas(canvasSelector)
 	if (!gl)
 		return null
@@ -31,26 +32,48 @@ export function createRenderer(canvasSelector: string, shadernum: number) {
 		uniforms = createUniforms(gl, canvas, screenQuad.program)
 		uniforms.iPrimary(hexToVec3("#071907"))
 		uniforms.iSecondary(hexToVec3("#153106"))
+		createEventListener(gl, canvas, uniforms)
 		render()
 	})
+
 	const startTime = performance.now()
-	let frameTime: DOMHighResTimeStamp = 0
+	let prevTime: DOMHighResTimeStamp = 0
+	const debugPanel: HTMLElement | null = document.getElementById("debug")
+	if (debugPanel)
+		debugPanel.style.display = debug ? "flex" : "hidden"
 	function render() {
 		if (!uniforms || !gl || !canvas)
 			return null
-		const timeNow: DOMHighResTimeStamp = performance.now()
-		const elapsedTime = (timeNow - startTime) / 1000.0
+
+		const initTime: DOMHighResTimeStamp = performance.now()
+		const elapsedTime = (performance.now() - startTime) / 1000.0
 		gl.viewport(0, 0, canvas.width, canvas.height)
 		gl.clearColor(0.0, 0.0, 0.0, 1.0)
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		uniforms.iResolution([canvas.width, canvas.height])
+
 		uniforms.iTime([elapsedTime])
 		gl.drawElements(gl.TRIANGLE_STRIP, 4, gl.UNSIGNED_SHORT, 0)
-		frameTime = performance.now() - timeNow
+
+		const frameTime: DOMHighResTimeStamp = performance.now() - prevTime
+		prevTime = performance.now()
+		const drawTime: DOMHighResTimeStamp = performance.now() - initTime
+		drawStats(drawTime, frameTime)
 		requestAnimationFrame(render)
 	}
 }
-
+const drawTimeNode: HTMLElement | null = document.getElementById("gpu")
+const frameTimeNode: HTMLElement | null = document.getElementById("frametime")
+const fpsTimeNode: HTMLElement | null = document.getElementById("fps")
+function drawStats(drawTime: DOMHighResTimeStamp, frameTime: DOMHighResTimeStamp) {
+	if (drawTimeNode) {
+		drawTimeNode.innerText = drawTime.toFixed(2)
+	}
+	if (frameTimeNode) {
+		frameTimeNode.innerText = frameTime.toFixed(2)
+	}
+	if (fpsTimeNode)
+		fpsTimeNode.innerText = (1000 / frameTime).toFixed(1)
+}
 function setCanvas(canvasSelector: string) {
 	const canvas: HTMLCanvasElement | null = document.querySelector(canvasSelector)
 	if (!canvas) {
@@ -58,11 +81,13 @@ function setCanvas(canvasSelector: string) {
 	}
 	const vp_size = [window.innerWidth, window.innerHeight]
 	canvas.style.background = "black"
+	canvas.style.width = "100vw"
+	canvas.style.height = "100vh"
 	canvas.width = vp_size[0]
 	canvas.height = vp_size[1]
 
 	const gl: WebGL2RenderingContext | null = canvas.getContext("webgl2", {
-		desynchronized: true,
+
 		preserveDrawingBuffer: true,
 	})
 	if (!gl) {

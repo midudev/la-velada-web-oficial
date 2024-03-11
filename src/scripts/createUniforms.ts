@@ -28,7 +28,7 @@ export function createUniforms(gl: WebGL2RenderingContext, canvas: HTMLCanvasEle
 function createUniform(gl: WebGL2RenderingContext, program: WebGLProgram, name: string, type: number, defaultValue: number[]): UniformFunc {
 	const updateFuncs = [update1f, update2f, update3f, update4f, updateSampler]
 	const update = updateFuncs[type - 1]
-
+	update(defaultValue)
 	function update1f(f: number[]): void {
 		const uniform = gl.getUniformLocation(program, name)
 		gl.uniform1f(uniform, f[0])
@@ -46,6 +46,7 @@ function createUniform(gl: WebGL2RenderingContext, program: WebGLProgram, name: 
 
 	function update4f(f: number[]): void {
 		const uniform = gl.getUniformLocation(program, name)
+
 		gl.uniform4f(uniform, f[0], f[1], f[2], f[3])
 	}
 

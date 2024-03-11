@@ -1,4 +1,4 @@
-export const flare2 = /* glsl */`
+export const mouseMove = /* glsl */`
 // Distress Flare
 // by athibaul
 
@@ -123,19 +123,24 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     // Normalized pixel coordinates (from 0 to 1)
     vec2 p = (fragCoord*2.-iResolution.xy)/iResolution.y;
 
+    vec2 mouse = iMouse / iResolution.xy;
+    mouse.x *= iResolution.x / iResolution.y;
+		mouse.x= mouse.x*2.-2. ;
+		mouse.y= mouse.y*4.-1. ;
 
     float time = iTime*SPEED;
 
     float camTime = time*2.;
-    vec2 q = p + vec2(fbm1D(camTime+50.), fbm1D(camTime+20.))*0.1 - vec2(0.7,0.1);
+    vec2 q = p + vec2(fbm1D(camTime+50.), fbm1D(camTime+20.))*0.1 - vec2(mouse.x,mouse.y)*.001;
+		vec2 qf=q- vec2(mouse.x,mouse.y);
     vec3 col = vec3(0.);
 
     col += backCloudsCol(q, time);
     vec4 midClouds = midCloudsCol(q, time);
     col = mix(col, midClouds.rgb, midClouds.a);
 
-	col += flareColor(q, time, 0.);
-    col += smokeColor(q, time);
+	col += flareColor(qf, time, 0.);
+    col += smokeColor(qf, time);
 
     col = mix(col, vec3(0.), 0.5*frontCloudsDen(q, time));
 
@@ -143,13 +148,13 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
     col += bokeh(5.*q, time, 0.5) * 10.;
 
-    col += flareColor(2.*p-q, time, 0.1) * 0.15;
+    col += flareColor(2.*p-qf, time, 0.1) * 0.15;
     col += bokeh(2.*p-q, time, 0.05) * 0.5;
-    col += bokeh2(3.*(4.*p-q), time, 0.2) * 0.5;
-    col += bokeh2(3.*(p-2.*q), time, 0.2) * 0.5;
-    col += bokeh2(5.*(3.*p-2.*q), time, 0.1) * 0.3;
+    col += bokeh2(3.*(4.*p-qf), time, 0.2) * 0.5;
+    col += bokeh2(3.*(p-2.*qf), time, 0.2) * 0.5;
+    col += bokeh2(5.*(3.*p-2.*qf), time, 0.1) * 0.3;
     col += bokeh2(5.*(q+p), time, 0.2) * 0.5;
-    col += flareColor(5.*(p+0.33*q), time, 0.2)*0.5;
+    col += flareColor(5.*(p+0.33*qf), time, 0.2)*0.5;
 
 
     //col = mix(col, 1.-4./27./(col*col), step(2./3.,col));

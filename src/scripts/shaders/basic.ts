@@ -1,5 +1,5 @@
 // glsl comentado permite formatear el codigo de glsl si se tiene habilitada alguna extension
-export const basic = `
+export const basic = /* glsl */`
 		void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
     // Normalized pixel coordinates (from 0 to 1)
