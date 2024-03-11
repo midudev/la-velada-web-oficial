@@ -1,0 +1,55 @@
+---
+import type { HTMLAttributes } from "astro/types"
+
+import type { SponsorId } from "@/consts/sponsors-logo-catalog"
+import { SponsorsLogoCatalog } from "@/consts/sponsors-logo-catalog"
+
+interface Props extends HTMLAttributes<"svg"> {
+	/**
+	 * Additional CSS class to be applied to the SVG element.
+	 */
+	class?: string
+
+	/**
+	 * The logo to display.
+	 */
+	logo: SponsorId
+}
+
+const { logo = "alsa", class: className, ...rest } = Astro.props
+
+const logoDetails = SponsorsLogoCatalog[logo]
+
+const optionsToObject = (
+	options?: Array<{ attribute: string; value: string }>
+): Record<string, string> => {
+	if (!options || options.length === 0) {
+		return {}
+	}
+
+	return options.reduce((attributesObject: Record<string, string>, option) => {
+		attributesObject[option.attribute] = option.value
+		return attributesObject
+	}, {})
+}
+---
+
+<svg
+	class:list={className}
+	data-testid="sponsorsLogo"
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox={logoDetails.viewBox}
+	{...rest}
+>
+	{
+		logoDetails.paths.map((pathDetail) => (
+			<path d={pathDetail.path} {...optionsToObject(pathDetail.options)} />
+		))
+	}
+</svg>
+
+<style>
+	svg {
+		fill: currentColor;
+	}
+</style>
