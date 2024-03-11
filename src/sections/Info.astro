@@ -4,46 +4,41 @@ import Typography from "@/components/Typography.astro"
 ---
 
 <section
-	class="group mb-32 mt-80 flex w-full flex-col items-center justify-center px-20 font-medium text-primary"
+	class="group mb-4 mt-80 flex w-full flex-col items-center justify-center px-20 font-medium text-primary md:mb-0"
 	aria-label="descripción del evento"
 >
 	<hr
 		class="-z-10 -mt-12 h-[2px] min-w-[20rem] border-t-0 bg-transparent bg-gradient-to-r from-transparent via-white to-transparent sm:w-full sm:max-w-64 md:max-w-lg"
 	/>
-	<a
-		href="https://twitch.tv/ibai"
-		target="_blank"
-		rel="nofollow noopener"
-		class="mx-auto -mt-11 mb-8 motion-safe:transition"
-		aria-label="síguelo en directo twitch.tv/ibai, se abrirá en una nueva pestaña"
-	>
-		<div class="w-14 md:w-20">
-			<TwitchLogo />
-		</div>
-	</a>
-
-	<a
-		class="flex flex-col items-center transition duration-200 hover:scale-110"
-		href="https://www.twitch.tv/ibai"
-		target="_blank"
-		rel="noopener"
-		title="Enlace al canal de Twitch de Ibai Llanos"
-		aria-label="Enlace al canal de Twitch de Ibai Llanos"
-	>
-		<span
-			class="-rotate-6 skew-x-6 text-center font-atomic text-xl text-white underline-offset-8 transition sm:text-3xl md:text-5xl"
-			>en directo
-		</span>
-		<Typography
-			as="h2"
-			variant="bigger"
-			color="primary"
-			class:list={"-mt-2 text-wrap text-center"}
-			class="flex justify-center transition"
+	<div class="-mt-8 transition duration-200 hover:scale-110 motion-safe:transition md:-mt-11">
+		<a
+			href="https://www.twitch.tv/ibai"
+			target="_blank"
+			rel="nofollow noopener"
+			class="mx-auto flex flex-col items-center"
+			aria-hidden="true"
+			tabindex="-1"
+			aria-label="Enlace al canal de Twitch de Ibai Llanos"
 		>
-			twitch.tv/ibai
-		</Typography>
-	</a>
+			<div class="mb-8 w-14 md:w-20">
+				<TwitchLogo />
+			</div>
+			<span
+				class="-rotate-6 skew-x-6 text-center font-atomic text-xl text-white underline-offset-8 transition sm:text-3xl md:text-5xl"
+				>en directo
+			</span>
+			<Typography
+				as="h2"
+				variant="bigger"
+				color="primary"
+				class:list={"-mt-2 text-wrap text-center"}
+				class="flex justify-center transition"
+			>
+				twitch.tv/ibai
+			</Typography>
+		</a>
+	</div>
+
 	<hr
 		class="my-12 h-[2px] min-w-[20rem] border-t-0 bg-transparent bg-gradient-to-r from-transparent via-white to-transparent sm:w-full sm:max-w-64 md:max-w-lg"
 	/>
