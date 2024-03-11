@@ -33,12 +33,32 @@ import HeroLogo from "@/components/HeroLogo.astro"
 		width: 100%;
 		height: 3px;
 		background-color: white;
-		transform-origin: left;
+		transform-origin: right;
 		transform: scaleX(0);
 		transition: transform 0.2s ease-in-out;
 	}
 
 	a:hover::before {
 		transform: scaleX(1);
+		transform-origin: left;
+	}
+	@media (prefers-reduced-motion) {
+		a::before {
+			content: "";
+			position: absolute;
+			left: 0;
+			bottom: -2px;
+			width: 100%;
+			height: 3px;
+			background-color: white;
+			transform-origin: right;
+			transform: scaleX(0);
+			transition: transform 0s;
+		}
+
+		a:hover::before {
+			transform: scaleX(1);
+			transform-origin: left;
+		}
 	}
 </style>
