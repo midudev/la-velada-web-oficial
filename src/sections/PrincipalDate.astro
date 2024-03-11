@@ -1,107 +1,61 @@
 ---
-import CalendarButton from "../components/CalendarButton.astro"
+import CalendarButton from "@/components/CalendarButton.astro"
 import MapMarkerIcon from "@/icons/map-marker.astro"
+import Action from "@/components/Action.astro"
+import Typography from "@/components/Typography.astro"
 ---
 
 <section
-	class="mx-auto mt-16 flex animate-fade-in flex-col place-items-center text-center text-primary animate-delay-[2s] motion-reduce:animate-delay-[0s] motion-reduce:animate-duration-[0s] md:mt-32"
+	class="mx-auto mt-16 flex animate-fade-in flex-col place-items-center text-center text-primary animate-delay-300 motion-reduce:animate-delay-[0s] motion-reduce:animate-duration-[0s] md:mt-32"
 >
-	<div class="text-3xl font-semibold uppercase md:text-5xl">
-		<time class="date"></time>
-		<span aria-hidden="true" class="mx-1 hidden md:inline">·</span>
-		<br aria-hidden="true" class="block md:hidden" />
-		<time class="time"></time>
-	</div>
+	<header class="text-3xl font-semibold uppercase md:text-5xl">
+		<time class="date inline-block"></time>
+		<span class="date-time-separator hidden">
+			<span aria-hidden="true" class="mx-1 hidden md:inline">·</span>
+			<br aria-hidden="true" class="block md:hidden" />
+		</span>
+		<time class="time hidden"></time>
+	</header>
 
-	<h2 class="mt-6 flex max-w-sm flex-col text-lg font-medium uppercase lg:text-2xl">
-		<span>Evento de Presentación</span>
+	<Typography
+		as="h2"
+		variant="h2"
+		color="neutral"
+		class:list={"underline-transition mt-6 flex max-w-sm flex-col transition-all duration-300 ease-in-out hover:text-accent"}
+	>
 		<a
-			href="https://maps.app.goo.gl/RFzHUVDhRqdQaTAo8"
+			class="flex"
+			href="https://maps.app.goo.gl/F1oAFhFjqnvTKtC18"
 			target="_blank"
 			rel="noopener"
-			style="display: -webkit-box;"
-			aria-label="ubicación del teatro en google maps, se abrirá en una nueva pestaña"
+			aria-label="ubicación del campo Santiago Bernabéu en google maps, se abrirá en una nueva pestaña"
 		>
-			<MapMarkerIcon class="mr-1 max-md:mt-1 md:mt-0.5 md:size-6" /> Teatro Victoria (Barcelona)
+			<MapMarkerIcon class="mr-1 max-md:mt-1 md:mt-0.5 md:size-6" /> Estadio Santiago Bernabéu
 		</a>
-	</h2>
+	</Typography>
 
-	<div class="scroll-horizontal mt-6 flex flex-col items-center gap-9 md:flex-row">
-		<a
-			href="https://www.teatrevictoria.com/es/cartelera/c/190_la-velada-del-ano-4.html"
-			target="_blank"
-			rel="noopener noreferrer"
-			aria-label="entradas agotadas, se abrirá en una nueva pestaña"
-		>
-			<span> Entradas agotadas </span>
-		</a>
-
-		<CalendarButton />
-	</div>
+	<footer class="scroll-horizontal items-top mt-6 flex w-full flex-col gap-9 xs:w-auto md:flex-row">
+		<div class="mx-auto flex w-[90%] flex-col items-center justify-center gap-y-2 xs:w-80">
+			<Action
+				class="!w-full !text-base xs:!text-xl"
+				as="a"
+				aria-disabled="true"
+				href="#"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="entradas agotadas, se abrirá en una nueva pestaña"
+			>
+				Comprar entradas
+			</Action>
+			<Typography as="span" variant="medium" color="primary" class:list={"text-center"}>
+				Próximamente
+			</Typography>
+		</div>
+		<div class="mx-auto w-[90%] xs:w-80">
+			<CalendarButton />
+		</div>
+	</footer>
 </section>
-
-<style is:global>
-	.scroll-horizontal > a,
-	.scroll-horizontal > #add-to-calendar {
-		background: transparent;
-		border: none;
-		padding: 10px 20px;
-		display: inline-block;
-		font-size: 20px;
-		font-weight: 600;
-		width: 20rem;
-		text-transform: uppercase;
-		cursor: pointer;
-		transform: skew(-21deg);
-		color: var(--color-primary);
-		border: 2px solid var(--color-primary);
-	}
-
-	.scroll-horizontal > a > span,
-	.scroll-horizontal > #add-to-calendar > span {
-		display: inline-block;
-		transform: skew(21deg);
-	}
-
-	.scroll-horizontal > a::before,
-	.scroll-horizontal > #add-to-calendar::before {
-		content: "";
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		right: 100%;
-		left: 0;
-		background: var(--color-primary);
-		opacity: 0;
-		z-index: -1;
-	}
-
-	.scroll-horizontal > a:hover,
-	.scroll-horizontal > #add-to-calendar:hover {
-		color: var(--color-secondary);
-		scale: 1.1;
-		transform: skew(-21deg);
-	}
-
-	.scroll-horizontal > a:hover::before,
-	.scroll-horizontal > #add-to-calendar:hover::before {
-		left: 0;
-		right: 0;
-		opacity: 1;
-	}
-
-	@media (prefers-reduced-motion: no-preference) {
-		.scroll-horizontal > a,
-		.scroll-horizontal > #add-to-calendar {
-			transition: scale 150ms ease-in-out;
-		}
-
-		.scroll-horizontal > a::before,
-		.scroll-horizontal > #add-to-calendar::before {
-			transition: all 0.5s;
-		}
-	}
-</style>
 
 <script>
 	import { EVENT_TIMESTAMP } from "@/consts/event-date"
@@ -156,15 +110,30 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		return new Intl.DateTimeFormat("en-CA", options).format(new Date(timestamp))
 	}
 
-	function updateUI(dateString: string, timeString: string, validDatetime: string) {
+	function updateUI(
+		dateString: string,
+		timeString: string,
+		validDatetime: string,
+		{
+			showTime = true,
+		}: {
+			showTime?: boolean
+		}
+	) {
 		const $dateSpan = document.querySelector(".date")
 		const $timeSpan = document.querySelector(".time")
+		const $dateSeparator = document.querySelector(".date-time-separator")
 
-		if ($dateSpan != null && $timeSpan != null) {
+		if ($dateSpan != null) {
 			$dateSpan.innerHTML = dateString
 			$dateSpan.setAttribute("datetime", validDatetime)
+		}
+
+		if ($timeSpan != null && showTime) {
 			$timeSpan.innerHTML = timeString
 			$timeSpan.setAttribute("datetime", validDatetime)
+			$timeSpan?.classList.remove("hidden")
+			$dateSeparator?.classList.remove("hidden")
 		}
 	}
 
@@ -174,7 +143,9 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		const formattedTime = formatEventTimeWithTimeZoneName(EVENT_TIMESTAMP, USER_TZ)
 		const validDatetime = formatValidDatetime(EVENT_TIMESTAMP, USER_TZ)
 
-		updateUI(formattedDate, formattedTime, validDatetime)
+		updateUI(formattedDate, formattedTime, validDatetime, {
+			showTime: false,
+		})
 	}
 
 	document.addEventListener("DOMContentLoaded", main)
@@ -188,3 +159,19 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		}
 	}
 </script>
+
+<style>
+	/* Efecto de subrayado animado */
+	.underline-transition {
+		background-image: linear-gradient(transparent, transparent),
+			linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
+		background-size: 0 3px;
+		background-position: 100% 100%;
+		background-repeat: no-repeat;
+		transition: background-size 0.3s ease-in-out;
+	}
+	.underline-transition:hover {
+		background-size: 100% 3px;
+		background-position: 0 100%;
+	}
+</style>

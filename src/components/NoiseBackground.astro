@@ -1,0 +1,78 @@
+<canvas id="noise" aria-label="Efecto de ruido de fondo" class="fixed top-0 -z-10 animate-fade-in"
+></canvas>
+
+<script>
+	let wWidth: number, wHeight: number
+	const noiseData: ImageData[] = []
+	let frame: number = 0
+	let loopTimeout: number
+	let resizeThrottle: number
+
+	const canvas = document.getElementById("noise") as HTMLCanvasElement
+	const ctx = canvas.getContext("2d")
+
+	if (!ctx) {
+		throw new Error("2D context not supported or canvas not found")
+	}
+
+	const createNoise = () => {
+		const idata: ImageData = ctx.createImageData(wWidth, wHeight)
+		const buffer32: Uint32Array = new Uint32Array(idata.data.buffer)
+		let len: number = buffer32.length
+
+		while (len--) {
+			buffer32[len] = ((Math.random() * 70) | 0) << 24
+		}
+
+		noiseData.push(idata)
+	}
+
+	const paintNoise = () => {
+		if (frame === 9) {
+			frame = 0
+		} else {
+			frame++
+		}
+
+		ctx.putImageData(noiseData[frame], 0, 0)
+	}
+
+	const loop = () => {
+		paintNoise()
+
+		loopTimeout = window.setTimeout(() => {
+			window.requestAnimationFrame(loop)
+		}, 1000 / 25) as unknown as number
+	}
+
+	const setup = () => {
+		wWidth = window.innerWidth
+		wHeight = window.innerHeight + 100
+
+		canvas.width = wWidth
+		canvas.height = wHeight
+
+		noiseData.length = 0
+
+		for (let i = 0; i < 10; i++) {
+			createNoise()
+		}
+
+		loop()
+	}
+
+	setup()
+
+	window.addEventListener(
+		"resize",
+		() => {
+			window.clearTimeout(resizeThrottle)
+
+			resizeThrottle = window.setTimeout(() => {
+				window.clearTimeout(loopTimeout)
+				setup()
+			}, 200) as unknown as number
+		},
+		false
+	)
+</script>

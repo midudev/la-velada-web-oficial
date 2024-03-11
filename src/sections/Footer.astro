@@ -1,18 +1,19 @@
 ---
-import ThemeToggle from "@/components/ThemeToggle.astro"
+import Typography from "@/components/Typography.astro"
 import InstagramIcon from "@/icons/instagram.astro"
 import XIcon from "@/icons/x.astro"
+import GithubIcon from "@/icons/github.astro"
 ---
 
 <footer
 	class="mt-20 flex w-full flex-col place-items-center border-t-2 border-primary pb-20 pt-6 md:flex-row md:justify-between"
 >
-	<span class="text-center text-primary">
-		&copy; {new Date().getFullYear()} La Velada del Año <span aria-hidden="true" class="hidden md:inline">|</span><br
+	<Typography as="span" variant="body" color="neutral" class:list={"text-center"}>
+		&copy; {new Date().getFullYear()} La Velada del Año <span
 			aria-hidden="true"
-			class="block md:hidden"
-		/> Todos los derechos reservados.
-	</span>
+			class="hidden md:inline">|</span
+		><br aria-hidden="true" class="block md:hidden" /> Todos los derechos reservados.
+	</Typography>
 	<span aria-hidden="true" class="mt-6 w-full border-t-2 border-primary pt-6 md:hidden"></span>
 
 	<nav>
@@ -28,7 +29,7 @@ import XIcon from "@/icons/x.astro"
 					href="https://www.instagram.com/infolavelada"
 					class="inline-block any-hover:scale-125 any-hover:opacity-70 motion-safe:transition"
 				>
-					<InstagramIcon class="text-primary" />
+					<InstagramIcon class="text-primary transition-colors duration-300 hover:text-accent" />
 				</a>
 			</li>
 			<li>
@@ -39,11 +40,19 @@ import XIcon from "@/icons/x.astro"
 					href="https://x.com/infoLaVelada"
 					class="inline-block any-hover:scale-125 any-hover:opacity-70 motion-safe:transition"
 				>
-					<XIcon class="text-primary" />
+					<XIcon class="text-primary transition-colors duration-300 hover:text-accent" />
 				</a>
 			</li>
 			<li>
-				<ThemeToggle />
+				<a
+					target="_blank"
+					rel="noopener"
+					aria-label="Github de la velada, se abrirá en una nueva pestaña"
+					href="https://github.com/midudev/la-velada-web-oficial"
+					class="inline-block any-hover:scale-125 any-hover:opacity-70 motion-safe:transition"
+				>
+					<GithubIcon class="text-primary transition-colors duration-300 hover:text-accent" />
+				</a>
 			</li>
 		</ul>
 	</nav>

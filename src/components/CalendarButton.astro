@@ -1,18 +1,23 @@
 ---
-import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
+import Action from "./Action.astro"
 ---
 
-<button id="add-to-calendar" aria-label="agregar al calendario se abrirá ventana flotante">
-	<span> Agregar al calendario</span>
-</button>
+<Action
+	class="!w-full !text-base xs:!text-xl"
+	as="button"
+	id="add-to-calendar"
+	aria-label="agregar al calendario se abrirá ventana flotante"
+>
+	Agregar al calendario
+</Action>
 
-<script is:inline define:vars={{ darkTheme: DARK_THEME, lightTheme: LIGHT_THEME }}>
+<script is:inline>
 	const config = {
-		name: "🥊 La Velada del Año 4 - Evento de Presentación",
+		name: "🥊 La Velada del Año 4 - El Evento del Año",
 		description:
-			"La presentación de La Velada del Año 4 está por comenzar.<br><br>Entra a Twitch y no te lo pierdas → [url]https://twitch.tv/ibai[/url]",
-		startDate: "2024-03-04",
-		endDate: "2024-03-04",
+			"¡Arranca la Velada del Año!<br><br>Entra a Twitch y no te lo pierdas → [url]https://twitch.tv/ibai[/url]",
+		startDate: "2024-07-13",
+		endDate: "2024-07-13",
 		startTime: "19:00",
 		endTime: "22:00",
 		options: ["Google", "Apple", "Microsoft365", "MicrosoftTeams"],
@@ -48,9 +53,6 @@ import { DARK_THEME, LIGHT_THEME } from "@/consts/themes"
 			status = "loaded"
 			button.innerHTML = text
 		}
-
-		const theme = document.documentElement.classList.contains(darkTheme) ? darkTheme : lightTheme
-		config.lightMode = theme
 
 		window.atcb_action(config, button)
 	})

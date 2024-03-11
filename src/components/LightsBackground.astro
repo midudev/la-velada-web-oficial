@@ -1,0 +1,57 @@
+<div></div>
+
+<style>
+	@keyframes lights {
+		from {
+			background-position:
+				50% 50%,
+				50% 50%;
+		}
+
+		to {
+			background-position:
+				350% 50%,
+				350% 50%;
+		}
+	}
+
+	div {
+		--stripesDark: repeating-linear-gradient(
+			100deg,
+			#000 0%,
+			#000 7%,
+			transparent 10%,
+			transparent 12%,
+			#000 16%
+		);
+
+		--rainbow: repeating-linear-gradient(100deg, var(--color-accent) 10%, var(--color-accent) 30%);
+		background-size: 200%, 400%;
+		background-position:
+			50% 50%,
+			50% 50%;
+
+		background-image: var(--stripesDark), var(--rainbow);
+		filter: blur(10px) opacity(20%) saturate(200%);
+
+		mask-image: radial-gradient(ellipse at 100% 0%, black 40%, transparent 70%);
+
+		pointer-events: none;
+		z-index: -20;
+		position: absolute;
+		inset: 0;
+		opacity: 0.5;
+		transform: translateZ(0);
+	}
+
+	div::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background-size: 200%, 100%;
+		animation: lights 80s linear infinite;
+		mix-blend-mode: difference;
+		background-image: var(--stripesDark), var(--rainbow);
+		transform: translateZ(0);
+	}
+</style>
