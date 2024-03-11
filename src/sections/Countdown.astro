@@ -1,35 +1,56 @@
 ---
-import LaVeladaLogo from "@/icons/la-velada.astro"
 import Date from "@/components/Date.astro"
 import { EVENT_TIMESTAMP } from "@/consts/event-date"
 ---
 
-<section class="my-0 flex flex-col place-items-center gap-y-10 lg:my-32" aria-label="cuenta atrás">
-	<LaVeladaLogo class="text-primary" />
+<section class="mt-20 flex flex-col place-items-center gap-y-10 md:mt-60" aria-label="cuenta atrás">
 	<p
-		class="countdown-text max-w-[250px] text-balance text-center text-lg font-medium uppercase text-primary opacity-80 sm:max-w-full"
+		class="countdown-text max-w-[250px] text-balance text-center text-lg font-medium uppercase text-accent opacity-80 sm:max-w-full md:mb-36"
 	>
-		Para el Evento de Presentación faltan
+		Para el inicio de la Velada Del año faltan...
 	</p>
 
 	<div
-		class="flex flex-row gap-x-1 font-semibold uppercase text-primary"
+		class="grid w-full grid-cols-2 flex-col items-center justify-center gap-4 gap-y-20 uppercase text-primary md:grid-cols-3 md:gap-x-6 md:gap-y-11"
 		data-date={EVENT_TIMESTAMP}
 		role="timer"
 	>
-		<Date dateType="Días" attribute={{ "data-days": "" }} max={99} />
+		<Date
+			dateType="Días"
+			attribute={{ "data-days": "" }}
+			position="md:col-span-3"
+			className="text-7xl text-accent md:text-[20rem]"
+			wrapperClassName="my-8 md:my-0 md:-mt-16"
+			height={"h-[3.80rem] md:h-[20rem]"}
+			max={129}
+		/>
 
-		<span aria-hidden="true" class="mt-1 text-xl">:</span>
+		<Date
+			wrapperClassName="my-8"
+			dateType="Horas"
+			attribute={{ "data-hours": "" }}
+			className="text-7xl text-accent"
+			height={"h-[3.80rem]"}
+			max={23}
+		/>
 
-		<Date dateType="Horas" attribute={{ "data-hours": "" }} max={23} />
+		<Date
+			wrapperClassName="my-8"
+			dateType="Minutos"
+			attribute={{ "data-minutes": "" }}
+			className="text-7xl text-accent"
+			height={"h-[3.80rem]"}
+			max={59}
+		/>
 
-		<span aria-hidden="true" class="mt-1 text-xl">:</span>
-
-		<Date dateType="Minutos" attribute={{ "data-minutes": "" }} max={59} />
-
-		<span aria-hidden="true" class="mt-1 text-xl">:</span>
-
-		<Date dateType="Segundos" attribute={{ "data-seconds": "" }} max={59} />
+		<Date
+			wrapperClassName="my-8"
+			dateType="Segundos"
+			attribute={{ "data-seconds": "" }}
+			className="text-7xl text-accent"
+			height={"h-[3.80rem]"}
+			max={59}
+		/>
 	</div>
 </section>
 
@@ -48,6 +69,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 		const $days = {
 			firstDigit: $countdown.querySelector("[data-days] [data-first-group]"),
 			secondDigit: $countdown.querySelector("[data-days] [data-second-group]"),
+			thirdDigit: $countdown.querySelector("[data-days] [data-third-group]"),
 		}
 
 		const $hours = {
@@ -111,9 +133,14 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 			const minutes = formatTime((diff % HOUR) / MINUTE)
 			const seconds = formatTime((diff % MINUTE) / SECOND)
 
-			if ($days.firstDigit instanceof HTMLElement && $days.secondDigit instanceof HTMLElement) {
+			if (
+				$days.firstDigit instanceof HTMLElement &&
+				$days.secondDigit instanceof HTMLElement &&
+				$days.thirdDigit instanceof HTMLElement
+			) {
 				animateDigit($days.firstDigit, days[0])
 				animateDigit($days.secondDigit, days[1])
+				animateDigit($days.thirdDigit, days[2])
 			}
 
 			if ($hours.firstDigit instanceof HTMLElement && $hours.secondDigit instanceof HTMLElement) {
