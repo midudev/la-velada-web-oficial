@@ -221,6 +221,10 @@ const {
 			}
 			this.classList.add("lyt-activated")
 
+			if (this.style.backgroundImage !== "unset") {
+				this.style.backgroundImage = "unset"
+			}
+
 			if (this.needsYTApi) {
 				return this.addYTPlayerIframe(this.getParams())
 			}
