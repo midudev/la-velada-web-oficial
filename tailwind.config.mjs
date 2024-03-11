@@ -1,5 +1,6 @@
 import animations from "@midudev/tailwind-animations"
 import defaultTheme from "tailwindcss/defaultTheme"
+
 /** @type {import('tailwindcss').Config} */
 export default {
 	content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
@@ -25,6 +26,7 @@ export default {
 		animations,
 		function ({ addVariant }) {
 			addVariant("any-hover", "@media (any-hover: hover) { &:hover }")
+			addVariant("mobile", "@media (any-hover: none) { & }")
 		},
 	],
 }
