@@ -1,5 +1,6 @@
 ---
 interface Props {
+	wrapperClassName: string
 	dateType: string
 	attribute: Record<string, string>
 	max: number
@@ -8,7 +9,7 @@ interface Props {
 	height: string
 }
 
-const { dateType, position, attribute, className, height, max } = Astro.props
+const { dateType, position, attribute, className, height, max, wrapperClassName } = Astro.props
 const maximumSplit = Astro.props.max.toString().split("")
 
 // + 1 porque hay que tener en cuenta el 0
@@ -22,25 +23,25 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 ---
 
 <div
-	class=`w-full ${position} text-center -skew-x-6 flex flex-col items-center justify-center font-atomic bg-gradient-to-b from-white/5 via-transparent to-transparent`
+	class:list=`w-full ${position} text-center -skew-x-6 flex flex-col items-center justify-center bg-gradient-to-b from-white/5 via-transparent to-transparent`
 >
-	<div class="relative -mt-48 flex overflow-hidden" {...attribute}>
-		<div class={`float-left block ${height} overflow-hidden`} data-first-group>
+	<div class:list={["font-atomic relative flex overflow-hidden", wrapperClassName]} {...attribute}>
+		<div class:list={`float-left block ${height} overflow-hidden`} data-first-group>
 			<div class="" data-wrapper>
 				{
 					Array.from({ length: maxFirst + 1 }, () => 0).map((_, index) => (
 						// + 1 porque hay que tener en cuenta el 0 para las transiciones
 						<div data-num={index} style={`height: ${firstDigitHeight}%`}>
-							<span class={`mx-3 tabular-nums ${className}`}>{index}</span>
+							<span class:list={`tabular-nums ${className}`}>{index}</span>
 						</div>
 					))
 				}
 				<div style={{ height: `${firstDigitHeight}%`, transition: "height 0.3s ease" }} data-num-x0>
-					<span class={`tabular-nums mx-3 ${className}`}>0</span>
+					<span class:list={`tabular-nums  ${className}`}>0</span>
 				</div>
 			</div>
 		</div>
-		<div class={`float-left block ${height} w-auto overflow-hidden`} data-second-group>
+		<div class:list={`float-left block ${height} w-auto overflow-hidden`} data-second-group>
 			<div
 				class="translate-y-0 transition-transform duration-[800ms] motion-reduce:duration-0"
 				data-wrapper
@@ -49,7 +50,7 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 					Array.from({ length: maxSecond + 1 }, () => 0).map((_, index) => (
 						// + 1 porque hay que tener en cuenta el 0 para las transiciones
 						<div data-num={index} style={`height: ${secondDigitHeight}%`}>
-							<span class={`mx-3 tabular-nums ${className}`}>{index}</span>
+							<span class:list={`tabular-nums ${className}`}>{index}</span>
 						</div>
 					))
 				}
@@ -57,13 +58,13 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 					style={{ height: `${secondDigitHeight}%`, transition: "height 0.3s ease" }}
 					data-num-x0
 				>
-					<span class={`tabular-nums mx-3 ${className} `}>0</span>
+					<span class:list={`tabular-nums ${className} `}>0</span>
 				</div>
 			</div>
 		</div>
 		{
 			max > 99 && (
-				<div class={`float-block px-3 ${height} w-auto overflow-hidden`} data-third-group>
+				<div class:list={`float-block ${height} w-auto overflow-hidden`} data-third-group>
 					<div
 						class="translate-y-0 transition-transform duration-[800ms] motion-reduce:duration-0"
 						data-wrapper
@@ -71,18 +72,19 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 						{Array.from({ length: maxThird + 1 }, () => 0).map((_, index) => (
 							// + 1 porque hay que tener en cuenta el 0 para las transiciones
 							<div data-num={index} style={`height: ${thirdDigitHeight}%`}>
-								<span class={`mx-3 tabular-nums ${className}`}>{index}</span>
+								<span class:list={`tabular-nums ${className}`}>{index}</span>
 							</div>
 						))}
 						<div
 							style={{ height: `${secondDigitHeight}%`, transition: "height 0.3s ease" }}
 							data-num-x0
 						>
-							<span class={`mx-3 tabular-nums ${className} `}>0</span>
+							<span class:list={`tabular-nums ${className} `}>0</span>
 						</div>
 					</div>
 				</div>
 			)
 		}
 	</div>
+	<span class="text-center text-sm md:text-xl">{dateType}</span>
 </div>
