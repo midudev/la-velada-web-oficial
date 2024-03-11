@@ -1,5 +1,17 @@
+type SporsorsId =
+	| "vicio"
+	| "revolut"
+	| "prime"
+	| "alsa"
+	| "spotify"
+	| "cerave"
+	| "el-pozo"
+	| "grefusa"
+	| "maxibon"
+	| "infojobs"
+
 interface Sponsors {
-	id: string
+	id: SporsorsId
 	name: string
 	url: string
 	image: {
