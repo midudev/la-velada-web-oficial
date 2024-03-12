@@ -18,11 +18,11 @@ const { title, description, preloadImgLCP } = Astro.props
 <!doctype html>
 <html lang="es">
 	<head>
-		<SEO title={title} description={description} preloadImgLCP={preloadImgLCP} />
+		<SEO title={title} description={description} preloadImgLCP={preloadImgLCP!} />
 	</head>
 
 	<body
-		class="dark overflow-x-hidden selection:bg-accent [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
+		class="dark selection:bg-accent [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
 		<!-- <SmokeBackground /> -->
 		<NoiseBackground />
@@ -56,8 +56,6 @@ const { title, description, preloadImgLCP } = Astro.props
 			html {
 				font-family: "Jost Variable", system-ui, sans-serif;
 				background: var(--background-color);
-				overflow-x: hidden;
-				overscroll-behavior: none;
 			}
 
 			main {

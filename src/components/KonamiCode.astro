@@ -1,38 +1,49 @@
 <script>
-	const container = document.querySelector("#main-content") as HTMLDivElement
+	import { konamiCodes } from "@/consts/konami-codes"
+	import { Konami } from "@/function/konami"
+	import { $ } from "@/consts/dom-selector"
 
-	const konamiCode = [
-		"ArrowUp",
-		"ArrowUp",
-		"ArrowDown",
-		"ArrowDown",
-		"ArrowLeft",
-		"ArrowRight",
-		"ArrowLeft",
-		"ArrowRight",
-		"b",
-		"a",
-	]
-	let konamiCodePosition = 0
+	const { rotateY, gloveCursor, amongUsCursor, lolCursor } = konamiCodes
+
+	const $container = $("#main-content")
 
 	document.addEventListener("keydown", ({ key }) => {
-		const requiredKey = konamiCode[konamiCodePosition]
+		Konami({
+			code: rotateY,
+			keyPressed: key,
+			onFinishTime: 1500,
+			onSuccess: () => {
+				$container.style.transform = "rotateY(360deg)"
+				$container.style.transition = "transform 2s ease"
+			},
+			onFinish: () => {
+				$container.style.transition = "none"
+				$container.style.transform = "none"
+			},
+		})
 
-		if (key !== requiredKey) {
-			konamiCodePosition = 0
-			return
-		}
+		Konami({
+			code: lolCursor,
+			keyPressed: key,
+			onSuccess: () => {
+				$("body").style.cursor = "url('/img/cursor/lol.cur'), auto"
+			},
+		})
 
-		konamiCodePosition++
+		Konami({
+			code: gloveCursor,
+			keyPressed: key,
+			onSuccess: () => {
+				$("body").style.cursor = "url('/img/cursor/boxing-glove.cur'), auto"
+			},
+		})
 
-		container.style.transition = "none"
-		container.style.transform = "none"
-
-		if (konamiCodePosition !== konamiCode.length) return
-
-		container.style.transform = "rotateY(360deg)"
-		container.style.transition = "transform 2s ease"
-
-		konamiCodePosition = 0
+		Konami({
+			code: amongUsCursor,
+			keyPressed: key,
+			onSuccess: () => {
+				$("body").style.cursor = "url('/img/cursor/among-us.cur'), auto"
+			},
+		})
 	})
 </script>
