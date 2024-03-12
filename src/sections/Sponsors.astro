@@ -4,7 +4,7 @@ import Typography from "@/components/Typography.astro"
 import { SPONSORS } from "@/consts/sponsors"
 ---
 
-<section class="my-40">
+<section>
 	<Typography as="h3" variant="h3" color="white" class:list={"text-center"}>
 		Patrocinadores
 	</Typography>
@@ -20,6 +20,7 @@ import { SPONSORS } from "@/consts/sponsors"
 					href={url}
 					target="_blank"
 					rel="noopener noreferrer"
+					aria-label={`Link con el logo de ${name} que lleva a ${url}`}
 				>
 					<SponsorLogo
 						logo={id}
@@ -38,9 +39,10 @@ import { SPONSORS } from "@/consts/sponsors"
 
 		<a
 			class="transition hover:scale-110"
-			href="https://infojobs.net"
+			href="https://www.infojobs.net"
 			title="Ir a la página de InfoJobs"
 			target="_blank"
+			aria-label="Link con el logo de Infojobs que lleva a https://www.infojobs.net"
 		>
 			<SponsorLogo
 				logo="infojobs"
