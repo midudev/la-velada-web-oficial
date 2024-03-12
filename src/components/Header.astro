@@ -1,0 +1,58 @@
+---
+import HeroLogo from "@/components/HeroLogo.astro"
+
+const pages = [
+	{ name: "El Evento", href: "/" },
+	{ name: "Combates", href: "/combates" },
+	{ name: "Pronósticos", href: "/pronosticos" },
+	{ name: "Entradas", href: "/entradas" },
+]
+---
+
+<header class="mb-10 h-24">
+	<nav class="hidden h-full justify-center lg:flex">
+		{
+			pages.map((page, key) => (
+				<>
+					<a
+						href={page.href}
+						class="nav-item from current relative flex items-center justify-center px-10 text-xl uppercase text-white hover:text-gray-300"
+					>
+						<span class="z-10">{page.name}</span>
+						<div class="background absolute -z-10 h-full w-full" />
+					</a>
+					{key == 1 && <div class={`w-64`} />}
+				</>
+			))
+		}
+	</nav>
+	<div class="relative flex h-2 w-full flex-col items-center">
+		<div class="absolute flex h-full w-full items-center">
+			<hr
+				class="h-[2px] w-full border-t-0"
+				style="background:linear-gradient(to right, transparent 3%, white 35%, white 100%)"
+			/>
+			<HeroLogo class:list={`-mx-2 h-80 w-auto`} noEffect />
+			<hr
+				class="h-[2px] w-full border-t-0"
+				style="background:linear-gradient(to left, transparent 3%, white 35%, white 100%)"
+			/>
+		</div>
+	</div>
+</header>
+
+<style>
+	.nav-item .background {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		background: linear-gradient(to bottom, rgba(221, 221, 221, 20%) 0%, transparent 100%);
+		transition: opacity 0.3s;
+	}
+
+	.nav-item:hover .background {
+		opacity: 1;
+	}
+</style>
