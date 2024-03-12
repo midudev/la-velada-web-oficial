@@ -59,6 +59,9 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
   ```
 > Si quieres automatizar el proceso, puedes crear un script siguiendo la [documentación oficial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file)
 
+<details>
+	<summary>Pequeño script de automatización</summary>
+	
 - For Linux/MacOS:
 	```sh
 	# .bashrc | .zshrc | cualquier archivo de configuración
@@ -87,6 +90,7 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 	}
 	New-Alias -Name cd -Value Change-Node-Version -Force -Option AllScope
 	```
+ </details>
 
 - PNPM (es nuestra recomendación por su eficiencia y rapidez)
 
