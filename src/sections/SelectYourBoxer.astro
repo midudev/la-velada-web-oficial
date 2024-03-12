@@ -34,24 +34,24 @@ const msFadeLuchador = 150
 				style="background-image: url('/img/effects/boxer-background.png'); background-size: 75%;"
 			>
 				<picture
-					class={`boxer-photo h-auto object-contain transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]`}
+					class:list={`boxer-photo h-auto object-contain transition duration-[${msFadeLuchador}] px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]`}
 				>
 					<source srcset="/img/boxers/el-mariana-big.webp" type="image/webp" />
 					<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
 					<img
-						class={`boxer-photo h-auto object-contain transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]`}
+						class:list={`boxer-photo h-auto object-contain transition duration-[${msFadeLuchador}] px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]`}
 						alt="Fotografía de El Mariana"
 						src="/img/boxers/el-mariana-big.avif"
 						style="filter: drop-shadow(0 0 10px rgba(0, 0, 0, 1));"
 					/>
 				</picture>
 				<img
-					class={`boxer-title pointer-events-none absolute bottom-14 h-auto transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:w-[480px]`}
+					class:list={`boxer-title pointer-events-none absolute bottom-14 h-auto transition duration-[${msFadeLuchador}] px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:w-[480px]`}
 					alt="El Mariana"
 					src="/img/boxers/el-mariana-title.webp"
 				/>
 				<img
-					class={`boxer-flag pointer-events-none aspect-[3/2] h-auto w-20 object-contain object-center transition duration-[${msFadeLuchador}] 3xl:w-24`}
+					class:list={`boxer-flag pointer-events-none aspect-[3/2] h-auto w-20 object-contain object-center transition duration-[${msFadeLuchador}] 3xl:w-24`}
 					alt="Bandera de México"
 					src="/img/flags/mx.webp"
 				/>
@@ -178,7 +178,7 @@ const msFadeLuchador = 150
 	}
 
 	if (imagen) {
-		imagen.addEventListener("mousemove", function (event: MouseEvent) {
+		imagen.addEventListener("mousemove", (event: MouseEvent) => {
 			if (window.innerWidth > 1280) {
 				asideAnimation(event)
 			}
