@@ -1,0 +1,29 @@
+---
+interface Props {
+	imgSrc: string
+	imgAlt: string
+	title: string
+	description: string
+}
+---
+
+<div
+	class="image-overlay relative mb-24 w-full flex-col sm:mt-28"
+	style="background: linear-gradient(180deg, #222222 0%, rgba(17, 17, 17, 0) 61.5%);"
+>
+	<div class="flex flex-col items-center justify-center pt-24 sm:w-full">
+		<div
+			class="image-container absolute left-1/2 top-0 flex h-56 w-56 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center overflow-hidden rounded-full"
+		>
+			<img
+				src={Astro.props.imgSrc}
+				alt={Astro.props.imgAlt}
+				class="max-h-full max-w-full object-cover"
+			/>
+		</div>
+		<div class="content mt-1 text-center">
+			<h1 class="title mb-0.5 text-xl" style="color: var(--color-accent);">{Astro.props.title}</h1>
+			<p class="description text-xs text-gray-400">{Astro.props.description}</p>
+		</div>
+	</div>
+</div>
