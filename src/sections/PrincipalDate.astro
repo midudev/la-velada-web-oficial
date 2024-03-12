@@ -21,7 +21,7 @@ import Typography from "@/components/Typography.astro"
 		as="h2"
 		variant="h2"
 		color="neutral"
-		class:list={"underline-transition mt-6 flex max-w-sm flex-col transition-all duration-300 ease-in-out hover:text-accent"}
+		class:list={"underline-transition mt-6 flex max-w-sm flex-col transition-all duration-300 ease-in-out hover:text-accent motion-reduce:transition-none"}
 	>
 		<a
 			class="flex"
@@ -39,7 +39,7 @@ import Typography from "@/components/Typography.astro"
 	>
 		<div class="flex flex-col items-center justify-center gap-y-2">
 			<Action
-				class="!w-full !text-base xs:!text-xl"
+				class="w-full text-base"
 				as="a"
 				aria-disabled="true"
 				href="#"
@@ -54,7 +54,14 @@ import Typography from "@/components/Typography.astro"
 			</Typography>
 		</div>
 		<div>
-			<Action as="a" href="https://lavelada.store/" target="_blank" rel="noopener noreferrer">
+			<Action
+				class="w-full text-base"
+				as="a"
+				href="https://lavelada.store/"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="Ir a la tienda oficial, se abrirá en una nueva pestaña"
+			>
 				Ir a la tienda oficial
 			</Action>
 		</div>
@@ -177,8 +184,28 @@ import Typography from "@/components/Typography.astro"
 		background-repeat: no-repeat;
 		transition: background-size 0.3s ease-in-out;
 	}
+
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			transition: none;
+		}
+	}
 	.underline-transition:hover {
 		background-size: 100% 3px;
 		background-position: 0 100%;
+	}
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			background-image: linear-gradient(transparent, transparent),
+				linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
+			background-size: 0 3px;
+			background-position: 100% 100%;
+			background-repeat: no-repeat;
+			transition: background-size 0s;
+		}
+		.underline-transition:hover {
+			background-size: 100% 3px;
+			background-position: 0 100%;
+		}
 	}
 </style>
