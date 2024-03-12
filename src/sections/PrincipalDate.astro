@@ -17,7 +17,12 @@ import Typography from "@/components/Typography.astro"
 		<time class="time hidden"></time>
 	</header>
 
-	<Typography as="h2" variant="h2" color="neutral" class:list={"mt-6 flex max-w-sm flex-col "}>
+	<Typography
+		as="h2"
+		variant="h2"
+		color="neutral"
+		class:list={"underline-transition mt-6 flex max-w-sm flex-col transition-all duration-300 ease-in-out hover:text-accent motion-reduce:transition-none"}
+	>
 		<a
 			class="flex"
 			href="https://maps.app.goo.gl/F1oAFhFjqnvTKtC18"
@@ -29,9 +34,12 @@ import Typography from "@/components/Typography.astro"
 		</a>
 	</Typography>
 
-	<footer class="scroll-horizontal items-top mt-6 flex flex-col gap-9 md:flex-row">
+	<footer
+		class="scroll-horizontal items-top mt-6 flex flex-col flex-wrap justify-center gap-9 md:flex-row *:md:basis-1/3"
+	>
 		<div class="flex flex-col items-center justify-center gap-y-2">
 			<Action
+				class="w-full text-base"
 				as="a"
 				aria-disabled="true"
 				href="#"
@@ -39,11 +47,23 @@ import Typography from "@/components/Typography.astro"
 				rel="noopener noreferrer"
 				aria-label="entradas agotadas, se abrirá en una nueva pestaña"
 			>
-				<span> Comprar entradas </span>
+				Comprar entradas
 			</Action>
 			<Typography as="span" variant="medium" color="primary" class:list={"text-center"}>
 				Próximamente
 			</Typography>
+		</div>
+		<div>
+			<Action
+				class="w-full text-base"
+				as="a"
+				href="https://lavelada.store/"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="Ir a la tienda oficial, se abrirá en una nueva pestaña"
+			>
+				Ir a la tienda oficial
+			</Action>
 		</div>
 		<div>
 			<CalendarButton />
@@ -153,3 +173,39 @@ import Typography from "@/components/Typography.astro"
 		}
 	}
 </script>
+
+<style>
+	/* Efecto de subrayado animado */
+	.underline-transition {
+		background-image: linear-gradient(transparent, transparent),
+			linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
+		background-size: 0 3px;
+		background-position: 100% 100%;
+		background-repeat: no-repeat;
+		transition: background-size 0.3s ease-in-out;
+	}
+
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			transition: none;
+		}
+	}
+	.underline-transition:hover {
+		background-size: 100% 3px;
+		background-position: 0 100%;
+	}
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			background-image: linear-gradient(transparent, transparent),
+				linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
+			background-size: 0 3px;
+			background-position: 100% 100%;
+			background-repeat: no-repeat;
+			transition: background-size 0s;
+		}
+		.underline-transition:hover {
+			background-size: 100% 3px;
+			background-position: 0 100%;
+		}
+	}
+</style>

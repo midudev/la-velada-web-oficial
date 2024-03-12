@@ -1,54 +1,49 @@
 ---
 import TwitchLogo from "@/components/TwitchLogo.astro"
+import Typography from "@/components/Typography.astro"
 ---
 
 <section
-	class="my-32 flex flex-col gap-y-10 font-medium text-primary"
+	class="group mt-44 flex w-full flex-col items-center justify-center px-20 font-medium text-primary md:mt-80"
 	aria-label="descripción del evento"
 >
+	<hr
+		class="h-[2px] min-w-[20rem] max-w-lg border-t-0 bg-transparent bg-gradient-to-r from-transparent via-white to-transparent sm:w-full"
+	/>
+
 	<a
-		href="https://twitch.tv/ibai"
+		href="https://www.twitch.tv/ibai"
 		target="_blank"
 		rel="nofollow noopener"
-		class="mx-auto hover:scale-125 motion-safe:transition"
-		aria-label="síguelo en directo twitch.tv/ibai, se abrirá en una nueva pestaña"
+		class="group/twitch mb-8 mt-0"
+		aria-hidden="true"
+		tabindex="-1"
+		title="Enlace al canal de Twitch de Ibai Llanos"
 	>
-		<TwitchLogo />
+		<div
+			class="mx-auto -mt-8 mb-4 w-14 scale-75 group-hover/twitch:scale-90 motion-safe:transition md:-mt-8 md:mb-9 md:scale-110 md:group-hover/twitch:scale-125"
+		>
+			<TwitchLogo />
+		</div>
+
+		<div class="duration-200 group-hover/twitch:scale-110 motion-safe:transition">
+			<span
+				class="skew-x-10 block -rotate-6 text-center font-atomic text-xl text-white underline-offset-8 transition sm:text-2xl md:text-5xl"
+				>en directo
+			</span>
+			<Typography
+				as="h2"
+				variant="bigger"
+				color="primary"
+				class:list={"-mt-2 text-wrap text-center"}
+				class="flex justify-center text-2xl md:text-5xl"
+			>
+				twitch.tv/ibai
+			</Typography>
+		</div>
 	</a>
 
-	<div
-		class="grid gap-x-10 text-center uppercase [grid-template-columns:1fr] md:grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))] lg:[grid-template-columns:1fr_1.5fr_1fr]"
-	>
-		<article
-			class="order-2 flex items-center justify-center border-y-2 border-primary px-10 py-10 text-center text-xl md:order-none md:flex-grow md:px-0 md:py-12 lg:py-20"
-		>
-			<h3 class="text-balance md:max-w-[250px]">Presentación, Pesaje, Entrevista y Cara a Cara</h3>
-		</article>
-
-		<article
-			class="order-1 flex items-center justify-center border-t-2 border-primary px-10 py-10 text-3xl md:order-none md:flex-1 md:border-y-2 md:px-0 md:py-12 lg:px-0 lg:py-20 lg:text-4xl"
-		>
-			<h3
-				class="flex justify-center md:max-w-[250px]"
-				aria-label="síguelo en directo twitch.tv/ibai, se abrirá en una nueva pestaña"
-			>
-				<a
-					class="inline-block hover:scale-110 hover:text-twitch motion-safe:transition-transform"
-					href="https://twitch.tv/ibai"
-					target="_blank"
-					rel="nofollow noopener"
-				>
-					Síguelo en directo <span class="text-twitch transition-colors">twitch.tv/ibai</span>
-				</a>
-			</h3>
-		</article>
-
-		<article
-			class="order-3 flex items-center justify-center border-b-2 border-primary px-10 py-10 text-xl sm:py-12 md:order-none md:border-y-2 md:px-0 md:py-12 lg:py-20"
-		>
-			<h3 class="text-balance md:max-w-[250px]">
-				Con la presencia de los boxeadores y las boxeadoras
-			</h3>
-		</article>
-	</div>
+	<hr
+		class="my-7 h-[2px] w-full min-w-[20rem] max-w-lg border-t-0 bg-transparent bg-gradient-to-r from-transparent via-white to-transparent md:my-9"
+	/>
 </section>
