@@ -6,9 +6,13 @@ interface Props {
 	title: string
 	description: string
 	preloadImgLCP?: string
+	canonical?: string
+	image?: string
 }
 
-const { title, description, preloadImgLCP } = Astro.props
+const { title, description, preloadImgLCP, canonical, image = "/img/og.jpg" } = Astro.props
+
+const canonicalURL = canonical ? new URL(canonical, Astro.site) : new URL(Astro.url.pathname, Astro.site)
 ---
 
 <title>{title}</title>
@@ -24,23 +28,23 @@ const { title, description, preloadImgLCP } = Astro.props
 }
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="canonical" href="https://lavelada.es" />
+<link rel="canonical" href={canonicalURL} />
 <meta name="viewport" content="width=device-width" />
 <meta name="theme-color" content="#d5ff00" />
 
 <meta name="keywords" content="velada, streamers, creadores, Ibai, boxeo, midudev" />
-
+<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@infoLaVelada" />
 <meta name="twitter:creator" content="@IbaiLlanos" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content="https://lavelada.es/og.jpg" />
-
-<meta name="og:image" content="https://lavelada.es/og.jpg" />
+<meta name="twitter:image" content={new URL(image, Astro.url)} />
+<!-- Open Graph / Facebook -->
+<meta name="og:image" content={new URL(image, Astro.url)} />
 <meta name="og:title" content={title} />
 <meta name="og:description" content={description} />
-<meta name="og:url" content="https://lavelada.es" />
+<meta name="og:url" content={Astro.url} />
 <meta name="og:site_name" content="La Velada 4" />
 <meta name="og:type" content="website" />
 <meta name="og:locale" content="es_ES" />
