@@ -8,7 +8,7 @@
 [![Issues][issues-shield]][issues-url]
 
 <a href="https://github.com/midudev/la-velada-web-oficial">
-  <img src="./public/img/github/og.jpg" alt="Logo" width="800" />
+  <img width="300px" src="./public/img/drawn-x-logo.webp" alt="Logo" width="800" />
 </a>
 
 ## Web oficial de La Velada IV
@@ -39,7 +39,7 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 - **Compra de boletos**: Permite a los usuarios dirigirlos a la compra de boletos fácilmente.
 - **Redes sociales**: Conoce las redes oficiales donde podrás informarte sobre el evento.
 
-### Capturas de pantalla de la web de La Velada IV:
+### Capturas de pantalla de la web de La Velada IV
 
 ![Captura de pantalla en móvil](./public/img/github/Mobile_README.png)
 ![Captura de pantalla en ordenador](./public/img/github/Desktop_README.png)
@@ -57,8 +57,40 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
   # o
   nvm use <version>
   ```
-
 > Si quieres automatizar el proceso, puedes crear un script siguiendo la [documentación oficial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file)
+
+<details>
+	<summary>Pequeño script de automatización</summary>
+	
+- For Linux/MacOS:
+	```sh
+	# .bashrc | .zshrc | cualquier archivo de configuración
+	# pequeño script para cambiar de version al entrar al directorio
+	cd() {
+  builtin cd "$@"
+		if [[ -f .nvmrc ]]; then
+			nvm use > /dev/null
+			# Si quieres que te diga la versión
+			nvm use
+		fi
+	}
+	```
+
+- For Windows:
+	```powershell
+	# $PROFILE
+	function Change-Node-Version {
+		param($path)
+		& Set-Location $path
+		$pwd = pwd
+		if ( Test-Path "$pwd\\.nvmrc" ) {
+			$version = Get-Content .nvmrc
+			nvm use $version
+		}
+	}
+	New-Alias -Name cd -Value Change-Node-Version -Force -Option AllScope
+	```
+ </details>
 
 - PNPM (es nuestra recomendación por su eficiencia y rapidez)
 

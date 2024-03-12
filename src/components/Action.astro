@@ -6,12 +6,12 @@ type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }>
 const { as: Tag, class: className, ...props } = Astro.props
 ---
 
-<Tag class:list={["button-style *:duration-500", className]} {...props}>
+<Tag class:list={["action *:duration-500 motion-reduce:*:duration-0", className]} {...props}>
 	<span><slot /></span>
 </Tag>
 
 <style>
-	.button-style {
+	.action {
 		padding: 10px 20px;
 		display: inline-block;
 		font-weight: 600;
@@ -22,19 +22,19 @@ const { as: Tag, class: className, ...props } = Astro.props
 		border: 2px solid var(--color-primary);
 	}
 
-	.button-style[aria-disabled="true"] {
+	.action[aria-disabled="true"] {
 		background: #666;
 		color: #111;
 		pointer-events: none;
 		border-color: #666;
 	}
 
-	.button-style > span {
+	.action > span {
 		display: inline-block;
 		transform: skew(21deg);
 	}
 
-	.button-style::before {
+	.action::before {
 		content: "";
 		position: absolute;
 		inset: -2px;
@@ -43,35 +43,35 @@ const { as: Tag, class: className, ...props } = Astro.props
 		transform-origin: right; /* To end from left to right */
 	}
 
-	.button-style:hover {
+	.action:hover {
 		color: var(--color-secondary);
 		scale: 1.1;
 	}
 
-	.button-style:hover::before {
+	.action:hover::before {
 		transform: scaleX(1);
 		transform-origin: left; /* To start from left to right */
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
-		.button-style {
+		.action {
 			transition:
 				color 0.15s ease-in,
 				scale 0.15s ease-in;
 		}
-		.button-style::before {
+		.action::before {
 			transition: transform 0.3s ease-in;
 		}
 
 		/* Added delay to simulate a hover attempt */
-		.button-style:hover {
+		.action:hover {
 			transition:
 				color 0.15s ease-out 0.1s,
 				scale 0.15s ease-out 0.1s;
 		}
 
 		/* Added delay to simulate a hover attempt */
-		.button-style:hover::before {
+		.action:hover::before {
 			transition: transform 0.3s ease-out 0.1s;
 		}
 	}
