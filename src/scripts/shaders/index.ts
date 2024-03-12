@@ -1,4 +1,5 @@
 import { ball } from "./Ball"
+import { RayMarching } from "./RayMarching"
 import { basic } from "./basic"
 import { flare } from "./flare"
 import { mouseMove } from "./mouseMove"
@@ -8,7 +9,7 @@ import { smoke3 } from "./smoke3"
 import { smoke4 } from "./smoke4"
 import { whiteNoise } from "./whiteNoise"
 
-const shaders: string[] = [smoke1, smoke2, smoke3, smoke4, mouseMove, ball, flare, whiteNoise, basic]
+const shaders: string[] = [smoke1, smoke2, smoke3, smoke4, mouseMove, ball, flare, RayMarching, whiteNoise, basic]
 export default shaders
 
 /* uniforms disponibles en los shaders

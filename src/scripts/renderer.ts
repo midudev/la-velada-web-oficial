@@ -12,8 +12,7 @@ export function createRenderer(canvasSelector: string, shadernum: number, debug:
 	const { gl, canvas } = setCanvas(canvasSelector)
 	if (!gl)
 		return null
-	const images = shaderImages.basic
-	let textures = []
+	const images = shaderImages[shadernum % 10]
 	// const Quads = [] se usara al implementar el uso de varios shaders
 	let uniforms: Uniforms = {
 		iTime: (_a) => { },
@@ -21,14 +20,19 @@ export function createRenderer(canvasSelector: string, shadernum: number, debug:
 		iMouse: (_a) => { },
 		iPrimary: (_a) => { },
 		iSecondary: (_a) => { },
-		iChannel0: (_a) => { }
+		iFrame: (_a) => { },
+		iScroll: (_a) => { },
+		logoBox: (_a) => { },
+		iChannel0: (_a) => { },
+		iChannel1: (_a) => { },
+		iChannel2: (_a) => { },
 	}
 
-	const screenQuad = createQuad(gl, shaders[shadernum], "")
+	const screenQuad = createQuad(gl, shaders[shadernum % 10], "")
 	void preloadImages(images).catch().then((images: ImagesLoaded) => {
 		if (!gl || !screenQuad?.program)
 			return null
-		textures = createTextures(gl, images)
+		createTextures(gl, images)
 		uniforms = createUniforms(gl, canvas, screenQuad.program)
 		uniforms.iPrimary(hexToVec3("#071907"))
 		uniforms.iSecondary(hexToVec3("#153106"))

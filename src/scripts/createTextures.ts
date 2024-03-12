@@ -1,19 +1,22 @@
 import type { ImagesLoaded } from "./loadImages"
 
-export interface textureList {
+export interface Texture {
 	texture: WebGLTexture
 	channel: number
 	index: number
 }
+export type TextureElement = Texture
+export type TextureList = Texture[]
 export function createTextures(gl: WebGL2RenderingContext, images: ImagesLoaded) {
 	let index = 0
-	const textureArray: textureList[] = []
-	if (!images) return null
+	const textureArray: TextureList = []
+	if (!images) return []
 	for (let x = 0; x < images.length; x++) {
 		const { img, channel } = images[x]
-		const texture = createTexture(gl, img)
+		const texture: WebGLTexture | null = createTexture(gl, img)
 		if (texture) {
-			textureArray.push({ texture, channel, index })
+			const textureElement: TextureElement = { texture, channel, index }
+			textureArray.push(textureElement)
 			index++
 		}
 	}

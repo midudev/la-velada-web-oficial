@@ -10,7 +10,8 @@ const float SPEED = 2.5;
 
 float noise(float x)
 {
-    return 2.*texture2D(iChannel0, vec2(x+0.5,0)/256.).r-1.;
+     return 2.*textureLod(iChannel0, vec2(x+0.5,0)/256., 0.).r-1.;
+
 }
 
 float fbm1D(float x)
@@ -22,7 +23,7 @@ float fbm1D(float x)
 float noise2D(vec2 p)
 {
     p = floor(p) + smoothstep(0.,1.,fract(p));
-    return texture2D(iChannel0, (p+0.5)/256.).r;
+    return textureLod(iChannel0, (p+0.5)/256., 0.).r;
 }
 float fbm2D(vec2 p)
 {
