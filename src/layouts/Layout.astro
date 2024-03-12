@@ -80,28 +80,37 @@ scroll-behavior: smooth;
 				width: 1px;
 			}
 
-			::-webkit-scrollbar {
-				width: 10px;
-				border-radius: 10px;
+			@supports selector(::-webkit-scrollbar) {
+				::-webkit-scrollbar {
+					width: 10px;
+					border-radius: 10px;
+				}
+
+				::-webkit-scrollbar-thumb {
+					border-radius: 10px;
+					background-color: theme("colors.primary");
+					border: 2px solid transparent;
+					background-clip: content-box;
+				}
+
+				::-webkit-scrollbar-thumb:active {
+					background-color: #666;
+				}
+
+				::-webkit-scrollbar-track {
+					background: var(--background-image);
+				}
+
+				::-webkit-scrollbar-corner {
+					background: var(--background-image);
+				}
 			}
 
-			::-webkit-scrollbar-thumb {
-				border-radius: 10px;
-				background-color: theme("colors.primary");
-				border: 2px solid transparent;
-				background-clip: content-box;
-			}
-
-			::-webkit-scrollbar-thumb:active {
-				background-color: #666;
-			}
-
-			::-webkit-scrollbar-track {
-				background: var(--background-image);
-			}
-
-			::-webkit-scrollbar-corner {
-				background: var(--background-image);
+			@supports not selector(::-webkit-scrollbar) {
+				* {
+					scrollbar-color: theme("colors.primary") transparent;
+					scrollbar-width: thin;
+				}
 			}
 		</style>
 	</body>
