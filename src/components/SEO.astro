@@ -35,9 +35,9 @@ const { title, description, preloadImgLCP } = Astro.props
 <meta name="twitter:creator" content="@IbaiLlanos" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content="https://lavelada.es/og.jpg" />
+<meta name="twitter:image" content="/og.jpg" />
 
-<meta name="og:image" content="https://lavelada.es/og.jpg" />
+<meta name="og:image" content="/og.jpg" />
 <meta name="og:title" content={title} />
 <meta name="og:description" content={description} />
 <meta name="og:url" content="https://lavelada.es" />
@@ -76,10 +76,12 @@ const { title, description, preloadImgLCP } = Astro.props
 
 <!-- Worker Registration -->
 {
-  !import.meta.env.DEV && (
-    <script is:inline src="/registerSW.js"></script>
-    <link rel="manifest" href="/manifest.webmanifest" />
-  )
+	!import.meta.env.DEV && (
+		<>
+			<script is:inline src="/registerSW.js" />
+			<link rel="manifest" href="/manifest.webmanifest" />
+		</>
+	)
 }
 
 <RichResults />
