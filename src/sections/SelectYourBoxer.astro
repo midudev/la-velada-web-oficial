@@ -32,28 +32,29 @@ const msFadeLuchador = 150
 			<header
 				class="relative flex w-full flex-col items-center justify-center bg-center bg-no-repeat"
 				style="background-image: url('/img/effects/boxer-background.png'); background-size: 75%;"
+				id="boxer-header"
 			>
 				<picture
 					class={`boxer-photo h-auto object-contain transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]`}
 				>
-					<source srcset="/img/boxers/el-mariana-big.webp" type="image/webp" />
-					<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
+					<source id="boxer-big-webp" type="image/webp" />
+					<source id="boxer-big-avif" type="image/avif" />
 					<img
+						id="boxer-big-img"
 						class={`boxer-photo h-auto object-contain transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]`}
-						alt="Fotografía de El Mariana"
-						src="/img/boxers/el-mariana-big.avif"
+						alt=""
 						style="filter: drop-shadow(0 0 10px rgba(0, 0, 0, 1));"
 					/>
 				</picture>
 				<img
+					id="boxer-title"
 					class={`boxer-title pointer-events-none absolute bottom-14 h-auto transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:w-[480px]`}
-					alt="El Mariana"
-					src="/img/boxers/el-mariana-title.webp"
+					alt=""
 				/>
 				<img
+					id="boxer-flag"
 					class={`boxer-flag pointer-events-none aspect-[3/2] h-auto w-20 object-contain object-center transition duration-[${msFadeLuchador}] 3xl:w-24`}
-					alt="Bandera de México"
-					src="/img/flags/mx.webp"
+					alt=""
 				/>
 			</header>
 
@@ -63,7 +64,7 @@ const msFadeLuchador = 150
 			>
 				<div class="flex flex-col gap-y-2">
 					<h4 class="text-lg">País</h4>
-					<p class="text-lg font-bold">México</p>
+					<p class="text-lg font-bold" id="country-text"></p>
 					<a
 						href="#"
 						class="mt-10 inline-block font-semibold text-accent transition hover:scale-110"
@@ -74,7 +75,7 @@ const msFadeLuchador = 150
 
 				<div class="flex flex-col gap-y-2">
 					<h4 class="text-lg">Peso</h4>
-					<p class="text-lg font-bold">61 kg</p>
+					<p class="text-lg font-bold" id="weight-text"></p>
 					<a
 						href="#"
 						class="mt-10 inline-block font-semibold text-accent transition hover:scale-110"
@@ -88,7 +89,7 @@ const msFadeLuchador = 150
 			<div class="blur"><div class="clip-black"></div></div>
 			<nav class="boxers-nav">
 				{
-					listOfBoxers.map(({ id, name, country, countryName }) => (
+					listOfBoxers.map(({ id, name, country, countryName, weight }) => (
 						<button
 							class="boxer-link"
 							title={`Visita la página del boxeador ${name}`}
@@ -96,6 +97,7 @@ const msFadeLuchador = 150
 							data-name={name}
 							data-country={country}
 							data-country-name={countryName}
+							data-weight={weight}
 						>
 							<div class="boxer-link-background" />
 							<picture class="boxer-image">
@@ -117,72 +119,71 @@ const msFadeLuchador = 150
 </section>
 
 <script>
-	const article = document.querySelector("article") as HTMLElement
-	const boxerLinks = document.querySelectorAll(".boxer-link")
-	const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
-	const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
-	const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
+	const boxerBigWebp = document.getElementById("boxer-big-webp") as HTMLSourceElement
+	const boxerBigAvif = document.getElementById("boxer-big-avif") as HTMLSourceElement
+	const boxerBigImg = document.getElementById("boxer-big-img") as HTMLImageElement
+	const boxerTitle = document.getElementById("boxer-title") as HTMLImageElement
+	const boxerFlag = document.getElementById("boxer-flag") as HTMLImageElement
+	const countryText = document.querySelector("#country-text") as HTMLElement | null
+	const weightText = document.querySelector("#weight-text") as HTMLElement | null
 
-	boxerLinks.forEach((link) => {
-		link.addEventListener("click", (event) => {
-			const { id, name, country, countryName } = (event.currentTarget as HTMLElement)?.dataset
+	function updateBoxerContent(boxer: any) {
+		boxerBigWebp.srcset = `/img/boxers/${boxer.id}-big.webp`
+		boxerBigAvif.srcset = `/img/boxers/${boxer.id}-big.avif`
+		boxerBigImg.src = `/img/boxers/${boxer.id}-big.avif`
+		boxerBigImg.alt = `Fotografía de ${boxer.name}`
+		boxerTitle.src = `/img/boxers/${boxer.id}-title.webp`
+		boxerTitle.alt = boxer.name
+		boxerFlag.src = `/img/flags/${boxer.country}.webp`
+		boxerFlag.alt = `Bandera de ${boxer.countryName}`
 
-			boxerTitle.style.opacity = "0"
-			boxerPhoto.style.opacity = "0"
-			boxerCountry.style.opacity = "0"
-
-			setTimeout(
-				() => {
-					const boxerSrc = `/img/boxers/${id}-big`
-					const titleSrc = `/img/boxers/${id}-title.webp`
-
-					boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
-					boxerPhoto.getElementsByTagName("source")[1].srcset = `${boxerSrc}.webp`
-					boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.avif`
-					boxerTitle.src = titleSrc
-					boxerCountry.src = `/img/flags/${country}.webp`
-
-					boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
-					boxerTitle.alt = name!
-					boxerCountry.alt = `Bandera de ${countryName}`
-
-					boxerTitle.style.opacity = "1"
-					boxerPhoto.style.opacity = "1"
-					boxerCountry.style.opacity = "1"
-				},
-				article.getAttribute("data-transition-duration") as unknown as number
-			)
-		})
-	})
-
-	const imagen = document.querySelector(".boxer-photo") as HTMLElement
-
-	function asideAnimation(event: MouseEvent) {
-		const rect = imagen.getBoundingClientRect()
-
-		const aside = document.querySelector(".boxers-aside") as HTMLElement
-		const blur = aside.querySelector(".blur") as HTMLElement
-		const footer = document.querySelector("#boxer-footer") as HTMLElement
-
-		const cursorPosY = event.clientY - rect.top
-		console.log(cursorPosY > rect.height * 0.8)
-		if (!(cursorPosY > rect.height * 1.2) && cursorPosY > rect.height * 0.7) {
-			blur.style.opacity = "1"
-			footer.style.opacity = "0"
-			aside.classList.add("up")
-		} else {
-			footer.style.opacity = "1"
-			blur.style.opacity = "0"
-			aside.classList.remove("up")
+		if (countryText && weightText) {
+			countryText.textContent = boxer.countryName
+			weightText.textContent = `${boxer.weight} kg`
 		}
 	}
 
-	if (imagen) {
-		imagen.addEventListener("mousemove", function (event: MouseEvent) {
-			if (window.innerWidth > 1280) {
-				asideAnimation(event)
+	const boxerButtons = document.querySelectorAll(".boxer-link")
+	boxerButtons.forEach((button) => {
+		button.addEventListener("click", (event) => {
+			const currentTarget = event.currentTarget as HTMLElement
+			const dataset = currentTarget.dataset
+
+			if (dataset) {
+				const { id, name, country, countryName, weight } = dataset
+
+				if (id && name && country && countryName && weight) {
+					const selectedBoxer = {
+						id,
+						name,
+						country,
+						countryName,
+						weight: Number.parseFloat(weight),
+					}
+
+					updateBoxerContent(selectedBoxer)
+				}
 			}
 		})
+	})
+
+	const firstBoxerButton = boxerButtons[0] as HTMLElement
+	const dataset = firstBoxerButton.dataset
+
+	if (dataset) {
+		const { id, name, country, countryName, weight } = dataset
+
+		if (id && name && country && countryName && weight) {
+			const initialBoxer = {
+				id,
+				name,
+				country,
+				countryName,
+				weight: Number.parseFloat(weight),
+			}
+
+			updateBoxerContent(initialBoxer)
+		}
 	}
 </script>
 
