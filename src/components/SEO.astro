@@ -42,6 +42,7 @@ const canonicalURL = canonical ? new URL(canonical, Astro.site) : new URL(Astro.
 <meta name="twitter:image" content={new URL(image, Astro.url)} />
 <!-- Open Graph / Facebook -->
 <meta name="og:image" content={new URL(image, Astro.url)} />
+
 <meta name="og:title" content={title} />
 <meta name="og:description" content={description} />
 <meta name="og:url" content={Astro.url} />
@@ -80,10 +81,12 @@ const canonicalURL = canonical ? new URL(canonical, Astro.site) : new URL(Astro.
 
 <!-- Worker Registration -->
 {
-  !import.meta.env.DEV && (
-    <script is:inline src="/registerSW.js"></script>
-    <link rel="manifest" href="/manifest.webmanifest" />
-  )
+	!import.meta.env.DEV && (
+		<>
+			<script is:inline src="/registerSW.js" />
+			<link rel="manifest" href="/manifest.webmanifest" />
+		</>
+	)
 }
 
 <RichResults />
