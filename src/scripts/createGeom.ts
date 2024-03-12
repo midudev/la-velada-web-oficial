@@ -24,8 +24,7 @@ export function createGeom(gl: WebGL2RenderingContext, program: WebGLProgram) {
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
 	const vertices = new Float32Array(vertexGeom)
 	gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
-	if (!positionBuffer)
-		return null
+	if (!positionBuffer) return null
 	// en el vertex shader vamos a usar las coordenadas que pasemos para configurar las posiciones de los vertices
 	// por ello debemos buscar el attributo en el propio shader creado y vincularlos
 	const positionLocation = gl.getAttribLocation(program, "a_position")
@@ -41,8 +40,7 @@ export function createGeom(gl: WebGL2RenderingContext, program: WebGLProgram) {
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
 	const indices = new Uint16Array(indexGeom)
 	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW)
-	if (!indexBuffer)
-		return null
+	if (!indexBuffer) return null
 	const verticesData = { buffer: positionBuffer, data: vertices }
 	const indexData = { buffer: indexBuffer, data: indices }
 	const data: buffers = { vertex: verticesData, index: indexData }

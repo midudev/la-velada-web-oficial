@@ -125,7 +125,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
 
 	vec2 uv =  fragCoord.xy/iResolution.x;
-
+	
     vec2 center = vec2(0.5,0.5*(iResolution.y/iResolution.x));
 
     vec2 light1 = vec2(sin(iTime*1.2+50.0)*1.0 + cos(iTime*0.4+10.0)*0.6,sin(iTime*1.2+100.0)*0.8 + cos(iTime*0.2+20.0)*-0.2)*0.2+center;
@@ -146,11 +146,11 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
     float cloudIntensity3 = 0.7*(1.0-(2.5*distance(uv, light3)));
     float lighIntensity3 = 1.0/(100.0*distance(uv,light3));
-
-
-	fragColor = vec4(vec3(cloudIntensity1*clouds(uv))*lightColor1 + lighIntensity1*lightColor1 +
+	 vec3 clouds=vec3(cloudIntensity1*clouds(uv))*lightColor1 + lighIntensity1*lightColor1 +
                      vec3(cloudIntensity2*clouds(uv))*lightColor2 + lighIntensity2*lightColor2 +
-                     vec3(cloudIntensity3*clouds(uv))*lightColor3 + lighIntensity3*lightColor3
-                     ,1.0);
+                     vec3(cloudIntensity3*clouds(uv))*lightColor3 + lighIntensity3*lightColor3;
+                     
+		float scrollNorm=1.-clamp(iScroll/iResolution.y-1.,0.,1.);
+	fragColor = vec4(clouds*scrollNorm,scrollNorm);
 }
   `

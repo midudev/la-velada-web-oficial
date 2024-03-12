@@ -9,7 +9,7 @@ export interface ImageLoaded {
 	channel: number
 }
 
-export type ImagesLoaded = ImageLoaded[]
+export type ImagesLoaded = ImageLoaded[] | []
 
 export interface ImageLoadError {
 	url: string
@@ -28,7 +28,9 @@ export async function preloadImages(images: ImageToLoad[]): Promise<ImagesLoaded
 	}
 
 	try {
-		const promisesLoad = images.map(({ url, channel }) => preloadImage(`/img/textures/${url}`, channel))
+		const promisesLoad = images.map(({ url, channel }) =>
+			preloadImage(`/img/textures/${url}`, channel)
+		)
 		return await Promise.all(promisesLoad)
 	} catch (error) {
 		console.error("Error al cargar imágenes:", error)

@@ -11,8 +11,7 @@ export function createProgram(gl: WebGL2RenderingContext, vs: string, fs: string
 	const finalFragment = fsSource(fs)
 	const vertexShader: WebGLShader | null = compileShader(gl, gl.VERTEX_SHADER, finalVertex)
 	const fragmentShader: WebGLShader | null = compileShader(gl, gl.FRAGMENT_SHADER, finalFragment)
-	if (!vertexShader || !fragmentShader)
-		return null
+	if (!vertexShader || !fragmentShader) return null
 	gl.attachShader(program, vertexShader)
 	gl.attachShader(program, fragmentShader)
 	gl.linkProgram(program)

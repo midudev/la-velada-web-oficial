@@ -6,10 +6,14 @@ export const unifType = {
 	fv3: 3,
 	fv4: 4,
 	color: 4,
-	fv1i: 5
+	fv1i: 5,
 }
+// el logo esta a 1024*1024 pero su aspect ratio es 3333 2829
 export const shaderImages = {
-	basic: [{ url: "Noise1.png", channel: 0 }]
+	basic: [
+		{ url: "Noise1.png", channel: 0 },
+		{ url: "VeladaLogo.png", channel: 1 },
+	],
 }
 
 // base vertex shader
@@ -41,11 +45,14 @@ export const fsSource = (fragmentDef: string) => `
 		precision mediump float;
 		varying vec2 v_textCoord;
 		uniform float iTime;
+		uniform float iScroll;
 		uniform vec2 iResolution;
 		uniform vec2 iMouse;
 		uniform vec3 iPrimary;
 		uniform vec3 iSecondary;
+		uniform vec4 logoBox;
 		uniform sampler2D iChannel0;
+		uniform sampler2D iChannel1;
 
 		${fragmentDef}
 		void main() {

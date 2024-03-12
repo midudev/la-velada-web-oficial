@@ -1,14 +1,15 @@
-import type { imagesLoaded } from "./loadImages"
+import type { ImagesLoaded } from "./loadImages"
 
 export interface textureList {
 	texture: WebGLTexture
 	channel: number
 	index: number
 }
-export function createTextures(gl: WebGL2RenderingContext, images: imagesLoaded) {
+export function createTextures(gl: WebGL2RenderingContext, images: ImagesLoaded) {
 	let index = 0
 	const textureArray: textureList[] = []
-	for (let x = 0; x < images?.length; x++) {
+	if (!images) return null
+	for (let x = 0; x < images.length; x++) {
 		const { img, channel } = images[x]
 		const texture = createTexture(gl, img)
 		if (texture) {
@@ -21,8 +22,7 @@ export function createTextures(gl: WebGL2RenderingContext, images: imagesLoaded)
 
 function createTexture(gl: WebGL2RenderingContext, image: HTMLImageElement) {
 	const texture: WebGLTexture | null = gl.createTexture()
-	if (!texture)
-		return null
+	if (!texture) return null
 	gl.bindTexture(gl.TEXTURE_2D, texture)
 	// Configurar la textura
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image)
