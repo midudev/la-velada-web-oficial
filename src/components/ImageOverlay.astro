@@ -6,21 +6,23 @@ interface Props {
 	description: string
 	className?: string
 }
+
+const { className, imgSrc, imgAlt, title, description } = Astro.props
 ---
 
 <div
-	class={`${Astro.props.className} relative flex h-full w-full flex-col items-center justify-center gap-5 px-8 sm:w-full md:px-20 lg:px-28`}
+	class:list={[className, "relative flex h-full w-full flex-col items-center justify-center gap-5 px-8 sm:w-full md:px-20 lg:px-28"]}
 	style="background: linear-gradient(180deg, transparent 0%, transparent 21%, #222222 20%, rgba(17, 17, 17, 0) 90%);"
 >
 	<img
-		src={Astro.props.imgSrc}
-		alt={Astro.props.imgAlt}
+		src={imgSrc}
+		alt={imgAlt}
 		class="h-auto w-full select-none object-cover"
 	/>
 	<div class="content mt-1 text-center">
 		<h1 class="title mb-0.5 text-xl font-semibold text-accent lg:text-3xl">
-			{Astro.props.title}
+			{title}
 		</h1>
-		<p class="description text-md text-neutral-300 lg:text-lg">{Astro.props.description}</p>
+		<p class="description text-md text-neutral-300 lg:text-lg">{description}</p>
 	</div>
 </div>
