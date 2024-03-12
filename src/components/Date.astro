@@ -25,19 +25,26 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 <div
 	class:list=`relative w-full ${position} flex flex-col items-center justify-center text-center before:absolute before:inset-x-[-5px] before:inset-y-0 before:bg-gradient-to-b before:from-white/5 before:via-transparent before:to-transparent before:[clip-path:polygon(3.5%_0,100%_0%,97.5%_100%,0%_100%)] before:pointer-events-none`
 >
-	<div class:list={["relative flex -skew-x-6 overflow-hidden font-atomic", wrapperClassName]} {...attribute}>
+	<div
+		class:list={["relative flex -skew-x-6 overflow-hidden font-atomic", wrapperClassName]}
+		{...attribute}
+	>
 		<div class:list={`float-left block ${height} overflow-hidden`} data-first-group>
 			<div class="" data-wrapper>
 				{
 					Array.from({ length: maxFirst + 1 }, () => 0).map((_, index) => (
 						// + 1 porque hay que tener en cuenta el 0 para las transiciones
 						<div data-num={index} style={`height: ${firstDigitHeight}%`}>
-							<span class:list={`tabular-nums ${className} block h-fit overflow-hidden`}>{index}</span>
+							<span
+								class:list={`tabular-nums ${className} block h-fit select-none overflow-hidden`}
+							>
+								{index}
+							</span>
 						</div>
 					))
 				}
 				<div style={{ height: `${firstDigitHeight}%`, transition: "height 0.3s ease" }} data-num-x0>
-					<span class:list={`tabular-nums  ${className}`}>0</span>
+					<span class:list={`select-none tabular-nums  ${className}`}>0</span>
 				</div>
 			</div>
 		</div>
@@ -50,7 +57,11 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 					Array.from({ length: maxSecond + 1 }, () => 0).map((_, index) => (
 						// + 1 porque hay que tener en cuenta el 0 para las transiciones
 						<div data-num={index} style={`height: ${secondDigitHeight}%`}>
-							<span class:list={`tabular-nums ${className} block h-fit overflow-hidden`}>{index}</span>
+							<span
+								class:list={`select-none tabular-nums ${className} block h-fit overflow-hidden`}
+							>
+								{index}
+							</span>
 						</div>
 					))
 				}
@@ -58,7 +69,7 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 					style={{ height: `${secondDigitHeight}%`, transition: "height 0.3s ease" }}
 					data-num-x0
 				>
-					<span class:list={`tabular-nums ${className} `}>0</span>
+					<span class:list={`select-none tabular-nums ${className} `}>0</span>
 				</div>
 			</div>
 		</div>
@@ -72,14 +83,18 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 						{Array.from({ length: maxThird + 1 }, () => 0).map((_, index) => (
 							// + 1 porque hay que tener en cuenta el 0 para las transiciones
 							<div data-num={index} style={`height: ${thirdDigitHeight}%`}>
-								<span class:list={`tabular-nums ${className} block h-fit overflow-hidden`}>{index}</span>
+								<span
+									class:list={`select-none tabular-nums ${className} block h-fit overflow-hidden`}
+								>
+									{index}
+								</span>
 							</div>
 						))}
 						<div
 							style={{ height: `${secondDigitHeight}%`, transition: "height 0.3s ease" }}
 							data-num-x0
 						>
-							<span class:list={`tabular-nums ${className} `}>0</span>
+							<span class:list={`select-none tabular-nums ${className} `}>0</span>
 						</div>
 					</div>
 				</div>
