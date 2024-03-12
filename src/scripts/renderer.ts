@@ -48,7 +48,7 @@ export function createRenderer(canvasSelector: string, shadernum: number, debug:
 		const initTime: DOMHighResTimeStamp = performance.now()
 		const elapsedTime = (performance.now() - startTime) / 1000.0
 		gl.viewport(0, 0, canvas.width, canvas.height)
-		gl.clearColor(0.0, 0.0, 0.0, 1.0)
+		gl.clearColor(0.0, 0.0, 0.0, 0.0)
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
 		uniforms.iTime([elapsedTime])
@@ -80,9 +80,8 @@ function setCanvas(canvasSelector: string) {
 		return { gl: null, canvas: null }
 	}
 	const vp_size = [window.innerWidth, window.innerHeight]
-	canvas.style.background = "black"
 	canvas.style.width = "100vw"
-	canvas.style.height = "100vh"
+	canvas.style.height = "100dvh"
 	canvas.width = vp_size[0]
 	canvas.height = vp_size[1]
 
