@@ -32,7 +32,7 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 					Array.from({ length: maxFirst + 1 }, () => 0).map((_, index) => (
 						// + 1 porque hay que tener en cuenta el 0 para las transiciones
 						<div data-num={index} style={`height: ${firstDigitHeight}%`}>
-							<span class:list={`tabular-nums ${className}`}>{index}</span>
+							<span class:list={`tabular-nums ${className} block h-fit overflow-hidden`}>{index}</span>
 						</div>
 					))
 				}
@@ -50,7 +50,7 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 					Array.from({ length: maxSecond + 1 }, () => 0).map((_, index) => (
 						// + 1 porque hay que tener en cuenta el 0 para las transiciones
 						<div data-num={index} style={`height: ${secondDigitHeight}%`}>
-							<span class:list={`tabular-nums ${className}`}>{index}</span>
+							<span class:list={`tabular-nums ${className} block h-fit overflow-hidden`}>{index}</span>
 						</div>
 					))
 				}
@@ -72,7 +72,7 @@ const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 						{Array.from({ length: maxThird + 1 }, () => 0).map((_, index) => (
 							// + 1 porque hay que tener en cuenta el 0 para las transiciones
 							<div data-num={index} style={`height: ${thirdDigitHeight}%`}>
-								<span class:list={`tabular-nums ${className}`}>{index}</span>
+								<span class:list={`tabular-nums ${className} block h-fit overflow-hidden`}>{index}</span>
 							</div>
 						))}
 						<div
