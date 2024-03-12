@@ -19,13 +19,13 @@ export default {
 			screens: {
 				xs: "360px",
 				...defaultTheme.screens,
-				'3xl': "1650px",
+				"3xl": "1650px",
 			},
 		},
 	},
 	plugins: [
 		animations,
-		function({
+		function ({
 			addVariant
 		}) {
 			addVariant("any-hover", "@media (any-hover: hover) { &:hover }")
