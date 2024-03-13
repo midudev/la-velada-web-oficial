@@ -19,13 +19,22 @@ export const BOXERS: Boxer[] = [
 		country: "mx",
 	},
 	{
-		id: "plex",
-		name: "YoSoyPlex",
-		realName: "Daniel Alonso Góndez",
-		age: 22,
-		weight: 70,
-		height: 1.97,
+		id: "zeling",
+		name: "Zeling",
+		realName: "Alicia González",
+		age: 28,
+		weight: 65, // No encontrado
+		height: 1.7, // No es seguro
 		country: "es",
+	},
+	{
+		id: "alana",
+		name: "Alana",
+		realName: "Alana Flores",
+		age: 23,
+		weight: 55,
+		height: 1.7,
+		country: "mx",
 	},
 	{
 		id: "shelao",
@@ -55,21 +64,12 @@ export const BOXERS: Boxer[] = [
 		country: "mx",
 	},
 	{
-		id: "alana",
-		name: "Alana",
-		realName: "Alana Flores",
-		age: 23,
-		weight: 55,
-		height: 1.7,
-		country: "mx",
-	},
-	{
-		id: "zeling",
-		name: "Zeling",
-		realName: "Alicia González",
-		age: 28,
-		weight: 65, // No encontrado
-		height: 1.7, // No es seguro
+		id: "plex",
+		name: "YoSoyPlex",
+		realName: "Daniel Alonso Góndez",
+		age: 22,
+		weight: 70,
+		height: 1.97,
 		country: "es",
 	},
 	{
@@ -82,15 +82,6 @@ export const BOXERS: Boxer[] = [
 		country: "es",
 	},
 	{
-		id: "la-cobra",
-		name: "La Cobra",
-		realName: "Lautaro Damián del Campo",
-		age: 26,
-		weight: 105,
-		height: 1.83,
-		country: "ar",
-	},
-	{
 		id: "guanyar",
 		name: "Guanyar",
 		realName: "Diego Iglesias",
@@ -98,6 +89,15 @@ export const BOXERS: Boxer[] = [
 		weight: 85,
 		height: 1.88,
 		country: "es",
+	},
+	{
+		id: "la-cobra",
+		name: "La Cobra",
+		realName: "Lautaro Damián del Campo",
+		age: 26,
+		weight: 105,
+		height: 1.83,
+		country: "ar",
 	},
 	{
 		id: "agustin-51",
