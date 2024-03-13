@@ -21,6 +21,6 @@
 		>
 		</path>
 	</symbol>
-	<use href="#hero-logo" class="text-[#f1ffaa]/70 blur-xl md:blur-md"></use>
-	<use href="#hero-logo" class="text-primary"></use>
+	{Astro.props.noEffect && <use href="#hero-logo" class="text-[#f1ffaa]/70 blur-xl md:blur-md" />}
+	<use href="#hero-logo" class:list={Astro.props.noEffect ? "text-white" : "text-primary"}></use>
 </svg>
