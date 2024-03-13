@@ -4,9 +4,11 @@ import { ViewTransitions } from "astro:transitions"
 import ButtonUp from "@/components/ButtonUp.astro"
 import KonamiCode from "@/components/KonamiCode.astro"
 import LightsBackground from "@/components/LightsBackground.astro"
+import Navbar from "@/components/Navbar.astro"
 import NoiseBackground from "@/components/NoiseBackground.astro"
 import SEO from "@/components/SEO.astro"
 import Footer from "@/sections/Footer.astro"
+
 import "@fontsource-variable/jost"
 
 interface Props {
@@ -28,6 +30,7 @@ const { title, description, preloadImgLCP } = Astro.props
 	<body
 		class="dark selection:bg-accent [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
+		<Navbar />
 		<!-- <SmokeBackground /> -->
 		<NoiseBackground />
 		<LightsBackground />
