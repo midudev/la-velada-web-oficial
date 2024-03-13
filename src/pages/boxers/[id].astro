@@ -19,21 +19,22 @@ const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 >
 	<main class="flex flex-col items-center">
 		<div class="w-full lg:flex lg:items-center">
-			<picture class="mb-8 w-full px-10 sm:px-0 md:mb-0 lg:w-1/2">
-				<source srcset={`/img/boxers/${id}-big.avif`} type="image/avif" />
+			<picture
+				class:list={"boxer-photo h-auto w-[400px] object-contain"}
+				transition:name="boxer-big-image"
+			>
+				<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
 				<img
-					class="mx-auto h-auto w-full max-w-xs object-contain md:max-w-sm"
-					alt={`Fotografía de ${boxer.name}`}
-					src={`/img/boxers/${id}-big.avif`}
-					style="filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5)); mask-image: linear-gradient(to bottom, black 80%, transparent 100%);"
+					class="aspect-[285/428] h-auto w-full"
+					alt="Fotografía de El Mariana"
+					src="/img/boxers/el-mariana-big.webp"
+					style="
+						filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
+						mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+					"
 				/>
 			</picture>
 			<div class="w-full px-10 text-center lg:mx-auto lg:w-1/2 lg:text-left">
-				<img
-					class="mx-auto ml-2 max-w-xs object-contain sm:max-w-full md:max-w-sm"
-					src={`/img/boxers/${boxer.id}-title.webp`}
-					alt={boxer.name}
-				/>
 				<p class="text-xl text-white">{boxer.realName}</p>
 				<p class="text-xl text-white">Edad: {boxer.age}</p>
 				<p class="text-xl text-white">Peso: {boxer.weight} kg</p>

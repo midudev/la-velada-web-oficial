@@ -10,15 +10,6 @@ interface Boxer {
 
 export const BOXERS: Boxer[] = [
 	{
-		id: "zeling",
-		name: "Zeling",
-		realName: "Alicia González",
-		age: 28,
-		weight: 65, // No encontrado
-		height: 1.7, // No es seguro
-		country: "es",
-	},
-	{
 		id: "el-mariana",
 		name: "El Mariana",
 		realName: "Osvaldo Palacios Flores",
@@ -28,6 +19,15 @@ export const BOXERS: Boxer[] = [
 		country: "mx",
 	},
 	{
+		id: "zeling",
+		name: "Zeling",
+		realName: "Alicia González",
+		age: 28,
+		weight: 65, // No encontrado
+		height: 1.7, // No es seguro
+		country: "es",
+	},
+	{
 		id: "alana",
 		name: "Alana",
 		realName: "Alana Flores",
@@ -35,15 +35,6 @@ export const BOXERS: Boxer[] = [
 		weight: 55,
 		height: 1.7,
 		country: "mx",
-	},
-	{
-		id: "plex",
-		name: "YoSoyPlex",
-		realName: "Daniel Alonso Góndez",
-		age: 22,
-		weight: 70,
-		height: 1.97,
-		country: "es",
 	},
 	{
 		id: "shelao",
@@ -71,6 +62,15 @@ export const BOXERS: Boxer[] = [
 		weight: 55, // No es seguro
 		height: 1.58,
 		country: "mx",
+	},
+	{
+		id: "plex",
+		name: "YoSoyPlex",
+		realName: "Daniel Alonso Góndez",
+		age: 22,
+		weight: 70,
+		height: 1.97,
+		country: "es",
 	},
 	{
 		id: "nissaxter",
