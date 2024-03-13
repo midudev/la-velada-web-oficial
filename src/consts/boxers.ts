@@ -8,6 +8,31 @@ interface Boxer {
 	country: string
 }
 
+export const BOXER_TITLES = {
+	"el-mariana": [["el", "mariana"]],
+	"plex": [["yo", "soy"], ["plex"]],
+	"shelao": [["shelao"]],
+	"viruzz": [["viruzz"]],
+	"ama-blitz": [["amablitz"]],
+	"alana": [["alana"]],
+	"zeling": [["zeling"]],
+	"nissaxter": [["nissaxter"]],
+	"la-cobra": [["la cobra"]],
+	"guanyar": [["guanyar"]],
+	"agustin-51": [["agustin-51"]],
+	"carreraaa": [["carreraaa"]],
+	"sezar-blue": [["sezar"], ["blue"]],
+	"will": [["will"]],
+	"peldanyos": [["peldanyos"]],
+	"aldo-geo": [["aldo", "geo"]],
+	"pelicanger": [["pelicanger"]],
+	"roberto-cein": [["RobertoCein"]],
+	"unicornio": [["unicornio"]],
+	"karchez": [["karchez"]],
+	"skain": [["skain"]],
+	"folagor": [["folagor"]],
+}
+
 export const BOXERS: Boxer[] = [
 	{
 		id: "el-mariana",

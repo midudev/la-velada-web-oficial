@@ -136,6 +136,33 @@ const msFadeLuchador = 150
 </section>
 
 <script>
+	import { BOXER_TITLES as boxerTitles } from "@/consts/boxers"
+
+	const getBoxerTitleAsHTML = (boxerId) => {
+		const boxerTitleCols = boxerTitles[boxerId] ?? {}
+		const titleHtml = document.createElement("div")
+		titleHtml.classList.add("flex", "flex-row", "items-center", "gap-4")
+
+		boxerTitleCols.forEach((col) => {
+			const colElement = document.createElement("div")
+			colElement.classList.add("flex", "flex-col")
+
+			if (boxerTitleCols.length > 1) {
+				colElement.style.fontSize = `${Math.floor(6 / col.length)}rem`
+			}
+
+			col.forEach((row) => {
+				const rowElement = document.createElement("div")
+				rowElement.innerText = row
+				colElement.appendChild(rowElement)
+			})
+
+			titleHtml.append(colElement)
+		})
+
+		return titleHtml.outerHTML
+	}
+
 	document.addEventListener("astro:page-load", () => {
 		const boxerLinks = document.querySelectorAll(".boxer-link")
 		const boxerNav = document.querySelector(".boxers-nav")
@@ -160,7 +187,7 @@ const msFadeLuchador = 150
 
 				boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
 				boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
-				boxerTitle.innerText = name?.toLocaleLowerCase() ?? ""
+				boxerTitle.innerHTML = getBoxerTitleAsHTML(id ?? "")
 				boxerCountry.src = `/img/flags/${country}.webp`
 
 				boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
