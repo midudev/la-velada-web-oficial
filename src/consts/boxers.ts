@@ -1,4 +1,4 @@
-interface Boxer {
+export interface Boxer {
 	id: string
 	name: string
 	age: number
