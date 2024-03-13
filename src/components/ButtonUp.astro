@@ -22,18 +22,17 @@
 	let timeout: number = 0 // Identificador para clearTimeout
 	const $button = document.getElementById("scroll-to-top") as HTMLButtonElement
 
-	// Constantes para la animación
-	const displayBlock: string = "block"
-	const displayNone: string = "none"
+	const DISPLAY = { BLOCK: "block", NONE: "none" } as const
 
 	// Función para mostrar u ocultar el botón
 	function toggleScrollToTop() {
 		const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
-		const display = scrollTop > 20 ? displayBlock : displayNone
+		const display = scrollTop > 20 ? DISPLAY.BLOCK : DISPLAY.NONE
+
 		if ($button) {
 			const parent = $button.closest("#button-up")
-			parent?.classList.toggle("opacity-0", display === displayNone)
-			$button.classList.toggle("cursor-default", display === displayNone)
+			parent?.classList.toggle("opacity-0", display === DISPLAY.NONE)
+			$button.classList.toggle("cursor-default", display === DISPLAY.NONE)
 		}
 	}
 
