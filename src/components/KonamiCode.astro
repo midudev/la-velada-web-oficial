@@ -1,49 +1,109 @@
-<script>
-	import { konamiCodes } from "@/consts/konami-codes"
-	import { Konami } from "@/function/konami"
-	import { $ } from "@/consts/dom-selector"
+<style is:global>
+	.bubbles {
+		border-radius: 50%;
+		object-fit: cover;
+		object-position: center;
+		position: absolute;
+		width: 60px;
+		height: 60px;
+		opacity: 1;
+		bottom: -50px;
+		animation: bubble linear forwards 3s;
+	}
 
-	const { rotateY, gloveCursor, amongUsCursor, lolCursor } = konamiCodes
+	@keyframes bubble {
+		from {
+			opacity: 1;
+			bottom: -50px;
+		}
 
-	const $container = $("#main-content")
+		to {
+			opacity: 0;
+			bottom: 80vh;
+			transform: rotate(0deg);
+		}
+	}
+</style>
+<script defer>
+	const newContainer = document.createElement('div');
 
-	document.addEventListener("keydown", ({ key }) => {
-		Konami({
-			code: rotateY,
-			keyPressed: key,
-			onFinishTime: 1500,
-			onSuccess: () => {
-				$container.style.transform = "rotateY(360deg)"
-				$container.style.transition = "transform 2s ease"
-			},
-			onFinish: () => {
-				$container.style.transition = "none"
-				$container.style.transform = "none"
-			},
-		})
+	const konamiCode = [
+		"ArrowUp",
+		"ArrowUp",
+		"ArrowDown",
+		"ArrowDown",
+		"ArrowLeft",
+		"ArrowRight",
+		"ArrowLeft",
+		"ArrowRight",
+		"b",
+		"a",
+	]
+	// const konamiCode = ["ArrowUp"];
+	let konamiCodePosition = 0;
 
-		Konami({
-			code: lolCursor,
-			keyPressed: key,
-			onSuccess: () => {
-				$("body").style.cursor = "url('/img/cursor/lol.cur'), auto"
-			},
-		})
+	document.addEventListener("keydown", async ({ key }) => {
+		const requiredKey = konamiCode[konamiCodePosition];
 
-		Konami({
-			code: gloveCursor,
-			keyPressed: key,
-			onSuccess: () => {
-				$("body").style.cursor = "url('/img/cursor/boxing-glove.cur'), auto"
-			},
-		})
+		if (key !== requiredKey) {
+			konamiCodePosition = 0;
+			return;
+		}
 
-		Konami({
-			code: amongUsCursor,
-			keyPressed: key,
-			onSuccess: () => {
-				$("body").style.cursor = "url('/img/cursor/among-us.cur'), auto"
-			},
-		})
-	})
+		konamiCodePosition++;
+
+		if (konamiCodePosition !== konamiCode.length) return;
+
+		newContainer.style.cssText = 'position: fixed; width: 100dvw; height: 100vh; background: rgba(0,0,0,0.3); z-index: 10; inset: 0';
+
+		document.body.appendChild(newContainer);
+		console.log('Konamy code');
+		await showContributors();
+		setTimeout(() => {
+			checkAndRemoveContainer();
+		},1000)
+	});
+
+	async function showContributors() {
+		const url = 'https://api.github.com/repos/midudev/la-velada-web-oficial/contributors';
+
+		const response = await fetch(url);
+		const contributors = await response.json();
+
+		for (let i = 0; i < contributors.length; i++) {
+			setTimeout(() => {
+				createBubbles(contributors[i]);
+			}, i * 300);
+		}
+	}
+
+	function createBubbles(contributor) {
+		const { avatar_url, login } = contributor;
+		const img = document.createElement('img');
+		img.src = avatar_url;
+		img.alt = login;
+		img.title = login;
+		img.classList.add('bubbles');
+		img.style.left = `${generateRandomNumber()}vw`;
+		const startRotation = Math.floor(Math.random() * (90 - (-90) + 1)) + (-45);
+		img.style.transform = `rotate(${startRotation}deg)`;
+		img.addEventListener('animationend', () => {
+			newContainer.removeChild(img);
+		});
+		newContainer.appendChild(img);
+	}
+
+	function generateRandomNumber() {
+		return Math.floor(Math.random() * 91) + 5;
+	}
+
+	function checkAndRemoveContainer() {
+		if (newContainer.childElementCount === 0) {
+			newContainer.remove();
+		}
+
+		setTimeout(() => {
+			checkAndRemoveContainer();
+		},1000)
+	}
 </script>
