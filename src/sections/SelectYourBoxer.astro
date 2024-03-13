@@ -44,7 +44,7 @@ const msFadeLuchador = 150
 				>
 				</div>
 				<picture
-					transition:name="boxer-big-image"
+					x.transition:name="boxer-big-image"
 					class:list={"boxer-photo h-auto object-contain px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]"}
 				>
 					<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
@@ -83,7 +83,7 @@ const msFadeLuchador = 150
 			>
 				<div class="flex flex-col gap-y-2">
 					<h4 class="text-lg">País</h4>
-					<p class="text-lg font-bold">México</p>
+					<p id="boxer-country" class="text-lg font-bold">México</p>
 					<a
 						href="#"
 						class="mt-10 inline-block font-semibold text-accent transition hover:scale-110"
@@ -94,7 +94,7 @@ const msFadeLuchador = 150
 
 				<div class="flex flex-col gap-y-2">
 					<h4 class="text-lg">Peso</h4>
-					<p class="text-lg font-bold">61 kg</p>
+					<p id="boxer-weight" class="text-lg font-bold">87</p>
 					<a
 						href="#"
 						class="mt-10 inline-block font-semibold text-accent transition hover:scale-110"
@@ -108,7 +108,7 @@ const msFadeLuchador = 150
 			<div class="blur"><div class="clip-black"></div></div>
 			<nav class="boxers-nav">
 				{
-					listOfBoxers.map(({ id, name, country, countryName }) => (
+					listOfBoxers.map(({ id, name, country, countryName, weight }) => (
 						<a
 							href={`/boxers/${id}`}
 							class="boxer-link"
@@ -117,10 +117,10 @@ const msFadeLuchador = 150
 							data-name={name}
 							data-country={country}
 							data-country-name={countryName}
+							data-weight={weight}
 						>
 							<div class="boxer-link-background" />
 							<picture class="boxer-image">
-								<source srcset={`/img/boxers/${id}-small.avif`} type="image/avif" />
 								<img
 									loading="lazy"
 									src={`/img/boxers/${id}-small.webp`}
@@ -142,12 +142,18 @@ const msFadeLuchador = 150
 	const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
 	const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
 	const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
+	const boxerFooter = document.getElementById("boxer-footer") as HTMLElement
+	const boxerCountryElement = document.getElementById("boxer-country") as HTMLElement
+	const boxerWeightElement = document.getElementById("boxer-weight") as HTMLElement
 
 	boxerLinks.forEach((link) => {
+		let timeout: number
+
 		link.addEventListener("mouseenter", (event) => {
-			const { id, name, country, countryName } = (event.currentTarget as HTMLElement)?.dataset
+			const { id, name, country, countryName, weight } = (event.currentTarget as HTMLElement)
+				?.dataset
 			link.classList.add("active")
-			setTimeout(
+			timeout = setTimeout(
 				() => {
 					const boxerSrc = `/img/boxers/${id}-big`
 
@@ -158,12 +164,17 @@ const msFadeLuchador = 150
 
 					boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
 					boxerCountry.alt = `Bandera de ${countryName}`
+
+					boxerCountryElement.innerText = countryName ?? ""
+					boxerWeightElement.innerText = weight ?? ""
+					boxerFooter.style.display = "flex"
 				},
 				article.getAttribute("data-transition-duration") as unknown as number
 			)
 		})
 		link.addEventListener("mouseleave", () => {
 			link.classList.remove("active")
+			clearTimeout(timeout)
 		})
 	})
 </script>
