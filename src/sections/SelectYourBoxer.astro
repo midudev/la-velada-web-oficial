@@ -91,7 +91,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 					<p id="boxer-weight" class="text-lg font-bold">87kg</p>
 					<a
 						href="#"
-						class="mt-10 inline-block font-semibold text-accent transition-transform hover:scale-110"
+						class="boxer-profile mt-10 inline-block font-semibold text-accent transition-transform hover:scale-110"
 					>
 						Ver perfil
 					</a>
@@ -134,6 +134,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 		const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
 		const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
+		const boxerProfile = document.querySelector(".boxer-profile") as HTMLAnchorElement
 		const boxerFooter = document.getElementById("boxer-footer") as HTMLElement
 		const boxerCountryElement = document.getElementById("boxer-country") as HTMLElement
 		const boxerWeightElement = document.getElementById("boxer-weight") as HTMLElement
@@ -155,7 +156,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
 			boxerTitle.innerText = name?.toLocaleLowerCase() ?? ""
 			boxerCountry.src = `/img/flags/${country}.webp`
-
+			boxerProfile.href = `/boxers/${id}`
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
 			boxerCountry.alt = `Bandera de ${countryName}`
 
