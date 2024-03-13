@@ -51,7 +51,7 @@ const msFadeLuchador = 150
 					<img
 						class:list={"boxer-photo h-auto object-contain px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]"}
 						alt="Fotografía de El Mariana"
-						src="/img/boxers/el-mariana-big.avif"
+						src="/img/boxers/el-mariana-big.wepb"
 						style="
 							filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
 							mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
@@ -146,7 +146,7 @@ const msFadeLuchador = 150
 	boxerLinks.forEach((link) => {
 		link.addEventListener("mouseenter", (event) => {
 			const { id, name, country, countryName } = (event.currentTarget as HTMLElement)?.dataset
-
+			link.classList.add("active")
 			setTimeout(
 				() => {
 					const boxerSrc = `/img/boxers/${id}-big`
@@ -161,6 +161,9 @@ const msFadeLuchador = 150
 				},
 				article.getAttribute("data-transition-duration") as unknown as number
 			)
+		})
+		link.addEventListener("mouseleave", () => {
+			link.classList.remove("active")
 		})
 	})
 </script>
@@ -224,7 +227,14 @@ const msFadeLuchador = 150
 	.boxer-link:hover .boxer-image {
 		transform: scale(1.05);
 	}
+	.boxer-link .boxer-image {
+		filter: grayscale(100%);
+		transition: filter 0.3s ease;
+	}
 
+	.boxer-link.active .boxer-image {
+		filter: grayscale(0%);
+	}
 	.boxer-link:hover .boxer-link-background {
 		filter: brightness(0.5);
 	}
