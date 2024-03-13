@@ -1,4 +1,4 @@
-<div class="fixed bottom-2 right-2 opacity-0 transition-opacity">
+<div id="button-up" class="fixed bottom-2 right-2 opacity-0 transition-opacity">
 	<button
 		id="scroll-to-top"
 		aria-label="Volver al inicio de la página"
@@ -20,30 +20,35 @@
 
 <script>
 	let timeout: number = 0 // Identificador para clearTimeout
-	const $button = document.getElementById("scroll-to-top")
+	const $button = document.getElementById("scroll-to-top") as HTMLButtonElement
+
+	// Constantes para la animación
+	const displayBlock: string = "block"
+	const displayNone: string = "none"
 
 	// Función para mostrar u ocultar el botón
 	function toggleScrollToTop() {
 		const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
-		const display = scrollTop > 20 ? "block" : "none"
+		const display = scrollTop > 20 ? displayBlock : displayNone
 		if ($button) {
-			$button.parentElement?.classList.toggle("opacity-0", display === "none")
-			$button.classList.toggle("cursor-default", display === "none")
+			const parent = $button.closest("#button-up")
+			parent?.classList.toggle("opacity-0", display === displayNone)
+			$button.classList.toggle("cursor-default", display === displayNone)
 		}
 	}
 
 	function throttledScrollHandler() {
-		if (timeout === 0) {
-			timeout = setTimeout(() => {
+		if (!timeout) {
+			timeout = requestAnimationFrame(() => {
 				toggleScrollToTop()
 				timeout = 0
-			}, 100)
+			})
 		}
 	}
 
 	window.addEventListener("scroll", throttledScrollHandler)
 
-	$button?.addEventListener("click", () => {
+	$button.addEventListener("click", () => {
 		window.scrollTo({ top: 0, behavior: "smooth" })
 	})
 </script>
