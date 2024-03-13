@@ -184,56 +184,34 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
 <style>
 	.boxers-aside {
-		display: flex;
-		max-width: 100vw;
-		height: 8rem;
-		overflow-x: scroll;
-		position: relative;
+		@apply relative flex h-32 w-screen overflow-x-scroll;
 		scrollbar-width: none;
 	}
 
 	.boxers-nav {
-		display: flex;
-		gap: 0.5rem;
-		height: 100%;
-
-		padding: 1rem 5rem;
+		@apply flex h-full gap-2 px-20 py-4;
 	}
 
 	.boxer-link {
-		@apply size-40;
-
-		position: relative;
-		display: flex;
-		align-items: center;
-		flex-direction: column;
-		transition: opacity 0.3s ease;
+		@apply relative flex size-40 flex-col items-center transition-opacity duration-300 ease-in-out;
 	}
 
 	.boxer-link-background {
-		position: absolute;
-		width: 100%;
-		bottom: 0;
-		display: block;
+		@apply absolute bottom-0 block h-3/5 w-full opacity-25 transition-opacity duration-300 ease-in-out;
 		background: linear-gradient(
 			180deg,
 			rgba(255, 255, 255, 1) 0%,
 			rgba(255, 255, 255, 0.5) 30%,
 			rgba(0, 0, 0, 0) 95%
 		);
-		opacity: 0.25;
-		height: 60%;
-		transition: filter 0.3s ease-in-out;
 	}
 
 	.boxer-link:hover {
-		opacity: 0.9;
+		@apply opacity-90;
 	}
 
 	.boxer-image {
-		object-fit: contain;
-		z-index: 2;
-		transition: transform 0.3s ease-in-out;
+		@apply z-20 h-full object-contain transition-opacity duration-300 ease-in-out;
 		mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
 	}
 
@@ -255,12 +233,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
 	@media (min-width: 1280px) {
 		.boxers-aside {
-			padding: 0.5rem 0;
-			display: block;
-			max-width: none;
-			width: 100%;
-			overflow: hidden;
-			height: auto;
+			@apply block h-auto w-full max-w-none overflow-hidden px-0 py-2;
 		}
 
 		.boxers-nav {
@@ -269,8 +242,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 		}
 
 		.boxer-link {
-			@apply flex items-center justify-center;
-			width: 100%;
+			@apply flex w-full items-center justify-center;
 		}
 	}
 </style>
