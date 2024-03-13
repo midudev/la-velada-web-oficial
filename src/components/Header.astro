@@ -22,12 +22,16 @@ const pages = [
 					<a
 						href={disabled ? "" : href}
 						class:list={[
-							"nav-item relative hidden h-full select-none items-center justify-center px-10 text-xl uppercase text-white lg:flex",
-							disabled ? "cursor-not-allowed hover:text-gray-300" : "",
+							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 px-10 text-xl uppercase text-white lg:flex",
+							{ "cursor-not-allowed": disabled },
 						]}
 					>
 						<span class="z-10">{name}</span>
-						<div class="background absolute -z-10 h-full w-full" />
+						{disabled ? (
+							<span class="absolute mt-10 -skew-x-6 text-xs text-accent">Próximamente</span>
+						) : (
+							<div class="background absolute -z-10 h-full w-full" />
+						)}
 					</a>
 					{key == 1 && <div class={`hidden w-64 lg:block`} />}
 				</>
@@ -59,7 +63,7 @@ const pages = [
 					pages.map(({ disabled, name, href }, key) => (
 						<>
 							<a
-								href={disabled ? "" : href}
+								href={href}
 								class="flex flex-col items-center justify-center gap-2 text-xl capitalize"
 							>
 								<span class="z-10 uppercase text-primary">{name}</span>
@@ -126,19 +130,17 @@ const pages = [
 </style>
 
 <script>
+	import { $, $$ } from "@/consts/dom-selector"
 	document.addEventListener("astro:page-load", () => {
-		const nav = document.querySelector("nav")
-		document
-			.querySelector("#menuButton")
-			?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
-		console.log(document.querySelector("#innerMenuButton"))
-		document.querySelector("#innerMenuButton")?.addEventListener("hamburgerButtonClicked", () => {
-			toggleMenu(nav)
-		})
+		const nav = $("nav")
+		const menuButton = $("#menuButton")
+		const innerMenuButton = $("#innerMenuButton")
+
+		menuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
+		innerMenuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
 
 		function toggleMenu(nav: HTMLElement | null) {
-			console.log("toggleMenu")
-			document.querySelector("#menuMobileContent")?.classList.toggle("open")
+			$("#menuMobileContent")?.classList.toggle("open")
 			nav?.classList.toggle("open")
 			document.body.classList.toggle("overflow-hidden")
 		}
