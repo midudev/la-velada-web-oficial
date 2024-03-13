@@ -2,6 +2,7 @@
 import { ViewTransitions } from "astro:transitions"
 
 import ButtonUp from "@/components/ButtonUp.astro"
+import Header from "@/components/Header.astro"
 import KonamiCode from "@/components/KonamiCode.astro"
 import LightsBackground from "@/components/LightsBackground.astro"
 import MiduCode from "@/components/MiduCode.astro"
@@ -27,11 +28,12 @@ const { title, description, preloadImgLCP } = Astro.props
 	</head>
 
 	<body
-		class="dark selection:bg-accent [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
+		class="selection:bg-primary selection:text-secondary [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
 		<!-- <SmokeBackground /> -->
 		<NoiseBackground />
 		<LightsBackground />
+		<Header />
 		<div
 			class="mx-auto min-h-screen max-w-6xl px-2 pt-16 selection:bg-primary selection:text-secondary md:pt-20 lg:px-10"
 			id="main-content"
@@ -39,7 +41,6 @@ const { title, description, preloadImgLCP } = Astro.props
 			<slot />
 			<Footer />
 			<KonamiCode />
-			<MiduCode />
 		</div>
 		<ButtonUp />
 		<style is:global>
@@ -47,6 +48,7 @@ const { title, description, preloadImgLCP } = Astro.props
 				--color-primary: #ddd;
 				--color-secondary: #333;
 				--color-accent: #d5ff00;
+				--color-accent-rgb: 213, 255, 0;
 
 				--background-color: #141800;
 				--background-twitch: var(--color-twitch-ice);
