@@ -6,7 +6,7 @@
  * @param selector
  * @returns  HTMLElement
  */
-export const $ = (selector: string) => document.querySelector(selector) as HTMLElement
+export const $ = (selector: string) => document.querySelector(selector)
 
 /**
  * Get elements from dom by selector string
