@@ -1,0 +1,63 @@
+---
+import HeroLogo from "./HeroLogo.astro"
+import Typography from "./Typography.astro"
+
+interface Links {
+	url: string
+	name: string
+	space?: boolean
+}
+
+const LINKS: Links[] = [
+	{
+		url: "/",
+		name: "EL EVENTO",
+	},
+	{
+		url: "/",
+		name: "COMBATES",
+	},
+	{
+		url: "",
+		name: "",
+		space: true,
+	},
+	{
+		url: "/",
+		name: "PRONÓSTICOS",
+	},
+	{
+		url: "/",
+		name: "ENTRADAS",
+	},
+]
+---
+
+<nav>
+	<ul class="flex items-center justify-center gap-x-7">
+		{
+			LINKS.map(({ url, name, space }) => (
+				<li class="flex items-center">
+					{space ? (
+						<div class="w-40 px-8 py-10" />
+					) : (
+						<Typography
+							class:list={"from-neutral-700 px-8 py-10 hover:bg-gradient-to-b"}
+							color="white"
+							variant="body"
+							as="a"
+							href={url}
+						>
+							{name}
+						</Typography>
+					)}
+				</li>
+			))
+		}
+	</ul>
+	<div class="-mt-44 flex items-center justify-center">
+		<hr class="h-[2px] border-t-0 bg-transparent bg-gradient-to-l from-white sm:w-full" />
+		<HeroLogo width="350" height="350" />
+		<hr class="h-[2px] border-t-0 bg-transparent bg-gradient-to-r from-white sm:w-full" />
+	</div>
+</nav>
