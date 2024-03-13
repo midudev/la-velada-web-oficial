@@ -19,19 +19,13 @@ const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 >
 	<main class="flex flex-col items-center">
 		<div class="w-full lg:flex lg:items-center">
-			<picture
-				class:list={"boxer-photo h-auto w-[400px] object-contain"}
-				transition:name="boxer-big-image"
-			>
-				<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
+			<picture class="boxer-photo h-auto w-[400px]" transition:name="boxer-big-image">
+				<source srcset={`/img/boxers/${id}-big.avif`} type="image/avif" />
 				<img
 					class="aspect-[285/428] h-auto w-full"
-					alt="Fotografía de El Mariana"
-					src="/img/boxers/el-mariana-big.webp"
-					style="
-						filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
-						mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-					"
+					alt={`Fotografía de ${boxer.name}`}
+					src={`/img/boxers/${id}-big.webp`}
+					style="filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5)); mask-image: linear-gradient(to bottom, black 80%, transparent 100%);"
 				/>
 			</picture>
 			<div class="w-full px-10 text-center lg:mx-auto lg:w-1/2 lg:text-left">
