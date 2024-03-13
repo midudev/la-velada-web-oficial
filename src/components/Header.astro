@@ -37,7 +37,7 @@ const pages = [
 				</>
 			))
 		}
-		<DrawnXLogo class:list={`block w-10 lg:hidden`} />
+		<a href="/"><DrawnXLogo class:list={`block w-10 lg:hidden`} /></a>
 		<HamburgerButton class:list={`block lg:hidden`} id="menuButton" />
 		<div
 			class="absolute inset-0 z-[888] flex h-screen w-screen flex-col items-center overflow-x-auto bg-[var(--background-color)] px-10 lg:hidden"
@@ -64,7 +64,10 @@ const pages = [
 						<>
 							<a
 								href={href}
-								class="flex flex-col items-center justify-center gap-2 text-xl capitalize"
+								class:list={[
+									"flex flex-col items-center justify-center gap-2 text-xl capitalize",
+									{ "pointer-events-none": disabled },
+								]}
 							>
 								<span class="z-10 uppercase text-primary">{name}</span>
 								{disabled && <span class="text-accent">Próximamente</span>}
