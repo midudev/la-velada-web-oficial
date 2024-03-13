@@ -3,28 +3,32 @@ import HeroLogo from "@/components/HeroLogo.astro"
 
 const pages = [
 	{ name: "El Evento", href: "/" },
-	{ name: "Combates", href: "/combates" },
-	{ name: "Pronósticos", href: "/pronosticos" },
-	{ name: "Entradas", href: "/entradas" },
+	{ name: "Combates", href: "/combates", disabled: true },
+	{ name: "Pronósticos", href: "/pronosticos", disabled: true },
+	{ name: "Entradas", href: "/entradas", disabled: true },
 ]
 ---
 
 <header class="mb-10 h-24">
-	<nav class="hidden h-full justify-center lg:flex">
+	<nav class="h-full justify-center lg:flex">
 		{
-			pages.map((page, key) => (
+			pages.map(({ disabled, name, href }, key) => (
 				<>
 					<a
-						href={page.href}
-						class="nav-item from current relative flex items-center justify-center px-10 text-xl uppercase text-white hover:text-gray-300"
+						href={disabled ? "" : href}
+						class:list={[
+							"nav-item relative hidden select-none items-center justify-center px-10 text-xl uppercase text-white lg:flex",
+							disabled ? "cursor-not-allowed hover:text-gray-300" : "",
+						]}
 					>
-						<span class="z-10">{page.name}</span>
+						<span class="z-10">{name}</span>
 						<div class="background absolute -z-10 h-full w-full" />
 					</a>
-					{key == 1 && <div class={`w-64`} />}
+					{key == 1 && <div class={`hidden w-64 lg:block`} />}
 				</>
 			))
 		}
+		<HamburgerButton class:list={`block lg:hidden`} />
 	</nav>
 	<div class="relative flex h-2 w-full flex-col items-center">
 		<div class="absolute flex h-full w-full items-center">
