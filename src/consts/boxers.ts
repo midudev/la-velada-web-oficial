@@ -20,7 +20,7 @@ export const BOXERS: Boxer[] = [
 	},
 	{
 		id: "plex",
-		name: "YoSoyPlex",
+		name: "Yo Soy Plex",
 		realName: "Daniel Alonso Góndez",
 		age: 22,
 		weight: 70,
