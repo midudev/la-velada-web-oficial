@@ -29,7 +29,6 @@ const msFadeLuchador = 150
 
 	<div class="flex flex-col items-center justify-center gap-8">
 		<article
-			data-transition-duration={msFadeLuchador}
 			class="relative flex w-full flex-col items-center justify-center"
 			style="view-transition-name: boxer;"
 		>
@@ -44,14 +43,14 @@ const msFadeLuchador = 150
 				>
 				</div>
 				<picture
-					x.transition:name="boxer-big-image"
-					class:list={"boxer-photo h-auto object-contain px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]"}
+					class:list={"boxer-photo h-auto w-[400px] object-contain"}
+					transition:name="boxer-big-image"
 				>
 					<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
 					<img
-						class:list={"boxer-photo h-auto object-contain px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]"}
+						class="aspect-[285/428] h-auto w-full"
 						alt="Fotografía de El Mariana"
-						src="/img/boxers/el-mariana-big.wepb"
+						src="/img/boxers/el-mariana-big.webp"
 						style="
 							filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
 							mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
@@ -108,10 +107,10 @@ const msFadeLuchador = 150
 			<div class="blur"><div class="clip-black"></div></div>
 			<nav class="boxers-nav">
 				{
-					listOfBoxers.map(({ id, name, country, countryName, weight }) => (
+					listOfBoxers.map(({ id, name, country, countryName, weight }, index) => (
 						<a
 							href={`/boxers/${id}`}
-							class="boxer-link"
+							class:list={["boxer-link", { active: index === 0 }]}
 							title={`Visita la página del boxeador ${name}`}
 							data-id={id}
 							data-name={name}
@@ -137,44 +136,40 @@ const msFadeLuchador = 150
 </section>
 
 <script>
-	const article = document.querySelector("article") as HTMLElement
-	const boxerLinks = document.querySelectorAll(".boxer-link")
-	const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
-	const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
-	const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
-	const boxerFooter = document.getElementById("boxer-footer") as HTMLElement
-	const boxerCountryElement = document.getElementById("boxer-country") as HTMLElement
-	const boxerWeightElement = document.getElementById("boxer-weight") as HTMLElement
+	document.addEventListener("astro:page-load", () => {
+		const boxerLinks = document.querySelectorAll(".boxer-link")
+		const boxerNav = document.querySelector(".boxers-nav")
+		const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
+		const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
+		const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
+		const boxerFooter = document.getElementById("boxer-footer") as HTMLElement
+		const boxerCountryElement = document.getElementById("boxer-country") as HTMLElement
+		const boxerWeightElement = document.getElementById("boxer-weight") as HTMLElement
 
-	boxerLinks.forEach((link) => {
-		let timeout: number
+		boxerLinks.forEach((link) => {
+			link.addEventListener("mouseenter", (event) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				if (currentTarget.classList.contains("active")) return
 
-		link.addEventListener("mouseenter", (event) => {
-			const { id, name, country, countryName, weight } = (event.currentTarget as HTMLElement)
-				?.dataset
-			link.classList.add("active")
-			timeout = setTimeout(
-				() => {
-					const boxerSrc = `/img/boxers/${id}-big`
+				const { id, name, country, countryName, weight } = currentTarget?.dataset
 
-					boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
-					boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
-					boxerTitle.innerText = name?.toLocaleLowerCase() ?? ""
-					boxerCountry.src = `/img/flags/${country}.webp`
+				boxerNav?.querySelector(".active")?.classList.remove("active")
+				link.classList.add("active")
 
-					boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
-					boxerCountry.alt = `Bandera de ${countryName}`
+				const boxerSrc = `/img/boxers/${id}-big`
 
-					boxerCountryElement.innerText = countryName ?? ""
-					boxerWeightElement.innerText = weight ?? ""
-					boxerFooter.style.display = "flex"
-				},
-				article.getAttribute("data-transition-duration") as unknown as number
-			)
-		})
-		link.addEventListener("mouseleave", () => {
-			link.classList.remove("active")
-			clearTimeout(timeout)
+				boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
+				boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
+				boxerTitle.innerText = name?.toLocaleLowerCase() ?? ""
+				boxerCountry.src = `/img/flags/${country}.webp`
+
+				boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
+				boxerCountry.alt = `Bandera de ${countryName}`
+
+				boxerCountryElement.innerText = countryName ?? ""
+				boxerWeightElement.innerText = weight ?? ""
+				boxerFooter.style.display = "flex"
+			})
 		})
 	})
 </script>
