@@ -170,8 +170,7 @@ const msFadeLuchador = 150
 
 <style>
 	.boxers-aside {
-		@apply relative flex h-32 overflow-x-scroll;
-		max-width: 100vw;
+		@apply relative flex h-32 w-screen overflow-x-scroll;
 		scrollbar-width: none;
 	}
 
@@ -180,20 +179,17 @@ const msFadeLuchador = 150
 	}
 
 	.boxer-link {
-		@apply relative flex size-40 flex-col items-center;
-		transition: opacity 0.3s ease;
+		@apply relative flex size-40 flex-col items-center transition-opacity duration-300 ease-in-out;
 	}
 
 	.boxer-link-background {
-		@apply absolute bottom-0 block w-full opacity-25;
+		@apply absolute bottom-0 block h-3/5 w-full opacity-25 transition-opacity duration-300 ease-in-out;
 		background: linear-gradient(
 			180deg,
 			rgba(255, 255, 255, 1) 0%,
 			rgba(255, 255, 255, 0.5) 30%,
 			rgba(0, 0, 0, 0) 95%
 		);
-		height: 60%;
-		transition: filter 0.3s ease-in-out;
 	}
 
 	.boxer-link:hover {
@@ -201,9 +197,7 @@ const msFadeLuchador = 150
 	}
 
 	.boxer-image {
-		@apply h-full object-contain;
-		z-index: 2;
-		transition: all 0.3s ease-in-out;
+		@apply z-20 h-full object-contain transition-opacity duration-300;
 		mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
 	}
 
@@ -233,8 +227,7 @@ const msFadeLuchador = 150
 		}
 
 		.boxer-link {
-			@apply flex items-center justify-center;
-			width: 100%;
+			@apply flex w-full items-center justify-center;
 		}
 
 		.boxer-image {
