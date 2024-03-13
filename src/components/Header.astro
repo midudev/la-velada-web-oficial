@@ -1,46 +1,58 @@
 ---
+import { cm } from "@/utils/classMerge"
+import { siteRoutes } from "@/consts/site-routes"
+
 import HamburgerButton from "@/components/HamburgerButton.astro"
 import HeroLogo from "@/components/HeroLogo.astro"
 import DrawnXLogo from "@/components/DrawnXLogo.astro"
-import Footer from "@/sections/Footer.astro"
 import FooterContent from "@/components/FooterContent.astro"
 import SocialButtons from "@/components/SocialButtons.astro"
 
-const pages = [
-	{ name: "El Evento", href: "/" },
-	{ name: "Combates", href: "/combates", disabled: true },
-	{ name: "Pronósticos", href: "/pronosticos", disabled: true },
-	{ name: "Entradas", href: "/entradas", disabled: true },
-]
+const actualPath = Astro.url.pathname
+const isActualPath = (path: string) => actualPath === path
+
+const sitePath = (disabled: boolean | undefined, href: string) => (disabled ? "" : href)
 ---
 
 <header class="mb-10 h-16 lg:h-24">
 	<nav class="group flex h-full w-full items-center justify-between px-10 lg:justify-center">
 		{
-			pages.map(({ disabled, name, href }, key) => (
-				<>
-					<a
-						href={disabled ? "" : href}
-						class:list={[
-							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 px-10 text-xl uppercase text-white lg:flex",
-							{ "cursor-not-allowed": disabled },
-						]}
-					>
-						<span class="z-10">{name}</span>
-						{disabled ? (
-							<span class="absolute mt-10 -skew-x-6 text-xs text-accent">Próximamente</span>
-						) : (
-							<div class="background absolute -z-10 h-full w-full" />
-						)}
-					</a>
-					{key == 1 && <div class={`hidden w-64 lg:block`} />}
-				</>
-			))
+			siteRoutes.map(({ disabled, name, href }, key) => {
+				const pathRoute = sitePath(disabled, href)
+
+				return (
+					<>
+						<a
+							href={pathRoute}
+							class:list={cm(
+								"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 text-nowrap px-10 text-xl uppercase text-white lg:flex",
+								disabled && "cursor-not-allowed"
+							)}
+						>
+							<span
+								class:list={cm(
+									"absolute left-0 right-0 top-px hidden h-1 w-full rounded-md bg-accent",
+									isActualPath(pathRoute) && "block"
+								)}
+							/>
+							<span class="z-10">{name}</span>
+							{disabled ? (
+								<span class="absolute mt-10 -skew-x-6 text-xs text-accent">Próximamente</span>
+							) : (
+								<div class="background absolute -z-10 h-full w-full" />
+							)}
+						</a>
+						{key === 1 && <div class="hidden w-64 lg:block" />}
+					</>
+				)
+			})
 		}
-		<a href="/"><DrawnXLogo class:list={`block w-10 lg:hidden`} /></a>
-		<HamburgerButton class:list={`block lg:hidden`} id="menuButton" />
+		<a href="/">
+			<DrawnXLogo class="block w-10 lg:hidden" />
+		</a>
+		<HamburgerButton class="block lg:hidden" id="menuButton" />
 		<div
-			class="absolute inset-0 z-[888] flex h-screen w-screen flex-col items-center overflow-x-auto bg-[var(--background-color)] px-10 lg:hidden"
+			class="absolute inset-0 z-[888] flex h-dvh w-screen flex-col items-center overflow-x-auto bg-[var(--background-color)] px-10 lg:hidden"
 			id="menuMobileContent"
 		>
 			<aside class="flex min-h-16 w-full items-center justify-between">
@@ -54,30 +66,45 @@ const pages = [
 				/>
 			</div>
 			<nav class="flex w-full flex-col items-center gap-5">
-				<img src="img/lvda.webp" class="accent-drop-shadow my-4 max-w-60 drop-shadow-lg" />
+				<img
+					src="img/lvda.webp"
+					class="accent-drop-shadow my-4 max-w-60 drop-shadow-lg"
+					alt="La Velada del Año IV"
+				/>
 				<hr
 					class="h-[2px] w-full border-t-0"
 					style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
 				/>
 				{
-					pages.map(({ disabled, name, href }, key) => (
-						<>
-							<a
-								href={href}
-								class:list={[
-									"flex flex-col items-center justify-center gap-2 text-xl capitalize",
-									{ "pointer-events-none": disabled },
-								]}
-							>
-								<span class="z-10 uppercase text-primary">{name}</span>
-								{disabled && <span class="text-accent">Próximamente</span>}
-							</a>
-							<hr
-								class="h-[2px] w-full border-t-0"
-								style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
-							/>
-						</>
-					))
+					siteRoutes.map(({ disabled, name, href }) => {
+						const pathRoute = sitePath(disabled, href)
+
+						return (
+							<>
+								<a
+									href={pathRoute}
+									class:list={cm(
+										"flex flex-col items-center justify-center gap-2 text-xl capitalize",
+										disabled && "cursor-not-allowed"
+									)}
+								>
+									<span
+										class:list={cm(
+											"z-10 uppercase text-primary",
+											isActualPath(href) && "text-accent"
+										)}
+									>
+										{name}
+									</span>
+									{disabled && <span class="text-accent">Próximamente</span>}
+								</a>
+								<hr
+									class="h-[2px] w-full border-t-0"
+									style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
+								/>
+							</>
+						)
+					})
 				}
 				<nav class="my-4 flex flex-col gap-10">
 					<FooterContent />
@@ -92,7 +119,7 @@ const pages = [
 				class="h-[2px] w-full border-t-0"
 				style="background:linear-gradient(to right, transparent 3%, white 35%, white 100%)"
 			/>
-			<HeroLogo class:list={`-mx-2 h-60 w-auto lg:-ml-5 lg:h-80`} noEffect />
+			<HeroLogo class="-mx-2 h-60 w-auto lg:-ml-5 lg:h-80" noEffect />
 			<hr
 				class="h-[2px] w-full border-t-0"
 				style="background:linear-gradient(to left, transparent 3%, white 35%, white 100%)"
@@ -133,7 +160,8 @@ const pages = [
 </style>
 
 <script>
-	import { $, $$ } from "@/consts/dom-selector"
+	import { $ } from "@/consts/dom-selector"
+
 	document.addEventListener("astro:page-load", () => {
 		const nav = $("nav")
 		const menuButton = $("#menuButton")
