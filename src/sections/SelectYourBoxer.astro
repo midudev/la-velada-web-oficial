@@ -129,7 +129,10 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
 <script>
 	document.addEventListener("astro:page-load", () => {
-		const boxerLinks = document.querySelectorAll(".boxer-link") as NodeListOf<HTMLAnchorElement>
+		const boxerLinks = [
+			...Array.from(document.querySelectorAll(".boxer-link")),
+		] as HTMLAnchorElement[]
+
 		const boxerNav = document.querySelector(".boxers-nav")
 		const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
 		const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement

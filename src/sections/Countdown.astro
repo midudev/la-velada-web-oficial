@@ -11,7 +11,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 	</p>
 
 	<div
-		class="grid w-full grid-cols-2 flex-col items-center justify-center gap-4 gap-y-20 uppercase text-primary md:grid-cols-3 md:gap-x-6 md:gap-y-11 select-none"
+		class="grid w-full select-none grid-cols-2 flex-col items-center justify-center gap-4 gap-y-20 uppercase text-primary md:grid-cols-3 md:gap-x-6 md:gap-y-11"
 		data-date={EVENT_TIMESTAMP}
 		role="timer"
 	>
@@ -64,7 +64,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 		const $countdown = document.querySelector("[data-date]")
 		if (!$countdown) return
 
-		let intervalId: number
+		let intervalId: ReturnType<typeof setInterval>
 
 		const $days = {
 			firstDigit: $countdown.querySelector("[data-days] [data-first-group]"),
