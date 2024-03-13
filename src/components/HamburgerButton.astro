@@ -1,0 +1,32 @@
+---
+const genericHamburgerLine = `h-0.5 w-4 my-0.5 bg-gray-300 transition ease transform duration-300`
+---
+
+<button
+	id="hamburgerButton"
+	class="group group flex h-5 w-4 flex-col items-center justify-center lg:hidden"
+	aria-label="hamburguer menu button"
+>
+	<div
+		class={`${genericHamburgerLine}  group-hover:opacity-100 group-[.open]:translate-y-1.5 group-[.open]:rotate-45 group-[.open]:group-hover:opacity-100`}
+	>
+	</div>
+	<div class={`${genericHamburgerLine} group-[.open]:opacity-0 group-hover:opacity-100}`}></div>
+	<div
+		class={`${genericHamburgerLine} group-[.open]:-translate-y-1.5 group-[.open]:-rotate-45 group-[.open]:group-hover:opacity-100 group-hover:opacity-100`}
+	>
+	</div>
+</button>
+
+<style>
+	#hamburgerButton.open {
+	}
+</style>
+
+<script>
+	document.querySelector("#hamburgerButton")?.addEventListener("click", () => {
+		const isOpen = document.querySelector("#hamburgerButton")?.classList.contains("open")
+		document.querySelector("#hamburgerButton")?.classList.toggle("open")
+		dispatchEvent(new CustomEvent("hamburgerButtonClicked", { detail: { isOpen: !isOpen } }))
+	})
+</script>
