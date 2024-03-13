@@ -151,12 +151,11 @@ const msFadeLuchador = 150
 				() => {
 					const boxerSrc = `/img/boxers/${id}-big`
 
-					boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
-					boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
+					boxerPhoto.querySelector("source:first-of-type").srcset = `${boxerSrc}.avif`
+					boxerPhoto.querySelector("img").src = `${boxerSrc}.webp`
 					boxerTitle.innerText = name?.toLocaleLowerCase() ?? ""
 					boxerCountry.src = `/img/flags/${country}.webp`
-
-					boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
+					boxerPhoto.querySelector("img").alt = `Fotografía de ${name}`
 					boxerCountry.alt = `Bandera de ${countryName}`
 				},
 				article.getAttribute("data-transition-duration") as unknown as number
