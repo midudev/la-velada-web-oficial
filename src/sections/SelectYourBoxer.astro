@@ -2,6 +2,7 @@
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
+import { $, $$ } from "@/consts/dom-selector"
 
 const listOfBoxers = BOXERS.map((boxer) => {
 	const { country } = boxer
@@ -137,11 +138,11 @@ const msFadeLuchador = 150
 </section>
 
 <script>
-	const article = document.querySelector("article") as HTMLElement
-	const boxerLinks = document.querySelectorAll(".boxer-link")
-	const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
-	const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
-	const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
+	const article = $("article") as HTMLElement
+	const boxerLinks = $$(".boxer-link")
+	const boxerTitle = $(".boxer-title") as HTMLImageElement
+	const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
+	const boxerCountry = $(".boxer-flag") as HTMLImageElement
 
 	boxerLinks.forEach((link) => {
 		link.addEventListener("mouseenter", (event) => {
