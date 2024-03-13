@@ -23,35 +23,55 @@ const msFadeLuchador = 150
 		elige tu luchador
 	</Typography>
 
+	<Typography as="p" variant="body" color="neutral" class="mt-4 text-center">
+		Conoce los detalles de cada boxeador
+	</Typography>
+
 	<div class="flex flex-col items-center justify-center gap-8">
 		<article
 			data-transition-duration={msFadeLuchador}
 			class="relative flex w-full flex-col items-center justify-center"
 			style="view-transition-name: boxer;"
 		>
-			<header
-				class="relative flex w-full flex-col items-center justify-center bg-center bg-no-repeat"
-				style="background-image: url('/img/effects/boxer-background.png'); background-size: 75%;"
-			>
-				<picture
-					class={`boxer-photo h-auto object-contain transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]`}
+			<header class="relative flex w-full flex-col items-center justify-center">
+				<div
+					class="absolute inset-0 -z-20 m-auto bg-center bg-no-repeat"
+					style="
+						background-image: url('/img/effects/boxer-background.png');
+						background-size: 75%;
+						mask-image: radial-gradient(circle at bottom, transparent 26%, #000 40%);
+						"
 				>
-					<source srcset="/img/boxers/el-mariana-big.webp" type="image/webp" />
+				</div>
+				<picture
+					transition:name="boxer-big-image"
+					class:list={"boxer-photo h-auto object-contain px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]"}
+				>
 					<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
 					<img
-						class={`boxer-photo h-auto object-contain transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]`}
+						class:list={"boxer-photo h-auto object-contain px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]"}
 						alt="Fotografía de El Mariana"
-						src="/img/boxers/el-mariana-big.avif"
-						style="filter: drop-shadow(0 0 10px rgba(0, 0, 0, 1));"
+						src="/img/boxers/el-mariana-big.wepb"
+						style="
+							filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
+							mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+						"
 					/>
 				</picture>
+
+				<div class="absolute bottom-14 max-w-md text-wrap">
+					<Typography
+						as="h4"
+						variant="boxer-title"
+						color="primary"
+						class:list={"boxer-title -skew-y-6 text-center"}
+					>
+						el mariana
+					</Typography>
+				</div>
+
 				<img
-					class={`boxer-title pointer-events-none absolute bottom-14 h-auto transition duration-[${msFadeLuchador}] px-10 sm:px-0 sm:w-[30vw] xl:w-[19vw] 3xl:w-[480px]`}
-					alt="El Mariana"
-					src="/img/boxers/el-mariana-title.webp"
-				/>
-				<img
-					class={`boxer-flag pointer-events-none aspect-[3/2] h-auto w-20 object-contain object-center transition duration-[${msFadeLuchador}] 3xl:w-24`}
+					class:list={`boxer-flag pointer-events-none aspect-[3/2] h-auto w-20 object-contain object-center transition duration-[${msFadeLuchador}] 3xl:w-24`}
 					alt="Bandera de México"
 					src="/img/flags/mx.webp"
 				/>
@@ -89,7 +109,8 @@ const msFadeLuchador = 150
 			<nav class="boxers-nav">
 				{
 					listOfBoxers.map(({ id, name, country, countryName }) => (
-						<button
+						<a
+							href={`/boxers/${id}`}
 							class="boxer-link"
 							title={`Visita la página del boxeador ${name}`}
 							data-id={id}
@@ -100,15 +121,14 @@ const msFadeLuchador = 150
 							<div class="boxer-link-background" />
 							<picture class="boxer-image">
 								<source srcset={`/img/boxers/${id}-small.avif`} type="image/avif" />
-								<source srcset={`/img/boxers/${id}-small.webp`} type="image/webp" />
 								<img
 									loading="lazy"
-									src={`/img/boxers/${id}-small.avif`}
+									src={`/img/boxers/${id}-small.webp`}
 									alt={`Foto en pequeño del boxeador ${name}`}
 									class="boxer-image"
 								/>
 							</picture>
-						</button>
+						</a>
 					))
 				}
 			</nav>
@@ -124,66 +144,28 @@ const msFadeLuchador = 150
 	const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
 
 	boxerLinks.forEach((link) => {
-		link.addEventListener("click", (event) => {
+		link.addEventListener("mouseenter", (event) => {
 			const { id, name, country, countryName } = (event.currentTarget as HTMLElement)?.dataset
-
-			boxerTitle.style.opacity = "0"
-			boxerPhoto.style.opacity = "0"
-			boxerCountry.style.opacity = "0"
-
+			link.classList.add("active")
 			setTimeout(
 				() => {
 					const boxerSrc = `/img/boxers/${id}-big`
-					const titleSrc = `/img/boxers/${id}-title.webp`
 
 					boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
-					boxerPhoto.getElementsByTagName("source")[1].srcset = `${boxerSrc}.webp`
-					boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.avif`
-					boxerTitle.src = titleSrc
+					boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
+					boxerTitle.innerText = name?.toLocaleLowerCase() ?? ""
 					boxerCountry.src = `/img/flags/${country}.webp`
 
 					boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
-					boxerTitle.alt = name!
 					boxerCountry.alt = `Bandera de ${countryName}`
-
-					boxerTitle.style.opacity = "1"
-					boxerPhoto.style.opacity = "1"
-					boxerCountry.style.opacity = "1"
 				},
 				article.getAttribute("data-transition-duration") as unknown as number
 			)
 		})
-	})
-
-	const imagen = document.querySelector(".boxer-photo") as HTMLElement
-
-	function asideAnimation(event: MouseEvent) {
-		const rect = imagen.getBoundingClientRect()
-
-		const aside = document.querySelector(".boxers-aside") as HTMLElement
-		const blur = aside.querySelector(".blur") as HTMLElement
-		const footer = document.querySelector("#boxer-footer") as HTMLElement
-
-		const cursorPosY = event.clientY - rect.top
-		console.log(cursorPosY > rect.height * 0.8)
-		if (!(cursorPosY > rect.height * 1.2) && cursorPosY > rect.height * 0.7) {
-			blur.style.opacity = "1"
-			footer.style.opacity = "0"
-			aside.classList.add("up")
-		} else {
-			footer.style.opacity = "1"
-			blur.style.opacity = "0"
-			aside.classList.remove("up")
-		}
-	}
-
-	if (imagen) {
-		imagen.addEventListener("mousemove", function (event: MouseEvent) {
-			if (window.innerWidth > 1280) {
-				asideAnimation(event)
-			}
+		link.addEventListener("mouseleave", () => {
+			link.classList.remove("active")
 		})
-	}
+	})
 </script>
 
 <style>
@@ -194,46 +176,24 @@ const msFadeLuchador = 150
 		overflow-x: scroll;
 		position: relative;
 		scrollbar-width: none;
-		transition: all 0.3s ease-in-out;
-		.blur {
-			opacity: 0;
-			transition: opacity 0.3s ease-in-out;
-			position: absolute;
-			width: 100%;
-			height: 100%;
-			mask-image: linear-gradient(to bottom, transparent 0%, white 10%, white 100%);
-			backdrop-filter: blur(10px);
-			.clip-black {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				clip-path: polygon(100% 0, 0 0, 50% 100%);
-				filter: blur(100px);
-				background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
-			}
-		}
-	}
-
-	.boxers-aside.up {
-		margin-top: -20rem;
 	}
 
 	.boxers-nav {
 		display: flex;
-		gap: 2rem;
+		gap: 0.5rem;
 		height: 100%;
 
 		padding: 1rem 5rem;
 	}
 
 	.boxer-link {
+		@apply size-40;
+
 		position: relative;
-		width: 10rem;
-		max-width: 15rem;
 		display: flex;
 		align-items: center;
 		flex-direction: column;
-		transition: all 0.5s ease;
+		transition: opacity 0.3s ease;
 	}
 
 	.boxer-link-background {
@@ -249,13 +209,7 @@ const msFadeLuchador = 150
 		);
 		opacity: 0.25;
 		height: 60%;
-		transition:
-			all 0.3s ease-in-out,
-			height 0.2s ease-in-out;
-	}
-
-	.boxers-aside.up .boxer-link-background {
-		opacity: 0.5;
+		transition: filter 0.3s ease-in-out;
 	}
 
 	.boxer-link:hover {
@@ -263,14 +217,26 @@ const msFadeLuchador = 150
 	}
 
 	.boxer-image {
+		object-fit: contain;
 		z-index: 2;
 		transition: all 0.3s ease-in-out;
 		height: 100%;
+		mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
 	}
 
 	.boxer-link:hover .boxer-image {
-		transform: scale(1.1);
-		margin-bottom: 5px;
+		transform: scale(1.05);
+	}
+	.boxer-link .boxer-image {
+		filter: grayscale(100%);
+		transition: filter 0.3s ease;
+	}
+
+	.boxer-link.active .boxer-image {
+		filter: grayscale(0%);
+	}
+	.boxer-link:hover .boxer-link-background {
+		filter: brightness(0.5);
 	}
 
 	@media (min-width: 1280px) {
@@ -282,23 +248,15 @@ const msFadeLuchador = 150
 			overflow: hidden;
 			height: auto;
 		}
-		.boxers-nav {
-			overflow: hidden;
-			display: grid;
-			padding: 1rem 0rem;
-			@apply max-w-6xl gap-y-0;
-			width: 100%;
-			grid-template-columns: repeat(12, 1fr);
-		}
-		.boxer-link {
-			@apply flex h-20 items-center justify-center;
-			width: 100%;
-			grid-column: span 2;
 
-			&:nth-child(11n + 7) {
-				grid-column-start: 2;
-				grid-column-end: 4;
-			}
+		.boxers-nav {
+			@apply grid w-full max-w-6xl gap-y-0 overflow-hidden;
+			grid-template-columns: repeat(6, 1fr);
+		}
+
+		.boxer-link {
+			@apply flex items-center justify-center;
+			width: 100%;
 		}
 
 		.boxer-image {
