@@ -1,5 +1,10 @@
 ---
+import HamburgerButton from "@/components/HamburgerButton.astro"
 import HeroLogo from "@/components/HeroLogo.astro"
+import DrawnXLogo from "./DrawnXLogo.astro"
+import Footer from "@/sections/Footer.astro"
+import FooterContent from "@/components/FooterContent.astro"
+import SocialButtons from "@/components/SocialButtons.astro"
 
 const pages = [
 	{ name: "El Evento", href: "/" },
@@ -9,15 +14,15 @@ const pages = [
 ]
 ---
 
-<header class="mb-10 h-24">
-	<nav class="h-full justify-center lg:flex">
+<header class="mb-10 h-16 lg:h-24">
+	<nav class="group flex h-full w-full items-center justify-between px-10 lg:justify-center">
 		{
 			pages.map(({ disabled, name, href }, key) => (
 				<>
 					<a
 						href={disabled ? "" : href}
 						class:list={[
-							"nav-item relative hidden select-none items-center justify-center px-10 text-xl uppercase text-white lg:flex",
+							"nav-item relative hidden h-full select-none items-center justify-center px-10 text-xl uppercase text-white lg:flex",
 							disabled ? "cursor-not-allowed hover:text-gray-300" : "",
 						]}
 					>
@@ -28,7 +33,51 @@ const pages = [
 				</>
 			))
 		}
-		<HamburgerButton class:list={`block lg:hidden`} />
+		<DrawnXLogo class:list={`block w-10 lg:hidden`} />
+		<HamburgerButton class:list={`block lg:hidden`} id="menuButton" />
+		<div
+			class="absolute inset-0 z-[888] flex h-screen w-screen flex-col items-center overflow-x-auto bg-[var(--background-color)] px-10 lg:hidden"
+			id="menuMobileContent"
+		>
+			<aside class="flex min-h-16 w-full items-center justify-between">
+				<span class="text-xl font-semibold uppercase text-primary">Menú</span>
+				<HamburgerButton id="innerMenuButton" />
+			</aside>
+			<div class="flex min-h-2 w-full items-center">
+				<hr
+					class="h-[2px] w-full border-t-0"
+					style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
+				/>
+			</div>
+			<nav class="flex w-full flex-col items-center gap-5">
+				<img src="img/lvda.webp" class="accent-drop-shadow my-4 max-w-60 drop-shadow-lg" />
+				<hr
+					class="h-[2px] w-full border-t-0"
+					style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
+				/>
+				{
+					pages.map(({ disabled, name, href }, key) => (
+						<>
+							<a
+								href={disabled ? "" : href}
+								class="flex flex-col items-center justify-center gap-2 text-xl capitalize"
+							>
+								<span class="z-10 uppercase text-primary">{name}</span>
+								{disabled && <span class="text-accent">Próximamente</span>}
+							</a>
+							<hr
+								class="h-[2px] w-full border-t-0"
+								style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
+							/>
+						</>
+					))
+				}
+				<nav class="my-4 flex flex-col gap-10">
+					<FooterContent />
+					<SocialButtons class="flex items-center justify-center" />
+				</nav>
+			</nav>
+		</div>
 	</nav>
 	<div class="relative flex h-2 w-full flex-col items-center">
 		<div class="absolute flex h-full w-full items-center">
@@ -36,7 +85,7 @@ const pages = [
 				class="h-[2px] w-full border-t-0"
 				style="background:linear-gradient(to right, transparent 3%, white 35%, white 100%)"
 			/>
-			<HeroLogo class:list={`-mx-2 h-80 w-auto`} noEffect />
+			<HeroLogo class:list={`-mx-2 h-60 w-auto lg:-ml-5 lg:h-80`} noEffect />
 			<hr
 				class="h-[2px] w-full border-t-0"
 				style="background:linear-gradient(to left, transparent 3%, white 35%, white 100%)"
@@ -59,4 +108,39 @@ const pages = [
 	.nav-item:hover .background {
 		opacity: 1;
 	}
+
+	#menuMobileContent {
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.3s;
+	}
+
+	#menuMobileContent.open {
+		opacity: 1 !important;
+		pointer-events: all;
+	}
+
+	.accent-drop-shadow {
+		filter: drop-shadow(0px 0px 25px rgba(var(--color-accent-rgb), 0.25));
+	}
 </style>
+
+<script>
+	document.addEventListener("astro:page-load", () => {
+		const nav = document.querySelector("nav")
+		document
+			.querySelector("#menuButton")
+			?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
+		console.log(document.querySelector("#innerMenuButton"))
+		document.querySelector("#innerMenuButton")?.addEventListener("hamburgerButtonClicked", () => {
+			toggleMenu(nav)
+		})
+
+		function toggleMenu(nav: HTMLElement | null) {
+			console.log("toggleMenu")
+			document.querySelector("#menuMobileContent")?.classList.toggle("open")
+			nav?.classList.toggle("open")
+			document.body.classList.toggle("overflow-hidden")
+		}
+	})
+</script>
