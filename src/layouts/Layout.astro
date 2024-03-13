@@ -1,10 +1,13 @@
 ---
-import "@fontsource-variable/jost"
+import { ViewTransitions } from "astro:transitions"
 
 import ButtonUp from "@/components/ButtonUp.astro"
+import KonamiCode from "@/components/KonamiCode.astro"
 import LightsBackground from "@/components/LightsBackground.astro"
 import NoiseBackground from "@/components/NoiseBackground.astro"
 import SEO from "@/components/SEO.astro"
+import Footer from "@/sections/Footer.astro"
+import "@fontsource-variable/jost"
 
 interface Props {
 	description: string
@@ -19,6 +22,7 @@ const { title, description, preloadImgLCP } = Astro.props
 <html lang="es">
 	<head>
 		<SEO title={title} description={description} preloadImgLCP={preloadImgLCP!} />
+		<ViewTransitions />
 	</head>
 
 	<body
@@ -32,6 +36,8 @@ const { title, description, preloadImgLCP } = Astro.props
 			id="main-content"
 		>
 			<slot />
+			<Footer />
+			<KonamiCode />
 		</div>
 		<ButtonUp />
 		<style is:global>
@@ -62,12 +68,6 @@ const { title, description, preloadImgLCP } = Astro.props
 				position: relative;
 			}
 
-			/* @media screen and (prefers-reduced-motion: no-preference) {
-html {
-scroll-behavior: smooth;
-}
-} */
-
 			/* Hiding class, making content visible only to screen readers but not visually */
 			/* "sr" meaning "screen-reader" */
 			.sr-only:not(:focus):not(:active) {
@@ -80,28 +80,37 @@ scroll-behavior: smooth;
 				width: 1px;
 			}
 
-			::-webkit-scrollbar {
-				width: 10px;
-				border-radius: 10px;
+			@supports selector(::-webkit-scrollbar) {
+				::-webkit-scrollbar {
+					width: 10px;
+					border-radius: 10px;
+				}
+
+				::-webkit-scrollbar-thumb {
+					border-radius: 10px;
+					background-color: theme("colors.primary");
+					border: 2px solid transparent;
+					background-clip: content-box;
+				}
+
+				::-webkit-scrollbar-thumb:active {
+					background-color: #666;
+				}
+
+				::-webkit-scrollbar-track {
+					background: var(--background-image);
+				}
+
+				::-webkit-scrollbar-corner {
+					background: var(--background-image);
+				}
 			}
 
-			::-webkit-scrollbar-thumb {
-				border-radius: 10px;
-				background-color: theme("colors.primary");
-				border: 2px solid transparent;
-				background-clip: content-box;
-			}
-
-			::-webkit-scrollbar-thumb:active {
-				background-color: #666;
-			}
-
-			::-webkit-scrollbar-track {
-				background: var(--background-image);
-			}
-
-			::-webkit-scrollbar-corner {
-				background: var(--background-image);
+			@supports not selector(::-webkit-scrollbar) {
+				* {
+					scrollbar-color: theme("colors.primary") transparent;
+					scrollbar-width: thin;
+				}
 			}
 		</style>
 	</body>

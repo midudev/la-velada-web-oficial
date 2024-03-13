@@ -1,0 +1,37 @@
+---
+import { BOXERS } from "@/consts/boxers.ts"
+import Layout from "@/layouts/Layout.astro"
+
+export function getStaticPaths() {
+	return BOXERS.map(({ id }) => ({
+		params: { id },
+	}))
+}
+
+const { id } = Astro.params
+
+const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
+---
+
+<Layout
+	description={`Información del luchador ${boxer.name}`}
+	title={`${boxer.name} - Información del boxeador de La Velada IV`}
+>
+	<main>
+		<picture
+			transition:name="boxer-big-image"
+			class:list={"boxer-photo h-auto object-contain px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]"}
+		>
+			<source srcset={`/img/boxers/${id}-big.avif`} type="image/avif" />
+			<img
+				class:list={"boxer-photo h-auto object-contain px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]"}
+				alt={`Fotografía de ${boxer.name}`}
+				src={`/img/boxers/${id}-big.avif`}
+				style="
+							filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
+							mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+						"
+			/>
+		</picture>
+	</main>
+</Layout>
