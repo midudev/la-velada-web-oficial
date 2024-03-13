@@ -53,6 +53,14 @@ const listOfBoxers = BOXERS.map((boxer) => {
 					/>
 				</picture>
 
+				<audio id="soundClick" preload="auto">
+					<source src="/sounds/soundSelectionBoxer.mp3" type="audio/mp3" />
+				</audio>
+
+				<audio id="hoverSound">
+					<source src="/sounds/soundHover.mp3" type="audio/mp3" />
+				</audio>
+
 				<div class="absolute bottom-14 max-w-md text-wrap">
 					<Typography
 						as="h4"
@@ -111,6 +119,9 @@ const listOfBoxers = BOXERS.map((boxer) => {
 							data-country={country}
 							data-country-name={countryName}
 							data-weight={weight}
+							onclick="sound.play();"
+							onmouseenter="hoverSound.play();"
+							onmouseleave="hoverSound.pause();"
 						>
 							<div class="boxer-link-background" />
 							<img
@@ -138,6 +149,8 @@ const listOfBoxers = BOXERS.map((boxer) => {
 		const boxerFooter = document.getElementById("boxer-footer") as HTMLElement
 		const boxerCountryElement = document.getElementById("boxer-country") as HTMLElement
 		const boxerWeightElement = document.getElementById("boxer-weight") as HTMLElement
+		const sound = document.getElementById("soundClick") as HTMLAudioElement
+		const hoverSound = document.getElementById("hoverSound") as HTMLAudioElement
 
 		function activateBoxer(element: HTMLElement, link: HTMLElement, replaceUrl: boolean = false) {
 			if (element.classList.contains("active")) return
@@ -168,6 +181,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 		const urlParams = new URLSearchParams(window.location.search)
 		const boxerId = urlParams.get("boxer") ?? "el-mariana"
 		const boxerEl = document.querySelector(`[data-id="${boxerId}"]`) as HTMLElement
+
 		if (boxerEl) {
 			activateBoxer(boxerEl, boxerEl, false)
 		}
@@ -177,6 +191,17 @@ const listOfBoxers = BOXERS.map((boxer) => {
 				const currentTarget = event.currentTarget as HTMLElement
 				if (currentTarget.classList.contains("active")) return
 				activateBoxer(currentTarget, link, true)
+			})
+		})
+
+		function playSound() {
+			sound.play()
+			sound.playbackRate = 10
+		}
+
+		boxerLinks.forEach((link) => {
+			link.addEventListener("click", () => {
+				playSound()
 			})
 		})
 	})
