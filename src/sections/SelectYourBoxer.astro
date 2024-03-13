@@ -2,7 +2,6 @@
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
-
 const listOfBoxers = BOXERS.map((boxer) => {
 	const { country } = boxer
 	const countryName = COUNTRIES[country]?.name || ""
@@ -66,7 +65,10 @@ const msFadeLuchador = 150
 						color="primary"
 						class:list={"boxer-title -skew-y-6 text-center"}
 					>
-						el mariana
+						<span class="flex flex-col">
+							<span class="text-4xl"> el </span>
+							mariana
+						</span>
 					</Typography>
 				</div>
 
@@ -125,7 +127,7 @@ const msFadeLuchador = 150
 									loading="lazy"
 									src={`/img/boxers/${id}-small.webp`}
 									alt={`Foto en pequeño del boxeador ${name}`}
-									class="boxer-image"
+									class="boxer-image "
 								/>
 							</picture>
 						</a>
@@ -146,14 +148,19 @@ const msFadeLuchador = 150
 	boxerLinks.forEach((link) => {
 		link.addEventListener("mouseenter", (event) => {
 			const { id, name, country, countryName } = (event.currentTarget as HTMLElement)?.dataset
-
+			const splitName = name?.split(" ") ?? []
+			const lastName = splitName[splitName.length - 1]
+			const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
+			const spanNames = `<span class="flex flex-col">
+							<span class="text-4xl">${firstNames?.toLocaleLowerCase()}</span><span class="last-name">${lastName?.toLocaleLowerCase()}</span>
+							</span>`
 			setTimeout(
 				() => {
 					const boxerSrc = `/img/boxers/${id}-big`
 
 					boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
 					boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
-					boxerTitle.innerText = name?.toLocaleLowerCase() ?? ""
+					boxerTitle.innerHTML = spanNames ?? ""
 					boxerCountry.src = `/img/flags/${country}.webp`
 
 					boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
