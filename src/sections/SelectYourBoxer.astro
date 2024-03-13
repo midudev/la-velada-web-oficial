@@ -144,10 +144,12 @@ const msFadeLuchador = 150
 	const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
 
 	boxerLinks.forEach((link) => {
+		let timeout: number
+
 		link.addEventListener("mouseenter", (event) => {
 			const { id, name, country, countryName } = (event.currentTarget as HTMLElement)?.dataset
 			link.classList.add("active")
-			setTimeout(
+			timeout = setTimeout(
 				() => {
 					const boxerSrc = `/img/boxers/${id}-big`
 
@@ -164,6 +166,7 @@ const msFadeLuchador = 150
 		})
 		link.addEventListener("mouseleave", () => {
 			link.classList.remove("active")
+			clearTimeout(timeout)
 		})
 	})
 </script>
