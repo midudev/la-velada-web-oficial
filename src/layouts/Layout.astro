@@ -1,10 +1,15 @@
 ---
-import "@fontsource-variable/jost"
+import { ViewTransitions } from "astro:transitions"
 
 import ButtonUp from "@/components/ButtonUp.astro"
+import Header from "@/components/Header.astro"
+import KonamiCode from "@/components/KonamiCode.astro"
 import LightsBackground from "@/components/LightsBackground.astro"
+import MiduCode from "@/components/MiduCode.astro"
 import NoiseBackground from "@/components/NoiseBackground.astro"
 import SEO from "@/components/SEO.astro"
+import Footer from "@/sections/Footer.astro"
+import "@fontsource-variable/jost"
 
 interface Props {
 	description: string
@@ -19,19 +24,23 @@ const { title, description, preloadImgLCP } = Astro.props
 <html lang="es">
 	<head>
 		<SEO title={title} description={description} preloadImgLCP={preloadImgLCP!} />
+		<ViewTransitions />
 	</head>
 
 	<body
-		class="dark overflow-x-hidden selection:bg-accent [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
+		class="selection:bg-primary selection:text-secondary [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
 		<!-- <SmokeBackground /> -->
 		<NoiseBackground />
 		<LightsBackground />
+		<Header />
 		<div
-			class="mx-auto max-w-6xl px-2 pt-16 selection:bg-primary selection:text-secondary md:pt-20 lg:px-10"
+			class="mx-auto min-h-screen max-w-6xl px-2 pt-16 selection:bg-primary selection:text-secondary md:pt-20 lg:px-10"
 			id="main-content"
 		>
 			<slot />
+			<Footer />
+			<KonamiCode />
 		</div>
 		<ButtonUp />
 		<style is:global>
@@ -39,6 +48,7 @@ const { title, description, preloadImgLCP } = Astro.props
 				--color-primary: #ddd;
 				--color-secondary: #333;
 				--color-accent: #d5ff00;
+				--color-accent-rgb: 213, 255, 0;
 
 				--background-color: #141800;
 				--background-twitch: var(--color-twitch-ice);
@@ -56,19 +66,11 @@ const { title, description, preloadImgLCP } = Astro.props
 			html {
 				font-family: "Jost Variable", system-ui, sans-serif;
 				background: var(--background-color);
-				overflow-x: hidden;
-				overscroll-behavior: none;
 			}
 
 			main {
 				position: relative;
 			}
-
-			/* @media screen and (prefers-reduced-motion: no-preference) {
-html {
-scroll-behavior: smooth;
-}
-} */
 
 			/* Hiding class, making content visible only to screen readers but not visually */
 			/* "sr" meaning "screen-reader" */
@@ -82,28 +84,37 @@ scroll-behavior: smooth;
 				width: 1px;
 			}
 
-			::-webkit-scrollbar {
-				width: 10px;
-				border-radius: 10px;
+			@supports selector(::-webkit-scrollbar) {
+				::-webkit-scrollbar {
+					width: 10px;
+					border-radius: 10px;
+				}
+
+				::-webkit-scrollbar-thumb {
+					border-radius: 10px;
+					background-color: theme("colors.primary");
+					border: 2px solid transparent;
+					background-clip: content-box;
+				}
+
+				::-webkit-scrollbar-thumb:active {
+					background-color: #666;
+				}
+
+				::-webkit-scrollbar-track {
+					background: var(--background-image);
+				}
+
+				::-webkit-scrollbar-corner {
+					background: var(--background-image);
+				}
 			}
 
-			::-webkit-scrollbar-thumb {
-				border-radius: 10px;
-				background-color: theme("colors.primary");
-				border: 2px solid transparent;
-				background-clip: content-box;
-			}
-
-			::-webkit-scrollbar-thumb:active {
-				background-color: #666;
-			}
-
-			::-webkit-scrollbar-track {
-				background: var(--background-image);
-			}
-
-			::-webkit-scrollbar-corner {
-				background: var(--background-image);
+			@supports not selector(::-webkit-scrollbar) {
+				* {
+					scrollbar-color: theme("colors.primary") transparent;
+					scrollbar-width: thin;
+				}
 			}
 		</style>
 	</body>

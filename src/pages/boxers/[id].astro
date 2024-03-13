@@ -1,0 +1,42 @@
+---
+import { BOXERS } from "@/consts/boxers"
+import Layout from "@/layouts/Layout.astro"
+
+export function getStaticPaths() {
+	return BOXERS.map(({ id }) => ({
+		params: { id },
+	}))
+}
+
+const { id } = Astro.params
+
+const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
+---
+
+<Layout
+	description={`Información del luchador ${boxer.name}`}
+	title={`${boxer.name} - Información del boxeador de La Velada IV`}
+>
+	<main class="flex flex-col items-center">
+		<div class="w-full lg:flex lg:items-center">
+			<picture class="boxer-photo h-auto w-[400px]" transition:name="boxer-big-image">
+				<source srcset={`/img/boxers/${id}-big.avif`} type="image/avif" />
+				<img
+					class="aspect-[285/428] h-auto w-full"
+					alt={`Fotografía de ${boxer.name}`}
+					src={`/img/boxers/${id}-big.webp`}
+					style="filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5)); mask-image: linear-gradient(to bottom, black 80%, transparent 100%);"
+				/>
+			</picture>
+			<div class="w-full px-10 text-center lg:mx-auto lg:w-1/2 lg:text-left">
+				<p class="text-xl text-white">{boxer.realName}</p>
+				<p class="text-xl text-white">Edad: {boxer.age}</p>
+				<p class="text-xl text-white">Peso: {boxer.weight} kg</p>
+				<p class="text-xl text-white">Altura: {boxer.height} cm</p>
+				<p class="flex items-center justify-center text-xl lg:justify-start">
+					<img class="ml-2" src={`/img/flags/${boxer.country}.webp`} alt={boxer.country} />
+				</p>
+			</div>
+		</div>
+	</main>
+</Layout>
