@@ -8,8 +8,6 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	const countryName = COUNTRIES[country]?.name || ""
 	return { ...boxer, countryName }
 })
-
-const msFadeLuchador = 150
 ---
 
 <section class="my-40">
@@ -28,11 +26,7 @@ const msFadeLuchador = 150
 	</Typography>
 
 	<div class="flex flex-col items-center justify-center gap-8">
-		<article
-			data-transition-duration={msFadeLuchador}
-			class="relative flex w-full flex-col items-center justify-center"
-			style="view-transition-name: boxer;"
-		>
+		<article class="relative flex w-full flex-col items-center justify-center">
 			<header class="relative flex w-full flex-col items-center justify-center">
 				<div
 					class="absolute inset-0 -z-20 m-auto bg-center bg-no-repeat"
@@ -44,14 +38,14 @@ const msFadeLuchador = 150
 				>
 				</div>
 				<picture
-					x.transition:name="boxer-big-image"
-					class:list={"boxer-photo h-auto object-contain px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]"}
+					class:list={"boxer-photo aspect-[285/428] h-auto w-[400px]"}
+					transition:name="boxer-big-image"
 				>
 					<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
 					<img
-						class:list={"boxer-photo h-auto object-contain px-10 sm:w-[30vw] sm:px-0 xl:w-[19vw] 3xl:h-[600px] 3xl:w-[480px]"}
+						class="aspect-[285/428] h-auto w-full object-contain"
 						alt="Fotografía de El Mariana"
-						src="/img/boxers/el-mariana-big.wepb"
+						src="/img/boxers/el-mariana-big.webp"
 						style="
 							filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
 							mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
@@ -71,7 +65,7 @@ const msFadeLuchador = 150
 				</div>
 
 				<img
-					class:list={`boxer-flag pointer-events-none aspect-[3/2] h-auto w-20 object-contain object-center transition duration-[${msFadeLuchador}] 3xl:w-24`}
+					class:list={"boxer-flag pointer-events-none aspect-[3/2] h-auto w-20 object-contain object-center 3xl:w-24"}
 					alt="Bandera de México"
 					src="/img/flags/mx.webp"
 				/>
@@ -79,14 +73,14 @@ const msFadeLuchador = 150
 
 			<footer
 				id="boxer-footer"
-				class="absolute bottom-0 hidden w-full justify-between text-center text-white transition duration-200 xl:flex"
+				class="absolute bottom-0 hidden w-full justify-between text-center text-white xl:flex"
 			>
 				<div class="flex flex-col gap-y-2">
 					<h4 class="text-lg">País</h4>
 					<p id="boxer-country" class="text-lg font-bold">México</p>
 					<a
 						href="#"
-						class="mt-10 inline-block font-semibold text-accent transition hover:scale-110"
+						class="mt-10 inline-block font-semibold text-accent transition-transform hover:scale-110"
 					>
 						Ver combate
 					</a>
@@ -94,10 +88,10 @@ const msFadeLuchador = 150
 
 				<div class="flex flex-col gap-y-2">
 					<h4 class="text-lg">Peso</h4>
-					<p id="boxer-weight" class="text-lg font-bold">87</p>
+					<p id="boxer-weight" class="text-lg font-bold">87kg</p>
 					<a
 						href="#"
-						class="mt-10 inline-block font-semibold text-accent transition hover:scale-110"
+						class="mt-10 inline-block font-semibold text-accent transition-transform hover:scale-110"
 					>
 						Ver perfil
 					</a>
@@ -105,13 +99,12 @@ const msFadeLuchador = 150
 			</footer>
 		</article>
 		<aside class="boxers-aside">
-			<div class="blur"><div class="clip-black"></div></div>
 			<nav class="boxers-nav">
 				{
-					listOfBoxers.map(({ id, name, country, countryName, weight }) => (
+					listOfBoxers.map(({ id, name, country, countryName, weight }, index) => (
 						<a
 							href={`/boxers/${id}`}
-							class="boxer-link"
+							class:list={["boxer-link", { active: index === 0 }]}
 							title={`Visita la página del boxeador ${name}`}
 							data-id={id}
 							data-name={name}
@@ -120,14 +113,12 @@ const msFadeLuchador = 150
 							data-weight={weight}
 						>
 							<div class="boxer-link-background" />
-							<picture class="boxer-image">
-								<img
-									loading="lazy"
-									src={`/img/boxers/${id}-small.webp`}
-									alt={`Foto en pequeño del boxeador ${name}`}
-									class="boxer-image"
-								/>
-							</picture>
+							<img
+								loading="lazy"
+								src={`/img/boxers/${id}-small.webp`}
+								alt={`Foto en pequeño del boxeador ${name}`}
+								class="boxer-image aspect-square h-full w-full object-contain"
+							/>
 						</a>
 					))
 				}
@@ -137,44 +128,55 @@ const msFadeLuchador = 150
 </section>
 
 <script>
-	const article = document.querySelector("article") as HTMLElement
-	const boxerLinks = document.querySelectorAll(".boxer-link")
-	const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
-	const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
-	const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
-	const boxerFooter = document.getElementById("boxer-footer") as HTMLElement
-	const boxerCountryElement = document.getElementById("boxer-country") as HTMLElement
-	const boxerWeightElement = document.getElementById("boxer-weight") as HTMLElement
+	document.addEventListener("astro:page-load", () => {
+		const boxerLinks = document.querySelectorAll(".boxer-link") as NodeListOf<HTMLAnchorElement>
+		const boxerNav = document.querySelector(".boxers-nav")
+		const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
+		const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
+		const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
+		const boxerFooter = document.getElementById("boxer-footer") as HTMLElement
+		const boxerCountryElement = document.getElementById("boxer-country") as HTMLElement
+		const boxerWeightElement = document.getElementById("boxer-weight") as HTMLElement
 
-	boxerLinks.forEach((link) => {
-		let timeout: number
+		function activateBoxer(element: HTMLElement, link: HTMLElement, replaceUrl: boolean = false) {
+			if (element.classList.contains("active")) return
 
-		link.addEventListener("mouseenter", (event) => {
-			const { id, name, country, countryName, weight } = (event.currentTarget as HTMLElement)
-				?.dataset
+			const { id, name, country, countryName, weight } = element?.dataset
+
+			boxerNav?.querySelector(".active")?.classList.remove("active")
 			link.classList.add("active")
-			timeout = setTimeout(
-				() => {
-					const boxerSrc = `/img/boxers/${id}-big`
+			if (replaceUrl) {
+				history.replaceState({}, "", `?boxer=${id}`)
+			}
 
-					boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
-					boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
-					boxerTitle.innerText = name?.toLocaleLowerCase() ?? ""
-					boxerCountry.src = `/img/flags/${country}.webp`
+			const boxerSrc = `/img/boxers/${id}-big`
 
-					boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
-					boxerCountry.alt = `Bandera de ${countryName}`
+			boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
+			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
+			boxerTitle.innerText = name?.toLocaleLowerCase() ?? ""
+			boxerCountry.src = `/img/flags/${country}.webp`
 
-					boxerCountryElement.innerText = countryName ?? ""
-					boxerWeightElement.innerText = weight ?? ""
-					boxerFooter.style.display = "flex"
-				},
-				article.getAttribute("data-transition-duration") as unknown as number
-			)
-		})
-		link.addEventListener("mouseleave", () => {
-			link.classList.remove("active")
-			clearTimeout(timeout)
+			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
+			boxerCountry.alt = `Bandera de ${countryName}`
+
+			boxerCountryElement.innerText = countryName ?? ""
+			boxerWeightElement.innerText = weight ? `${weight}kg` : "?"
+			boxerFooter.style.display = "flex"
+		}
+
+		const urlParams = new URLSearchParams(window.location.search)
+		const boxerId = urlParams.get("boxer") ?? "el-mariana"
+		const boxerEl = document.querySelector(`[data-id="${boxerId}"]`) as HTMLElement
+		if (boxerEl) {
+			activateBoxer(boxerEl, boxerEl, false)
+		}
+
+		boxerLinks.forEach((link) => {
+			link.addEventListener("mouseenter", (event) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				if (currentTarget.classList.contains("active")) return
+				activateBoxer(currentTarget, link, true)
+			})
 		})
 	})
 </script>
@@ -230,22 +232,22 @@ const msFadeLuchador = 150
 	.boxer-image {
 		object-fit: contain;
 		z-index: 2;
-		transition: all 0.3s ease-in-out;
-		height: 100%;
+		transition: transform 0.3s ease-in-out;
 		mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
 	}
 
-	.boxer-link:hover .boxer-image {
-		transform: scale(1.05);
-	}
 	.boxer-link .boxer-image {
 		filter: grayscale(100%);
 		transition: filter 0.3s ease;
 	}
 
+	.boxer-link:hover .boxer-image,
 	.boxer-link.active .boxer-image {
+		transform: scale(1.05);
 		filter: grayscale(0%);
 	}
+
+	.boxer-link.active .boxer-link-background,
 	.boxer-link:hover .boxer-link-background {
 		filter: brightness(0.5);
 	}
@@ -268,16 +270,6 @@ const msFadeLuchador = 150
 		.boxer-link {
 			@apply flex items-center justify-center;
 			width: 100%;
-		}
-
-		.boxer-image {
-			@apply h-full;
-		}
-	}
-
-	@media (max-width: 1650px) {
-		.boxers-aside.up {
-			margin-top: -15rem;
 		}
 	}
 </style>
