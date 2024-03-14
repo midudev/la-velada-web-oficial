@@ -60,7 +60,10 @@ const listOfBoxers = BOXERS.map((boxer) => {
 						color="primary"
 						class:list={"boxer-title -skew-y-6 text-center"}
 					>
-						el mariana
+						<span class="flex flex-col">
+							<span class="text-4xl"> el </span>
+							mariana
+						</span>
 					</Typography>
 				</div>
 
@@ -144,6 +147,16 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
 			const { id, name, country, countryName, weight } = element?.dataset
 
+			const splitName = name?.split(" ") ?? []
+			const lastName = splitName[splitName.length - 1]
+			const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
+			const spanNames = `
+				<span class="flex flex-col">
+					<span class="text-4xl">${firstNames?.toLocaleLowerCase()}</span>
+					<span class="last-name">${lastName?.toLocaleLowerCase()}</span>
+				</span>
+			`
+
 			boxerNav?.querySelector(".active")?.classList.remove("active")
 			link.classList.add("active")
 			if (replaceUrl) {
@@ -154,7 +167,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
 			boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
 			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
-			boxerTitle.innerText = name?.toLocaleLowerCase() ?? ""
+			boxerTitle.innerHTML = spanNames ?? ""
 			boxerCountry.src = `/img/flags/${country}.webp`
 			boxerProfile.href = `/boxers/${id}`
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
