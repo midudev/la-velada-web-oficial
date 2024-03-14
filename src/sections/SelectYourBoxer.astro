@@ -82,12 +82,12 @@ const boxerColumns = [
 			/>
 		</article>
 		<div class="boxers-nav flex w-full justify-between">
-			<nav class="boxers-aside flex justify-start h-full gap-2 py-4">
+			<nav class="boxers-lists flex justify-start h-full gap-2 py-4">
 				<ColumnBoxers boxers={boxerColumns[0]} />
 				<ColumnBoxers boxers={boxerColumns[1]} class="mt-4" />
 			</nav>
 
-			<nav class="boxers-aside flex h-full justify-end gap-2 py-4">
+			<nav class="boxers-lists flex h-full justify-end gap-2 py-4">
 				<ColumnBoxers boxers={boxerColumns[2]} class="mt-4" />
 				<ColumnBoxers boxers={boxerColumns[3]} />
 			</nav>
@@ -152,13 +152,13 @@ const boxerColumns = [
 </script>
 
 <style>
-	.boxers-aside {
+	.boxers-lists {
 		@apply relative h-32 w-screen overflow-x-scroll;
 		scrollbar-width: none;
 	}
 
 	@media (min-width: 1280px) {
-		.boxers-aside {
+		.boxers-lists {
 			@apply h-auto w-full max-w-none overflow-hidden py-2;
 		}
 	}
