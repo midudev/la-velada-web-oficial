@@ -1,0 +1,30 @@
+---
+import Typography from "@/components/Typography.astro"
+---
+
+<div class="flex flex-col gap-4 text-center md:flex-row lg:gap-6">
+	<Typography as="span" variant="body" color="neutral" class:list={"text-center"}>
+		&copy; {new Date().getFullYear()} La Velada del Año <span
+			aria-hidden="true"
+			class="hidden md:inline">|</span
+		><br aria-hidden="true" class="block md:hidden" /> Todos los derechos reservados.
+	</Typography>
+	<Typography
+		as="a"
+		variant="body"
+		color="neutral"
+		class:list="underline hidden"
+		href="/legal-advice"
+	>
+		Aviso legal
+	</Typography>
+	<Typography
+		as="a"
+		variant="body"
+		color="neutral"
+		class:list="underline hidden"
+		href="/privacy-policy"
+	>
+		Política de privacidad
+	</Typography>
+</div>
