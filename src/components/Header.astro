@@ -161,6 +161,20 @@ const pages = [
 		border-radius: 100%;
 		transform: translateY(-50%);
 	}
+	@media (prefers-reduced-motion) {
+		.nav-item .background {
+			transition: opacity 0s;
+		}
+
+		.nav-item:hover .background,
+		.nav-item:focus .background {
+			opacity: 1;
+		}
+
+		#menuMobileContent {
+			transition: opacity 0s;
+		}
+	}
 </style>
 
 <script>
