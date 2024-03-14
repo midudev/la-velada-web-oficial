@@ -16,16 +16,16 @@ const pages = [
 }))
 ---
 
-<header class="mb-10 h-16 lg:h-24">
+<header class="mb-10 h-16 max-w-[100vw] lg:h-24">
 	<nav class="group flex h-full w-full items-center justify-between px-10 lg:justify-center">
 		{
 			pages.map(({ disabled, name, href, active }, key) => (
 				<>
 					<a
-						href={disabled ? "/" : href}
+						href={href}
 						class:list={[
 							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 px-10 text-xl uppercase text-white lg:flex",
-							{ "cursor-not-allowed": disabled },
+							{ "pointer-events-none": disabled },
 							{ "current-page": active },
 						]}
 						id={`nav-link-${key}`}
@@ -44,7 +44,7 @@ const pages = [
 		<a href="/" class="block lg:hidden"><DrawnXLogo class:list={"w-10"} /></a>
 		<HamburgerButton class:list={"block lg:hidden"} id="menuButton" />
 		<div
-			class="absolute inset-0 z-[888] flex h-screen w-screen flex-col items-center overflow-x-auto bg-[var(--background-color)] px-10 lg:hidden"
+			class="fixed inset-0 z-[888] flex w-screen flex-col items-center overflow-x-auto bg-[var(--background-color)] px-10 lg:hidden"
 			id="menuMobileContent"
 		>
 			<aside class="flex min-h-16 w-full items-center justify-between">
@@ -97,16 +97,19 @@ const pages = [
 		</div>
 	</nav>
 	<div class="relative flex h-2 w-full flex-col items-center">
-		<div class="absolute flex h-full w-full items-center">
-			<hr
+		<div class="gridBottomBarContainer absolute grid w-full items-center justify-between">
+			<div
 				class="h-[2px] w-full border-t-0"
 				style="background:linear-gradient(to right, transparent 3%, white 35%, white 100%)"
-			/>
-			<HeroLogo class:list={"-mx-2 h-60 w-auto lg:-ml-5 lg:h-80"} noEffect />
-			<hr
+			>
+			</div>
+			<div class="-mx-2 -ml-4"><HeroLogo class:list={" w-full"} noEffect /></div>
+			<!-- <div class="bg-red-500">la velada del año</div> -->
+			<div
 				class="h-[2px] w-full border-t-0"
 				style="background:linear-gradient(to left, transparent 3%, white 35%, white 100%)"
-			/>
+			>
+			</div>
 		</div>
 	</div>
 </header>
@@ -160,6 +163,17 @@ const pages = [
 		height: 10px;
 		border-radius: 100%;
 		transform: translateY(-50%);
+	}
+
+	.gridBottomBarContainer {
+		grid-template-columns: 1fr 6rem 1fr;
+		grid-template-rows: 4px;
+	}
+
+	@media (min-width: 1024px) {
+		.gridBottomBarContainer {
+			grid-template-columns: 1fr 9rem 1fr;
+		}
 	}
 	@media (prefers-reduced-motion) {
 		.nav-item .background {
