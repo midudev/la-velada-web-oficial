@@ -9,6 +9,7 @@ import NoiseBackground from "@/components/NoiseBackground.astro"
 import SEO from "@/components/SEO.astro"
 import Footer from "@/sections/Footer.astro"
 import "@fontsource-variable/jost"
+import { BOXERS } from "@/consts/boxers"
 
 interface Props {
 	description: string
@@ -17,6 +18,8 @@ interface Props {
 }
 
 const { title, description, preloadImgLCP } = Astro.props
+
+const imagesToPreload = BOXERS.map((boxer) => `/img/boxers/${boxer.id}-big.avif`)
 ---
 
 <!doctype html>
@@ -24,6 +27,7 @@ const { title, description, preloadImgLCP } = Astro.props
 	<head>
 		<SEO title={title} description={description} preloadImgLCP={preloadImgLCP!} />
 		<ViewTransitions />
+		{imagesToPreload.map((src) => <link rel="preload" href={src} as="image" />)}
 	</head>
 
 	<body
