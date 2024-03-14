@@ -33,12 +33,14 @@ export default defineConfig({
 				manifest,
 				workbox: {
 					globDirectory: "dist",
-					globPatterns: ["**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}"],
+					globPatterns: [
+						"**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}"
+					],
 					// Don't fallback on document based (e.g. `/some-page`) requests
 					// This removes an errant console.log message from showing up.
-					navigateFallback: null,
-				},
-			}),
-		],
+					navigateFallback: null
+				}
+			})
+		]
 	},
 })
