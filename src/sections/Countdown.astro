@@ -11,14 +11,14 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 	</p>
 
 	<div
-		class="grid w-full grid-cols-2 flex-col items-center justify-center gap-4 gap-y-20 uppercase text-primary md:grid-cols-3 md:gap-x-6 md:gap-y-11"
+		class="grid w-full select-none grid-cols-3 flex-col items-center justify-center gap-y-20 uppercase text-primary md:gap-x-6 md:gap-y-11"
 		data-date={EVENT_TIMESTAMP}
 		role="timer"
 	>
 		<Date
 			dateType="Días"
 			attribute={{ "data-days": "" }}
-			position="md:col-span-3"
+			position="col-span-3"
 			className="text-7xl text-accent md:text-[20rem]"
 			wrapperClassName="my-8 md:my-0 md:-mt-16"
 			height={"h-[3.80rem] md:h-[20rem]"}
@@ -178,5 +178,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 		updateCountdown()
 	}
 
-	init()
+	document.addEventListener("astro:page-load", () => {
+		init()
+	})
 </script>

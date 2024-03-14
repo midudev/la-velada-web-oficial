@@ -17,7 +17,7 @@ type SponsorName =
 	| "Spotify"
 	| "Cerave"
 	| "Grefusa"
-	| "El Pozo"
+	| "ElPozo"
 	| "Maxibon"
 	| "InfoJobs"
 
@@ -88,7 +88,7 @@ export const SPONSORS: Array<Sponsors> = [
 	},
 	{
 		id: "el-pozo",
-		name: "El Pozo",
+		name: "ElPozo",
 		url: "https://elpozo.com/",
 		image: {
 			width: 134,
