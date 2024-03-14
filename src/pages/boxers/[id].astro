@@ -1,6 +1,7 @@
 ---
 import { BOXERS } from "@/consts/boxers"
 import Layout from "@/layouts/Layout.astro"
+import Combat from "@/sections/Combat.astro"
 
 export function getStaticPaths() {
 	return BOXERS.map(({ id }) => ({
@@ -14,17 +15,17 @@ const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 
 console.log(`url ${import.meta.env.API_URL}/combats/${id}.json`)
 
-fetch(`${import.meta.env.API_URL}/combats/get-combat-by-boxer-id.json?boxerId=${id}`, {
-	method: "GET",
-	headers: {
-		"Content-Type": "application/json",
-	},
-})
-	.then((res) => res.json())
-	.then((data) => {
-		console.log(data)
-	})
-	.catch((err) => console.error(err))
+const combatRes = await fetch(
+	`${import.meta.env.API_URL}/combats/get-combat-and-boxers-by-boxer-id.json?boxerId=${id}`,
+	{
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	}
+)
+
+const { combat, boxers } = await combatRes.json()
 ---
 
 <Layout
@@ -54,7 +55,7 @@ fetch(`${import.meta.env.API_URL}/combats/get-combat-by-boxer-id.json?boxerId=${
 				</div>
 			</div>
 		</section>
-		<section></section>
+		<Combat combatNumber={combat.id} , boxers={boxers} />
 	</main>
 </Layout>
 
