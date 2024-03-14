@@ -122,7 +122,8 @@ const pages = [
 		transition: opacity 0.3s;
 	}
 
-	.nav-item:hover .background {
+	.nav-item:hover .background,
+	.nav-item:focus .background {
 		opacity: 1;
 	}
 
@@ -141,7 +142,7 @@ const pages = [
 		filter: drop-shadow(0px 0px 25px rgba(var(--color-accent-rgb), 0.25));
 	}
 	.current-page:before {
-		background: #b4cd02;
+		background: var(--color-accent);
 		width: 100%;
 		content: "";
 		position: absolute;
@@ -150,7 +151,7 @@ const pages = [
 		height: 8px;
 	}
 	.current-page-mob:before {
-		background: #b4cd02;
+		background: var(--color-accent);
 		width: 10px;
 		content: "";
 		position: absolute;
@@ -159,6 +160,20 @@ const pages = [
 		height: 10px;
 		border-radius: 100%;
 		transform: translateY(-50%);
+	}
+	@media (prefers-reduced-motion) {
+		.nav-item .background {
+			transition: opacity 0s;
+		}
+
+		.nav-item:hover .background,
+		.nav-item:focus .background {
+			opacity: 1;
+		}
+
+		#menuMobileContent {
+			transition: opacity 0s;
+		}
 	}
 </style>
 
