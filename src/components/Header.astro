@@ -2,7 +2,6 @@
 import HamburgerButton from "@/components/HamburgerButton.astro"
 import HeroLogo from "@/components/HeroLogo.astro"
 import DrawnXLogo from "@/components/DrawnXLogo.astro"
-import Footer from "@/sections/Footer.astro"
 import FooterContent from "@/components/FooterContent.astro"
 import SocialButtons from "@/components/SocialButtons.astro"
 
@@ -11,20 +10,25 @@ const pages = [
 	{ name: "Combates", href: "/combates", disabled: true },
 	{ name: "Pronósticos", href: "/pronosticos", disabled: true },
 	{ name: "Entradas", href: "/entradas", disabled: true },
-]
+].map((page) => ({
+	...page,
+	active: Astro.url.pathname === page.href,
+}))
 ---
 
 <header class="mb-10 h-16 lg:h-24">
 	<nav class="group flex h-full w-full items-center justify-between px-10 lg:justify-center">
 		{
-			pages.map(({ disabled, name, href }, key) => (
+			pages.map(({ disabled, name, href, active }, key) => (
 				<>
 					<a
-						href={disabled ? "" : href}
+						href={disabled ? "/" : href}
 						class:list={[
 							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 px-10 text-xl uppercase text-white lg:flex",
 							{ "cursor-not-allowed": disabled },
+							{ "current-page": active },
 						]}
+						id={`nav-link-${key}`}
 					>
 						<span class="z-10">{name}</span>
 						{disabled ? (
@@ -33,12 +37,12 @@ const pages = [
 							<div class="background absolute -z-10 h-full w-full" />
 						)}
 					</a>
-					{key == 1 && <div class={`hidden w-64 lg:block`} />}
+					{key === 1 && <div class:list={"hidden w-64 lg:block"} />}
 				</>
 			))
 		}
-		<a href="/"><DrawnXLogo class:list={`block w-10 lg:hidden`} /></a>
-		<HamburgerButton class:list={`block lg:hidden`} id="menuButton" />
+		<a href="/" class="block lg:hidden"><DrawnXLogo class:list={"w-10"} /></a>
+		<HamburgerButton class:list={"block lg:hidden"} id="menuButton" />
 		<div
 			class="absolute inset-0 z-[888] flex h-screen w-screen flex-col items-center overflow-x-auto bg-[var(--background-color)] px-10 lg:hidden"
 			id="menuMobileContent"
@@ -54,20 +58,26 @@ const pages = [
 				/>
 			</div>
 			<nav class="flex w-full flex-col items-center gap-5">
-				<img src="img/lvda.webp" class="accent-drop-shadow my-4 max-w-60 drop-shadow-lg" />
+				<img
+					src="img/lvda.webp"
+					alt="lvda logo"
+					class="accent-drop-shadow my-4 max-w-60 drop-shadow-lg"
+				/>
 				<hr
 					class="h-[2px] w-full border-t-0"
 					style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
 				/>
 				{
-					pages.map(({ disabled, name, href }, key) => (
+					pages.map(({ disabled, name, href, active }, key) => (
 						<>
 							<a
 								href={href}
 								class:list={[
-									"flex flex-col items-center justify-center gap-2 text-xl capitalize",
+									"relative flex flex-col items-center justify-center gap-2 text-xl capitalize",
 									{ "pointer-events-none": disabled },
+									{ "current-page-mob": active },
 								]}
+								id={`navmob-link-${key}`}
 							>
 								<span class="z-10 uppercase text-primary">{name}</span>
 								{disabled && <span class="text-accent">Próximamente</span>}
@@ -92,7 +102,7 @@ const pages = [
 				class="h-[2px] w-full border-t-0"
 				style="background:linear-gradient(to right, transparent 3%, white 35%, white 100%)"
 			/>
-			<HeroLogo class:list={`-mx-2 h-60 w-auto lg:-ml-5 lg:h-80`} noEffect />
+			<HeroLogo class:list={"-mx-2 h-60 w-auto lg:-ml-5 lg:h-80"} noEffect />
 			<hr
 				class="h-[2px] w-full border-t-0"
 				style="background:linear-gradient(to left, transparent 3%, white 35%, white 100%)"
@@ -112,7 +122,8 @@ const pages = [
 		transition: opacity 0.3s;
 	}
 
-	.nav-item:hover .background {
+	.nav-item:hover .background,
+	.nav-item:focus .background {
 		opacity: 1;
 	}
 
@@ -134,10 +145,45 @@ const pages = [
 	.accent-drop-shadow {
 		filter: drop-shadow(0px 0px 25px rgba(var(--color-accent-rgb), 0.25));
 	}
+	.current-page:before {
+		background: var(--color-accent);
+		width: 100%;
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 8px;
+	}
+	.current-page-mob:before {
+		background: var(--color-accent);
+		width: 10px;
+		content: "";
+		position: absolute;
+		top: 50%;
+		left: -20px;
+		height: 10px;
+		border-radius: 100%;
+		transform: translateY(-50%);
+	}
+	@media (prefers-reduced-motion) {
+		.nav-item .background {
+			transition: opacity 0s;
+		}
+
+		.nav-item:hover .background,
+		.nav-item:focus .background {
+			opacity: 1;
+		}
+
+		#menuMobileContent {
+			transition: opacity 0s;
+		}
+	}
 </style>
 
 <script>
-	import { $, $$ } from "@/consts/dom-selector"
+	import { $ } from "@/consts/dom-selector"
+
 	document.addEventListener("astro:page-load", () => {
 		const nav = $("nav")
 		const menuButton = $("#menuButton")
