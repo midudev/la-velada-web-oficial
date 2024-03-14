@@ -71,26 +71,23 @@ const forecastRes = await fetch(
 	}
 )
 
-if (forecastRes.status !== 200) {
-	return new Response(forecastRes.statusText, { status: forecastRes.status })
-}
-
-const forecast: Forecast = await forecastRes.json()
-
-if (!forecast) {
-	return new Response("Forecast not found", { status: 404 })
-}
-
 const boxersWithForecast: BoxerWithForecast[] = []
 let forecastCount = 0
+let forecast: Forecast | undefined
 
-forecast.forecastData.map((forecastData) => {
-	const boxer = boxers.find((boxer) => boxer.id === forecastData.boxerId)
-	if (boxer) {
-		boxersWithForecast.push({ ...boxer, forecast: forecastData.forecast })
-		forecastCount += forecastData.predictionsCount
+if (forecastRes.status == 200) {
+	forecast = await forecastRes.json()
+
+	if (forecast) {
+		forecast.forecastData.map((forecastData) => {
+			const boxer = boxers.find((boxer) => boxer.id === forecastData.boxerId)
+			if (boxer) {
+				boxersWithForecast.push({ ...boxer, forecast: forecastData.forecast })
+				forecastCount += forecastData.predictionsCount
+			}
+		})
 	}
-})
+}
 ---
 
 <Layout
@@ -120,7 +117,11 @@ forecast.forecastData.map((forecastData) => {
 				</div>
 			</div>
 		</section>
-		<Forecasts combatNumber={combat.id} count={forecastCount} boxers={boxersWithForecast} />
+		{
+			forecast && (
+				<Forecasts combatNumber={combat.id} count={forecastCount} boxers={boxersWithForecast} />
+			)
+		}
 		<CombatSection combatNumber={combat.id} , boxers={boxers} />
 	</main>
 </Layout>
