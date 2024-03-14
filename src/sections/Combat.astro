@@ -25,7 +25,7 @@ const { combatNumber, boxers } = Astro.props
 			variant="atomic-title"
 			color="primary"
 			tabindex={-1}
-			class:list={"absolute inset-0 -z-10 h-full w-full self-center text-center text-[20rem] opacity-80"}
+			class:list={"absolute inset-0 -z-10 self-center text-center text-[20rem] opacity-80"}
 			>{combatNumber}
 		</Typography>
 		<h2 class:list={["text-center text-4xl font-semibold uppercase text-white  lg:text-6xl"]}>
@@ -40,6 +40,14 @@ const { combatNumber, boxers } = Astro.props
 		</h2>
 	</div>
 	<div>
-		<a class:list={["text-xl font-semibold text-accent"]} tabindex="0">Ver combate</a>
+		<a
+			class:list={[
+				"pointer-events-none flex flex-col items-center justify-center text-2xl font-semibold text-accent",
+			]}
+			tabindex="0"
+			><span class="text-primary opacity-80">Ver combate</span><span
+				class="-skew-x-6 text-xs font-light uppercase">Próximamente</span
+			></a
+		>
 	</div>
 </section>
