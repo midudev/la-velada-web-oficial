@@ -3,17 +3,17 @@ import Typography from "@/components/Typography.astro"
 import type { Boxer } from "@/consts/boxers"
 
 interface Props {
-	combatNumber: number
+	combatNumber: string
 	boxers: Boxer[]
 }
 
-const ordinals: Record<number, string> = {
-	1: "Primer",
-	2: "Segundo",
-	3: "Tercer",
-	4: "Cuarto",
-	5: "Quinto",
-	6: "Sexto",
+const ordinals: Record<string, string> = {
+	"1": "Primer",
+	"2": "Segundo",
+	"3": "Tercer",
+	"4": "Cuarto",
+	"5": "Quinto",
+	"6": "Sexto",
 }
 const { combatNumber, boxers } = Astro.props
 ---
