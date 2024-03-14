@@ -1,6 +1,7 @@
 interface Boxer {
 	id: string
 	name: string
+	birthDate: Date
 	age: number
 	realName: string
 	weight: number
@@ -8,12 +9,21 @@ interface Boxer {
 	country: string
 }
 
-export const BOXERS: Boxer[] = [
+const addAgeGetter = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
+	return boxersWithoutAge.map((boxerWithoutAge) => ({
+		...boxerWithoutAge,
+		get age() {
+			return new Date(new Date().getTime() - this.birthDate.getTime()).getFullYear() - 1970
+		},
+	}))
+}
+
+export const BOXERS: Boxer[] = addAgeGetter([
 	{
 		id: "el-mariana",
 		name: "El Mariana",
 		realName: "Osvaldo Palacios Flores",
-		age: 25,
+		birthDate: new Date(1998, 6, 23),
 		weight: 87,
 		height: 1.95,
 		country: "mx",
@@ -22,7 +32,7 @@ export const BOXERS: Boxer[] = [
 		id: "zeling",
 		name: "Zeling",
 		realName: "Alicia González",
-		age: 28,
+		birthDate: new Date(1995, 10, 3),
 		weight: 65, // No encontrado
 		height: 1.7, // No es seguro
 		country: "es",
@@ -31,7 +41,7 @@ export const BOXERS: Boxer[] = [
 		id: "alana",
 		name: "Alana",
 		realName: "Alana Flores",
-		age: 23,
+		birthDate: new Date(2000, 11, 15),
 		weight: 55,
 		height: 1.7,
 		country: "mx",
@@ -40,7 +50,7 @@ export const BOXERS: Boxer[] = [
 		id: "shelao",
 		name: "Shelao",
 		realName: "Cristóbal Andrés Álvarez Leiva",
-		age: 33,
+		birthDate: new Date(1990, 5, 8),
 		weight: 93,
 		height: 1.88,
 		country: "cl",
@@ -49,7 +59,7 @@ export const BOXERS: Boxer[] = [
 		id: "viruzz",
 		name: "Viruzz",
 		realName: "Víctor Mélida Cambra",
-		age: 31,
+		birthDate: new Date(1992, 4, 1),
 		weight: 85,
 		height: 1.82,
 		country: "es",
@@ -58,7 +68,7 @@ export const BOXERS: Boxer[] = [
 		id: "ama-blitz",
 		name: "Amablitz",
 		realName: "Amairani Garza Alonso",
-		age: 29, // No es seguro
+		birthDate: new Date(1995, 2, 1),
 		weight: 55, // No es seguro
 		height: 1.58,
 		country: "mx",
@@ -67,7 +77,7 @@ export const BOXERS: Boxer[] = [
 		id: "plex",
 		name: "YoSoyPlex",
 		realName: "Daniel Alonso Góndez",
-		age: 22,
+		birthDate: new Date(2001, 8, 20),
 		weight: 70,
 		height: 1.97,
 		country: "es",
@@ -76,7 +86,7 @@ export const BOXERS: Boxer[] = [
 		id: "nissaxter",
 		name: "Nissaxter",
 		realName: "Cristina Magadán",
-		age: 29,
+		birthDate: new Date(1994, 3, 4),
 		weight: 55, // No es seguro
 		height: 1.64,
 		country: "es",
@@ -85,7 +95,7 @@ export const BOXERS: Boxer[] = [
 		id: "guanyar",
 		name: "Guanyar",
 		realName: "Diego Iglesias",
-		age: 25,
+		birthDate: new Date(1998, 8, 28),
 		weight: 85,
 		height: 1.88,
 		country: "es",
@@ -94,7 +104,7 @@ export const BOXERS: Boxer[] = [
 		id: "la-cobra",
 		name: "La Cobra",
 		realName: "Lautaro Damián del Campo",
-		age: 26,
+		birthDate: new Date(1997, 8, 8),
 		weight: 105,
 		height: 1.83,
 		country: "ar",
@@ -103,7 +113,7 @@ export const BOXERS: Boxer[] = [
 		id: "agustin-51",
 		name: "Agustin51",
 		realName: "José Agustín Peréz Nuñéz",
-		age: 23,
+		birthDate: new Date(2000, 10, 18),
 		weight: 62, // No es seguro
 		height: 1.7,
 		country: "es",
@@ -112,7 +122,7 @@ export const BOXERS: Boxer[] = [
 		id: "carreraaa",
 		name: "Carreraaa",
 		realName: "Rodrigo Ezequiel Carrera",
-		age: 23,
+		birthDate: new Date(2000, 9, 9),
 		weight: 61,
 		height: 1.65,
 		country: "ar",
@@ -121,7 +131,7 @@ export const BOXERS: Boxer[] = [
 		id: "sezar-blue",
 		name: "Sezar Blue",
 		realName: "César González",
-		age: 50,
+		birthDate: new Date(1973,7,29),
 		weight: 87,
 		height: 1.77,
 		country: "es",
@@ -130,7 +140,7 @@ export const BOXERS: Boxer[] = [
 		id: "will",
 		name: "Will",
 		realName: "Ángelo Valdés",
-		age: 23,
+		birthDate: new Date(2000,5,29),
 		weight: 85, // No encontrado
 		height: 1.85, // No encontrado
 		country: "do",
@@ -139,7 +149,7 @@ export const BOXERS: Boxer[] = [
 		id: "peldanyos",
 		name: "Peldanyos",
 		realName: "Sergio Bolaños",
-		age: 25,
+		birthDate: new Date(1998,3,13),
 		weight: 87, // No encontrado
 		height: 1.91, // No es seguro
 		country: "es",
@@ -148,7 +158,7 @@ export const BOXERS: Boxer[] = [
 		id: "aldo-geo",
 		name: "Aldo Geo",
 		realName: "Aldo Geovanni",
-		age: 27,
+		birthDate: new Date(1996,9,14),
 		weight: 80, // No encontrado
 		height: 1.79,
 		country: "mx",
@@ -157,7 +167,7 @@ export const BOXERS: Boxer[] = [
 		id: "pelicanger",
 		name: "Pelicanger",
 		realName: "Angerson Esneider",
-		age: 23,
+		birthDate: new Date(2001,0,7),
 		weight: 85, // No es seguro
 		height: 1.91,
 		country: "co",
@@ -166,7 +176,7 @@ export const BOXERS: Boxer[] = [
 		id: "roberto-cein",
 		name: "RobertoCein",
 		realName: "Roberto Sebastián Guadarrama Jiménez",
-		age: 25,
+		birthDate: new Date(1998,6,29),
 		weight: 85, // No encontrado
 		height: 1.69, // No es seguro
 		country: "mx",
@@ -175,7 +185,7 @@ export const BOXERS: Boxer[] = [
 		id: "unicornio",
 		name: "Unicornio",
 		realName: "Germán Usinger",
-		age: 24,
+		birthDate: new Date(1999,5,7),
 		weight: 75, // No encontrado
 		height: 1.69, // No es seguro
 		country: "ar",
@@ -184,7 +194,7 @@ export const BOXERS: Boxer[] = [
 		id: "karchez",
 		name: "Karchez",
 		realName: "José Carlos Sánchez",
-		age: 23,
+		birthDate: new Date(2000,7,4),
 		weight: 85, // No encontrado
 		height: 1.84,
 		country: "es",
@@ -193,7 +203,7 @@ export const BOXERS: Boxer[] = [
 		id: "skain",
 		name: "Skain",
 		realName: "David Carbó Ferrer",
-		age: 27,
+		birthDate: new Date(1997,2,10),
 		weight: 83, // No encontrado
 		height: 1.83, // No encontrado
 		country: "es",
@@ -202,10 +212,10 @@ export const BOXERS: Boxer[] = [
 		id: "folagor",
 		name: "Folagor",
 		realName: "Yoel Ramírez Pulido",
-		age: 29,
+		birthDate: new Date(1994,11,9),
 		weight: 71,
 		height: 1.8,
 		country: "es",
 	},
 	*/
-] as const
+] as const)
