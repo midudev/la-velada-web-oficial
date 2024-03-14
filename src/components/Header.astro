@@ -22,10 +22,10 @@ const pages = [
 			pages.map(({ disabled, name, href, active }, key) => (
 				<>
 					<a
-						href={disabled ? "/" : href}
+						href={href}
 						class:list={[
 							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 px-10 text-xl uppercase text-white lg:flex",
-							{ "cursor-not-allowed": disabled },
+							{ "pointer-events-none": disabled },
 							{ "current-page": active },
 						]}
 						id={`nav-link-${key}`}
