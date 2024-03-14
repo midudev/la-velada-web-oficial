@@ -3,8 +3,8 @@ import Typography from "@/components/Typography.astro"
 
 interface Props {
 	readonly id: string
-	readonly name?: string
-	readonly country?: string
+	readonly name: string
+	readonly country: string
 	readonly countryName?: string
 }
 
@@ -47,22 +47,4 @@ const { name, country, countryName, id } = Astro.props
 			</Typography>
 		</div>
 	</div>
-	<!-- <div class="absolute bottom-14 left-1/2 mb-10 max-w-md -translate-x-1/2 transform text-wrap">
-		<Typography
-			as="h4"
-			variant="boxer-title"
-			color="primary"
-			class:list={"boxer-title -skew-y-6 text-center"}
-		>
-			<span class="flex flex-col">
-				<span class="text-4xl"> el </span>
-				mariana
-			</span>
-		</Typography>
-	</div>
-	<img
-		class:list={"boxer-flag pointer-events-none absolute bottom-0 left-1/2 aspect-[3/2] h-auto w-20 -translate-x-1/2 transform object-contain object-center sm:w-24 md:w-28"}
-		alt={`Bandera de ${countryName}`}
-		src={`/img/flags/${country}.webp`}
-	/> -->
 </div>

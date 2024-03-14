@@ -12,11 +12,11 @@ export interface Boxer {
 	guard?: string // Como no sabemos todos los datos lo dejamos como opcional
 	reach?: number // Como no sabemos todos los datos lo dejamos como opcional
 	socials: {
-		twitch?: string
-		instagram?: string
-		twitter?: string
-		youtube?: string
-		tiktok?: string
+		twitch?: string // Como no sabemos todos los datos lo dejamos como opcional
+		instagram?: string // Como no sabemos todos los datos lo dejamos como opcional
+		twitter?: string // Como no sabemos todos los datos lo dejamos como opcional
+		youtube?: string // Como no sabemos todos los datos lo dejamos como opcional
+		tiktok?: string // Como no sabemos todos los datos lo dejamos como opcional
 	}
 }
 
