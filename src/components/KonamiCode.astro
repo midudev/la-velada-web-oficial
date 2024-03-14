@@ -44,6 +44,20 @@
 	const $container = $("#main-content")
 	const $miduContainer = document.createElement("div")
 
+	const audioManager: {
+		audioInstance: HTMLAudioElement | null
+		getAudioInstance: () => HTMLAudioElement | null
+	} = {
+		audioInstance: null,
+		getAudioInstance: () => {
+			if (!audioManager.audioInstance) {
+				audioManager.audioInstance = new Audio("/sounds/son-robots-ibai.mp3")
+				return audioManager.audioInstance
+			}
+			return null
+		},
+	}
+
 	document.addEventListener("keydown", ({ key }) => {
 		Konami({
 			code: rotateY,
@@ -92,9 +106,13 @@
 					"position: fixed; width: 100dvw; height: 100vh; background: rgba(0,0,0,0.3); z-index: 10; inset: 0"
 				document.body.appendChild($miduContainer)
 				showContributors($miduContainer)
+				const audio = audioManager.getAudioInstance()
+				if (audio !== null) audio.play()
 			},
 			onFinish: () => {
 				checkAndRemoveContainer($miduContainer)
+				if (audioManager.audioInstance !== null && audioManager.audioInstance.paused)
+					audioManager.audioInstance = null
 			},
 		})
 	})
