@@ -18,7 +18,11 @@ const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 	title={`${boxer.name} - Información del boxeador de La Velada IV`}
 >
 	<main class="flex flex-col items-center">
-		<div class="w-full lg:flex lg:items-center">
+		<div
+			class={boxer.position === 1 || boxer.position === 4
+				? "w-full lg:flex lg:items-center"
+				: "w-full lg:flex lg:items-center flex-row-reverse"}
+		>
 			<picture class="boxer-photo h-auto w-[400px]" transition:name="boxer-big-image">
 				<source srcset={`/img/boxers/${id}-big.avif`} type="image/avif" />
 				<img

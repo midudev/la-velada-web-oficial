@@ -138,6 +138,10 @@ const boxerColumns = [
 			boxerCountry.src = `/img/flags/${country}.webp`
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
 			boxerCountry.alt = `Bandera de ${countryName}`
+
+			const listOfBoxers: any[] = []
+			const position = listOfBoxers.findIndex((boxer) => boxer.id === id) + 1
+			element.dataset.position = position.toString()
 		}
 
 		const urlParams = new URLSearchParams(window.location.search)
