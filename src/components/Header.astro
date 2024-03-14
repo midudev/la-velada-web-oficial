@@ -10,19 +10,23 @@ const pages = [
 	{ name: "Combates", href: "/combates", disabled: true },
 	{ name: "Pronósticos", href: "/pronosticos", disabled: true },
 	{ name: "Entradas", href: "/entradas", disabled: true },
-]
+].map((page) => ({
+	...page,
+	active: Astro.url.pathname === page.href,
+}))
 ---
 
-<header class="mb-10 h-16 lg:h-24" data-pages={JSON.stringify(pages)}>
+<header class="mb-10 h-16 lg:h-24">
 	<nav class="group flex h-full w-full items-center justify-between px-10 lg:justify-center">
 		{
-			pages.map(({ disabled, name, href }, key) => (
+			pages.map(({ disabled, name, href, active }, key) => (
 				<>
 					<a
-						href={disabled ? "" : href}
+						href={disabled ? "/" : href}
 						class:list={[
 							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 px-10 text-xl uppercase text-white lg:flex",
 							{ "cursor-not-allowed": disabled },
+							{ "current-page": active },
 						]}
 						id={`nav-link-${key}`}
 					>
@@ -64,13 +68,14 @@ const pages = [
 					style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
 				/>
 				{
-					pages.map(({ disabled, name, href }, key) => (
+					pages.map(({ disabled, name, href, active }, key) => (
 						<>
 							<a
 								href={href}
 								class:list={[
 									"relative flex flex-col items-center justify-center gap-2 text-xl capitalize",
 									{ "pointer-events-none": disabled },
+									{ "current-page-mob": active },
 								]}
 								id={`navmob-link-${key}`}
 							>
@@ -158,7 +163,7 @@ const pages = [
 </style>
 
 <script>
-	import { $, $$ } from "@/consts/dom-selector"
+	import { $ } from "@/consts/dom-selector"
 
 	document.addEventListener("astro:page-load", () => {
 		const nav = $("nav")
@@ -173,20 +178,5 @@ const pages = [
 			nav?.classList.toggle("open")
 			document.body.classList.toggle("overflow-hidden")
 		}
-
-		const header = document.querySelector("header")
-		const pages = JSON.parse(header.dataset.pages)
-
-		const currentPath = window.location.pathname
-		pages.forEach((page, index) => {
-			const link = document.getElementById(`nav-link-${index}`)
-			const mobLink = document.getElementById(`navmob-link-${index}`)
-			if (link && page.href === currentPath) {
-				link.classList.add("current-page")
-			}
-			if (mobLink && page.href === currentPath) {
-				mobLink.classList.add("current-page-mob")
-			}
-		})
 	})
 </script>
