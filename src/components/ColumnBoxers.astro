@@ -1,0 +1,97 @@
+---
+const { boxers, clss } = Astro.props
+---
+
+<div class={`flex flex-col ${clss ?? clss}`}>
+	{
+		boxers.map(
+			({
+				id,
+				name,
+				country,
+				countryName,
+			}: {
+				id: number
+				name: string
+				country: string
+				countryName: string
+			}) => (
+				<a
+					href={`/boxers/${id}`}
+					class="boxer-link"
+					title={`Visita la página del boxeador ${name}`}
+					data-id={id}
+					data-name={name}
+					data-country={country}
+					data-country-name={countryName}
+				>
+					<div class="boxer-link-background" />
+					<picture class="boxer-image">
+						<source srcset={`/img/boxers/${id}-small.avif`} type="image/avif" />
+						<img
+							loading="lazy"
+							src={`/img/boxers/${id}-small.webp`}
+							alt={`Foto en pequeño del boxeador ${name}`}
+							class="boxer-image"
+						/>
+					</picture>
+				</a>
+			)
+		)
+	}
+</div>
+
+<style>
+	.boxer-link {
+		@apply size-28;
+
+		position: relative;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		transition: opacity 0.3s ease;
+	}
+
+	.boxer-link-background {
+		position: absolute;
+		width: 100%;
+		bottom: 0;
+		display: block;
+		background: linear-gradient(
+			180deg,
+			rgba(255, 255, 255, 1) 0%,
+			rgba(255, 255, 255, 0.5) 30%,
+			rgba(0, 0, 0, 0) 95%
+		);
+		opacity: 0.25;
+		height: 60%;
+		transition: filter 0.3s ease-in-out;
+	}
+
+	.boxer-link:hover {
+		opacity: 0.9;
+	}
+
+	.boxer-image {
+		object-fit: contain;
+		z-index: 2;
+		transition: all 0.3s ease-in-out;
+		height: 100%;
+		mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+	}
+
+	.boxer-link:hover .boxer-image {
+		transform: scale(1.05);
+	}
+	.boxer-link .boxer-image {
+		filter: grayscale(100%);
+		transition: filter 0.3s ease;
+	}
+
+	.boxer-link.active .boxer-image {
+		filter: grayscale(0%);
+	}
+	.boxer-link:hover .boxer-link-background {
+		filter: brightness(0.5);
+	}
+</style>
