@@ -1,4 +1,5 @@
 ---
+import Velocimetro from "@/components/Velocimetro.astro"
 import { type Boxer } from "@/consts/boxers"
 
 export interface BoxerWithForecast extends Boxer {
@@ -13,9 +14,10 @@ interface Props {
 const { count, combatNumber, boxers } = Astro.props
 ---
 
-<section>
-	<h2>Combat {combatNumber}</h2>
-	<p>Total predictions: {count}</p>
+<section class="flex flex-col items-center">
+	<h2 class="text-xl font-semibold uppercase text-white">Pronóstico</h2>
+	<p class="text-xl text-primary">Probabilidad de victoria basada en {count} predicciones</p>
+	<Velocimetro percentage={100} />
 	<ul>
 		{
 			boxers.map(({ name, forecast }) => (
