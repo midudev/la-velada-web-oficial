@@ -1,7 +1,11 @@
 ---
-import { BOXERS } from "@/consts/boxers"
+import { BOXERS, type Boxer } from "@/consts/boxers"
+import { type Combat } from "@/consts/combats"
+import { type Forecast } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
-import Combat from "@/sections/Combat.astro"
+import CombatSection from "@/sections/Combat.astro"
+import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
+import { ResponseSentError } from "node_modules/astro/dist/core/errors/errors-data"
 
 export function getStaticPaths() {
 	return BOXERS.map(({ id }) => ({
@@ -13,10 +17,8 @@ const { id } = Astro.params
 
 const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 
-console.log(`url ${import.meta.env.API_URL}/combats/${id}.json`)
-
 const combatRes = await fetch(
-	`${import.meta.env.API_URL}/combats/get-combat-and-boxers-by-boxer-id.json?boxerId=${id}`,
+	`${import.meta.env.API_URL}/combats/get-combat-by-boxer-id.json?id=${id}`,
 	{
 		method: "GET",
 		headers: {
@@ -25,7 +27,72 @@ const combatRes = await fetch(
 	}
 )
 
-const { combat, boxers } = await combatRes.json()
+if (combatRes.status !== 200) {
+	return new Response(combatRes.statusText, { status: combatRes.status })
+}
+
+const combat: Combat = await combatRes.json()
+
+if (!combat) {
+	if (combatRes.status !== 200) {
+		return new Response("Combat not found", { status: 404 })
+	}
+}
+
+const boxersRes = await fetch(
+	`${import.meta.env.API_URL}/boxers/get-boxers-by-combat-id.json?id=${combat.id}`,
+	{
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	}
+)
+
+if (boxersRes.status !== 200) {
+	return new Response(boxersRes.statusText, { status: boxersRes.status })
+}
+
+const boxers: Boxer[] = await boxersRes.json()
+
+if (!boxers) {
+	if (boxersRes.status !== 200) {
+		return new Response("Boxers not found", { status: 404 })
+	}
+}
+
+const forecastRes = await fetch(
+	`${import.meta.env.API_URL}/forecasts/get-forecast-by-combat-id.json?id=${combat.id}`,
+	{
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	}
+)
+
+if (forecastRes.status !== 200) {
+	return new Response(forecastRes.statusText, { status: forecastRes.status })
+}
+
+const forecast: Forecast = await forecastRes.json()
+
+if (!forecast) {
+	return new Response("Forecast not found", { status: 404 })
+}
+
+console.log(forecast)
+
+const boxersWithForecast: BoxerWithForecast[] = []
+let forecastCount = 0
+
+forecast.forecastData.map((forecastData) => {
+	const boxer = boxers.find((boxer) => boxer.id === forecastData.boxerId)
+	if (boxer) {
+		boxersWithForecast.push({ ...boxer, forecast: forecastData.forecast })
+		forecastCount += forecastData.predictionsCount
+	}
+})
 ---
 
 <Layout
@@ -55,7 +122,8 @@ const { combat, boxers } = await combatRes.json()
 				</div>
 			</div>
 		</section>
-		<Combat combatNumber={combat.id} , boxers={boxers} />
+		<Forecasts combatNumber={combat.id} count={forecastCount} boxers={boxersWithForecast} />
+		<CombatSection combatNumber={combat.id} , boxers={boxers} />
 	</main>
 </Layout>
 

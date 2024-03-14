@@ -1,0 +1,28 @@
+---
+import { type Boxer } from "@/consts/boxers"
+
+export interface BoxerWithForecast extends Boxer {
+	forecast: number
+}
+interface Props {
+	count: number
+	combatNumber: string
+	boxers: BoxerWithForecast[]
+}
+
+const { count, combatNumber, boxers } = Astro.props
+---
+
+<section>
+	<h2>Combat {combatNumber}</h2>
+	<p>Total predictions: {count}</p>
+	<ul>
+		{
+			boxers.map(({ name, forecast }) => (
+				<li>
+					{name} - {forecast * 100}%
+				</li>
+			))
+		}
+	</ul>
+</section>
