@@ -65,15 +65,6 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		country: "es",
 	},
 	{
-		id: "ama-blitz",
-		name: "Amablitz",
-		realName: "Amairani Garza Alonso",
-		birthDate: new Date(1995, 2, 1),
-		weight: 55, // No es seguro
-		height: 1.58,
-		country: "mx",
-	},
-	{
 		id: "plex",
 		name: "YoSoyPlex",
 		realName: "Daniel Alonso Góndez",
@@ -81,6 +72,15 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 70,
 		height: 1.97,
 		country: "es",
+	},
+	{
+		id: "ama-blitz",
+		name: "Amablitz",
+		realName: "Amairani Garza Alonso",
+		birthDate: new Date(1995, 2, 1),
+		weight: 55, // No es seguro
+		height: 1.58,
+		country: "mx",
 	},
 	{
 		id: "nissaxter",
