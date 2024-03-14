@@ -19,7 +19,7 @@ const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 >
 	<main class="flex flex-col items-center">
 		<div
-			class={boxer.position === 1 || boxer.position === 4
+			class={boxer.position === 1
 				? "w-full lg:flex lg:items-center"
 				: "w-full lg:flex lg:items-center flex-row-reverse"}
 		>
@@ -32,12 +32,30 @@ const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 					style="filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5)); mask-image: linear-gradient(to bottom, black 80%, transparent 100%);"
 				/>
 			</picture>
-			<div class="w-full px-10 text-center lg:mx-auto lg:w-1/2 lg:text-left">
-				<p class="text-xl text-white">{boxer.realName}</p>
-				<p class="text-xl text-white">Edad: {boxer.age}</p>
-				<p class="text-xl text-white">Peso: {boxer.weight} kg</p>
-				<p class="text-xl text-white">Altura: {boxer.height} cm</p>
-				<p class="flex items-center justify-center text-xl lg:justify-start">
+			<div
+				class={boxer.position === 0
+					? "w-full px-10 text-center lg:mx-auto lg:w-1/2 lg:text-left"
+					: "w-full px-10 text-center lg:mx-auto lg:w-1/2 lg:text-left lg:ml-2"}
+			>
+				<p
+					class={boxer.position === 0 ? "ml-52 text-left text-xl text-white" : "text-xl text-white"}
+				>
+					{boxer.realName}
+				</p>
+				<p class={boxer.position === 0 ? "ml-52 text-xl text-white" : "text-xl text-white"}>
+					Edad: {boxer.age}
+				</p>
+				<p class={boxer.position === 0 ? "ml-52 text-xl text-white" : "text-xl text-white"}>
+					Peso: {boxer.weight} kg
+				</p>
+				<p class={boxer.position === 0 ? "ml-52 text-xl text-white" : "text-xl text-white"}>
+					Altura: {boxer.height} cm
+				</p>
+				<p
+					class={boxer.position === 0
+						? "ml-52 flex items-center justify-center text-xl lg:justify-start"
+						: "flex items-center justify-center text-xl lg:justify-start"}
+				>
 					<img class="ml-2" src={`/img/flags/${boxer.country}.webp`} alt={boxer.country} />
 				</p>
 			</div>
