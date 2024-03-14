@@ -13,7 +13,7 @@ const { as: Tag, class: className, ...props } = Astro.props
 </Tag>
 
 <script>
-	const syncPointer = ({ x, y }) => {
+	const syncPointer = ({ x, y }: { x: number; y: number }) => {
 		const el = document.documentElement
 		el.style.setProperty("--x", x.toFixed(2))
 		el.style.setProperty("--xp", (x / window.innerWidth).toFixed(2))
