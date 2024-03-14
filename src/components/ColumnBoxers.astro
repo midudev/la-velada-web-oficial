@@ -1,0 +1,73 @@
+---
+import type { Boxer } from "@/consts/boxers"
+
+interface Props {
+	boxers: Boxer[]
+	class?: string
+}
+
+const { boxers, class: className = "" } = Astro.props
+---
+
+<div class:list={`flex flex-col ${className}`}>
+	{
+		boxers.map(({ id, name, country, countryName, weight }) => (
+			<a
+				href={`/boxers/${id}`}
+				class:list={["boxer-link"]}
+				title={`Visita la página del boxeador ${name}`}
+				data-id={id}
+				data-name={name}
+				data-country={country}
+				data-country-name={countryName}
+				data-weight={weight}
+			>
+				<div class="boxer-link-background" />
+				<img
+					loading="lazy"
+					src={`/img/boxers/${id}-small.webp`}
+					alt={`Foto en pequeño del boxeador ${name}`}
+					class="boxer-image aspect-square h-full w-full object-contain"
+				/>
+			</a>
+		))
+	}
+</div>
+
+<style>
+	.boxer-link {
+		@apply relative flex size-36 flex-col items-center justify-center transition-opacity duration-300 ease-in-out;
+
+		&:hover {
+			@apply opacity-90;
+		}
+
+		& .boxer-image {
+			@apply z-20 h-full object-contain transition-opacity duration-300 ease-in-out;
+			mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+			filter: grayscale(100%);
+			transition: filter 0.3s ease;
+		}
+	}
+
+	.boxer-link-background {
+		@apply absolute bottom-0 block h-3/5 w-full opacity-25 transition-opacity duration-300 ease-in-out;
+		background: linear-gradient(
+			180deg,
+			rgba(255, 255, 255, 1) 0%,
+			rgba(255, 255, 255, 0.5) 30%,
+			rgba(0, 0, 0, 0) 95%
+		);
+	}
+
+	.boxer-link:hover .boxer-image,
+	.boxer-link.active .boxer-image {
+		transform: scale(1.05);
+		filter: grayscale(0%);
+	}
+
+	.boxer-link.active .boxer-link-background,
+	.boxer-link:hover .boxer-link-background {
+		filter: brightness(0.5);
+	}
+</style>
