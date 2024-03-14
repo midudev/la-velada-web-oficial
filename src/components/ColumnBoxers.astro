@@ -11,7 +11,7 @@ const { boxers, class: className = "" } = Astro.props
 
 <div class:list={`flex flex-col ${className}`}>
 	{
-		boxers.map(({ id, name, country, countryName, weight }, index) => (
+		boxers.map(({ id, name, country, countryName, weight }) => (
 			<a
 				href={`/boxers/${id}`}
 				class:list={["boxer-link"]}
@@ -36,7 +36,7 @@ const { boxers, class: className = "" } = Astro.props
 
 <style>
 	.boxer-link {
-		@apply relative flex size-36 flex-col items-center transition-opacity duration-300 ease-in-out;
+		@apply relative flex size-36 flex-col items-center justify-center transition-opacity duration-300 ease-in-out;
 
 		&:hover {
 			@apply opacity-90;
@@ -69,11 +69,5 @@ const { boxers, class: className = "" } = Astro.props
 	.boxer-link.active .boxer-link-background,
 	.boxer-link:hover .boxer-link-background {
 		filter: brightness(0.5);
-	}
-
-	@media (min-width: 1280px) {
-		.boxer-link {
-			@apply flex w-full items-center justify-center;
-		}
 	}
 </style>
