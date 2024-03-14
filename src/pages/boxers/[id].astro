@@ -11,16 +11,19 @@ export function getStaticPaths() {
 const { id } = Astro.params
 
 const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
-fetch("http://localhost:4321/api/builtwith.json")
-	.then((res) => res.json())
-	.then((data) => console.log(data))
-	.catch((err) => console.error(err))
 
-fetch(`/api/combats/get-combat-by-boxer-id.json`, {
+console.log(`url ${import.meta.env.API_URL}/combats/${id}.json`)
+
+fetch(`${import.meta.env.API_URL}/combats/get-combat-by-boxer-id.json?boxerId=${id}`, {
 	method: "GET",
-	body: JSON.stringify({ boxerId: id }),
+	headers: {
+		"Content-Type": "application/json",
+	},
 })
-	.then((res) => console.log(res.json()))
+	.then((res) => res.json())
+	.then((data) => {
+		console.log(data)
+	})
 	.catch((err) => console.error(err))
 ---
 
@@ -54,3 +57,5 @@ fetch(`/api/combats/get-combat-by-boxer-id.json`, {
 		<section></section>
 	</main>
 </Layout>
+
+<script></script>
