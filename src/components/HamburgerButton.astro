@@ -1,0 +1,38 @@
+---
+const width = "w-6"
+const genericHamburgerLine = `h-[2px] ${width} bg-gray-300 transition ease transform duration-300`
+---
+
+<button
+	id={Astro.props.id}
+	class:list={[
+		`hamburgerButton group relative flex h-[20px] flex-col items-center justify-between lg:hidden`,
+		width,
+	]}
+	aria-label="hamburguer menu button"
+>
+	<div class:list={[`group-[.open]:translate-y-2 group-[.open]:rotate-45`, genericHamburgerLine]}>
+	</div>
+	<div class:list={[`group-[.open]:opacity-0`, genericHamburgerLine]}></div>
+	<div class:list={[`group-[.open]:opacity-0`, genericHamburgerLine]}></div>
+	<div
+		class:list={[
+			`group-[.open]:-translate-y-[0.6rem] group-[.open]:-rotate-45 `,
+			genericHamburgerLine,
+		]}
+	>
+	</div>
+</button>
+
+<script>
+	import { $, $$ } from "@/consts/dom-selector"
+	document.addEventListener("astro:page-load", () => {
+		$$(".hamburgerButton").forEach((button) => {
+			button.addEventListener("click", () => {
+				const hamburgerButton = $(".hamburgerButton")
+				hamburgerButton?.classList.toggle("open")
+				hamburgerButton?.dispatchEvent(new CustomEvent("hamburgerButtonClicked"))
+			})
+		})
+	})
+</script>
