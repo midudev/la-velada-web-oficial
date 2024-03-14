@@ -8,6 +8,9 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	const countryName = COUNTRIES[country]?.name || ""
 	return { ...boxer, countryName }
 })
+
+const selectedBoxerId = Astro.url.searchParams.get("boxer")
+const selectedBoxer = listOfBoxers.find(({ id }) => id === selectedBoxerId) || listOfBoxers[0]
 ---
 
 <section class="my-40">
@@ -41,11 +44,11 @@ const listOfBoxers = BOXERS.map((boxer) => {
 					class:list={"boxer-photo aspect-[285/428] h-auto w-[400px]"}
 					transition:name="boxer-big-image"
 				>
-					<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
+					<source srcset={`/img/boxers/${selectedBoxer.id}-big.avif`} type="image/avif" />
 					<img
 						class="aspect-[285/428] h-auto w-full object-contain"
 						alt="Fotografía de El Mariana"
-						src="/img/boxers/el-mariana-big.webp"
+						src={`/img/boxers/${selectedBoxer.id}-big.webp`}
 						style="
 							filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
 							mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
@@ -60,14 +63,14 @@ const listOfBoxers = BOXERS.map((boxer) => {
 						color="primary"
 						class:list={"boxer-title -skew-y-6 text-center"}
 					>
-						el mariana
+						{selectedBoxer.name}
 					</Typography>
 				</div>
 
 				<img
 					class:list={"boxer-flag pointer-events-none aspect-[3/2] h-auto w-20 object-contain object-center 3xl:w-24"}
-					alt="Bandera de México"
-					src="/img/flags/mx.webp"
+					alt={`Bandera de ${selectedBoxer.countryName}`}
+					src={`/img/flags/${selectedBoxer.country}.webp`}
 				/>
 			</header>
 
@@ -77,7 +80,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 			>
 				<div class="flex flex-col gap-y-2">
 					<h4 class="text-lg">País</h4>
-					<p id="boxer-country" class="text-lg font-bold">México</p>
+					<p id="boxer-country" class="text-lg font-bold">{selectedBoxer.countryName}</p>
 					<a
 						href="#"
 						class="mt-10 inline-block font-semibold text-accent transition-transform hover:scale-110"
@@ -88,7 +91,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
 				<div class="flex flex-col gap-y-2">
 					<h4 class="text-lg">Peso</h4>
-					<p id="boxer-weight" class="text-lg font-bold">87kg</p>
+					<p id="boxer-weight" class="text-lg font-bold">{`${selectedBoxer.weight}kg`}</p>
 					<a
 						href="#"
 						class="mt-10 inline-block font-semibold text-accent transition-transform hover:scale-110"
@@ -101,10 +104,10 @@ const listOfBoxers = BOXERS.map((boxer) => {
 		<aside class="boxers-aside">
 			<nav class="boxers-nav">
 				{
-					listOfBoxers.map(({ id, name, country, countryName, weight }, index) => (
+					listOfBoxers.map(({ id, name, country, countryName, weight }) => (
 						<a
 							href={`/boxers/${id}`}
-							class:list={["boxer-link", { active: index === 0 }]}
+							class:list={["boxer-link", { active: selectedBoxer.id === id }]}
 							title={`Visita la página del boxeador ${name}`}
 							data-id={id}
 							data-name={name}
@@ -162,13 +165,6 @@ const listOfBoxers = BOXERS.map((boxer) => {
 			boxerCountryElement.innerText = countryName ?? ""
 			boxerWeightElement.innerText = weight ? `${weight}kg` : "?"
 			boxerFooter.style.display = "flex"
-		}
-
-		const urlParams = new URLSearchParams(window.location.search)
-		const boxerId = urlParams.get("boxer") ?? "el-mariana"
-		const boxerEl = document.querySelector(`[data-id="${boxerId}"]`) as HTMLElement
-		if (boxerEl) {
-			activateBoxer(boxerEl, boxerEl, false)
 		}
 
 		boxerLinks.forEach((link) => {
