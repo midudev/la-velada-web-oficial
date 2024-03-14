@@ -1,4 +1,5 @@
 ---
+import ColumnBoxers from "@/components/ColumnBoxers.astro"
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
@@ -8,9 +9,17 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	const countryName = COUNTRIES[country]?.name || ""
 	return { ...boxer, countryName }
 })
+
+// split in 4 columns
+const boxerColumns = [
+	listOfBoxers.slice(0, 3),
+	listOfBoxers.slice(3, 6),
+	listOfBoxers.slice(6, 9),
+	listOfBoxers.slice(9, 12),
+]
 ---
 
-<section class="my-40">
+<section class="my-40 hidden md:block">
 	<Typography
 		as="h3"
 		variant="atomic-title"
@@ -25,20 +34,20 @@ const listOfBoxers = BOXERS.map((boxer) => {
 		Conoce los detalles de cada boxeador
 	</Typography>
 
-	<div class="flex flex-col items-center justify-center gap-8">
-		<article class="relative flex w-full flex-col items-center justify-center">
+	<div class="mt-32 flex flex-row items-center justify-center gap-8">
+		<article class="absolute flex w-full flex-col items-center justify-center">
 			<header class="relative flex w-full flex-col items-center justify-center">
 				<div
-					class="absolute inset-0 -z-20 m-auto bg-center bg-no-repeat"
+					class="absolute inset-0 -z-10 m-auto bg-center bg-no-repeat"
 					style="
 						background-image: url('/img/effects/boxer-background.png');
-						background-size: 75%;
+						background-size: 45%;
 						mask-image: radial-gradient(circle at bottom, transparent 26%, #000 40%);
 						"
 				>
 				</div>
 				<picture
-					class:list={"boxer-photo aspect-[285/428] h-auto w-[400px]"}
+					class:list={"boxer-photo aspect-[285/428] h-auto w-[450px]"}
 					transition:name="boxer-big-image"
 				>
 					<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
@@ -53,77 +62,42 @@ const listOfBoxers = BOXERS.map((boxer) => {
 					/>
 				</picture>
 
-				<div class="absolute bottom-14 max-w-md text-wrap">
+				<div class="absolute bottom-14 mb-10 max-w-md text-wrap">
 					<Typography
 						as="h4"
 						variant="boxer-title"
 						color="primary"
 						class:list={"boxer-title -skew-y-6 text-center"}
 					>
-						el mariana
+						<span class="flex flex-col">
+							<span class="text-4xl"> el </span>
+							mariana
+						</span>
 					</Typography>
 				</div>
 
 				<img
-					class:list={"boxer-flag pointer-events-none aspect-[3/2] h-auto w-20 object-contain object-center 3xl:w-24"}
+					class:list={"boxer-flag pointer-events-none aspect-[3/2] h-auto w-28 object-contain object-center"}
 					alt="Bandera de México"
 					src="/img/flags/mx.webp"
 				/>
 			</header>
-
-			<footer
-				id="boxer-footer"
-				class="absolute bottom-0 hidden w-full justify-between text-center text-white xl:flex"
-			>
-				<div class="flex flex-col gap-y-2">
-					<h4 class="text-lg">País</h4>
-					<p id="boxer-country" class="text-lg font-bold">México</p>
-					<a
-						href="#"
-						class="mt-10 inline-block font-semibold text-accent transition-transform hover:scale-110"
-					>
-						Ver combate
-					</a>
-				</div>
-
-				<div class="flex flex-col gap-y-2">
-					<h4 class="text-lg">Peso</h4>
-					<p id="boxer-weight" class="text-lg font-bold">87kg</p>
-					<a
-						href="#"
-						class="mt-10 inline-block font-semibold text-accent transition-transform hover:scale-110"
-					>
-						Ver perfil
-					</a>
-				</div>
-			</footer>
 		</article>
-		<aside class="boxers-aside">
-			<nav class="boxers-nav">
-				{
-					listOfBoxers.map(({ id, name, country, countryName, weight }, index) => (
-						<a
-							href={`/boxers/${id}`}
-							class:list={["boxer-link", { active: index === 0 }]}
-							title={`Visita la página del boxeador ${name}`}
-							data-id={id}
-							data-name={name}
-							data-country={country}
-							data-country-name={countryName}
-							data-weight={weight}
-						>
-							<div class="boxer-link-background" />
-							<img
-								loading="lazy"
-								src={`/img/boxers/${id}-small.webp`}
-								alt={`Foto en pequeño del boxeador ${name}`}
-								class="boxer-image aspect-square h-full w-full object-contain"
-							/>
-						</a>
-					))
-				}
-			</nav>
-		</aside>
+		<div class="boxers-nav flex w-full justify-between">
+			<aside class="boxers-aside flex justify-start">
+				<nav class="flex h-full gap-2 py-4">
+					<ColumnBoxers boxers={boxerColumns[0]} />
+					<ColumnBoxers boxers={boxerColumns[1]} class="mt-4" />
+				</nav>
+			</aside>
+
+			<aside class="boxers-aside flex justify-end">
+				<nav class="flex h-full justify-end gap-2 py-4">
+					<ColumnBoxers boxers={boxerColumns[2]} class="mt-4" />
+					<ColumnBoxers boxers={boxerColumns[3]} />
+				</nav>
+			</aside>
+		</div>
 	</div>
 </section>
 
@@ -134,14 +108,21 @@ const listOfBoxers = BOXERS.map((boxer) => {
 		const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
 		const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
-		const boxerFooter = document.getElementById("boxer-footer") as HTMLElement
-		const boxerCountryElement = document.getElementById("boxer-country") as HTMLElement
-		const boxerWeightElement = document.getElementById("boxer-weight") as HTMLElement
 
 		function activateBoxer(element: HTMLElement, link: HTMLElement, replaceUrl: boolean = false) {
 			if (element.classList.contains("active")) return
 
-			const { id, name, country, countryName, weight } = element?.dataset
+			const { id, name, country, countryName } = element?.dataset
+
+			const splitName = name?.split(" ") ?? []
+			const lastName = splitName[splitName.length - 1]
+			const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
+			const spanNames = `
+				<span class="flex flex-col">
+					<span class="text-4xl">${firstNames?.toLocaleLowerCase()}</span>
+					<span class="last-name">${lastName?.toLocaleLowerCase()}</span>
+				</span>
+			`
 
 			boxerNav?.querySelector(".active")?.classList.remove("active")
 			link.classList.add("active")
@@ -153,15 +134,10 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
 			boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
 			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
-			boxerTitle.innerText = name?.toLocaleLowerCase() ?? ""
+			boxerTitle.innerHTML = spanNames ?? ""
 			boxerCountry.src = `/img/flags/${country}.webp`
-
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
 			boxerCountry.alt = `Bandera de ${countryName}`
-
-			boxerCountryElement.innerText = countryName ?? ""
-			boxerWeightElement.innerText = weight ? `${weight}kg` : "?"
-			boxerFooter.style.display = "flex"
 		}
 
 		const urlParams = new URLSearchParams(window.location.search)
@@ -183,93 +159,13 @@ const listOfBoxers = BOXERS.map((boxer) => {
 
 <style>
 	.boxers-aside {
-		display: flex;
-		max-width: 100vw;
-		height: 8rem;
-		overflow-x: scroll;
-		position: relative;
+		@apply relative h-32 w-screen overflow-x-scroll;
 		scrollbar-width: none;
-	}
-
-	.boxers-nav {
-		display: flex;
-		gap: 0.5rem;
-		height: 100%;
-
-		padding: 1rem 5rem;
-	}
-
-	.boxer-link {
-		@apply size-40;
-
-		position: relative;
-		display: flex;
-		align-items: center;
-		flex-direction: column;
-		transition: opacity 0.3s ease;
-	}
-
-	.boxer-link-background {
-		position: absolute;
-		width: 100%;
-		bottom: 0;
-		display: block;
-		background: linear-gradient(
-			180deg,
-			rgba(255, 255, 255, 1) 0%,
-			rgba(255, 255, 255, 0.5) 30%,
-			rgba(0, 0, 0, 0) 95%
-		);
-		opacity: 0.25;
-		height: 60%;
-		transition: filter 0.3s ease-in-out;
-	}
-
-	.boxer-link:hover {
-		opacity: 0.9;
-	}
-
-	.boxer-image {
-		object-fit: contain;
-		z-index: 2;
-		transition: transform 0.3s ease-in-out;
-		mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-	}
-
-	.boxer-link .boxer-image {
-		filter: grayscale(100%);
-		transition: filter 0.3s ease;
-	}
-
-	.boxer-link:hover .boxer-image,
-	.boxer-link.active .boxer-image {
-		transform: scale(1.05);
-		filter: grayscale(0%);
-	}
-
-	.boxer-link.active .boxer-link-background,
-	.boxer-link:hover .boxer-link-background {
-		filter: brightness(0.5);
 	}
 
 	@media (min-width: 1280px) {
 		.boxers-aside {
-			padding: 0.5rem 0;
-			display: block;
-			max-width: none;
-			width: 100%;
-			overflow: hidden;
-			height: auto;
-		}
-
-		.boxers-nav {
-			@apply grid w-full max-w-6xl gap-y-0 overflow-hidden;
-			grid-template-columns: repeat(6, 1fr);
-		}
-
-		.boxer-link {
-			@apply flex items-center justify-center;
-			width: 100%;
+			@apply h-auto w-full max-w-none overflow-hidden py-2;
 		}
 	}
 </style>
