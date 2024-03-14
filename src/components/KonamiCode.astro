@@ -1,11 +1,62 @@
+<style is:global>
+	.bubbles {
+		border-radius: 50%;
+		object-fit: cover;
+		object-position: center;
+		position: absolute;
+		width: 60px;
+		height: 60px;
+		opacity: 1;
+		bottom: -50px;
+		display: block;
+		animation: bubble linear forwards 3s;
+	}
+
+	#midu {
+		width: 150px;
+		height: 150px;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+	@keyframes bubble {
+		from {
+			opacity: 1;
+			bottom: -50px;
+		}
+
+		to {
+			opacity: 0;
+			bottom: 80vh;
+			transform: rotate(0deg);
+		}
+	}
+</style>
+
 <script>
 	import { konamiCodes } from "@/consts/konami-codes"
 	import { Konami } from "@/function/konami"
+	import { checkAndRemoveContainer, showContributors } from "@/function/miduCode"
 	import { $ } from "@/consts/dom-selector"
 
-	const { rotateY, gloveCursor, amongUsCursor, lolCursor } = konamiCodes
+	const { rotateY, gloveCursor, amongUsCursor, lolCursor, midu } = konamiCodes
 
 	const $container = $("#main-content")
+	const $miduContainer = document.createElement("div")
+
+	const audioManager: {
+		audioInstance: HTMLAudioElement | null
+		getAudioInstance: () => HTMLAudioElement | null
+	} = {
+		audioInstance: null,
+		getAudioInstance: () => {
+			if (!audioManager.audioInstance) {
+				audioManager.audioInstance = new Audio("/sounds/son-robots-ibai.mp3")
+				return audioManager.audioInstance
+			}
+			return null
+		},
+	}
 
 	document.addEventListener("keydown", ({ key }) => {
 		Konami({
@@ -43,6 +94,25 @@
 			keyPressed: key,
 			onSuccess: () => {
 				$("body").style.cursor = "url('/img/cursor/among-us.cur'), auto"
+			},
+		})
+
+		Konami({
+			code: midu,
+			keyPressed: key,
+			onFinishTime: 1500,
+			onSuccess: () => {
+				$miduContainer.style.cssText =
+					"position: fixed; width: 100dvw; height: 100vh; background: rgba(0,0,0,0.3); z-index: 10; inset: 0"
+				document.body.appendChild($miduContainer)
+				showContributors($miduContainer)
+				const audio = audioManager.getAudioInstance()
+				if (audio !== null) audio.play()
+			},
+			onFinish: () => {
+				checkAndRemoveContainer($miduContainer)
+				if (audioManager.audioInstance !== null && audioManager.audioInstance.paused)
+					audioManager.audioInstance = null
 			},
 		})
 	})
