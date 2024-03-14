@@ -10,6 +10,7 @@ import { manifest, seoConfig } from "./src/utils/seoConfig"
 
 // https://astro.build/config
 export default defineConfig({
+	prefetch: true,
 	integrations: [tailwind(), sitemap()],
 	adapter: vercel({
 		webAnalytics: { enabled: true },
