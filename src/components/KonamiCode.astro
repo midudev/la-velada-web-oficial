@@ -43,6 +43,7 @@
 
 	const $container = $("#main-content")
 	const $miduContainer = document.createElement("div")
+	const audio = new Audio("/sounds/son-robots-ibai.mp3")
 
 	document.addEventListener("keydown", ({ key }) => {
 		Konami({
@@ -92,6 +93,7 @@
 					"position: fixed; width: 100dvw; height: 100vh; background: rgba(0,0,0,0.3); z-index: 10; inset: 0"
 				document.body.appendChild($miduContainer)
 				showContributors($miduContainer)
+				audio.play()
 			},
 			onFinish: () => {
 				checkAndRemoveContainer($miduContainer)
