@@ -40,7 +40,7 @@
 	import { $ } from "@/consts/dom-selector"
 
 	const { rotateY, gloveCursor, amongUsCursor, lolCursor, midu } = konamiCodes
-
+	let konamiCodeInprogress = false
 	const $container = $("#main-content")
 	const $miduContainer = document.createElement("div")
 
@@ -102,6 +102,8 @@
 			keyPressed: key,
 			onFinishTime: 1500,
 			onSuccess: () => {
+				if (konamiCodeInprogress) return
+				konamiCodeInprogress = true
 				$miduContainer.style.cssText =
 					"position: fixed; width: 100dvw; height: 100vh; background: rgba(0,0,0,0.3); z-index: 10; inset: 0"
 				document.body.appendChild($miduContainer)
@@ -111,8 +113,10 @@
 			},
 			onFinish: () => {
 				checkAndRemoveContainer($miduContainer)
-				if (audioManager.audioInstance !== null && audioManager.audioInstance.paused)
+				if (audioManager.audioInstance !== null && audioManager.audioInstance.paused) {
 					audioManager.audioInstance = null
+					konamiCodeInprogress = false
+				}
 			},
 		})
 	})
