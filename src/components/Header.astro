@@ -2,7 +2,6 @@
 import HamburgerButton from "@/components/HamburgerButton.astro"
 import HeroLogo from "@/components/HeroLogo.astro"
 import DrawnXLogo from "@/components/DrawnXLogo.astro"
-import Footer from "@/sections/Footer.astro"
 import FooterContent from "@/components/FooterContent.astro"
 import SocialButtons from "@/components/SocialButtons.astro"
 
@@ -20,9 +19,9 @@ const pages = [
 			pages.map(({ disabled, name, href }, key) => (
 				<>
 					<a
-						href={disabled ? "" : href}
+						href={disabled ? "/" : href}
 						class:list={[
-							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 px-10 text-xl uppercase text-white lg:flex",
+							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 text-xl uppercase text-white sm:px-7 lg:flex lg:px-10",
 							{ "cursor-not-allowed": disabled },
 						]}
 					>
@@ -33,12 +32,12 @@ const pages = [
 							<div class="background absolute -z-10 h-full w-full" />
 						)}
 					</a>
-					{key == 1 && <div class={`hidden w-64 lg:block`} />}
+					{key === 1 && <div class:list={"hidden w-64 lg:block"} />}
 				</>
 			))
 		}
-		<a href="/"><DrawnXLogo class:list={`block w-10 lg:hidden`} /></a>
-		<HamburgerButton class:list={`block lg:hidden`} id="menuButton" />
+		<a href="/"><DrawnXLogo class:list={"block w-10 lg:hidden"} /></a>
+		<HamburgerButton class:list={"block lg:hidden"} id="menuButton" />
 		<div
 			class="absolute inset-0 z-[888] flex h-screen w-screen flex-col items-center overflow-x-auto bg-[var(--background-color)] px-10 lg:hidden"
 			id="menuMobileContent"
@@ -54,13 +53,17 @@ const pages = [
 				/>
 			</div>
 			<nav class="flex w-full flex-col items-center gap-5">
-				<img src="img/lvda.webp" class="accent-drop-shadow my-4 max-w-60 drop-shadow-lg" />
+				<img
+					alt="Imagen de con el título de: La Velada del Año IV"
+					src="img/lvda.webp"
+					class="accent-drop-shadow my-4 max-w-60 drop-shadow-lg"
+				/>
 				<hr
 					class="h-[2px] w-full border-t-0"
 					style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
 				/>
 				{
-					pages.map(({ disabled, name, href }, key) => (
+					pages.map(({ disabled, name, href }, _key) => (
 						<>
 							<a
 								href={href}
@@ -92,7 +95,7 @@ const pages = [
 				class="h-[2px] w-full border-t-0"
 				style="background:linear-gradient(to right, transparent 3%, white 35%, white 100%)"
 			/>
-			<HeroLogo class:list={`-mx-2 h-60 w-auto lg:-ml-5 lg:h-80`} noEffect />
+			<HeroLogo class:list={"-mx-2 h-60 w-auto lg:-ml-5 lg:h-80"} noEffect />
 			<hr
 				class="h-[2px] w-full border-t-0"
 				style="background:linear-gradient(to left, transparent 3%, white 35%, white 100%)"
@@ -133,7 +136,8 @@ const pages = [
 </style>
 
 <script>
-	import { $, $$ } from "@/consts/dom-selector"
+	import { $ } from "@/consts/dom-selector"
+
 	document.addEventListener("astro:page-load", () => {
 		const nav = $("nav")
 		const menuButton = $("#menuButton")
