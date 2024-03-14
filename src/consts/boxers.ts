@@ -1,4 +1,4 @@
-interface Boxer {
+export interface Boxer {
 	id: string
 	name: string
 	birthDate: Date
@@ -7,6 +7,8 @@ interface Boxer {
 	weight: number
 	height: number
 	country: string
+	countryName?: string
+	versus: string | string[]
 }
 
 const addAgeGetter = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
@@ -27,6 +29,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 87,
 		height: 1.95,
 		country: "mx",
+		versus: "plex",
 	},
 	{
 		id: "zeling",
@@ -36,6 +39,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 65, // No encontrado
 		height: 1.7, // No es seguro
 		country: "es",
+		versus: ["alana", "ama-blitz"],
 	},
 	{
 		id: "alana",
@@ -45,6 +49,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 55,
 		height: 1.7,
 		country: "mx",
+		versus: ["nissaxter", "zeling"],
 	},
 	{
 		id: "shelao",
@@ -54,6 +59,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 93,
 		height: 1.88,
 		country: "cl",
+		versus: "viruzz",
 	},
 	{
 		id: "viruzz",
@@ -63,15 +69,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 85,
 		height: 1.82,
 		country: "es",
-	},
-	{
-		id: "plex",
-		name: "YoSoyPlex",
-		realName: "Daniel Alonso Góndez",
-		birthDate: new Date(2001, 8, 20),
-		weight: 70,
-		height: 1.97,
-		country: "es",
+		versus: "shelao",
 	},
 	{
 		id: "ama-blitz",
@@ -81,7 +79,19 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 55, // No es seguro
 		height: 1.58,
 		country: "mx",
+		versus: ["zeling", "nissaxter"],
 	},
+	{
+		id: "plex",
+		name: "YoSoyPlex",
+		realName: "Daniel Alonso Góndez",
+		birthDate: new Date(2001, 8, 20),
+		weight: 70,
+		height: 1.97,
+		country: "es",
+		versus: "el-mariana",
+	},
+
 	{
 		id: "nissaxter",
 		name: "Nissaxter",
@@ -90,6 +100,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 55, // No es seguro
 		height: 1.64,
 		country: "es",
+		versus: ["alana", "ama-blitz"],
 	},
 	{
 		id: "guanyar",
@@ -99,6 +110,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 85,
 		height: 1.88,
 		country: "es",
+		versus: "la-cobra",
 	},
 	{
 		id: "la-cobra",
@@ -108,6 +120,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 105,
 		height: 1.83,
 		country: "ar",
+		versus: "guanyar",
 	},
 	{
 		id: "agustin-51",
@@ -117,6 +130,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 62, // No es seguro
 		height: 1.7,
 		country: "es",
+		versus: "carreraaa",
 	},
 	{
 		id: "carreraaa",
@@ -126,6 +140,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 61,
 		height: 1.65,
 		country: "ar",
+		versus: "agustin-51",
 	},
 	/* {
 		id: "sezar-blue",
