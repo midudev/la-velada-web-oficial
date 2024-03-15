@@ -1,0 +1,23 @@
+---
+interface Props {
+	image: string
+	imageAlt: string
+	boxerName: string
+	percentage: number
+}
+
+const { image, imageAlt, boxerName, percentage } = Astro.props
+---
+
+<article>
+	<img class="image" src={image} alt={imageAlt} />
+	<h3 class:list={["text-center text-2xl font-medium uppercase text-white"]}>{boxerName}</h3>
+	<h4 class:list={["mt-1 text-center text-6xl font-semibold text-accent"]}>{percentage}%</h4>
+</article>
+
+<style>
+	.image {
+		filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
+		mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+	}
+</style>
