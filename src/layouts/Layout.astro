@@ -2,6 +2,7 @@
 import { ViewTransitions } from "astro:transitions"
 
 import ButtonUp from "@/components/ButtonUp.astro"
+import Header from "@/components/Header.astro"
 import KonamiCode from "@/components/KonamiCode.astro"
 import LightsBackground from "@/components/LightsBackground.astro"
 import NoiseBackground from "@/components/NoiseBackground.astro"
@@ -28,13 +29,14 @@ const { title, description, preloadImgLCP, canonical, image } = Astro.props
 	</head>
 
 	<body
-		class="dark selection:bg-accent [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
+		class="selection:bg-primary selection:text-secondary [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
 		<!-- <SmokeBackground /> -->
 		<NoiseBackground />
 		<LightsBackground />
+		<Header />
 		<div
-			class="mx-auto max-w-6xl px-2 pt-16 selection:bg-primary selection:text-secondary md:pt-20 lg:px-10"
+			class="mx-auto min-h-screen max-w-6xl px-2 pt-16 selection:bg-primary selection:text-secondary md:pt-20 lg:px-10"
 			id="main-content"
 		>
 			<slot />
@@ -47,6 +49,7 @@ const { title, description, preloadImgLCP, canonical, image } = Astro.props
 				--color-primary: #ddd;
 				--color-secondary: #333;
 				--color-accent: #d5ff00;
+				--color-accent-rgb: 213, 255, 0;
 
 				--background-color: #141800;
 				--background-twitch: var(--color-twitch-ice);
@@ -64,16 +67,11 @@ const { title, description, preloadImgLCP, canonical, image } = Astro.props
 			html {
 				font-family: "Jost Variable", system-ui, sans-serif;
 				background: var(--background-color);
+				scrollbar-gutter: stable;
 			}
 
 			main {
 				position: relative;
-			}
-
-			@media screen and (prefers-reduced-motion: no-preference) {
-				html {
-					scroll-behavior: smooth;
-				}
 			}
 
 			/* Hiding class, making content visible only to screen readers but not visually */
