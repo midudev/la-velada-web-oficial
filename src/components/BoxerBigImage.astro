@@ -1,17 +1,22 @@
 ---
-import Typography from "@/components/Typography"
+import Typography from "@/components/Typography.astro"
 
 interface Props {
 	readonly id: string
 	readonly name: string
 	readonly country: string
-	readonly countryName: string
+	readonly countryName?: string
 }
 
 const { name, country, countryName, id } = Astro.props
+
+const splitName = name?.split(" ") ?? []
+const lastName = splitName[splitName.length - 1]
+const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
 ---
 
 <div
+	aria-hidden="true"
 	class="absolute inset-0 -z-10 m-auto bg-center bg-no-repeat"
 	style="
 		background-image: url('/img/effects/boxer-background.png');
@@ -24,11 +29,11 @@ const { name, country, countryName, id } = Astro.props
 	class:list={"boxer-photo aspect-[285/428] h-auto w-[450px]"}
 	transition:name="boxer-big-image"
 >
-	<source srcset={`/img/boxers/${id}.avif`} type="image/avif" />
+	<source srcset={`/img/boxers/${id}-big.avif`} type="image/avif" />
 	<img
 		class="aspect-[285/428] h-auto w-full object-contain"
 		alt="Fotografía de El Mariana"
-		src={`/img/boxers/${id}.webp`}
+		src={`/img/boxers/${id}-big.webp`}
 		style="
 			filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
 			mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
@@ -36,7 +41,7 @@ const { name, country, countryName, id } = Astro.props
 	/>
 </picture>
 
-<div class="absolute bottom-14 mb-10 max-w-md text-wrap">
+<div class="absolute bottom-14 mb-10 max-w-md text-wrap" transition:name="boxer-name">
 	<Typography
 		as="h4"
 		variant="boxer-title"
@@ -44,13 +49,14 @@ const { name, country, countryName, id } = Astro.props
 		class:list={"boxer-title -skew-y-6 text-center"}
 	>
 		<span class="flex flex-col">
-			<span class="text-4xl"> el </span>
-			mariana
+			<span class="text-4xl">{firstNames?.toLocaleLowerCase()}</span>
+			<span>{lastName?.toLocaleLowerCase()}</span>
 		</span>
 	</Typography>
 </div>
 
 <img
+	transition:name="boxer-flag"
 	class:list={"boxer-flag pointer-events-none aspect-[3/2] h-auto w-28 object-contain object-center"}
 	alt={`Bandera de ${countryName}`}
 	src={`/img/flags/${country}.webp`}
