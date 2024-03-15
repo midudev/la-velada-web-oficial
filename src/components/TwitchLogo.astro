@@ -8,7 +8,7 @@
 		fill="var(--color-twitch-ice)"
 		d="m58.2003 55 12.8-12.8V7h-51.2v48h12.8v12.8l12.8-12.8h12.8Z"></path>
 	<path
-		class="stroke"
+		class="stroke eyesMotion"
 		fill="var(--color-twitch)"
 		d="M39 19.8h6.4V39H39V19.8Zm22.4 0V39H55V19.8h6.4Z"></path>
 </svg>
@@ -30,5 +30,21 @@
 				animation-timing-function: linear;
 			}
 		}
+	}
+	@keyframes eyesMotion {
+		0%,
+		7%,
+		13%,
+		100% {
+			transform: scaleY(1);
+		}
+		5%,
+		10% {
+			transform: scaleY(0.1);
+		}
+	}
+	.eyesMotion {
+		transform-origin: 0 30px;
+		animation: eyesMotion 5s infinite;
 	}
 </style>
