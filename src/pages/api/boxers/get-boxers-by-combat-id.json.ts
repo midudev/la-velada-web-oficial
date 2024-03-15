@@ -1,6 +1,7 @@
+import type { APIRoute } from "astro"
 import { BOXERS } from "@/consts/boxers"
 import { COMBATS } from "@/consts/combats"
-import type { APIRoute } from "astro"
+
 export const prerender = false
 
 export const GET: APIRoute = ({ url }) => {
