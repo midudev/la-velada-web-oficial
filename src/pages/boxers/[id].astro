@@ -1,4 +1,6 @@
 ---
+import BoxerBigImage from "@/components/BoxerBigImage.astro"
+import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro"
 import { BOXERS } from "@/consts/boxers"
 import Layout from "@/layouts/Layout.astro"
 
@@ -17,26 +19,104 @@ const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 	description={`Información del luchador ${boxer.name}`}
 	title={`${boxer.name} - Información del boxeador de La Velada IV`}
 >
-	<main class="flex flex-col items-center">
-		<div class="w-full lg:flex lg:items-center">
-			<picture class="boxer-photo h-auto w-[400px]" transition:name="boxer-big-image">
-				<source srcset={`/img/boxers/${id}-big.avif`} type="image/avif" />
-				<img
-					class="aspect-[285/428] h-auto w-full"
-					alt={`Fotografía de ${boxer.name}`}
-					src={`/img/boxers/${id}-big.webp`}
-					style="filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5)); mask-image: linear-gradient(to bottom, black 80%, transparent 100%);"
-				/>
-			</picture>
-			<div class="w-full px-10 text-center lg:mx-auto lg:w-1/2 lg:text-left">
-				<p class="text-xl text-white">{boxer.realName}</p>
-				<p class="text-xl text-white">Edad: {boxer.age}</p>
-				<p class="text-xl text-white">Peso: {boxer.weight} kg</p>
-				<p class="text-xl text-white">Altura: {boxer.height} cm</p>
-				<p class="flex items-center justify-center text-xl lg:justify-start">
-					<img class="ml-2" src={`/img/flags/${boxer.country}.webp`} alt={boxer.country} />
-				</p>
+	<main>
+		<section class="flex flex-col items-center">
+			<div class="flex flex-col items-center lg:flex-row lg:items-start">
+				<div class="lg:w-1/4">
+					<div class="mb-10">
+						<BoxerDetailInfo title="Alias" value={boxer.name} />
+					</div>
+					<div class="mb-10">
+						<BoxerDetailInfo title="País" value={boxer.country} />
+					</div>
+					<div class="mb-10">
+						<BoxerDetailInfo title="Edad" value={boxer.age} />
+					</div>
+					<div class="mb-10">
+						<BoxerDetailInfo title="Rival/es" value={[...boxer.versus]} />
+					</div>
+				</div>
+				<div class="lg:mx-4 lg:w-1/2">
+					<BoxerBigImage id={id} name={boxer.name} country={boxer.country} />
+				</div>
+				<div class="lg:w-1/4">
+					<div class="mb-10">
+						<BoxerDetailInfo title="Peso" value={boxer.weight} />
+					</div>
+					<div class="mb-10">
+						<BoxerDetailInfo title="Altura" value={boxer.height} />
+					</div>
+					<div class="mb-10">
+						<BoxerDetailInfo title="Guardia" value={boxer.guard || ""} />
+					</div>
+					<div class="mb-10">
+						<BoxerDetailInfo title="Alcance" value={boxer.reach || ""} />
+					</div>
+				</div>
 			</div>
-		</div>
+
+			<div class="mt-4 flex justify-center space-x-4">
+				{
+					boxer.socials.twitch && (
+						<a
+							href={boxer.socials.twitch}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
+						>
+							<img src="/img/social/twitch.png" alt="Twitch" />
+						</a>
+					)
+				}
+				{
+					boxer.socials.instagram && (
+						<a
+							href={boxer.socials.instagram}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
+						>
+							<img src="/img/social/instagram.png" alt="Instagram" />
+						</a>
+					)
+				}
+				{
+					boxer.socials.twitter && (
+						<a
+							href={boxer.socials.twitter}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
+						>
+							<img src="/img/social/twitter.png" alt="Twitter" />
+						</a>
+					)
+				}
+				{
+					boxer.socials.youtube && (
+						<a
+							href={boxer.socials.youtube}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
+						>
+							<img src="/img/social/youtube.png" alt="YouTube" />
+						</a>
+					)
+				}
+				{
+					boxer.socials.tiktok && (
+						<a
+							href={boxer.socials.tiktok}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
+						>
+							<img src="/img/social/tiktok.png" alt="TikTok" />
+						</a>
+					)
+				}
+			</div>
+		</section>
 	</main>
 </Layout>
