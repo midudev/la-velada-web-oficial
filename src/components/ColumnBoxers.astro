@@ -11,7 +11,7 @@ const { boxers, class: className = "" } = Astro.props
 
 <div class:list={`flex flex-col ${className}`}>
 	{
-		boxers.map(({ id, name, country, countryName, weight, rotate }) => (
+		boxers.map(({ id, name, country, countryName, weight, rotate, versus, allies }) => (
 			<a
 				href={`/boxers/${id}`}
 				class:list={`boxer-link ${rotate ? "rotate-y-180" : ""}`}
@@ -21,6 +21,8 @@ const { boxers, class: className = "" } = Astro.props
 				data-country={country}
 				data-country-name={countryName}
 				data-weight={weight}
+				data-opponents={versus}
+				data-allies={allies}
 			>
 				<div class="boxer-link-background" />
 				<img
@@ -67,6 +69,18 @@ const { boxers, class: className = "" } = Astro.props
 		& .rotate-y-180 {
 			transform: rotateY(180deg);
 		}
+	}
+
+	.boxer-link.ally .boxer-image {
+		transform: scale(1.05);
+		filter: hue-rotate(70deg);
+		transition: 2s;
+	}
+
+	.boxer-link.opponent .boxer-image {
+		transform: scale(1.05);
+		filter: saturate(200%) hue-rotate(0deg);
+		transition: 2s;
 	}
 
 	.boxer-link.active .boxer-link-background,
