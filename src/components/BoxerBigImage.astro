@@ -9,42 +9,55 @@ interface Props {
 }
 
 const { name, country, countryName, id } = Astro.props
+
+const splitName = name?.split(" ") ?? []
+const lastName = splitName[splitName.length - 1]
+const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
 ---
 
-<div class="relative">
-	<div
-		class="absolute inset-0 -z-10 m-auto bg-center bg-no-repeat"
-		style="
-			background-image: url('/img/effects/boxer-background.png');
-			background-size: 45%;
-			mask-image: radial-gradient(circle at bottom, transparent 26%, #000 40%);
-		"
-	>
-	</div>
-	<img
-		class="h-auto w-full max-w-full"
-		alt={`Fotografía de ${name}`}
-		src={`/img/boxers/${id}-small.webp`}
-		style="filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5)); mask-image: linear-gradient(to bottom, black 80%, transparent 100%);"
-	/>
-	<div class="relative mt-10">
-		<img
-			class:list={"boxer-flag pointer-events-none absolute bottom-0 left-1/2 aspect-[3/2] h-auto w-20 -translate-x-1/2 transform object-contain object-center sm:w-24 md:w-28"}
-			alt={`Bandera de ${countryName}`}
-			src={`/img/flags/${country}.webp`}
-		/>
-		<div class="absolute bottom-14 left-1/2 mb-10 max-w-md -translate-x-1/2 transform text-wrap">
-			<Typography
-				as="h4"
-				variant="boxer-title"
-				color="primary"
-				class:list={"boxer-title -skew-y-6 text-center"}
-			>
-				<span class="flex flex-col">
-					<span class="text-4xl"> el </span>
-					mariana
-				</span>
-			</Typography>
-		</div>
-	</div>
+<div
+	aria-hidden="true"
+	class="absolute inset-0 -z-10 m-auto bg-center bg-no-repeat"
+	style="
+		background-image: url('/img/effects/boxer-background.png');
+		background-size: 45%;
+		mask-image: radial-gradient(circle at bottom, transparent 26%, #000 40%);
+	"
+>
 </div>
+<picture
+	class:list={"boxer-photo aspect-[285/428] h-auto w-[450px]"}
+	transition:name="boxer-big-image"
+>
+	<source srcset={`/img/boxers/${id}-big.avif`} type="image/avif" />
+	<img
+		class="aspect-[285/428] h-auto w-full object-contain"
+		alt="Fotografía de El Mariana"
+		src={`/img/boxers/${id}-big.webp`}
+		style="
+			filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
+			mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+		"
+	/>
+</picture>
+
+<div class="absolute bottom-14 mb-10 max-w-md text-wrap" transition:name="boxer-name">
+	<Typography
+		as="h4"
+		variant="boxer-title"
+		color="primary"
+		class:list={"boxer-title -skew-y-6 text-center"}
+	>
+		<span class="flex flex-col">
+			<span class="text-4xl">{firstNames?.toLocaleLowerCase()}</span>
+			<span>{lastName?.toLocaleLowerCase()}</span>
+		</span>
+	</Typography>
+</div>
+
+<img
+	transition:name="boxer-flag"
+	class:list={"boxer-flag pointer-events-none aspect-[3/2] h-auto w-28 object-contain object-center"}
+	alt={`Bandera de ${countryName}`}
+	src={`/img/flags/${country}.webp`}
+/>
