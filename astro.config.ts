@@ -6,7 +6,7 @@ import sitemap from "@astrojs/sitemap"
 import { VitePWA } from "vite-plugin-pwa"
 
 // Helper imports
-import { manifest, seoConfig } from "@/utils/seoConfig"
+import { manifest, seoConfig } from "./src/utils/seoConfig"
 
 // https://astro.build/config
 export default defineConfig({
