@@ -1,7 +1,16 @@
 ---
 import BoxerBigImage from "@/components/BoxerBigImage.astro"
 import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro"
+import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
+
+import Instagram from "@/icons/instagram.astro"
+import Tiktok from "@/icons/tiktok.astro"
+import Twitch from "@/icons/twitch.astro"
+import X from "@/icons/x.astro"
+import YouTube from "@/icons/youtube.astro"
+
 import { BOXERS } from "@/consts/boxers"
+import { COUNTRIES } from "@/consts/countries"
 import Layout from "@/layouts/Layout.astro"
 
 export function getStaticPaths() {
@@ -14,11 +23,7 @@ const { id } = Astro.params
 
 const boxer = BOXERS.find((boxer) => boxer.id === id)
 
-if (!boxer) {
-	return {
-		notFound: true,
-	}
-}
+if (!boxer) return { notFound: true }
 ---
 
 <Layout
@@ -26,106 +31,43 @@ if (!boxer) {
 	title={`${boxer.name} - Información del boxeador de La Velada IV`}
 >
 	<main>
-		<section class="flex flex-col items-center">
+		<section class="flex flex-col items-center justify-center">
 			<div class="flex flex-col items-center lg:flex-row lg:items-start">
-				<div class="lg:w-1/4">
-					<div class="mb-10">
-						<BoxerDetailInfo title="Alias" value={boxer.name} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="País" value={boxer.country} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Edad" value={boxer.age} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Rival/es" value={boxer.versus} />
-					</div>
-				</div>
-				<div class="lg:mx-4 lg:w-1/2">
+				<aside class="flex flex-col gap-y-20 lg:w-1/4">
+					<BoxerDetailInfo title="Alias" value={boxer.name} />
+					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} />
+					<BoxerDetailInfo title="Edad" value={boxer.age} />
+					<BoxerDetailInfo title="Rival/es" value={boxer.versus} />
+				</aside>
+
+				<div class="-mt-24 flex flex-col items-center justify-center lg:mx-4 lg:w-[800px]">
 					<BoxerBigImage id={id} name={boxer.name} country={boxer.country} />
 				</div>
-				<div class="lg:w-1/4">
-					<div class="mb-10">
-						<BoxerDetailInfo title="Peso" value={boxer.weight} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Altura" value={boxer.height} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Guardia" value={boxer.guard} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Alcance" value={boxer.reach} />
-						<BoxerDetailInfo title="Guardia" value={boxer.guard} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Alcance" value={boxer.reach} />
-					</div>
-				</div>
+
+				<aside class="flex flex-col gap-y-20 lg:w-1/4">
+					<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg.`} />
+					<BoxerDetailInfo title="Altura" value={`${boxer.height} m.`} />
+					<BoxerDetailInfo title="Guardia" value={boxer.guard} />
+					<BoxerDetailInfo title="Alcance" value={boxer.reach} />
+				</aside>
 			</div>
 
-			<div class="mt-4 flex justify-center space-x-4">
-				{
-					boxer.socials.twitch && (
-						<a
-							href={boxer.socials.twitch}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
-						>
-							<img src="/img/social/twitch.png" alt="Twitch" />
-						</a>
-					)
-				}
-				{
-					boxer.socials.instagram && (
-						<a
-							href={boxer.socials.instagram}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
-						>
-							<img src="/img/social/instagram.png" alt="Instagram" />
-						</a>
-					)
-				}
-				{
-					boxer.socials.twitter && (
-						<a
-							href={boxer.socials.twitter}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
-						>
-							<img src="/img/social/twitter.png" alt="Twitter" />
-						</a>
-					)
-				}
-				{
-					boxer.socials.youtube && (
-						<a
-							href={boxer.socials.youtube}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
-						>
-							<img src="/img/social/youtube.png" alt="YouTube" />
-						</a>
-					)
-				}
-				{
-					boxer.socials.tiktok && (
-						<a
-							href={boxer.socials.tiktok}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
-						>
-							<img src="/img/social/tiktok.png" alt="TikTok" />
-						</a>
-					)
-				}
+			<div class="mt-40 flex justify-center space-x-8">
+				<BoxerSocialLink href={boxer.socials.twitch}>
+					<Twitch />
+				</BoxerSocialLink>
+				<BoxerSocialLink href={boxer.socials.instagram}>
+					<Instagram />
+				</BoxerSocialLink>
+				<BoxerSocialLink href={boxer.socials.twitter}>
+					<X />
+				</BoxerSocialLink>
+				<BoxerSocialLink href={boxer.socials.youtube}>
+					<YouTube />
+				</BoxerSocialLink>
+				<BoxerSocialLink href={boxer.socials.tiktok}>
+					<Tiktok />
+				</BoxerSocialLink>
 			</div>
 		</section>
 	</main>
