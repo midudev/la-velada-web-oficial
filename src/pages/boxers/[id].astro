@@ -11,21 +11,59 @@ import Twitch from "@/icons/twitch.astro"
 import X from "@/icons/x.astro"
 import YouTube from "@/icons/youtube.astro"
 
-import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
+import { BOXERS } from "@/consts/boxers"
+import { COMBATS } from "@/consts/combats"
+import { FORECASTS } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
+import CombatSection from "@/sections/Combat.astro"
+import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
 
 export function getStaticPaths() {
-	return BOXERS.map(({ id }) => ({
-		params: { id },
-	}))
+	return BOXERS.map(({ id }) => {
+		return { params: { id } }
+	})
 }
 
 const { id } = Astro.params
 
-const boxer = BOXERS.find((boxer) => boxer.id === id)
+const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 
-if (!boxer) return { notFound: true }
+const combat = COMBATS.find((combat) => combat.boxers.includes(id))
+
+if (!combat) {
+	return new Response(JSON.stringify("Combat not found"), { status: 404 })
+}
+
+const boxers = BOXERS.filter((boxer) => combat.boxers.includes(boxer.id))
+
+if (!boxers) {
+	return new Response(JSON.stringify("Boxers not found"), { status: 404 })
+}
+
+const forecast = FORECASTS.find((forecast) => forecast.combatId === combat.id)
+
+const boxersWithForecast: BoxerWithForecast[] = []
+let forecastCount = 0
+
+let rivals = ""
+if (typeof boxer.versus === "object") {
+	rivals = boxer.versus
+		.map((vs: string) => BOXERS.find((rival: string) => rival.id === vs).name)
+		.join(" y ")
+} else {
+	rivals = BOXERS.find((rival: string) => rival.id === boxer.versus).name
+}
+
+if (forecast) {
+	forecast.forecastData.map((forecastData) => {
+		const boxer = boxers.find((boxer) => boxer.id === forecastData.boxerId)
+		if (boxer) {
+			boxersWithForecast.push({ ...boxer, forecast: forecastData.forecast })
+			forecastCount += forecastData.predictionsCount
+		}
+	})
+}
 ---
 
 <Layout
@@ -39,7 +77,7 @@ if (!boxer) return { notFound: true }
 					<BoxerDetailInfo title="Alias" value={boxer.name} />
 					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} />
 					<BoxerDetailInfo title="Edad" value={boxer.age} />
-					<BoxerDetailInfo title="Rival/es" value={boxer.versus} />
+					<BoxerDetailInfo title="Rival/es" value={rivals} />
 				</aside>
 
 				<div class="relative -mt-24 flex flex-col items-center justify-center lg:mx-4 lg:w-[800px]">
@@ -54,7 +92,7 @@ if (!boxer) return { notFound: true }
 				</aside>
 			</div>
 
-			<div class="mt-20 flex justify-center space-x-8">
+			<div class="mt-20 flex flex-row flex-wrap justify-center gap-8">
 				<BoxerSocialLink href={boxer.socials.twitch}>
 					<Twitch />
 				</BoxerSocialLink>
@@ -82,5 +120,13 @@ if (!boxer) return { notFound: true }
 				</section>
 			)
 		}
+		{
+			forecast && (
+				<Forecasts combatNumber={combat.id} count={forecastCount} boxers={boxersWithForecast} />
+			)
+		}
+		<CombatSection combatNumber={combat.id} boxers={boxers} />
 	</main>
 </Layout>
+
+<script></script>
