@@ -55,7 +55,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		},
 		clips: [
 			{
-				text: "Como el combate lo verá mi madre. Voy a ir con todo, voy a ganar.",
+				text: "El combate lo verá mi madre. Voy a ir con todo, voy a ganar.",
 				url: "https://youtube.com/clip/UgkxZSsrfj0sR_gZ802CbVtT2F9SKtj1OxKW?si=B-u68MU9FB7-VmPo",
 			},
 			{
