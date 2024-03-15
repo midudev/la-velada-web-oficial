@@ -13,7 +13,7 @@ const { as: Tag, class: className, ...props } = Astro.props
 </Tag>
 
 <script>
-	const syncPointer = ({ x, y }) => {
+	const syncPointer = ({ x, y }: { x: number; y: number }) => {
 		const el = document.documentElement
 		el.style.setProperty("--x", x.toFixed(2))
 		el.style.setProperty("--xp", (x / window.innerWidth).toFixed(2))
@@ -42,7 +42,8 @@ const { as: Tag, class: className, ...props } = Astro.props
 			--spotlight-size: calc(var(--size, 150) * 1px);
 			--hue: calc(var(--base) + (var(--xp, 0) * var(--spread, 0)));
 			background-image: radial-gradient(
-				var(--spotlight-size) var(--spotlight-size) at calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
+				var(--spotlight-size) var(--spotlight-size) at calc(var(--x, 0) * 1px)
+					calc(var(--y, 0) * 1px),
 				hsl(
 					var(--hue, 70) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 50) * 1%) /
 						var(--bg-spot-opacity, 0.1)
@@ -90,8 +91,8 @@ const { as: Tag, class: className, ...props } = Astro.props
 
 		[data-glow]::after {
 			background-image: radial-gradient(
-				calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at calc(var(--x, 0) * 1px)
-					calc(var(--y, 0) * 1px),
+				calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at
+					calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
 				hsl(0 100% 100% / var(--border-light-opacity, 1)),
 				transparent 100%
 			);
@@ -119,7 +120,5 @@ const { as: Tag, class: className, ...props } = Astro.props
 			will-change: filter;
 			opacity: var(--outer, 1);
 		}
-
 	}
-
 </style>

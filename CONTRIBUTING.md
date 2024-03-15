@@ -45,6 +45,7 @@
 - **Sigue las convenciones de código del proyecto**.
 - **Actualiza tu rama con frecuencia** para mantenerla al día con la rama principal del proyecto.
 - **Participa en las discusiones** de tu PR si hay comentarios o sugerencias.
+- **Uso de objetos y typos globales** como `new Date` -> `new window.Date`, `NodeListOf` -> `globalThis.NodeListOf`, `NodeJS` -> `globalThis.NodeJS`. En caso de no saber que usar, referenciad en [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis) o en la documentación del framework [Astro](https://docs.astro.build/en/guides/typescript/#extending-window-and-globalthis)
 
 ### ¿Necesitas ayuda? 🆘
 

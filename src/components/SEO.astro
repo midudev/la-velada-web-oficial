@@ -1,6 +1,8 @@
 ---
 import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
-import RichResults from "./RichResults.astro"
+import atomic from "/fonts/atomic.woff2"
+
+import RichResults from "@/components/RichResults.astro"
 
 interface Props {
 	title: string
@@ -21,6 +23,8 @@ const canonicalURL = canonical ? new URL(canonical, Astro.site) : new URL(Astro.
 <meta name="description" content={description} />
 
 <link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={atomic} as="font" type="font/woff2" crossorigin />
+
 {
 	preloadImgLCP && (
 		<link rel="preload" href={preloadImgLCP} as="image" type="image/webp" crossorigin />
