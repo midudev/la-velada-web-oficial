@@ -9,8 +9,8 @@ export interface Boxer {
 	country: string
 	countryName?: string
 	versus: string | string[]
-	guard?: string // Como no sabemos todos los datos lo dejamos como opcional
-	reach?: number // Como no sabemos todos los datos lo dejamos como opcional
+	guard?: string
+	reach?: number
 	socials: {
 		twitch?: string
 		instagram?: string
@@ -18,6 +18,10 @@ export interface Boxer {
 		youtube?: string
 		tiktok?: string
 	}
+	clips?: Array<{
+		text: string
+		url: string
+	}>
 }
 
 const addAgeGetter = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
@@ -48,6 +52,16 @@ export const BOXERS: Boxer[] = addAgeGetter([
 			youtube: "https://youtube.com/c/elmariana",
 			tiktok: "https://tiktok.com/@elmarianaa",
 		},
+		clips: [
+			{
+				text: "Como el combate lo verá mi madre. Voy a ir con todo, voy a ganar.",
+				url: "https://youtube.com/clip/UgkxZSsrfj0sR_gZ802CbVtT2F9SKtj1OxKW?si=B-u68MU9FB7-VmPo",
+			},
+			{
+				text: "Cuanto más alto, más fácil va a ser que le entre un gancho",
+				url: "https://youtube.com/clip/Ugkx-2lQ3J2MyKiOppp0UnGVO2APKh-r4cnS?si=mqpgfimZ7-nIU2ql",
+			},
+		],
 	},
 	{
 		id: "zeling",
@@ -160,6 +174,20 @@ export const BOXERS: Boxer[] = addAgeGetter([
 			youtube: "https://youtube.com/c/YoSoyPlex",
 			tiktok: "https://tiktok.com/@yosoyplexx",
 		},
+		clips: [
+			{
+				text: "No hay chance de que pierda. Soy un psicópata",
+				url: "https://youtube.com/clip/UgkxwyKEwj17kL8yJ2XVPNMI4dMuq-FdjYuG?si=LTAScm2qp6d7Bi4L",
+			},
+			{
+				text: "¿Se supone que tiene que picar?",
+				url: "https://youtube.com/clip/UgkxCVitcQsAn1I5wO4GlZY_kMcwLKaOI7HI?si=oyHb0fJkIWWQ8wTz",
+			},
+			{
+				text: "Hablaré en el ring. No tengo nada que decir.",
+				url: "https://youtube.com/clip/UgkxSCdNOmvFVB74IC_D56vglujXVWtVI60Q?si=Eqhsbja42efTdCaz",
+			},
+		],
 	},
 
 	{
