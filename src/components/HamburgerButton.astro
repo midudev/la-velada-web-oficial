@@ -41,4 +41,11 @@ const genericHamburgerLine = `h-[2px] ${width} bg-gray-300 transition ease trans
 			hamburgerButton.dispatchEvent(hamburgerButtonClick)
 		})
 	})
+
+	document.addEventListener("astro:page-load", () => {
+		const hamburgerButton = $(DISPLAY.hamburgerMenuClass)
+
+		if (hamburgerButton?.classList?.contains(DISPLAY.open))
+			hamburgerButton?.classList?.remove(DISPLAY.open)
+	})
 </script>
