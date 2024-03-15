@@ -1,6 +1,14 @@
 ---
 import BoxerBigImage from "@/components/BoxerBigImage.astro"
 import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro"
+import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
+
+import Instagram from "@/icons/instagram.astro"
+import Tiktok from "@/icons/tiktok.astro"
+import Twitch from "@/icons/twitch.astro"
+import X from "@/icons/x.astro"
+import YouTube from "@/icons/youtube.astro"
+
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
 import Layout from "@/layouts/Layout.astro"
@@ -44,67 +52,22 @@ if (!boxer) return { notFound: true }
 				</aside>
 			</div>
 
-			<div class="mt-4 flex justify-center space-x-4">
-				{
-					boxer.socials.twitch && (
-						<a
-							href={boxer.socials.twitch}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
-						>
-							<img src="/img/social/twitch.png" alt="Twitch" />
-						</a>
-					)
-				}
-				{
-					boxer.socials.instagram && (
-						<a
-							href={boxer.socials.instagram}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
-						>
-							<img src="/img/social/instagram.png" alt="Instagram" />
-						</a>
-					)
-				}
-				{
-					boxer.socials.twitter && (
-						<a
-							href={boxer.socials.twitter}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
-						>
-							<img src="/img/social/twitter.png" alt="Twitter" />
-						</a>
-					)
-				}
-				{
-					boxer.socials.youtube && (
-						<a
-							href={boxer.socials.youtube}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
-						>
-							<img src="/img/social/youtube.png" alt="YouTube" />
-						</a>
-					)
-				}
-				{
-					boxer.socials.tiktok && (
-						<a
-							href={boxer.socials.tiktok}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-32 bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 mix-blend-screen"
-						>
-							<img src="/img/social/tiktok.png" alt="TikTok" />
-						</a>
-					)
-				}
+			<div class="mt-40 flex justify-center space-x-8">
+				<BoxerSocialLink href={boxer.socials.twitch}>
+					<Twitch />
+				</BoxerSocialLink>
+				<BoxerSocialLink href={boxer.socials.instagram}>
+					<Instagram />
+				</BoxerSocialLink>
+				<BoxerSocialLink href={boxer.socials.twitter}>
+					<X />
+				</BoxerSocialLink>
+				<BoxerSocialLink href={boxer.socials.youtube}>
+					<YouTube />
+				</BoxerSocialLink>
+				<BoxerSocialLink href={boxer.socials.tiktok}>
+					<Tiktok />
+				</BoxerSocialLink>
 			</div>
 		</section>
 	</main>
