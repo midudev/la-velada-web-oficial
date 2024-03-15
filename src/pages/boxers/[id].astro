@@ -13,6 +13,8 @@ import YouTube from "@/icons/youtube.astro"
 
 import { COUNTRIES } from "@/consts/countries"
 import { BOXERS, type Boxer } from "@/consts/boxers"
+import { COMBATS } from "@/consts/combats"
+import { FORECASTS } from "@/consts/forecasts"
 import { type Combat } from "@/consts/combats"
 import { type Forecast } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
@@ -20,85 +22,40 @@ import CombatSection from "@/sections/Combat.astro"
 import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
 
 export function getStaticPaths() {
-	return BOXERS.map(({ id }) => ({
-		params: { id },
-	}))
+	return BOXERS.map(({ id }) => {
+		return { params: { id } }
+	})
 }
 
 const { id } = Astro.params
 
 const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 
-const combatRes = await fetch(
-	`${import.meta.env.API_URL}/combats/get-combat-by-boxer-id.json?id=${id}`,
-	{
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
-	}
-)
-
-if (combatRes.status !== 200) {
-	return new Response(JSON.stringify(combatRes.statusText), { status: combatRes.status })
-}
-
-const combat: Combat = await combatRes.json()
+const combat = COMBATS.find((combat) => combat.boxers.includes(id))
 
 if (!combat) {
-	if (combatRes.status !== 200) {
-		return new Response(JSON.stringify("Combat not found"), { status: 404 })
-	}
+	return new Response(JSON.stringify("Combat not found"), { status: 404 })
 }
 
-const boxersRes = await fetch(
-	`${import.meta.env.API_URL}/boxers/get-boxers-by-combat-id.json?id=${combat.id}`,
-	{
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
-	}
-)
-
-if (boxersRes.status !== 200) {
-	return new Response(JSON.stringify(boxersRes.statusText), { status: boxersRes.status })
-}
-
-const boxers: Boxer[] = await boxersRes.json()
+const boxers = BOXERS.filter((boxer) => combat.boxers.includes(boxer.id))
 
 if (!boxers) {
-	if (boxersRes.status !== 200) {
-		return new Response(JSON.stringify("Boxers not found"), { status: 404 })
-	}
+	return new Response(JSON.stringify("Boxers not found"), { status: 404 })
 }
 
-const forecastRes = await fetch(
-	`${import.meta.env.API_URL}/forecasts/get-forecast-by-combat-id.json?id=${combat.id}`,
-	{
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
-	}
-)
+const forecast = FORECASTS.find((forecast) => forecast.combatId === combat.id)
 
 const boxersWithForecast: BoxerWithForecast[] = []
 let forecastCount = 0
-let forecast: Forecast | undefined
 
-if (forecastRes.status == 200) {
-	forecast = await forecastRes.json()
-
-	if (forecast) {
-		forecast.forecastData.map((forecastData) => {
-			const boxer = boxers.find((boxer) => boxer.id === forecastData.boxerId)
-			if (boxer) {
-				boxersWithForecast.push({ ...boxer, forecast: forecastData.forecast })
-				forecastCount += forecastData.predictionsCount
-			}
-		})
-	}
+if (forecast) {
+	forecast.forecastData.map((forecastData) => {
+		const boxer = boxers.find((boxer) => boxer.id === forecastData.boxerId)
+		if (boxer) {
+			boxersWithForecast.push({ ...boxer, forecast: forecastData.forecast })
+			forecastCount += forecastData.predictionsCount
+		}
+	})
 }
 ---
 
