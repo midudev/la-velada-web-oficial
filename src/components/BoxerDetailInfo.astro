@@ -1,17 +1,43 @@
 ---
+import { BOXERS, type Boxer } from "@/consts/boxers"
+
 interface Props {
 	title: string
 	value?: string | number | string[]
 }
 
 const { title, value } = Astro.props
+
+let rivals: Boxer[] = []
+if (title === "Rival/es") {
+	if (typeof value === "object") {
+		rivals = value.map((vs: string) => BOXERS.find((rival: Boxer) => rival.id === vs)) as Boxer[]
+	} else {
+		rivals = [BOXERS.find((rival: Boxer) => rival.id === value)] as Boxer[]
+	}
+}
 ---
 
 <div class="flex justify-center text-white">
 	<div class="style text-center">
 		<h4>{title}</h4>
-		<p class={"text-xl font-bold" + (title === "Rival/es" ? " text-accent" : "")} id="boxer-weight">
-			{value}
-		</p>
+		{
+			title === "Rival/es" ? (
+				rivals.map((rival, index: number) => (
+					<>
+						<a href={`/boxers/${rival.id}`} class="text-xl font-bold text-accent " id="boxer-rival">
+							{rival.name}
+						</a>
+						<span class="text-xl font-bold text-accent">
+							{index < rivals.length - 1 ? " y " : ""}
+						</span>
+					</>
+				))
+			) : (
+				<p class="text-xl font-bold" id="boxer-weight">
+					{value}
+				</p>
+			)
+		}
 	</div>
 </div>
