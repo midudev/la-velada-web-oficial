@@ -24,14 +24,19 @@ const { title, description, preloadImgLCP, canonical, image } = Astro.props
 <!doctype html>
 <html lang="es">
 	<head>
-		<SEO title={title} description={description} preloadImgLCP={preloadImgLCP!} canonical={canonical} image={image} />
+		<SEO
+			canonical={canonical}
+			description={description}
+			image={image}
+			preloadImgLCP={preloadImgLCP!}
+			title={title}
+		/>
 		<ViewTransitions />
 	</head>
 
 	<body
 		class="selection:bg-primary selection:text-secondary [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
-		<!-- <SmokeBackground /> -->
 		<NoiseBackground />
 		<LightsBackground />
 		<Header />
