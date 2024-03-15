@@ -26,43 +26,25 @@ if (!boxer) {
 	title={`${boxer.name} - Información del boxeador de La Velada IV`}
 >
 	<main>
-		<section class="flex flex-col items-center">
+		<section class="flex flex-col items-center justify-center">
 			<div class="flex flex-col items-center lg:flex-row lg:items-start">
-				<div class="lg:w-1/4">
-					<div class="mb-10">
-						<BoxerDetailInfo title="Alias" value={boxer.name} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="País" value={boxer.country} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Edad" value={boxer.age} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Rival/es" value={boxer.versus} />
-					</div>
-				</div>
-				<div class="lg:mx-4 lg:w-1/2">
+				<aside class="flex flex-col gap-y-20 lg:w-1/4">
+					<BoxerDetailInfo title="Alias" value={boxer.name} />
+					<BoxerDetailInfo title="País" value={boxer.country} />
+					<BoxerDetailInfo title="Edad" value={boxer.age} />
+					<BoxerDetailInfo title="Rival/es" value={boxer.versus} />
+				</aside>
+
+				<div class="-mt-24 flex flex-col items-center justify-center lg:mx-4 lg:w-[800px]">
 					<BoxerBigImage id={id} name={boxer.name} country={boxer.country} />
 				</div>
-				<div class="lg:w-1/4">
-					<div class="mb-10">
-						<BoxerDetailInfo title="Peso" value={boxer.weight} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Altura" value={boxer.height} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Guardia" value={boxer.guard} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Alcance" value={boxer.reach} />
-						<BoxerDetailInfo title="Guardia" value={boxer.guard} />
-					</div>
-					<div class="mb-10">
-						<BoxerDetailInfo title="Alcance" value={boxer.reach} />
-					</div>
-				</div>
+
+				<aside class="flex flex-col gap-y-20 lg:w-1/4">
+					<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg.`} />
+					<BoxerDetailInfo title="Altura" value={`${boxer.height} m.`} />
+					<BoxerDetailInfo title="Guardia" value={boxer.guard} />
+					<BoxerDetailInfo title="Alcance" value={boxer.reach} />
+				</aside>
 			</div>
 
 			<div class="mt-4 flex justify-center space-x-4">
