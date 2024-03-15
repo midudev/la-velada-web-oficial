@@ -13,6 +13,17 @@ export function getStaticPaths() {
 const { id } = Astro.params
 
 const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
+fetch("http://localhost:4321/api/builtwith.json")
+	.then((res) => res.json())
+	.then((data) => console.log(data))
+	.catch((err) => console.error(err))
+
+fetch("/api/combats/get-combat-by-boxer-id.json", {
+	method: "GET",
+	body: JSON.stringify({ boxerId: id }),
+})
+	.then((res) => console.log(res.json()))
+	.catch((err) => console.error(err))
 ---
 
 <Layout
@@ -33,7 +44,7 @@ const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 						<BoxerDetailInfo title="Edad" value={boxer.age} />
 					</div>
 					<div class="mb-10">
-						<BoxerDetailInfo title="Rival/es" value={[...boxer.versus]} />
+						<BoxerDetailInfo title="Rival/es" value={boxer.versus} />
 					</div>
 				</div>
 				<div class="lg:mx-4 lg:w-1/2">
@@ -47,10 +58,14 @@ const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
 						<BoxerDetailInfo title="Altura" value={boxer.height} />
 					</div>
 					<div class="mb-10">
-						<BoxerDetailInfo title="Guardia" value={boxer.guard || ""} />
+						<BoxerDetailInfo title="Guardia" value={boxer.guard} />
 					</div>
 					<div class="mb-10">
-						<BoxerDetailInfo title="Alcance" value={boxer.reach || ""} />
+						<BoxerDetailInfo title="Alcance" value={boxer.reach} />
+						<BoxerDetailInfo title="Guardia" value={boxer.guard} />
+					</div>
+					<div class="mb-10">
+						<BoxerDetailInfo title="Alcance" value={boxer.reach} />
 					</div>
 				</div>
 			</div>
