@@ -40,14 +40,14 @@ const combatRes = await fetch(
 )
 
 if (combatRes.status !== 200) {
-	return new Response(combatRes.statusText, { status: combatRes.status })
+	return new Response(JSON.stringify(combatRes.statusText), { status: combatRes.status })
 }
 
 const combat: Combat = await combatRes.json()
 
 if (!combat) {
 	if (combatRes.status !== 200) {
-		return new Response("Combat not found", { status: 404 })
+		return new Response(JSON.stringify("Combat not found"), { status: 404 })
 	}
 }
 
@@ -62,14 +62,14 @@ const boxersRes = await fetch(
 )
 
 if (boxersRes.status !== 200) {
-	return new Response(boxersRes.statusText, { status: boxersRes.status })
+	return new Response(JSON.stringify(boxersRes.statusText), { status: boxersRes.status })
 }
 
 const boxers: Boxer[] = await boxersRes.json()
 
 if (!boxers) {
 	if (boxersRes.status !== 200) {
-		return new Response("Boxers not found", { status: 404 })
+		return new Response(JSON.stringify("Boxers not found"), { status: 404 })
 	}
 }
 
