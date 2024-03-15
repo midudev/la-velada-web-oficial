@@ -209,4 +209,17 @@ const pages = [
 		nav?.classList.toggle("open")
 		document.body.classList.toggle("overflow-hidden")
 	}
+
+	document.addEventListener("astro:page-load", () => {
+		if (!nav) return
+
+		const menuMobileContext = $("#menuMobileContent")
+
+		if (menuMobileContext?.classList.contains("open")) menuMobileContext?.classList.remove("open")
+
+		if (nav?.classList.contains("open")) nav?.classList.remove("open")
+
+		if (document.body.classList.contains("overflow-hidden"))
+			document.body.classList.remove("overflow-hidden")
+	})
 </script>
