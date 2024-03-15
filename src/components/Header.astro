@@ -197,18 +197,16 @@ const pages = [
 <script>
 	import { $ } from "@/consts/dom-selector"
 
-	document.addEventListener("astro:page-load", () => {
-		const nav = $("nav")
-		const menuButton = $("#menuButton")
-		const innerMenuButton = $("#innerMenuButton")
+	const nav = $("nav")
+	const menuButton = $("#menuButton")
+	const innerMenuButton = $("#innerMenuButton")
 
-		menuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
-		innerMenuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
+	menuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
+	innerMenuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
 
-		function toggleMenu(nav: HTMLElement | null) {
-			$("#menuMobileContent")?.classList.toggle("open")
-			nav?.classList.toggle("open")
-			document.body.classList.toggle("overflow-hidden")
-		}
-	})
+	function toggleMenu(nav: HTMLElement | null) {
+		$("#menuMobileContent")?.classList.toggle("open")
+		nav?.classList.toggle("open")
+		document.body.classList.toggle("overflow-hidden")
+	}
 </script>
