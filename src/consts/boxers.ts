@@ -22,6 +22,7 @@ export interface Boxer {
 		text: string
 		url: string
 	}>
+	rotate?: boolean
 }
 
 const addAgeGetter = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
@@ -54,7 +55,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		},
 		clips: [
 			{
-				text: "Como el combate lo verá mi madre. Voy a ir con todo, voy a ganar.",
+				text: "El combate lo verá mi madre. Voy a ir con todo, voy a ganar.",
 				url: "https://youtube.com/clip/UgkxZSsrfj0sR_gZ802CbVtT2F9SKtj1OxKW?si=B-u68MU9FB7-VmPo",
 			},
 			{
@@ -118,6 +119,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 			youtube: "https://youtube.com/c/shelao",
 			tiktok: "https://tiktok.com/@shelao",
 		},
+		rotate: true
 	},
 	{
 		id: "viruzz",
@@ -137,6 +139,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 			youtube: "https://youtube.com/c/byViruZz",
 			tiktok: "https://tiktok.com/@victormelida",
 		},
+		rotate: true
 	},
 	{
 		id: "ama-blitz",
@@ -208,6 +211,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 			youtube: "https://www.youtube.com/channel/UCjUjTl1MiPdAwRxklFLNklg",
 			tiktok: "https://tiktok.com/@nissaxter_",
 		},
+		rotate: true
 	},
 	{
 		id: "guanyar",
@@ -227,6 +231,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 			youtube: "https://www.youtube.com/channel/UCEy75s5IJw-ISYDu1d7HzlA?view_as=subscriber",
 			tiktok: "https://tiktok.com/@guanyar",
 		},
+		rotate: true
 	},
 	{
 		id: "la-cobra",
