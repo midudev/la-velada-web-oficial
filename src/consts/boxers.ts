@@ -42,7 +42,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 87,
 		height: 1.95,
 		country: "mx",
-		versus: "Yo Soy Plex",
+		versus: "Yo soy Plex",
 		guard: "Izquierda",
 		reach: 168,
 		socials: {
