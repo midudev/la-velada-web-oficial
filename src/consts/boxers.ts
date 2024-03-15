@@ -42,7 +42,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 87,
 		height: 1.95,
 		country: "mx",
-		versus: "Yo Soy Plex",
+		versus: "Yo soy Plex",
 		guard: "Izquierda",
 		reach: 168,
 		socials: {
@@ -71,7 +71,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 65, // No encontrado
 		height: 1.7, // No es seguro
 		country: "es",
-		versus: ["alana", "ama-blitz"],
+		versus: ["Alana", "Amablitz"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
@@ -90,7 +90,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 55,
 		height: 1.7,
 		country: "mx",
-		versus: ["nissaxter", "zeling"],
+		versus: ["Nissaxter", "Zeling"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
@@ -109,7 +109,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 93,
 		height: 1.88,
 		country: "cl",
-		versus: "viruzz",
+		versus: "Viruzz",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
@@ -127,7 +127,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 85,
 		height: 1.82,
 		country: "es",
-		versus: "shelao",
+		versus: "Shelao",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
@@ -146,7 +146,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 55, // No es seguro
 		height: 1.58,
 		country: "mx",
-		versus: ["zeling", "nissaxter"],
+		versus: ["Zeling", "Nissaxter"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
@@ -165,7 +165,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 70,
 		height: 1.97,
 		country: "es",
-		versus: "el-mariana",
+		versus: "El Mariana",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
@@ -198,7 +198,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 55, // No es seguro
 		height: 1.64,
 		country: "es",
-		versus: ["alana", "ama-blitz"],
+		versus: ["Alana", "Amablitz"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
@@ -217,7 +217,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 85,
 		height: 1.88,
 		country: "es",
-		versus: "la-cobra",
+		versus: "La Cobra",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
@@ -236,7 +236,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 105,
 		height: 1.83,
 		country: "ar",
-		versus: "guanyar",
+		versus: "Guanyar",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
@@ -255,7 +255,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 62, // No es seguro
 		height: 1.7,
 		country: "es",
-		versus: "carreraaa",
+		versus: "Carreraaa",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
@@ -274,7 +274,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		weight: 61,
 		height: 1.65,
 		country: "ar",
-		versus: "agustin-51",
+		versus: "Agustin51",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
