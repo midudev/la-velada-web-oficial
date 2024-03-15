@@ -12,11 +12,9 @@ import X from "@/icons/x.astro"
 import YouTube from "@/icons/youtube.astro"
 
 import { COUNTRIES } from "@/consts/countries"
-import { BOXERS, type Boxer } from "@/consts/boxers"
+import { BOXERS } from "@/consts/boxers"
 import { COMBATS } from "@/consts/combats"
 import { FORECASTS } from "@/consts/forecasts"
-import { type Combat } from "@/consts/combats"
-import { type Forecast } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
 import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
@@ -118,7 +116,7 @@ if (forecast) {
 				<Forecasts combatNumber={combat.id} count={forecastCount} boxers={boxersWithForecast} />
 			)
 		}
-		<CombatSection combatNumber={combat.id} , boxers={boxers} />
+		<CombatSection combatNumber={combat.id} boxers={boxers} />
 	</main>
 </Layout>
 
