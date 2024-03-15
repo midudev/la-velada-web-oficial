@@ -4,6 +4,10 @@ process.env.ESLINT_TSCONFIG = "tsconfig.json"
  * @type {import("eslint").Linter.Config}
  */
 module.exports = {
+	globals: {
+		NodeJS: true,
+		NodeListOf: true,
+	},
 	env: {
 		es2022: true,
 		node: true,
