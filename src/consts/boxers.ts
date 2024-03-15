@@ -9,9 +9,8 @@ export interface Boxer {
 	country: string
 	countryName?: string
 	versus: string | string[]
-	guard: string // Como no sabemos todos los datos tienen todos los mismos
-	reach: number // Como no sabemos todos los datos tienen todos los mismos
-	// Solo estan los datos de elMariana para comprobar que funcione correctamente
+	guard?: string // Como no sabemos todos los datos lo dejamos como opcional
+	reach?: number // Como no sabemos todos los datos lo dejamos como opcional
 	socials: {
 		twitch?: string
 		instagram?: string
@@ -43,11 +42,11 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		guard: "Izquierda",
 		reach: 168,
 		socials: {
-			twitch: "https://www.twitch.tv/elmariana",
-			instagram: "https://www.instagram.com/elmarianaa",
+			twitch: "https://twitch.tv/elmariana",
+			instagram: "https://instagram.com/elmarianaa",
 			twitter: "https://twitter.com/elmarianaa",
-			youtube: "https://www.youtube.com/c/elmariana",
-			tiktok: "https://www.tiktok.com/@elmarianaa",
+			youtube: "https://youtube.com/c/elmariana",
+			tiktok: "https://tiktok.com/@elmarianaa",
 		},
 	},
 	{
