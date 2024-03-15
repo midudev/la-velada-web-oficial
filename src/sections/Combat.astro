@@ -1,0 +1,53 @@
+---
+import Typography from "@/components/Typography.astro"
+import type { Boxer } from "@/consts/boxers"
+
+interface Props {
+	combatNumber: string
+	boxers: Boxer[]
+}
+
+const ordinals: Record<string, string> = {
+	"1": "Primer",
+	"2": "Segundo",
+	"3": "Tercer",
+	"4": "Cuarto",
+	"5": "Quinto",
+	"6": "Sexto",
+}
+const { combatNumber, boxers } = Astro.props
+---
+
+<section class="mt-40 flex flex-col items-center gap-5 md:gap-10 lg:gap-0">
+	<div class:list={["relative flex w-full flex-col items-center justify-center py-20"]}>
+		<Typography
+			as="div"
+			variant="atomic-title"
+			color="primary"
+			tabindex={-1}
+			class:list={"absolute inset-0 -z-10 self-center text-center text-[20rem] opacity-80"}
+			>{combatNumber}
+		</Typography>
+		<h2 class:list={["text-center text-4xl font-semibold uppercase text-white  lg:text-6xl"]}>
+			<span class:list={["flex flex-col items-center gap-2"]}>
+				<span>
+					{ordinals[combatNumber]} combate
+				</span>
+				<span>
+					{boxers.map((boxer) => boxer.name).join(" vs ")}
+				</span>
+			</span>
+		</h2>
+	</div>
+	<div>
+		<a
+			class:list={[
+				"pointer-events-none flex flex-col items-center justify-center text-2xl font-semibold text-accent",
+			]}
+			tabindex="0"
+			><span class="text-primary opacity-80">Ver combate</span><span
+				class="-skew-x-6 text-xs font-light uppercase">Próximamente</span
+			></a
+		>
+	</div>
+</section>
