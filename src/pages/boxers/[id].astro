@@ -26,6 +26,14 @@ const { id } = Astro.params
 const boxer = BOXERS.find((boxer) => boxer.id === id)
 
 if (!boxer) return { notFound: true }
+let rivals = ""
+if (typeof boxer.versus === "object") {
+	rivals = boxer.versus
+		.map((vs: string) => BOXERS.find((rival: string) => rival.id === vs).name)
+		.join(" y ")
+} else {
+	rivals = BOXERS.find((rival: string) => rival.id === boxer.versus).name
+}
 ---
 
 <Layout
@@ -39,7 +47,7 @@ if (!boxer) return { notFound: true }
 					<BoxerDetailInfo title="Alias" value={boxer.name} />
 					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} />
 					<BoxerDetailInfo title="Edad" value={boxer.age} />
-					<BoxerDetailInfo title="Rival/es" value={boxer.versus} />
+					<BoxerDetailInfo title="Rival/es" value={rivals} />
 				</aside>
 
 				<div class="relative -mt-24 flex flex-col items-center justify-center lg:mx-4 lg:w-[800px]">
