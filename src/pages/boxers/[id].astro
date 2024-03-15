@@ -11,7 +11,6 @@ import Twitch from "@/icons/twitch.astro"
 import X from "@/icons/x.astro"
 import YouTube from "@/icons/youtube.astro"
 
-import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
 import { BOXERS, type Boxer } from "@/consts/boxers"
 import { type Combat } from "@/consts/combats"
@@ -19,7 +18,6 @@ import { type Forecast } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
 import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
-import { ResponseSentError } from "node_modules/astro/dist/core/errors/errors-data"
 
 export function getStaticPaths() {
 	return BOXERS.map(({ id }) => ({
