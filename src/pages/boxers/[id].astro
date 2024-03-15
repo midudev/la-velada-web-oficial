@@ -18,7 +18,7 @@ fetch("http://localhost:4321/api/builtwith.json")
 	.then((data) => console.log(data))
 	.catch((err) => console.error(err))
 
-fetch(`/api/combats/get-combat-by-boxer-id.json`, {
+fetch("/api/combats/get-combat-by-boxer-id.json", {
 	method: "GET",
 	body: JSON.stringify({ boxerId: id }),
 })
@@ -58,6 +58,10 @@ fetch(`/api/combats/get-combat-by-boxer-id.json`, {
 						<BoxerDetailInfo title="Altura" value={boxer.height} />
 					</div>
 					<div class="mb-10">
+						<BoxerDetailInfo title="Guardia" value={boxer.guard} />
+					</div>
+					<div class="mb-10">
+						<BoxerDetailInfo title="Alcance" value={boxer.reach} />
 						<BoxerDetailInfo title="Guardia" value={boxer.guard} />
 					</div>
 					<div class="mb-10">
