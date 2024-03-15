@@ -13,12 +13,16 @@ import "@fontsource-variable/jost"
 interface Props {
 	description: string
 	title: string
-	preloadImgLCP?: string
 	canonical?: string
 	image?: string
+	preload?: Array<{
+		as: string
+		href: string
+		type: string
+	}>
 }
 
-const { title, description, preloadImgLCP, canonical, image } = Astro.props
+const { title, description, preload, canonical, image } = Astro.props
 ---
 
 <!doctype html>
@@ -28,7 +32,7 @@ const { title, description, preloadImgLCP, canonical, image } = Astro.props
 			canonical={canonical}
 			description={description}
 			image={image}
-			preloadImgLCP={preloadImgLCP!}
+			preload={preload}
 			title={title}
 		/>
 		<ViewTransitions />
