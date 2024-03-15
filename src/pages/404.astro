@@ -1,17 +1,58 @@
 ---
-import Layout from "@/layouts/Layout.astro"
 import Error from "@/sections/Error.astro"
+import SEO from "@/components/SEO.astro"
+import LightsBackground from "@/components/LightsBackground.astro"
+import NoiseBackground from "@/components/NoiseBackground.astro"
+import Footer from "@/sections/Footer.astro"
+import KonamiCode from "@/components/KonamiCode.astro"
+
+interface Props {
+	description: string
+	title: string
+	preloadImgLCP?: string
+}
+
+const { preloadImgLCP } = Astro.props
 ---
 
-<Layout
-	description="Web Oficial de La Velada del Año IV, evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos"
-	title="La Velada del Año 4 - Página no encontrada"
->
+<html lang="es">
+	<head>
+		<SEO
+			title="La Velada del año IV - Pagina no encontrada"
+			description="Verificar que la dirección URL sea correcta "
+			preloadImgLCP={preloadImgLCP!}
+		/>
+	</head>
 	<main>
+		<NoiseBackground />
+		<LightsBackground />
 		<Error
 			error="404"
 			message="Página no encontrada"
 			contextMessage="¡Hola! Lo sentimos, pero no pudimos encontrar lo que buscabas. Verifica que la dirección URL sea correcta."
 		/>
+		<div
+			class="mx-auto min-h-screen max-w-6xl px-2 pt-16 selection:bg-[#141800] selection:text-[#333] md:pt-20 lg:px-10"
+			id="main-content"
+		>
+			<Footer />
+			<KonamiCode />
+		</div>
 	</main>
-</Layout>
+	<style>
+		:root {
+			--color-primary: #ddd;
+			--color-accent: #d5ff00;
+		}
+		@font-face {
+			font-family: Atomic;
+			font-display: swap;
+			src: url("/fonts/atomic.woff2") format("woff2");
+		}
+
+		html {
+			font-family: "Jost Variable", system-ui, sans-serif;
+			background: #141800;
+		}
+	</style>
+</html>
