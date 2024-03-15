@@ -1,0 +1,50 @@
+---
+import Typography from "@/components/Typography.astro"
+
+interface Props {
+	clips?: Array<{
+		text: string
+		url: string
+	}>
+}
+
+const { clips = [] } = Astro.props
+const hasClips = clips.length > 0
+---
+
+{
+	hasClips && (
+		<section class="mt-10 grid select-none grid-cols-3 place-content-center gap-2 gap-x-8 md:gap-4">
+			{clips.map(({ text, url }) => (
+				<a
+					href={url}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="group flex flex-col justify-between bg-gradient-to-b p-8 hover:from-zinc-600/25"
+				>
+					<Typography
+						as="h3"
+						variant="atomic-title"
+						color="primary"
+						class:list={
+							"flex flex-1 items-center justify-center text-center transition group-hover:scale-110"
+						}
+					>
+						"{text.toLowerCase()}"
+					</Typography>
+
+					<footer class="mt-2 flex items-end justify-center p-5 text-center">
+						<Typography
+							as="p"
+							variant="body"
+							color="neutral"
+							class:list={"text-center group-hover:text-accent"}
+						>
+							Ver clip
+						</Typography>
+					</footer>
+				</a>
+			))}
+		</section>
+	)
+}

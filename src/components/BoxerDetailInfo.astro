@@ -1,0 +1,17 @@
+---
+interface Props {
+	title: string
+	value?: string | number | string[]
+}
+
+const { title, value } = Astro.props
+---
+
+<div class="flex justify-center text-white">
+	<div class="style text-center">
+		<h4>{title}</h4>
+		<p class={"text-xl font-bold" + (title === "Rival/es" ? " text-accent" : "")} id="boxer-weight">
+			{value}
+		</p>
+	</div>
+</div>
