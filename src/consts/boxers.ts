@@ -12,11 +12,11 @@ export interface Boxer {
 	guard?: string // Como no sabemos todos los datos lo dejamos como opcional
 	reach?: number // Como no sabemos todos los datos lo dejamos como opcional
 	socials: {
-		twitch?: string // Como no sabemos todos los datos lo dejamos como opcional
-		instagram?: string // Como no sabemos todos los datos lo dejamos como opcional
-		twitter?: string // Como no sabemos todos los datos lo dejamos como opcional
-		youtube?: string // Como no sabemos todos los datos lo dejamos como opcional
-		tiktok?: string // Como no sabemos todos los datos lo dejamos como opcional
+		twitch?: string
+		instagram?: string
+		twitter?: string
+		youtube?: string
+		tiktok?: string
 	}
 }
 
@@ -42,11 +42,11 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		guard: "Izquierda",
 		reach: 168,
 		socials: {
-			twitch: "https://www.twitch.tv/elmariana",
-			instagram: "https://www.instagram.com/elmarianaa",
+			twitch: "https://twitch.tv/elmariana",
+			instagram: "https://instagram.com/elmarianaa",
 			twitter: "https://twitter.com/elmarianaa",
-			youtube: "https://www.youtube.com/c/elmariana",
-			tiktok: "https://www.tiktok.com/@elmarianaa",
+			youtube: "https://youtube.com/c/elmariana",
+			tiktok: "https://tiktok.com/@elmarianaa",
 		},
 	},
 	{
@@ -58,6 +58,8 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		height: 1.7, // No es seguro
 		country: "es",
 		versus: ["alana", "ama-blitz"],
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
 		socials: {},
 	},
 	{
@@ -69,6 +71,8 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		height: 1.7,
 		country: "mx",
 		versus: ["nissaxter", "zeling"],
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
 		socials: {},
 	},
 	{
@@ -80,6 +84,8 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		height: 1.88,
 		country: "cl",
 		versus: "viruzz",
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
 		socials: {},
 	},
 	{
@@ -91,6 +97,8 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		height: 1.82,
 		country: "es",
 		versus: "shelao",
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
 		socials: {},
 	},
 	{
@@ -102,6 +110,8 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		height: 1.58,
 		country: "mx",
 		versus: ["zeling", "nissaxter"],
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
 		socials: {},
 	},
 	{
@@ -113,6 +123,8 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		height: 1.97,
 		country: "es",
 		versus: "el-mariana",
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
 		socials: {},
 	},
 
@@ -125,6 +137,8 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		height: 1.64,
 		country: "es",
 		versus: ["alana", "ama-blitz"],
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
 		socials: {},
 	},
 	{
@@ -136,6 +150,8 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		height: 1.88,
 		country: "es",
 		versus: "la-cobra",
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
 		socials: {},
 	},
 	{
@@ -147,6 +163,8 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		height: 1.83,
 		country: "ar",
 		versus: "guanyar",
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
 		socials: {},
 	},
 	{
@@ -158,6 +176,8 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		height: 1.7,
 		country: "es",
 		versus: "carreraaa",
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
 		socials: {},
 	},
 	{
@@ -169,106 +189,108 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		height: 1.65,
 		country: "ar",
 		versus: "agustin-51",
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
 		socials: {},
 	},
-	/*	{
-		id: "sezar-blue",
-		name: "Sezar Blue",
-		realName: "César González",
-		birthDate: new Date(1973, 7, 29),
-		weight: 87,
-		height: 1.77,
-		country: "es",
-		socials: {},
-	},
-	{
-		id: "will",
-		name: "Will",
-		realName: "Ángelo Valdés",
-		birthDate: new Date(2000, 5, 29),
-		weight: 85, // No encontrado
-		height: 1.85, // No encontrado
-		country: "do",
-		socials: {},
-	},
-	{
-		id: "peldanyos",
-		name: "Peldanyos",
-		realName: "Sergio Bolaños",
-		birthDate: new Date(1998, 3, 13),
-		weight: 87, // No encontrado
-		height: 1.91, // No es seguro
-		country: "es",
-		socials: {},
-	},
-	{
-		id: "aldo-geo",
-		name: "Aldo Geo",
-		realName: "Aldo Geovanni",
-		birthDate: new Date(1996, 9, 14),
-		weight: 80, // No encontrado
-		height: 1.79,
-		country: "mx",
-		socials: {},
-	},
-	{
-		id: "pelicanger",
-		name: "Pelicanger",
-		realName: "Angerson Esneider",
-		birthDate: new Date(2001, 0, 7),
-		weight: 85, // No es seguro
-		height: 1.91,
-		country: "co",
-		socials: {},
-	},
-	{
-		id: "roberto-cein",
-		name: "RobertoCein",
-		realName: "Roberto Sebastián Guadarrama Jiménez",
-		birthDate: new Date(1998, 6, 29),
-		weight: 85, // No encontrado
-		height: 1.69, // No es seguro
-		country: "mx",
-		socials: {},
-	},
-	{
-		id: "unicornio",
-		name: "Unicornio",
-		realName: "Germán Usinger",
-		birthDate: new Date(1999, 5, 7),
-		weight: 75, // No encontrado
-		height: 1.69, // No es seguro
-		country: "ar",
-		socials: {},
-	},
-	{
-		id: "karchez",
-		name: "Karchez",
-		realName: "José Carlos Sánchez",
-		birthDate: new Date(2000, 7, 4),
-		weight: 85, // No encontrado
-		height: 1.84,
-		country: "es",
-		socials: {},
-	},
-	{
-		id: "skain",
-		name: "Skain",
-		realName: "David Carbó Ferrer",
-		birthDate: new Date(1997, 2, 10),
-		weight: 83, // No encontrado
-		height: 1.83, // No encontrado
-		country: "es",
-		socials: {},
-	},
-	{
-		id: "folagor",
-		name: "Folagor",
-		realName: "Yoel Ramírez Pulido",
-		birthDate: new Date(1994, 11, 9),
-		weight: 71,
-		height: 1.8,
-		country: "es",
-		socials: {},
-	},*/
+	// {
+	// 	id: "sezar-blue",
+	// 	name: "Sezar Blue",
+	// 	realName: "César González",
+	// 	birthDate: new Date(1973, 7, 29),
+	// 	weight: 87,
+	// 	height: 1.77,
+	// 	country: "es",
+	// 	socials: {},
+	// },
+	// {
+	// 	id: "will",
+	// 	name: "Will",
+	// 	realName: "Ángelo Valdés",
+	// 	birthDate: new Date(2000, 5, 29),
+	// 	weight: 85, // No encontrado
+	// 	height: 1.85, // No encontrado
+	// 	country: "do",
+	// 	socials: {},
+	// },
+	// {
+	// 	id: "peldanyos",
+	// 	name: "Peldanyos",
+	// 	realName: "Sergio Bolaños",
+	// 	birthDate: new Date(1998, 3, 13),
+	// 	weight: 87, // No encontrado
+	// 	height: 1.91, // No es seguro
+	// 	country: "es",
+	// 	socials: {},
+	// },
+	// {
+	// 	id: "aldo-geo",
+	// 	name: "Aldo Geo",
+	// 	realName: "Aldo Geovanni",
+	// 	birthDate: new Date(1996, 9, 14),
+	// 	weight: 80, // No encontrado
+	// 	height: 1.79,
+	// 	country: "mx",
+	// 	socials: {},
+	// },
+	// {
+	// 	id: "pelicanger",
+	// 	name: "Pelicanger",
+	// 	realName: "Angerson Esneider",
+	// 	birthDate: new Date(2001, 0, 7),
+	// 	weight: 85, // No es seguro
+	// 	height: 1.91,
+	// 	country: "co",
+	// 	socials: {},
+	// },
+	// {
+	// 	id: "roberto-cein",
+	// 	name: "RobertoCein",
+	// 	realName: "Roberto Sebastián Guadarrama Jiménez",
+	// 	birthDate: new Date(1998, 6, 29),
+	// 	weight: 85, // No encontrado
+	// 	height: 1.69, // No es seguro
+	// 	country: "mx",
+	// 	socials: {},
+	// },
+	// {
+	// 	id: "unicornio",
+	// 	name: "Unicornio",
+	// 	realName: "Germán Usinger",
+	// 	birthDate: new Date(1999, 5, 7),
+	// 	weight: 75, // No encontrado
+	// 	height: 1.69, // No es seguro
+	// 	country: "ar",
+	// 	socials: {},
+	// },
+	// {
+	// 	id: "karchez",
+	// 	name: "Karchez",
+	// 	realName: "José Carlos Sánchez",
+	// 	birthDate: new Date(2000, 7, 4),
+	// 	weight: 85, // No encontrado
+	// 	height: 1.84,
+	// 	country: "es",
+	// 	socials: {},
+	// },
+	// {
+	// 	id: "skain",
+	// 	name: "Skain",
+	// 	realName: "David Carbó Ferrer",
+	// 	birthDate: new Date(1997, 2, 10),
+	// 	weight: 83, // No encontrado
+	// 	height: 1.83, // No encontrado
+	// 	country: "es",
+	// 	socials: {},
+	// },
+	// {
+	// 	id: "folagor",
+	// 	name: "Folagor",
+	// 	realName: "Yoel Ramírez Pulido",
+	// 	birthDate: new Date(1994, 11, 9),
+	// 	weight: 71,
+	// 	height: 1.8,
+	// 	country: "es",
+	// 	socials: {},
+	// },
 ] as const)

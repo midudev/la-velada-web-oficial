@@ -11,25 +11,36 @@ import Footer from "@/sections/Footer.astro"
 import "@fontsource-variable/jost"
 
 interface Props {
-	description: string
 	title: string
-	preloadImgLCP?: string
+	description: string
+	preload?: Array<{
+		as: string
+		href: string
+		type: string
+	}>
+	canonical?: string
+	image?: string
 }
 
-const { title, description, preloadImgLCP } = Astro.props
+const { title, description, preloadImgLCP, canonical, image } = Astro.props
 ---
 
 <!doctype html>
 <html lang="es">
 	<head>
-		<SEO title={title} description={description} preloadImgLCP={preloadImgLCP!} />
+		<SEO
+			canonical={canonical}
+			description={description}
+			image={image}
+			preloadImgLCP={preloadImgLCP!}
+			title={title}
+		/>
 		<ViewTransitions />
 	</head>
 
 	<body
 		class="selection:bg-primary selection:text-secondary [&_:focus-visible]:outline-none [&_:focus-visible]:ring-2 [&_:focus-visible]:ring-primary"
 	>
-		<!-- <SmokeBackground /> -->
 		<NoiseBackground />
 		<LightsBackground />
 		<Header />
