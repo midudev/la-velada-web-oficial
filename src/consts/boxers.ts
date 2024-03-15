@@ -60,7 +60,13 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		versus: ["alana", "ama-blitz"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/zeling",
+			instagram: "https://instagram.com/zeiing",
+			twitter: "https://twitter.com/zeling",
+			youtube: "https://www.youtube.com/channel/UCTfejVE5het7QO8WCY7yIQA",
+			tiktok: "https://tiktok.com/@zeliing",
+		},
 	},
 	{
 		id: "alana",
@@ -73,7 +79,13 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		versus: ["nissaxter", "zeling"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/alanalarana",
+			instagram: "https://instagram.com/alanafloresf",
+			twitter: "https://twitter.com/alanafloresf",
+			youtube: "https://youtube.com/c/alanalarana",
+			tiktok: "https://tiktok.com/@alanatwitch",
+		},
 	},
 	{
 		id: "shelao",
@@ -86,7 +98,12 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		versus: "viruzz",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/shelao",
+			instagram: "https://instagram.com/crissalva40",
+			youtube: "https://youtube.com/c/shelao",
+			tiktok: "https://tiktok.com/@shelao",
+		},
 	},
 	{
 		id: "viruzz",
@@ -99,7 +116,13 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		versus: "shelao",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/byviruzz",
+			instagram: "https://instagram.com/victormelida",
+			twitter: "https://twitter.com/byViruZz",
+			youtube: "https://youtube.com/c/byViruZz",
+			tiktok: "https://tiktok.com/@victormelida",
+		},
 	},
 	{
 		id: "ama-blitz",
@@ -112,7 +135,13 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		versus: ["zeling", "nissaxter"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/amablitz",
+			instagram: "https://instagram.com/amablitz",
+			twitter: "https://twitter.com/amablitz",
+			youtube: "https://youtube.com/c/amablitz",
+			tiktok: "https://tiktok.com/@amablitz",
+		},
 	},
 	{
 		id: "plex",
@@ -125,7 +154,12 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		versus: "el-mariana",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
-		socials: {},
+		socials: {
+			instagram: "https://instagram.com/yosoyplex",
+			twitter: "https://twitter.com/yosoyplex",
+			youtube: "https://youtube.com/c/YoSoyPlex",
+			tiktok: "https://tiktok.com/@yosoyplexx",
+		},
 	},
 
 	{
@@ -139,7 +173,13 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		versus: ["alana", "ama-blitz"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/nissaxter",
+			instagram: "https://instagram.com/nissaxter",
+			twitter: "https://twitter.com/nissaxter",
+			youtube: "https://www.youtube.com/channel/UCjUjTl1MiPdAwRxklFLNklg",
+			tiktok: "https://tiktok.com/@nissaxter_",
+		},
 	},
 	{
 		id: "guanyar",
@@ -152,7 +192,13 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		versus: "la-cobra",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/guanyar",
+			instagram: "https://instagram.com/guanyarr",
+			twitter: "https://twitter.com/guanyarr",
+			youtube: "https://www.youtube.com/channel/UCEy75s5IJw-ISYDu1d7HzlA?view_as=subscriber",
+			tiktok: "https://tiktok.com/@guanyar",
+		},
 	},
 	{
 		id: "la-cobra",
@@ -165,7 +211,13 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		versus: "guanyar",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/lacobraaa",
+			instagram: "https://www.instagram.com/lautarodelcampo/",
+			twitter: "https://twitter.com/lautarodeIcampo",
+			youtube: "https://www.youtube.com/channel/UCCfPkh8osJPC2pPq283kKXg",
+			tiktok: "https://www.tiktok.com/@lacobraaa.9",
+		},
 	},
 	{
 		id: "agustin-51",
@@ -178,7 +230,13 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		versus: "carreraaa",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/agustin51",
+			instagram: "https://www.instagram.com/IMAGUS51",
+			twitter: "https://twitter.com/ImAgus51",
+			youtube: "https://www.youtube.com/channel/UC1Bb0DVSgXLKuLbenbpkb8g",
+			tiktok: "https://www.tiktok.com/@agustin51",
+		},
 	},
 	{
 		id: "carreraaa",
@@ -191,7 +249,13 @@ export const BOXERS: Boxer[] = addAgeGetter([
 		versus: "agustin-51",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/carreraaa",
+			instagram: "https://www.instagram.com/rodricarreraaa/",
+			twitter: "http://twitter.com/rodricarreraaa",
+			youtube: "http://youtube.com/carreraaa",
+			tiktok: "https://www.tiktok.com/@carreproroblox74",
+		},
 	},
 	// {
 	// 	id: "sezar-blue",
