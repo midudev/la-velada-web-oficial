@@ -14,21 +14,20 @@ const { percentage } = Astro.props
 	data-percentage={percentage}></canvas>
 
 <script>
-	// import { $ } from "@/consts/dom-selector"
 	import { $ } from "@/consts/dom-selector"
 
 	document.addEventListener("astro:page-load", () => {
 		const canvas = $("#velocimeter") as HTMLCanvasElement
 		if (!canvas) return
 		const ctx = canvas.getContext("2d")
-		const velocimeterValueInput = $("#velocimeterValue") as HTMLInputElement
+		// const velocimeterValueInput = $("#velocimeterValue") as HTMLInputElement
 
 		function updateVelocimeter() {
 			const velocimeterValue = Number.parseInt(canvas.getAttribute("data-percentage") ?? "50")
 			drawVelocimeter(velocimeterValue)
 		}
 
-		function createGradient(ctx: CanvasRenderingContext2D) {}
+		// function createGradient(ctx: CanvasRenderingContext2D) {}
 
 		function drawVelocimeter(value: number) {
 			if (!ctx) return
