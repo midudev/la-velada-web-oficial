@@ -208,6 +208,7 @@ const pages = [
 		$("#menuMobileContent")?.classList.toggle("open")
 		nav?.classList.toggle("open")
 		document.body.classList.toggle("overflow-hidden")
+		document.body.classList.toggle("lg:overflow-auto")
 	}
 
 	document.addEventListener("astro:page-load", () => {
@@ -219,5 +220,8 @@ const pages = [
 
 		if (document.body.classList.contains("overflow-hidden"))
 			document.body.classList.remove("overflow-hidden")
+
+		if (document.body.classList.contains("lg:overflow-auto"))
+			document.body.classList.remove("lg:overflow-auto")
 	})
 </script>
