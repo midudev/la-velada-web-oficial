@@ -18,6 +18,7 @@ import { FORECASTS } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
 import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
+import type { Preload } from "@/components/SEO.astro"
 
 export function getStaticPaths() {
 	return BOXERS.map(({ id }) => {
@@ -65,7 +66,7 @@ if (forecast) {
 	})
 }
 
-const preloadBoxerImage = [
+const preloadBoxerImage: Preload[] = [
 	{
 		as: "image",
 		href: `/img/boxers/${id}-big.avif`,
