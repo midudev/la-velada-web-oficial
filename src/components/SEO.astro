@@ -4,15 +4,17 @@ import atomic from "/fonts/atomic.woff2"
 
 import RichResults from "@/components/RichResults.astro"
 
+export type Preload = {
+	as: string
+	href: string
+	type: string
+	rel?: "preload" | "prefetch"
+}
+
 interface Props {
 	title: string
 	description: string
-	preload?: Array<{
-		as: string
-		href: string
-		type: string
-		rel?: "preload" | "prefetch"
-	}>
+	preload?: Array<Preload>
 	canonical?: string
 	image?: string
 }
