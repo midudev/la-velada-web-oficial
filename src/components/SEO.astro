@@ -11,6 +11,7 @@ interface Props {
 		as: string
 		href: string
 		type: string
+		rel?: "preload" | "prefetch"
 	}>
 	canonical?: string
 	image?: string
@@ -32,8 +33,8 @@ const canonicalURL = canonical
 <link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
 
 {
-	preload?.map(({ href, as, type }) => (
-		<link rel="preload" href={href} as={as} type={type} crossorigin />
+	preload?.map(({ href, as, type, rel = "prefetch" }) => (
+		<link {rel} {href} {as} {type} crossorigin />
 	))
 }
 
