@@ -17,12 +17,13 @@ interface Props {
 		as: string
 		href: string
 		type: string
+		rel?: "preload" | "prefetch"
 	}>
 	canonical?: string
 	image?: string
 }
 
-const { title, description, preloadImgLCP, canonical, image } = Astro.props
+const { title, description, preload, canonical, image } = Astro.props
 ---
 
 <!doctype html>
@@ -32,7 +33,7 @@ const { title, description, preloadImgLCP, canonical, image } = Astro.props
 			canonical={canonical}
 			description={description}
 			image={image}
-			preloadImgLCP={preloadImgLCP!}
+			preload={preload}
 			title={title}
 		/>
 		<ViewTransitions />
