@@ -18,6 +18,7 @@ const { percentage } = Astro.props
 
 	document.addEventListener("astro:page-load", () => {
 		const canvas = $("#velocimeter") as HTMLCanvasElement
+		if (!canvas) return
 		const ctx = canvas.getContext("2d")
 		// const velocimeterValueInput = $("#velocimeterValue") as HTMLInputElement
 
