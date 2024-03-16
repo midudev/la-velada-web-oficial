@@ -1,29 +1,4 @@
-export interface Boxer {
-	id: string
-	name: string
-	birthDate: Date
-	age: number
-	realName: string
-	weight: number
-	height: number
-	country: string
-	countryName?: string
-	versus: string | string[]
-	guard?: string
-	reach?: number
-	socials: {
-		twitch?: string
-		instagram?: string
-		twitter?: string
-		youtube?: string
-		tiktok?: string
-	}
-	clips?: Array<{
-		text: string
-		url: string
-	}>
-	rotate?: boolean
-}
+import type { Boxer } from "@/types/Boxer"
 
 const addAgeGetter = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
 	return boxersWithoutAge.map((boxerWithoutAge) => ({
@@ -119,7 +94,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 			youtube: "https://youtube.com/c/shelao",
 			tiktok: "https://tiktok.com/@shelao",
 		},
-		rotate: true
+		rotate: true,
 	},
 	{
 		id: "viruzz",
@@ -139,7 +114,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 			youtube: "https://youtube.com/c/byViruZz",
 			tiktok: "https://tiktok.com/@victormelida",
 		},
-		rotate: true
+		rotate: true,
 	},
 	{
 		id: "ama-blitz",
@@ -211,7 +186,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 			youtube: "https://www.youtube.com/channel/UCjUjTl1MiPdAwRxklFLNklg",
 			tiktok: "https://tiktok.com/@nissaxter_",
 		},
-		rotate: true
+		rotate: true,
 	},
 	{
 		id: "guanyar",
@@ -231,7 +206,7 @@ export const BOXERS: Boxer[] = addAgeGetter([
 			youtube: "https://www.youtube.com/channel/UCEy75s5IJw-ISYDu1d7HzlA?view_as=subscriber",
 			tiktok: "https://tiktok.com/@guanyar",
 		},
-		rotate: true
+		rotate: true,
 	},
 	{
 		id: "la-cobra",
