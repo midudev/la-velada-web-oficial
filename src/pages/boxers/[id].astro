@@ -11,9 +11,9 @@ import Twitch from "@/icons/twitch.astro"
 import X from "@/icons/x.astro"
 import YouTube from "@/icons/youtube.astro"
 
-import { COUNTRIES } from "@/consts/countries"
 import { BOXERS } from "@/consts/boxers"
 import { COMBATS } from "@/consts/combats"
+import { COUNTRIES } from "@/consts/countries"
 import { FORECASTS } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
@@ -74,7 +74,30 @@ if (forecast) {
 		<section class="flex flex-col items-center justify-center">
 			<div class="flex flex-col items-center lg:flex-row lg:items-start">
 				<aside class="flex flex-col gap-y-20 lg:w-1/4">
-					<BoxerDetailInfo title="Alias" value={boxer.name} />
+					<div class="flex flex-col items-center justify-center">
+						<a
+							class="mb-3 text-xl font-bold text-accent transition hover:scale-105 hover:contrast-125"
+							href={`/?boxer=${boxer.id}`}
+							title="volver atras"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-10 w-10 transition"
+								width="40"
+								height="40"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								fill="none"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 8l-4 4l4 4"
+								></path><path d="M16 12h-8"></path><path
+									d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"></path></svg
+							>
+						</a>
+						<BoxerDetailInfo title="Alias" value={boxer.name} />
+					</div>
 					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} />
 					<BoxerDetailInfo title="Edad" value={boxer.age} />
 					<BoxerDetailInfo title="Rival/es" value={rivals} />
@@ -128,5 +151,3 @@ if (forecast) {
 		<CombatSection combatNumber={combat.id} boxers={boxers} />
 	</main>
 </Layout>
-
-<script></script>
