@@ -1,0 +1,52 @@
+---
+import GithubIcon from "@/icons/github.astro"
+import InstagramIcon from "@/icons/instagram.astro"
+import XIcon from "@/icons/x.astro"
+---
+
+<nav class:list={`${Astro.props.class}`}>
+	<ul
+		class="flex flex-row items-center gap-x-6"
+		aria-label="redes sociales y botón para alternar tema"
+	>
+		<li>
+			<a
+				target="_blank"
+				rel="noopener"
+				aria-label="Instagram de La Velada, se abrirá en una nueva pestaña"
+				href="https://www.instagram.com/infolavelada"
+				class="inline-block any-hover:scale-125 any-hover:opacity-70 motion-safe:transition motion-reduce:any-hover:scale-100"
+			>
+				<InstagramIcon
+					class="text-primary transition-colors duration-300 hover:text-accent motion-reduce:duration-0"
+				/>
+			</a>
+		</li>
+		<li>
+			<a
+				target="_blank"
+				rel="noopener"
+				aria-label="X de La Velada, se abrirá en una nueva pestaña"
+				href="https://x.com/infoLaVelada"
+				class="inline-block any-hover:scale-125 any-hover:opacity-70 motion-safe:transition motion-reduce:any-hover:scale-100"
+			>
+				<XIcon
+					class="text-primary transition-colors duration-300 hover:text-accent motion-reduce:duration-0"
+				/>
+			</a>
+		</li>
+		<li>
+			<a
+				target="_blank"
+				rel="noopener"
+				aria-label="GitHub de La Velada, se abrirá en una nueva pestaña"
+				href="https://github.com/midudev/la-velada-web-oficial"
+				class="inline-block any-hover:scale-125 any-hover:opacity-70 motion-safe:transition motion-reduce:any-hover:scale-100"
+			>
+				<GithubIcon
+					class="text-primary transition-colors duration-300 hover:text-accent motion-reduce:duration-0"
+				/>
+			</a>
+		</li>
+	</ul>
+</nav>
