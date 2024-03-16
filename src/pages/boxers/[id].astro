@@ -74,23 +74,26 @@ if (forecast) {
 	<main>
 		<section class="flex flex-col items-center justify-center">
 			<div class="flex flex-col items-center md:flex-row md:gap-10 lg:items-start">
-				<aside class="flex flex-col gap-y-20 lg:w-1/4">
+				<div class="order-2 flex flex-col gap-y-6 md:order-1 md:gap-y-20 lg:w-1/4">
 					<BoxerDetailInfo title="Alias" value={boxer.name} />
 					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} />
 					<BoxerDetailInfo title="Edad" value={boxer.age} />
+					<BoxerDetailInfo title="Rival/es" value={rivals} />
+				</div>
 					<BoxerDetailInfoRival title="Rival/es" value={rivals} />
 				</aside>
-
-				<div class="relative -mt-24 flex flex-col items-center justify-center lg:mx-4 lg:w-[800px]">
+				<div
+					class="relative order-1 flex flex-col items-center justify-center md:order-2 lg:mx-4 lg:w-[800px]"
+				>
 					<BoxerBigImage id={id} name={boxer.name} country={boxer.country} />
 				</div>
 
-				<aside class="flex flex-col gap-y-20 lg:w-1/4">
+				<div class="order-3 flex flex-col gap-y-6 md:order-3 md:gap-y-20 lg:w-1/4">
 					<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg.`} />
 					<BoxerDetailInfo title="Altura" value={`${boxer.height} m.`} />
 					<BoxerDetailInfo title="Guardia" value={boxer.guard} />
 					<BoxerDetailInfo title="Alcance" value={boxer.reach} />
-				</aside>
+				</div>
 			</div>
 
 			<div class="mt-20 flex flex-row flex-wrap justify-center gap-8">
