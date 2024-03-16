@@ -6,19 +6,14 @@ import Header from "@/components/Header.astro"
 import KonamiCode from "@/components/KonamiCode.astro"
 import LightsBackground from "@/components/LightsBackground.astro"
 import NoiseBackground from "@/components/NoiseBackground.astro"
-import SEO from "@/components/SEO.astro"
+import SEO, { type Preload } from "@/components/SEO.astro"
 import Footer from "@/sections/Footer.astro"
 import "@fontsource-variable/jost"
 
 interface Props {
 	title: string
 	description: string
-	preload?: Array<{
-		as: string
-		href: string
-		type: string
-		rel?: "preload" | "prefetch"
-	}>
+	preload?: Array<Preload>
 	canonical?: string
 	image?: string
 }
