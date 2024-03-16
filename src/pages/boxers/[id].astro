@@ -64,11 +64,21 @@ if (forecast) {
 		}
 	})
 }
+
+const preloadBoxerImage = [
+	{
+		as: "image",
+		href: `/img/boxers/${id}-big.avif`,
+		type: "image/avif",
+		rel: "preload",
+	},
+]
 ---
 
 <Layout
 	description={`Información del luchador ${boxer.name}`}
 	title={`${boxer.name} - Información del boxeador de La Velada IV`}
+	preload={preloadBoxerImage}
 >
 	<main>
 		<section class="flex flex-col items-center justify-center">
