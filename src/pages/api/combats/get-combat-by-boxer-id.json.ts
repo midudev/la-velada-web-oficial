@@ -1,5 +1,5 @@
-import { COMBATS } from "@/consts/combats"
 import type { APIRoute } from "astro"
+import { COMBATS } from "@/consts/combats"
 
 export const prerender = false
 
