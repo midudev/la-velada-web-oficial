@@ -1,0 +1,100 @@
+---
+interface Props {
+	percentage: number
+}
+
+const { percentage } = Astro.props
+---
+
+<canvas
+	id="velocimeter"
+	width="500px"
+	height="260px"
+	class="w-full md:w-[500px]"
+	data-percentage={percentage}></canvas>
+
+<script>
+	import { $ } from "@/consts/dom-selector"
+
+	document.addEventListener("astro:page-load", () => {
+		const canvas = $("#velocimeter") as HTMLCanvasElement
+		if (!canvas) return
+		const ctx = canvas.getContext("2d")
+		// const velocimeterValueInput = $("#velocimeterValue") as HTMLInputElement
+
+		function updateVelocimeter() {
+			const velocimeterValue = Number.parseInt(canvas.getAttribute("data-percentage") ?? "50")
+			drawVelocimeter(velocimeterValue)
+		}
+
+		// function createGradient(ctx: CanvasRenderingContext2D) {}
+
+		function drawVelocimeter(value: number) {
+			if (!ctx) return
+
+			const centerX = canvas.width / 2
+			const centerY = canvas.height
+			const arcWidth = 75
+			const radius = (canvas.width - arcWidth * 2) / 2 - 10
+
+			const gradientArc = ctx.createLinearGradient(0, 0, 0, canvas.height)
+			gradientArc.addColorStop(0, "#222")
+			gradientArc.addColorStop(0.5, "#111")
+			gradientArc.addColorStop(1, "transparent")
+
+			ctx.strokeStyle = gradientArc
+			ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+			ctx.beginPath()
+			ctx.arc(centerX, centerY, radius, Math.PI, 2 * Math.PI)
+			ctx.lineWidth = arcWidth
+			ctx.stroke()
+
+			const startAngle = Math.PI
+			const endAngle = (value / 100) * Math.PI + startAngle
+
+			const linePointerWidth = 8
+			const circleLineWidth = 12
+
+			const pointerLength = radius * 1.1
+			const pointerX = centerX + pointerLength * Math.cos(endAngle)
+			const pointerY = centerY - circleLineWidth + pointerLength * Math.sin(endAngle)
+
+			ctx.beginPath()
+			ctx.moveTo(centerX, centerY - circleLineWidth)
+			ctx.lineTo(pointerX, pointerY)
+			ctx.lineWidth = linePointerWidth
+			ctx.strokeStyle = "#fff"
+			ctx.stroke()
+
+			// hacemos un cuadrado rojo en la parte de arriba del pointer
+
+			ctx.beginPath()
+			ctx.moveTo(pointerX - 5 * Math.cos(endAngle), pointerY - 5 * Math.sin(endAngle))
+			ctx.lineWidth = linePointerWidth * 2
+			ctx.lineTo(
+				pointerX + linePointerWidth * 4 * Math.cos(endAngle),
+				pointerY + linePointerWidth * 4 * Math.sin(endAngle)
+			)
+			ctx.strokeStyle = "red"
+			ctx.stroke()
+
+			// hacemos un circulo en el centro abajo
+
+			const gradientCircle = ctx.createLinearGradient(0, 0, 0, canvas.height)
+			gradientCircle.addColorStop(0, "#222")
+			gradientCircle.addColorStop(0.5, "#111")
+			ctx.strokeStyle = gradientCircle
+			ctx.lineWidth = circleLineWidth
+
+			ctx.beginPath()
+			ctx.arc(centerX, centerY - circleLineWidth, circleLineWidth, 0, 2 * Math.PI)
+			ctx.fillStyle = "#fff"
+			ctx.fill()
+			ctx.stroke()
+		}
+
+		// Initial draw with default value
+		updateVelocimeter()
+	})
+</script>

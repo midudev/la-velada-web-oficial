@@ -1,0 +1,20 @@
+---
+interface Props {
+	href?: string
+}
+
+const { href } = Astro.props
+---
+
+{
+	href && (
+		<a
+			href={href}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="inline-flex w-32 items-center justify-center bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 text-white mix-blend-screen transition hover:opacity-70"
+		>
+			<slot />
+		</a>
+	)
+}
