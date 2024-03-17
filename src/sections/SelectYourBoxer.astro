@@ -20,7 +20,7 @@ const boxerColumns = [
 ]
 ---
 
-<section class="my-40 hidden md:block">
+<section class="my-40">
 	<Typography
 		as="h3"
 		variant="atomic-title"
@@ -35,7 +35,7 @@ const boxerColumns = [
 		Conoce los detalles de cada boxeador
 	</Typography>
 
-	<div class="mt-32 flex flex-row items-center justify-center gap-8">
+	<div class="mt-32 flex hidden flex-row items-center justify-center gap-8 md:flex">
 		<article class="absolute flex w-full flex-col items-center justify-center">
 			<BoxerBigImage id="el-mariana" name="El Mariana" country="mx" countryName="México" />
 		</article>
@@ -49,6 +49,24 @@ const boxerColumns = [
 				<ColumnBoxers boxers={boxerColumns[2]} class="mt-4" />
 				<ColumnBoxers boxers={boxerColumns[3]} />
 			</nav>
+		</div>
+	</div>
+
+	<!-- Nuevo código para dispositivos móviles -->
+	<div class="mt-32 flex flex-col items-center justify-center md:hidden">
+		<article class="flex w-full flex-col items-center justify-center">
+			<BoxerBigImage id="el-mariana" name="El Mariana" country="mx" countryName="México" />
+		</article>
+		<div class="carousel mt-8 w-full overflow-x-scroll">
+			<div class="carousel-inner flex">
+				{
+					listOfBoxers.map((boxer) => (
+						<div class="carousel-item w-1/3 flex-shrink-0 px-2">
+							<ColumnBoxers boxers={[boxer]} />
+						</div>
+					))
+				}
+			</div>
 		</div>
 	</div>
 </section>
@@ -68,17 +86,19 @@ const boxerColumns = [
 
 			const { id, name, country, countryName } = element?.dataset
 
-			const splitName = name?.split(" ") ?? []
+			if (!id || !name || !country || !countryName) return
+
+			const splitName = name.split(" ")
 			const lastName = splitName[splitName.length - 1]
 			const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
 			const spanNames = `
-					<a href="/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
-						<span class="flex flex-col">
-							<span class="text-4xl">${firstNames?.toLocaleLowerCase()}</span>
-							<span>${lastName?.toLocaleLowerCase()}</span>
-						</span>
-					</a>
-			`
+        <a href="/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
+          <span class="flex flex-col">
+            <span class="text-4xl">${firstNames.toLocaleLowerCase()}</span>
+            <span>${lastName.toLocaleLowerCase()}</span>
+          </span>
+        </a>
+      `
 
 			boxerNav?.querySelector(".active")?.classList.remove("active")
 			link.classList.add("active")
@@ -90,7 +110,7 @@ const boxerColumns = [
 
 			boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
 			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
-			boxerTitle.innerHTML = spanNames ?? ""
+			boxerTitle.innerHTML = spanNames
 			boxerCountry.src = `/img/flags/${country}.webp`
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
 			boxerCountry.alt = `Bandera de ${countryName}`
@@ -110,18 +130,111 @@ const boxerColumns = [
 				activateBoxer(currentTarget, link, true)
 			})
 		})
+
+		// Nuevo código para dispositivos móviles
+		const carouselInner = document.querySelector(".carousel-inner") as HTMLElement
+		const carouselItems = document.querySelectorAll(".carousel-item") as NodeListOf<HTMLElement>
+
+		function updateCarousel() {
+			if (carouselItems.length === 0) return
+
+			const activeItem = document.querySelector(".carousel-item.active") as HTMLElement
+			const activeIndex = Array.from(carouselItems).indexOf(activeItem)
+			const itemWidth = carouselItems[0].offsetWidth
+			const scrollLeft = activeIndex * itemWidth
+
+			carouselInner.style.transform = `translateX(-${scrollLeft}px)`
+		}
+
+		function activateCarouselItem(item: HTMLElement) {
+			const { id, name, country, countryName } = item.dataset
+
+			if (!id || !name || !country || !countryName) return
+
+			carouselItems.forEach((item) => item.classList.remove("active"))
+			item.classList.add("active")
+
+			const boxerSrc = `/img/boxers/${id}-big`
+
+			boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
+			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
+			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
+			boxerCountry.src = `/img/flags/${country}.webp`
+			boxerCountry.alt = `Bandera de ${countryName}`
+
+			updateCarousel()
+		}
+
+		function handleCarouselScroll() {
+			if (carouselItems.length === 0) return
+
+			const itemWidth = carouselItems[0].offsetWidth
+			const scrollLeft = carouselInner.scrollLeft
+			const activeIndex = Math.round(scrollLeft / itemWidth)
+
+			carouselItems.forEach((item, index) => {
+				if (index === activeIndex) {
+					item.classList.add("active")
+					activateCarouselItem(item)
+				} else {
+					item.classList.remove("active")
+				}
+			})
+		}
+
+		let scrollTimeout: number | undefined
+
+		function handleCarouselScrollEnd() {
+			clearTimeout(scrollTimeout)
+			scrollTimeout = setTimeout(() => {
+				handleCarouselScroll()
+			}, 100)
+		}
+
+		if (carouselInner) {
+			carouselInner.addEventListener("scroll", handleCarouselScrollEnd)
+		}
+
+		carouselItems.forEach((item) => {
+			item.addEventListener("click", () => {
+				activateCarouselItem(item)
+			})
+		})
 	})
 </script>
 
 <style>
 	.boxers-lists {
-		@apply relative md:h-[480px] xl:h-32 w-screen overflow-x-scroll;
+		@apply relative w-screen overflow-x-scroll md:h-[480px] xl:h-32;
 		scrollbar-width: none;
 	}
 
 	@media (min-width: 1280px) {
 		.boxers-lists {
 			@apply h-auto w-full max-w-none overflow-hidden py-2;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.carousel {
+			scrollbar-width: none;
+		}
+
+		.carousel::-webkit-scrollbar {
+			display: none;
+		}
+
+		.carousel-inner {
+			transition: transform 0.3s ease-in-out;
+		}
+
+		.carousel-item {
+			opacity: 0.5;
+			transition: opacity 0.3s ease-in-out;
+		}
+
+		.carousel-item.active {
+			opacity: 1;
 		}
 	}
 </style>
