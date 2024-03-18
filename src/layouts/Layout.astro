@@ -43,7 +43,7 @@ const { title, description, preloadImgLCP, canonical, image } = Astro.props
 	>
 		<a
 			href="#main-content"
-			class="fixed top-0 z-20 rounded-br-md bg-secondary px-3 py-5 text-primary opacity-0 focus:opacity-100"
+			class="anchor-main-content fixed top-0 z-20 rounded-br-md bg-secondary px-3 py-5 text-primary opacity-0 focus:opacity-100"
 			>Saltar al contenido principal</a
 		>
 		<NoiseBackground />
@@ -131,6 +131,14 @@ const { title, description, preloadImgLCP, canonical, image } = Astro.props
 					scrollbar-color: theme("colors.primary") transparent;
 					scrollbar-width: thin;
 				}
+			}
+
+			.anchor-main-content {
+				pointer-events: none;
+			}
+
+			.anchor-main-content:focus {
+				pointer-events: all;
 			}
 		</style>
 	</body>
