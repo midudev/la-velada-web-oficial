@@ -66,7 +66,7 @@ const boxerColumns = [
 		function activateBoxer(element: HTMLElement, link: HTMLElement, replaceUrl: boolean = false) {
 			if (element.classList.contains("active")) return
 
-			const { id, name, country, countryName } = element?.dataset
+			const { id, name, country, countryName, opponents = "", allies = "" } = element?.dataset
 
 			const splitName = name?.split(" ") ?? []
 			const lastName = splitName[splitName.length - 1]
@@ -81,7 +81,29 @@ const boxerColumns = [
 			`
 
 			boxerNav?.querySelector(".active")?.classList.remove("active")
+			boxerNav
+				?.querySelectorAll(".opponent")
+				?.forEach((opponentEl) => opponentEl.classList.remove("opponent"))
+			boxerNav?.querySelectorAll(".ally")?.forEach((allyEl) => allyEl.classList.remove("ally"))
+
 			link.classList.add("active")
+
+			allies.split(",").map((ally) =>
+				boxerLinks.forEach((link) => {
+					if (link.dataset.id === ally) {
+						link.classList.add("ally")
+					}
+				})
+			)
+
+			opponents.split(",").map((opponent) =>
+				boxerLinks.forEach((link) => {
+					if (link.dataset.id === opponent) {
+						link.classList.add("opponent")
+					}
+				})
+			)
+
 			if (replaceUrl) {
 				history.replaceState({}, "", `?boxer=${id}`)
 			}
@@ -115,7 +137,7 @@ const boxerColumns = [
 
 <style>
 	.boxers-lists {
-		@apply relative md:h-[480px] xl:h-32 w-screen overflow-x-scroll;
+		@apply relative w-screen overflow-x-scroll md:h-[480px] xl:h-32;
 		scrollbar-width: none;
 	}
 
