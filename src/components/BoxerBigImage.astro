@@ -25,6 +25,7 @@ const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
 	"
 >
 </div>
+
 <picture
 	class:list={"boxer-photo aspect-[285/428] h-auto w-full max-w-[450px]"}
 	transition:name="boxer-big-image"
@@ -32,7 +33,7 @@ const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
 	<source srcset={`/img/boxers/${id}-big.avif`} type="image/avif" />
 	<img
 		class="aspect-[285/428] h-auto w-full object-contain"
-		alt="Fotografía de El Mariana"
+		alt={`Fotografía de ${name}`}
 		src={`/img/boxers/${id}-big.webp`}
 		style="
 			filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
