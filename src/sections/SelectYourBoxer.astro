@@ -11,6 +11,9 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	return { ...boxer, countryName }
 })
 
+const selectedBoxerId = Astro.url.searchParams.get("boxer") ?? "el-mariana"
+const selectedBoxer = listOfBoxers.find(({ id }) => id === selectedBoxerId) || listOfBoxers[0]
+
 // split in 4 columns
 const boxerColumns = [
 	listOfBoxers.slice(0, 3),
@@ -39,18 +42,23 @@ const boxerColumns = [
 		<article
 			class="relative flex w-full max-w-[60%] flex-col items-center justify-center md:absolute md:max-w-full"
 		>
-			<BoxerBigImage id="el-mariana" name="El Mariana" country="mx" countryName="México" />
+			<BoxerBigImage
+				id={selectedBoxer.id}
+				name={selectedBoxer.name}
+				country={selectedBoxer.country}
+				countryName={selectedBoxer.countryName}
+			/>
 		</article>
 
 		<div class="boxers-nav hidden w-full justify-between md:flex">
 			<nav class="boxers-lists flex h-full justify-start gap-2 py-4">
-				<ColumnBoxers boxers={boxerColumns[0]} />
-				<ColumnBoxers boxers={boxerColumns[1]} class="mt-4" />
+				<ColumnBoxers boxers={boxerColumns[0]} selectedBoxerId={selectedBoxerId} />
+				<ColumnBoxers boxers={boxerColumns[1]} selectedBoxerId={selectedBoxerId} class="mt-4" />
 			</nav>
 
 			<nav class="boxers-lists flex h-full justify-end gap-2 py-4">
-				<ColumnBoxers boxers={boxerColumns[2]} class="mt-4" />
-				<ColumnBoxers boxers={boxerColumns[3]} />
+				<ColumnBoxers boxers={boxerColumns[2]} selectedBoxerId={selectedBoxerId} class="mt-4" />
+				<ColumnBoxers boxers={boxerColumns[3]} selectedBoxerId={selectedBoxerId} />
 			</nav>
 		</div>
 
@@ -66,7 +74,7 @@ const boxerColumns = [
 									${index === listOfBoxers.length - 1 ? "mr-[30%]" : ""}
 								`}
 							>
-								<ColumnBoxers boxers={[boxer]} />
+								<ColumnBoxers boxers={[boxer]} selectedBoxerId={selectedBoxerId} />
 							</div>
 						))
 					}
@@ -150,13 +158,6 @@ const boxerColumns = [
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
 
 			boxerCountry.alt = `Bandera de ${countryName}`
-		}
-
-		const urlParams = new URLSearchParams(window.location.search)
-		const boxerId = urlParams.get("boxer") ?? "el-mariana"
-		const boxerEl = $(`[data-id="${boxerId}"]`) as HTMLElement
-		if (boxerEl) {
-			activateBoxer(boxerEl, boxerEl, boxerNav, false)
 		}
 
 		boxerLinks.forEach((link) => {
