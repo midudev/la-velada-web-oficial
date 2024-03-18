@@ -11,23 +11,25 @@ const { boxers, class: className = "" } = Astro.props
 
 <div class:list={`flex flex-col ${className}`}>
 	{
-		boxers.map(({ id, name, country, countryName, weight, rotate }) => (
+		boxers.map(({ id, name, country, countryName, weight, rotate, versus, allies }) => (
 			<a
 				href={`/boxers/${id}`}
-				class:list={`boxer-link ${rotate ? "rotate-y-180" : ""}`}
+				class:list={"boxer-link"}
 				title={`Visita la página del boxeador ${name}`}
 				data-id={id}
 				data-name={name}
 				data-country={country}
 				data-country-name={countryName}
 				data-weight={weight}
+				data-opponents={versus}
+				data-allies={allies}
 			>
 				<div class="boxer-link-background" />
 				<img
 					loading="lazy"
 					src={`/img/boxers/${id}-small.webp`}
 					alt={`Foto en pequeño del boxeador ${name}`}
-					class="boxer-image aspect-square h-full w-full object-contain"
+					class:list={`boxer-image aspect-square h-full w-full object-contain ${rotate ? "rotate-y-180" : ""}`}
 				/>
 			</a>
 		))
@@ -62,10 +64,31 @@ const { boxers, class: className = "" } = Astro.props
 
 	.boxer-link:hover .boxer-image,
 	.boxer-link.active .boxer-image {
-		transform: scale(1.05);
+		scale: 1.05;
 		filter: grayscale(0%);
-		& .rotate-y-180 {
-			transform: rotateY(180deg);
+	}
+
+	.boxer-link.ally {
+		& .boxer-image {
+			scale: 1.05;
+		}
+
+		&::after {
+			content: "aliada";
+			@apply pointer-events-none absolute bottom-0 z-50 font-atomic text-2xl text-green-500;
+			text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+		}
+	}
+
+	.boxer-link.opponent {
+		& .boxer-image {
+			scale: 1.05;
+		}
+
+		&::after {
+			content: "versus";
+			@apply pointer-events-none absolute bottom-0 z-50 font-atomic text-2xl text-red-500;
+			text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 		}
 	}
 

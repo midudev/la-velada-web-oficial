@@ -1,0 +1,35 @@
+---
+import type { Boxer } from "@/consts/boxers"
+
+interface Props {
+	title: string
+	value: Boxer[]
+}
+
+const { title, value } = Astro.props
+---
+
+<div class="flex justify-center text-white">
+	<div
+		class="flex w-full items-start justify-between pl-2.5 pr-2.5 pt-2 text-center md:flex-col md:items-center"
+	>
+		<h4>{title}</h4>
+		<div>
+			{
+				value.map((item, index) => (
+					<>
+						<a
+							class:list={"text-xl font-bold text-accent hover:underline"}
+							id="boxer-weight"
+							href={item.id}
+							title={`Visita la página del boxeador ${item.name}`}
+						>
+							{item.name}
+						</a>
+						{index !== value.length - 1 && <span class="text-xl font-bold text-accent"> / </span>}
+					</>
+				))
+			}
+		</div>
+	</div>
+</div>
