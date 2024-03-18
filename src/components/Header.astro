@@ -4,6 +4,7 @@ import HeroLogo from "@/components/HeroLogo.astro"
 import DrawnXLogo from "@/components/DrawnXLogo.astro"
 import FooterContent from "@/components/FooterContent.astro"
 import SocialButtons from "@/components/SocialButtons.astro"
+import { MOBILE_MENU_CONTENT_ID } from "@/consts/mobile-menu"
 
 const pages = [
 	{ name: "El Evento", href: "/" },
@@ -45,7 +46,7 @@ const pages = [
 		<HamburgerButton class:list={"block lg:hidden"} id="menuButton" />
 		<div
 			class="fixed inset-0 z-[888] flex w-screen flex-col items-center overflow-x-auto bg-[var(--background-color)] px-10 lg:hidden"
-			id="menuMobileContent"
+			id={MOBILE_MENU_CONTENT_ID}
 		>
 			<aside class="flex min-h-16 w-full items-center justify-between">
 				<span class="text-xl font-semibold uppercase text-primary">Menú</span>
