@@ -55,31 +55,32 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 </section>
 
 <script>
+	import { $ } from "@/lib/dom-selector"
 	import createCountdown from "@/lib/countdown"
 
-	const $countdown = document.querySelector("[data-date]")
+	const $countdown = $("[data-date]")
 	const $days = {
-		firstDigit: $countdown?.querySelector("[data-days] [data-first-group]"),
-		secondDigit: $countdown?.querySelector("[data-days] [data-second-group]"),
-		thirdDigit: $countdown?.querySelector("[data-days] [data-third-group]"),
+		firstDigit: $("[data-days] [data-first-group]", $countdown),
+		secondDigit: $("[data-days] [data-second-group]", $countdown),
+		thirdDigit: $("[data-days] [data-third-group]", $countdown),
 	}
 	const $hours = {
-		firstDigit: $countdown?.querySelector("[data-hours] [data-first-group]"),
-		secondDigit: $countdown?.querySelector("[data-hours] [data-second-group]"),
+		firstDigit: $("[data-hours] [data-first-group]", $countdown),
+		secondDigit: $("[data-hours] [data-second-group]", $countdown),
 	}
 	const $minutes = {
-		firstDigit: $countdown?.querySelector("[data-minutes] [data-first-group]"),
-		secondDigit: $countdown?.querySelector("[data-minutes] [data-second-group]"),
+		firstDigit: $("[data-minutes] [data-first-group]", $countdown),
+		secondDigit: $("[data-minutes] [data-second-group]", $countdown),
 	}
 	const $seconds = {
-		firstDigit: $countdown?.querySelector("[data-seconds] [data-first-group]"),
-		secondDigit: $countdown?.querySelector("[data-seconds] [data-second-group]"),
+		firstDigit: $("[data-seconds] [data-first-group]", $countdown),
+		secondDigit: $("[data-seconds] [data-second-group]", $countdown),
 	}
 
 	function animateDigit(group: HTMLElement, value: string) {
-		const wrapper = group.querySelector("[data-wrapper]")
-		const num = group.querySelector(`[data-num="${value}"]`)
-		const xnum = group.querySelector("[data-num-x0]") // 0 añadido para la animación
+		const wrapper = $("[data-wrapper]", group)
+		const num = $(`[data-num="${value}"]`, group)
+		const xnum = $("[data-num-x0]", group) // 0 añadido para la animación
 
 		if (
 			wrapper instanceof HTMLElement &&
@@ -138,7 +139,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 		},
 
 		onComplete() {
-			document.querySelector(".countdown-text")?.remove()
+			$(".countdown-text")?.remove()
 
 			if (!$countdown) return
 
