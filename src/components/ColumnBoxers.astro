@@ -4,9 +4,10 @@ import type { Boxer } from "@/consts/boxers"
 interface Props {
 	boxers: Boxer[]
 	class?: string
+	selectedBoxerId: string
 }
 
-const { boxers, class: className = "" } = Astro.props
+const { boxers, class: className = "", selectedBoxerId } = Astro.props
 ---
 
 <div class:list={`flex flex-col ${className}`}>
@@ -14,7 +15,7 @@ const { boxers, class: className = "" } = Astro.props
 		boxers.map(({ id, name, country, countryName, weight, rotate, versus, allies }) => (
 			<a
 				href={`/boxers/${id}`}
-				class:list={"boxer-link"}
+				class:list={["boxer-link", { active: selectedBoxerId === id }]}
 				title={`Visita la página del boxeador ${name}`}
 				data-id={id}
 				data-name={name}
