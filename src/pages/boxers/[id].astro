@@ -3,6 +3,7 @@ import BoxerBigImage from "@/components/BoxerBigImage.astro"
 import BoxerWorkout from "@/components/BoxerWorkout.astro"
 import BoxerClips from "@/components/BoxerClips.astro"
 import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro"
+import BoxerDetailInfoRival from "@/components/BoxerDetailInfoRival.astro"
 import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
 import SectionTitle from "@/components/SectionTitle.astro"
 
@@ -47,13 +48,13 @@ const forecast = FORECASTS.find((forecast) => forecast.combatId === combat.id)
 const boxersWithForecast: BoxerWithForecast[] = []
 let forecastCount = 0
 
-let rivals = ""
+let rivals: Boxer[] = []
 if (typeof boxer.versus === "object") {
-	rivals = boxer.versus
-		.map((vs: string) => BOXERS.find((rival: Boxer) => rival.id === vs)!.name)
-		.join(" / ")
+  for (const vs of boxer.versus) {
+		rivals = rivals.concat(BOXERS.filter((rival: Boxer) => rival.id === vs))
+	}
 } else {
-	rivals = BOXERS.find((rival: Boxer) => rival.id === boxer.versus)!.name
+	rivals = BOXERS.filter((rival: Boxer) => rival.id === boxer.versus)
 }
 
 if (forecast) {
@@ -79,7 +80,7 @@ if (forecast) {
 					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} />
 					<BoxerDetailInfo title="Edad" value={boxer.age} />
 					<div class="hidden md:block">
-						<BoxerDetailInfo title="Rival/es" value={rivals} />
+						<BoxerDetailInfoRival title="Rival/es" value={rivals} />
 					</div>
 				</div>
 
@@ -95,7 +96,7 @@ if (forecast) {
 					<BoxerDetailInfo title="Guardia" value={boxer.guard} />
 					<BoxerDetailInfo title="Alcance" value={boxer.reach} />
 					<div class="block md:hidden">
-						<BoxerDetailInfo title="Rival/es" value={rivals} />
+						<BoxerDetailInfoRival title="Rival/es" value={rivals} />
 					</div>
 				</div>
 			</div>
