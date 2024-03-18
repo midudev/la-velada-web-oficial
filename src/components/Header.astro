@@ -198,22 +198,23 @@ const pages = [
 <script>
 	import { $ } from "@/lib/dom-selector"
 
-	const nav = $("nav")
-	const menuButton = $("#menuButton")
-	const innerMenuButton = $("#innerMenuButton")
-
-	menuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
-	innerMenuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
-
-	function toggleMenu(nav: HTMLElement | null) {
-		$("#menuMobileContent")?.classList.toggle("open")
+	function toggleMenu(nav: HTMLElement | null, menuMobileContent: HTMLElement | null) {
+		console.log("toggle")
+		menuMobileContent?.classList.toggle("open")
 		nav?.classList.toggle("open")
 		document.body.classList.toggle("overflow-hidden")
 		document.body.classList.toggle("lg:overflow-auto")
 	}
-
 	document.addEventListener("astro:page-load", () => {
+		const nav = $("nav")
+		const menuButton = $("#menuButton")
+		const innerMenuButton = $("#innerMenuButton")
 		const menuMobileContext = $("#menuMobileContent")
+
+		menuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav, menuMobileContext))
+		innerMenuButton?.addEventListener("hamburgerButtonClicked", () =>
+			toggleMenu(nav, menuMobileContext)
+		)
 
 		if (menuMobileContext?.classList.contains("open")) menuMobileContext?.classList.remove("open")
 
