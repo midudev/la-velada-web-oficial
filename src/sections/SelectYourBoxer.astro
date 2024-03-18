@@ -76,6 +76,8 @@ const boxerColumns = [
 		const boxerLinks = document.querySelectorAll(
 			".boxer-link"
 		) as globalThis.NodeListOf<HTMLAnchorElement>
+		const boxerImageLink = document.createElement("a")
+		boxerImageLink.classList.add("max-w-[450px]", "z-10")
 		const boxerNav = document.querySelector(".boxers-nav")
 		const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
 		const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
@@ -84,7 +86,7 @@ const boxerColumns = [
 		function activateBoxer(element: HTMLElement, link: HTMLElement, replaceUrl: boolean = false) {
 			if (element.classList.contains("active")) return
 
-			const { id, name, country, countryName } = element?.dataset
+			const { id, name, country, countryName, opponents = "", allies = "" } = element?.dataset
 
 			if (!id || !name || !country || !countryName) return
 
@@ -92,16 +94,38 @@ const boxerColumns = [
 			const lastName = splitName[splitName.length - 1]
 			const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
 			const spanNames = `
-        <a href="/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
-          <span class="flex flex-col">
-            <span class="text-4xl">${firstNames.toLocaleLowerCase()}</span>
-            <span>${lastName.toLocaleLowerCase()}</span>
-          </span>
-        </a>
-      `
-
+					<a href="/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
+						<span class="flex flex-col">
+							<span class="text-4xl">${firstNames?.toLocaleLowerCase()}</span>
+							<span>${lastName?.toLocaleLowerCase()}</span>
+						</span>
+					</a>
+			`
+			boxerImageLink.href = `/boxers/${id}`
 			boxerNav?.querySelector(".active")?.classList.remove("active")
+			boxerNav
+				?.querySelectorAll(".opponent")
+				?.forEach((opponentEl) => opponentEl.classList.remove("opponent"))
+			boxerNav?.querySelectorAll(".ally")?.forEach((allyEl) => allyEl.classList.remove("ally"))
+
 			link.classList.add("active")
+
+			allies.split(",").map((ally) =>
+				boxerLinks.forEach((link) => {
+					if (link.dataset.id === ally) {
+						link.classList.add("ally")
+					}
+				})
+			)
+
+			opponents.split(",").map((opponent) =>
+				boxerLinks.forEach((link) => {
+					if (link.dataset.id === opponent) {
+						link.classList.add("opponent")
+					}
+				})
+			)
+
 			if (replaceUrl) {
 				history.replaceState({}, "", `?boxer=${id}`)
 			}
@@ -113,6 +137,8 @@ const boxerColumns = [
 			boxerTitle.innerHTML = spanNames
 			boxerCountry.src = `/img/flags/${country}.webp`
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
+			boxerPhoto.parentNode?.insertBefore(boxerImageLink, boxerPhoto.nextSibling)
+			boxerImageLink.appendChild(boxerPhoto)
 			boxerCountry.alt = `Bandera de ${countryName}`
 		}
 
@@ -182,7 +208,7 @@ const boxerColumns = [
 			})
 		}
 
-		let scrollTimeout: number | undefined
+		let scrollTimeout: NodeJS.Timeout
 
 		function handleCarouselScrollEnd() {
 			clearTimeout(scrollTimeout)
