@@ -58,6 +58,8 @@ const boxerColumns = [
 		const boxerLinks = document.querySelectorAll(
 			".boxer-link"
 		) as globalThis.NodeListOf<HTMLAnchorElement>
+		const boxerImageLink = document.createElement("a")
+		boxerImageLink.classList.add("max-w-[450px]", "z-10")
 		const boxerNav = document.querySelector(".boxers-nav")
 		const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
 		const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
@@ -79,7 +81,7 @@ const boxerColumns = [
 						</span>
 					</a>
 			`
-
+			boxerImageLink.href = `/boxers/${id}`
 			boxerNav?.querySelector(".active")?.classList.remove("active")
 			boxerNav
 				?.querySelectorAll(".opponent")
@@ -115,6 +117,8 @@ const boxerColumns = [
 			boxerTitle.innerHTML = spanNames ?? ""
 			boxerCountry.src = `/img/flags/${country}.webp`
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
+			boxerPhoto.parentNode?.insertBefore(boxerImageLink, boxerPhoto.nextSibling)
+			boxerImageLink.appendChild(boxerPhoto)
 			boxerCountry.alt = `Bandera de ${countryName}`
 		}
 
