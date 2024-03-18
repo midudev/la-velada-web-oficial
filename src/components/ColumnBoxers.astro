@@ -61,14 +61,17 @@ const { boxers, class: className = "" } = Astro.props
 	}
 
 	.boxer-link:hover .boxer-image,
-	.boxer-link.active .boxer-image {
+	.boxer-link.active .boxer-image,
+	.boxer-link.rivals-selected .boxer-image {
 		transform: scale(1.05);
 		filter: grayscale(0%);
 		& .rotate-y-180 {
 			transform: rotateY(180deg);
 		}
 	}
-
+	.no-rivals-selected {
+		opacity: 0.3;
+	}
 	.boxer-link.active .boxer-link-background,
 	.boxer-link:hover .boxer-link-background {
 		filter: brightness(0.5);

@@ -54,6 +54,8 @@ const boxerColumns = [
 </section>
 
 <script>
+	import { COMBATS } from "@/consts/combats"
+
 	document.addEventListener("astro:page-load", () => {
 		const boxerLinks = document.querySelectorAll(
 			".boxer-link"
@@ -67,7 +69,6 @@ const boxerColumns = [
 			if (element.classList.contains("active")) return
 
 			const { id, name, country, countryName } = element?.dataset
-
 			const splitName = name?.split(" ") ?? []
 			const lastName = splitName[splitName.length - 1]
 			const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
@@ -106,8 +107,34 @@ const boxerColumns = [
 		boxerLinks.forEach((link) => {
 			link.addEventListener("mouseenter", (event) => {
 				const currentTarget = event.currentTarget as HTMLElement
+
+				const { id } = currentTarget.dataset
+				const rivals = COMBATS.find((item) => item.boxers.includes(`${id}`))
+				const boxers = rivals?.boxers
+
+				boxerLinks.forEach((item) => {
+					const { id } = item.dataset
+					const isActiveClass = boxers?.includes(`${id}`)
+					// item.classList.toggle("rivals", isActiveClass)
+					item.classList.remove("rivals")
+					item.classList.remove("no-rivals-selected")
+
+					if (isActiveClass) {
+						item.classList.add("rivals-selected")
+					} else {
+						item.classList.add("no-rivals-selected")
+					}
+				})
+
 				if (currentTarget.classList.contains("active")) return
 				activateBoxer(currentTarget, link, true)
+			})
+
+			link.addEventListener("mouseleave", () => {
+				boxerLinks.forEach((item) => {
+					item.classList.remove("rivals-selected")
+					item.classList.remove("no-rivals-selected")
+				})
 			})
 		})
 	})
@@ -115,7 +142,7 @@ const boxerColumns = [
 
 <style>
 	.boxers-lists {
-		@apply relative md:h-[480px] xl:h-32 w-screen overflow-x-scroll;
+		@apply relative w-screen overflow-x-scroll md:h-[480px] xl:h-32;
 		scrollbar-width: none;
 	}
 
