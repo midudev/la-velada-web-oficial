@@ -1,7 +1,9 @@
 ---
 import BoxerBigImage from "@/components/BoxerBigImage.astro"
+import BoxerWorkout from "@/components/BoxerWorkout.astro"
 import BoxerClips from "@/components/BoxerClips.astro"
 import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro"
+import BoxerDetailInfoRival from "@/components/BoxerDetailInfoRival.astro"
 import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
 import SectionTitle from "@/components/SectionTitle.astro"
 
@@ -46,13 +48,13 @@ const forecast = FORECASTS.find((forecast) => forecast.combatId === combat.id)
 const boxersWithForecast: BoxerWithForecast[] = []
 let forecastCount = 0
 
-let rivals = ""
+let rivals: Boxer[] = []
 if (typeof boxer.versus === "object") {
-	rivals = boxer.versus
-		.map((vs: string) => BOXERS.find((rival: Boxer) => rival.id === vs)!.name)
-		.join(" y ")
+  for (const vs of boxer.versus) {
+		rivals = rivals.concat(BOXERS.filter((rival: Boxer) => rival.id === vs))
+	}
 } else {
-	rivals = BOXERS.find((rival: Boxer) => rival.id === boxer.versus)!.name
+	rivals = BOXERS.filter((rival: Boxer) => rival.id === boxer.versus)
 }
 
 if (forecast) {
@@ -73,23 +75,30 @@ if (forecast) {
 	<main>
 		<section class="flex flex-col items-center justify-center">
 			<div class="flex flex-col items-center md:flex-row md:gap-10 lg:items-start">
-				<aside class="flex flex-col gap-y-20 lg:w-1/4">
+				<div class="order-2 flex w-full flex-col md:order-1 md:w-auto md:gap-y-20 lg:w-1/4">
 					<BoxerDetailInfo title="Alias" value={boxer.name} />
 					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} />
 					<BoxerDetailInfo title="Edad" value={boxer.age} />
-					<BoxerDetailInfo title="Rival/es" value={rivals} />
-				</aside>
+					<div class="hidden md:block">
+						<BoxerDetailInfoRival title="Rival/es" value={rivals} />
+					</div>
+				</div>
 
-				<div class="relative -mt-24 flex flex-col items-center justify-center lg:mx-4 lg:w-[800px]">
+				<div
+					class="relative order-1 -mt-20 flex flex-col items-center justify-center md:order-2 lg:mx-4 lg:w-[800px]"
+				>
 					<BoxerBigImage id={id} name={boxer.name} country={boxer.country} />
 				</div>
 
-				<aside class="flex flex-col gap-y-20 lg:w-1/4">
+				<div class="order-3 flex w-full flex-col md:w-auto md:gap-y-20 lg:w-1/4">
 					<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg.`} />
 					<BoxerDetailInfo title="Altura" value={`${boxer.height} m.`} />
 					<BoxerDetailInfo title="Guardia" value={boxer.guard} />
 					<BoxerDetailInfo title="Alcance" value={boxer.reach} />
-				</aside>
+					<div class="block md:hidden">
+						<BoxerDetailInfoRival title="Rival/es" value={rivals} />
+					</div>
+				</div>
 			</div>
 
 			<div class="mt-20 flex flex-row flex-wrap justify-center gap-8">
@@ -111,6 +120,15 @@ if (forecast) {
 			</div>
 		</section>
 
+		{
+			boxer.workout && (
+				<section class="my-44">
+					<SectionTitle title="Entrenamiento" description="Preparación para el combate" />
+
+					<BoxerWorkout workout={boxer.workout} />
+				</section>
+			)
+		}
 		{
 			boxer.clips && boxer.clips.length > 0 && (
 				<section class="my-44">

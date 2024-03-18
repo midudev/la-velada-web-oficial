@@ -73,6 +73,7 @@ import Typography from "@/components/Typography.astro"
 
 <script>
 	import { EVENT_TIMESTAMP, timeZoneAbbreviations } from "@/consts/event-date"
+	import { $ } from "@/lib/dom-selector"
 
 	function getUserTimeZone(): string {
 		return Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -134,9 +135,9 @@ import Typography from "@/components/Typography.astro"
 			showTime?: boolean
 		}
 	) {
-		const $dateSpan = document.querySelector(".date")
-		const $timeSpan = document.querySelector(".time")
-		const $dateSeparator = document.querySelector(".date-time-separator")
+		const $dateSpan = $(".date")
+		const $timeSpan = $(".time")
+		const $dateSeparator = $(".date-time-separator")
 
 		if ($dateSpan != null) {
 			$dateSpan.innerHTML = dateString

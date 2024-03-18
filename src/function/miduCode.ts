@@ -13,13 +13,14 @@ export async function showContributors($miduContainer: HTMLDivElement) {
 		setTimeout(() => {
 			const { avatar_url, login } = contributors[i]
 			const img = document.createElement("img")
-			img.src = avatar_url
 			img.alt = login
 			img.title = login
 			img.classList.add("bubbles")
 			if (login === "midudev") {
 				img.setAttribute("id", "midu")
+				img.src = `${avatar_url}&size=150`
 			} else {
+				img.src = `${avatar_url}&size=60`
 				img.style.left = `${generateRandomNumber()}vw`
 				const startRotation = Math.floor(Math.random() * (90 - -90 + 1)) + -45
 				img.style.transform = `rotate(${startRotation}deg)`
