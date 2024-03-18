@@ -66,7 +66,7 @@ const boxerColumns = [
 		function activateBoxer(element: HTMLElement, link: HTMLElement, replaceUrl: boolean = false) {
 			if (element.classList.contains("active")) return
 
-			const { id, name, country, countryName, opponents, allies } = element?.dataset
+			const { id, name, country, countryName, opponents = "", allies = "" } = element?.dataset
 
 			const splitName = name?.split(" ") ?? []
 			const lastName = splitName[splitName.length - 1]
