@@ -3,6 +3,8 @@ import BoxerBigImage from "@/components/boxer/BigImage.astro"
 import BoxerClips from "@/components/boxer/Clips.astro"
 import BoxerDetailInfo from "@/components/boxer/DetailInfo.astro"
 import BoxerSocialLink from "@/components/boxer/SocialLink.astro"
+import BoxerDetailInfoRival from "@/components/boxer/DetailInfoRival.astro"
+import BoxerWorkout from "@/components/boxer/Workout.astro"
 import SectionTitle from "@/components/SectionTitle.astro"
 
 import Instagram from "@/icons/instagram.astro"
@@ -47,13 +49,13 @@ const forecast = FORECASTS.find((forecast) => forecast.combatId === combat.id)
 const boxersWithForecast: BoxerWithForecast[] = []
 let forecastCount = 0
 
-let rivals = ""
+let rivals: Boxer[] = []
 if (typeof boxer.versus === "object") {
-	rivals = boxer.versus
-		.map((vs: string) => BOXERS.find((rival: Boxer) => rival.id === vs)!.name)
-		.join(" y ")
+	for (const vs of boxer.versus) {
+		rivals = rivals.concat(BOXERS.filter((rival: Boxer) => rival.id === vs))
+	}
 } else {
-	rivals = BOXERS.find((rival: Boxer) => rival.id === boxer.versus)!.name
+	rivals = BOXERS.filter((rival: Boxer) => rival.id === boxer.versus)
 }
 
 if (forecast) {
@@ -79,12 +81,12 @@ if (forecast) {
 					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} />
 					<BoxerDetailInfo title="Edad" value={boxer.age} />
 					<div class="hidden md:block">
-						<BoxerDetailInfo title="Rival/es" value={rivals} />
+						<BoxerDetailInfoRival title="Rival/es" value={rivals} />
 					</div>
 				</div>
 
 				<div
-					class="relative order-1 flex flex-col items-center justify-center md:order-2 lg:mx-4 lg:w-[800px]"
+					class="relative order-1 -mt-20 flex flex-col items-center justify-center md:order-2 lg:mx-4 lg:w-[800px]"
 				>
 					<BoxerBigImage id={id} name={boxer.name} country={boxer.country} />
 				</div>
@@ -95,7 +97,7 @@ if (forecast) {
 					<BoxerDetailInfo title="Guardia" value={boxer.guard} />
 					<BoxerDetailInfo title="Alcance" value={boxer.reach} />
 					<div class="block md:hidden">
-						<BoxerDetailInfo title="Rival/es" value={rivals} />
+						<BoxerDetailInfoRival title="Rival/es" value={rivals} />
 					</div>
 				</div>
 			</div>
@@ -119,6 +121,15 @@ if (forecast) {
 			</div>
 		</section>
 
+		{
+			boxer.workout && (
+				<section class="my-44">
+					<SectionTitle title="Entrenamiento" description="Preparación para el combate" />
+
+					<BoxerWorkout workout={boxer.workout} />
+				</section>
+			)
+		}
 		{
 			boxer.clips && boxer.clips.length > 0 && (
 				<section class="my-44">

@@ -1,15 +1,26 @@
 import type { Boxer } from "@/types/Boxer"
 
-const addAgeGetter = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
+const addGetters = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
 	return boxersWithoutAge.map((boxerWithoutAge) => ({
 		...boxerWithoutAge,
 		get age() {
 			return new Date(new Date().getTime() - this.birthDate.getTime()).getFullYear() - 1970
 		},
+		// El enemigo de mi enemigo es mi amigo
+		get allies() {
+			return boxersWithoutAge
+				.filter(
+					(ally) =>
+						(Array.isArray(ally.versus)
+							? ally.versus.every((opponent) => this.versus.includes(opponent))
+							: false) && ally.id !== this.id
+				)
+				.map((ally) => ally.id)
+		},
 	}))
 }
 
-export const BOXERS: Boxer[] = addAgeGetter([
+export const BOXERS: Boxer[] = addGetters([
 	{
 		id: "el-mariana",
 		name: "El Mariana",
@@ -75,6 +86,10 @@ export const BOXERS: Boxer[] = addAgeGetter([
 			twitter: "https://twitter.com/alanafloresf",
 			youtube: "https://youtube.com/c/alanalarana",
 			tiktok: "https://tiktok.com/@alanatwitch",
+		},
+		workout: {
+			videoID: "FXzCBTRWouA",
+			thumbnail: "/img/boxers/workoutThumbnails/alana-thumbnails.webp",
 		},
 	},
 	{
