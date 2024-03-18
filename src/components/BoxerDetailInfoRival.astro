@@ -10,9 +10,11 @@ const { title, value } = Astro.props
 ---
 
 <div class="flex justify-center text-white">
-	<div class="style flex flex-col items-start text-center">
+	<div
+		class="flex w-full items-start justify-between pl-2.5 pr-2.5 pt-2 text-center md:flex-col md:items-center"
+	>
 		<h4>{title}</h4>
-		<div class="rivals-data">
+		<div>
 			{
 				value.map((item, index) => (
 					<>
@@ -24,39 +26,10 @@ const { title, value } = Astro.props
 						>
 							{item.name}
 						</a>
-						{index !== value.length - 1 && <span class="text-xl font-bold text-accent"> y </span>}
+						{index !== value.length - 1 && <span class="text-xl font-bold text-accent"> / </span>}
 					</>
 				))
 			}
 		</div>
 	</div>
 </div>
-
-<style>
-	.style {
-		width: 100%;
-		display: flex;
-		align-items: center;
-	}
-
-	@media (max-width: 767px) {
-		.style {
-			flex-direction: row;
-			justify-content: space-between;
-		}
-
-		h4,
-		.rivals-data {
-			margin: 0;
-			padding: 2px 10px;
-		}
-
-		h4 {
-			margin-left: 0;
-		}
-
-		.rivals-data {
-			margin-right: 0;
-		}
-	}
-</style>
