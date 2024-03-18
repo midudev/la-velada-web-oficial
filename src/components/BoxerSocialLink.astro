@@ -12,9 +12,24 @@ const { href } = Astro.props
 			href={href}
 			target="_blank"
 			rel="noopener noreferrer"
-			class="inline-flex w-32 items-center justify-center bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 text-white mix-blend-screen transition hover:opacity-70"
+			class="group relative inline-flex w-32 items-center justify-center overflow-hidden bg-gradient-to-b from-gray-900 to-transparent px-10 py-2 text-white mix-blend-screen transition"
 		>
 			<slot />
+			<span class="absolute inset-0 h-1/2 bg-gradient-to-b from-white to-transparent opacity-0 transition-opacity duration-200 ease-in-out group-hover:h-[90%] group-hover:opacity-20 group-focus:h-[90%] group-focus:opacity-20" />
 		</a>
 	)
 }
+
+<style>
+	a:hover :global(svg),
+	a:focus :global(svg) {
+		transform: scale(1.05);
+	}
+
+	@media (prefers-reduced-motion) {
+		a:hover :global(svg),
+		a:focus :global(svg) {
+			transform: scale(1);
+		}
+	}
+</style>
