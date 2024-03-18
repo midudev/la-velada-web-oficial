@@ -22,6 +22,10 @@ export interface Boxer {
 		text: string
 		url: string
 	}>
+	workout?: {
+		videoID: string
+		thumbnail: string
+	}
 	rotate?: boolean
 	allies?: string[]
 }
@@ -113,6 +117,10 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/c/alanalarana",
 			tiktok: "https://tiktok.com/@alanatwitch",
 		},
+		workout: {
+			videoID: "FXzCBTRWouA",
+			thumbnail: "/img/boxers/workoutThumbnails/alana-thumbnails.webp",
+		},
 	},
 	{
 		id: "shelao",
@@ -131,7 +139,7 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/c/shelao",
 			tiktok: "https://tiktok.com/@shelao",
 		},
-		rotate: true
+		rotate: true,
 	},
 	{
 		id: "viruzz",
@@ -151,7 +159,7 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/c/byViruZz",
 			tiktok: "https://tiktok.com/@victormelida",
 		},
-		rotate: true
+		rotate: true,
 	},
 	{
 		id: "ama-blitz",
@@ -223,7 +231,7 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/channel/UCjUjTl1MiPdAwRxklFLNklg",
 			tiktok: "https://tiktok.com/@nissaxter_",
 		},
-		rotate: true
+		rotate: true,
 	},
 	{
 		id: "guanyar",
@@ -243,7 +251,7 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/channel/UCEy75s5IJw-ISYDu1d7HzlA?view_as=subscriber",
 			tiktok: "https://tiktok.com/@guanyar",
 		},
-		rotate: true
+		rotate: true,
 	},
 	{
 		id: "la-cobra",
