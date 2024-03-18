@@ -1,0 +1,16 @@
+---
+import type { HTMLAttributes } from "astro/types"
+
+type Props = {
+	className?: string
+} & HTMLAttributes<"img">
+
+const { className, ...props } = Astro.props
+---
+
+<img
+	src="/img/lvda.webp"
+	alt="lvda logo"
+	class:list={["accent-drop-shadow my-4 drop-shadow-lg", className]}
+	{...props}
+/>
