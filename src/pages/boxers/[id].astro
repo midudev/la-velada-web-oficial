@@ -50,7 +50,7 @@ let rivals = ""
 if (typeof boxer.versus === "object") {
 	rivals = boxer.versus
 		.map((vs: string) => BOXERS.find((rival: Boxer) => rival.id === vs)!.name)
-		.join(" y ")
+		.join(" / ")
 } else {
 	rivals = BOXERS.find((rival: Boxer) => rival.id === boxer.versus)!.name
 }
