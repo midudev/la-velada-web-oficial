@@ -78,8 +78,11 @@ if (forecast) {
 					<BoxerDetailInfo title="Alias" value={boxer.name} />
 					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} />
 					<BoxerDetailInfo title="Edad" value={boxer.age} />
-					<BoxerDetailInfoRival title="Rival/es" value={rivals} />
+					<div class="hidden md:block">
+						<BoxerDetailInfoRival title="Rival/es" value={rivals} />
+					</div>
 				</div>
+
 				<div
 					class="relative order-1 flex flex-col items-center justify-center md:order-2 lg:mx-4 lg:w-[800px]"
 				>
@@ -92,7 +95,7 @@ if (forecast) {
 					<BoxerDetailInfo title="Guardia" value={boxer.guard} />
 					<BoxerDetailInfo title="Alcance" value={boxer.reach} />
 					<div class="block md:hidden">
-						<BoxerDetailInfo title="Rival/es" value={rivals} />
+						<BoxerDetailInfoRival title="Rival/es" value={rivals} />
 					</div>
 				</div>
 			</div>
