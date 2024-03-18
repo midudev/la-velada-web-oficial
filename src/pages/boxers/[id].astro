@@ -74,7 +74,7 @@ if (forecast) {
 	<main>
 		<section class="flex flex-col items-center justify-center">
 			<div class="flex flex-col items-center md:flex-row md:gap-10 lg:items-start">
-				<div class="order-2 flex flex-col gap-y-6 md:order-1 md:gap-y-20 lg:w-1/4">
+				<div class="order-2 flex w-full flex-col md:order-1 md:w-auto md:gap-y-20 lg:w-1/4">
 					<BoxerDetailInfo title="Alias" value={boxer.name} />
 					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} />
 					<BoxerDetailInfo title="Edad" value={boxer.age} />
@@ -86,11 +86,14 @@ if (forecast) {
 					<BoxerBigImage id={id} name={boxer.name} country={boxer.country} />
 				</div>
 
-				<div class="order-3 flex flex-col gap-y-6 md:order-3 md:gap-y-20 lg:w-1/4">
+				<div class="order-3 flex w-full flex-col md:w-auto md:gap-y-20 lg:w-1/4">
 					<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg.`} />
 					<BoxerDetailInfo title="Altura" value={`${boxer.height} m.`} />
 					<BoxerDetailInfo title="Guardia" value={boxer.guard} />
 					<BoxerDetailInfo title="Alcance" value={boxer.reach} />
+					<div class="block md:hidden">
+						<BoxerDetailInfo title="Rival/es" value={rivals} />
+					</div>
 				</div>
 			</div>
 
