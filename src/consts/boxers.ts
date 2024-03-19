@@ -188,7 +188,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No encontrado
 		height: 1.84,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/karchez",
+			instagram: "https://www.instagram.com/karchezz/",
+			twitter: "https://twitter.com/Karchezzz",
+			youtube: "https://www.youtube.com/Karchez",
+			tiktok: "https://tiktok.com/@karchez",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -203,7 +209,7 @@ export const BOXERS: Boxer[] = addGetters([
 			twitch: "https://twitch.tv/peldanyos",
 			instagram: "https://instagram.com/peldanyos",
 			twitter: "https://twitter.com/peldanyos",
-			youtube: "https://www.youtube.com/@peldanyos",
+			youtube: "https://youtube.com/@peldanyos",
 			tiktok: "https://tiktok.com/@peldanyos",
 		},
 		versus: "rey-de-la-pista",
@@ -260,7 +266,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No es seguro
 		height: 1.91,
 		country: "co",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/pelicanger",
+			instagram: "https://www.instagram.com/pelicanger__",
+			twitter: "https://twitter.com/offpeli",
+			youtube: "https://www.youtube.com/c/Pelicanger",
+			tiktok: "https://www.tiktok.com/@pelicanger.oficial",
+		},
 		versus: "rey-de-la-pista",
 	},
 
@@ -283,7 +295,17 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 83, // No encontrado
 		height: 1.83, // No encontrado
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/skain",
+			instagram: "https://www.instagram.com/skain24",
+			twitter: "https://twitter.com/skain24",
+			youtube: "https://www.youtube.com/@skain24",
+			tiktok: "https://www.tiktok.com/@skain24",
+		},
+		workout: {
+			videoID: "BlN7FgdDoHM",
+			thumbnail: "/img/boxers/workoutThumbnails/skain-thumbnails.webp",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -294,7 +316,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 71,
 		height: 1.8,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/folagorlives",
+			instagram: "https://www.instagram.com/yoel__ramirez",
+			twitter: "https://twitter.com/FolagoR",
+			tiktok: "https://www.tiktok.com/@folagor_official",
+			youtube: "https://www.youtube.com/Folagor03",
+		},
 		versus: "rey-de-la-pista",
 		rotate: true,
 	},

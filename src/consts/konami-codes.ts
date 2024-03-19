@@ -15,4 +15,5 @@ export const konamiCodes = {
 	amongUsCursor: ["a", "m", "o", "n", "g", "u", "s"],
 	lolCursor: ["l", "o", "l"],
 	midu: ["m", "i", "d", "u"],
+	devContributors: ["d", "e", "v"],
 }
