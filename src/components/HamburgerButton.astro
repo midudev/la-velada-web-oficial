@@ -1,15 +1,19 @@
 ---
+import { MOBILE_MENU_CONTENT_ID } from "@/consts/mobile-menu"
+
 const width = "w-6"
 const genericHamburgerLine = `h-[2px] ${width} bg-gray-300 transition ease transform duration-300`
 ---
 
 <button
 	id={Astro.props.id}
+	aria-expanded="false"
+	aria-controls={MOBILE_MENU_CONTENT_ID}
 	class:list={[
 		"hamburgerButton group relative flex h-[20px] flex-col items-center justify-between lg:hidden",
 		width,
 	]}
-	aria-label="hamburger menu button"
+	aria-label="Abrir menú de navegación"
 >
 	<div class:list={["group-[.open]:translate-y-2 group-[.open]:rotate-45", genericHamburgerLine]}>
 	</div>
@@ -25,7 +29,7 @@ const genericHamburgerLine = `h-[2px] ${width} bg-gray-300 transition ease trans
 </button>
 
 <script>
-	import { $, $$ } from "@/consts/dom-selector"
+	import { $, $$ } from "@/lib/dom-selector"
 
 	const DISPLAY = {
 		hamburgerMenuClass: ".hamburgerButton",
@@ -34,13 +38,23 @@ const genericHamburgerLine = `h-[2px] ${width} bg-gray-300 transition ease trans
 	} as const
 
 	document.addEventListener("astro:page-load", () => {
+		const hamburgerButton = $(DISPLAY.hamburgerMenuClass)
+
 		$$(DISPLAY.hamburgerMenuClass).forEach((button) => {
 			button.addEventListener("click", () => {
 				const hamburgerButton = $(DISPLAY.hamburgerMenuClass)
 				hamburgerButton.classList.toggle(DISPLAY.open)
+				const isMenuOpen = hamburgerButton.classList.contains(DISPLAY.open)
+				hamburgerButton.setAttribute("aria-expanded", String(isMenuOpen))
+				hamburgerButton.setAttribute(
+					"aria-label",
+					isMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"
+				)
 				const hamburgerButtonClick = new CustomEvent(DISPLAY.hamburgerButtonClicked)
 				hamburgerButton.dispatchEvent(hamburgerButtonClick)
 			})
 		})
+		if (hamburgerButton?.classList?.contains(DISPLAY.open))
+			hamburgerButton?.classList?.remove(DISPLAY.open)
 	})
 </script>
