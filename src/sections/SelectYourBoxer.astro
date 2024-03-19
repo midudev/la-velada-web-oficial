@@ -136,6 +136,14 @@ const boxerColumns = [
 					})
 				)
 
+				if (opponents === "rey-de-la-pista") {
+					boxerLinks.forEach((link) => {
+						if (link.dataset.opponents === "rey-de-la-pista" && link.dataset.id !== id) {
+							link.classList.add("opponent")
+						}
+					})
+				}
+
 				opponents.split(",").map((opponent) =>
 					boxerLinks.forEach((link) => {
 						if (link.dataset.id === opponent) {
