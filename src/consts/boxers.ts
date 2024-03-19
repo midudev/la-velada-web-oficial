@@ -254,7 +254,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No es seguro
 		height: 1.91,
 		country: "co",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/pelicanger",
+			instagram: "https://www.instagram.com/pelicanger__",
+			twitter: "https://twitter.com/offpeli",
+			youtube: "https://www.youtube.com/c/Pelicanger",
+			tiktok: "https://www.tiktok.com/@pelicanger.oficial",
+		},
 		versus: "rey-de-la-pista",
 	},
 
