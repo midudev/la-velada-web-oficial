@@ -206,10 +206,10 @@ export const BOXERS: Boxer[] = addGetters([
 		height: 1.91, // No es seguro
 		guard: "Derecha",
 		country: "es",
-    workout: {
+		workout: {
 			videoID: "I8R5sQXjpKk",
 			thumbnail: "/img/boxers/workoutThumbnails/peldanyos-thumbnails.webp",
-    },
+		},
 		socials: {
 			twitch: "https://twitch.tv/peldanyos",
 			instagram: "https://instagram.com/peldanyos",
@@ -358,6 +358,10 @@ export const BOXERS: Boxer[] = addGetters([
 			twitter: "https://twitter.com/yosoyplex",
 			youtube: "https://youtube.com/c/YoSoyPlex",
 			tiktok: "https://tiktok.com/@yosoyplexx",
+		},
+		workout: {
+			videoID: "svXhWZ1sZJE",
+			thumbnail: "/img/boxers/workoutThumbnails/plex-thumbnail.webp",
 		},
 		clips: [
 			{
