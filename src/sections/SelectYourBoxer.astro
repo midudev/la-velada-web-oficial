@@ -50,6 +50,18 @@ const selectedBoxer = listOfBoxers.find(({ id }) => id === selectedBoxerId) ?? l
 			/>
 		</article>
 
+		<div class="boxers-nav hidden w-full justify-between md:flex">
+			<nav class="boxers-lists flex h-full justify-start gap-4 py-4">
+				<ColumnBoxers boxers={boxerColumns[0]} selectedBoxerId={selectedBoxerId} />
+				<ColumnBoxers boxers={boxerColumns[1]} selectedBoxerId={selectedBoxerId} class="mt-12" />
+			</nav>
+
+			<nav class="boxers-lists flex h-full justify-end gap-2 py-4">
+				<ColumnBoxers boxers={boxerColumns[2]} selectedBoxerId={selectedBoxerId} class="mt-12" />
+				<ColumnBoxers boxers={boxerColumns[3]} selectedBoxerId={selectedBoxerId} />
+			</nav>
+		</div>
+
 		<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
 			<div class="carousel mt-8 w-full overflow-y-hidden overflow-x-scroll">
 				<div class="carousel-inner flex snap-x overflow-y-hidden overflow-x-scroll">
