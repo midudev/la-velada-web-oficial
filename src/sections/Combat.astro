@@ -41,12 +41,14 @@ const { combatNumber, combatId, boxers } = Astro.props
 		</h2>
 	</div>
 	<div>
-		<a
-			class:list={["flex flex-col items-center justify-center text-2xl font-semibold text-accent"]}
-			href={`/combates/${combatId}`}
-			tabindex="0"
-		>
-			<span class="text-primary">Ver combate</span>
-		</a>
+		<Typography as="h2" variant="h2" color="neutral" withUnderlineTransition>
+			<a
+				href={`/combates/${combatId}`}
+				tabindex="0"
+				aria-label="ubicación del campo Santiago Bernabéu en google maps, se abrirá en una nueva pestaña"
+			>
+				Ver combate
+			</a>
+		</Typography>
 	</div>
 </section>
