@@ -181,24 +181,13 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 	},
 	{
-		id: "sezar-blue",
-		name: "Sezar Blue",
-		realName: "César González",
-		birthDate: new Date(1973, 7, 29),
-		weight: 87,
-		height: 1.77,
-		country: "es",
-		socials: {},
-		versus: "rey-de-la-pista",
-	},
-	{
-		id: "will",
-		name: "Will",
-		realName: "Ángelo Valdés",
-		birthDate: new Date(2000, 5, 29),
+		id: "karchez",
+		name: "Karchez",
+		realName: "José Carlos Sánchez",
+		birthDate: new Date(2000, 7, 4),
 		weight: 85, // No encontrado
-		height: 1.85, // No encontrado
-		country: "do",
+		height: 1.84,
+		country: "es",
 		socials: {},
 		versus: "rey-de-la-pista",
 	},
@@ -225,24 +214,24 @@ export const BOXERS: Boxer[] = addGetters([
 		versus: "rey-de-la-pista",
 	},
 	{
-		id: "pelicanger",
-		name: "Pelicanger",
-		realName: "Angerson Esneider",
-		birthDate: new Date(2001, 0, 7),
-		weight: 85, // No es seguro
-		height: 1.91,
-		country: "co",
+		id: "will",
+		name: "Will",
+		realName: "Ángelo Valdés",
+		birthDate: new Date(2000, 5, 29),
+		weight: 85, // No encontrado
+		height: 1.85, // No encontrado
+		country: "do",
 		socials: {},
 		versus: "rey-de-la-pista",
 	},
 	{
-		id: "roberto-cein",
-		name: "RobertoCein",
-		realName: "Roberto Sebastián Guadarrama Jiménez",
-		birthDate: new Date(1998, 6, 29),
-		weight: 85, // No encontrado
-		height: 1.69, // No es seguro
-		country: "mx",
+		id: "sezar-blue",
+		name: "Sezar Blue",
+		realName: "César González",
+		birthDate: new Date(1973, 7, 29),
+		weight: 87,
+		height: 1.77,
+		country: "es",
 		socials: {},
 		versus: "rey-de-la-pista",
 	},
@@ -258,13 +247,25 @@ export const BOXERS: Boxer[] = addGetters([
 		versus: "rey-de-la-pista",
 	},
 	{
-		id: "karchez",
-		name: "Karchez",
-		realName: "José Carlos Sánchez",
-		birthDate: new Date(2000, 7, 4),
+		id: "pelicanger",
+		name: "Pelicanger",
+		realName: "Angerson Esneider",
+		birthDate: new Date(2001, 0, 7),
+		weight: 85, // No es seguro
+		height: 1.91,
+		country: "co",
+		socials: {},
+		versus: "rey-de-la-pista",
+	},
+
+	{
+		id: "roberto-cein",
+		name: "RobertoCein",
+		realName: "Roberto Sebastián Guadarrama Jiménez",
+		birthDate: new Date(1998, 6, 29),
 		weight: 85, // No encontrado
-		height: 1.84,
-		country: "es",
+		height: 1.69, // No es seguro
+		country: "mx",
 		socials: {},
 		versus: "rey-de-la-pista",
 	},
@@ -289,6 +290,7 @@ export const BOXERS: Boxer[] = addGetters([
 		country: "es",
 		socials: {},
 		versus: "rey-de-la-pista",
+		rotate: true,
 	},
 	{
 		id: "plex",
