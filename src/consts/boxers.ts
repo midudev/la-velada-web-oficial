@@ -311,6 +311,16 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/c/Pelicanger",
 			tiktok: "https://www.tiktok.com/@pelicanger.oficial",
 		},
+		clips: [
+			{
+				text: "Me emociona mucho,y me los puedo bajar a todos",
+				url: "https://youtube.com/clip/UgkxQdajCilFEG8GfFfoazDZmwQFHMG3zjW3?si=0kA6MIrGBov58T0B",
+			},
+			{
+				text: "Todos están diciendo que me van a partir, pues demuéstrenlo",
+				url: "https://youtube.com/clip/UgkxevzOvk1Ef_BGIefrB9v2YyRZEvU9a-0B?si=IgoywtV5JkUqM0gB",
+			},
+		],
 		versus: "rey-de-la-pista",
 	},
 
