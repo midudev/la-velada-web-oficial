@@ -150,12 +150,8 @@ const preloadBoxerImage: Preload[] = [
 				</section>
 			)
 		}
-		{
-			forecast && (
-				<Forecasts combatNumber={combat.id} count={forecastCount} boxers={boxersWithForecast} />
-			)
-		}
-		<CombatSection combatNumber={combat.id} boxers={boxers} />
+		{forecast && <Forecasts count={forecastCount} boxers={boxersWithForecast} />}
+		<CombatSection combatId={combat.id} combatNumber={combat.number} boxers={boxers} />
 	</main>
 </Layout>
 
