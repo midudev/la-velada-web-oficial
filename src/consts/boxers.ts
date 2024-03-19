@@ -204,7 +204,12 @@ export const BOXERS: Boxer[] = addGetters([
 		birthDate: new Date(1998, 3, 13),
 		weight: 87, // No encontrado
 		height: 1.91, // No es seguro
+		guard: "Derecha",
 		country: "es",
+    workout: {
+			videoID: "I8R5sQXjpKk",
+			thumbnail: "/img/boxers/workoutThumbnails/peldanyos-thumbnails.webp",
+    },
 		socials: {
 			twitch: "https://twitch.tv/peldanyos",
 			instagram: "https://instagram.com/peldanyos",
