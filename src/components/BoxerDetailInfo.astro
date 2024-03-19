@@ -2,18 +2,16 @@
 interface Props {
 	title: string
 	value?: string | number | string[]
+	id: string
 }
 
-const { title, value } = Astro.props
+const { title, value, id } = Astro.props
 ---
 
 <div class="flex justify-center text-white">
 	<div class="style flex flex-col items-start text-center">
 		<h4>{title}</h4>
-		<p
-			class:list={`text-xl font-bold ${title === "Rival/es" ? "text-accent" : ""}`}
-			id="boxer-weight"
-		>
+		<p class:list={`text-xl font-bold ${title === "Rival/es" ? "text-accent" : ""}`} id={id}>
 			{value}
 		</p>
 	</div>
