@@ -391,6 +391,16 @@ export const BOXERS: Boxer[] = addGetters([
 			tiktok: "https://www.tiktok.com/@folagor_official",
 			youtube: "https://www.youtube.com/Folagor03",
 		},
+		clips: [
+			{
+				text: "Aunque tenga un mes de retraso, voy a llegar a su nivel",
+				url: "https://youtube.com/clip/UgkxXwT3QIrF_18ubc4LU2t2rn0fSy36XCl9?si=f6sqmOfhnbKd-qE1",
+			},
+			{
+				text: "Empezaré a entrenar y daré todo lo que pueda",
+				url: "https://youtube.com/clip/UgkxU-0uUkxYVWUrr6wdMw33KgTDlmSecjNm?si=4Hgou6TkI_jRrqwR",
+			},
+		],
 		versus: "rey-de-la-pista",
 		rotate: true,
 	},
