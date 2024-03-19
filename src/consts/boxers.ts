@@ -206,10 +206,10 @@ export const BOXERS: Boxer[] = addGetters([
 		height: 1.91, // No es seguro
 		guard: "Derecha",
 		country: "es",
-    workout: {
+		workout: {
 			videoID: "I8R5sQXjpKk",
 			thumbnail: "/img/boxers/workoutThumbnails/peldanyos-thumbnails.webp",
-    },
+		},
 		socials: {
 			twitch: "https://twitch.tv/peldanyos",
 			instagram: "https://instagram.com/peldanyos",
@@ -245,6 +245,20 @@ export const BOXERS: Boxer[] = addGetters([
 			tiktok: "https://tiktok.com/@mrangelovaldes",
 		},
 		versus: "rey-de-la-pista",
+		clips: [
+			{
+				text: "Espero que se acostumbren a la regla del knockout.",
+				url: "https://www.youtube.com/clip/UgkxgdKFyMCvRcN-fj-tuiF1i4KB2msHncZo",
+			},
+			{
+				text: "Esta sera mi prioridad de los proximos meses.",
+				url: "https://youtube.com/clip/UgkxgTZz_h0N3COR9qQ6sRMmd_PSN_0CNFfJ?si=w5wRjWdKSjtiWnXx",
+			},
+			{
+				text: "César parepárate para tres minutos mágicos.",
+				url: "https://www.youtube.com/clip/UgkxHy3xXDVJdgv9BUaArwgIYrA_ae1M5FIX",
+			},
+		],
 	},
 	{
 		id: "sezar-blue",
