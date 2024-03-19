@@ -51,43 +51,45 @@ import { COMBATS } from "@/consts/combats"
 	// import { $ } from "@/lib/dom-selector"
 	import { $ } from "@/lib/dom-selector"
 
-	const $prevButton = $("#prev-button")
-	const $nextButton = $("#next-button")
-	const $wrapper = $("#carousel-wrapper")
-	const $fightBox = $("#number-figth")
-	const $fight = $fightBox.querySelector("span")!
-	const $slides = Array.from($wrapper.querySelectorAll("article"))
-	let index: number = 0
-	const slidesLength = $slides.length
+	document.addEventListener("astro:page-load", () => {
+		const $prevButton = $("#prev-button")
+		const $nextButton = $("#next-button")
+		const $wrapper = $("#carousel-wrapper")
+		const $fightBox = $("#number-figth")
+		const $fight = $fightBox.querySelector("span")!
+		const $slides = Array.from($wrapper.querySelectorAll("article"))
+		let index: number = 0
+		const slidesLength = $slides.length
 
-	const figthText: Record<number, string> = [
-		"Primer",
-		"Segundo",
-		"Tercer",
-		"Cuarto",
-		"Quinto",
-		"Sexto",
-		"Septimo",
-		"Octavo",
-	]
+		const figthText: Record<number, string> = [
+			"Primer",
+			"Segundo",
+			"Tercer",
+			"Cuarto",
+			"Quinto",
+			"Sexto",
+			"Septimo",
+			"Octavo",
+		]
 
-	$prevButton.addEventListener("click", () => {
-		// fadeInOutEffect()
-		index--
-		if (index < 0) index = slidesLength - 1
-		const translatedX = index * -100
-		console.log({ translatedX, index })
-		$wrapper.style.transform = `translateX(${translatedX}%)`
-		$fight.innerText = `${figthText[index]}`
-	})
+		$prevButton.addEventListener("click", () => {
+			// fadeInOutEffect()
+			index--
+			if (index < 0) index = slidesLength - 1
+			const translatedX = index * -100
+			console.log({ translatedX, index })
+			$wrapper.style.transform = `translateX(${translatedX}%)`
+			$fight.innerText = `${figthText[index]}`
+		})
 
-	$nextButton.addEventListener("click", () => {
-		// fadeInOutEffect()
-		index++
-		if (index === slidesLength) index = 0
-		const translatedX = index * -100
-		console.log({ translatedX, index })
-		$wrapper.style.transform = `translateX(${translatedX}%)`
-		$fight.innerText = `${figthText[index]}`
+		$nextButton.addEventListener("click", () => {
+			// fadeInOutEffect()
+			index++
+			if (index === slidesLength) index = 0
+			const translatedX = index * -100
+			console.log({ translatedX, index })
+			$wrapper.style.transform = `translateX(${translatedX}%)`
+			$fight.innerText = `${figthText[index]}`
+		})
 	})
 </script>
