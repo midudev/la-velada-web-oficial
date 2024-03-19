@@ -5,6 +5,7 @@ import DrawnXLogo from "@/components/DrawnXLogo.astro"
 import FooterContent from "@/components/FooterContent.astro"
 import SocialButtons from "@/components/SocialButtons.astro"
 import { MOBILE_MENU_CONTENT_ID } from "@/consts/mobile-menu"
+import ContextMenu from "@/components/ContextMenu.astro"
 
 const pages = [
 	{ name: "El Evento", href: "/" },
@@ -104,11 +105,13 @@ const pages = [
 				style="background:linear-gradient(to right, transparent 3%, white 35%, white 100%)"
 			>
 			</div>
-			<div class="-ml-[8px] -mr-[4px]">
-				<a href="/">
-					<HeroLogo class:list={"h-auto w-full"} noEffect />
-				</a>
-			</div>
+			<ContextMenu>
+				<div class="-ml-[8px] -mr-[4px]">
+					<a href="/">
+						<HeroLogo class:list={"h-auto w-full"} noEffect />
+					</a>
+				</div>
+			</ContextMenu>
 
 			<div
 				class="h-[2px] w-full rounded-r-[30%] border-t-0 bg-white"
