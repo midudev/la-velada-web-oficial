@@ -127,6 +127,8 @@
 			keyPressed: key,
 			onSuccess: async () => {
 				const $boxerNav = $(".boxers-nav")
+				if ($boxerNav === null) return
+
 				let contributors = await getContributors()
 				contributors = contributors.sort(() => Math.random() - 0.5)
 				$boxerNav.querySelectorAll("img").forEach((e, i) => {
