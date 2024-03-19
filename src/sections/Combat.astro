@@ -26,7 +26,7 @@ const { combatNumber, combatId, boxers } = Astro.props
 			variant="atomic-title"
 			color="primary"
 			tabindex={-1}
-			class:list={"absolute inset-0 -z-10 self-center text-center text-[20rem] opacity-80"}
+			class:list={"absolute inset-0 -z-10 self-center text-center text-[20rem] opacity-20"}
 			>{combatNumber}
 		</Typography>
 		<h2 class:list={["text-center text-4xl font-semibold uppercase text-white  lg:text-6xl"]}>
@@ -34,9 +34,20 @@ const { combatNumber, combatId, boxers } = Astro.props
 				<span>
 					{ordinals[combatNumber]} combate
 				</span>
-				<span>
-					{boxers.map((boxer) => boxer.name).join(" vs ")}
-				</span>
+				<div>
+					{
+						boxers.map((boxer, index) => (
+							<span>
+								{boxer.name}
+								{index < boxers.length - 1 && (
+									<Typography as="span" variant="atomic-title" color="primary">
+										vs
+									</Typography>
+								)}
+							</span>
+						))
+					}
+				</div>
 			</span>
 		</h2>
 	</div>
