@@ -313,6 +313,7 @@ export const BOXERS: Boxer[] = addGetters([
 			twitch: "https://www.twitch.tv/folagorlives",
 			instagram: "https://www.instagram.com/yoel__ramirez",
 			twitter: "https://twitter.com/FolagoR",
+			tiktok: "https://www.tiktok.com/@folagor_official",
 			youtube: "https://www.youtube.com/Folagor03",
 		},
 		versus: "rey-de-la-pista",
