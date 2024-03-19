@@ -20,6 +20,7 @@ import { FORECASTS } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
 import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
+import type { Preload } from "@/components/SEO.astro"
 
 export function getStaticPaths() {
 	return BOXERS.map(({ id }) => {
@@ -66,42 +67,53 @@ if (forecast) {
 		}
 	})
 }
+
+const preloadBoxerImage: Preload[] = [
+	{
+		as: "image",
+		href: `/img/boxers/${id}-big.avif`,
+		type: "image/avif",
+		rel: "preload",
+	},
+]
 ---
 
 <Layout
 	description={`Información del luchador ${boxer.name}`}
 	title={`${boxer.name} - Información del boxeador de La Velada IV`}
+	preload={preloadBoxerImage}
 >
 	<main>
 		<section class="flex flex-col items-center justify-center">
-			<div class="flex flex-col items-center md:flex-row md:gap-10 lg:items-start">
-				<div class="order-2 flex w-full flex-col md:order-1 md:w-auto md:gap-y-20 lg:w-1/4">
-					<BoxerDetailInfo title="Alias" value={boxer.name} />
-					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} />
-					<BoxerDetailInfo title="Edad" value={boxer.age} />
+			<div class="flex w-full flex-col items-center md:flex-row md:gap-10">
+				<div class="order-2 flex w-full flex-col md:order-1 md:w-1/4 md:gap-y-20">
+					<BoxerDetailInfo title="Alias" value={boxer.name} id="boxer-alias" />
+					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} id="boxer-país" />
+					<BoxerDetailInfo title="Edad" value={boxer.age} id="boxer-edad" />
 					<div class="hidden md:block">
-						<BoxerDetailInfoRival title="Rival/es" value={rivals} />
+						<BoxerDetailInfoRival title="Rival/es" value={rivals} id="boxer-rival-desk" />
 					</div>
 				</div>
 
 				<div
-					class="relative order-1 -mt-20 flex flex-col items-center justify-center md:order-2 lg:mx-4 lg:w-[800px]"
+					class="relative order-1 -mt-20 flex flex-col items-center justify-center md:order-2 md:w-1/2 lg:mx-4"
 				>
 					<BoxerBigImage id={id} name={boxer.name} country={boxer.country} />
 				</div>
 
 				<div class="order-3 flex w-full flex-col md:w-auto md:gap-y-20 lg:w-1/4">
-					<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg.`} />
-					<BoxerDetailInfo title="Altura" value={`${boxer.height} m.`} />
-					<BoxerDetailInfo title="Guardia" value={boxer.guard} />
-					<BoxerDetailInfo title="Alcance" value={boxer.reach} />
+					<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg.`} id="boxer-peso" />
+					<BoxerDetailInfo title="Altura" value={`${boxer.height} m.`} id="boxer-altura" />
+					<BoxerDetailInfo title="Guardia" value={boxer.guard} id="boxer-guardia" />
+					<BoxerDetailInfo title="Alcance" value={boxer.reach} id="boxer-alcance" />
+
 					<div class="block md:hidden">
-						<BoxerDetailInfoRival title="Rival/es" value={rivals} />
+						<BoxerDetailInfoRival title="Rival/es" value={rivals} id="boxer-rival-mobile" />
 					</div>
 				</div>
 			</div>
 
-			<div class="mt-20 flex flex-row flex-wrap justify-center gap-8">
+			<div class="mt-24 flex max-w-xl flex-wrap justify-center gap-8 md:mt-56 md:max-w-full">
 				<BoxerSocialLink href={boxer.socials.twitch}>
 					<Twitch />
 				</BoxerSocialLink>

@@ -1,5 +1,5 @@
 ---
-import Typography from "@/components/Typography.astro"
+import BoxerTitleName from "@/components/BoxerTitleName.astro"
 
 interface Props {
 	readonly id: string
@@ -9,10 +9,6 @@ interface Props {
 }
 
 const { name, country, countryName, id } = Astro.props
-
-const splitName = name?.split(" ") ?? []
-const lastName = splitName[splitName.length - 1]
-const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
 ---
 
 <div
@@ -27,11 +23,12 @@ const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
 </div>
 
 <picture
-	class:list={"boxer-photo aspect-[285/428] h-auto w-full max-w-[450px]"}
+	class:list={"boxer-photo aspect-[285/428] h-auto w-full max-w-[460px]"}
 	transition:name="boxer-big-image"
 >
 	<source srcset={`/img/boxers/${id}-big.avif`} type="image/avif" />
 	<img
+		decoding="async"
 		class="aspect-[285/428] h-auto w-full object-contain"
 		alt={`Fotografía de ${name}`}
 		src={`/img/boxers/${id}-big.webp`}
@@ -42,23 +39,17 @@ const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
 	/>
 </picture>
 
-<div class="absolute bottom-14 z-10 mb-10 max-w-md text-wrap" transition:name="boxer-name">
-	<Typography
-		as="h4"
-		variant="boxer-title"
-		color="primary"
-		class:list={"boxer-title -skew-y-6 text-center"}
-	>
-		<span class="flex flex-col">
-			<span class="text-4xl">{firstNames?.toLocaleLowerCase()}</span>
-			<span>{lastName?.toLocaleLowerCase()}</span>
-		</span>
-	</Typography>
-</div>
+<div
+	class="absolute bottom-10 z-10 flex max-w-md flex-col items-center justify-center text-wrap md:-bottom-32"
+	transition:name="boxer-name"
+>
+	<BoxerTitleName name={name} />
 
-<img
-	transition:name="boxer-flag"
-	class:list={"boxer-flag pointer-events-none aspect-[3/2] h-auto w-28 object-contain object-center"}
-	alt={`Bandera de ${countryName}`}
-	src={`/img/flags/${country}.webp`}
-/>
+	<img
+		decoding="async"
+		transition:name="boxer-flag"
+		class:list={"boxer-flag pointer-events-none aspect-[3/2] h-auto w-28 object-contain object-center"}
+		alt={`Bandera de ${countryName}`}
+		src={`/img/flags/${country}.webp`}
+	/>
+</div>

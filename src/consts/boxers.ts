@@ -181,6 +181,118 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 	},
 	{
+		id: "karchez",
+		name: "Karchez",
+		realName: "José Carlos Sánchez",
+		birthDate: new Date(2000, 7, 4),
+		weight: 85, // No encontrado
+		height: 1.84,
+		country: "es",
+		socials: {},
+		versus: "rey-de-la-pista",
+	},
+	{
+		id: "peldanyos",
+		name: "Peldanyos",
+		realName: "Sergio Bolaños",
+		birthDate: new Date(1998, 3, 13),
+		weight: 87, // No encontrado
+		height: 1.91, // No es seguro
+		country: "es",
+		socials: {},
+		versus: "rey-de-la-pista",
+	},
+	{
+		id: "aldo-geo",
+		name: "Aldo Geo",
+		realName: "Aldo Geovanni",
+		birthDate: new Date(1996, 9, 14),
+		weight: 80, // No encontrado
+		height: 1.79,
+		country: "mx",
+		socials: {},
+		versus: "rey-de-la-pista",
+	},
+	{
+		id: "will",
+		name: "Will",
+		realName: "Ángelo Valdés",
+		birthDate: new Date(2000, 5, 29),
+		weight: 85, // No encontrado
+		height: 1.85, // No encontrado
+		country: "do",
+		socials: {},
+		versus: "rey-de-la-pista",
+	},
+	{
+		id: "sezar-blue",
+		name: "Sezar Blue",
+		realName: "César González",
+		birthDate: new Date(1973, 7, 29),
+		weight: 87,
+		height: 1.77,
+		country: "es",
+		socials: {},
+		versus: "rey-de-la-pista",
+	},
+	{
+		id: "unicornio",
+		name: "Unicornio",
+		realName: "Germán Usinger",
+		birthDate: new Date(1999, 5, 7),
+		weight: 75, // No encontrado
+		height: 1.69, // No es seguro
+		country: "ar",
+		socials: {},
+		versus: "rey-de-la-pista",
+	},
+	{
+		id: "pelicanger",
+		name: "Pelicanger",
+		realName: "Angerson Esneider",
+		birthDate: new Date(2001, 0, 7),
+		weight: 85, // No es seguro
+		height: 1.91,
+		country: "co",
+		socials: {},
+		versus: "rey-de-la-pista",
+	},
+
+	{
+		id: "roberto-cein",
+		name: "RobertoCein",
+		realName: "Roberto Sebastián Guadarrama Jiménez",
+		birthDate: new Date(1998, 6, 29),
+		weight: 85, // No encontrado
+		height: 1.69, // No es seguro
+		country: "mx",
+		socials: {},
+		versus: "rey-de-la-pista",
+	},
+	{
+		id: "skain",
+		name: "Skain",
+		realName: "David Carbó Ferrer",
+		birthDate: new Date(1997, 2, 10),
+		weight: 83, // No encontrado
+		height: 1.83, // No encontrado
+		country: "es",
+		socials: {},
+		versus: "rey-de-la-pista",
+	},
+	{
+		id: "folagor",
+		name: "Folagor",
+		realName: "Yoel Ramírez Pulido",
+		birthDate: new Date(1994, 11, 9),
+		weight: 71,
+		height: 1.8,
+		country: "es",
+		socials: {},
+		versus: "rey-de-la-pista",
+		rotate: true,
+	},
+	{
 		id: "plex",
 		name: "YoSoyPlex",
 		realName: "Daniel Alonso Góndez",
@@ -310,104 +422,4 @@ export const BOXERS: Boxer[] = addGetters([
 			tiktok: "https://www.tiktok.com/@carreproroblox74",
 		},
 	},
-	// {
-	// 	id: "sezar-blue",
-	// 	name: "Sezar Blue",
-	// 	realName: "César González",
-	// 	birthDate: new Date(1973, 7, 29),
-	// 	weight: 87,
-	// 	height: 1.77,
-	// 	country: "es",
-	// 	socials: {},
-	// },
-	// {
-	// 	id: "will",
-	// 	name: "Will",
-	// 	realName: "Ángelo Valdés",
-	// 	birthDate: new Date(2000, 5, 29),
-	// 	weight: 85, // No encontrado
-	// 	height: 1.85, // No encontrado
-	// 	country: "do",
-	// 	socials: {},
-	// },
-	// {
-	// 	id: "peldanyos",
-	// 	name: "Peldanyos",
-	// 	realName: "Sergio Bolaños",
-	// 	birthDate: new Date(1998, 3, 13),
-	// 	weight: 87, // No encontrado
-	// 	height: 1.91, // No es seguro
-	// 	country: "es",
-	// 	socials: {},
-	// },
-	// {
-	// 	id: "aldo-geo",
-	// 	name: "Aldo Geo",
-	// 	realName: "Aldo Geovanni",
-	// 	birthDate: new Date(1996, 9, 14),
-	// 	weight: 80, // No encontrado
-	// 	height: 1.79,
-	// 	country: "mx",
-	// 	socials: {},
-	// },
-	// {
-	// 	id: "pelicanger",
-	// 	name: "Pelicanger",
-	// 	realName: "Angerson Esneider",
-	// 	birthDate: new Date(2001, 0, 7),
-	// 	weight: 85, // No es seguro
-	// 	height: 1.91,
-	// 	country: "co",
-	// 	socials: {},
-	// },
-	// {
-	// 	id: "roberto-cein",
-	// 	name: "RobertoCein",
-	// 	realName: "Roberto Sebastián Guadarrama Jiménez",
-	// 	birthDate: new Date(1998, 6, 29),
-	// 	weight: 85, // No encontrado
-	// 	height: 1.69, // No es seguro
-	// 	country: "mx",
-	// 	socials: {},
-	// },
-	// {
-	// 	id: "unicornio",
-	// 	name: "Unicornio",
-	// 	realName: "Germán Usinger",
-	// 	birthDate: new Date(1999, 5, 7),
-	// 	weight: 75, // No encontrado
-	// 	height: 1.69, // No es seguro
-	// 	country: "ar",
-	// 	socials: {},
-	// },
-	// {
-	// 	id: "karchez",
-	// 	name: "Karchez",
-	// 	realName: "José Carlos Sánchez",
-	// 	birthDate: new Date(2000, 7, 4),
-	// 	weight: 85, // No encontrado
-	// 	height: 1.84,
-	// 	country: "es",
-	// 	socials: {},
-	// },
-	// {
-	// 	id: "skain",
-	// 	name: "Skain",
-	// 	realName: "David Carbó Ferrer",
-	// 	birthDate: new Date(1997, 2, 10),
-	// 	weight: 83, // No encontrado
-	// 	height: 1.83, // No encontrado
-	// 	country: "es",
-	// 	socials: {},
-	// },
-	// {
-	// 	id: "folagor",
-	// 	name: "Folagor",
-	// 	realName: "Yoel Ramírez Pulido",
-	// 	birthDate: new Date(1994, 11, 9),
-	// 	weight: 71,
-	// 	height: 1.8,
-	// 	country: "es",
-	// 	socials: {},
-	// },
 ] as const)

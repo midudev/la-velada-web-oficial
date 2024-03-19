@@ -10,13 +10,23 @@ interface Props {
 const { image, imageAlt, boxerName, boxerHref, percentage } = Astro.props
 ---
 
-<a href={boxerHref} class="underline-transition">
+<a
+	href={boxerHref}
+	class="group overflow-hidden transition-transform hover:scale-105"
+	aria-label={`Ir a la página de ${boxerName}`}
+>
 	<article>
-		<img class="image" src={image} alt={imageAlt} />
-		<h3 class:list={["text-center text-2xl font-medium uppercase text-white"]}>
+		<img decoding="async" class="image" src={image} alt={imageAlt} />
+		<h3
+			class="text-center text-2xl font-medium uppercase text-white transition-transform group-hover:scale-125 md:group-hover:scale-150"
+		>
 			{boxerName}
 		</h3>
-		<h4 class:list={["mt-1 text-center text-6xl font-semibold text-accent"]}>{percentage}%</h4>
+		<h4
+			class="mt-1 text-center text-6xl font-semibold text-accent transition-transform group-hover:scale-75"
+		>
+			{percentage}%
+		</h4>
 	</article>
 </a>
 
@@ -24,38 +34,5 @@ const { image, imageAlt, boxerName, boxerHref, percentage } = Astro.props
 	.image {
 		filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
 		mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-	}
-
-	.underline-transition {
-		background-image: linear-gradient(transparent, transparent),
-			linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
-		background-size: 0 3px;
-		background-position: 100% 100%;
-		background-repeat: no-repeat;
-		transition: background-size 0.3s ease-in-out;
-	}
-
-	@media (prefers-reduced-motion) {
-		.underline-transition {
-			transition: none;
-		}
-	}
-	.underline-transition:hover {
-		background-size: 100% 3px;
-		background-position: 0 100%;
-	}
-	@media (prefers-reduced-motion) {
-		.underline-transition {
-			background-image: linear-gradient(transparent, transparent),
-				linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
-			background-size: 0 3px;
-			background-position: 100% 100%;
-			background-repeat: no-repeat;
-			transition: background-size 0s;
-		}
-		.underline-transition:hover {
-			background-size: 100% 3px;
-			background-position: 0 100%;
-		}
 	}
 </style>
