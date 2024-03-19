@@ -227,7 +227,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 80, // No encontrado
 		height: 1.79,
 		country: "mx",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/aldo_geo/about",
+			instagram: "https://www.instagram.com/_aldogeo_/",
+			twitter: "https://twitter.com/aldogeotv",
+			youtube: "https://www.youtube.com/user/aldogeo100",
+			tiktok: "https://www.tiktok.com/@aldo_geo?lang=es",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
