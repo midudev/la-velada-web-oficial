@@ -353,6 +353,16 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/channel/UCt8RJDArdFmULfqNENimQvw",
 			tiktok: "https://www.tiktok.com/@roberto_cein?lang=es",
 		},
+		clips: [
+			{
+				text: "Estoy muy emocionado, algunos me sacan dos cabezas entonces mi estrategía será sacar aire",
+				url: "https://youtube.com/clip/UgkxfyqAvmfPS6r6qAFFHvfleqBWQZpj8Zfr?si=a4Did3Jb4eCXw5iB",
+			},
+			{
+				text: "Todos han sido muy amables y algunos se ven muy fuertes, no sé si podré vencerlos",
+				url: "https://youtube.com/clip/Ugkxg29Xx8-7eE1qRTNKFuMCb2tZ9KdCzV-a?si=JDK7GjtmKYN7DOgs",
+			},
+		],
 		versus: "rey-de-la-pista",
 	},
 	{
