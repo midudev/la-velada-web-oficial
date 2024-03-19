@@ -105,7 +105,9 @@ const pages = [
 			>
 			</div>
 			<div class="-ml-[8px] -mr-[4px]">
-				<HeroLogo class:list={" w-full"} noEffect />
+				<a href="/">
+					<HeroLogo class:list={"h-auto w-full"} noEffect />
+				</a>
 			</div>
 
 			<div
@@ -198,31 +200,26 @@ const pages = [
 <script>
 	import { $ } from "@/lib/dom-selector"
 
-	const nav = $("nav")
-	const menuButton = $("#menuButton")
-	const innerMenuButton = $("#innerMenuButton")
-
-	menuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
-	innerMenuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
-
-	function toggleMenu(nav: HTMLElement | null) {
-		$("#menuMobileContent")?.classList.toggle("open")
+	function toggleMenu(nav: HTMLElement | null, menuMobileContent: HTMLElement | null) {
+		menuMobileContent?.classList.toggle("open")
 		nav?.classList.toggle("open")
 		document.body.classList.toggle("overflow-hidden")
 		document.body.classList.toggle("lg:overflow-auto")
 	}
 
 	document.addEventListener("astro:page-load", () => {
+		const nav = $("nav")
+		const menuButton = $("#menuButton")
+		const innerMenuButton = $("#innerMenuButton")
 		const menuMobileContext = $("#menuMobileContent")
 
-		if (menuMobileContext?.classList.contains("open")) menuMobileContext?.classList.remove("open")
+		menuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav, menuMobileContext))
+		innerMenuButton?.addEventListener("hamburgerButtonClicked", () =>
+			toggleMenu(nav, menuMobileContext)
+		)
 
-		if (nav?.classList.contains("open")) nav?.classList.remove("open")
-
-		if (document.body.classList.contains("overflow-hidden"))
-			document.body.classList.remove("overflow-hidden")
-
-		if (document.body.classList.contains("lg:overflow-auto"))
-			document.body.classList.remove("lg:overflow-auto")
+		if (menuMobileContext?.classList.contains("open")) {
+			toggleMenu(nav, menuMobileContext)
+		}
 	})
 </script>

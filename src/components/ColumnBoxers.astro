@@ -27,7 +27,6 @@ const { boxers, class: className = "", selectedBoxerId } = Astro.props
 			>
 				<div class="boxer-link-background" />
 				<img
-					loading="lazy"
 					src={`/img/boxers/${id}-small.webp`}
 					alt={`Foto en pequeño del boxeador ${name}`}
 					class:list={`boxer-image aspect-square h-full w-full object-contain ${rotate ? "rotate-y-180" : ""}`}
@@ -39,7 +38,7 @@ const { boxers, class: className = "", selectedBoxerId } = Astro.props
 
 <style>
 	.boxer-link {
-		@apply relative flex flex-col items-center justify-center transition-opacity duration-300 ease-in-out md:size-28 xl:size-36;
+		@apply relative mb-2 flex flex-col items-center justify-center transition-opacity duration-300 ease-in-out md:size-28 xl:size-36;
 
 		&:hover {
 			@apply opacity-90;
