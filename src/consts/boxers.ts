@@ -255,7 +255,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 75, // No encontrado
 		height: 1.69, // No es seguro
 		country: "ar",
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/unicornio",
+			instagram: "https://www.instagram.com/germanusinger",
+			twitter: "https://twitter.com/GermanUsinger",
+			youtube: "https://youtube.com/c/unicornioperro",
+			tiktok: "https://www.tiktok.com/@german.usinger",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
