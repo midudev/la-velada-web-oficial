@@ -188,7 +188,12 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No encontrado
 		height: 1.84,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/karchez",
+			instagram: "https://instagram.com/karchezz/",
+			twitter: "https://twitter.com/Karchezzz",
+			youtube: "https://www.youtube.com/c/Karchez",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -199,7 +204,12 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 87, // No encontrado
 		height: 1.91, // No es seguro
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/peldanyos",
+			instagram: "https://instagram.com/peldanyos/",
+			youtube: "https://youtube.com/@peldanyos",
+			tiktok: "https://tiktok.com/@peldanyos",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
