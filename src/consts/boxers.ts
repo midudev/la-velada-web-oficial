@@ -188,7 +188,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No encontrado
 		height: 1.84,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/karchez",
+			instagram: "https://www.instagram.com/karchezz/",
+			twitter: "https://twitter.com/Karchezzz",
+			youtube: "https://www.youtube.com/Karchez",
+			tiktok: "https://tiktok.com/@karchez",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -198,8 +204,19 @@ export const BOXERS: Boxer[] = addGetters([
 		birthDate: new Date(1998, 3, 13),
 		weight: 87, // No encontrado
 		height: 1.91, // No es seguro
+		guard: "Derecha",
 		country: "es",
-		socials: {},
+		workout: {
+			videoID: "I8R5sQXjpKk",
+			thumbnail: "/img/boxers/workoutThumbnails/peldanyos-thumbnails.webp",
+		},
+		socials: {
+			twitch: "https://twitch.tv/peldanyos",
+			instagram: "https://instagram.com/peldanyos",
+			twitter: "https://twitter.com/peldanyos",
+			youtube: "https://youtube.com/@peldanyos",
+			tiktok: "https://tiktok.com/@peldanyos",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -210,7 +227,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 80, // No encontrado
 		height: 1.79,
 		country: "mx",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/aldo_geo/about",
+			instagram: "https://www.instagram.com/_aldogeo_/",
+			twitter: "https://twitter.com/aldogeotv",
+			youtube: "https://www.youtube.com/user/aldogeo100",
+			tiktok: "https://www.tiktok.com/@aldo_geo?lang=es",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -221,7 +244,12 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No encontrado
 		height: 1.85, // No encontrado
 		country: "do",
-		socials: {},
+		socials: {
+			instagram: "https://instagram.com/mrangelovaldes",
+			twitter: "https://twitter.com/MrAngeloValdes",
+			youtube: "https://youtube.com/@misterfactoush",
+			tiktok: "https://tiktok.com/@mrangelovaldes",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -232,7 +260,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 87,
 		height: 1.77,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/sezarbluelive",
+			instagram: "https://www.instagram.com/sezarblue/",
+			twitter: "https://twitter.com/soysezarblue",
+			youtube: "https://www.youtube.com/sezarblue",
+			tiktok: "https://www.tiktok.com/@sezar_blue_",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -243,7 +277,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 75, // No encontrado
 		height: 1.69, // No es seguro
 		country: "ar",
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/unicornio",
+			instagram: "https://www.instagram.com/germanusinger",
+			twitter: "https://twitter.com/GermanUsinger",
+			youtube: "https://youtube.com/c/unicornioperro",
+			tiktok: "https://www.tiktok.com/@german.usinger",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -254,7 +294,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No es seguro
 		height: 1.91,
 		country: "co",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/pelicanger",
+			instagram: "https://www.instagram.com/pelicanger__",
+			twitter: "https://twitter.com/offpeli",
+			youtube: "https://www.youtube.com/c/Pelicanger",
+			tiktok: "https://www.tiktok.com/@pelicanger.oficial",
+		},
 		versus: "rey-de-la-pista",
 	},
 
@@ -266,7 +312,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No encontrado
 		height: 1.69, // No es seguro
 		country: "mx",
-		socials: {},
+		socials: {
+			twitch: "https://m.twitch.tv/robertocein/home",
+			instagram: "https://www.instagram.com/robertocein/",
+			twitter: "https://twitter.com/Roberto_Cein",
+			youtube: "https://www.youtube.com/channel/UCt8RJDArdFmULfqNENimQvw",
+			tiktok: "https://www.tiktok.com/@roberto_cein?lang=es",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -277,7 +329,17 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 83, // No encontrado
 		height: 1.83, // No encontrado
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/skain",
+			instagram: "https://www.instagram.com/skain24",
+			twitter: "https://twitter.com/skain24",
+			youtube: "https://www.youtube.com/@skain24",
+			tiktok: "https://www.tiktok.com/@skain24",
+		},
+		workout: {
+			videoID: "BlN7FgdDoHM",
+			thumbnail: "/img/boxers/workoutThumbnails/skain-thumbnails.webp",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -288,7 +350,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 71,
 		height: 1.8,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/folagorlives",
+			instagram: "https://www.instagram.com/yoel__ramirez",
+			twitter: "https://twitter.com/FolagoR",
+			tiktok: "https://www.tiktok.com/@folagor_official",
+			youtube: "https://www.youtube.com/Folagor03",
+		},
 		versus: "rey-de-la-pista",
 		rotate: true,
 	},
@@ -308,6 +376,10 @@ export const BOXERS: Boxer[] = addGetters([
 			twitter: "https://twitter.com/yosoyplex",
 			youtube: "https://youtube.com/c/YoSoyPlex",
 			tiktok: "https://tiktok.com/@yosoyplexx",
+		},
+		workout: {
+			videoID: "svXhWZ1sZJE",
+			thumbnail: "/img/boxers/workoutThumbnails/plex-thumbnail.webp",
 		},
 		clips: [
 			{

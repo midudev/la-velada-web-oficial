@@ -139,7 +139,8 @@ const boxerColumns = [
 
 				opponents.split(",").map((opponent) =>
 					boxerLinks.forEach((link) => {
-						if (link.dataset.id === opponent) {
+						const { id: linkId, opponents: linkOpponents } = link.dataset
+						if (linkId === opponent || (linkOpponents === opponent && linkId !== id)) {
 							link.classList.add("opponent")
 						}
 					})

@@ -1,4 +1,7 @@
 ---
+import { Image } from "astro:assets"
+
+import Typography from "@/components/Typography.astro"
 import { COMBATS } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 
@@ -14,21 +17,41 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 <Layout description={"Todos los combates de la Velada IV"} title={"Combates de La Velada IV"}>
 	<main class="flex min-h-screen flex-col items-center text-[#b4cd02]">
 		<div class="mx-auto w-full max-w-4xl p-8">
-			<h1 class="mb-8 text-4xl font-bold">Lista de Combates</h1>
+			<Typography
+				class="mb-12 -skew-y-6 text-wrap text-center text-6xl"
+				color="primary"
+				as="h1"
+				variant="atomic-title"
+			>
+				todos los<br />combates
+			</Typography>
+
 			<ul class="space-y-8">
 				{
-					COMBATS.map((combat) => {
+					COMBATS.map((combat, index) => {
 						const combatData = getCombatById(combat.id)
+						if (!combatData) return null
+
 						const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
+
 						return (
-							<li class="rounded-lg bg-[#b4cd02] p-6 text-white shadow-md">
-								<h2 class="mb-4 text-2xl font-bold">Combate {combat.id}</h2>
-								<p class="mb-2 text-lg">Boxeadores:</p>
-								<ul class="list-inside list-disc">
-									{boxerNames.map((boxerName) => (
-										<li>{boxerName}</li>
-									))}
-								</ul>
+							<li>
+								<a
+									class="inline-block transition-transform hover:scale-105 hover:saturate-150"
+									href={`/combates/${combat.id}`}
+									title={`Ir al combate ${combatData.number} de la Velada IV`}
+								>
+									<Image
+										transition:name={`combat-image-${combat.id}`}
+										loading={index < 2 ? "eager" : "lazy"}
+										class="aspect-video h-auto w-full"
+										src={`/img/matches/${combat.id}.webp`}
+										alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+										width="1500"
+										height="843"
+										style="mask-image: linear-gradient(black 90%, transparent 100%);"
+									/>
+								</a>
 							</li>
 						)
 					})
