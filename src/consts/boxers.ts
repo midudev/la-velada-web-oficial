@@ -400,6 +400,10 @@ export const BOXERS: Boxer[] = addGetters([
 				text: "Empezaré a entrenar y daré todo lo que pueda",
 				url: "https://youtube.com/clip/UgkxU-0uUkxYVWUrr6wdMw33KgTDlmSecjNm?si=4Hgou6TkI_jRrqwR",
 			},
+			{
+				text: "En El Rey de la Pista el cardio no es importante, es la fuerza",
+				url: "https://youtube.com/clip/UgkxnYTPVsLLRS3h4sOEdR8--oZxVx01vCum?si=UcUZpzw5d_8NkJWK",
+			},
 		],
 		versus: "rey-de-la-pista",
 		rotate: true,
