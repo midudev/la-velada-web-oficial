@@ -300,7 +300,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No encontrado
 		height: 1.69, // No es seguro
 		country: "mx",
-		socials: {},
+		socials: {
+			twitch: "https://m.twitch.tv/robertocein/home",
+			instagram: "https://www.instagram.com/robertocein/",
+			twitter: "https://twitter.com/Roberto_Cein",
+			youtube: "https://www.youtube.com/channel/UCt8RJDArdFmULfqNENimQvw",
+			tiktok: "https://www.tiktok.com/@roberto_cein?lang=es",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
