@@ -1,0 +1,53 @@
+---
+import { BOXERS } from "@/consts/boxers"
+import { COMBATS } from "@/consts/combats"
+import Layout from "@/layouts/Layout.astro"
+
+export async function getStaticPaths() {
+	return COMBATS.filter((combat) => combat.id !== "rey-de-la-pista").map((combat) => ({
+		params: { combatId: combat.id },
+		props: { combat },
+	}))
+}
+
+const { combat } = Astro.props
+
+const getBoxerById = (id: string) => {
+	return BOXERS.find((boxer) => boxer.id === id)
+}
+---
+
+<Layout title={`Combate ${combat.id}`} description={`Detalles del combate ${combat.id}`}>
+	<main class="bg-background-color py-8 text-white">
+		<div class="container mx-auto px-4">
+			<h1 class="mb-4 text-4xl font-bold text-[#b4cd02]">Combate: {combat.id}</h1>
+			<h2 class="mb-4 text-2xl font-bold">Boxeadores:</h2>
+			<ul class="grid grid-cols-1 gap-4 md:grid-cols-2">
+				{
+					combat.boxers.map((boxerId) => {
+						const boxer = getBoxerById(boxerId)
+						if (boxer) {
+							return (
+								<li class="bg-color-secondary rounded p-4 shadow">
+									<img
+										src={`/img/boxers/${boxer.id}-small.webp`}
+										alt={boxer.name}
+										class="mx-auto mb-4 h-24 w-24 rounded-full"
+									/>
+									<h3 class="mb-2 text-center text-xl font-bold text-[#b4cd02]">{boxer.name}</h3>
+									<p class="text-center text-lg">Edad: {boxer.age}</p>
+								</li>
+							)
+						} else {
+							return (
+								<li class="rounded bg-red-500 p-4 text-white shadow">
+									<p>Boxeador no encontrado: {boxerId}</p>
+								</li>
+							)
+						}
+					})
+				}
+			</ul>
+		</div>
+	</main>
+</Layout>

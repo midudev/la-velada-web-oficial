@@ -22,13 +22,15 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 						const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
 						return (
 							<li class="rounded-lg bg-[#b4cd02] p-6 text-white shadow-md">
-								<h2 class="mb-4 text-2xl font-bold">Combate {combat.id}</h2>
-								<p class="mb-2 text-lg">Boxeadores:</p>
-								<ul class="list-inside list-disc">
-									{boxerNames.map((boxerName) => (
-										<li>{boxerName}</li>
-									))}
-								</ul>
+								<a href={`/combates/${combat.id}`}>
+									<h2 class="mb-4 text-2xl font-bold">Combate {combat.id}</h2>
+									<p class="mb-2 text-lg">Boxeadores:</p>
+									<ul class="list-inside list-disc">
+										{boxerNames.map((boxerName) => (
+											<li>{boxerName}</li>
+										))}
+									</ul>
+								</a>
 							</li>
 						)
 					})

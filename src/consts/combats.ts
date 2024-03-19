@@ -21,7 +21,7 @@ export const COMBATS: Combat[] = [
 		boxers: ["viruzz", "shelao"],
 	},
 	{
-		id: "5",
+		id: "rey-de-la-pista",
 		boxers: [
 			"roberto-cein",
 			"aldo-geo",

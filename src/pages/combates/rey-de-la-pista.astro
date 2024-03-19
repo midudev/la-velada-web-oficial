@@ -1,0 +1,48 @@
+---
+import { BOXERS } from "@/consts/boxers"
+import { COMBATS } from "@/consts/combats"
+import Layout from "@/layouts/Layout.astro"
+
+const combat = COMBATS.find((combat) => combat.id === "rey-de-la-pista")
+
+const getBoxerById = (id: string) => {
+	return BOXERS.find((boxer) => boxer.id === id)
+}
+---
+
+<Layout title="Rey de la Pista" description="Combate por el título de Rey de la Pista">
+	<main class="bg-background-color py-8 text-white">
+		<div class="container mx-auto px-4">
+			<h1 class="mb-4 text-4xl font-bold text-[#b4cd02]">Rey de la Pista</h1>
+			<p class="mb-8 text-xl">Combate por el título de Rey de la Pista</p>
+
+			<h2 class="mb-4 text-2xl font-bold">Boxeadores:</h2>
+			<ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				{
+					combat?.boxers.map((boxerId) => {
+						const boxer = getBoxerById(boxerId)
+						if (boxer) {
+							return (
+								<li class="bg-color-secondary rounded p-4 shadow">
+									<img
+										src={`/img/boxers/${boxer.id}-small.webp`}
+										alt={boxer.name}
+										class="mx-auto mb-4 h-24 w-24 rounded-full"
+									/>
+									<h3 class="mb-2 text-center text-xl font-bold text-[#b4cd02]">{boxer.name}</h3>
+									<p class="text-center text-lg">Edad: {boxer.age}</p>
+								</li>
+							)
+						} else {
+							return (
+								<li class="rounded bg-red-500 p-4 text-white shadow">
+									<p>Boxeador no encontrado: {boxerId}</p>
+								</li>
+							)
+						}
+					})
+				}
+			</ul>
+		</div>
+	</main>
+</Layout>
