@@ -5,9 +5,17 @@ type Props<Tag extends HTMLTag> = Polymorphic<{
 	as: Tag
 	variant: keyof typeof variantClasses
 	color: keyof typeof colorClasses
+	withUnderlineTransition?: boolean
 }>
 
-const { as: Tag, class: className, variant, color, ...props } = Astro.props
+const {
+	as: Tag,
+	class: className,
+	variant,
+	color,
+	withUnderlineTransition = false,
+	...props
+} = Astro.props
 
 const variantClasses: { [key: string]: string } = {
 	"h2": "text-lg font-medium uppercase lg:text-2xl",
@@ -26,14 +34,55 @@ const colorClasses = {
 	primary: "text-accent",
 	neutral: "text-neutral-300",
 }
+const underlineTransitionClassses =
+	"underline-transition mt-6 transition-all duration-300 ease-in-out hover:text-accent motion-reduce:transition-none"
 
 const classes = [
 	variantClasses[variant as keyof typeof variantClasses],
 	colorClasses[color as keyof typeof colorClasses],
 	className,
+	{
+		[underlineTransitionClassses]: withUnderlineTransition,
+	},
 ]
 ---
 
 <Tag class:list={classes} {...props} tabindex="0">
 	<slot />
 </Tag>
+
+<style>
+	/* Efecto de subrayado animado */
+	.underline-transition {
+		background-image: linear-gradient(transparent, transparent),
+			linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
+		background-size: 0 3px;
+		background-position: 100% 100%;
+		background-repeat: no-repeat;
+		transition: background-size 0.3s ease-in-out;
+	}
+
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			transition: none;
+		}
+	}
+	.underline-transition:hover {
+		background-size: 100% 3px;
+		background-position: 0 100%;
+	}
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			background-image: linear-gradient(transparent, transparent),
+				linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
+			background-size: 0 3px;
+			background-position: 100% 100%;
+			background-repeat: no-repeat;
+			transition: background-size 0s;
+		}
+		.underline-transition:hover {
+			background-size: 100% 3px;
+			background-position: 0 100%;
+		}
+	}
+</style>
