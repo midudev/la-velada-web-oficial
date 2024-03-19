@@ -254,7 +254,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 87,
 		height: 1.77,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/sezarbluelive",
+			instagram: "https://www.instagram.com/sezarblue/",
+			twitter: "https://twitter.com/soysezarblue",
+			youtube: "https://www.youtube.com/sezarblue",
+			tiktok: "https://www.tiktok.com/@sezar_blue_",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
