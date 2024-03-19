@@ -14,37 +14,80 @@ const hasClips = clips.length > 0
 
 {
 	hasClips && (
-		<section class="mt-10 grid select-none grid-cols-1 place-content-center gap-2 gap-x-8 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
-			{clips.map(({ text, url }) => (
-				<a
-					href={url}
-					target="_blank"
-					rel="noopener noreferrer"
-					class="group flex flex-col justify-between bg-gradient-to-b p-8 hover:from-zinc-600/25"
-				>
-					<Typography
-						as="h3"
-						variant="atomic-title"
-						color="primary"
-						class:list={
-							"flex flex-1 -skew-y-2 items-center justify-center text-center transition group-hover:scale-110"
-						}
+		<section class="mt-2 overflow-hidden md:mt-10">
+			<div class="carousel flex select-none flex-row flex-nowrap transition duration-700 md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
+				{clips.map(({ text, url }) => (
+					<a
+						href={url}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="group flex min-w-full flex-col justify-between bg-gradient-to-b px-12 pt-8 hover:from-zinc-600/25 md:min-w-0 md:max-w-[340px]"
 					>
-						"{text.toLowerCase()}"
-					</Typography>
-
-					<footer class="mt-2 flex items-end justify-center p-5 text-center">
 						<Typography
-							as="p"
-							variant="body"
-							color="neutral"
-							class:list={"text-center group-hover:text-accent"}
+							as="h3"
+							variant="atomic-title"
+							color="primary"
+							class:list={
+								"flex flex-1 -skew-y-2 items-center justify-center text-center transition group-hover:scale-110"
+							}
 						>
-							Ver clip
+							"{text.toLowerCase()}"
 						</Typography>
-					</footer>
-				</a>
-			))}
+
+						<footer class="mt-2 flex items-end justify-center p-5 text-center">
+							<Typography
+								as="p"
+								variant="body"
+								color="neutral"
+								class:list={"text-center group-hover:text-accent"}
+							>
+								Ver clip
+							</Typography>
+						</footer>
+					</a>
+				))}
+			</div>
+			<div class="mx-16 flex items-center justify-between md:hidden">
+				<button data-btn-prev class="transition hover:scale-125">
+					<img src="/img/ui/left-arrow.svg" alt="Izquierda" />
+				</button>
+				<Typography data-clip-index as="p" variant="medium" color="white" class:list={"uppercase"}>
+					Cita 1/{clips.length}
+				</Typography>
+				<button data-btn-next class="transition hover:scale-125">
+					<img src="/img/ui/right-arrow.svg" alt="Derecha" />
+				</button>
+			</div>
 		</section>
 	)
 }
+<script>
+	const $carousel = document.querySelector(".carousel")
+	const $prev = document.querySelector("[data-btn-prev]")
+	const $next = document.querySelector("[data-btn-next]")
+	const $clipIndex = document.querySelector("[data-clip-index]")
+
+	let position = 0
+
+	const updatePosition = () => {
+		// Midu diría que esto es un poquito regulinchis :)
+		$carousel?.setAttribute("style", `transform: translateX(-${100 * position}%)`)
+
+		if ($clipIndex) $clipIndex.innerHTML = `Cita ${position + 1}/${$carousel?.children.length}`
+	}
+
+	$prev?.addEventListener("click", () => {
+		position--
+		if (position < 0) {
+			position = ($carousel?.children.length ?? 1) - 1
+		}
+		updatePosition()
+	})
+	$next?.addEventListener("click", () => {
+		position++
+		if ($carousel?.children.length && position >= $carousel?.children.length) {
+			position = 0
+		}
+		updatePosition()
+	})
+</script>
