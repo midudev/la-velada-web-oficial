@@ -1,0 +1,93 @@
+---
+import CombatSlideCarousel from "@/components/CombatSlideCarousel.astro"
+import ChevronIcon from "@/components/ChevronIcon.astro"
+import LVDALogo from "@/components/LVDALogo.astro"
+import { BOXERS, type Boxer } from "@/consts/boxers"
+import { COMBATS } from "@/consts/combats"
+---
+
+<section id="carousel-boxers" class="relative h-min w-full overflow-hidden sm:mx-0">
+	<div
+		id="carousel-wrapper"
+		class="h-[38rem] w-full animate-fade-in whitespace-nowrap text-[0px] transition-transform"
+	>
+		{
+			COMBATS.map((combat) => {
+				return <CombatSlideCarousel combat={combat} />
+			})
+		}
+	</div>
+	<hr
+		class="h-[2px] w-full border-t-0"
+		style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
+	/>
+	<div class="absolute inset-0 -z-10 flex items-start justify-center">
+		<LVDALogo
+			style={`
+				filter: drop-shadow(0 0 14px rgba(var(--color-accent-rgb), 0.4));
+			`}
+			className="w-full min-w-[600px] max-w-4xl items-center opacity-70"
+		/>
+	</div>
+	<div class="flex w-full items-center justify-center">
+		<button id="prev-button" class="button-action text-white"
+			><ChevronIcon class="rotate-180" /></button
+		>
+		<div id="number-figth" class="min-w-32 text-center">
+			<span>Primer</span> combate
+		</div>
+		<button id="next-button" class="button-action text-white"><ChevronIcon /></button>
+	</div>
+</section>
+
+<style>
+	.button-action:hover {
+		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+		transition: all 0.3s ease;
+	}
+</style>
+
+<script>
+	// import { $ } from "@/lib/dom-selector"
+	import { $ } from "@/lib/dom-selector"
+
+	const $prevButton = $("#prev-button")
+	const $nextButton = $("#next-button")
+	const $wrapper = $("#carousel-wrapper")
+	const $fightBox = $("#number-figth")
+	const $fight = $fightBox.querySelector("span")!
+	const $slides = Array.from($wrapper.querySelectorAll("article"))
+	let index: number = 0
+	const slidesLength = $slides.length
+
+	const figthText: Record<number, string> = [
+		"Primer",
+		"Segundo",
+		"Tercer",
+		"Cuarto",
+		"Quinto",
+		"Sexto",
+		"Septimo",
+		"Octavo",
+	]
+
+	$prevButton.addEventListener("click", () => {
+		// fadeInOutEffect()
+		index--
+		if (index < 0) index = slidesLength - 1
+		const translatedX = index * -100
+		console.log({ translatedX, index })
+		$wrapper.style.transform = `translateX(${translatedX}%)`
+		$fight.innerText = `${figthText[index]}`
+	})
+
+	$nextButton.addEventListener("click", () => {
+		// fadeInOutEffect()
+		index++
+		if (index === slidesLength) index = 0
+		const translatedX = index * -100
+		console.log({ translatedX, index })
+		$wrapper.style.transform = `translateX(${translatedX}%)`
+		$fight.innerText = `${figthText[index]}`
+	})
+</script>

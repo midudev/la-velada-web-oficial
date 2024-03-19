@@ -1,0 +1,107 @@
+---
+import { BOXERS } from "@/consts/boxers"
+import type { Combat } from "@/consts/combats"
+
+interface Props {
+	combat: Combat
+}
+
+const { combat } = Astro.props
+
+const boxers = BOXERS.filter((boxer) => combat.boxers.includes(boxer.id))
+---
+
+<article class="inline-block h-full w-full overflow-hidden">
+	{
+		boxers.length === 2 ? (
+			<>
+				<div class="relative flex h-full items-end justify-between gap-4 overflow-hidden sm:gap-12">
+					<div
+						class:list={[
+							"absolute inset-0 flex h-full w-full flex-row items-center justify-between",
+						]}
+						style={`mask-image: linear-gradient(to top, transparent 0%, #000 15%);`}
+					>
+						{boxers.map((boxer, key) => (
+							<picture
+								class:list={[
+									"absolute h-full w-[30rem] object-cover md:relative md:w-auto md:min-w-0 md:object-contain",
+									{ "right-[30vw] sm:right-[20rem] md:right-0": key == 0 },
+									{ "left-[30vw] sm:left-[20rem] md:left-0": key == 1 },
+								]}
+							>
+								<source srcset={`/img/boxers/${boxer.id}-big.webp`} type="image/webp" />
+								<img alt={boxer.name} src={`/img/boxers/${boxer.id}-big.webp`} />
+							</picture>
+						))}
+					</div>
+					<div class="absolute bottom-10 flex w-full -skew-y-12 font-atomic">
+						<div class="mx-auto flex w-full max-w-xs  items-center justify-center sm:max-w-md ">
+							{boxers.length === 2 && (
+								<>
+									<span class="w-min text-3xl text-accent  sm:text-5xl md:text-7xl">
+										{boxers[0].name.toLowerCase()}
+									</span>
+									<div class="ml-8 flex flex-col gap-y-2">
+										<span class="text-left  text-xl text-primary sm:text-2xl md:text-5xl">
+											versus
+										</span>
+										<span class="w-min text-3xl text-accent sm:text-5xl  md:text-7xl">
+											{boxers[1].name.toLowerCase()}
+										</span>
+									</div>
+								</>
+							)}
+						</div>
+					</div>
+				</div>
+			</>
+		) : boxers.length > 4 ? (
+			<div class="flex h-full w-full items-center justify-center">
+				<div class="circle relative h-full w-full items-center justify-center">
+					<div class="absolute inset-0 flex h-full w-full items-center justify-center">
+						<div class="relative flex h-full w-full items-center justify-center">
+							{boxers.map((boxer) => (
+								<picture class="img absolute w-52 object-contain">
+									<source srcset={`/img/boxers/${boxer.id}-big.webp`} type="image/webp" />
+									<img alt={boxer.name} src={`/img/boxers/${boxer.id}-big.webp`} />
+								</picture>
+							))}
+							<div class="max-w-48 text-wrap text-center font-atomic text-3xl text-white text-opacity-90 drop-shadow-2xl backdrop-blur md:max-w-56 md:text-5xl">
+								el rey de la pista
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		) : (
+			<> </>
+		)
+	}
+</article>
+
+<script>
+	//import { $ } from "@/lib/dom-selector"
+	import { $, $$ } from "@/lib/dom-selector"
+	const circle = $(".circle")
+	const images = $$(".circle .img")
+	const circleWidth = circle.clientWidth
+	const circleHeight = circle.clientHeight
+	const radius = 270 // Radio del círculo
+	const numImages = images.length
+
+	if (circle && images.length > 4) {
+		images.forEach((img, index) => {
+			const angle = (index / numImages) * Math.PI * 2 // Ángulo entre las imágenes
+			const centerX = circleWidth / 2
+			const centerY = circleHeight
+			const x = centerX + radius * Math.cos(angle) // Posición X
+			const y = centerY + radius * Math.sin(angle) - img.clientHeight // Posición Y
+			img.style.left = x + "px"
+			img.style.top = y + "px"
+
+			const rotationAngle = angle - Math.PI / 2 // Rotación de 90 grados para que la parte superior mire hacia el centro
+			img.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}rad)`
+		})
+	}
+</script>
