@@ -1,4 +1,5 @@
 ---
+import { BOXERS } from "@/consts/boxers"
 import Layout from "@/layouts/Layout.astro"
 import Countdown from "@/sections/Countdown.astro"
 
@@ -8,12 +9,26 @@ import PresentationVideo from "@/sections/PresentationVideo.astro"
 import PrincipalDate from "@/sections/PrincipalDate.astro"
 import SelectYourBoxer from "@/sections/SelectYourBoxer.astro"
 import Sponsors from "@/sections/Sponsors.astro"
+
+const preloadBoxerImages = BOXERS.flatMap(({ id }) => [
+	{
+		as: "image",
+		href: `/img/boxers/${id}-big.avif`,
+		type: "image/avif",
+	},
+	{
+		as: "image",
+		href: `/img/boxers/${id}-small.avif`,
+		type: "image/avif",
+	},
+])
 ---
 
 <Layout
 	description="Web Oficial de La Velada del Año IV, evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos"
 	title="La Velada del Año 4 - Evento de Boxeo de Ibai Llanos"
 	canonical="https://lavelada.es"
+	preload={preloadBoxerImages}
 >
 	<Hero />
 

@@ -6,7 +6,8 @@ import Header from "@/components/Header.astro"
 import KonamiCode from "@/components/KonamiCode.astro"
 import LightsBackground from "@/components/LightsBackground.astro"
 import NoiseBackground from "@/components/NoiseBackground.astro"
-import SEO from "@/components/SEO.astro"
+import SEO, { type Preload } from "@/components/SEO.astro"
+
 import TwitchLiveBox from "@/components/TwitchLiveBox.astro"
 import Footer from "@/sections/Footer.astro"
 import "@fontsource-variable/jost"
@@ -14,16 +15,12 @@ import "@fontsource-variable/jost"
 interface Props {
 	title: string
 	description: string
-	preload?: Array<{
-		as: string
-		href: string
-		type: string
-	}>
+	preload?: Array<Preload>
 	canonical?: string
 	image?: string
 }
 
-const { title, description, preloadImgLCP, canonical, image } = Astro.props
+const { title, description, preload, canonical, image } = Astro.props
 ---
 
 <!doctype html>
@@ -33,7 +30,7 @@ const { title, description, preloadImgLCP, canonical, image } = Astro.props
 			canonical={canonical}
 			description={description}
 			image={image}
-			preloadImgLCP={preloadImgLCP!}
+			preload={preload}
 			title={title}
 		/>
 		<ViewTransitions />
