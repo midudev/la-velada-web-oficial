@@ -244,6 +244,16 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/user/aldogeo100",
 			tiktok: "https://www.tiktok.com/@aldo_geo?lang=es",
 		},
+		clips: [
+			{
+				text: "Ni siquiera ha empezado la pelea y ya estoy sintiendo adrenalina en mi cuerpo",
+				url: "https://youtube.com/clip/UgkxGm-L9MDFvEf3AjwjoGxRAn-2P0mbBcHM?si=tNDah2eREaipv6iz",
+			},
+			{
+				text: "Estoy muy entusiasmado por empezar a entrenar y darle a full",
+				url: "https://youtube.com/clip/UgkxPN9KOdpqCyfZMzSpASYG-GintxzHx1au?si=ki9ob750dSvegoIJ",
+			},
+		],
 		versus: "rey-de-la-pista",
 	},
 	{
