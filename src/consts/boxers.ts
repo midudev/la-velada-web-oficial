@@ -207,7 +207,8 @@ export const BOXERS: Boxer[] = addGetters([
 		country: "es",
 		socials: {
 			twitch: "https://twitch.tv/peldanyos",
-			instagram: "https://instagram.com/peldanyos/",
+			instagram: "https://instagram.com/peldanyos",
+			twitter: "https://twitter.com/peldanyos",
 			youtube: "https://youtube.com/@peldanyos",
 			tiktok: "https://tiktok.com/@peldanyos",
 		},
