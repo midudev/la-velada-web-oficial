@@ -55,11 +55,13 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 </section>
 
 <script>
-	import { $ } from "@/lib/dom-selector"
 	import createCountdown from "@/lib/countdown"
+	import { $ } from "@/lib/dom-selector"
 
 	function initCountdown() {
 		const $countdown = $("[data-date]")
+		if (!$countdown) return
+
 		const $days = {
 			firstDigit: $("[data-days] [data-first-group]", $countdown),
 			secondDigit: $("[data-days] [data-second-group]", $countdown),
@@ -154,6 +156,6 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 
 	document.addEventListener("astro:page-load", () => {
 		const countdown = initCountdown()
-		countdown.start()
+		countdown && countdown.start()
 	})
 </script>
