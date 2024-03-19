@@ -83,25 +83,28 @@ const boxers = BOXERS.filter((boxer) => combat.boxers.includes(boxer.id))
 <script>
 	//import { $ } from "@/lib/dom-selector"
 	import { $, $$ } from "@/lib/dom-selector"
-	const circle = $(".circle")
-	const images = $$(".circle .img")
-	const circleWidth = circle.clientWidth
-	const circleHeight = circle.clientHeight
-	const radius = 270 // Radio del círculo
-	const numImages = images.length
 
-	if (circle && images.length > 4) {
-		images.forEach((img, index) => {
-			const angle = (index / numImages) * Math.PI * 2 // Ángulo entre las imágenes
-			const centerX = circleWidth / 2
-			const centerY = circleHeight
-			const x = centerX + radius * Math.cos(angle) // Posición X
-			const y = centerY + radius * Math.sin(angle) - img.clientHeight // Posición Y
-			img.style.left = x + "px"
-			img.style.top = y + "px"
+	document.addEventListener("astro:page-load", () => {
+		const circle = $(".circle")
+		const images = $$(".circle .img")
+		const circleWidth = circle.clientWidth
+		const circleHeight = circle.clientHeight
+		const radius = 270 // Radio del círculo
+		const numImages = images.length
 
-			const rotationAngle = angle - Math.PI / 2 // Rotación de 90 grados para que la parte superior mire hacia el centro
-			img.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}rad)`
-		})
-	}
+		if (circle && images.length > 4) {
+			images.forEach((img, index) => {
+				const angle = (index / numImages) * Math.PI * 2 // Ángulo entre las imágenes
+				const centerX = circleWidth / 2
+				const centerY = circleHeight
+				const x = centerX + radius * Math.cos(angle) // Posición X
+				const y = centerY + radius * Math.sin(angle) - img.clientHeight // Posición Y
+				img.style.left = x + "px"
+				img.style.top = y + "px"
+
+				const rotationAngle = angle - Math.PI / 2 // Rotación de 90 grados para que la parte superior mire hacia el centro
+				img.style.transform = `translate(-50%, -50%) rotate(${rotationAngle}rad)`
+			})
+		}
+	})
 </script>
