@@ -288,7 +288,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 83, // No encontrado
 		height: 1.83, // No encontrado
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/skain",
+			instagram: "https://www.instagram.com/skain24",
+			twitter: "https://twitter.com/skain24",
+			youtube: "https://www.youtube.com/channel/UCBxWceO2t_WJnu9YzN1qwHA",
+			tiktok: "https://www.tiktok.com/@skain24",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
