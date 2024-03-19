@@ -4,11 +4,12 @@ import atomic from "/fonts/atomic.woff2"
 
 import RichResults from "@/components/RichResults.astro"
 
-export type Preload = {
+export interface Preload {
 	as: string
 	href: string
 	type: string
 	rel?: "preload" | "prefetch"
+	crossorigin?: string
 }
 
 interface Props {
@@ -35,8 +36,8 @@ const canonicalURL = canonical
 <link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
 
 {
-	preload?.map(({ href, as, type, rel = "prefetch" }) => (
-		<link {rel} {href} {as} {type} crossorigin />
+	preload?.map(({ href, as, type, rel = "preload", crossorigin }) => (
+		<link {rel} {href} {as} {type} {crossorigin} />
 	))
 }
 
