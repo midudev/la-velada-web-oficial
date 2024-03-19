@@ -18,9 +18,12 @@ const boxerColumns = [
 	listOfBoxers.slice(11, 16),
 	listOfBoxers.slice(16, 22),
 ]
+
+const selectedBoxerId = Astro.url.searchParams.get("boxer") ?? "el-mariana"
+const selectedBoxer = listOfBoxers.find(({ id }) => id === selectedBoxerId) ?? listOfBoxers[0]
 ---
 
-<section class="my-40">
+<section class="my-40 transform-gpu">
 	<Typography
 		as="h3"
 		variant="atomic-title"
@@ -39,20 +42,13 @@ const boxerColumns = [
 		<article
 			class="relative flex w-full max-w-[70%] flex-col items-center justify-center md:absolute md:max-w-full lg:-mt-32"
 		>
-			<BoxerBigImage id="el-mariana" name="El Mariana" country="mx" countryName="México" />
+			<BoxerBigImage
+				id={selectedBoxer.id}
+				name={selectedBoxer.name}
+				country={selectedBoxer.country}
+				countryName={selectedBoxer.countryName}
+			/>
 		</article>
-
-		<div class="boxers-nav hidden w-full justify-between md:flex">
-			<nav class="boxers-lists flex h-full justify-start gap-4 py-4">
-				<ColumnBoxers boxers={boxerColumns[0]} />
-				<ColumnBoxers boxers={boxerColumns[1]} class="mt-12" />
-			</nav>
-
-			<nav class="boxers-lists flex h-full justify-end gap-2 py-4">
-				<ColumnBoxers boxers={boxerColumns[2]} class="mt-12" />
-				<ColumnBoxers boxers={boxerColumns[3]} />
-			</nav>
-		</div>
 
 		<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
 			<div class="carousel mt-8 w-full overflow-y-hidden overflow-x-scroll">
@@ -66,7 +62,7 @@ const boxerColumns = [
 									${index === listOfBoxers.length - 1 ? "mr-[30%]" : ""}
 								`}
 							>
-								<ColumnBoxers boxers={[boxer]} />
+								<ColumnBoxers boxers={[boxer]} selectedBoxerId={selectedBoxerId} />
 							</div>
 						))
 					}
@@ -150,13 +146,6 @@ const boxerColumns = [
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
 
 			boxerCountry.alt = `Bandera de ${countryName}`
-		}
-
-		const urlParams = new URLSearchParams(window.location.search)
-		const boxerId = urlParams.get("boxer") ?? "el-mariana"
-		const boxerEl = $(`[data-id="${boxerId}"]`) as HTMLElement
-		if (boxerEl) {
-			activateBoxer(boxerEl, boxerEl, boxerNav, false)
 		}
 
 		boxerLinks.forEach((link) => {
