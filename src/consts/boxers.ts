@@ -188,7 +188,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No encontrado
 		height: 1.84,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/karchez",
+			instagram: "https://www.instagram.com/karchezz/",
+			twitter: "https://twitter.com/Karchezzz",
+			youtube: "https://www.youtube.com/c/karchez",
+			tiktok: "https://www.tiktok.com/@karchez?lang=es",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -199,7 +205,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 87, // No encontrado
 		height: 1.91, // No es seguro
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: 'https://www.twitch.tv/peldanyos',
+		    instagram: 'https://www.instagram.com/peldanyos/?hl=en',
+		    twitter: 'https://twitter.com/peldanyos',
+		    youtube: 'https://www.youtube.com/channel/UCHrXxI_9u9VzUynLqZEU1Sg',
+		    tiktok: 'https://www.tiktok.com/@peldanyos?lang=en'
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -210,7 +222,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 80, // No encontrado
 		height: 1.79,
 		country: "mx",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/aldo_geo/about",
+			instagram: "https://www.instagram.com/_aldogeo_/",
+			twitter: "https://twitter.com/aldogeotv",
+			youtube: "https://www.youtube.com/user/aldogeo100",
+			tiktok: "https://www.tiktok.com/@aldo_geo?lang=es",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -232,7 +250,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 87,
 		height: 1.77,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/sezarbluelive",
+			instagram: "https://www.instagram.com/sezarblue/",
+			twitter: "https://twitter.com/soysezarblue",
+			youtube: "https://www.youtube.com/sezarblue",
+			tiktok: "https://www.tiktok.com/@sezar_blue_",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -243,7 +267,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 75, // No encontrado
 		height: 1.69, // No es seguro
 		country: "ar",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/unicornio",
+			instagram: "https://www.instagram.com/germanusinger/",
+			twitter: "https://twitter.com/GermanUsinger",
+			youtube: "https://www.youtube.com/unicornioperro",
+			tiktok: "https://www.tiktok.com/@german.usinger",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -254,7 +284,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No es seguro
 		height: 1.91,
 		country: "co",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/pelicanger",
+			instagram: "https://www.instagram.com/pelicanger__/",
+			twitter: "https://twitter.com/offpeli",
+			youtube: "https://www.youtube.com/c/pelicanger",
+			tiktok: "https://www.tiktok.com/@pelicanger.oficial",
+		},
 		versus: "rey-de-la-pista",
 	},
 
@@ -266,7 +302,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No encontrado
 		height: 1.69, // No es seguro
 		country: "mx",
-		socials: {},
+		socials: {
+			twitch: "https://m.twitch.tv/robertocein/home",
+			instagram: "https://www.instagram.com/robertocein/",
+			twitter: "https://twitter.com/Roberto_Cein",
+			youtube: "https://www.youtube.com/channel/UCt8RJDArdFmULfqNENimQvw",
+			tiktok: "https://www.tiktok.com/@roberto_cein?lang=es",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -277,7 +319,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 83, // No encontrado
 		height: 1.83, // No encontrado
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/skain",
+			instagram: "https://www.instagram.com/skain24",
+			twitter: "https://twitter.com/skain24",
+			youtube: "https://www.youtube.com/@skain24",
+			tiktok: "https://www.tiktok.com/@skain24",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -288,7 +336,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 71,
 		height: 1.8,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/folagorlives",
+			instagram: "https://www.instagram.com/yoel__ramirez/",
+			twitter: "https://twitter.com/FolagoR",
+			youtube: "https://www.youtube.com/channel/UCYcdw2wL6W6iGBKZgGK_Hjw",
+			tiktok: "https://www.tiktok.com/@folagor_official?lang=es",
+		},
 		versus: "rey-de-la-pista",
 		rotate: true,
 	},
