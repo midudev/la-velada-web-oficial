@@ -3,19 +3,20 @@ import Typography from "@/components/Typography.astro"
 import type { Boxer } from "@/consts/boxers"
 
 interface Props {
-	combatNumber: string
+	combatId: string
+	combatNumber: number
 	boxers: Boxer[]
 }
 
-const ordinals: Record<string, string> = {
-	"1": "Primer",
-	"2": "Segundo",
-	"3": "Tercer",
-	"4": "Cuarto",
-	"5": "Quinto",
-	"6": "Sexto",
+const ordinals: Record<number, string> = {
+	1: "Primer",
+	2: "Segundo",
+	3: "Tercer",
+	4: "Cuarto",
+	5: "Quinto",
+	6: "Sexto",
 }
-const { combatNumber, boxers } = Astro.props
+const { combatNumber, combatId, boxers } = Astro.props
 ---
 
 <section class="mt-40 flex flex-col items-center gap-5 md:gap-10 lg:gap-0">
@@ -41,14 +42,11 @@ const { combatNumber, boxers } = Astro.props
 	</div>
 	<div>
 		<a
-			class:list={[
-				"pointer-events-none flex flex-col items-center justify-center text-2xl font-semibold text-accent",
-			]}
-			href="#"
+			class:list={["flex flex-col items-center justify-center text-2xl font-semibold text-accent"]}
+			href={`/combates/${combatId}`}
 			tabindex="0"
-			><span class="text-primary opacity-80">Ver combate</span><span
-				class="-skew-x-6 text-xs font-light uppercase">Próximamente</span
-			></a
 		>
+			<span class="text-primary">Ver combate</span>
+		</a>
 	</div>
 </section>
