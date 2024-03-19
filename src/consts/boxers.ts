@@ -198,8 +198,18 @@ export const BOXERS: Boxer[] = addGetters([
 		birthDate: new Date(1998, 3, 13),
 		weight: 87, // No encontrado
 		height: 1.91, // No es seguro
+		guard: "Derecha",
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/peldanyos",
+			instagram: "https://www.instagram.com/peldanyos",
+			youtube: "https://youtube.com/@peldanyos",
+			tiktok: "https://www.tiktok.com/@peldanyos"
+		},
+		workout: {
+			videoID: "I8R5sQXjpKk",
+			thumbnail: "/img/boxers/workoutThumbnails/peldanyos-thumbnails.webp",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
