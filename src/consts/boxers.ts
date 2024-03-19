@@ -199,7 +199,13 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 87, // No encontrado
 		height: 1.91, // No es seguro
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/peldanyos",
+			instagram: "https://instagram.com/peldanyos",
+			twitter: "https://twitter.com/peldanyos",
+			youtube: "https://www.youtube.com/@peldanyos",
+			tiktok: "https://tiktok.com/@peldanyos",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
