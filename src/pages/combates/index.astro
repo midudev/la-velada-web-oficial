@@ -1,9 +1,39 @@
 ---
+import { COMBATS } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
+
+const getCombatById = (id: string) => {
+	return COMBATS.find((combat) => combat.id === id)
+}
+
+const getBoxerNames = (boxerIds: string[]): string[] => {
+	return boxerIds.map((boxerId) => `Boxeador ${boxerId}`)
+}
 ---
 
 <Layout description={"Todos los combates de la Velada IV"} title={"Combates de La Velada IV"}>
-	<main class="flex flex-col items-center">
-		<div class="w-full lg:flex lg:items-center"></div>
+	<main class="flex min-h-screen flex-col items-center text-[#b4cd02]">
+		<div class="mx-auto w-full max-w-4xl p-8">
+			<h1 class="mb-8 text-4xl font-bold">Lista de Combates</h1>
+			<ul class="space-y-8">
+				{
+					COMBATS.map((combat) => {
+						const combatData = getCombatById(combat.id)
+						const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
+						return (
+							<li class="rounded-lg bg-[#b4cd02] p-6 text-white shadow-md">
+								<h2 class="mb-4 text-2xl font-bold">Combate {combat.id}</h2>
+								<p class="mb-2 text-lg">Boxeadores:</p>
+								<ul class="list-inside list-disc">
+									{boxerNames.map((boxerName) => (
+										<li>{boxerName}</li>
+									))}
+								</ul>
+							</li>
+						)
+					})
+				}
+			</ul>
+		</div>
 	</main>
 </Layout>
