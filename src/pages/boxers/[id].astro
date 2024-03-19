@@ -55,7 +55,7 @@ if (typeof boxer.versus === "object") {
 		rivals = rivals.concat(BOXERS.filter((rival: Boxer) => rival.id === vs))
 	}
 } else {
-	rivals = BOXERS.filter((rival: Boxer) => rival.id === boxer.versus)
+	rivals = boxers.filter((rival: Boxer) => rival.id !== boxer.id)
 }
 
 if (forecast) {
