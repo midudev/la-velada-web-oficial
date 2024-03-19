@@ -238,7 +238,12 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No encontrado
 		height: 1.85, // No encontrado
 		country: "do",
-		socials: {},
+		socials: {
+			instagram: "https://instagram.com/mrangelovaldes",
+			twitter: "https://twitter.com/MrAngeloValdes",
+			youtube: "https://youtube.com/@misterfactoush",
+			tiktok: "https://tiktok.com/@mrangelovaldes",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
