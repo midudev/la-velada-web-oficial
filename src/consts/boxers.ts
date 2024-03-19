@@ -188,7 +188,12 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 85, // No encontrado
 		height: 1.84,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://twitch.tv/karchez",
+			instagram: "https://instagram.com/karchezz/",
+			twitter: "https://twitter.com/Karchezzz",
+			youtube: "https://www.youtube.com/c/Karchez",
+		},
 		versus: "rey-de-la-pista",
 	},
 	{
