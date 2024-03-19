@@ -217,6 +217,16 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/@peldanyos",
 			tiktok: "https://tiktok.com/@peldanyos",
 		},
+		clips: [
+			{
+				text: "Me los bajaré a todos, decir que no sería tener mala actitud",
+				url: "https://youtube.com/clip/UgkxDDiYcrums2e6329f6Zi2MveywHF8R-da?si=Eplk8G484ovrTM0Z",
+			},
+			{
+				text: "No puedo estar más emocionado por el reto, pero no me voy a flipar",
+				url: "https://youtube.com/clip/Ugkx1VRxwu3liP3LO5E7FxvR97Qy7VHQ-AMy?si=g0Qwd0gm2dhcZL3t",
+			},
+		],
 		versus: "rey-de-la-pista",
 	},
 	{
