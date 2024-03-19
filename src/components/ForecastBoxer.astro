@@ -12,15 +12,21 @@ const { image, imageAlt, boxerName, boxerHref, percentage } = Astro.props
 
 <a
 	href={boxerHref}
-	class="group hover:scale-105 transition-transform overflow-hidden"
+	class="group overflow-hidden transition-transform hover:scale-105"
 	aria-label={`Ir a la página de ${boxerName}`}
 >
 	<article>
-		<img class="image" src={image} alt={imageAlt} />
-		<h3 class="text-center text-2xl font-medium uppercase text-white transition-transform group-hover:scale-125 md:group-hover:scale-150">
+		<img decoding="async" class="image" src={image} alt={imageAlt} />
+		<h3
+			class="text-center text-2xl font-medium uppercase text-white transition-transform group-hover:scale-125 md:group-hover:scale-150"
+		>
 			{boxerName}
 		</h3>
-		<h4 class="mt-1 text-center text-6xl font-semibold text-accent transition-transform group-hover:scale-75">{percentage}%</h4>
+		<h4
+			class="mt-1 text-center text-6xl font-semibold text-accent transition-transform group-hover:scale-75"
+		>
+			{percentage}%
+		</h4>
 	</article>
 </a>
 
