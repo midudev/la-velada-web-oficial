@@ -1,0 +1,71 @@
+---
+import { Image } from "astro:assets"
+
+import { COMBATS } from "@/consts/combats"
+import Layout from "@/layouts/Layout.astro"
+
+const getCombatById = (id: string) => {
+	return COMBATS.find((combat) => combat.id === id)
+}
+
+const getBoxerNames = (boxerIds: string[]): string[] => {
+	return boxerIds.map((boxerId) => boxerId)
+}
+
+export const getStaticPaths = () => {
+	return COMBATS.map((combat) => ({
+		params: { id: combat.id },
+	}))
+}
+
+const { id } = Astro.params
+const combatData = COMBATS.find((combat) => combat.id === id)
+const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
+
+if (!combatData) {
+	return {
+		status: 404,
+	}
+}
+
+const formatter = new Intl.ListFormat("es", {
+	style: "short",
+	type: "conjunction",
+})
+
+const formattedBoxerNames = formatter.format(boxerNames)
+---
+
+<Layout
+	title={`Combate número ${combatData.number} de La Velada IV`}
+	description={`Combate entre ${formattedBoxerNames}`}
+>
+	<div
+		class="absolute left-0 right-0 top-0 -z-50"
+		style="mask-image: linear-gradient(black 50%, transparent 100%);"
+	>
+		<video autoplay muted loop class="aspect-video h-screen w-full object-cover opacity-10">
+			<source
+				type="video/mp4"
+				src="https://pub-b708fa93d7064977b256b094eb906703.r2.dev/1-agustin-51-vs-carreraaa.mp4"
+			/>
+			<source
+				type="video/webm"
+				src="https://pub-b708fa93d7064977b256b094eb906703.r2.dev/1-agustin-51-vs-carreraaa.webm"
+			/>
+		</video>
+	</div>
+
+	<main>
+		<Image
+			transition:name={`combat-image-${id}`}
+			loading={"eager"}
+			class="aspect-video h-auto w-full"
+			src={`/img/matches/${id}.webp`}
+			alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+			width="1500"
+			height="843"
+			style="mask-image: linear-gradient(black 90%, transparent 100%)"
+		/>
+	</main>
+</Layout>
