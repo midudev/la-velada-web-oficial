@@ -4,9 +4,10 @@ import type { Boxer } from "@/consts/boxers"
 interface Props {
 	title: string
 	value: Boxer[]
+	id: string
 }
 
-const { title, value } = Astro.props
+const { title, value, id } = Astro.props
 ---
 
 <div class="flex justify-center text-white">
@@ -20,9 +21,9 @@ const { title, value } = Astro.props
 					<>
 						<a
 							class:list={"text-xl font-bold text-accent hover:underline"}
-							id="boxer-weight"
 							href={item.id}
 							title={`Visita la página del boxeador ${item.name}`}
+							id={id + (index + 1)}
 						>
 							{item.name}
 						</a>
