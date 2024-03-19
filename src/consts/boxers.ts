@@ -294,7 +294,12 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 71,
 		height: 1.8,
 		country: "es",
-		socials: {},
+		socials: {
+			twitch: "https://www.twitch.tv/folagorlives",
+			instagram: "https://www.instagram.com/yoel__ramirez",
+			twitter: "https://twitter.com/FolagoR",
+			youtube: "https://www.youtube.com/Folagor03",
+		},
 		versus: "rey-de-la-pista",
 		rotate: true,
 	},
