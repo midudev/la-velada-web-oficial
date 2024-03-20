@@ -79,6 +79,8 @@ const preloadBoxerImage: Preload[] = [
 ]
 
 const rivalOrRivals = rivals.length > 1 ? "Rivales" : "Rival"
+const guardBoxer = boxer.guard !== null ? "Desconocida" : boxer.guard
+const reachBoxer = boxer.reach !== null ? "Desconocido" : boxer.reach
 ---
 
 <Layout
@@ -107,8 +109,8 @@ const rivalOrRivals = rivals.length > 1 ? "Rivales" : "Rival"
 				<div class="order-3 flex w-full flex-col md:w-auto md:gap-y-20 lg:w-1/4">
 					<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg.`} id="boxer-peso" />
 					<BoxerDetailInfo title="Altura" value={`${boxer.height} m.`} id="boxer-altura" />
-					<BoxerDetailInfo title="Guardia" value={boxer.guard} id="boxer-guardia" />
-					<BoxerDetailInfo title="Alcance" value={boxer.reach} id="boxer-alcance" />
+					<BoxerDetailInfo title="Guardia" value={guardBoxer} id="boxer-guardia" />
+					<BoxerDetailInfo title="Alcance" value={reachBoxer} id="boxer-alcance" />
 
 					<div class="block md:hidden">
 						<BoxerDetailInfoRival title={rivalOrRivals} value={rivals} id="boxer-rival-mobile" />
