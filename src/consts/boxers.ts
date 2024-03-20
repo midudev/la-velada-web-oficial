@@ -1,34 +1,4 @@
-export interface Boxer {
-	id: string
-	name: string
-	birthDate: Date
-	age: number
-	realName: string
-	weight: number
-	height: number
-	country: string
-	countryName?: string
-	versus: string | string[]
-	guard?: string
-	reach?: number
-	socials: {
-		twitch?: string
-		instagram?: string
-		twitter?: string
-		youtube?: string
-		tiktok?: string
-	}
-	clips?: Array<{
-		text: string
-		url: string
-	}>
-	workout?: {
-		videoID: string
-		thumbnail: string
-	}
-	rotate?: boolean
-	allies?: string[]
-}
+import { type Boxer } from "@/types/Boxer"
 
 const addGetters = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
 	return boxersWithoutAge.map((boxerWithoutAge) => ({
@@ -175,7 +145,7 @@ export const BOXERS: Boxer[] = addGetters([
 			{
 				text: "Siento que es muy bueno que te den una oportunidad de redención, Viruzz",
 				url: "https://youtube.com/clip/UgkxACB-VsHvjoYbtrWir9sqZomlseYCpmlV?si=Qo0S5TK_r8_-c-bk",
-			},	
+			},
 		],
 		rotate: true,
 	},
@@ -209,7 +179,7 @@ export const BOXERS: Boxer[] = addGetters([
 			{
 				text: "Te propongo que este sea el primer combate de la Velada donde no haya casco",
 				url: "https://youtube.com/clip/UgkxuLDeLsfhwMN1DgJoLSThw_nNNrsLFVGF?si=EHJD4g3G_-53dYbB",
-			}
+			},
 		],
 		rotate: true,
 	},
@@ -611,16 +581,16 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Era un sueño un día subirme aquí, muchas gracias a todos por venir",
-				url: "https://youtube.com/clip/UgkxMc_uxsDRteyleobjWTLU7VzlM74PVEul?si=oKWmaUc3mUKDQuOt"
+				url: "https://youtube.com/clip/UgkxMc_uxsDRteyleobjWTLU7VzlM74PVEul?si=oKWmaUc3mUKDQuOt",
 			},
 			{
 				text: "Me van a perdonar pero creo que es el mejor combate de toda la Velada",
-				url: "https://youtube.com/clip/UgkxoHOE311rgi9xvpr3WSU0k3yaMVx7N8Lm?si=cESF8DpadP52bhBT"
+				url: "https://youtube.com/clip/UgkxoHOE311rgi9xvpr3WSU0k3yaMVx7N8Lm?si=cESF8DpadP52bhBT",
 			},
 			{
 				text: "Es un rival duro y me gustó mucho, fue muy intenso desde el primer momento",
-				url: "https://youtube.com/clip/UgkxRpobly-wM3CN1F8FuuMJ9Q2GLrFNHTuZ?si=hiIeodSEwIjWmlDp4"
-			}
+				url: "https://youtube.com/clip/UgkxRpobly-wM3CN1F8FuuMJ9Q2GLrFNHTuZ?si=hiIeodSEwIjWmlDp4",
+			},
 		],
 		rotate: true,
 	},
@@ -674,16 +644,16 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Después del combate nos podemos dar un abrazo porque lo importante es dar un buen ejemplo",
-				url: "https://youtube.com/clip/UgkxJszPGolZaON3QjSuzzh5TP2luW9qLX4W?si=_KPbivwhIxlrhMR-"
+				url: "https://youtube.com/clip/UgkxJszPGolZaON3QjSuzzh5TP2luW9qLX4W?si=_KPbivwhIxlrhMR-",
 			},
 			{
 				text: "Siento que soy un chaval con mucha energía pero cuando me ponen la mano encima me caliento",
-				url: "https://youtube.com/clip/UgkxRZ3cq1lEgLDe-NizURNpwN3vPxowiITS?si=iF103l7J-MVN4MbY"
+				url: "https://youtube.com/clip/UgkxRZ3cq1lEgLDe-NizURNpwN3vPxowiITS?si=iF103l7J-MVN4MbY",
 			},
 			{
 				text: "Si a mi me tienen que nerfear en los torneos por algo será, espero no me nerfeen en la velada",
-				url: "https://youtube.com/clip/UgkxHCkkSU67P09o20vM1ZCrohVvOYDmVIh2?si=1IVMhiqKxoUYbxQe"
-			}
+				url: "https://youtube.com/clip/UgkxHCkkSU67P09o20vM1ZCrohVvOYDmVIh2?si=1IVMhiqKxoUYbxQe",
+			},
 		],
 	},
 	{
@@ -707,16 +677,16 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "El año pasado la vida me cagó a trompadas y esto me vino como anillo al dedo",
-				url: "https://youtube.com/clip/UgkxtwjSORg57TZFqKsJBhUB1VqgYvL_W-cH?si=i7vlKyALk5vXaR5q"
+				url: "https://youtube.com/clip/UgkxtwjSORg57TZFqKsJBhUB1VqgYvL_W-cH?si=i7vlKyALk5vXaR5q",
 			},
 			{
 				text: "Con ese bigote de Agustín me dan ganas de pegarle",
-				url: "https://youtube.com/clip/Ugkx5U4X6gOIS3cqBerhC8OmebW7fRakNqCM?si=Z6yzxl1aQsRjrXa9"
+				url: "https://youtube.com/clip/Ugkx5U4X6gOIS3cqBerhC8OmebW7fRakNqCM?si=Z6yzxl1aQsRjrXa9",
 			},
 			{
 				text: "Tenemos un buen peso para que esto sea una pelea muy divertida",
-				url: "https://youtube.com/clip/Ugkx7iS-4hpvBT1QHGAabmfrVamnMu2IefPX?si=c8s5vkc5gO6UD8_q"
-			}
+				url: "https://youtube.com/clip/Ugkx7iS-4hpvBT1QHGAabmfrVamnMu2IefPX?si=c8s5vkc5gO6UD8_q",
+			},
 		],
 	},
 ] as const)
