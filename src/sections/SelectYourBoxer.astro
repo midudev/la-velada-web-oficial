@@ -94,7 +94,18 @@ const boxerColumns = [
 		const boxerTitle = $(".boxer-title") as HTMLImageElement
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement
+		const queryString = window.location.search
+		const urlParams = new URLSearchParams(queryString)
+		const initialBoxer = urlParams.get("boxer") ?? "el-mariana"
+		const initialBoxerElement = $(`a.boxer-link[data-id=${initialBoxer}]`)
+		let isInitialBoxer = true
 
+		const initialBoxerLink =
+			Array.from(boxerLinks).find(
+				(boxerLink) => boxerLink.getAttribute("data-id") === initialBoxer
+			) ?? boxerLinks[0]
+
+		activateBoxer(initialBoxerElement, initialBoxerLink, boxerNav, false)
 		function activateBoxer(
 			element: HTMLElement,
 			link: HTMLElement,
@@ -102,7 +113,8 @@ const boxerColumns = [
 			replaceUrl: boolean = false,
 			showAlliesAndOpponents: boolean = true
 		) {
-			if (element.classList.contains("active")) return
+			if (element.classList.contains("active") && !isInitialBoxer) return
+			isInitialBoxer = false
 
 			const { id, name, country, countryName, opponents = "", allies = "" } = element?.dataset
 
