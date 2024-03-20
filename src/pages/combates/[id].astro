@@ -34,6 +34,7 @@ const formatter = new Intl.ListFormat("es", {
 })
 
 const formattedBoxerNames = formatter.format(boxerNames)
+const [imageWidth, imageHeight] = combatData.titleSize
 ---
 
 <Layout
@@ -41,32 +42,43 @@ const formattedBoxerNames = formatter.format(boxerNames)
 	description={`Combate entre ${formattedBoxerNames}`}
 	image={`/img/matches/og-${id}-min.jpg`}
 >
-	<div
-		class="absolute left-0 right-0 top-0 -z-50"
-		style="mask-image: linear-gradient(black 50%, transparent 100%);"
-	>
-		<video autoplay muted loop class="aspect-video h-screen w-full object-cover opacity-10">
-			<source
-				type="video/mp4"
-				src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}.mp4`}
+	<main class="-mt-6">
+		<div class="relative">
+			<video
+				autoplay
+				muted
+				loop
+				class="aspect-video h-auto w-full overflow-hidden rounded-xl object-cover opacity-0 transition-opacity duration-500"
+				style="mask-image: radial-gradient(circle, black 10%, transparent 100%);"
+				oncanplay="this.classList.add('opacity-80')"
+			>
+				<source
+					type="video/mp4"
+					src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto.mp4`}
+				/>
+			</video>
+			<video
+				autoplay
+				muted
+				loop
+				class="absolute inset-0 -z-10 aspect-video h-auto w-full scale-110 rounded-xl object-cover opacity-0 blur-3xl transition-opacity duration-500"
+				oncanplay="this.classList.remove('opacity-0')"
+			>
+				<source
+					type="video/mp4"
+					src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto.mp4`}
+				/>
+			</video>
+			<Image
+				width={imageWidth}
+				height={imageHeight}
+				transition:name={`combat-image-${id}`}
+				loading={"eager"}
+				class="absolute inset-0 m-auto h-auto max-h-96 w-full max-w-80 object-contain lg:max-w-3xl"
+				src={`/img/matches/title-${id}.webp`}
+				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+				style="filter: drop-shadow(0 0 30px rgba(0, 0, 0, 1));"
 			/>
-			<source
-				type="video/webm"
-				src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}.webm`}
-			/>
-		</video>
-	</div>
-
-	<main>
-		<Image
-			transition:name={`combat-image-${id}`}
-			loading={"eager"}
-			class="aspect-video h-auto w-full"
-			src={`/img/matches/${id}.webp`}
-			alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
-			width="1500"
-			height="843"
-			style="mask-image: linear-gradient(black 90%, transparent 100%)"
-		/>
+		</div>
 	</main>
 </Layout>
