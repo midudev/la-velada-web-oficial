@@ -51,72 +51,6 @@ export const BOXERS: Boxer[] = addGetters([
 		],
 	},
 	{
-		id: "zeling",
-		name: "Zeling",
-		realName: "Alicia González",
-		birthDate: new Date(1995, 10, 3),
-		weight: 65, // No encontrado
-		height: 1.7, // No es seguro
-		country: "es",
-		versus: ["alana", "ama-blitz"],
-		guard: "Izquierda", // encontrado
-		reach: 168, // No encontrado
-		socials: {
-			twitch: "https://twitch.tv/zeling",
-			instagram: "https://instagram.com/zeiing",
-			twitter: "https://twitter.com/zeling",
-			youtube: "https://www.youtube.com/channel/UCTfejVE5het7QO8WCY7yIQA",
-			tiktok: "https://tiktok.com/@zeliing",
-		},
-		clips: [
-			{
-				text: "Soy competitiva, no me gusta perder y creo que nos enfadamos mucho",
-				url: "https://youtube.com/clip/Ugkx1GFvGZOaZ9z_HvOqUUNwai5fvgFPdiHX?si=22BsoUeULnhqT73-",
-			},
-			{
-				text: "Por mi parte ya no habrá tan buen rollo como antes",
-				url: "https://youtube.com/clip/UgkxvB5Kn63tTAz2oSsA8E-2Pq_lnA7nDmJF?si=92af92-UCIjsnV4Z",
-			},
-		],
-	},
-	{
-		id: "alana",
-		name: "Alana",
-		realName: "Alana Flores",
-		birthDate: new Date(2000, 11, 15),
-		weight: 55,
-		height: 1.7,
-		country: "mx",
-		versus: ["nissaxter", "zeling"],
-		guard: "Izquierda", // encontrado
-		reach: 168, // No encontrado
-		socials: {
-			twitch: "https://twitch.tv/alanalarana",
-			instagram: "https://instagram.com/alanafloresf",
-			twitter: "https://twitter.com/alanafloresf",
-			youtube: "https://youtube.com/c/alanalarana",
-			tiktok: "https://tiktok.com/@alanatwitch",
-		},
-		workout: {
-			videoID: "FXzCBTRWouA",
-			thumbnail: "/img/boxers/workoutThumbnails/alana-thumbnails.webp",
-		},
-		clips: [
-			{
-				text: "No me siento nerviosa, sino ansiosa para que comience ya",
-				url: "https://youtube.com/clip/Ugkx0Mw7RT8n-aa7XwatTTg7zG0y8x14BMiY?si=8p0UBNrZsD0nFQHs",
-			},
-			{
-				text: "Siento que Nissaxter viene con más motivación y a Zeling la noto con miedo",
-				url: "https://youtube.com/clip/Ugkx06ew5d2CB1oLDIc9HPOzTmR5tDi5VHi-?si=SeGMhL7Nejc0M4Bd",
-			},
-			{
-				text: "Sé del combate meses antes pero no me puse a entrenar porque soy justa y honesta",
-				url: "https://youtube.com/clip/UgkxnCHow_qxDh6_zAdO5Tirg2UryjIgpNQi?si=X11a4D-0TPK-LnyX",
-			},
-		],
-	},
-	{
 		id: "shelao",
 		name: "Shelao",
 		realName: "Cristóbal Andrés Álvarez Leiva",
@@ -150,67 +84,130 @@ export const BOXERS: Boxer[] = addGetters([
 		rotate: true,
 	},
 	{
-		id: "viruzz",
-		name: "Viruzz",
-		realName: "Víctor Mélida Cambra",
-		birthDate: new Date(1992, 4, 1),
-		weight: 85,
-		height: 1.82,
+		id: "zeling",
+		name: "Zeling",
+		realName: "Alicia González",
+		birthDate: new Date(1995, 10, 3),
+		weight: 65, // No encontrado
+		height: 1.7, // No es seguro
 		country: "es",
-		versus: "shelao",
+		versus: ["alana", "ama-blitz"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
-			twitch: "https://twitch.tv/byviruzz",
-			instagram: "https://instagram.com/victormelida",
-			twitter: "https://twitter.com/byViruZz",
-			youtube: "https://youtube.com/c/byViruZz",
-			tiktok: "https://tiktok.com/@victormelida",
+			twitch: "https://twitch.tv/zeling",
+			instagram: "https://instagram.com/zeiing",
+			twitter: "https://twitter.com/zeling",
+			youtube: "https://www.youtube.com/channel/UCTfejVE5het7QO8WCY7yIQA",
+			tiktok: "https://tiktok.com/@zeliing",
 		},
 		clips: [
 			{
-				text: "Nos apostamos los cinturones de la Velada, porque el tuyo no te lo mereces",
-				url: "https://youtube.com/clip/UgkxfYWnQtr1SDApiBtm-EBvS352rnz22bz0?si=3ek10syjTVif2Jz_",
+				text: "Soy competitiva, no me gusta perder y creo que nos enfadamos mucho",
+				url: "https://youtube.com/clip/Ugkx1GFvGZOaZ9z_HvOqUUNwai5fvgFPdiHX?si=22BsoUeULnhqT73-",
 			},
 			{
-				text: "Shelao este año te enfrentas a mi redención, no hay manera de que ganes",
-				url: "https://youtube.com/clip/UgkxO_tFZ74OirLeHBIu0xMnvHEcWtYNs7fB?si=aLY0rakseZ1ZYiYZ",
+				text: "Por mi parte ya no habrá tan buen rollo como antes",
+				url: "https://youtube.com/clip/UgkxvB5Kn63tTAz2oSsA8E-2Pq_lnA7nDmJF?si=92af92-UCIjsnV4Z",
+			},
+		],
+	},
+	{
+		id: "nissaxter",
+		name: "Nissaxter",
+		realName: "Cristina Magadán",
+		birthDate: new Date(1994, 3, 4),
+		weight: 55, // No es seguro
+		height: 1.64,
+		country: "es",
+		versus: ["alana", "ama-blitz"],
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
+		socials: {
+			twitch: "https://twitch.tv/nissaxter",
+			instagram: "https://instagram.com/nissaxter",
+			twitter: "https://twitter.com/nissaxter",
+			youtube: "https://www.youtube.com/channel/UCjUjTl1MiPdAwRxklFLNklg",
+			tiktok: "https://tiktok.com/@nissaxter_",
+		},
+		clips: [
+			{
+				text: "No estoy preparando excusas, no soy el xocas, si pierdo será con dignidad",
+				url: "https://youtube.com/clip/UgkxJJ3K1UB1MGsxI_WzPxyiQo-hL4YMn9KB?si=dInk9hcrBB_uSIXK",
 			},
 			{
-				text: "Te propongo que este sea el primer combate de la Velada donde no haya casco",
-				url: "https://youtube.com/clip/UgkxuLDeLsfhwMN1DgJoLSThw_nNNrsLFVGF?si=EHJD4g3G_-53dYbB",
+				text: "Alana, veo que eres muy bonita y cookie pero es que yo soy de barrio",
+				url: "https://youtube.com/clip/UgkxWTeqQT62-L-LYjSBofjx2i5zsxaeHCqf?si=K08UiInfEvVsIKIe",
+			},
+			{
+				text: "Una cosa es entrenar en gimnasio, verse bonita, y otra darse de ostias",
+				url: "https://youtube.com/clip/UgkxptfPo72fI8yntHVo2UfsuyGjpmsfI3js?si=63ttE4alT2k73Aoo",
+			},
+		],
+	},
+	{
+		id: "carreraaa",
+		name: "Carreraaa",
+		realName: "Rodrigo Ezequiel Carrera",
+		birthDate: new Date(2000, 9, 9),
+		weight: 61,
+		height: 1.65,
+		country: "ar",
+		versus: "agustin-51",
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
+		socials: {
+			twitch: "https://twitch.tv/carreraaa",
+			instagram: "https://www.instagram.com/rodricarreraaa/",
+			twitter: "http://twitter.com/rodricarreraaa",
+			youtube: "http://youtube.com/carreraaa",
+			tiktok: "https://www.tiktok.com/@carreproroblox74",
+		},
+		clips: [
+			{
+				text: "El año pasado la vida me cagó a trompadas y esto me vino como anillo al dedo",
+				url: "https://youtube.com/clip/UgkxtwjSORg57TZFqKsJBhUB1VqgYvL_W-cH?si=i7vlKyALk5vXaR5q",
+			},
+			{
+				text: "Con ese bigote de Agustín me dan ganas de pegarle",
+				url: "https://youtube.com/clip/Ugkx5U4X6gOIS3cqBerhC8OmebW7fRakNqCM?si=Z6yzxl1aQsRjrXa9",
+			},
+			{
+				text: "Tenemos un buen peso para que esto sea una pelea muy divertida",
+				url: "https://youtube.com/clip/Ugkx7iS-4hpvBT1QHGAabmfrVamnMu2IefPX?si=c8s5vkc5gO6UD8_q",
 			},
 		],
 		rotate: true,
 	},
 	{
-		id: "ama-blitz",
-		name: "Amablitz",
-		realName: "Amairani Garza Alonso",
-		birthDate: new Date(1995, 2, 1),
-		weight: 55, // No es seguro
-		height: 1.58,
-		country: "mx",
-		versus: ["zeling", "nissaxter"],
+		id: "la-cobra",
+		name: "La Cobra",
+		realName: "Lautaro Damián del Campo",
+		birthDate: new Date(1997, 8, 8),
+		weight: 105,
+		height: 1.83,
+		country: "ar",
+		versus: "guanyar",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
-			twitch: "https://twitch.tv/amablitz",
-			instagram: "https://instagram.com/amablitz",
-			twitter: "https://twitter.com/amablitz",
-			youtube: "https://youtube.com/c/amablitz",
-			tiktok: "https://tiktok.com/@amablitz",
+			twitch: "https://www.twitch.tv/lacobraaa",
+			instagram: "https://www.instagram.com/lautarodelcampo/",
+			twitter: "https://twitter.com/lautarodeIcampo",
+			youtube: "https://www.youtube.com/channel/UCCfPkh8osJPC2pPq283kKXg",
+			tiktok: "https://www.tiktok.com/@lacobraaa.9",
 		},
 		clips: [
 			{
-				text: "Si hablamos de ventajas, yo soy la que menos ha practicado de todas",
-				url: "https://youtube.com/clip/UgkxP_fhKdpqIa-DNHn21UofXxOS6dcJ46iH?si=aEOCLGdxSk82Mcgp",
+				text: "Me gusta pelear en el Bernabeu el patio de la casa de Messi",
+				url: "https://youtube.com/clip/Ugkxjm_VBOO_hEVTcaT1iIn1wkqhdSgz0PEz?si=4FNXieUC5rSWA4N5",
 			},
 			{
-				text: "Voy a entrenar con Jhonny González, que es un campeón mundial",
-				url: "https://youtube.com/clip/Ugkx7Cx_kusf73FDmnSXKZFpkSagGjhzykoR?si=pKGVXbtOKM8umKJJ",
+				text: "Quiero que la pelea dure nueve minutos",
+				url: "https://youtube.com/clip/UgkxJxXzX5p5WQ-qnTCVSY_yHKLwN1mF_yRt?si=hYvXI2ERkJ3DP6ZT",
 			},
 		],
+		rotate: true,
 	},
 	{
 		id: "karchez",
@@ -393,7 +390,6 @@ export const BOXERS: Boxer[] = addGetters([
 		],
 		versus: "rey-de-la-pista",
 	},
-
 	{
 		id: "roberto-cein",
 		name: "RobertoCein",
@@ -525,103 +521,106 @@ export const BOXERS: Boxer[] = addGetters([
 			},
 		],
 	},
-
 	{
-		id: "nissaxter",
-		name: "Nissaxter",
-		realName: "Cristina Magadán",
-		birthDate: new Date(1994, 3, 4),
-		weight: 55, // No es seguro
-		height: 1.64,
-		country: "es",
-		versus: ["alana", "ama-blitz"],
-		guard: "Izquierda", // encontrado
-		reach: 168, // No encontrado
-		socials: {
-			twitch: "https://twitch.tv/nissaxter",
-			instagram: "https://instagram.com/nissaxter",
-			twitter: "https://twitter.com/nissaxter",
-			youtube: "https://www.youtube.com/channel/UCjUjTl1MiPdAwRxklFLNklg",
-			tiktok: "https://tiktok.com/@nissaxter_",
-		},
-		clips: [
-			{
-				text: "No estoy preparando excusas, no soy el xocas, si pierdo será con dignidad",
-				url: "https://youtube.com/clip/UgkxJJ3K1UB1MGsxI_WzPxyiQo-hL4YMn9KB?si=dInk9hcrBB_uSIXK",
-			},
-			{
-				text: "Alana, veo que eres muy bonita y cookie pero es que yo soy de barrio",
-				url: "https://youtube.com/clip/UgkxWTeqQT62-L-LYjSBofjx2i5zsxaeHCqf?si=K08UiInfEvVsIKIe",
-			},
-			{
-				text: "Una cosa es entrenar en gimnasio, verse bonita, y otra darse de ostias",
-				url: "https://youtube.com/clip/UgkxptfPo72fI8yntHVo2UfsuyGjpmsfI3js?si=63ttE4alT2k73Aoo",
-			},
-		],
-		rotate: true,
-	},
-	{
-		id: "guanyar",
-		name: "Guanyar",
-		realName: "Diego Iglesias",
-		birthDate: new Date(1998, 8, 28),
+		id: "viruzz",
+		name: "Viruzz",
+		realName: "Víctor Mélida Cambra",
+		birthDate: new Date(1992, 4, 1),
 		weight: 85,
-		height: 1.88,
+		height: 1.82,
 		country: "es",
-		versus: "la-cobra",
+		versus: "shelao",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
-			twitch: "https://twitch.tv/guanyar",
-			instagram: "https://instagram.com/guanyarr",
-			twitter: "https://twitter.com/guanyarr",
-			youtube: "https://www.youtube.com/channel/UCEy75s5IJw-ISYDu1d7HzlA?view_as=subscriber",
-			tiktok: "https://tiktok.com/@guanyar",
+			twitch: "https://twitch.tv/byviruzz",
+			instagram: "https://instagram.com/victormelida",
+			twitter: "https://twitter.com/byViruZz",
+			youtube: "https://youtube.com/c/byViruZz",
+			tiktok: "https://tiktok.com/@victormelida",
 		},
 		clips: [
 			{
-				text: "Era un sueño un día subirme aquí, muchas gracias a todos por venir",
-				url: "https://youtube.com/clip/UgkxMc_uxsDRteyleobjWTLU7VzlM74PVEul?si=oKWmaUc3mUKDQuOt",
+				text: "Nos apostamos los cinturones de la Velada, porque el tuyo no te lo mereces",
+				url: "https://youtube.com/clip/UgkxfYWnQtr1SDApiBtm-EBvS352rnz22bz0?si=3ek10syjTVif2Jz_",
 			},
 			{
-				text: "Me van a perdonar pero creo que es el mejor combate de toda la Velada",
-				url: "https://youtube.com/clip/UgkxoHOE311rgi9xvpr3WSU0k3yaMVx7N8Lm?si=cESF8DpadP52bhBT",
+				text: "Shelao este año te enfrentas a mi redención, no hay manera de que ganes",
+				url: "https://youtube.com/clip/UgkxO_tFZ74OirLeHBIu0xMnvHEcWtYNs7fB?si=aLY0rakseZ1ZYiYZ",
 			},
 			{
-				text: "Es un rival duro y me gustó mucho, fue muy intenso desde el primer momento",
-				url: "https://youtube.com/clip/UgkxRpobly-wM3CN1F8FuuMJ9Q2GLrFNHTuZ?si=hiIeodSEwIjWmlDp4",
+				text: "Te propongo que este sea el primer combate de la Velada donde no haya casco",
+				url: "https://youtube.com/clip/UgkxuLDeLsfhwMN1DgJoLSThw_nNNrsLFVGF?si=EHJD4g3G_-53dYbB",
+			},
+		],
+	},
+	{
+		id: "alana",
+		name: "Alana",
+		realName: "Alana Flores",
+		birthDate: new Date(2000, 11, 15),
+		weight: 55,
+		height: 1.7,
+		country: "mx",
+		versus: ["nissaxter", "zeling"],
+		guard: "Izquierda", // encontrado
+		reach: 168, // No encontrado
+		socials: {
+			twitch: "https://twitch.tv/alanalarana",
+			instagram: "https://instagram.com/alanafloresf",
+			twitter: "https://twitter.com/alanafloresf",
+			youtube: "https://youtube.com/c/alanalarana",
+			tiktok: "https://tiktok.com/@alanatwitch",
+		},
+		workout: {
+			videoID: "FXzCBTRWouA",
+			thumbnail: "/img/boxers/workoutThumbnails/alana-thumbnails.webp",
+		},
+		clips: [
+			{
+				text: "No me siento nerviosa, sino ansiosa para que comience ya",
+				url: "https://youtube.com/clip/Ugkx0Mw7RT8n-aa7XwatTTg7zG0y8x14BMiY?si=8p0UBNrZsD0nFQHs",
+			},
+			{
+				text: "Siento que Nissaxter viene con más motivación y a Zeling la noto con miedo",
+				url: "https://youtube.com/clip/Ugkx06ew5d2CB1oLDIc9HPOzTmR5tDi5VHi-?si=SeGMhL7Nejc0M4Bd",
+			},
+			{
+				text: "Sé del combate meses antes pero no me puse a entrenar porque soy justa y honesta",
+				url: "https://youtube.com/clip/UgkxnCHow_qxDh6_zAdO5Tirg2UryjIgpNQi?si=X11a4D-0TPK-LnyX",
 			},
 		],
 		rotate: true,
 	},
 	{
-		id: "la-cobra",
-		name: "La Cobra",
-		realName: "Lautaro Damián del Campo",
-		birthDate: new Date(1997, 8, 8),
-		weight: 105,
-		height: 1.83,
-		country: "ar",
-		versus: "guanyar",
+		id: "ama-blitz",
+		name: "Amablitz",
+		realName: "Amairani Garza Alonso",
+		birthDate: new Date(1995, 2, 1),
+		weight: 55, // No es seguro
+		height: 1.58,
+		country: "mx",
+		versus: ["zeling", "nissaxter"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
-			twitch: "https://www.twitch.tv/lacobraaa",
-			instagram: "https://www.instagram.com/lautarodelcampo/",
-			twitter: "https://twitter.com/lautarodeIcampo",
-			youtube: "https://www.youtube.com/channel/UCCfPkh8osJPC2pPq283kKXg",
-			tiktok: "https://www.tiktok.com/@lacobraaa.9",
+			twitch: "https://twitch.tv/amablitz",
+			instagram: "https://instagram.com/amablitz",
+			twitter: "https://twitter.com/amablitz",
+			youtube: "https://youtube.com/c/amablitz",
+			tiktok: "https://tiktok.com/@amablitz",
 		},
 		clips: [
 			{
-				text: "Me gusta pelear en el Bernabeu el patio de la casa de Messi",
-				url: "https://youtube.com/clip/Ugkxjm_VBOO_hEVTcaT1iIn1wkqhdSgz0PEz?si=4FNXieUC5rSWA4N5",
+				text: "Si hablamos de ventajas, yo soy la que menos ha practicado de todas",
+				url: "https://youtube.com/clip/UgkxP_fhKdpqIa-DNHn21UofXxOS6dcJ46iH?si=aEOCLGdxSk82Mcgp",
 			},
 			{
-				text: "Quiero que la pelea dure nueve minutos",
-				url: "https://youtube.com/clip/UgkxJxXzX5p5WQ-qnTCVSY_yHKLwN1mF_yRt?si=hYvXI2ERkJ3DP6ZT",
+				text: "Voy a entrenar con Jhonny González, que es un campeón mundial",
+				url: "https://youtube.com/clip/Ugkx7Cx_kusf73FDmnSXKZFpkSagGjhzykoR?si=pKGVXbtOKM8umKJJ",
 			},
 		],
+		rotate: true,
 	},
 	{
 		id: "agustin-51",
@@ -657,36 +656,37 @@ export const BOXERS: Boxer[] = addGetters([
 		],
 	},
 	{
-		id: "carreraaa",
-		name: "Carreraaa",
-		realName: "Rodrigo Ezequiel Carrera",
-		birthDate: new Date(2000, 9, 9),
-		weight: 61,
-		height: 1.65,
-		country: "ar",
-		versus: "agustin-51",
+		id: "guanyar",
+		name: "Guanyar",
+		realName: "Diego Iglesias",
+		birthDate: new Date(1998, 8, 28),
+		weight: 85,
+		height: 1.88,
+		country: "es",
+		versus: "la-cobra",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
-			twitch: "https://twitch.tv/carreraaa",
-			instagram: "https://www.instagram.com/rodricarreraaa/",
-			twitter: "http://twitter.com/rodricarreraaa",
-			youtube: "http://youtube.com/carreraaa",
-			tiktok: "https://www.tiktok.com/@carreproroblox74",
+			twitch: "https://twitch.tv/guanyar",
+			instagram: "https://instagram.com/guanyarr",
+			twitter: "https://twitter.com/guanyarr",
+			youtube: "https://www.youtube.com/channel/UCEy75s5IJw-ISYDu1d7HzlA?view_as=subscriber",
+			tiktok: "https://tiktok.com/@guanyar",
 		},
 		clips: [
 			{
-				text: "El año pasado la vida me cagó a trompadas y esto me vino como anillo al dedo",
-				url: "https://youtube.com/clip/UgkxtwjSORg57TZFqKsJBhUB1VqgYvL_W-cH?si=i7vlKyALk5vXaR5q",
+				text: "Era un sueño un día subirme aquí, muchas gracias a todos por venir",
+				url: "https://youtube.com/clip/UgkxMc_uxsDRteyleobjWTLU7VzlM74PVEul?si=oKWmaUc3mUKDQuOt",
 			},
 			{
-				text: "Con ese bigote de Agustín me dan ganas de pegarle",
-				url: "https://youtube.com/clip/Ugkx5U4X6gOIS3cqBerhC8OmebW7fRakNqCM?si=Z6yzxl1aQsRjrXa9",
+				text: "Me van a perdonar pero creo que es el mejor combate de toda la Velada",
+				url: "https://youtube.com/clip/UgkxoHOE311rgi9xvpr3WSU0k3yaMVx7N8Lm?si=cESF8DpadP52bhBT",
 			},
 			{
-				text: "Tenemos un buen peso para que esto sea una pelea muy divertida",
-				url: "https://youtube.com/clip/Ugkx7iS-4hpvBT1QHGAabmfrVamnMu2IefPX?si=c8s5vkc5gO6UD8_q",
+				text: "Es un rival duro y me gustó mucho, fue muy intenso desde el primer momento",
+				url: "https://youtube.com/clip/UgkxRpobly-wM3CN1F8FuuMJ9Q2GLrFNHTuZ?si=hiIeodSEwIjWmlDp4",
 			},
 		],
+		rotate: true,
 	},
 ] as const)
