@@ -197,7 +197,7 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "A Will le digo que no toque a Skain. a Skain me lo pido yo",
+				text: "A Will le digo que no toque a Skain. A Skain me lo pido yo",
 				url: "https://youtube.com/clip/UgkxiWzPv1OLVZmD_T_NH7XTY4QP3beSSc-V?si=CvyH-pbOAi4H5HMT",
 			},
 			{
