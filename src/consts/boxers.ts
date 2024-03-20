@@ -564,6 +564,20 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/channel/UCjUjTl1MiPdAwRxklFLNklg",
 			tiktok: "https://tiktok.com/@nissaxter_",
 		},
+		clips: [
+			{
+				text: "No estoy preparando excusas, no soy el xocas, si pierdo será con dignidad",
+				url: "https://youtube.com/clip/UgkxJJ3K1UB1MGsxI_WzPxyiQo-hL4YMn9KB?si=dInk9hcrBB_uSIXK",
+			},
+			{
+				text: "Alana, veo que eres muy bonita y cookie pero es que yo soy de barrio",
+				url: "https://youtube.com/clip/UgkxWTeqQT62-L-LYjSBofjx2i5zsxaeHCqf?si=K08UiInfEvVsIKIe",
+			},
+			{
+				text: "Una cosa es entrenar en gimnasio, verse bonita, y otra darse de ostias",
+				url: "https://youtube.com/clip/UgkxptfPo72fI8yntHVo2UfsuyGjpmsfI3js?si=63ttE4alT2k73Aoo",
+			},
+		],
 		rotate: true,
 	},
 	{
