@@ -139,6 +139,20 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/c/shelao",
 			tiktok: "https://tiktok.com/@shelao",
 		},
+		clips: [
+			{
+				text: "Viruzz ha dejado las drogas de doping, un aplauso.",
+				url: "https://youtube.com/clip/UgkxGivF3aSpyQdc9L4P6JBE0q5ZTstNC0jm?si=m0J04aypC-2ud74U",
+			},
+			{
+				text: "El año pasado me hicieron sentir que no merecía esta oportunidad, entonces me maté entrenando",
+				url: "https://youtube.com/clip/UgkxxiL9X5jvl1Pj3eirGiDOIyjrMZFQjbQs?si=nA1rCooWna03VV7g",
+			},
+			{
+				text: "Siento que es muy bueno que te den una oportunidad de redención, Viruzz",
+				url: "https://youtube.com/clip/UgkxACB-VsHvjoYbtrWir9sqZomlseYCpmlV?si=Qo0S5TK_r8_-c-bk",
+			},	
+		],
 		rotate: true,
 	},
 	{
