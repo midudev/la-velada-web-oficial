@@ -469,6 +469,20 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/channel/UCEy75s5IJw-ISYDu1d7HzlA?view_as=subscriber",
 			tiktok: "https://tiktok.com/@guanyar",
 		},
+		clips: [
+			{
+				text: "Era un sueño un día subirme aquí, muchas gracias a todos por venir",
+				url: "https://youtube.com/clip/UgkxMc_uxsDRteyleobjWTLU7VzlM74PVEul?si=oKWmaUc3mUKDQuOt"
+			},
+			{
+				text: "Me van a perdonar pero creo que es el mejor combate de toda la Velada",
+				url: "https://youtube.com/clip/UgkxoHOE311rgi9xvpr3WSU0k3yaMVx7N8Lm?si=cESF8DpadP52bhBT"
+			},
+			{
+				text: "Es un rival duro y me gustó mucho, fue muy intenso desde el primer momento",
+				url: "https://youtube.com/clip/UgkxRpobly-wM3CN1F8FuuMJ9Q2GLrFNHTuZ?si=hiIeodSEwIjWmlDp4"
+			}
+		],
 		rotate: true,
 	},
 	{
