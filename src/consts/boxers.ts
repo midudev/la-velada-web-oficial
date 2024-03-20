@@ -642,5 +642,19 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "http://youtube.com/carreraaa",
 			tiktok: "https://www.tiktok.com/@carreproroblox74",
 		},
+		clips: [
+			{
+				text: "El año pasado la vida me cagó a trompadas y esto me vino como anillo al dedo",
+				url: "https://youtube.com/clip/UgkxtwjSORg57TZFqKsJBhUB1VqgYvL_W-cH?si=i7vlKyALk5vXaR5q"
+			},
+			{
+				text: "Con ese bigote de Agustín me dan ganas de pegarle",
+				url: "https://youtube.com/clip/Ugkx5U4X6gOIS3cqBerhC8OmebW7fRakNqCM?si=Z6yzxl1aQsRjrXa9"
+			},
+			{
+				text: "Tenemos un buen peso para que esto sea una pelea muy divertida",
+				url: "https://youtube.com/clip/Ugkx7iS-4hpvBT1QHGAabmfrVamnMu2IefPX?si=c8s5vkc5gO6UD8_q"
+			}
+		],
 	},
 ] as const)
