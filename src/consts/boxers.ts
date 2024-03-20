@@ -195,6 +195,16 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/Karchez",
 			tiktok: "https://tiktok.com/@karchez",
 		},
+		clips: [
+			{
+				text: "A Will le digo que no toque a Skain. A Skain me lo pido yo",
+				url: "https://youtube.com/clip/UgkxiWzPv1OLVZmD_T_NH7XTY4QP3beSSc-V?si=CvyH-pbOAi4H5HMT",
+			},
+			{
+				text: "¿Quién crees que es el rival mas peligroso? Karchez: Nadie",
+				url: "https://youtube.com/clip/UgkxIiWOmEccr40oWJUkQzYVAkjVxLSvG2HU?si=jJtd35_Rliq97o6D",
+			},
+		],
 		versus: "rey-de-la-pista",
 	},
 	{
