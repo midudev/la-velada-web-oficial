@@ -1,0 +1,37 @@
+---
+import { getSession } from "auth-astro/server"
+import Layout from "@/layouts/Layout.astro"
+
+const session = await getSession(Astro.request)
+---
+
+<Layout
+	title="Pronostica los ganadores de La Velada IV"
+	description="¡Participa votando a los boxeadores que crees que ganarán sus combates!"
+>
+	<main class="flex flex-col items-center justify-center text-white">
+		<div>Pronósticos</div>
+		{
+			session ? (
+				<div>
+					<p>¡Hola, {session.user?.name}!</p>
+					<button id="logout">Cerrar sesión</button>
+				</div>
+			) : (
+				<button id="login">Iniciar sesión</button>
+			)
+		}
+	</main>
+</Layout>
+
+<script>
+	import { $ } from "@/lib/dom-selector"
+
+	const { signIn, signOut } = await import("auth-astro/client")
+
+	const $login = $("#login")
+	const $logout = $("#logout")
+
+	if ($login) $login.onclick = () => signIn("twitch")
+	if ($logout) $logout.onclick = () => signOut()
+</script>
