@@ -344,6 +344,20 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/sezarblue",
 			tiktok: "https://www.tiktok.com/@sezar_blue_",
 		},
+		clips: [
+			{
+				text: "Me siento muy preparado para el reto, además me siento el padre de toda la gente que hay",
+				url: "https://www.youtube.com/clip/Ugkxpgjoq-dSHfusbcM7joiiJlE6DvAz-O3V",
+			},
+			{
+				text: "Ibai, ¿dónde está el vídeo de las dominadas? Porque si quieres las hago aquí mismo",
+				url: "https://youtube.com/clip/UgkxRLtIUYYyPRqrRa02tpC26Ppyclg5U2G4?si=e7sqNk11GMDgpCqE",
+			},
+			{
+				text: "Creo que el cardio será una cosa importante, entonces estaré 60 minutos sudando como una bestia",
+				url: "https://youtube.com/clip/UgkxfeafuAmAxWjXfSHLE2rdeuiA51BI93qc?si=rKmhv-XfMm2lSRIO",
+			},
+		],
 		versus: "rey-de-la-pista",
 	},
 	{
