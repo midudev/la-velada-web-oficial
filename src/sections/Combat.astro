@@ -37,14 +37,10 @@ const { combatNumber, combatId, boxers } = Astro.props
 				<div class="lowercase">
 					{
 						boxers.map((boxer, index) => (
-							<span>
+							<Typography as="span" variant="atomic-title" color="primary">
 								{boxer.name}
-								{index < boxers.length - 1 && (
-									<Typography as="span" variant="atomic-title" color="primary">
-										vs
-									</Typography>
-								)}
-							</span>
+								{index < boxers.length - 1 && <span class="text-6xl text-white"> vs</span>}
+							</Typography>
 						))
 					}
 				</div>
