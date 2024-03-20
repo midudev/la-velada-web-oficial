@@ -94,9 +94,8 @@ const boxerColumns = [
 		const boxerTitle = $(".boxer-title") as HTMLImageElement
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement
-		const queryString = window.location.search
-		const urlParams = new URLSearchParams(queryString)
-		const storedBoxerId = localStorage.getItem("selectedBoxerId")
+		const urlParams = new URLSearchParams(window.location.search)
+		const storedBoxerId = localStorage.getItem("selected:boxer")
 		const initialBoxer = storedBoxerId || urlParams.get("boxer") || "el-mariana"
 		const initialBoxerElement = $(`a.boxer-link[data-id=${initialBoxer}]`)
 		let isInitialBoxer = true
@@ -107,7 +106,7 @@ const boxerColumns = [
 					(boxerLink) => boxerLink.getAttribute("data-id") === initialBoxer
 				) ?? boxerLinks[0]
 
-			activateBoxer(initialBoxerElement, initialBoxerLink, boxerNav, false)
+			activateBoxer(initialBoxerElement, initialBoxerLink, boxerNav, true)
 		}
 
 		function activateBoxer(
@@ -124,10 +123,13 @@ const boxerColumns = [
 
 			if (!id || !name || !country || !countryName) return
 
-			link.addEventListener("click", (event: MouseEvent) => {
-				const currentTarget = event.currentTarget as HTMLElement
-				const boxerId = currentTarget.getAttribute("data-id")
-				if (boxerId) localStorage.setItem("selected:boxer", boxerId)
+			boxerLinks.forEach((link) => {
+				link.addEventListener("click", (event: MouseEvent) => {
+					const currentTarget = event.currentTarget as HTMLElement
+					const boxerId = currentTarget.getAttribute("data-id")
+					if (boxerId) localStorage.setItem("selected:boxer", JSON.stringify(boxerId))
+					activateBoxer(currentTarget, currentTarget, boxerNav, true)
+				})
 			})
 
 			const splitName = name.split(" ")
