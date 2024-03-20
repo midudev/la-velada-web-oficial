@@ -5,6 +5,7 @@ export interface Combat {
 	titleSize: [number, number]
 }
 
+export const REY_DE_LA_PISTA_ID = "5-rey-de-la-pista"
 export const COMBATS: Combat[] = [
 	{
 		id: "1-agustin-51-vs-carreraaa",
@@ -31,7 +32,7 @@ export const COMBATS: Combat[] = [
 		titleSize: [1623, 1077],
 	},
 	{
-		id: "5-rey-de-la-pista",
+		id: REY_DE_LA_PISTA_ID,
 		number: 5,
 		boxers: [
 			"roberto-cein",
