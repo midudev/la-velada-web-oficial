@@ -9,7 +9,6 @@ export interface BoxerWithForecast extends Boxer {
 }
 interface Props {
 	count: number
-	combatNumber: string
 	boxers: BoxerWithForecast[]
 }
 
@@ -21,6 +20,7 @@ const { count, boxers } = Astro.props
 		image={`/img/boxers/${boxers[0].id}-big.webp`}
 		imageAlt={`${boxers[0].name}`}
 		boxerName={boxers[0].name}
+		boxerHref=`/boxers/${boxers[0].id}`
 		percentage={boxers[0].forecast * 100}
 		class:list={["boxer1"]}
 	/>
@@ -35,8 +35,9 @@ const { count, boxers } = Astro.props
 		image={`/img/boxers/${boxers[1].id}-big.webp`}
 		imageAlt={`${boxers[1].name}`}
 		boxerName={boxers[1].name}
+		boxerHref=`/boxers/${boxers[1].id}`
 		percentage={boxers[1].forecast * 100}
-		class:list={["boxer1"]}
+		class:list={["boxer2"]}
 	/>
 	<div class="action flex w-full flex-col items-center justify-center">
 		<Action

@@ -1,0 +1,83 @@
+---
+import { Image } from "astro:assets"
+
+import { COMBATS } from "@/consts/combats"
+import Layout from "@/layouts/Layout.astro"
+
+const getCombatById = (id: string) => {
+	return COMBATS.find((combat) => combat.id === id)
+}
+
+const getBoxerNames = (boxerIds: string[]): string[] => {
+	return boxerIds.map((boxerId) => boxerId)
+}
+
+export const getStaticPaths = () => {
+	return COMBATS.map((combat) => ({
+		params: { id: combat.id },
+	}))
+}
+
+const { id } = Astro.params
+const combatData = COMBATS.find((combat) => combat.id === id)
+const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
+
+if (!combatData) {
+	return {
+		status: 404,
+	}
+}
+
+const formatter = new Intl.ListFormat("es", {
+	style: "short",
+	type: "conjunction",
+})
+
+const formattedBoxerNames = formatter.format(boxerNames)
+const [imageWidth, imageHeight] = combatData.titleSize
+---
+
+<Layout
+	title={`Combate número ${combatData.number} de La Velada IV`}
+	description={`Combate entre ${formattedBoxerNames}`}
+	image={`/img/matches/og-${id}-min.jpg`}
+>
+	<main class="-mt-6">
+		<div class="relative">
+			<video
+				autoplay
+				muted
+				loop
+				class="aspect-video h-auto w-full overflow-hidden rounded-xl object-cover opacity-0 transition-opacity duration-500"
+				style="mask-image: radial-gradient(circle, black 10%, transparent 100%);"
+				oncanplay="this.classList.add('opacity-80')"
+			>
+				<source
+					type="video/mp4"
+					src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto.mp4`}
+				/>
+			</video>
+			<video
+				autoplay
+				muted
+				loop
+				class="absolute inset-0 -z-10 aspect-video h-auto w-full scale-110 rounded-xl object-cover opacity-0 blur-3xl transition-opacity duration-500"
+				oncanplay="this.classList.remove('opacity-0')"
+			>
+				<source
+					type="video/mp4"
+					src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto.mp4`}
+				/>
+			</video>
+			<Image
+				width={imageWidth}
+				height={imageHeight}
+				transition:name={`title-image-${id}`}
+				loading={"eager"}
+				class="absolute inset-0 m-auto h-auto max-h-96 w-full max-w-80 object-contain lg:max-w-3xl"
+				src={`/img/matches/title-${id}.webp`}
+				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+			/>
+		</div>
+	</main>
+</Layout>

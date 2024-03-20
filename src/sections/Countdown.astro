@@ -55,130 +55,107 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 </section>
 
 <script>
-	const SECOND = 1000
-	const MINUTE = SECOND * 60
-	const HOUR = MINUTE * 60
-	const DAY = HOUR * 24
+	import createCountdown from "@/lib/countdown"
+	import { $ } from "@/lib/dom-selector"
 
-	function init() {
-		const $countdown = document.querySelector("[data-date]")
+	function initCountdown() {
+		const $countdown = $("[data-date]")
 		if (!$countdown) return
 
-		let intervalId: globalThis.NodeJS.Timer
-
 		const $days = {
-			firstDigit: $countdown.querySelector("[data-days] [data-first-group]"),
-			secondDigit: $countdown.querySelector("[data-days] [data-second-group]"),
-			thirdDigit: $countdown.querySelector("[data-days] [data-third-group]"),
+			firstDigit: $("[data-days] [data-first-group]", $countdown),
+			secondDigit: $("[data-days] [data-second-group]", $countdown),
+			thirdDigit: $("[data-days] [data-third-group]", $countdown),
 		}
-
 		const $hours = {
-			firstDigit: $countdown.querySelector("[data-hours] [data-first-group]"),
-			secondDigit: $countdown.querySelector("[data-hours] [data-second-group]"),
+			firstDigit: $("[data-hours] [data-first-group]", $countdown),
+			secondDigit: $("[data-hours] [data-second-group]", $countdown),
 		}
-
 		const $minutes = {
-			firstDigit: $countdown.querySelector("[data-minutes] [data-first-group]"),
-			secondDigit: $countdown.querySelector("[data-minutes] [data-second-group]"),
+			firstDigit: $("[data-minutes] [data-first-group]", $countdown),
+			secondDigit: $("[data-minutes] [data-second-group]", $countdown),
 		}
-
 		const $seconds = {
-			firstDigit: $countdown.querySelector("[data-seconds] [data-first-group]"),
-			secondDigit: $countdown.querySelector("[data-seconds] [data-second-group]"),
+			firstDigit: $("[data-seconds] [data-first-group]", $countdown),
+			secondDigit: $("[data-seconds] [data-second-group]", $countdown),
 		}
-
-		const timestamp = $countdown.getAttribute("data-date")
-		if (!timestamp) return
-
-		const date = new Date(+timestamp).getTime()
-
-		const formatTime = (time: number) => {
-			return Math.floor(time).toString().padStart(2, "0")
-		}
-
-		function animateDigit(group: HTMLElement, value: string) {
-			const wrapper = group.querySelector("[data-wrapper]")
-			const num = group.querySelector(`[data-num="${value}"]`)
-			const xnum = group.querySelector("[data-num-x0]") // 0 añadido para la animación
-
-			if (
-				wrapper instanceof HTMLElement &&
-				num instanceof HTMLElement &&
-				xnum instanceof HTMLElement
-			) {
-				wrapper.style.transform = `translateY(-${num.offsetTop}px)`
-
-				// Cuando cambie, volver arriba
-				if (value === "0") {
-					setTimeout(() => {
-						wrapper.classList.toggle("duration-[800ms]", false)
-						wrapper.classList.toggle("transition-transform", false)
-						wrapper.style.transform = `translateY(-${xnum.offsetTop}px)`
-					}, 800)
-				} else {
-					wrapper.classList.toggle("duration-[800ms]", true)
-					wrapper.classList.toggle("transition-transform", true)
+		const timestamp = Number($countdown?.getAttribute("data-date") ?? 0)
+		const countdown = createCountdown(timestamp, {
+			onTick({ days, hours, minutes, seconds }) {
+				if (
+					$days.firstDigit instanceof HTMLElement &&
+					$days.secondDigit instanceof HTMLElement &&
+					$days.thirdDigit instanceof HTMLElement
+				) {
+					animateDigit($days.firstDigit, days[0])
+					animateDigit($days.secondDigit, days[1])
+					animateDigit($days.thirdDigit, days[2])
 				}
-			}
-		}
 
-		function updateCountdown() {
-			const now = Date.now()
-			const diff = date - now
-			const $countdown = document.querySelector("[data-date]")
-			if (!$countdown) return
+				if ($hours.firstDigit instanceof HTMLElement && $hours.secondDigit instanceof HTMLElement) {
+					animateDigit($hours.firstDigit, hours[0])
+					animateDigit($hours.secondDigit, hours[1])
+				}
 
-			const days = formatTime(diff / DAY)
-			const hours = formatTime((diff % DAY) / HOUR)
-			const minutes = formatTime((diff % HOUR) / MINUTE)
-			const seconds = formatTime((diff % MINUTE) / SECOND)
+				if (
+					$minutes.firstDigit instanceof HTMLElement &&
+					$minutes.secondDigit instanceof HTMLElement
+				) {
+					animateDigit($minutes.firstDigit, minutes[0])
+					animateDigit($minutes.secondDigit, minutes[1])
+				}
 
-			if (
-				$days.firstDigit instanceof HTMLElement &&
-				$days.secondDigit instanceof HTMLElement &&
-				$days.thirdDigit instanceof HTMLElement
-			) {
-				animateDigit($days.firstDigit, days[0])
-				animateDigit($days.secondDigit, days[1])
-				animateDigit($days.thirdDigit, days[2])
-			}
+				if (
+					$seconds.firstDigit instanceof HTMLElement &&
+					$seconds.secondDigit instanceof HTMLElement
+				) {
+					animateDigit($seconds.firstDigit, seconds[0])
+					animateDigit($seconds.secondDigit, seconds[1])
+				}
+			},
 
-			if ($hours.firstDigit instanceof HTMLElement && $hours.secondDigit instanceof HTMLElement) {
-				animateDigit($hours.firstDigit, hours[0])
-				animateDigit($hours.secondDigit, hours[1])
-			}
+			onComplete() {
+				$(".countdown-text")?.remove()
 
-			if (
-				$minutes.firstDigit instanceof HTMLElement &&
-				$minutes.secondDigit instanceof HTMLElement
-			) {
-				animateDigit($minutes.firstDigit, minutes[0])
-				animateDigit($minutes.secondDigit, minutes[1])
-			}
-
-			if (
-				$seconds.firstDigit instanceof HTMLElement &&
-				$seconds.secondDigit instanceof HTMLElement
-			) {
-				animateDigit($seconds.firstDigit, seconds[0])
-				animateDigit($seconds.secondDigit, seconds[1])
-			}
-
-			if (diff < 1000) {
-				clearInterval(intervalId)
-				document.querySelector(".countdown-text")?.remove()
+				if (!$countdown) return
 
 				$countdown.innerHTML = "¡El evento de presentación ha empezado! 🎉"
 				$countdown.className =
 					"text-primary uppercase font-semibold animate-fade-in text-3xl text-center"
+			},
+		})
+
+		return countdown
+	}
+
+	function animateDigit(group: HTMLElement, value: string) {
+		const wrapper = $("[data-wrapper]", group)
+		const num = $(`[data-num="${value}"]`, group)
+		const xnum = $("[data-num-x0]", group) // 0 añadido para la animación
+
+		if (
+			wrapper instanceof HTMLElement &&
+			num instanceof HTMLElement &&
+			xnum instanceof HTMLElement
+		) {
+			wrapper.style.transform = `translateY(-${num.offsetTop}px)`
+
+			// Cuando cambie, volver arriba
+			if (value === "0") {
+				setTimeout(() => {
+					wrapper.classList.toggle("duration-[800ms]", false)
+					wrapper.classList.toggle("transition-transform", false)
+					wrapper.style.transform = `translateY(-${xnum.offsetTop}px)`
+				}, 800)
+			} else {
+				wrapper.classList.toggle("duration-[800ms]", true)
+				wrapper.classList.toggle("transition-transform", true)
 			}
 		}
-
-		intervalId = setInterval(updateCountdown, SECOND)
-		updateCountdown()
 	}
 
 	document.addEventListener("astro:page-load", () => {
-		init()
+		const countdown = initCountdown()
+		countdown && countdown.start()
 	})
 </script>

@@ -36,14 +36,13 @@
 <script>
 	import { konamiCodes } from "@/consts/konami-codes"
 	import { Konami } from "@/function/konami"
-	import { checkAndRemoveContainer, showContributors } from "@/function/miduCode"
-	import { $ } from "@/consts/dom-selector"
+	import { checkAndRemoveContainer, getContributors, showContributors } from "@/function/miduCode"
+	import { $ } from "@/lib/dom-selector"
 
-	const { rotateY, gloveCursor, amongUsCursor, lolCursor, midu } = konamiCodes
+	const { rotateY, gloveCursor, amongUsCursor, lolCursor, midu, devContributors } = konamiCodes
 	let konamiCodeInprogress = false
 	const $container = $("#main-content")
 	const $miduContainer = document.createElement("div")
-
 	const audioManager: {
 		audioInstance: HTMLAudioElement | null
 		getAudioInstance: () => HTMLAudioElement | null
@@ -110,7 +109,7 @@
 				showContributors($miduContainer)
 				const audio = audioManager.getAudioInstance()
 				if (audio !== null) {
-					audio.volume = 0.5
+					audio.volume = 0.3
 					audio.play()
 				}
 			},
@@ -120,6 +119,24 @@
 					audioManager.audioInstance = null
 					konamiCodeInprogress = false
 				}
+			},
+		})
+
+		Konami({
+			code: devContributors,
+			keyPressed: key,
+			onSuccess: async () => {
+				const $boxerNav = $(".boxers-nav")
+				if ($boxerNav === null) return
+
+				let contributors = await getContributors()
+				contributors = contributors.sort(() => Math.random() - 0.5)
+				$boxerNav.querySelectorAll("img").forEach((e, i) => {
+					const { avatar_url, login } = contributors[i]
+					e.src = `${avatar_url}&size=200`
+					e.alt = login
+					e.title = `Developer ${login}`
+				})
 			},
 		})
 	})
