@@ -1,0 +1,22 @@
+---
+import Typography from "@/components/Typography.astro"
+import Action from "@/components/Action.astro"
+---
+
+<section>
+	<Typography class="mb-10" color="white" as="h1" variant={"atomic-title"}
+		>¡haz tu pronóstico!</Typography
+	>
+	<Action id="logout" class="w-full text-base" as="button" aria-label="Cerrar sesión de usuario">
+		Cerrar sesión
+	</Action>
+</section>
+
+<script>
+	import { $ } from "@/lib/dom-selector"
+
+	const { signOut } = await import("auth-astro/client")
+	const $logout = $("#logout")
+
+	$logout.onclick = () => signOut()
+</script>
