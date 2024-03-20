@@ -53,9 +53,9 @@ const teams = groupAllies(boxers)
 							? boxers.map((boxer, key) => (
 									<picture
 										class:list={[
-											"absolute h-full w-[30rem] object-cover md:relative md:w-auto md:min-w-0 md:object-contain",
-											{ "right-[30vw] sm:right-[20rem] md:right-0": key == 0 },
-											{ "left-[30vw] sm:left-[20rem] md:left-0": key == 1 },
+											"absolute h-full w-[20rem] object-cover md:relative md:w-auto md:min-w-0 md:object-contain",
+											{ "-left-[25vw] xs:-left-[10vw] sm:left-0": key == 0 },
+											{ "-right-[25vw] xs:-right-[10vw] sm:right-0": key == 1 },
 										]}
 									>
 										<source srcset={`/img/boxers/${boxer.id}-big.webp`} type="image/webp" />
@@ -69,9 +69,15 @@ const teams = groupAllies(boxers)
 												{team.map((boxer, key2) => (
 													<picture
 														class:list={[
-															"absolute top-0 h-full w-[30rem] object-cover ",
-															{ "-left-[3.5vw]": key2 == 0 },
-															{ "-right-[3.5vw]": key2 == 1 },
+															"absolute top-0 h-full w-[100vw] object-cover sm:w-[70vw] md:w-[50vw] xl:w-[30rem] ",
+															{
+																"-left-[35vw] sm:-left-[20vw] md:-left-[10vw] xl:-left-[5rem]":
+																	key2 == 0,
+															},
+															{
+																"-right-[35vw] sm:-right-[20vw] md:-right-[10vw] xl:-right-[5rem]":
+																	key2 == 1,
+															},
 														]}
 													>
 														<source srcset={`/img/boxers/${boxer.id}-big.webp`} type="image/webp" />
