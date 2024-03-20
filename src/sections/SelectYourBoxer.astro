@@ -227,6 +227,37 @@ const boxerColumns = [
 				carouselItems.forEach((item) => carouselObserver.observe(item))
 			}
 		})
+
+		const carousel = document.querySelector(".carousel-inner")
+		if (!carousel) return
+
+		const carouselContainer = carousel.closest(".carousel")
+		if (!carouselContainer) return
+
+		const indicatorContainer = document.createElement("div")
+		indicatorContainer.style.position = "absolute"
+		indicatorContainer.style.bottom = "-10px"
+		indicatorContainer.style.left = "0"
+		indicatorContainer.style.width = "100%"
+		indicatorContainer.style.textAlign = "center"
+		carouselContainer.appendChild(indicatorContainer)
+
+		const indicator = document.createElement("div")
+		indicator.style.display = "inline-block"
+		indicator.style.height = "4px"
+		indicator.style.backgroundColor = "#fff"
+		indicator.style.minWidth = "4px"
+		indicatorContainer.appendChild(indicator)
+
+		const updateIndicator = () => {
+			const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth
+			const currentScroll = carousel.scrollLeft
+			const percentage = Math.max((currentScroll / maxScrollLeft) * 100, 2.5)
+			indicator.style.width = `${percentage}%`
+		}
+
+		carousel.addEventListener("scroll", updateIndicator)
+		updateIndicator()
 	})
 </script>
 
