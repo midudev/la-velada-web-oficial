@@ -159,6 +159,20 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/c/byViruZz",
 			tiktok: "https://tiktok.com/@victormelida",
 		},
+		clips: [
+			{
+				text: "Nos apostamos los cinturones de la Velada, porque el tuyo no te lo mereces",
+				url: "https://youtube.com/clip/UgkxfYWnQtr1SDApiBtm-EBvS352rnz22bz0?si=3ek10syjTVif2Jz_",
+			},
+			{
+				text: "Shelao este año te enfrentas a mi redención, no hay manera de que ganes",
+				url: "https://youtube.com/clip/UgkxO_tFZ74OirLeHBIu0xMnvHEcWtYNs7fB?si=aLY0rakseZ1ZYiYZ",
+			},
+			{
+				text: "Te propongo que este sea el primer combate de la Velada donde no haya casco",
+				url: "https://youtube.com/clip/UgkxuLDeLsfhwMN1DgJoLSThw_nNNrsLFVGF?si=EHJD4g3G_-53dYbB",
+			}
+		],
 		rotate: true,
 	},
 	{
