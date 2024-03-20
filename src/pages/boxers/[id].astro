@@ -76,6 +76,8 @@ const preloadBoxerImage: Preload[] = [
 		rel: "preload",
 	},
 ]
+
+const rivalOrRivals = rivals.length > 1 ? "Rivales" : "Rival"
 ---
 
 <Layout
@@ -91,7 +93,7 @@ const preloadBoxerImage: Preload[] = [
 					<BoxerDetailInfo title="País" value={COUNTRIES[boxer.country].name} id="boxer-país" />
 					<BoxerDetailInfo title="Edad" value={boxer.age} id="boxer-edad" />
 					<div class="hidden md:block">
-						<BoxerDetailInfoRival title="Rival/es" value={rivals} id="boxer-rival-desk" />
+						<BoxerDetailInfoRival title={rivalOrRivals} value={rivals} id="boxer-rival-desk" />
 					</div>
 				</div>
 
@@ -108,7 +110,7 @@ const preloadBoxerImage: Preload[] = [
 					<BoxerDetailInfo title="Alcance" value={boxer.reach} id="boxer-alcance" />
 
 					<div class="block md:hidden">
-						<BoxerDetailInfoRival title="Rival/es" value={rivals} id="boxer-rival-mobile" />
+						<BoxerDetailInfoRival title={rivalOrRivals} value={rivals} id="boxer-rival-mobile" />
 					</div>
 				</div>
 			</div>
