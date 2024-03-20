@@ -52,7 +52,9 @@ const {
 	 */
 	class LiteYTEmbed extends HTMLElement {
 		connectedCallback() {
-			this.videoId = this.getAttribute("videoid")
+			const video = this.getAttribute("videoid").split("?")
+			this.videoId = video[0]
+			this.short = video[1]
 
 			let playBtnEl = this.querySelector(".lty-playbtn")
 			// A label for the button takes priority over a [playlabel] attribute on the custom-element
@@ -252,7 +254,9 @@ const {
 			iframeEl.allowFullscreen = true
 			// AFAIK, the encoding here isn't necessary for XSS, but we'll do it only because this is a URL
 			// https://stackoverflow.com/q/64959723/89484
-			iframeEl.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(this.videoId)}?${this.getParams().toString()}`
+			iframeEl.src = !this.short
+				? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(this.videoId)}?${this.getParams().toString()}`
+				: `https://www.youtube.com/embed/${encodeURIComponent(this.videoId)}?${this.getParams().toString()}&${this.short}`
 			return iframeEl
 		}
 
