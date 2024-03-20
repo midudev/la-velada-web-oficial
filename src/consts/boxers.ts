@@ -418,15 +418,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "No hay chance de que pierda. Soy un psicópata",
-				url: "https://youtube.com/clip/UgkxwyKEwj17kL8yJ2XVPNMI4dMuq-FdjYuG?si=LTAScm2qp6d7Bi4L",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=Y6wUewxg1UwqLvoj&amp;controls=0&amp;clip=UgkxwyKEwj17kL8yJ2XVPNMI4dMuq-FdjYuG&amp;clipt=EOP3-QUY--z6BQ",
 			},
 			{
 				text: "¿Se supone que tiene que picar?",
-				url: "https://youtube.com/clip/UgkxCVitcQsAn1I5wO4GlZY_kMcwLKaOI7HI?si=oyHb0fJkIWWQ8wTz",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=jucHSELaUPIteA_k&amp;clip=UgkxCVitcQsAn1I5wO4GlZY_kMcwLKaOI7HI&amp;clipt=EMmf7wUY4ZTwBQ",
 			},
 			{
 				text: "Hablaré en el ring. No tengo nada que decir.",
-				url: "https://youtube.com/clip/UgkxSCdNOmvFVB74IC_D56vglujXVWtVI60Q?si=Eqhsbja42efTdCaz",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=lc3jB0Vtt-cS6uhq&amp;controls=0&amp;clip=UgkxSCdNOmvFVB74IC_D56vglujXVWtVI60Q&amp;clipt=ELL72QUYvevaBQ",
 			},
 		],
 	},

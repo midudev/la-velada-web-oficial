@@ -17,34 +17,50 @@ const hasClips = clips.length > 0
 		<section class="mt-2 overflow-hidden md:mt-10">
 			<div class="carousel flex select-none flex-row flex-nowrap transition duration-700  lg:max-w-none lg:!translate-x-0 lg:flex-wrap lg:place-content-center lg:gap-4">
 				{clips.map(({ text, url }) => (
-					<a
-						href={url}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="group flex min-w-full max-w-[450px] flex-col justify-between bg-gradient-to-b px-12 pt-8 hover:from-zinc-600/25 lg:min-w-0"
-					>
-						<Typography
-							as="h3"
-							variant="atomic-title"
-							color="primary"
-							class:list={
-								"flex flex-1 -skew-y-2 items-center justify-center text-center transition group-hover:scale-110"
-							}
-						>
-							"{text.toLowerCase()}"
-						</Typography>
-
-						<footer class="mt-2 flex items-end justify-center p-5 text-center">
-							<Typography
-								as="p"
-								variant="body"
-								color="neutral"
-								class:list={"text-center group-hover:text-accent"}
+					<div class="card">
+						<div id="cardfront" class="cardfront">
+							<div
+								class="group flex min-w-full max-w-[450px] min-h-[300px] flex-col justify-between bg-gradient-to-b px-12 pt-8 hover:from-zinc-600/25 lg:min-w-0"
 							>
-								Ver clip
-							</Typography>
-						</footer>
-					</a>
+								<Typography
+									as="h3"
+									variant="atomic-title"
+									color="primary"
+									class:list={
+										"flex flex-1 -skew-y-2 items-center justify-center text-center transition group-hover:scale-110"
+									}
+								>
+									"{text.toLowerCase()}"
+								</Typography>
+
+								<footer id="verClip" class="verClip flex items-end justify-center p-5 text-center">
+									<Typography
+										as="p"
+										variant="body"
+										color="neutral"
+										class:list={"text-center group-hover:text-accent"}
+									>
+										Ver clip
+									</Typography>
+								</footer>
+							</div>
+						</div>
+						<div id="cardback" class="cardback">
+							<div class="group flex min-w-full max-w-[450px] flex-col justify-between bg-gradient-to-b hover:from-zinc-600/25 lg:min-w-0">
+								<iframe max-width="450" height="232" src={url} title={text} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+								<footer id="volver" class="volver flex items-end justify-center p-5 text-center">
+									<Typography
+										as="p"
+										variant="body"
+										color="neutral"
+										class:list={"text-center group-hover:text-accent"}
+									>
+										Volver
+									</Typography>
+								</footer>
+							</div>
+						</div>
+					</div>
 				))}
 			</div>
 			<div class="mx-16 flex items-center justify-between lg:hidden">
@@ -61,6 +77,63 @@ const hasClips = clips.length > 0
 		</section>
 	)
 }
+<style>
+	.cardback {
+		backface-visibility: hidden;
+		margin-top: -300px;
+		transform: rotateY(180deg);
+		pointer-events: none;
+	}
+	.rotate--cardback--on {
+		animation: rotateBackOn 0.5s ease-in-out forwards;
+	}
+	@keyframes rotateBackOn {
+		0% {
+			transform: rotateY(180deg);
+		}
+		100% {
+			transform: rotateY(360deg);
+			pointer-events: auto;
+		}
+	}
+	.rotate--cardback--off {
+		animation: rotateBackOff 0.5s ease-in-out forwards;
+	}
+	@keyframes rotateBackOff {
+		0% {
+			transform: rotateY(360deg);
+		}
+		100% {
+			transform: rotateY(180deg);
+		}
+	}
+	.cardfront {
+		backface-visibility: hidden;
+		overflow: hidden;
+	}
+	.rotate--cardfront--off {
+		animation: rotateFrontOff 0.5s ease-in-out forwards;
+	}
+	@keyframes rotateFrontOff {
+		0% {
+			transform: rotateY(0deg);
+		}
+		100% {
+			transform: rotateY(180deg);
+		}
+	}
+	.rotate--cardfront--on {
+		animation: rotateFrontOn 0.5s ease-in-out forwards;
+	}
+	@keyframes rotateFrontOn {
+		0% {
+			transform: rotateY(180deg);
+		}
+		100% {
+			transform: rotateY(0deg);
+		}
+	}
+</style>
 <script>
 	document.addEventListener("astro:page-load", () => {
 		const $carousel = document.querySelector(".carousel")
@@ -68,6 +141,31 @@ const hasClips = clips.length > 0
 		const $next = document.querySelector("[data-btn-next]")
 		const $clipIndex = document.querySelector("[data-clip-index]")
 
+		const $verClips = document.querySelectorAll(".verClip")
+		const $volvers = document.querySelectorAll(".volver")
+		const $cardfronts = document.querySelectorAll(".cardfront")
+		const $cardbacks = document.querySelectorAll(".cardback")
+		const $iframes = document.querySelectorAll("iframe")
+
+		$verClips.forEach((clip, index) => {
+			clip.addEventListener("click", () => {
+				$cardfronts[index].classList.add("rotate--cardfront--off")
+				$cardbacks[index].classList.add("rotate--cardback--on")
+			})
+		})
+		$volvers.forEach((volver, index) => {
+			volver.addEventListener("click", () => {
+				$cardfronts[index].classList.add("rotate--cardfront--on")
+				$cardbacks[index].classList.add("rotate--cardback--off")
+				const source = $iframes[index].src
+				$iframes[index].src = ""
+				$iframes[index].src = source
+				setTimeout(() => {
+					$cardfronts[index].classList = "cardfront"
+					$cardbacks[index].classList = "cardback"
+				}, "500")
+			})
+		})
 		let position = 0
 
 		const updatePosition = () => {
