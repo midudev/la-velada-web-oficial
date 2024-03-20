@@ -542,6 +542,16 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/channel/UCCfPkh8osJPC2pPq283kKXg",
 			tiktok: "https://www.tiktok.com/@lacobraaa.9",
 		},
+		clips: [
+			{
+				text: "Me gusta pelear en el Bernabeu el patio de la casa de Messi",
+				url: "https://youtube.com/clip/Ugkxjm_VBOO_hEVTcaT1iIn1wkqhdSgz0PEz?si=4FNXieUC5rSWA4N5",
+			},
+			{
+				text: "Quiero que la pelea dure nueve minutos",
+				url: "https://youtube.com/clip/UgkxJxXzX5p5WQ-qnTCVSY_yHKLwN1mF_yRt?si=hYvXI2ERkJ3DP6ZT",
+			},
+		],
 	},
 	{
 		id: "agustin-51",
