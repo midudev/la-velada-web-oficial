@@ -405,6 +405,21 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://youtube.com/clip/UgkxnYTPVsLLRS3h4sOEdR8--oZxVx01vCum?si=UcUZpzw5d_8NkJWK",
 			},
 		],
+
+		// clips: [
+		// 	{
+		// 		text: "Aunque tenga un mes de retraso, voy a llegar a su nivel",
+		// 		url: "https://player.twitch.tv/?enableExtensions=true&muted=false&parent=twitch.tv&player=popout&quality=auto&t=3h6m39s&video=2081166660&volume=1",
+		// 	},
+		// 	{
+		// 		text: "Empezaré a entrenar y daré todo lo que pueda",
+		// 		url: "https://player.twitch.tv/?enableExtensions=true&muted=false&parent=twitch.tv&player=popout&quality=auto&t=3h7m6s&video=2081166660&volume=1",
+		// 	},
+		// 	{
+		// 		text: "En El Rey de la Pista el cardio no es importante, es la fuerza",
+		// 		url: "https://player.twitch.tv/?enableExtensions=true&muted=false&parent=twitch.tv&player=popout&quality=auto&t=3h18m43s&video=2081166660&volume=1",
+		// 	},
+		// ],
 		versus: "rey-de-la-pista",
 		rotate: true,
 	},
