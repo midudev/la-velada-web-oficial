@@ -35,9 +35,7 @@ export async function getContributors() {
 	const response = await fetch(url)
 
 	const linkHeader = response.headers.get("link")
-	const pageCount = linkHeader
-		? parseInt(linkHeader.match(/page=(\d+)>; rel="last"/)?.[1] || "1")
-		: 1
+	const pageCount = linkHeader ? Number(linkHeader.match(/page=(\d+)>; rel="last"/)?.[1] || "1") : 1
 	const randomPage = Math.floor(Math.random() * pageCount) + 1
 	const randomPageUrl = `${url}?page=${randomPage}`
 	const randomPageResponse = await fetch(randomPageUrl)
