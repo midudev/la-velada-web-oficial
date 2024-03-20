@@ -609,6 +609,20 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/channel/UC1Bb0DVSgXLKuLbenbpkb8g",
 			tiktok: "https://www.tiktok.com/@agustin51",
 		},
+		clips: [
+			{
+				text: "Después del combate nos podemos dar un abrazo porque lo importante es dar un buen ejemplo",
+				url: "https://youtube.com/clip/UgkxJszPGolZaON3QjSuzzh5TP2luW9qLX4W?si=_KPbivwhIxlrhMR-"
+			},
+			{
+				text: "Siento que soy un chaval con mucha energía pero cuando me ponen la mano encima me caliento",
+				url: "https://youtube.com/clip/UgkxRZ3cq1lEgLDe-NizURNpwN3vPxowiITS?si=iF103l7J-MVN4MbY"
+			},
+			{
+				text: "Si a mi me tienen que nerfear en los torneos por algo será, espero no me nerfeen en la velada",
+				url: "https://youtube.com/clip/UgkxHCkkSU67P09o20vM1ZCrohVvOYDmVIh2?si=1IVMhiqKxoUYbxQe"
+			}
+		],
 	},
 	{
 		id: "carreraaa",
