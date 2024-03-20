@@ -222,9 +222,9 @@ const boxerColumns = [
 		// detect if it changes
 		mobileMediaQuery.addEventListener("change", (event) => {
 			if (event.matches) {
-				carouselItems.forEach((item) => carouselObserver.unobserve(item))
-			} else {
 				carouselItems.forEach((item) => carouselObserver.observe(item))
+			} else {
+				carouselItems.forEach((item) => carouselObserver.unobserve(item))
 			}
 		})
 	})
