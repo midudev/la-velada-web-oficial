@@ -80,41 +80,38 @@ export const BOXERS: Boxer[] = addGetters([
 		],
 	},
 	{
-		id: "alana",
-		name: "Alana",
-		realName: "Alana Flores",
-		birthDate: new Date(2000, 11, 15),
-		weight: 55,
-		height: 1.7,
-		country: "mx",
-		versus: ["nissaxter", "zeling"],
+		id: "nissaxter",
+		name: "Nissaxter",
+		realName: "Cristina Magadán",
+		birthDate: new Date(1994, 3, 4),
+		weight: 55, // No es seguro
+		height: 1.64,
+		country: "es",
+		versus: ["alana", "ama-blitz"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
-			twitch: "https://twitch.tv/alanalarana",
-			instagram: "https://instagram.com/alanafloresf",
-			twitter: "https://twitter.com/alanafloresf",
-			youtube: "https://youtube.com/c/alanalarana",
-			tiktok: "https://tiktok.com/@alanatwitch",
-		},
-		workout: {
-			videoID: "FXzCBTRWouA",
-			thumbnail: "/img/boxers/workoutThumbnails/alana-thumbnails.webp",
+			twitch: "https://twitch.tv/nissaxter",
+			instagram: "https://instagram.com/nissaxter",
+			twitter: "https://twitter.com/nissaxter",
+			youtube: "https://www.youtube.com/channel/UCjUjTl1MiPdAwRxklFLNklg",
+			tiktok: "https://tiktok.com/@nissaxter_",
 		},
 		clips: [
 			{
-				text: "No me siento nerviosa, sino ansiosa para que comience ya",
-				url: "https://youtube.com/clip/Ugkx0Mw7RT8n-aa7XwatTTg7zG0y8x14BMiY?si=8p0UBNrZsD0nFQHs",
+				text: "No estoy preparando excusas, no soy el xocas, si pierdo será con dignidad",
+				url: "https://youtube.com/clip/UgkxJJ3K1UB1MGsxI_WzPxyiQo-hL4YMn9KB?si=dInk9hcrBB_uSIXK",
 			},
 			{
-				text: "Siento que Nissaxter viene con más motivación y a Zeling la noto con miedo",
-				url: "https://youtube.com/clip/Ugkx06ew5d2CB1oLDIc9HPOzTmR5tDi5VHi-?si=SeGMhL7Nejc0M4Bd",
+				text: "Alana, veo que eres muy bonita y cookie pero es que yo soy de barrio",
+				url: "https://youtube.com/clip/UgkxWTeqQT62-L-LYjSBofjx2i5zsxaeHCqf?si=K08UiInfEvVsIKIe",
 			},
 			{
-				text: "Sé del combate meses antes pero no me puse a entrenar porque soy justa y honesta",
-				url: "https://youtube.com/clip/UgkxnCHow_qxDh6_zAdO5Tirg2UryjIgpNQi?si=X11a4D-0TPK-LnyX",
+				text: "Una cosa es entrenar en gimnasio, verse bonita, y otra darse de ostias",
+				url: "https://youtube.com/clip/UgkxptfPo72fI8yntHVo2UfsuyGjpmsfI3js?si=63ttE4alT2k73Aoo",
 			},
 		],
+		rotate: true,
 	},
 	{
 		id: "shelao",
@@ -525,40 +522,42 @@ export const BOXERS: Boxer[] = addGetters([
 			},
 		],
 	},
-
 	{
-		id: "nissaxter",
-		name: "Nissaxter",
-		realName: "Cristina Magadán",
-		birthDate: new Date(1994, 3, 4),
-		weight: 55, // No es seguro
-		height: 1.64,
-		country: "es",
-		versus: ["alana", "ama-blitz"],
+		id: "alana",
+		name: "Alana",
+		realName: "Alana Flores",
+		birthDate: new Date(2000, 11, 15),
+		weight: 55,
+		height: 1.7,
+		country: "mx",
+		versus: ["nissaxter", "zeling"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
-			twitch: "https://twitch.tv/nissaxter",
-			instagram: "https://instagram.com/nissaxter",
-			twitter: "https://twitter.com/nissaxter",
-			youtube: "https://www.youtube.com/channel/UCjUjTl1MiPdAwRxklFLNklg",
-			tiktok: "https://tiktok.com/@nissaxter_",
+			twitch: "https://twitch.tv/alanalarana",
+			instagram: "https://instagram.com/alanafloresf",
+			twitter: "https://twitter.com/alanafloresf",
+			youtube: "https://youtube.com/c/alanalarana",
+			tiktok: "https://tiktok.com/@alanatwitch",
+		},
+		workout: {
+			videoID: "FXzCBTRWouA",
+			thumbnail: "/img/boxers/workoutThumbnails/alana-thumbnails.webp",
 		},
 		clips: [
 			{
-				text: "No estoy preparando excusas, no soy el xocas, si pierdo será con dignidad",
-				url: "https://youtube.com/clip/UgkxJJ3K1UB1MGsxI_WzPxyiQo-hL4YMn9KB?si=dInk9hcrBB_uSIXK",
+				text: "No me siento nerviosa, sino ansiosa para que comience ya",
+				url: "https://youtube.com/clip/Ugkx0Mw7RT8n-aa7XwatTTg7zG0y8x14BMiY?si=8p0UBNrZsD0nFQHs",
 			},
 			{
-				text: "Alana, veo que eres muy bonita y cookie pero es que yo soy de barrio",
-				url: "https://youtube.com/clip/UgkxWTeqQT62-L-LYjSBofjx2i5zsxaeHCqf?si=K08UiInfEvVsIKIe",
+				text: "Siento que Nissaxter viene con más motivación y a Zeling la noto con miedo",
+				url: "https://youtube.com/clip/Ugkx06ew5d2CB1oLDIc9HPOzTmR5tDi5VHi-?si=SeGMhL7Nejc0M4Bd",
 			},
 			{
-				text: "Una cosa es entrenar en gimnasio, verse bonita, y otra darse de ostias",
-				url: "https://youtube.com/clip/UgkxptfPo72fI8yntHVo2UfsuyGjpmsfI3js?si=63ttE4alT2k73Aoo",
+				text: "Sé del combate meses antes pero no me puse a entrenar porque soy justa y honesta",
+				url: "https://youtube.com/clip/UgkxnCHow_qxDh6_zAdO5Tirg2UryjIgpNQi?si=X11a4D-0TPK-LnyX",
 			},
 		],
-		rotate: true,
 	},
 	{
 		id: "guanyar",
