@@ -27,7 +27,9 @@ const { title, value, id } = Astro.props
 						>
 							{item.name}
 						</a>
-						{index !== value.length - 1 && <span class="text-xl font-bold text-accent"> / </span>}
+						{index !== value.length - 1 && index % 2 === 0 && (
+							<span class="text-xl font-bold text-accent"> / </span>
+						)}
 					</>
 				))
 			}
