@@ -253,6 +253,10 @@ export const BOXERS: Boxer[] = addGetters([
 				text: "Estoy muy entusiasmado por empezar a entrenar y darle a full",
 				url: "https://youtube.com/clip/UgkxPN9KOdpqCyfZMzSpASYG-GintxzHx1au?si=ki9ob750dSvegoIJ",
 			},
+			{
+				text: "Si hablamos de tirar vergazos, yo no le tengo miedo a nada ni a nadie",
+				url: "https://youtube.com/clip/Ugkx1MY5pq1j1Ehe3I_w05O9OZgTCBUlhTBJ?si=p2dXn_oUyonwT2sV",
+			},
 		],
 		versus: "rey-de-la-pista",
 	},
