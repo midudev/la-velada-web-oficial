@@ -1,9 +1,11 @@
 ---
-import { Image } from "astro:assets"
-
+import Glow from "@/components/Glow.astro"
 import Typography from "@/components/Typography.astro"
 import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
+
+// eslint-disable-next-line import/order
+import { Image } from "astro:assets"
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
@@ -26,7 +28,7 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 				todos los<br />combates
 			</Typography>
 
-			<ul class="grid grid-cols-1 space-y-8 md:grid-cols-2">
+			<ul class="grid w-full auto-rows-[22rem] grid-cols-3 gap-4">
 				{
 					COMBATS.map((combat, index) => {
 						const combatData = getCombatById(combat.id)
@@ -36,9 +38,11 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 						const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
 
 						return (
-							<li>
+							<Glow as="li" class:list={["col-span-3 rounded-xl lg:col-span-1"]}>
 								<a
-									class="relative inline-block aspect-square h-auto w-full transition-transform hover:scale-105 hover:saturate-150"
+									class:list={[
+										"group relative flex h-full w-full transform-gpu flex-col justify-between  overflow-hidden rounded-xl  [border:1px_solid_rgba(255,255,255,.1)] [box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
+									]}
 									href={`/combates/${combat.id}`}
 									title={`Ir al combate ${combatData.number} de la Velada IV`}
 								>
@@ -46,28 +50,29 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 										decoding="async"
 										loading={index < 2 ? "eager" : "lazy"}
 										class:list={[
-											"absolute z-0 mx-auto h-auto w-full",
-											{ "bottom-0": isKingOfTheHill },
+											"absolute -bottom-10 z-20 mx-auto h-auto w-full transform-gpu transition-all duration-300 ease-in-out md:bottom-0 ",
+											{ "group-hover:scale-125": isKingOfTheHill },
+											{ "scale-75 group-hover:scale-110 md:scale-100": !isKingOfTheHill },
 										]}
 										src={`/img/matches/combat-${combat.id}.webp`}
 										alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 										style="mask-image: linear-gradient(black 90%, transparent 100%);"
 									/>
-									<Image
-										width={combatData.titleSize[0]}
-										height={combatData.titleSize[1]}
-										transition:name={`title-image-${combat.id}`}
-										loading={index < 2 ? "eager" : "lazy"}
-										class:list={[
-											"absolute left-0 right-0 z-50 mx-auto h-auto transform-gpu",
-											{ "top-10 w-1/2": isKingOfTheHill },
-											{ "bottom-0 w-2/3": !isKingOfTheHill },
-										]}
-										src={`/img/matches/title-${combat.id}.webp`}
-										alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
-									/>
+									<div class="pointer-events-none z-10  transform-gpu transition-all duration-300">
+										<Image
+											width={combatData.titleSize[0]}
+											height={combatData.titleSize[1]}
+											transition:name={`title-image-${combat.id}`}
+											loading={index < 2 ? "eager" : "lazy"}
+											class:list={[
+												"group-hover:saturate-15 absolute left-1/2 top-0 h-auto w-full -translate-x-1/2 transform-gpu transition-all duration-300 ease-in-out group-hover:scale-75",
+											]}
+											src={`/img/matches/title-${combat.id}.webp`}
+											alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+										/>
+									</div>
 								</a>
-							</li>
+							</Glow>
 						)
 					})
 				}

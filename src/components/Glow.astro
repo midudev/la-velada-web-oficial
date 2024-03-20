@@ -13,15 +13,17 @@ const { as: Tag, class: className, ...props } = Astro.props
 </Tag>
 
 <script>
-	const syncPointer = ({ x, y }: { x: number; y: number }) => {
-		const el = document.documentElement
-		el.style.setProperty("--x", x.toFixed(2))
-		el.style.setProperty("--xp", (x / window.innerWidth).toFixed(2))
-		el.style.setProperty("--y", y.toFixed(2))
-		el.style.setProperty("--yp", (y / window.innerHeight).toFixed(2))
-	}
+	document.addEventListener("astro:page-load", () => {
+		const syncPointer = ({ x, y }: { x: number; y: number }) => {
+			const el = document.documentElement
+			el.style.setProperty("--x", x.toFixed(2))
+			el.style.setProperty("--xp", (x / window.innerWidth).toFixed(2))
+			el.style.setProperty("--y", y.toFixed(2))
+			el.style.setProperty("--yp", (y / window.innerHeight).toFixed(2))
+		}
 
-	document.body.addEventListener("pointermove", syncPointer)
+		document.body.addEventListener("pointermove", syncPointer)
+	})
 </script>
 
 <style>
