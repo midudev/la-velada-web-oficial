@@ -7,12 +7,12 @@ import Typography from "@/components/Typography.astro"
 	<div class="flex max-w-lg flex-col items-center justify-center px-10">
 		<Typography
 			class="mb-10 -skew-y-6 text-wrap text-center"
-			color="white"
+			color="primary"
 			as="h1"
 			variant={"atomic-title"}>¡haz tu pronóstico!</Typography
 		>
 		<Typography as="p" color="white" variant="body" class="mb-10">
-			Haz tu quiniela de <strong>quién ganará cada combate de La Velada IV</strong>. Comparte tu
+			Haz tu predicción de <strong>quién ganará cada combate de La Velada IV</strong>. Comparte tu
 			pronóstico en redes sociales e invita a tus amigos a participar.
 		</Typography>
 		<Action id="login" class="w-full text-base" as="button" aria-label="Iniciar sesión de usuario">
@@ -35,5 +35,9 @@ import Typography from "@/components/Typography.astro"
 	const { signIn } = await import("auth-astro/client")
 	const $login = $("#login")
 
-	$login.onclick = () => signIn("twitch")
+	$login.onclick = () => {
+		signIn("twitch")
+		$login.setAttribute("aria-disabled", "true")
+		$login.querySelector("span").innerText = "Iniciando sesión..."
+	}
 </script>
