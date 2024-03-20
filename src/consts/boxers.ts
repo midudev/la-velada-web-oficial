@@ -121,6 +121,20 @@ export const BOXERS: Boxer[] = addGetters([
 			videoID: "FXzCBTRWouA",
 			thumbnail: "/img/boxers/workoutThumbnails/alana-thumbnails.webp",
 		},
+		clips: [
+			{
+				text: "No me siento nerviosa, sino ansiosa para que comience ya",
+				url: "https://youtube.com/clip/Ugkx0Mw7RT8n-aa7XwatTTg7zG0y8x14BMiY?si=8p0UBNrZsD0nFQHs",
+			},
+			{
+				text: "Siento que Nissaxter viene con más motivación y a Zeling la noto con miedo",
+				url: "https://youtube.com/clip/Ugkx06ew5d2CB1oLDIc9HPOzTmR5tDi5VHi-?si=SeGMhL7Nejc0M4Bd",
+			},
+			{
+				text: "Sé del combate meses antes pero no me puse a entrenar porque soy justa y honesta",
+				url: "https://youtube.com/clip/UgkxnCHow_qxDh6_zAdO5Tirg2UryjIgpNQi?si=X11a4D-0TPK-LnyX",
+			},
+		],
 	},
 	{
 		id: "shelao",
