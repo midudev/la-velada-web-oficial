@@ -1,6 +1,7 @@
 ---
 import { BOXERS } from "@/consts/boxers"
 import type { Combat } from "@/consts/combats"
+import type { Boxer } from "@/types/Boxer"
 
 interface Props {
 	combat: Combat
@@ -9,11 +10,37 @@ interface Props {
 const { combat } = Astro.props
 
 const boxers = BOXERS.filter((boxer) => combat.boxers.includes(boxer.id))
+
+const groupAllies = (boxers: Boxer[]): Boxer[][] => {
+	const teams: Boxer[][] = []
+	const boxersClone = [...boxers]
+
+	while (boxersClone.length > 0) {
+		const boxer = boxersClone.pop()
+		if (boxer) {
+			const allies: Boxer[] = [boxer]
+
+			for (let i = boxersClone.length - 1; i >= 0; i--) {
+				const otherBoxer = boxersClone[i]
+				if (boxer.allies?.includes(otherBoxer.id)) {
+					allies.push(otherBoxer)
+					boxersClone.splice(i, 1)
+				}
+			}
+
+			teams.push(allies) // Add the formed team to the list of teams
+		}
+	}
+
+	return teams
+}
+
+const teams = groupAllies(boxers)
 ---
 
 <article class="inline-block h-full w-full overflow-hidden">
 	{
-		boxers.length === 2 ? (
+		boxers.length === 2 || boxers.length === 4 ? (
 			<>
 				<div class="relative flex h-full items-end justify-between gap-4 overflow-hidden sm:gap-12">
 					<div
@@ -22,22 +49,48 @@ const boxers = BOXERS.filter((boxer) => combat.boxers.includes(boxer.id))
 						]}
 						style={`mask-image: linear-gradient(to top, transparent 0%, #000 15%);`}
 					>
-						{boxers.map((boxer, key) => (
-							<picture
-								class:list={[
-									"absolute h-full w-[30rem] object-cover md:relative md:w-auto md:min-w-0 md:object-contain",
-									{ "right-[30vw] sm:right-[20rem] md:right-0": key == 0 },
-									{ "left-[30vw] sm:left-[20rem] md:left-0": key == 1 },
-								]}
-							>
-								<source srcset={`/img/boxers/${boxer.id}-big.webp`} type="image/webp" />
-								<img alt={boxer.name} src={`/img/boxers/${boxer.id}-big.webp`} />
-							</picture>
-						))}
+						{boxers.length === 2
+							? boxers.map((boxer, key) => (
+									<picture
+										class:list={[
+											"absolute h-full w-[30rem] object-cover md:relative md:w-auto md:min-w-0 md:object-contain",
+											{ "right-[30vw] sm:right-[20rem] md:right-0": key == 0 },
+											{ "left-[30vw] sm:left-[20rem] md:left-0": key == 1 },
+										]}
+									>
+										<source srcset={`/img/boxers/${boxer.id}-big.webp`} type="image/webp" />
+										<img alt={boxer.name} src={`/img/boxers/${boxer.id}-big.webp`} />
+									</picture>
+								))
+							: boxers.length === 4 && (
+									<>
+										{teams.map((team, key1) => (
+											<div class:list={["relative h-full w-full"]}>
+												{team.map((boxer, key2) => (
+													<picture
+														class:list={[
+															"absolute top-0 h-full w-[30rem] object-cover ",
+															{ "-left-[3.5vw]": key2 == 0 },
+															{ "-right-[3.5vw]": key2 == 1 },
+														]}
+													>
+														<source srcset={`/img/boxers/${boxer.id}-big.webp`} type="image/webp" />
+														<img alt={boxer.name} src={`/img/boxers/${boxer.id}-big.webp`} />
+													</picture>
+												))}
+											</div>
+										))}
+									</>
+								)}
 					</div>
-					<div class="absolute bottom-10 flex w-full -skew-y-12 font-atomic">
+					<div
+						class:list={[
+							"absolute bottom-10 flex w-full font-atomic",
+							{ "-skew-y-12": boxers.length === 2 },
+						]}
+					>
 						<div class="mx-auto flex w-full max-w-xs  items-center justify-center sm:max-w-md ">
-							{boxers.length === 2 && (
+							{boxers.length === 2 ? (
 								<>
 									<span class="w-min text-3xl text-accent  sm:text-5xl md:text-7xl">
 										{boxers[0].name.toLowerCase()}
@@ -51,6 +104,20 @@ const boxers = BOXERS.filter((boxer) => combat.boxers.includes(boxer.id))
 										</span>
 									</div>
 								</>
+							) : (
+								boxers.length === 4 && (
+									<div class="mb-5 flex flex-col gap-y-2 text-center">
+										<span class="-skew-y-6 text-3xl  text-accent sm:text-5xl md:text-7xl">
+											{teams[0].map((boxer) => boxer.name.toLowerCase()).join(" y ")}
+										</span>
+										<span class="-skew-y-6 text-xl text-primary sm:text-2xl md:text-5xl ">
+											versus
+										</span>
+										<span class="-skew-y-6 text-3xl text-accent  sm:text-5xl md:text-7xl ">
+											{teams[1].map((boxer) => boxer.name.toLowerCase()).join(" y ")}
+										</span>
+									</div>
+								)
 							)}
 						</div>
 					</div>
