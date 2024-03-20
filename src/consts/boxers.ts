@@ -98,6 +98,16 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://www.youtube.com/channel/UCTfejVE5het7QO8WCY7yIQA",
 			tiktok: "https://tiktok.com/@zeliing",
 		},
+		clips: [
+			{
+				text: "Soy competitiva, no me gusta perder y creo que nos enfadamos mucho",
+				url: "https://youtube.com/clip/Ugkx1GFvGZOaZ9z_HvOqUUNwai5fvgFPdiHX?si=22BsoUeULnhqT73-",
+			},
+			{
+				text: "Por mi parte ya no habrá tan buen rollo como antes",
+				url: "https://youtube.com/clip/UgkxvB5Kn63tTAz2oSsA8E-2Pq_lnA7nDmJF?si=92af92-UCIjsnV4Z",
+			},
+		],
 	},
 	{
 		id: "alana",
