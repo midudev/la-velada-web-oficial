@@ -162,11 +162,20 @@ const boxerColumns = [
 			boxerCountry.alt = `Bandera de ${countryName}`
 		}
 
+		function handleMouseEnter(event: MouseEvent) {
+			const currentTarget = event.currentTarget as HTMLElement
+			const link = currentTarget
+			if (currentTarget.classList.contains("active")) return
+			activateBoxer(currentTarget, link, boxerNav, true)
+		}
+
 		boxerLinks.forEach((link) => {
-			link.addEventListener("mouseenter", (event) => {
-				const currentTarget = event.currentTarget as HTMLElement
-				if (currentTarget.classList.contains("active")) return
-				activateBoxer(currentTarget, link, boxerNav, true)
+			link.addEventListener("mouseenter", handleMouseEnter)
+		})
+
+		document.addEventListener("astro:before-preparation", () => {
+			boxerLinks.forEach((link) => {
+				link.removeEventListener("mouseenter", handleMouseEnter)
 			})
 		})
 
