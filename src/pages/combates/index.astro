@@ -2,8 +2,8 @@
 import { Image } from "astro:assets"
 
 import Typography from "@/components/Typography.astro"
+import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import CombatCarousel from "@/components/CombatCarousel.astro"
-import { COMBATS } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 
 const getCombatById = (id: string) => {
@@ -27,30 +27,45 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 				todos los<br />combates
 			</Typography>
 
-			<ul class="space-y-8">
+			<ul class="grid grid-cols-1 space-y-8 md:grid-cols-2">
 				{
 					COMBATS.map((combat, index) => {
 						const combatData = getCombatById(combat.id)
 						if (!combatData) return null
 
 						const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
+						const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
 
 						return (
 							<li>
 								<a
-									class="inline-block transition-transform hover:scale-105 hover:saturate-150"
+									class="relative inline-block aspect-square h-auto w-full transition-transform hover:scale-105 hover:saturate-150"
 									href={`/combates/${combat.id}`}
 									title={`Ir al combate ${combatData.number} de la Velada IV`}
 								>
-									<Image
-										transition:name={`combat-image-${combat.id}`}
+									<img
+										decoding="async"
 										loading={index < 2 ? "eager" : "lazy"}
-										class="aspect-video h-auto w-full"
-										src={`/img/matches/${combat.id}.webp`}
+										class:list={[
+											"absolute z-0 mx-auto h-auto w-full",
+											{ "bottom-0": isKingOfTheHill },
+										]}
+										src={`/img/matches/combat-${combat.id}.webp`}
 										alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
-										width="1500"
-										height="843"
 										style="mask-image: linear-gradient(black 90%, transparent 100%);"
+									/>
+									<Image
+										width={combatData.titleSize[0]}
+										height={combatData.titleSize[1]}
+										transition:name={`title-image-${combat.id}`}
+										loading={index < 2 ? "eager" : "lazy"}
+										class:list={[
+											"absolute left-0 right-0 z-50 mx-auto h-auto transform-gpu",
+											{ "top-10 w-1/2": isKingOfTheHill },
+											{ "bottom-0 w-2/3": !isKingOfTheHill },
+										]}
+										src={`/img/matches/title-${combat.id}.webp`}
+										alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 									/>
 								</a>
 							</li>
