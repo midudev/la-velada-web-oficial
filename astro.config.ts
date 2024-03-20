@@ -23,7 +23,7 @@ export default defineConfig({
 	build: {
 		inlineStylesheets: "always",
 	},
-	output: "hybrid",
+	output: "server",
 	site: seoConfig.baseURL,
 	vite: {
 		build: {
