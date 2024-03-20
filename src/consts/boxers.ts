@@ -231,6 +231,16 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/c/amablitz",
 			tiktok: "https://tiktok.com/@amablitz",
 		},
+		clips: [
+			{
+				text: "Si hablamos de ventajas, yo soy la que menos ha practicado de todas",
+				url: "https://youtube.com/clip/UgkxP_fhKdpqIa-DNHn21UofXxOS6dcJ46iH?si=aEOCLGdxSk82Mcgp",
+			},
+			{
+				text: "Voy a entrenar con Jhonny González, que es un campeón mundial",
+				url: "https://youtube.com/clip/Ugkx7Cx_kusf73FDmnSXKZFpkSagGjhzykoR?si=pKGVXbtOKM8umKJJ",
+			},
+		],
 	},
 	{
 		id: "karchez",
