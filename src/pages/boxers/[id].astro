@@ -18,6 +18,7 @@ import YouTube from "@/icons/youtube.astro"
 import type { Preload } from "@/components/SEO.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COMBATS } from "@/consts/combats"
+import { COUNTRIES } from "@/consts/countries"
 import { FORECASTS } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
@@ -49,6 +50,8 @@ if (!boxers) {
 }
 
 const forecast = FORECASTS.find((forecast) => forecast.combatId === combat.id)
+
+const countryName = COUNTRIES[boxer.country]
 
 const boxersWithForecast: BoxerWithForecast[] = []
 let forecastCount = 0
@@ -83,6 +86,7 @@ const preloadBoxerImage: Preload[] = [
 
 const rivalOrRivals = rivals.length > 1 ? "Rivales" : "Rival"
 const guardBoxer = boxer.guard === undefined ? "Desconocida" : boxer.guard
+const flagAlt = countryName === undefined ? "un país" : countryName.name
 ---
 
 <Layout
