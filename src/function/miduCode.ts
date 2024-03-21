@@ -34,10 +34,15 @@ export async function getContributors() {
 	const url = "https://api.github.com/repos/midudev/la-velada-web-oficial/contributors"
 	const response = await fetch(url)
 
+
 	const linkHeader = await response.headers.get("link")
 	const pageCount = linkHeader
 		? parseInt(linkHeader.match(/page=(\d+)>; rel="last"/)?.[1] || "1")
 		: 1
+  
+	const linkHeader = response.headers.get("link")
+	const pageCount = linkHeader ? Number(linkHeader.match(/page=(\d+)>; rel="last"/)?.[1] || "1") : 1
+  
 	const randomPage = Math.floor(Math.random() * pageCount) + 1
 	const randomPageUrl = `${url}?page=${randomPage}`
 	const randomPageResponse = await fetch(randomPageUrl)
