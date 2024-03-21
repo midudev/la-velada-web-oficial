@@ -38,7 +38,9 @@ const boxerColumns = [
 		Conoce los detalles de cada boxeador
 	</Typography>
 
-	<div class="mt-8 flex flex-col items-center justify-center gap-8 md:mt-32 md:flex-row lg:mt-0">
+	<div
+		class="boxers-match mt-8 flex flex-col items-center justify-center gap-8 md:mt-32 md:flex-row lg:mt-0"
+	>
 		<article
 			class="relative flex w-full max-w-[70%] flex-col items-center justify-center md:absolute md:max-w-full lg:-mt-32"
 		>
@@ -86,6 +88,68 @@ const boxerColumns = [
 </section>
 
 <script>
+	// Utilidad para la selección en el DOM.
+	import { $ } from "@/lib/dom-selector"
+
+	// Espera a que el DOM esté completamente cargado antes de ejecutar el script.
+	document.addEventListener("DOMContentLoaded", () => {
+		// Selecciona el elemento con clase .boxers-match.
+		const boxers_nav = $(".boxers-match")
+		// Selecciona el primer elemento <article>.
+		const article = $("article")
+
+		// Verifica si se ha seleccionado correctamente boxers_nav y es una instancia de HTMLElement.
+		if (boxers_nav instanceof HTMLElement) {
+			// Inicializa un nuevo IntersectionObserver para monitorear los cambios de visibilidad de boxers_nav.
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						// Alterna la clase "visible" según si el elemento está intersectando con el viewport.
+						if (entry.isIntersecting) {
+							entry.target.classList.add("visible")
+						} else {
+							entry.target.classList.remove("visible")
+						}
+					})
+				},
+				{
+					rootMargin: "0px", // Margen alrededor del root. Aquí se establece en "0px".
+					threshold: 0.1, // El porcentaje de visibilidad del objetivo para ejecutar el callback del observador.
+				}
+			)
+
+			// Comienza a observar boxers_nav para detectar cambios de intersección con el viewport.
+			observer.observe(boxers_nav)
+		}
+
+		// De manera similar para article, verifica si se ha seleccionado correctamente y es una instancia de HTMLElement.
+		if (article instanceof HTMLElement) {
+			// Inicializa un nuevo IntersectionObserver para monitorear los cambios de visibilidad del artículo.
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						// Alterna la clase "visible" según si el elemento está intersectando con el viewport.
+						if (entry.isIntersecting) {
+							entry.target.classList.add("visible")
+						} else {
+							entry.target.classList.remove("visible")
+						}
+					})
+				},
+				{
+					rootMargin: "0px", // Margen alrededor del root. Aquí se establece en "0px".
+					threshold: 0.1, // El porcentaje de visibilidad del objetivo para ejecutar el callback del observador.
+				}
+			)
+
+			// Comienza a observar el artículo para detectar cambios de intersección con el viewport.
+			observer.observe(article)
+		}
+	})
+</script>
+
+<script>
+	// Utilidad para la selección en el DOM.
 	import { $, $$ } from "@/lib/dom-selector"
 
 	document.addEventListener("astro:page-load", () => {
@@ -148,7 +212,6 @@ const boxerColumns = [
 						</span>
 					</a>
 			`
-
 			nav?.querySelector(".active")?.classList.remove("active")
 			nav
 				?.querySelectorAll(".opponent")
@@ -165,7 +228,6 @@ const boxerColumns = [
 						}
 					})
 				)
-
 				opponents.split(",").map((opponent) =>
 					boxerLinks.forEach((link) => {
 						const { id: linkId, opponents: linkOpponents } = link.dataset
@@ -175,13 +237,10 @@ const boxerColumns = [
 					})
 				)
 			}
-
 			if (replaceUrl) {
 				history.replaceState({}, "", `?boxer=${id}`)
 			}
-
 			const boxerSrc = `/img/boxers/${id}-big`
-
 			boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
 			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
 			boxerTitle.innerHTML = spanNames
@@ -190,7 +249,6 @@ const boxerColumns = [
 
 			boxerCountry.alt = `Bandera de ${countryName}`
 		}
-
 		function handleMouseEnter(event: MouseEvent) {
 			const currentTarget = event.currentTarget as HTMLElement
 			const link = currentTarget
@@ -207,7 +265,6 @@ const boxerColumns = [
 				link.removeEventListener("mouseenter", handleMouseEnter)
 			})
 		})
-
 		const carouselInner = $(".carousel-inner") as HTMLElement
 		const carouselItems = $$(".carousel-item") as globalThis.NodeListOf<HTMLElement>
 
@@ -226,7 +283,6 @@ const boxerColumns = [
 				threshold: 0.95,
 			}
 		)
-
 		// detect match media change for mobile
 		const isMobileMediaQuery = window.matchMedia("(max-width: 768px)")
 		// detect first time
@@ -245,6 +301,24 @@ const boxerColumns = [
 </script>
 
 <style>
+	article {
+		opacity: 0;
+		transition: opacity 1s ease-in-out;
+	}
+
+	article.visible {
+		opacity: 1;
+	}
+
+	.boxers-match {
+		opacity: 0;
+		transition: opacity 1s ease-in-out;
+	}
+
+	.boxers-match.visible {
+		opacity: 1;
+	}
+
 	.boxers-lists {
 		@apply relative w-screen overflow-x-scroll;
 		scrollbar-width: none;
