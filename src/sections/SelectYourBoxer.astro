@@ -95,6 +95,35 @@ const boxerColumns = [
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement
 
+		// detect with intersection observer that the $boxerNav is in viewport
+		const boxerNavObserver = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						// disconnect observer to do this only once
+						boxerNavObserver.disconnect()
+						// get all images and preload them
+						boxerLinks.forEach((link) => {
+							const { id } = link.dataset
+							const boxerSrc = `/img/boxers/${id}-big`
+							// create link preload for each image for avif and webp
+							const avifLink = document.createElement("link")
+							avifLink.rel = "preload"
+							avifLink.as = "image"
+							avifLink.href = `${boxerSrc}.avif`
+							avifLink.type = "image/avif"
+							document.head.appendChild(avifLink)
+						})
+					}
+				})
+			},
+			{
+				root: null,
+				threshold: 0.1,
+			}
+		)
+		boxerNavObserver.observe(boxerNav)
+
 		function activateBoxer(
 			element: HTMLElement,
 			link: HTMLElement,
@@ -199,13 +228,13 @@ const boxerColumns = [
 		)
 
 		// detect match media change for mobile
-		const mobileMediaQuery = window.matchMedia("(max-width: 768px)")
+		const isMobileMediaQuery = window.matchMedia("(max-width: 768px)")
 		// detect first time
-		if (mobileMediaQuery.matches) {
+		if (isMobileMediaQuery.matches) {
 			carouselItems.forEach((item) => carouselObserver.observe(item))
 		}
 		// detect if it changes
-		mobileMediaQuery.addEventListener("change", (event) => {
+		isMobileMediaQuery.addEventListener("change", (event) => {
 			if (event.matches) {
 				carouselItems.forEach((item) => carouselObserver.observe(item))
 			} else {
