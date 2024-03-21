@@ -5,6 +5,7 @@ import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro"
 import BoxerDetailInfoRival from "@/components/BoxerDetailInfoRival.astro"
 import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
 import BoxerWorkout from "@/components/BoxerWorkout.astro"
+import BoxerGallery from "@/components/Boxers/Gallery.astro"
 import SectionTitle from "@/components/SectionTitle.astro"
 
 import Instagram from "@/icons/instagram.astro"
@@ -150,6 +151,8 @@ const guardBoxer = boxer.guard === undefined ? "Desconocida" : boxer.guard
 				</section>
 			)
 		}
+
+		{boxer.gallery && <BoxerGallery id={boxer.id} name={boxer.name} />}
 
 		{forecast && <Forecasts count={forecastCount} boxers={boxersWithForecast} />}
 		<CombatSection combatId={combat.id} combatNumber={combat.number} boxers={boxers} />
