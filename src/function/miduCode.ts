@@ -26,7 +26,7 @@ export async function showContributors($miduContainer: HTMLDivElement) {
 				$miduContainer.removeChild(img)
 			})
 			$miduContainer.appendChild(img)
-		}, i * 300)
+		}, i * 435)
 	}
 }
 
