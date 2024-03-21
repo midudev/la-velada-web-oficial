@@ -95,8 +95,6 @@ const boxerColumns = [
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement
 
-		let isInitialBoxer = true
-
 		const updatedSelectedBoxerId =
 			localStorage.getItem("selected:boxer") ||
 			new URLSearchParams(window.location.search).get("boxer") ||
@@ -108,7 +106,6 @@ const boxerColumns = [
 		if (updatedSelectedBoxerElement) {
 			activateBoxer(updatedSelectedBoxerElement, updatedSelectedBoxerElement, boxerNav, true)
 		}
-
 
 		// detect with intersection observer that the $boxerNav is in viewport
 		const boxerNavObserver = new IntersectionObserver(
