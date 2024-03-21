@@ -29,6 +29,8 @@ export function getStaticPaths() {
 	})
 }
 
+export const prerender = true
+
 const { id } = Astro.params
 
 const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
