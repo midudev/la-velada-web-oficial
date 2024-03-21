@@ -95,6 +95,18 @@ const boxerColumns = [
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement
 
+		const updatedSelectedBoxerId =
+			localStorage.getItem("selected:boxer") ||
+			new URLSearchParams(window.location.search).get("boxer") ||
+			"el-mariana"
+
+		const updatedSelectedBoxerElement: HTMLElement | null = document.querySelector(
+			`.boxer-link[data-id=${updatedSelectedBoxerId}]`
+		)
+		if (updatedSelectedBoxerElement) {
+			activateBoxer(updatedSelectedBoxerElement, updatedSelectedBoxerElement, boxerNav, true)
+		}
+
 		// detect with intersection observer that the $boxerNav is in viewport
 		const boxerNavObserver = new IntersectionObserver(
 			(entries) => {
@@ -191,20 +203,20 @@ const boxerColumns = [
 			boxerCountry.alt = `Bandera de ${countryName}`
 		}
 
-		function handleMouseEnter(event: MouseEvent) {
-			const currentTarget = event.currentTarget as HTMLElement
-			const link = currentTarget
-			if (currentTarget.classList.contains("active")) return
-			activateBoxer(currentTarget, link, boxerNav, true)
-		}
-
 		boxerLinks.forEach((link) => {
-			link.addEventListener("mouseenter", handleMouseEnter)
+			link.addEventListener("click", (event: MouseEvent) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				const boxerId = currentTarget.getAttribute("data-id")
+				if (boxerId) localStorage.setItem("selected:boxer", JSON.stringify(boxerId))
+				activateBoxer(currentTarget, currentTarget, boxerNav, true)
+			})
 		})
 
-		document.addEventListener("astro:before-preparation", () => {
-			boxerLinks.forEach((link) => {
-				link.removeEventListener("mouseenter", handleMouseEnter)
+		boxerLinks.forEach((link) => {
+			link.addEventListener("mouseenter", (event) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				if (currentTarget.classList.contains("active")) return
+				activateBoxer(currentTarget, link, boxerNav, true)
 			})
 		})
 
