@@ -1,10 +1,10 @@
 ---
 import BoxerBigImage from "@/components/BoxerBigImage.astro"
-import BoxerWorkout from "@/components/BoxerWorkout.astro"
 import BoxerClips from "@/components/BoxerClips.astro"
 import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro"
 import BoxerDetailInfoRival from "@/components/BoxerDetailInfoRival.astro"
 import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
+import BoxerWorkout from "@/components/BoxerWorkout.astro"
 import SectionTitle from "@/components/SectionTitle.astro"
 
 import Instagram from "@/icons/instagram.astro"
@@ -13,15 +13,15 @@ import Twitch from "@/icons/twitch.astro"
 import X from "@/icons/x.astro"
 import YouTube from "@/icons/youtube.astro"
 
-import { COUNTRIES } from "@/consts/countries"
+import type { Preload } from "@/components/SEO.astro"
 import { BOXERS } from "@/consts/boxers"
-import type { Boxer } from "@/types/Boxer"
 import { COMBATS } from "@/consts/combats"
+import { COUNTRIES } from "@/consts/countries"
 import { FORECASTS } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
 import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
-import type { Preload } from "@/components/SEO.astro"
+import type { Boxer } from "@/types/Boxer"
 
 export function getStaticPaths() {
 	return BOXERS.map(({ id }) => {
