@@ -3,6 +3,7 @@ export interface Combat {
 	boxers: string[] // es un string porque hace referencia a los ids de los boxeadores
 	number: number
 	titleSize: [number, number]
+	teams?: string[]
 }
 
 export const REY_DE_LA_PISTA_ID = "5-rey-de-la-pista"
@@ -23,6 +24,7 @@ export const COMBATS: Combat[] = [
 		id: "3-zeling-y-nissaxter-vs-alana-y-ama-blitz",
 		number: 3,
 		boxers: ["zeling", "alana", "nissaxter", "ama-blitz"],
+		teams: ["zeling-nissaxter", "alana-ama-blitz"],
 		titleSize: [1525, 1525],
 	},
 	{
