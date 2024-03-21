@@ -8,7 +8,7 @@ const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
 }
 
-const getBoxerNames = (boxerIds: string[]): string[] => {
+const getBoxerNames = (boxerIds: string[]) => {
 	return boxerIds.map((boxerId) => boxerId)
 }
 
@@ -54,10 +54,7 @@ const [imageWidth, imageHeight] = combatData.titleSize
 				style="mask-image: radial-gradient(circle, black 10%, transparent 100%);"
 				oncanplay="this.classList.add('opacity-80')"
 			>
-				<source
-					type="video/mp4"
-					src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto.mp4`}
-				/>
+				<source type="video/mp4" src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto.mp4`} />
 			</video>
 			<video
 				autoplay
@@ -66,10 +63,7 @@ const [imageWidth, imageHeight] = combatData.titleSize
 				class="absolute inset-0 -z-10 aspect-video h-auto w-full scale-110 rounded-xl object-cover opacity-0 blur-3xl transition-opacity duration-500"
 				oncanplay="this.classList.remove('opacity-0')"
 			>
-				<source
-					type="video/mp4"
-					src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto.mp4`}
-				/>
+				<source type="video/mp4" src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto-low.mp4`} />
 			</video>
 			<Image
 				width={imageWidth}
