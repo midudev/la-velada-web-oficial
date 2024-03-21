@@ -53,13 +53,13 @@ const boxerColumns = [
 
 		<div class="boxers-nav hidden w-full justify-between md:flex">
 			<nav class="boxers-lists flex h-full justify-start gap-4 py-4">
-				<ColumnBoxers boxers={boxerColumns[0]} selectedBoxerId={selectedBoxerId} />
-				<ColumnBoxers boxers={boxerColumns[1]} selectedBoxerId={selectedBoxerId} class="mt-12" />
+				<ColumnBoxers boxers={boxerColumns[0]} selectedBoxer={selectedBoxer} />
+				<ColumnBoxers boxers={boxerColumns[1]} selectedBoxer={selectedBoxer} class="mt-12" />
 			</nav>
 
 			<nav class="boxers-lists flex h-full justify-end gap-2 py-4">
-				<ColumnBoxers boxers={boxerColumns[2]} selectedBoxerId={selectedBoxerId} class="mt-12" />
-				<ColumnBoxers boxers={boxerColumns[3]} selectedBoxerId={selectedBoxerId} />
+				<ColumnBoxers boxers={boxerColumns[2]} selectedBoxer={selectedBoxer} class="mt-12" />
+				<ColumnBoxers boxers={boxerColumns[3]} selectedBoxer={selectedBoxer} />
 			</nav>
 		</div>
 
@@ -75,7 +75,7 @@ const boxerColumns = [
 									${index === listOfBoxers.length - 1 ? "mr-[30%]" : ""}
 								`}
 							>
-								<ColumnBoxers boxers={[boxer]} selectedBoxerId={selectedBoxerId} />
+								<ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
 							</div>
 						))
 					}
@@ -94,6 +94,7 @@ const boxerColumns = [
 		const boxerTitle = $(".boxer-title") as HTMLImageElement
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement
+
 		let isInitialBoxer = true
 
 		const updatedSelectedBoxerId =
@@ -108,6 +109,36 @@ const boxerColumns = [
 			activateBoxer(updatedSelectedBoxerElement, updatedSelectedBoxerElement, boxerNav, true)
 		}
 
+
+		// detect with intersection observer that the $boxerNav is in viewport
+		const boxerNavObserver = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						// disconnect observer to do this only once
+						boxerNavObserver.disconnect()
+						// get all images and preload them
+						boxerLinks.forEach((link) => {
+							const { id } = link.dataset
+							const boxerSrc = `/img/boxers/${id}-big`
+							// create link preload for each image for avif and webp
+							const avifLink = document.createElement("link")
+							avifLink.rel = "preload"
+							avifLink.as = "image"
+							avifLink.href = `${boxerSrc}.avif`
+							avifLink.type = "image/avif"
+							document.head.appendChild(avifLink)
+						})
+					}
+				})
+			},
+			{
+				root: null,
+				threshold: 0.1,
+			}
+		)
+		boxerNavObserver.observe(boxerNav)
+
 		function activateBoxer(
 			element: HTMLElement,
 			link: HTMLElement,
@@ -115,8 +146,7 @@ const boxerColumns = [
 			replaceUrl: boolean = false,
 			showAlliesAndOpponents: boolean = true
 		) {
-			if (element?.classList.contains("active") && !isInitialBoxer) return
-			isInitialBoxer = false
+			if (element?.classList.contains("active")) return
 
 			const { id, name, country, countryName, opponents = "", allies = "" } = element?.dataset
 
@@ -213,13 +243,13 @@ const boxerColumns = [
 		)
 
 		// detect match media change for mobile
-		const mobileMediaQuery = window.matchMedia("(max-width: 768px)")
+		const isMobileMediaQuery = window.matchMedia("(max-width: 768px)")
 		// detect first time
-		if (mobileMediaQuery.matches) {
+		if (isMobileMediaQuery.matches) {
 			carouselItems.forEach((item) => carouselObserver.observe(item))
 		}
 		// detect if it changes
-		mobileMediaQuery.addEventListener("change", (event) => {
+		isMobileMediaQuery.addEventListener("change", (event) => {
 			if (event.matches) {
 				carouselItems.forEach((item) => carouselObserver.observe(item))
 			} else {
