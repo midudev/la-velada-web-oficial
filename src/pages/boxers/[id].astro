@@ -1,9 +1,10 @@
 ---
 import BoxerBigImage from "@/components/BoxerBigImage.astro"
-import BoxerWorkout from "@/components/BoxerWorkout.astro"
 import BoxerClips from "@/components/BoxerClips.astro"
 import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro"
 import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
+import BoxerWorkout from "@/components/BoxerWorkout.astro"
+import BoxerGallery from "@/components/Boxers/Gallery.astro"
 import SectionTitle from "@/components/SectionTitle.astro"
 
 import Instagram from "@/icons/instagram.astro"
@@ -13,19 +14,20 @@ import X from "@/icons/x.astro"
 import YouTube from "@/icons/youtube.astro"
 
 import { BOXERS } from "@/consts/boxers"
-import type { Boxer } from "@/types/Boxer"
 import { COMBATS } from "@/consts/combats"
 import { FORECASTS } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
 import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
-import type { Preload } from "@/components/SEO.astro"
+import type { Boxer } from "@/types/Boxer"
 
 export function getStaticPaths() {
 	return BOXERS.map(({ id }) => {
 		return { params: { id } }
 	})
 }
+
+export const prerender = true
 
 const { id } = Astro.params
 
@@ -78,7 +80,6 @@ const preloadBoxerImage: Preload[] = [
 
 const rivalOrRivals = rivals.length > 1 ? "Rivales" : "Rival"
 const guardBoxer = boxer.guard === undefined ? "Desconocida" : boxer.guard
-const reachBoxer = boxer.reach === undefined ? "Desconocido" : boxer.reach
 ---
 
 <Layout
