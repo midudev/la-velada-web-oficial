@@ -89,7 +89,7 @@ const guardBoxer = boxer.guard === undefined ? "Desconocida" : boxer.guard
 	title={`${boxer.name} - Información del boxeador de La Velada IV`}
 	preload={preloadBoxerImage}
 >
-  <main class="m-auto w-full">
+<main class="m-auto w-full">
 	<section class="">
 		<section class="flex flex-wrap items-center justify-center">
 			<div
@@ -98,9 +98,6 @@ const guardBoxer = boxer.guard === undefined ? "Desconocida" : boxer.guard
 				<BoxerBigImage id={id} name={boxer.name} country={boxer.country} />
 			</div>
 			<section class="mt-20 flex-col flex-wrap items-center justify-center">
-				<div class="m-auto max-w-md">
-					{(<BoxerClips clips={boxer.clips} />)}
-				</div>
 				<section>
 					<div class="m-5">
 						<SectionTitle title="INFORMACIÓN" description="Información personal del boxeador" />
@@ -111,6 +108,12 @@ const guardBoxer = boxer.guard === undefined ? "Desconocida" : boxer.guard
 						<BoxerDetailInfo title="Altura" value={`${boxer.height} m.`} id="boxer-altura" />
 					</div>
 				</section>
+				<div class="mt-10">
+					<SectionTitle title="Frases icónicas" description="Frases polémicas dichas por el boxeador" />
+				</div>
+				<div class="m-auto max-w-sm lg:max-w-md mb-10">
+					{(<BoxerClips clips={boxer.clips} />)}
+				</div>
 			</section>
 		</section>
 		<section>
