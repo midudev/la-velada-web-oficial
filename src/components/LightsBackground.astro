@@ -1,4 +1,4 @@
-<div></div>
+<div id="effect-lights"></div>
 
 <style>
 	@keyframes lights {
@@ -15,7 +15,7 @@
 		}
 	}
 
-	div.enabled {
+	#effect-lights.enabled {
 		--stripesDark: repeating-linear-gradient(
 			100deg,
 			#000 0%,
@@ -38,7 +38,7 @@
 
 		pointer-events: none;
 		z-index: -20;
-		position: absolute;
+		position: fixed;
 		inset: 0;
 		opacity: 0.5;
 		transform: translateZ(0);
@@ -57,12 +57,14 @@
 </style>
 
 <script>
-	const canvas = document.createElement("canvas")
-	const ctx = canvas.getContext("webgl")
-	const enabled = ctx instanceof WebGLRenderingContext
-	const el = document.querySelector("div")
+	document.addEventListener("astro:page-load", () => {
+		const canvas = document.createElement("canvas")
+		const ctx = canvas.getContext("webgl")
+		const enabled = ctx instanceof WebGLRenderingContext
+		const el = document.querySelector("#effect-lights")
 
-	if (enabled && el) {
-		el.classList.add("enabled")
-	}
+		if (enabled && el) {
+			el.classList.add("enabled")
+		}
+	})
 </script>
