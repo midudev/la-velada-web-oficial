@@ -141,15 +141,6 @@ const reachBoxer = boxer.reach === undefined ? "Desconocido" : boxer.reach
 			</section>
 		</section>
 	</section>
-	{
-		boxer.clips && boxer.clips.length > 0 && (
-			<section class="my-44">
-				<SectionTitle title="Todas las declaraciones" description="Citas previas del combate" />
-
-				<BoxerClips clips={boxer.clips} />
-			</section>
-		)
-	}
 
 	{
 		boxer.workout && (
@@ -160,6 +151,16 @@ const reachBoxer = boxer.reach === undefined ? "Desconocido" : boxer.reach
 			</section>
 		)
 	}
+
+    {
+	    boxer.clips && boxer.clips.length > 0 && (
+		    <section class="my-44">
+			    <SectionTitle title="Todas las declaraciones" description="Citas previas del combate" />
+
+			    <BoxerClips clips={boxer.clips} />
+		</section>
+	   )
+    }
 
 	{forecast && <Forecasts count={forecastCount} boxers={boxersWithForecast} />}
 	<CombatSection combatId={combat.id} combatNumber={combat.number} boxers={boxers} />
