@@ -15,7 +15,7 @@ const { title, value, id } = Astro.props
 		class="flex w-full items-start justify-between pl-2.5 pr-2.5 pt-2 text-center md:flex-col md:items-center"
 	>
 		<h4>{title}</h4>
-		<div>
+		<div class="w-2/3 text-right md:w-full md:text-center">
 			{
 				value.map((item, index) => (
 					<>
@@ -27,9 +27,7 @@ const { title, value, id } = Astro.props
 						>
 							{item.name}
 						</a>
-						{index !== value.length - 1 && index % 2 === 0 && (
-							<span class="text-xl font-bold text-accent"> / </span>
-						)}
+						{index !== value.length - 1 && <span class="text-xl font-bold text-accent"> / </span>}
 					</>
 				))
 			}
