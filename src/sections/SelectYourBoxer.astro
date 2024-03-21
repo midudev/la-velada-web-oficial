@@ -67,7 +67,7 @@ const boxerColumns = [
 
 		<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
 			<div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
-				<div class="carousel-inner flex snap-x overflow-y-hidden overflow-x-scroll">
+				<div class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll">
 					{
 						listOfBoxers.map((boxer, index) => (
 							<div
@@ -159,6 +159,18 @@ const boxerColumns = [
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement
 
+		const updatedSelectedBoxerId =
+			localStorage.getItem("selected:boxer") ||
+			new URLSearchParams(window.location.search).get("boxer") ||
+			"el-mariana"
+
+		const updatedSelectedBoxerElement: HTMLElement | null = document.querySelector(
+			`.boxer-link[data-id=${updatedSelectedBoxerId}]`
+		)
+		if (updatedSelectedBoxerElement) {
+			activateBoxer(updatedSelectedBoxerElement, updatedSelectedBoxerElement, boxerNav, true)
+		}
+
 		// detect with intersection observer that the $boxerNav is in viewport
 		const boxerNavObserver = new IntersectionObserver(
 			(entries) => {
@@ -249,54 +261,54 @@ const boxerColumns = [
 
 			boxerCountry.alt = `Bandera de ${countryName}`
 		}
-		function handleMouseEnter(event: MouseEvent) {
-			const currentTarget = event.currentTarget as HTMLElement
-			const link = currentTarget
-			if (currentTarget.classList.contains("active")) return
-			activateBoxer(currentTarget, link, boxerNav, true)
-		}
+
 
 		boxerLinks.forEach((link) => {
-			link.addEventListener("mouseenter", handleMouseEnter)
+			link.addEventListener("click", (event: MouseEvent) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				const boxerId = currentTarget.getAttribute("data-id")
+				if (boxerId) localStorage.setItem("selected:boxer", JSON.stringify(boxerId))
+				activateBoxer(currentTarget, currentTarget, boxerNav, true)
+			})
 		})
 
-		document.addEventListener("astro:before-preparation", () => {
-			boxerLinks.forEach((link) => {
-				link.removeEventListener("mouseenter", handleMouseEnter)
+		boxerLinks.forEach((link) => {
+			link.addEventListener("mouseenter", (event) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				if (currentTarget.classList.contains("active")) return
+				activateBoxer(currentTarget, link, boxerNav, true)
 			})
 		})
 		const carouselInner = $(".carousel-inner") as HTMLElement
-		const carouselItems = $$(".carousel-item") as globalThis.NodeListOf<HTMLElement>
 
-		// detect centered carousel item with intersection observer
-		const carouselObserver = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						const link = entry.target.querySelector(".boxer-link") as HTMLAnchorElement
-						activateBoxer(link, link, carouselInner, false, false)
-					}
-				})
-			},
-			{
-				root: carouselInner,
-				threshold: 0.95,
-			}
-		)
 		// detect match media change for mobile
-		const isMobileMediaQuery = window.matchMedia("(max-width: 768px)")
-		// detect first time
-		if (isMobileMediaQuery.matches) {
-			carouselItems.forEach((item) => carouselObserver.observe(item))
-		}
-		// detect if it changes
-		isMobileMediaQuery.addEventListener("change", (event) => {
-			if (event.matches) {
-				carouselItems.forEach((item) => carouselObserver.observe(item))
-			} else {
-				carouselItems.forEach((item) => carouselObserver.unobserve(item))
+		const mobileMediaQuery = window.matchMedia("(max-width: 768px)")
+
+		function highlightBoxer(link: HTMLAnchorElement) {
+			if (
+				link.getBoundingClientRect().left >
+					carouselInner.getBoundingClientRect().width / 2 -
+						link.getBoundingClientRect().width * 0.75 &&
+				link.getBoundingClientRect().left <
+					carouselInner.getBoundingClientRect().width / 2 +
+						link.getBoundingClientRect().width * 0.25
+			) {
+				activateBoxer(link, link, carouselInner, false, false)
 			}
-		})
+
+		}
+
+		function highlightActiveBoxer() {
+			boxerLinks.forEach((link) => {
+				highlightBoxer(link)
+			})
+		}
+
+		if (mobileMediaQuery.matches) {
+			carouselInner.addEventListener("scroll", () => {
+				highlightActiveBoxer()
+			})
+		}
 	})
 </script>
 
