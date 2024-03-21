@@ -1,78 +1,19 @@
-<canvas id="noise" aria-label="Efecto de ruido de fondo" class="fixed top-0 -z-10 animate-fade-in"
-></canvas>
+<div class="fixed inset-0 m-auto bg-black/25">
+	<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"></svg>
+</div>
 
-<script>
-	let wWidth: number, wHeight: number
-	const noiseData: ImageData[] = []
-	let frame: number = 0
-	let loopTimeout: number
-	let resizeThrottle: number
-
-	const canvas = document.getElementById("noise") as HTMLCanvasElement
-	const ctx = canvas.getContext("2d")
-
-	if (!ctx) {
-		throw new Error("2D context not supported or canvas not found")
+<style>
+	div::before {
+		content: "";
+		background-color: transparent;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+		background-repeat: repeat;
+		background-size: 182px;
+		opacity: 0.2;
+		top: 0;
+		left: 0;
+		position: absolute;
+		width: 100%;
+		height: 100%;
 	}
-
-	const createNoise = () => {
-		const idata: ImageData = ctx.createImageData(wWidth, wHeight)
-		const buffer32: Uint32Array = new Uint32Array(idata.data.buffer)
-		let len: number = buffer32.length
-
-		while (len--) {
-			buffer32[len] = ((Math.random() * 70) | 0) << 24
-		}
-
-		noiseData.push(idata)
-	}
-
-	const paintNoise = () => {
-		if (frame === 9) {
-			frame = 0
-		} else {
-			frame++
-		}
-
-		ctx.putImageData(noiseData[frame], 0, 0)
-	}
-
-	const loop = () => {
-		paintNoise()
-
-		loopTimeout = window.setTimeout(() => {
-			window.requestAnimationFrame(loop)
-		}, 1000 / 25) as unknown as number
-	}
-
-	const setup = () => {
-		wWidth = window.innerWidth
-		wHeight = window.innerHeight + 100
-
-		canvas.width = wWidth
-		canvas.height = wHeight
-
-		noiseData.length = 0
-
-		for (let i = 0; i < 10; i++) {
-			createNoise()
-		}
-
-		loop()
-	}
-
-	setup()
-
-	window.addEventListener(
-		"resize",
-		() => {
-			window.clearTimeout(resizeThrottle)
-
-			resizeThrottle = window.setTimeout(() => {
-				window.clearTimeout(loopTimeout)
-				setup()
-			}, 200) as unknown as number
-		},
-		false
-	)
-</script>
+</style>
