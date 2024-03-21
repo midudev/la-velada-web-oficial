@@ -91,6 +91,9 @@ const boxerColumns = [
 	document.addEventListener("astro:page-load", () => {
 		const boxerLinks = $$(".boxer-link") as globalThis.NodeListOf<HTMLAnchorElement>
 		const boxerNav = $(".boxers-nav")
+
+		if (!boxerNav) return
+
 		const boxerTitle = $(".boxer-title") as HTMLImageElement
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement

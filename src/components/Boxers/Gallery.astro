@@ -81,74 +81,78 @@ const { id, name } = Astro.props
 </style>
 
 <script>
-	const $lightbox = document.getElementById("lightbox") as HTMLElement
-	const $gallery = document.getElementById("boxer-gallery") as HTMLElement
-	const $links = $gallery?.querySelectorAll("a")
-	const $close = $lightbox?.querySelector("button")
+	document.addEventListener("astro:page-load", () => {
+		const $lightbox = document.getElementById("lightbox") as HTMLElement
+		const $gallery = document.getElementById("boxer-gallery") as HTMLElement
+		if (!$gallery) return
 
-	const updateImg = (link: HTMLElement) => {
-		const img = $lightbox?.querySelector("img")
-		const newImg = link.querySelector("img")
-		if (img && newImg) img.src = newImg.src
-	}
+		const $links = $gallery?.querySelectorAll("a")
+		const $close = $lightbox?.querySelector("button")
 
-	const close = () => {
-		$lightbox.classList.add("hidden")
-		$lightbox.classList.remove("enabled")
-	}
-
-	document.addEventListener("keydown", (event) => {
-		const isOpen = $lightbox.classList.contains("enabled")
-		if (!isOpen) return
-
-		if (event.key === "Escape") {
-			close()
+		const updateImg = (link: HTMLElement) => {
+			const img = $lightbox?.querySelector("img")
+			const newImg = link.querySelector("img")
+			if (img && newImg) img.src = newImg.src
 		}
 
-		if (event.key === "ArrowRight") {
-			const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
-			const next = (current.nextElementSibling || $gallery.firstElementChild) as HTMLAnchorElement
-			next.click()
+		const close = () => {
+			$lightbox.classList.add("hidden")
+			$lightbox.classList.remove("enabled")
 		}
 
-		if (event.key === "ArrowLeft") {
-			const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
-			const prev = (current.previousElementSibling ||
-				$gallery.lastElementChild) as HTMLAnchorElement
-			prev.click()
-		}
-	})
+		document.addEventListener("keydown", (event) => {
+			const isOpen = $lightbox.classList.contains("enabled")
+			if (!isOpen) return
 
-	// al hacer click en el botón de cerrar
-	$close?.addEventListener("click", close)
-	// al hacer click en el fondo del lightbox
-	$lightbox?.addEventListener("click", close)
-
-	// al hacer click en un enlace de lightbox
-	// usar la imagen del enlace como imagen principal
-	$links.forEach((link) =>
-		link.addEventListener("click", (event) => {
-			const isAlreadyOpen = $lightbox.classList.contains("enabled")
-
-			event.preventDefault()
-			// remove current data atribute
-			$gallery.querySelector("a[data-current=true]")?.removeAttribute("data-current")
-			// set current data atribute
-			link.setAttribute("data-current", "true")
-			// add lightbox
-			if (!isAlreadyOpen) {
-				$lightbox?.classList.add("enabled")
-				$lightbox?.classList.remove("hidden")
+			if (event.key === "Escape") {
+				close()
 			}
 
-			if (isAlreadyOpen && document.startViewTransition) {
-				document.startViewTransition(() => {
-					updateImg(link)
-				})
-				return
+			if (event.key === "ArrowRight") {
+				const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
+				const next = (current.nextElementSibling || $gallery.firstElementChild) as HTMLAnchorElement
+				next.click()
 			}
 
-			updateImg(link)
+			if (event.key === "ArrowLeft") {
+				const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
+				const prev = (current.previousElementSibling ||
+					$gallery.lastElementChild) as HTMLAnchorElement
+				prev.click()
+			}
 		})
-	)
+
+		// al hacer click en el botón de cerrar
+		$close?.addEventListener("click", close)
+		// al hacer click en el fondo del lightbox
+		$lightbox?.addEventListener("click", close)
+
+		// al hacer click en un enlace de lightbox
+		// usar la imagen del enlace como imagen principal
+		$links.forEach((link) =>
+			link.addEventListener("click", (event) => {
+				const isAlreadyOpen = $lightbox.classList.contains("enabled")
+
+				event.preventDefault()
+				// remove current data atribute
+				$gallery.querySelector("a[data-current=true]")?.removeAttribute("data-current")
+				// set current data atribute
+				link.setAttribute("data-current", "true")
+				// add lightbox
+				if (!isAlreadyOpen) {
+					$lightbox?.classList.add("enabled")
+					$lightbox?.classList.remove("hidden")
+				}
+
+				if (isAlreadyOpen && document.startViewTransition) {
+					document.startViewTransition(() => {
+						updateImg(link)
+					})
+					return
+				}
+
+				updateImg(link)
+			})
+		)
+	})
 </script>
