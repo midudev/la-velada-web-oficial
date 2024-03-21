@@ -6,6 +6,8 @@ interface Contributor {
 export async function showContributors($miduContainer: HTMLDivElement) {
 	const contributors = await getContributors()
 
+	console.log(contributors)
+
 	for (let i = 0; i < contributors.length; i++) {
 		setTimeout(() => {
 			const { avatar_url, login } = contributors[i]
@@ -26,7 +28,7 @@ export async function showContributors($miduContainer: HTMLDivElement) {
 				$miduContainer.removeChild(img)
 			})
 			$miduContainer.appendChild(img)
-		}, i * 300)
+		}, i * 435)
 	}
 }
 
@@ -34,7 +36,7 @@ export async function getContributors() {
 	const url = "https://api.github.com/repos/midudev/la-velada-web-oficial/contributors"
 	const response = await fetch(url)
 
-	const linkHeader = response.headers.get("link")
+	const linkHeader = await response.headers.get("link")
 	const pageCount = linkHeader
 		? parseInt(linkHeader.match(/page=(\d+)>; rel="last"/)?.[1] || "1")
 		: 1
