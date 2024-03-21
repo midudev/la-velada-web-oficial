@@ -140,7 +140,7 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://youtube.com/clip/UgkxJJ3K1UB1MGsxI_WzPxyiQo-hL4YMn9KB?si=dInk9hcrBB_uSIXK",
 			},
 			{
-				text: "Alana, veo que eres muy bonita y cookie pero es que yo soy de barrio",
+				text: "Alana, veo que eres muy bonita y cuqui pero es que yo soy de barrio",
 				url: "https://youtube.com/clip/UgkxWTeqQT62-L-LYjSBofjx2i5zsxaeHCqf?si=K08UiInfEvVsIKIe",
 			},
 			{
@@ -563,11 +563,11 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://youtube.com/clip/UgkxfYWnQtr1SDApiBtm-EBvS352rnz22bz0?si=3ek10syjTVif2Jz_",
 			},
 			{
-				text: "Shelao este año te enfrentas a mi redención, no hay manera de que ganes",
+				text: "Shelao, te enfrentas a mi redención, no hay manera de que ganes",
 				url: "https://youtube.com/clip/UgkxO_tFZ74OirLeHBIu0xMnvHEcWtYNs7fB?si=aLY0rakseZ1ZYiYZ",
 			},
 			{
-				text: "Te propongo que este sea el primer combate de la Velada donde no haya casco",
+				text: "Te propongo que sea el primer combate de la Velada sin casco",
 				url: "https://youtube.com/clip/UgkxuLDeLsfhwMN1DgJoLSThw_nNNrsLFVGF?si=EHJD4g3G_-53dYbB",
 			},
 		],
@@ -621,6 +621,7 @@ export const BOXERS: Boxer[] = addGetters([
 		versus: ["zeling", "nissaxter"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
+		gallery: true,
 		socials: {
 			twitch: "https://twitch.tv/amablitz",
 			instagram: "https://instagram.com/amablitz",
