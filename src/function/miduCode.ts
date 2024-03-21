@@ -6,8 +6,6 @@ interface Contributor {
 export async function showContributors($miduContainer: HTMLDivElement) {
 	const contributors = await getContributors()
 
-	console.log(contributors)
-
 	for (let i = 0; i < contributors.length; i++) {
 		setTimeout(() => {
 			const { avatar_url, login } = contributors[i]
