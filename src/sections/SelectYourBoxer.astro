@@ -1,7 +1,7 @@
 ---
+import BoxerBigImage from "@/components/BoxerBigImage.astro"
 import ColumnBoxers from "@/components/ColumnBoxers.astro"
 import Typography from "@/components/Typography.astro"
-import BoxerBigImage from "@/components/BoxerBigImage.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
 
@@ -94,19 +94,18 @@ const boxerColumns = [
 		const boxerTitle = $(".boxer-title") as HTMLImageElement
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement
-		const urlParams = new URLSearchParams(window.location.search)
-		const storedBoxerId = localStorage.getItem("selected:boxer")
-		const initialBoxer = storedBoxerId || urlParams.get("boxer") || "el-mariana"
-		const initialBoxerElement = $(`a.boxer-link[data-id=${initialBoxer}]`)
 		let isInitialBoxer = true
 
-		if (initialBoxerElement) {
-			const initialBoxerLink =
-				Array.from(boxerLinks).find(
-					(boxerLink) => boxerLink.getAttribute("data-id") === initialBoxer
-				) ?? boxerLinks[0]
+		const updatedSelectedBoxerId =
+			localStorage.getItem("selected:boxer") ||
+			new URLSearchParams(window.location.search).get("boxer") ||
+			"el-mariana"
 
-			activateBoxer(initialBoxerElement, initialBoxerLink, boxerNav, true)
+		const updatedSelectedBoxerElement: HTMLElement | null = document.querySelector(
+			`.boxer-link[data-id=${updatedSelectedBoxerId}]`
+		)
+		if (updatedSelectedBoxerElement) {
+			activateBoxer(updatedSelectedBoxerElement, updatedSelectedBoxerElement, boxerNav, true)
 		}
 
 		function activateBoxer(
@@ -122,15 +121,6 @@ const boxerColumns = [
 			const { id, name, country, countryName, opponents = "", allies = "" } = element?.dataset
 
 			if (!id || !name || !country || !countryName) return
-
-			boxerLinks.forEach((link) => {
-				link.addEventListener("click", (event: MouseEvent) => {
-					const currentTarget = event.currentTarget as HTMLElement
-					const boxerId = currentTarget.getAttribute("data-id")
-					if (boxerId) localStorage.setItem("selected:boxer", JSON.stringify(boxerId))
-					activateBoxer(currentTarget, currentTarget, boxerNav, true)
-				})
-			})
 
 			const splitName = name.split(" ")
 			const lastName = splitName[splitName.length - 1]
@@ -185,6 +175,15 @@ const boxerColumns = [
 
 			boxerCountry.alt = `Bandera de ${countryName}`
 		}
+
+		boxerLinks.forEach((link) => {
+			link.addEventListener("click", (event: MouseEvent) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				const boxerId = currentTarget.getAttribute("data-id")
+				if (boxerId) localStorage.setItem("selected:boxer", JSON.stringify(boxerId))
+				activateBoxer(currentTarget, currentTarget, boxerNav, true)
+			})
+		})
 
 		boxerLinks.forEach((link) => {
 			link.addEventListener("mouseenter", (event) => {
