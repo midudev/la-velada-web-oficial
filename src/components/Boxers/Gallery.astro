@@ -42,7 +42,7 @@ const { id, name } = Astro.props
 		}
 		<div
 			id="lightbox"
-			class="fixed inset-0 z-10 h-screen w-screen overflow-hidden bg-black/75 p-10 backdrop-blur-lg"
+			class="fixed inset-0 z-10 hidden h-screen w-screen overflow-hidden bg-black/75 p-10 backdrop-blur-lg"
 		>
 			<button
 				class="absolute right-6 top-6 inline-flex size-10 items-center justify-center rounded-full bg-white text-xl font-bold text-black transition hover:scale-105 hover:bg-accent"
@@ -86,9 +86,23 @@ const { id, name } = Astro.props
 	const $links = $gallery?.querySelectorAll("a")
 	const $close = $lightbox?.querySelector("button")
 
+	const updateImg = (link: HTMLElement) => {
+		const img = $lightbox?.querySelector("img")
+		const newImg = link.querySelector("img")
+		if (img && newImg) img.src = newImg.src
+	}
+
+	const close = () => {
+		$lightbox.classList.add("hidden")
+		$lightbox.classList.remove("enabled")
+	}
+
 	document.addEventListener("keydown", (event) => {
+		const isOpen = $lightbox.classList.contains("enabled")
+		if (!isOpen) return
+
 		if (event.key === "Escape") {
-			$lightbox.classList.remove("enabled")
+			close()
 		}
 
 		if (event.key === "ArrowRight") {
@@ -106,20 +120,9 @@ const { id, name } = Astro.props
 	})
 
 	// al hacer click en el botón de cerrar
-	$close?.addEventListener("click", () => {
-		$lightbox.classList.remove("enabled")
-	})
-
+	$close?.addEventListener("click", close)
 	// al hacer click en el fondo del lightbox
-	$lightbox?.addEventListener("click", (event) => {
-		$lightbox.classList.remove("enabled")
-	})
-
-	const updateImg = (link: HTMLElement) => {
-		const img = $lightbox?.querySelector("img")
-		const newImg = link.querySelector("img")
-		if (img && newImg) img.src = newImg.src
-	}
+	$lightbox?.addEventListener("click", close)
 
 	// al hacer click en un enlace de lightbox
 	// usar la imagen del enlace como imagen principal
@@ -133,7 +136,10 @@ const { id, name } = Astro.props
 			// set current data atribute
 			link.setAttribute("data-current", "true")
 			// add lightbox
-			!isAlreadyOpen && $lightbox?.classList.add("enabled")
+			if (!isAlreadyOpen) {
+				$lightbox?.classList.add("enabled")
+				$lightbox?.classList.remove("hidden")
+			}
 
 			if (isAlreadyOpen && document.startViewTransition) {
 				document.startViewTransition(() => {
