@@ -12,9 +12,7 @@ const { boxers, class: className = "", selectedBoxer } = Astro.props
 const isAlly = (id: Boxer["id"]) => selectedBoxer.allies?.includes(id)
 
 const hasSameOpponents = (selectedBoxerOpponents: string[], opponents: string[]) => {
-	return selectedBoxerOpponents.every((sBoxerOpponent) =>
-		opponents.some((opponent) => opponent === sBoxerOpponent)
-	)
+	return selectedBoxerOpponents.every((sBoxerOpponent) => opponents.includes(sBoxerOpponent))
 }
 
 const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
