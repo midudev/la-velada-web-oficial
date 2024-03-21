@@ -14,42 +14,42 @@ const hasClips = clips.length > 0
 
 {
 	hasClips && (
-		<section class="z-10 mt-2 md:mt-0">
-			<div class="carousel flex select-none flex-row flex-nowrap transition duration-700 md:max-w-none md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
-				{clips.map(({ text, url }) => (
-					<a
-						href={url}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="group flex min-w-full max-w-[450px] flex-col justify-between  hover:saturate-150 md:min-w-0"
-					>
-						<Typography
-							as="h3"
-							variant="atomic-quote"
-							color="primary"
-							class:list={
-								"flex flex-1 -skew-y-6 items-center justify-center text-pretty text-center transition group-hover:scale-110"
-							}
+		<>
+			<section class="mt-2 overflow-hidden md:mt-10">
+				<div class="carousel m-auto flex select-none flex-row flex-nowrap transition duration-700">
+					{clips.map(({ text, url }) => (
+						<a
+							href={url}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="group flex min-w-full max-w-[450px] flex-col justify-between bg-gradient-to-b px-12 pt-8 hover:from-zinc-600/25"
 						>
-							"{text.toLowerCase()}"
-						</Typography>
-
-						<footer class="flex items-end justify-center pt-2 text-center">
 							<Typography
-								as="p"
-								variant="small"
-								color="neutral"
+								as="h3"
+								variant="atomic-title"
+								color="primary"
 								class:list={
-									"text-center opacity-0 transition group-hover:text-white group-hover:opacity-100"
+									"flex flex-1 -skew-y-2 items-center justify-center text-center transition group-hover:scale-110"
 								}
 							>
-								Ver clip
+								"{text.toLowerCase()}"
 							</Typography>
-						</footer>
-					</a>
-				))}
-			</div>
-			<div class="mx-auto flex max-w-60 items-center justify-between md:hidden">
+
+							<footer class="mt-2 flex items-end justify-center p-5 text-center">
+								<Typography
+									as="p"
+									variant="body"
+									color="neutral"
+									class:list={"text-center group-hover:text-accent"}
+								>
+									Ver clip
+								</Typography>
+							</footer>
+						</a>
+					))}
+				</div>
+			</section>
+			<div class="mx-16 flex items-center justify-between">
 				<button data-btn-prev class="transition hover:scale-125">
 					<img class="size-16" src="/img/ui/left-arrow.svg" alt="Izquierda" />
 				</button>
@@ -60,7 +60,7 @@ const hasClips = clips.length > 0
 					<img class="size-16 rotate-180" src="/img/ui/left-arrow.svg" alt="Derecha" />
 				</button>
 			</div>
-		</section>
+		</>
 	)
 }
 <script>
