@@ -8,10 +8,12 @@ interface Props {
 const { title, value, id } = Astro.props
 ---
 
-<div class="flex justify-center text-white">
+<div
+	class="group relative items-center justify-center overflow-hidden px-10 py-2 text-white mix-blend-screen transition"
+>
 	<div class="style flex flex-col items-start text-center">
-		<h4>{title}</h4>
-		<p class="text-xl font-bold" id={id}>
+		<h4 class="font-atomic lowercase text-accent">{title}</h4>
+		<p class="text-4xl font-bold" id={id}>
 			{value}
 		</p>
 	</div>
