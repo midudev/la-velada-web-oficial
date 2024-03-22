@@ -65,17 +65,15 @@ const boxerColumns = [
 
 		<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
 			<div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
-				<div
-					class="carousel-inner relative flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll"
-				>
+				<div class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll">
 					{
 						listOfBoxers.map((boxer, index) => (
 							<div
 								class:list={`
-						carousel-item w-[40%] flex-shrink-0 snap-center px-2
-						${index === 0 ? "ml-[30%]" : ""}
-						${index === listOfBoxers.length - 1 ? "mr-[30%]" : ""}
-					  `}
+									carousel-item w-[40%] flex-shrink-0 snap-center px-2
+									${index === 0 ? "ml-[30%]" : ""}
+									${index === listOfBoxers.length - 1 ? "mr-[30%]" : ""}
+								`}
 							>
 								<ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
 							</div>
@@ -83,36 +81,33 @@ const boxerColumns = [
 					}
 				</div>
 			</div>
+		</div>
 
-			<div class="mt-4 flex w-full justify-center space-x-4">
-				<button class="carousel-arrow left-0">
-					<svg
-						class="h-6 w-6 text-gray-500"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M15 19l-7-7 7-7"></path>
-					</svg>
-				</button>
-				<button class="carousel-arrow right-0">
-					<svg
-						class="h-6 w-6 text-gray-500"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
-						></path>
-					</svg>
-				</button>
-			</div>
+		<div class="mt-4 flex w-full justify-center space-x-4">
+			<button class="carousel-arrow left-0">
+				<svg
+					class="h-6 w-6 text-gray-500"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"
+					></path>
+				</svg>
+			</button>
+			<button class="carousel-arrow right-0">
+				<svg
+					class="h-6 w-6 text-gray-500"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+					></path>
+				</svg>
+			</button>
 		</div>
 	</div>
 </section>
@@ -188,13 +183,13 @@ const boxerColumns = [
 			const lastName = splitName[splitName.length - 1]
 			const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
 			const spanNames = `
-					<a href="/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
-						<span class="flex flex-col">
-							<span class="text-4xl">${firstNames?.toLocaleLowerCase()}</span>
-							<span>${lastName?.toLocaleLowerCase()}</span>
-						</span>
-					</a>
-			`
+				<a href="/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
+					<span class="flex flex-col">
+						<span class="text-4xl">${firstNames?.toLocaleLowerCase()}</span>
+						<span>${lastName?.toLocaleLowerCase()}</span>
+					</span>
+				</a>
+		`
 
 			nav?.querySelector(".active")?.classList.remove("active")
 			nav
