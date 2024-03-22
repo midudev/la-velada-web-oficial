@@ -1,4 +1,5 @@
 ---
+import ClipsModal from "@/components/ClipsModal.astro"
 import Typography from "@/components/Typography.astro"
 
 interface Props {
@@ -15,13 +16,12 @@ const hasClips = clips.length > 0
 {
 	hasClips && (
 		<section class="z-10 mt-2 md:mt-0">
+			<ClipsModal />
 			<div class="carousel flex select-none flex-row flex-nowrap transition duration-700 md:max-w-none md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
 				{clips.map(({ text, url }, index) => (
-					<a
-						href={url}
-						target="_blank"
-						rel="noopener noreferrer"
-						class:list={`group flex min-w-full max-w-[450px] flex-col justify-between  hover:saturate-150 md:min-w-0 ${index === 0 ? "block" : "hidden"} md:block`}
+					<article
+						data-url={url}
+						class:list={`clip-container group flex min-w-full max-w-[450px] flex-col justify-between  hover:saturate-150 md:min-w-0 ${index === 0 ? "block" : "hidden"} cursor-pointer md:block`}
 						data-clip-item
 					>
 						<Typography
@@ -47,7 +47,7 @@ const hasClips = clips.length > 0
 								Ver clip
 							</Typography>
 						</footer>
-					</a>
+					</article>
 				))}
 			</div>
 			<div class="mx-auto flex max-w-60 items-center justify-between md:hidden">
@@ -66,6 +66,10 @@ const hasClips = clips.length > 0
 }
 <script>
 	document.addEventListener("astro:page-load", () => {
+		const $clipDialog = document.querySelector(".clip-dialog") as HTMLElement
+		const $closeButton = document.querySelector(".close-dialog")
+		const $ytFrame = document.querySelector(".yt-iframe")
+		const $clipContainer = document.querySelectorAll(".clip-container")
 		const $carousel = document.querySelector(".carousel")
 		const $prev = document.querySelector("[data-btn-prev]")
 		const $next = document.querySelector("[data-btn-next]")
@@ -104,6 +108,21 @@ const hasClips = clips.length > 0
 				position = 0
 			}
 			updatePosition()
+		})
+
+		$closeButton?.addEventListener("click", () => {
+			$ytFrame?.setAttribute("src", "")
+			$clipDialog.style.display = "none"
+		})
+
+		$clipContainer?.forEach((el) => {
+			el.addEventListener("click", async (event) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				const { url } = currentTarget.dataset
+				if (!url) return
+				$ytFrame?.setAttribute("src", `${url}&autoplay=1`)
+				$clipDialog.style.display = "flex"
+			})
 		})
 
 		window.addEventListener("resize", updatePosition)
