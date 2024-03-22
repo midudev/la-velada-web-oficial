@@ -1,0 +1,18 @@
+---
+import { getSession } from "auth-astro/server"
+
+import Intro from "@/components/Pronosticos/Intro.astro"
+import Vote from "@/components/Pronosticos/Vote.astro"
+import Layout from "@/layouts/Layout.astro"
+
+const session = await getSession(Astro.request)
+---
+
+<Layout
+	title="Pronostica los ganadores de La Velada IV"
+	description="¡Participa votando a los boxeadores que crees que ganarán sus combates!"
+>
+	<main class="flex flex-col items-center justify-center text-white">
+		{session === null ? <Intro /> : <Vote />}
+	</main>
+</Layout>
