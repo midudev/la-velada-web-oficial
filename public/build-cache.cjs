@@ -46,4 +46,4 @@ function getFiles(dir, fileList = []) {
 const urlsToCache = getFiles(imgFolder);
 
 // Escribe la lista de URLs a cachear en un archivo JavaScript.
-fs.writeFileSync('./public/js/urlsToCache.js', `self.__precacheManifest = ${JSON.stringify(urlsToCache.map(url => url.startsWith('/') ? url : '/' + url))};`);
+fs.writeFileSync('./public/urlsToCache.js', `self.__precacheManifest = ${JSON.stringify(urlsToCache.map(url => url.startsWith('/') ? url : '/' + url))};`);
