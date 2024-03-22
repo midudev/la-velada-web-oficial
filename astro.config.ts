@@ -35,6 +35,8 @@ export default defineConfig({
 		plugins: [
 			VitePWA({
 				registerType: "autoUpdate",
+				includeAssets: ["**/*"],
+				injectRegister: "script",
 				manifest,
 				workbox: {
 					globDirectory: "dist",
