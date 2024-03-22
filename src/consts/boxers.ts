@@ -41,7 +41,7 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "El combate lo verá mi madre. Voy a ir con todo, voy a ganar.",
+				text: "El combate lo verá mi madre. Voy a ir con todo, voy a ganar",
 				url: "https://youtube.com/clip/UgkxZSsrfj0sR_gZ802CbVtT2F9SKtj1OxKW?si=B-u68MU9FB7-VmPo",
 			},
 			{
@@ -69,7 +69,7 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "Viruzz ha dejado las drogas de doping, un aplauso.",
+				text: "Viruzz ha dejado las drogas de doping, un aplauso",
 				url: "https://youtube.com/clip/UgkxGivF3aSpyQdc9L4P6JBE0q5ZTstNC0jm?si=m0J04aypC-2ud74U",
 			},
 			{
@@ -136,15 +136,15 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "No estoy preparando excusas, no soy el xocas, si pierdo será con dignidad",
+				text: "No estoy preparando excusas, no soy el xocas, si pierdo, será con dignidad",
 				url: "https://youtube.com/clip/UgkxJJ3K1UB1MGsxI_WzPxyiQo-hL4YMn9KB?si=dInk9hcrBB_uSIXK",
 			},
 			{
-				text: "Alana, veo que eres muy bonita y cuqui pero es que yo soy de barrio",
+				text: "Alana, veo que eres muy bonita y cuqui, pero es que yo soy de barrio",
 				url: "https://youtube.com/clip/UgkxWTeqQT62-L-LYjSBofjx2i5zsxaeHCqf?si=K08UiInfEvVsIKIe",
 			},
 			{
-				text: "Una cosa es entrenar en gimnasio, verse bonita, y otra darse de ostias",
+				text: "Una cosa es entrenar en gimnasio, verse bonita, y otra, darse de ostias",
 				url: "https://youtube.com/clip/UgkxptfPo72fI8yntHVo2UfsuyGjpmsfI3js?si=63ttE4alT2k73Aoo",
 			},
 		],
@@ -169,7 +169,7 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "El año pasado la vida me cagó a trompadas y esto me vino como anillo al dedo",
+				text: "El año pasado, la vida me cagó a trompadas y esto me vino como anillo al dedo",
 				url: "https://youtube.com/clip/UgkxtwjSORg57TZFqKsJBhUB1VqgYvL_W-cH?si=i7vlKyALk5vXaR5q",
 			},
 			{
@@ -203,7 +203,7 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "Me gusta pelear en el Bernabeu el patio de la casa de Messi",
+				text: "Me gusta pelear en el Bernabeu: El patio de la casa de Messi",
 				url: "https://youtube.com/clip/Ugkxjm_VBOO_hEVTcaT1iIn1wkqhdSgz0PEz?si=4FNXieUC5rSWA4N5",
 			},
 			{
@@ -230,11 +230,11 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "A Will le digo que no toque a Skain. A Skain me lo pido yo",
+				text: "A Will le digo que no toque a Skain. A Skain, me lo pido yo",
 				url: "https://youtube.com/clip/UgkxiWzPv1OLVZmD_T_NH7XTY4QP3beSSc-V?si=CvyH-pbOAi4H5HMT",
 			},
 			{
-				text: "¿Quién crees que es el rival mas peligroso? Karchez: Nadie",
+				text: "¿Quién crees que es el rival más peligroso? Karchez: Nadie",
 				url: "https://youtube.com/clip/UgkxIiWOmEccr40oWJUkQzYVAkjVxLSvG2HU?si=jJtd35_Rliq97o6D",
 			},
 		],
@@ -262,7 +262,7 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "Me los bajaré a todos, decir que no sería tener mala actitud",
+				text: "Me los bajaré a todos, decir que no, sería tener mala actitud",
 				url: "https://youtube.com/clip/UgkxDDiYcrums2e6329f6Zi2MveywHF8R-da?si=Eplk8G484ovrTM0Z",
 			},
 			{
@@ -289,7 +289,7 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "Ni siquiera ha empezado la pelea y ya estoy sintiendo adrenalina en mi cuerpo",
+				text: "Ni siquiera ha empezado la pelea, y ya estoy sintiendo adrenalina en mi cuerpo",
 				url: "https://youtube.com/clip/UgkxGm-L9MDFvEf3AjwjoGxRAn-2P0mbBcHM?si=tNDah2eREaipv6iz",
 			},
 			{
@@ -320,15 +320,15 @@ export const BOXERS: Boxer[] = addGetters([
 		versus: "rey-de-la-pista",
 		clips: [
 			{
-				text: "Espero que se acostumbren a la regla del knockout.",
+				text: "Espero que se acostumbren a la regla del knockout",
 				url: "https://www.youtube.com/clip/UgkxgdKFyMCvRcN-fj-tuiF1i4KB2msHncZo",
 			},
 			{
-				text: "Esta sera mi prioridad de los proximos meses.",
+				text: "Esta sera mi prioridad de los próximos meses",
 				url: "https://youtube.com/clip/UgkxgTZz_h0N3COR9qQ6sRMmd_PSN_0CNFfJ?si=w5wRjWdKSjtiWnXx",
 			},
 			{
-				text: "César parepárate para tres minutos mágicos.",
+				text: "César, parepárate para tres minutos mágicos",
 				url: "https://www.youtube.com/clip/UgkxHy3xXDVJdgv9BUaArwgIYrA_ae1M5FIX",
 			},
 		],
@@ -350,15 +350,15 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "Me siento muy preparado para el reto, además me siento el padre de toda la gente que hay",
+				text: "Me siento muy preparado para el reto, además, me siento el padre de toda la gente que hay",
 				url: "https://www.youtube.com/clip/Ugkxpgjoq-dSHfusbcM7joiiJlE6DvAz-O3V",
 			},
 			{
-				text: "Ibai, ¿dónde está el vídeo de las dominadas? Porque si quieres las hago aquí mismo",
+				text: "Ibai, ¿dónde está el vídeo de las dominadas? Porque, si quieres, las hago aquí mismo",
 				url: "https://youtube.com/clip/UgkxRLtIUYYyPRqrRa02tpC26Ppyclg5U2G4?si=e7sqNk11GMDgpCqE",
 			},
 			{
-				text: "Creo que el cardio será una cosa importante, entonces estaré 60 minutos sudando como una bestia",
+				text: "Creo que el cardio será una cosa importante, entonces, estaré 60 minutos sudando como una bestia",
 				url: "https://youtube.com/clip/UgkxfeafuAmAxWjXfSHLE2rdeuiA51BI93qc?si=rKmhv-XfMm2lSRIO",
 			},
 		],
@@ -398,7 +398,7 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "Me emociona mucho,y me los puedo bajar a todos",
+				text: "Me emociona mucho, y me los puedo bajar a todos",
 				url: "https://youtube.com/clip/UgkxQdajCilFEG8GfFfoazDZmwQFHMG3zjW3?si=0kA6MIrGBov58T0B",
 			},
 			{
@@ -425,7 +425,7 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "Estoy muy emocionado, algunos me sacan dos cabezas entonces mi estrategía será sacar aire",
+				text: "Estoy muy emocionado, algunos me sacan dos cabezas, entonces, mi estrategía será sacar aire",
 				url: "https://youtube.com/clip/UgkxfyqAvmfPS6r6qAFFHvfleqBWQZpj8Zfr?si=a4Did3Jb4eCXw5iB",
 			},
 			{
@@ -481,7 +481,7 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://youtube.com/clip/UgkxU-0uUkxYVWUrr6wdMw33KgTDlmSecjNm?si=4Hgou6TkI_jRrqwR",
 			},
 			{
-				text: "En El Rey de la Pista el cardio no es importante, es la fuerza",
+				text: "En El Rey de la Pista, el cardio no es importante, es la fuerza",
 				url: "https://youtube.com/clip/UgkxnYTPVsLLRS3h4sOEdR8--oZxVx01vCum?si=UcUZpzw5d_8NkJWK",
 			},
 		],
@@ -496,7 +496,7 @@ export const BOXERS: Boxer[] = addGetters([
 		// 		url: "https://player.twitch.tv/?enableExtensions=true&muted=false&parent=twitch.tv&player=popout&quality=auto&t=3h7m6s&video=2081166660&volume=1",
 		// 	},
 		// 	{
-		// 		text: "En El Rey de la Pista el cardio no es importante, es la fuerza",
+		// 		text: "En El Rey de la Pista, el cardio no es importante, es la fuerza",
 		// 		url: "https://player.twitch.tv/?enableExtensions=true&muted=false&parent=twitch.tv&player=popout&quality=auto&t=3h18m43s&video=2081166660&volume=1",
 		// 	},
 		// ],
@@ -534,7 +534,7 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://youtube.com/clip/UgkxCVitcQsAn1I5wO4GlZY_kMcwLKaOI7HI?si=oyHb0fJkIWWQ8wTz",
 			},
 			{
-				text: "Hablaré en el ring. No tengo nada que decir.",
+				text: "Hablaré en el ring. No tengo nada que decir",
 				url: "https://youtube.com/clip/UgkxSCdNOmvFVB74IC_D56vglujXVWtVI60Q?si=Eqhsbja42efTdCaz",
 			},
 		],
@@ -604,7 +604,7 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://youtube.com/clip/Ugkx06ew5d2CB1oLDIc9HPOzTmR5tDi5VHi-?si=SeGMhL7Nejc0M4Bd",
 			},
 			{
-				text: "Sé del combate meses antes pero no me puse a entrenar porque soy justa y honesta",
+				text: "Sé del combate meses antes, pero no me puse a entrenar porque soy justa y honesta",
 				url: "https://youtube.com/clip/UgkxnCHow_qxDh6_zAdO5Tirg2UryjIgpNQi?si=X11a4D-0TPK-LnyX",
 			},
 		],
@@ -661,11 +661,11 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "Después del combate nos podemos dar un abrazo porque lo importante es dar un buen ejemplo",
+				text: "Después del combate, nos podemos dar un abrazo porque lo importante es dar un buen ejemplo",
 				url: "https://youtube.com/clip/UgkxJszPGolZaON3QjSuzzh5TP2luW9qLX4W?si=_KPbivwhIxlrhMR-",
 			},
 			{
-				text: "Siento que soy un chaval con mucha energía pero cuando me ponen la mano encima me caliento",
+				text: "Siento que soy un chaval con mucha energía, pero cuando me ponen la mano encima, me caliento",
 				url: "https://youtube.com/clip/UgkxRZ3cq1lEgLDe-NizURNpwN3vPxowiITS?si=iF103l7J-MVN4MbY",
 			},
 			{
@@ -698,7 +698,7 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://youtube.com/clip/UgkxMc_uxsDRteyleobjWTLU7VzlM74PVEul?si=oKWmaUc3mUKDQuOt",
 			},
 			{
-				text: "Me van a perdonar pero creo que es el mejor combate de toda la Velada",
+				text: "Me van a perdonar, pero creo que es el mejor combate de toda la Velada",
 				url: "https://youtube.com/clip/UgkxoHOE311rgi9xvpr3WSU0k3yaMVx7N8Lm?si=cESF8DpadP52bhBT",
 			},
 			{
