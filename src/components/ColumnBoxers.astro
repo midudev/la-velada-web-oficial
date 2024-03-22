@@ -1,13 +1,15 @@
 ---
 import type { Boxer } from "@/types/Boxer"
+import type { HTMLAttributes } from "astro/types"
 
 interface Props {
 	boxers: Boxer[]
 	class?: string
 	selectedBoxer: Boxer
+	imgLoading?: HTMLAttributes<"img">["loading"]
 }
 
-const { boxers, class: className = "", selectedBoxer } = Astro.props
+const { boxers, class: className = "", selectedBoxer, imgLoading } = Astro.props
 
 const isAlly = (id: Boxer["id"]) => selectedBoxer.allies?.includes(id)
 
@@ -57,7 +59,7 @@ const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
 					src={`/img/boxers/${id}-small.webp`}
 					alt={`Foto en pequeño del boxeador ${name}`}
 					class:list={`boxer-image aspect-square h-full w-full object-contain ${rotate ? "rotate-y-180" : ""}`}
-					loading="lazy"
+					loading={imgLoading}
 				/>
 			</a>
 		))
