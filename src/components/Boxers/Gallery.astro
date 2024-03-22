@@ -1,0 +1,157 @@
+---
+import SectionTitle from "../SectionTitle.astro"
+
+const IMAGES_TO_LOAD = 5
+
+interface Props {
+	id: string
+	name: string
+}
+
+const { id, name } = Astro.props
+---
+
+<section class="my-44">
+	<SectionTitle title="Galería de Fotos" description={`Fotos de ${name}`} />
+
+	<div id="boxer-gallery" class="relative mt-8 grid grid-cols-[1fr_0.5fr_0.5fr] gap-3">
+		{
+			Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => (
+				<a
+					class:list={[
+						" aspect-square transition hover:scale-105 hover:brightness-125",
+						{ "row-span-2": index === 0 },
+					]}
+					href={`/img/boxers/gallery/${id}/${index + 1}.webp`}
+					title={`Abrir imagen ${index} de la galería de ${name}`}
+				>
+					<figure class="h-full w-full">
+						<picture class="block h-full w-full">
+							<img
+								loading="lazy"
+								decoding="async"
+								class="aspect-square h-full w-full rounded object-cover object-top"
+								alt={`Imagen de la galería de fotos de ${name}`}
+								src={`/img/boxers/gallery/${id}/${index + 1}.webp`}
+							/>
+						</picture>
+					</figure>
+				</a>
+			))
+		}
+		<div
+			id="lightbox"
+			class="fixed inset-0 z-10 hidden h-screen w-screen overflow-hidden bg-black/75 p-10 backdrop-blur-lg"
+		>
+			<button
+				class="absolute right-6 top-6 inline-flex size-10 items-center justify-center rounded-full bg-white text-xl font-bold text-black transition hover:scale-105 hover:bg-accent"
+				>&times;</button
+			>
+			<picture class="block h-full w-full">
+				<img
+					loading="lazy"
+					decoding="async"
+					class="h-full w-full object-contain object-center"
+					alt={`Imagen de la galería de fotos de ${name}`}
+					src={`/img/boxers/gallery/${id}/1.webp`}
+				/>
+			</picture>
+		</div>
+	</div>
+</section>
+
+<style>
+	#lightbox {
+		overscroll-behavior: contain;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.3s;
+		contain: strict;
+	}
+
+	#lightbox img {
+		view-transition-name: lightbox-image;
+	}
+
+	#lightbox.enabled {
+		opacity: 1;
+		pointer-events: auto;
+	}
+</style>
+
+<script>
+	document.addEventListener("astro:page-load", () => {
+		const $lightbox = document.getElementById("lightbox") as HTMLElement
+		const $gallery = document.getElementById("boxer-gallery") as HTMLElement
+		if (!$gallery) return
+
+		const $links = $gallery?.querySelectorAll("a")
+		const $close = $lightbox?.querySelector("button")
+
+		const updateImg = (link: HTMLElement) => {
+			const img = $lightbox?.querySelector("img")
+			const newImg = link.querySelector("img")
+			if (img && newImg) img.src = newImg.src
+		}
+
+		const close = () => {
+			$lightbox.classList.add("hidden")
+			$lightbox.classList.remove("enabled")
+		}
+
+		document.addEventListener("keydown", (event) => {
+			const isOpen = $lightbox.classList.contains("enabled")
+			if (!isOpen) return
+
+			if (event.key === "Escape") {
+				close()
+			}
+
+			if (event.key === "ArrowRight") {
+				const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
+				const next = (current.nextElementSibling || $gallery.firstElementChild) as HTMLAnchorElement
+				next.click()
+			}
+
+			if (event.key === "ArrowLeft") {
+				const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
+				const prev = (current.previousElementSibling ||
+					$gallery.lastElementChild) as HTMLAnchorElement
+				prev.click()
+			}
+		})
+
+		// al hacer click en el botón de cerrar
+		$close?.addEventListener("click", close)
+		// al hacer click en el fondo del lightbox
+		$lightbox?.addEventListener("click", close)
+
+		// al hacer click en un enlace de lightbox
+		// usar la imagen del enlace como imagen principal
+		$links.forEach((link) =>
+			link.addEventListener("click", (event) => {
+				const isAlreadyOpen = $lightbox.classList.contains("enabled")
+
+				event.preventDefault()
+				// remove current data atribute
+				$gallery.querySelector("a[data-current=true]")?.removeAttribute("data-current")
+				// set current data atribute
+				link.setAttribute("data-current", "true")
+				// add lightbox
+				if (!isAlreadyOpen) {
+					$lightbox?.classList.add("enabled")
+					$lightbox?.classList.remove("hidden")
+				}
+
+				if (isAlreadyOpen && document.startViewTransition) {
+					document.startViewTransition(() => {
+						updateImg(link)
+					})
+					return
+				}
+
+				updateImg(link)
+			})
+		)
+	})
+</script>

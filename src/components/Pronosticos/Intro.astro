@@ -1,0 +1,48 @@
+---
+import Action from "@/components/Action.astro"
+import Typography from "@/components/Typography.astro"
+---
+
+<section class="relative flex min-h-96 flex-row justify-between lg:min-h-min">
+	<div class="flex max-w-lg flex-col items-center justify-center px-10">
+		<Typography
+			class="mb-10 -skew-y-6 text-wrap text-center"
+			color="primary"
+			as="h1"
+			variant={"atomic-title"}>¡haz tu pronóstico!</Typography
+		>
+		<Typography as="p" color="white" variant="body" class="mb-10">
+			Haz tu predicción de <strong>quién ganará cada combate de La Velada IV</strong>. Comparte tu
+			pronóstico en redes sociales e invita a tus amigos a participar.
+		</Typography>
+		<Action
+			id="login"
+			class="w-full text-sm md:text-base"
+			as="button"
+			aria-label="Iniciar sesión de usuario"
+		>
+			¡Inicia sesión para participar!
+		</Action>
+		<small class="mt-2">Para participar, necesitas una cuenta de Twitch</small>
+	</div>
+	<aside class="absolute -z-10 opacity-20 lg:relative lg:opacity-100">
+		<img
+			alt="Imagen de La Velada IV con todos los luchadores"
+			src="/img/pronostico-background.webp"
+			style="mask-image: linear-gradient(black 80%, transparent);"
+		/>
+	</aside>
+</section>
+
+<script>
+	import { $ } from "@/lib/dom-selector"
+
+	const { signIn } = await import("auth-astro/client")
+	const $login = $("#login")
+
+	$login.onclick = () => {
+		signIn("twitch")
+		$login.setAttribute("aria-disabled", "true")
+		$login.querySelector("span").innerText = "Iniciando sesión..."
+	}
+</script>

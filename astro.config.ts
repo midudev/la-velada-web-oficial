@@ -1,8 +1,8 @@
+import sitemap from "@astrojs/sitemap"
 import tailwind from "@astrojs/tailwind"
 import vercel from "@astrojs/vercel/serverless"
 import { defineConfig } from "astro/config"
-
-import sitemap from "@astrojs/sitemap"
+import auth from "auth-astro"
 import { VitePWA } from "vite-plugin-pwa"
 
 // Helper imports
@@ -14,14 +14,16 @@ export default defineConfig({
 	devToolbar: {
 		enabled: false,
 	},
-	integrations: [tailwind(), sitemap()],
+	integrations: [tailwind(), sitemap(), auth()],
 	adapter: vercel({
-		webAnalytics: { enabled: true },
+		webAnalytics: {
+			enabled: true,
+		},
 	}),
 	build: {
 		inlineStylesheets: "always",
 	},
-	output: "hybrid",
+	output: "server",
 	site: seoConfig.baseURL,
 	vite: {
 		build: {
