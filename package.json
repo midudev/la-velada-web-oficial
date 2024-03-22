@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build:cache": "node public/js/build-cache.cjs",
+    "build": "npm run build:cache && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check && tsc --noEmit",
