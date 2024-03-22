@@ -14,32 +14,35 @@ const hasClips = clips.length > 0
 
 {
 	hasClips && (
-		<section class="mt-2 overflow-hidden md:mt-10">
-			<div class="carousel flex select-none flex-row flex-nowrap transition duration-700  lg:max-w-none lg:!translate-x-0 lg:flex-wrap lg:place-content-center lg:gap-4">
-				{clips.map(({ text, url }) => (
+		<section class="z-10 mt-2 md:mt-0">
+			<div class="carousel flex select-none flex-row flex-nowrap transition duration-700 md:max-w-none md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
+				{clips.map(({ text, url }, index) => (
 					<a
 						href={url}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="group flex min-w-full max-w-[450px] flex-col justify-between bg-gradient-to-b px-12 pt-8 hover:from-zinc-600/25 lg:min-w-0"
+						class:list={`group flex min-w-full max-w-[450px] flex-col justify-between  hover:saturate-150 md:min-w-0 ${index === 0 ? "block" : "hidden"} md:block`}
+						data-clip-item
 					>
 						<Typography
 							as="h3"
-							variant="atomic-title"
+							variant="atomic-quote"
 							color="primary"
 							class:list={
-								"flex flex-1 -skew-y-2 items-center justify-center text-center transition group-hover:scale-110"
+								"flex flex-1 -skew-y-6 items-center justify-center text-pretty text-center transition group-hover:scale-110"
 							}
 						>
 							"{text.toLowerCase()}"
 						</Typography>
 
-						<footer class="mt-2 flex items-end justify-center p-5 text-center">
+						<footer class="flex items-end justify-center pt-2 text-center">
 							<Typography
 								as="p"
-								variant="body"
+								variant="small"
 								color="neutral"
-								class:list={"text-center group-hover:text-accent"}
+								class:list={
+									"text-center opacity-0 transition group-hover:text-white group-hover:opacity-100"
+								}
 							>
 								Ver clip
 							</Typography>
@@ -47,15 +50,15 @@ const hasClips = clips.length > 0
 					</a>
 				))}
 			</div>
-			<div class="mx-16 flex items-center justify-between lg:hidden">
+			<div class="mx-auto flex max-w-60 items-center justify-between md:hidden">
 				<button data-btn-prev class="transition hover:scale-125">
-					<img src="/img/ui/left-arrow.svg" alt="Izquierda" />
+					<img class="size-16" src="/img/ui/left-arrow.svg" alt="Izquierda" />
 				</button>
 				<Typography data-clip-index as="p" variant="medium" color="white" class:list={"uppercase"}>
 					Cita 1/{clips.length}
 				</Typography>
 				<button data-btn-next class="transition hover:scale-125">
-					<img src="/img/ui/right-arrow.svg" alt="Derecha" />
+					<img class="size-16 rotate-180" src="/img/ui/left-arrow.svg" alt="Derecha" />
 				</button>
 			</div>
 		</section>
@@ -67,12 +70,22 @@ const hasClips = clips.length > 0
 		const $prev = document.querySelector("[data-btn-prev]")
 		const $next = document.querySelector("[data-btn-next]")
 		const $clipIndex = document.querySelector("[data-clip-index]")
+		const $clipItems = document.querySelectorAll("[data-clip-item]")
 
 		let position = 0
 
 		const updatePosition = () => {
-			// Midu diría que esto es un poquito regulinchis :)
-			$carousel?.setAttribute("style", `transform: translateX(-${100 * position}%)`)
+			if (window.innerWidth < 768) {
+				$clipItems.forEach(($item, index) => {
+					$item.classList.toggle("hidden", index !== position)
+					$item.classList.toggle("block", index === position)
+				})
+			} else {
+				$clipItems.forEach(($item) => {
+					$item.classList.remove("hidden")
+					$item.classList.add("block")
+				})
+			}
 
 			if ($clipIndex) $clipIndex.innerHTML = `Cita ${position + 1}/${$carousel?.children.length}`
 		}
@@ -84,6 +97,7 @@ const hasClips = clips.length > 0
 			}
 			updatePosition()
 		})
+
 		$next?.addEventListener("click", () => {
 			position++
 			if ($carousel?.children.length && position >= $carousel?.children.length) {
@@ -91,5 +105,8 @@ const hasClips = clips.length > 0
 			}
 			updatePosition()
 		})
+
+		window.addEventListener("resize", updatePosition)
+		updatePosition()
 	})
 </script>

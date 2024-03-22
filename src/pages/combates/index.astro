@@ -26,7 +26,7 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 				todos los<br />combates
 			</Typography>
 
-			<ul class="grid grid-cols-1 space-y-8 md:grid-cols-2">
+			<ul class="grid w-full grid-cols-4 gap-4">
 				{
 					COMBATS.map((combat, index) => {
 						const combatData = getCombatById(combat.id)
@@ -36,9 +36,9 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 						const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
 
 						return (
-							<li>
+							<li class:list={["col-span-4 rounded-xl lg:col-span-2"]}>
 								<a
-									class="relative inline-block aspect-square h-auto w-full transition-transform hover:scale-105 hover:saturate-150"
+									class="group relative inline-block aspect-square h-auto w-full transform-gpu transition-transform hover:scale-105 hover:saturate-150"
 									href={`/combates/${combat.id}`}
 									title={`Ir al combate ${combatData.number} de la Velada IV`}
 								>
@@ -46,8 +46,9 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 										decoding="async"
 										loading={index < 2 ? "eager" : "lazy"}
 										class:list={[
-											"absolute z-0 mx-auto h-auto w-full",
-											{ "bottom-0": isKingOfTheHill },
+											"absolute bottom-0  mx-auto h-auto w-full",
+											{ "group-hover:scale-115 z-20 md:z-10": isKingOfTheHill },
+											{ "z-10 group-hover:scale-105 ": !isKingOfTheHill },
 										]}
 										src={`/img/matches/combat-${combat.id}.webp`}
 										alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
@@ -59,13 +60,14 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 										transition:name={`title-image-${combat.id}`}
 										loading={index < 2 ? "eager" : "lazy"}
 										class:list={[
-											"absolute left-0 right-0 z-50 mx-auto h-auto transform-gpu",
-											{ "top-10 w-1/2": isKingOfTheHill },
-											{ "bottom-0 w-2/3": !isKingOfTheHill },
+											"group-hover:saturate-15 absolute  left-1/2 h-auto max-h-[15rem] w-auto -translate-x-1/2 transform-gpu transition-all duration-300 ease-in-out group-hover:scale-75",
+											{ "top-10 z-10 md:z-20": isKingOfTheHill },
+											{ "-bottom-20 z-20": !isKingOfTheHill },
 										]}
 										src={`/img/matches/title-${combat.id}.webp`}
 										alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 									/>
+									<div class="gradient-box absolute bottom-0 z-0 block h-2/5 w-full opacity-25 transition-opacity duration-300 ease-in-out group-hover:brightness-50 group-hover:filter" />
 								</a>
 							</li>
 						)
@@ -75,3 +77,15 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 		</div>
 	</main>
 </Layout>
+
+<style>
+	.gradient-box {
+		@apply bg-gradient-to-b;
+		background-image: linear-gradient(
+			180deg,
+			rgba(255, 255, 255, 1) 0%,
+			rgba(255, 255, 255, 0.5) 30%,
+			rgba(0, 0, 0, 0) 95%
+		);
+	}
+</style>
