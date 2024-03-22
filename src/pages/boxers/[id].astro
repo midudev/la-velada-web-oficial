@@ -15,6 +15,7 @@ import X from "@/icons/x.astro"
 import YouTube from "@/icons/youtube.astro"
 
 import type { Preload } from "@/components/SEO.astro"
+import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COMBATS } from "@/consts/combats"
 import { COUNTRIES } from "@/consts/countries"
@@ -96,16 +97,14 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 	<main>
 		<section class="relative flex flex-col items-center justify-center">
 			<div class="flex w-full flex-col md:flex-row md:gap-10">
-				<div
-					class="left-10 order-2 flex w-full flex-col md:absolute md:order-1 md:w-[300px] md:gap-y-20"
-				>
-					<BoxerClips clips={boxer.clips} />
-					<div class="hidden md:block">
-						<BoxerDetailInfoRival title={rivalOrRivals} value={rivals} id="boxer-rival-desk" />
+				<div class="flex w-full flex-col md:w-1/4 md:gap-y-20">
+					<div class="order-2 flex w-full flex-col md:order-1">
+						<BoxerClips clips={boxer.clips} />
+						<div class="hidden md:block">
+							<BoxerDetailInfoRival title={rivalOrRivals} value={rivals} id="boxer-rival-desk" />
+						</div>
 					</div>
 				</div>
-
-				<div class="flex w-full flex-col md:w-1/4 md:gap-y-20"></div>
 
 				<div
 					class="relative order-1 -mt-20 flex flex-col items-center justify-center md:order-2 md:w-1/2 lg:mx-4"
@@ -127,23 +126,28 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 				</div>
 			</div>
 
-			<div class="mt-24 flex max-w-xl flex-wrap justify-center gap-8 md:mt-56 md:max-w-full">
-				<BoxerSocialLink href={boxer.socials.twitch}>
-					<Twitch />
-				</BoxerSocialLink>
-				<BoxerSocialLink href={boxer.socials.instagram}>
-					<Instagram />
-				</BoxerSocialLink>
-				<BoxerSocialLink href={boxer.socials.twitter}>
-					<X />
-				</BoxerSocialLink>
-				<BoxerSocialLink href={boxer.socials.youtube}>
-					<YouTube />
-				</BoxerSocialLink>
-				<BoxerSocialLink href={boxer.socials.tiktok}>
-					<Tiktok />
-				</BoxerSocialLink>
-			</div>
+			<section class="mt-52">
+				<Typography as="h3" variant="h3" color="white" class:list={"mb-12 text-center"}>
+					REDES SOCIALES
+				</Typography>
+				<div class="flex w-full flex-col md:flex-row md:gap-10">
+					<BoxerSocialLink href={boxer.socials.twitch}>
+						<Twitch />
+					</BoxerSocialLink>
+					<BoxerSocialLink href={boxer.socials.instagram}>
+						<Instagram />
+					</BoxerSocialLink>
+					<BoxerSocialLink href={boxer.socials.twitter}>
+						<X />
+					</BoxerSocialLink>
+					<BoxerSocialLink href={boxer.socials.youtube}>
+						<YouTube />
+					</BoxerSocialLink>
+					<BoxerSocialLink href={boxer.socials.tiktok}>
+						<Tiktok />
+					</BoxerSocialLink>
+				</div>
+			</section>
 		</section>
 
 		{
