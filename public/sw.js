@@ -1,4 +1,4 @@
-importScripts('/js/urlsToCache.js');
+importScripts('/urlsToCache.js');
 
 const CACHE_NAME = 'v1_cache_lavelada_site';
 const urlsToCache = self.__precacheManifest;
