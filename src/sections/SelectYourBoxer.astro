@@ -11,7 +11,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	return { ...boxer, countryName }
 })
 
-const selectedBoxerId = Astro.url.searchParams.get("boxer")
+const selectedBoxerId = Astro.url.searchParams.get("boxer") ?? "el-mariana"
 const selectedBoxer = listOfBoxers.find(({ id }) => id === selectedBoxerId) || listOfBoxers[0]
 
 // split in 4 columns
@@ -47,57 +47,71 @@ const boxerColumns = [
 				name={selectedBoxer.name}
 				country={selectedBoxer.country}
 				countryName={selectedBoxer.countryName}
-				loading={selectedBoxerId ? "eager" : "lazy"}
+				loading="lazy"
 			/>
 		</article>
 
 		<div class="boxers-nav hidden w-full justify-between md:flex">
 			<nav class="boxers-lists flex h-full justify-start gap-4 py-4">
-				<ColumnBoxers
-					boxers={boxerColumns[0]}
-					selectedBoxer={selectedBoxer}
-					imgLoading={!selectedBoxerId ? "lazy" : undefined}
-				/>
-				<ColumnBoxers
-					boxers={boxerColumns[1]}
-					selectedBoxer={selectedBoxer}
-					class="mt-12"
-					imgLoading={!selectedBoxerId ? "lazy" : undefined}
-				/>
+				<ColumnBoxers boxers={boxerColumns[0]} selectedBoxer={selectedBoxer} />
+				<ColumnBoxers boxers={boxerColumns[1]} selectedBoxer={selectedBoxer} class="mt-12" />
 			</nav>
 
 			<nav class="boxers-lists flex h-full justify-end gap-2 py-4">
-				<ColumnBoxers
-					boxers={boxerColumns[2]}
-					selectedBoxer={selectedBoxer}
-					class="mt-12"
-					imgLoading={!selectedBoxerId ? "lazy" : undefined}
-				/>
-				<ColumnBoxers
-					boxers={boxerColumns[3]}
-					selectedBoxer={selectedBoxer}
-					imgLoading={!selectedBoxerId ? "lazy" : undefined}
-				/>
+				<ColumnBoxers boxers={boxerColumns[2]} selectedBoxer={selectedBoxer} class="mt-12" />
+				<ColumnBoxers boxers={boxerColumns[3]} selectedBoxer={selectedBoxer} />
 			</nav>
 		</div>
 
 		<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
 			<div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
-				<div class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll">
+				<div
+					class="carousel-inner relative flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll"
+				>
 					{
 						listOfBoxers.map((boxer, index) => (
 							<div
 								class:list={`
-									carousel-item w-[40%] flex-shrink-0 snap-center px-2
-									${index === 0 ? "ml-[30%]" : ""}
-									${index === listOfBoxers.length - 1 ? "mr-[30%]" : ""}
-								`}
+						carousel-item w-[40%] flex-shrink-0 snap-center px-2
+						${index === 0 ? "ml-[30%]" : ""}
+						${index === listOfBoxers.length - 1 ? "mr-[30%]" : ""}
+					  `}
 							>
 								<ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
 							</div>
 						))
 					}
 				</div>
+			</div>
+
+			<div class="mt-4 flex w-full justify-center space-x-4">
+				<button class="carousel-arrow left-0">
+					<svg
+						class="h-6 w-6 text-gray-500"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M15 19l-7-7 7-7"></path>
+					</svg>
+				</button>
+				<button class="carousel-arrow right-0">
+					<svg
+						class="h-6 w-6 text-gray-500"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+						></path>
+					</svg>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -269,36 +283,27 @@ const boxerColumns = [
 				highlightActiveBoxer()
 			})
 		}
+
+		const leftArrow = document.querySelector(".carousel-arrow.left-0")
+		const rightArrow = document.querySelector(".carousel-arrow.right-0")
 		const carousel = document.querySelector(".carousel-inner")
-		if (!carousel) return
+		const carouselItems = document.querySelectorAll(".carousel-item")
 
-		const carouselContainer = carousel.closest(".carousel")
-		if (!carouselContainer) return
+		if (
+			leftArrow instanceof HTMLElement &&
+			rightArrow instanceof HTMLElement &&
+			carousel instanceof HTMLElement
+		) {
+			leftArrow.addEventListener("click", () => {
+				const itemWidth = (carouselItems[0] as HTMLElement).offsetWidth
+				carousel.scrollLeft -= itemWidth
+			})
 
-		const indicatorContainer = document.createElement("div")
-		indicatorContainer.style.position = "absolute"
-		indicatorContainer.style.bottom = "-10px"
-		indicatorContainer.style.left = "0"
-		indicatorContainer.style.width = "100%"
-		indicatorContainer.style.textAlign = "center"
-		carouselContainer.appendChild(indicatorContainer)
-
-		const indicator = document.createElement("div")
-		indicator.style.display = "inline-block"
-		indicator.style.height = "4px"
-		indicator.style.backgroundColor = "#fff"
-		indicator.style.minWidth = "4px"
-		indicatorContainer.appendChild(indicator)
-
-		const updateIndicator = () => {
-			const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth
-			const currentScroll = carousel.scrollLeft
-			const percentage = Math.max((currentScroll / maxScrollLeft) * 100, 2.5)
-			indicator.style.width = `${percentage}%`
+			rightArrow.addEventListener("click", () => {
+				const itemWidth = (carouselItems[0] as HTMLElement).offsetWidth
+				carousel.scrollLeft += itemWidth
+			})
 		}
-
-		carousel.addEventListener("scroll", updateIndicator)
-		updateIndicator()
 	})
 </script>
 
@@ -339,6 +344,17 @@ const boxerColumns = [
 		.carousel-item.active {
 			opacity: 1;
 			scale: 1.2;
+		}
+		.carousel-arrow.left-0 {
+			margin-right: 10px;
+		}
+
+		.carousel-arrow.right-0 {
+			margin-left: 10px;
+		}
+
+		.carousel-item img {
+			pointer-events: none;
 		}
 	}
 </style>
