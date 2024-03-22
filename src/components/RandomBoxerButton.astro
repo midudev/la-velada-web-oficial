@@ -1,0 +1,27 @@
+---
+import { BOXERS } from "@/consts/boxers"
+import ArrowShuffle from "@/icons/arrows-shuffle.astro"
+
+interface Props {
+	currentBoxerId: string
+}
+
+const { currentBoxerId } = Astro.props
+
+const allBoxersButCurrentBoxer = BOXERS.map(({ id }) => id).filter((id) => id !== currentBoxerId)
+
+const randomNumber = Math.floor(Math.random() * allBoxersButCurrentBoxer.length)
+
+const randomBoxer = allBoxersButCurrentBoxer[randomNumber]
+---
+
+<div class="mt-44">
+	<a
+		class="flex flex-row items-center gap-x-2 text-primary transition-colors duration-300 hover:text-accent motion-reduce:duration-0"
+		href={`${randomBoxer}`}
+		tabindex="0"
+	>
+		<ArrowShuffle />
+		<span class="text-lg">Boxeador random</span>
+	</a>
+</div>
