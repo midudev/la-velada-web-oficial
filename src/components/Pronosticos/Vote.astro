@@ -1,0 +1,87 @@
+---
+import { Image } from "astro:assets"
+
+import Typography from "@/components/Typography.astro"
+import { COMBATS } from "@/consts/combats"
+
+const getCombatById = (id: string) => {
+	return COMBATS.find((combat) => combat.id === id)
+}
+
+const getBoxerNames = (boxerIds: string[]): string[] => {
+	return boxerIds.map((boxerId) => `Boxeador ${boxerId}`)
+}
+---
+
+<section class="w-full">
+	<Typography class="mb-10 text-center" color="white" as="h1" variant={"atomic-title"}
+		>¡haz tu pronóstico!</Typography
+	>
+	<!-- <Action id="logout" class="w-full text-base" as="button" aria-label="Cerrar sesión de usuario">
+		Cerrar sesión
+	</Action> -->
+
+	<ul class="flex flex-col items-center justify-center">
+		{
+			COMBATS.map((combat, index) => {
+				const combatData = getCombatById(combat.id)
+				if (!combatData) return null
+
+				const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
+				// const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
+
+				return (
+					<li class="relative flex w-full max-w-2xl flex-row justify-between">
+						<button class="vote-team group relative max-w-60 saturate-0 transition hover:scale-110 hover:saturate-100">
+							<img
+								class="h-auto w-full"
+								src="/img/boxers/vote-6-plex.webp"
+								alt="Fotografía de "
+								style="mask-image: linear-gradient(black 80%, transparent)"
+							/>
+							<span class="opacity-0 group-hover:animate-fade-in group-focus:animate-fade-in">
+								ganador
+							</span>
+						</button>
+						<Image
+							width={combatData.titleSize[0]}
+							height={combatData.titleSize[1]}
+							transition:name={`title-image-${combat.id}`}
+							loading={index < 2 ? "eager" : "lazy"}
+							class:list={["pointer-events-none absolute inset-0 m-auto h-auto w-80"]}
+							src={`/img/matches/title-${combat.id}.webp`}
+							alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+						/>
+						<button class="vote-team group relative max-w-60 saturate-0 transition hover:scale-110 hover:saturate-100">
+							<img
+								class="h-auto w-full"
+								src="/img/boxers/vote-6-el-mariana.webp"
+								alt="Fotografía de "
+								style="mask-image: linear-gradient(black 80%, transparent)"
+							/>
+							<span class="opacity-0 group-hover:animate-fade-in group-focus:animate-fade-in">
+								ganador
+							</span>
+						</button>
+					</li>
+				)
+			})
+		}
+	</ul>
+</section>
+
+<script>
+	import { $ } from "@/lib/dom-selector"
+
+	const { signOut } = await import("auth-astro/client")
+	const $logout = $("#logout")
+
+	$logout.onclick = () => signOut()
+</script>
+
+<style>
+	.vote-team span {
+		@apply pointer-events-none absolute bottom-0 left-0 right-0 z-50 mx-auto font-atomic text-5xl text-green-500;
+		text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+	}
+</style>

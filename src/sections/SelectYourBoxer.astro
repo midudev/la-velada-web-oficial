@@ -1,9 +1,10 @@
 ---
+import BoxerBigImage from "@/components/BoxerBigImage.astro"
 import ColumnBoxers from "@/components/ColumnBoxers.astro"
 import Typography from "@/components/Typography.astro"
-import BoxerBigImage from "@/components/BoxerBigImage.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
+import HorizontalScroll from "@/icons/horizontalScroll.astro"
 
 const listOfBoxers = BOXERS.map((boxer) => {
 	const { country } = boxer
@@ -11,7 +12,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	return { ...boxer, countryName }
 })
 
-const selectedBoxerId = Astro.url.searchParams.get("boxer") ?? "el-mariana"
+const selectedBoxerId = Astro.url.searchParams.get("boxer")
 const selectedBoxer = listOfBoxers.find(({ id }) => id === selectedBoxerId) || listOfBoxers[0]
 
 // split in 4 columns
@@ -47,25 +48,43 @@ const boxerColumns = [
 				name={selectedBoxer.name}
 				country={selectedBoxer.country}
 				countryName={selectedBoxer.countryName}
-				loading="lazy"
+				loading={selectedBoxerId ? "eager" : "lazy"}
 			/>
 		</article>
 
 		<div class="boxers-nav hidden w-full justify-between md:flex">
 			<nav class="boxers-lists flex h-full justify-start gap-4 py-4">
-				<ColumnBoxers boxers={boxerColumns[0]} selectedBoxerId={selectedBoxerId} />
-				<ColumnBoxers boxers={boxerColumns[1]} selectedBoxerId={selectedBoxerId} class="mt-12" />
+				<ColumnBoxers
+					boxers={boxerColumns[0]}
+					selectedBoxer={selectedBoxer}
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+				<ColumnBoxers
+					boxers={boxerColumns[1]}
+					selectedBoxer={selectedBoxer}
+					class="mt-12"
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
 			</nav>
 
 			<nav class="boxers-lists flex h-full justify-end gap-2 py-4">
-				<ColumnBoxers boxers={boxerColumns[2]} selectedBoxerId={selectedBoxerId} class="mt-12" />
-				<ColumnBoxers boxers={boxerColumns[3]} selectedBoxerId={selectedBoxerId} />
+				<ColumnBoxers
+					boxers={boxerColumns[2]}
+					selectedBoxer={selectedBoxer}
+					class="mt-12"
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+				<ColumnBoxers
+					boxers={boxerColumns[3]}
+					selectedBoxer={selectedBoxer}
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
 			</nav>
 		</div>
 
 		<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
 			<div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
-				<div class="carousel-inner flex snap-x overflow-y-hidden overflow-x-scroll">
+				<div class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll">
 					{
 						listOfBoxers.map((boxer, index) => (
 							<div
@@ -75,12 +94,13 @@ const boxerColumns = [
 									${index === listOfBoxers.length - 1 ? "mr-[30%]" : ""}
 								`}
 							>
-								<ColumnBoxers boxers={[boxer]} selectedBoxerId={selectedBoxerId} />
+								<ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
 							</div>
 						))
 					}
 				</div>
 			</div>
+			<HorizontalScroll class:list={["text-primary w-16 opacity-80"]} />
 		</div>
 	</div>
 </section>
@@ -91,23 +111,53 @@ const boxerColumns = [
 	document.addEventListener("astro:page-load", () => {
 		const boxerLinks = $$(".boxer-link") as globalThis.NodeListOf<HTMLAnchorElement>
 		const boxerNav = $(".boxers-nav")
+
+		if (!boxerNav) return
+
 		const boxerTitle = $(".boxer-title") as HTMLImageElement
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement
-		const queryString = window.location.search
-		const urlParams = new URLSearchParams(queryString)
-		const initialBoxer = urlParams.get("boxer") ?? "el-mariana"
-		const initialBoxerElement = $(`a.boxer-link[data-id=${initialBoxer}]`)
-		let isInitialBoxer = true
 
-		if (initialBoxerElement) {
-			const initialBoxerLink =
-				Array.from(boxerLinks).find(
-					(boxerLink) => boxerLink.getAttribute("data-id") === initialBoxer
-				) ?? boxerLinks[0]
+		const updatedSelectedBoxerId =
+			localStorage.getItem("selected:boxer") ||
+			new URLSearchParams(window.location.search).get("boxer") ||
+			"el-mariana"
 
-			activateBoxer(initialBoxerElement, initialBoxerLink, boxerNav, false)
+		const updatedSelectedBoxerElement: HTMLElement | null = document.querySelector(
+			`.boxer-link[data-id=${updatedSelectedBoxerId}]`
+		)
+		if (updatedSelectedBoxerElement) {
+			activateBoxer(updatedSelectedBoxerElement, updatedSelectedBoxerElement, boxerNav, true)
 		}
+
+		// detect with intersection observer that the $boxerNav is in viewport
+		const boxerNavObserver = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						// disconnect observer to do this only once
+						boxerNavObserver.disconnect()
+						// get all images and preload them
+						boxerLinks.forEach((link) => {
+							const { id } = link.dataset
+							const boxerSrc = `/img/boxers/${id}-big`
+							// create link preload for each image for webp
+							const preloadLink = document.createElement("link")
+							preloadLink.rel = "preload"
+							preloadLink.as = "image"
+							preloadLink.href = `${boxerSrc}.webp`
+							preloadLink.type = "image/webp"
+							document.head.appendChild(preloadLink)
+						})
+					}
+				})
+			},
+			{
+				root: null,
+				threshold: 0.1,
+			}
+		)
+		boxerNavObserver.observe(boxerNav)
 
 		function activateBoxer(
 			element: HTMLElement,
@@ -116,8 +166,7 @@ const boxerColumns = [
 			replaceUrl: boolean = false,
 			showAlliesAndOpponents: boolean = true
 		) {
-			if (element?.classList.contains("active") && !isInitialBoxer) return
-			isInitialBoxer = false
+			if (element?.classList.contains("active")) return
 
 			const { id, name, country, countryName, opponents = "", allies = "" } = element?.dataset
 
@@ -168,7 +217,6 @@ const boxerColumns = [
 
 			const boxerSrc = `/img/boxers/${id}-big`
 
-			boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
 			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
 			boxerTitle.innerHTML = spanNames
 			boxerCountry.src = `/img/flags/${country}.webp`
@@ -177,56 +225,52 @@ const boxerColumns = [
 			boxerCountry.alt = `Bandera de ${countryName}`
 		}
 
-		function handleMouseEnter(event: MouseEvent) {
-			const currentTarget = event.currentTarget as HTMLElement
-			const link = currentTarget
-			if (currentTarget.classList.contains("active")) return
-			activateBoxer(currentTarget, link, boxerNav, true)
-		}
-
 		boxerLinks.forEach((link) => {
-			link.addEventListener("mouseenter", handleMouseEnter)
+			link.addEventListener("click", (event: MouseEvent) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				const boxerId = currentTarget.getAttribute("data-id")
+				if (boxerId) localStorage.setItem("selected:boxer", JSON.stringify(boxerId))
+				activateBoxer(currentTarget, currentTarget, boxerNav, true)
+			})
 		})
 
-		document.addEventListener("astro:before-preparation", () => {
-			boxerLinks.forEach((link) => {
-				link.removeEventListener("mouseenter", handleMouseEnter)
+		boxerLinks.forEach((link) => {
+			link.addEventListener("mouseenter", (event) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				if (currentTarget.classList.contains("active")) return
+				activateBoxer(currentTarget, link, boxerNav, true)
 			})
 		})
 
 		const carouselInner = $(".carousel-inner") as HTMLElement
-		const carouselItems = $$(".carousel-item") as globalThis.NodeListOf<HTMLElement>
-
-		// detect centered carousel item with intersection observer
-		const carouselObserver = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						const link = entry.target.querySelector(".boxer-link") as HTMLAnchorElement
-						activateBoxer(link, link, carouselInner, false, false)
-					}
-				})
-			},
-			{
-				root: carouselInner,
-				threshold: 0.95,
-			}
-		)
 
 		// detect match media change for mobile
 		const mobileMediaQuery = window.matchMedia("(max-width: 768px)")
-		// detect first time
-		if (mobileMediaQuery.matches) {
-			carouselItems.forEach((item) => carouselObserver.observe(item))
-		}
-		// detect if it changes
-		mobileMediaQuery.addEventListener("change", (event) => {
-			if (event.matches) {
-				carouselItems.forEach((item) => carouselObserver.unobserve(item))
-			} else {
-				carouselItems.forEach((item) => carouselObserver.observe(item))
+
+		function highlightBoxer(link: HTMLAnchorElement) {
+			if (
+				link.getBoundingClientRect().left >
+					carouselInner.getBoundingClientRect().width / 2 -
+						link.getBoundingClientRect().width * 0.75 &&
+				link.getBoundingClientRect().left <
+					carouselInner.getBoundingClientRect().width / 2 +
+						link.getBoundingClientRect().width * 0.25
+			) {
+				activateBoxer(link, link, carouselInner, false, false)
 			}
-		})
+		}
+
+		function highlightActiveBoxer() {
+			boxerLinks.forEach((link) => {
+				highlightBoxer(link)
+			})
+		}
+
+		if (mobileMediaQuery.matches) {
+			carouselInner.addEventListener("scroll", () => {
+				highlightActiveBoxer()
+			})
+		}
 	})
 </script>
 

@@ -1,13 +1,34 @@
 ---
 import type { Boxer } from "@/types/Boxer"
+import type { HTMLAttributes } from "astro/types"
 
 interface Props {
 	boxers: Boxer[]
 	class?: string
-	selectedBoxerId: string
+	selectedBoxer: Boxer
+	imgLoading?: HTMLAttributes<"img">["loading"]
 }
 
-const { boxers, class: className = "", selectedBoxerId } = Astro.props
+const { boxers, class: className = "", selectedBoxer, imgLoading } = Astro.props
+
+const isAlly = (id: Boxer["id"]) => selectedBoxer.allies?.includes(id)
+
+const hasSameOpponents = (selectedBoxerOpponents: string[], opponents: string[]) => {
+	return selectedBoxerOpponents.every((sBoxerOpponent) => opponents.includes(sBoxerOpponent))
+}
+
+const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
+	const selectedBoxerOpponents = Array.isArray(selectedBoxer.versus)
+		? selectedBoxer.versus
+		: [selectedBoxer.versus]
+
+	const opponents = Array.isArray(versus) ? versus : [versus]
+
+	return (
+		selectedBoxerOpponents.includes(id) ||
+		(hasSameOpponents(selectedBoxerOpponents, opponents) && id !== selectedBoxer.id && !isAlly(id))
+	)
+}
 ---
 
 <div class:list={`flex flex-col ${className}`}>
@@ -15,7 +36,14 @@ const { boxers, class: className = "", selectedBoxerId } = Astro.props
 		boxers.map(({ id, name, country, countryName, weight, rotate, versus, allies }) => (
 			<a
 				href={`/boxers/${id}`}
-				class:list={["boxer-link", { active: selectedBoxerId === id }]}
+				class:list={[
+					"boxer-link",
+					{
+						active: selectedBoxer.id === id,
+						ally: isAlly(id),
+						opponent: isOpponent(id, versus),
+					},
+				]}
 				title={`Visita la página del boxeador ${name}`}
 				data-id={id}
 				data-name={name}
@@ -31,7 +59,7 @@ const { boxers, class: className = "", selectedBoxerId } = Astro.props
 					src={`/img/boxers/${id}-small.webp`}
 					alt={`Foto en pequeño del boxeador ${name}`}
 					class:list={`boxer-image aspect-square h-full w-full object-contain ${rotate ? "rotate-y-180" : ""}`}
-					loading="lazy"
+					loading={imgLoading}
 				/>
 			</a>
 		))
