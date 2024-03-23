@@ -10,6 +10,18 @@ interface Props {
 const { title, value, id } = Astro.props
 ---
 
+<script>
+	import trimSpaces from "../utils/trimSpaces.js"
+
+	document.addEventListener("astro:page-load", () => {
+		// Encuentra todos los elementos con la clase 'trim-whitespace'
+		const elements: HTMLElement[] = Array.from(document.querySelectorAll(".trim-whitespace"))
+
+		// Itera sobre cada elemento y actualiza su contenido
+		trimSpaces(elements)
+	})
+</script>
+
 <div class="flex justify-center text-white">
 	<div
 		class="flex w-full items-start justify-between pl-2.5 pr-2.5 pt-2 text-center md:flex-col md:items-center"
@@ -20,11 +32,14 @@ const { title, value, id } = Astro.props
 				value.map((item, index) => (
 					<>
 						<a
+							class:list={
+								"trim-whitespace text-xl font-bold text-accent decoration-2 hover:underline"
+							}
 							href={item.id}
 							title={`Visita la página del boxeador ${item.name}`}
 							id={id + (index + 1)}
 						>
-							<span class="text-xl font-bold text-accent hover:underline">{item.name}</span>
+							{item.name}
 						</a>
 						{index !== value.length - 1 && <span class="text-xl font-bold text-accent"> / </span>}
 					</>
