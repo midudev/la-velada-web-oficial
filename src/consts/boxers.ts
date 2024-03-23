@@ -115,6 +115,10 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://youtube.com/clip/UgkxvB5Kn63tTAz2oSsA8E-2Pq_lnA7nDmJF?si=92af92-UCIjsnV4Z",
 			},
 		],
+		workout: {
+			videoID: "bVlV1HejQag",
+			thumbnail: "/img/boxers/workoutThumbnails/zeling.webp",
+		},
 	},
 	{
 		id: "nissaxter",

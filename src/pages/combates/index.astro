@@ -18,7 +18,7 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 	<main class="flex min-h-screen flex-col items-center text-[#b4cd02]">
 		<div class="mx-auto w-full max-w-4xl p-8">
 			<Typography
-				class="mb-12 -skew-y-6 text-wrap text-center text-6xl"
+				class="title mb-12 -skew-y-6 text-wrap text-center text-6xl"
 				color="primary"
 				as="h1"
 				variant="atomic-title"
@@ -87,5 +87,10 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 			rgba(255, 255, 255, 0.5) 30%,
 			rgba(0, 0, 0, 0) 95%
 		);
+	}
+	@media (width <= 320px) {
+		.title {
+			font-size: 2.75rem;
+		}
 	}
 </style>
