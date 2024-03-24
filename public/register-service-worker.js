@@ -4,7 +4,7 @@
  */
 if ("serviceWorker" in navigator) {
 	window.addEventListener("load", () => {
-		navigator.serviceWorker.register("/cache-sw.js")
+		navigator.serviceWorker.register("/sw.js")
 			.then((registration) => {
 				console.info("ServiceWorker registration successful with scope: ", registration.scope)
 			}, err => {
