@@ -383,6 +383,20 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/c/unicornioperro",
 			tiktok: "https://www.tiktok.com/@german.usinger",
 		},
+		clips: [
+			{
+				text: "No entendí bien la mecánica, pero se que debo pegarles a ellos. ¿No?",
+				url: "https://youtube.com/clip/UgkxEcgcoJaVcag3z49qN_XpjZv3CHrCJ7fL?si=jnl237KKDMjsGiCo",
+			},
+			{
+				text: "Empecé a entrenar hace un año muy fuerte, hice un cambio físico y tengo más confianza de base",
+				url: "https://youtube.com/clip/UgkxfP2AM59ICTRmS5ICPtCS-JLwZIH8mzYa?si=ZiVnoMPS4fZ178C2",
+			},
+			{
+				text: "Subité, ¿querés pelear? y hacemos 11 en el rey de la pista",
+				url: "https://youtube.com/clip/UgkxwF9bV7tUmg7LbPeFDggtLpogaYq9Y2TA?si=WzJuyqp50n5ZrsGg",
+			},
+		],
 		versus: "rey-de-la-pista",
 	},
 	{
