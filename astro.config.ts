@@ -36,7 +36,7 @@ export default defineConfig({
 			VitePWA({
 				registerType: "autoUpdate",
 				includeAssets: ["**/*"],
-				injectRegister: "script",
+				injectRegister: "auto",
 				manifest,
 				workbox: {
 					globDirectory: "dist",
