@@ -394,7 +394,7 @@ export const BOXERS: Boxer[] = addGetters([
 			},
 			{
 				text: "Subité, ¿querés pelear? y hacemos 11 en el rey de la pista",
-				url: "https://youtube.com/clip/Ugkxo2a61Ds54RxEOdHkXofrEyCxIOdEvl_P?si=vwWpUCIQzNsV8tLH",
+				url: "https://youtube.com/clip/UgkxwF9bV7tUmg7LbPeFDggtLpogaYq9Y2TA?si=WzJuyqp50n5ZrsGg",
 			},
 		],
 		versus: "rey-de-la-pista",
