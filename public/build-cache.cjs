@@ -4,7 +4,7 @@ const path = require('path');
 
 // Define la carpeta de imágenes y las extensiones de archivo válidas.
 const imgFolder = './public/img';
-const validExtensions = new Set(['.avif', '.webp', '.png', '.jpg', '.jpeg', '.gif']);
+const validExtensions = new Set(['.avif', '.webp', '.png', '.jpg', '.jpeg', '.gif', '.ico', '.svg']);
 
 // Función para codificar la ruta del archivo.
 function encodePath(filePath) {
