@@ -458,6 +458,12 @@ export const BOXERS: Boxer[] = addGetters([
 			videoID: "BlN7FgdDoHM",
 			thumbnail: "/img/boxers/workoutThumbnails/skain.webp",
 		},
+		clips: [
+			{
+				text: "Yo solo voy a decir que Karchez el año pasado de salvó, no diré nada mas",
+				url: "https://youtube.com/clip/UgkxlGr0lw1Xr65CkY4r_CfV18y4JuAVSL7y?si=P5myCxrSZRY1i7wZ",
+			},
+		],
 		versus: "rey-de-la-pista",
 	},
 	{
