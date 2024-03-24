@@ -4,6 +4,7 @@ import ColumnBoxers from "@/components/ColumnBoxers.astro"
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
+import HorizontalScroll from "@/icons/horizontalScroll.astro"
 
 const listOfBoxers = BOXERS.map((boxer) => {
 	const { country } = boxer
@@ -11,7 +12,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	return { ...boxer, countryName }
 })
 
-const selectedBoxerId = Astro.url.searchParams.get("boxer") ?? "el-mariana"
+const selectedBoxerId = Astro.url.searchParams.get("boxer")
 const selectedBoxer = listOfBoxers.find(({ id }) => id === selectedBoxerId) || listOfBoxers[0]
 
 // split in 4 columns
@@ -49,19 +50,37 @@ const boxerColumns = [
 				name={selectedBoxer.name}
 				country={selectedBoxer.country}
 				countryName={selectedBoxer.countryName}
-				loading="lazy"
+				loading={selectedBoxerId ? "eager" : "lazy"}
 			/>
 		</article>
 
 		<div class="boxers-nav hidden w-full justify-between md:flex">
 			<nav class="boxers-lists flex h-full justify-start gap-4 py-4">
-				<ColumnBoxers boxers={boxerColumns[0]} selectedBoxer={selectedBoxer} />
-				<ColumnBoxers boxers={boxerColumns[1]} selectedBoxer={selectedBoxer} class="mt-12" />
+				<ColumnBoxers
+					boxers={boxerColumns[0]}
+					selectedBoxer={selectedBoxer}
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+				<ColumnBoxers
+					boxers={boxerColumns[1]}
+					selectedBoxer={selectedBoxer}
+					class="mt-12"
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
 			</nav>
 
 			<nav class="boxers-lists flex h-full justify-end gap-2 py-4">
-				<ColumnBoxers boxers={boxerColumns[2]} selectedBoxer={selectedBoxer} class="mt-12" />
-				<ColumnBoxers boxers={boxerColumns[3]} selectedBoxer={selectedBoxer} />
+				<ColumnBoxers
+					boxers={boxerColumns[2]}
+					selectedBoxer={selectedBoxer}
+					class="mt-12"
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+				<ColumnBoxers
+					boxers={boxerColumns[3]}
+					selectedBoxer={selectedBoxer}
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
 			</nav>
 		</div>
 
@@ -83,6 +102,7 @@ const boxerColumns = [
 					}
 				</div>
 			</div>
+			<HorizontalScroll class:list={["text-primary w-16 opacity-80"]} />
 		</div>
 	</div>
 </section>
