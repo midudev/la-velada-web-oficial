@@ -4,6 +4,7 @@ import ColumnBoxers from "@/components/ColumnBoxers.astro"
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
+import HorizontalScroll from "@/icons/horizontalScroll.astro"
 
 const listOfBoxers = BOXERS.map((boxer) => {
 	const { country } = boxer
@@ -99,6 +100,7 @@ const boxerColumns = [
 					}
 				</div>
 			</div>
+			<HorizontalScroll class:list={["text-primary w-16 opacity-80"]} />
 		</div>
 	</div>
 </section>
@@ -264,7 +266,21 @@ const boxerColumns = [
 			})
 		}
 
+		function updateActiveThumbnailPosition() {
+			const boxer = new URLSearchParams(window.location.search).get("boxer")
+			const boxerActiveElement = $(`.carousel .boxer-link[data-id=${boxer}]`)
+			if (boxerActiveElement) {
+				const carouselWidth = carouselInner.clientWidth
+				const thumbnailWidth = boxerActiveElement.offsetWidth
+				const currentPosition = boxerActiveElement.offsetLeft - (carouselWidth - thumbnailWidth) / 2
+
+				carouselInner.scrollTo(currentPosition, 0)
+			}
+		}
+
 		if (mobileMediaQuery.matches) {
+			updateActiveThumbnailPosition()
+
 			carouselInner.addEventListener("scroll", () => {
 				highlightActiveBoxer()
 			})
@@ -274,7 +290,7 @@ const boxerColumns = [
 
 <style>
 	.boxers-lists {
-		@apply relative w-screen overflow-x-scroll;
+		@apply relative w-screen overflow-x-scroll md:overflow-hidden;
 		scrollbar-width: none;
 	}
 
