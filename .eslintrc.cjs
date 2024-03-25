@@ -54,7 +54,7 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: ["*.astro"],
+			files: ["*.astro", "src/utils/serviceWorker.ts"],
 			parser: "astro-eslint-parser",
 			parserOptions: {
 				parser: "@typescript-eslint/parser",

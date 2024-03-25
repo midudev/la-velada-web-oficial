@@ -61,18 +61,10 @@ const canonicalURL = canonical
 <link rel="icon" href="/img/icons/favicon.ico" sizes="32x32" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png" />
-<link rel="manifest" href="/manifest.webmanifest" />
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="msapplication-config" content="/browserconfig.xml" />
 
-{
-	!import.meta.env.DEV && (
-		<>
-			<script is:inline src="/registerSW.js" />
-			<link rel="manifest" href="/manifest.webmanifest" />
-		</>
-	)
-}
-
+<script is:inline src="/registerSW.js"></script>
+<link rel="manifest" href="/manifest.webmanifest" />
 <RichResults />
