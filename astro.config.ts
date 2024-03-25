@@ -6,7 +6,7 @@ import auth from "auth-astro"
 import { VitePWA } from "vite-plugin-pwa"
 
 // Helper imports
-import { seoConfig, manifest } from "./src/utils/seoConfig"
+import { manifest, seoConfig } from "./src/utils/seoConfig"
 
 // https://astro.build/config
 export default defineConfig({
@@ -37,13 +37,52 @@ export default defineConfig({
 				registerType: "autoUpdate",
 				manifest,
 				workbox: {
-					globDirectory: '.vercel/output/static',
+					globDirectory: ".vercel/output/static",
 					globPatterns: [
-						'**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}',
+						"**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}",
+					],
+					runtimeCaching: [
+						{
+							urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+							handler: "CacheFirst",
+							options: {
+								cacheName: "images",
+								expiration: {
+									maxEntries: 50,
+									maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
+								},
+							},
+						},
+						{
+							urlPattern: /^https?.*/,
+							handler: "CacheFirst",
+							options: {
+								cacheName: "others",
+								expiration: {
+									maxEntries: 100,
+									maxAgeSeconds: 7 * 24 * 60 * 60, // 7 días
+								},
+							},
+						},
+						{
+							urlPattern: /^https:\/\/la-velada-preview.vercel.app\//,
+							handler: "NetworkFirst",
+							options: {
+								cacheName: "api-responses",
+								networkTimeoutSeconds: 3,
+								expiration: {
+									maxEntries: 50,
+									maxAgeSeconds: 24 * 60 * 60, // 1 día
+								},
+								cacheableResponse: {
+									statuses: [0, 200],
+								},
+							},
+						},
 					],
 					navigateFallback: null,
 				},
-			})
+			}),
 		],
 	},
 })
