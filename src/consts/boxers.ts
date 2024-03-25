@@ -115,6 +115,10 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=ccy_0Me4fseLPhdD&amp;clip=UgkxvB5Kn63tTAz2oSsA8E-2Pq_lnA7nDmJF&amp;clipt=EIztngMY9MyfAw",
 			},
 		],
+		workout: {
+			videoID: "bVlV1HejQag",
+			thumbnail: "/img/boxers/workoutThumbnails/zeling.webp",
+		},
 	},
 	{
 		id: "nissaxter",
@@ -379,6 +383,20 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/c/unicornioperro",
 			tiktok: "https://www.tiktok.com/@german.usinger",
 		},
+		clips: [
+			{
+				text: "No entendí bien la mecánica, pero se que debo pegarles a ellos. ¿No?",
+				url: "https://youtube.com/clip/UgkxEcgcoJaVcag3z49qN_XpjZv3CHrCJ7fL?si=jnl237KKDMjsGiCo",
+			},
+			{
+				text: "Empecé a entrenar hace un año muy fuerte, hice un cambio físico y tengo más confianza de base",
+				url: "https://youtube.com/clip/UgkxfP2AM59ICTRmS5ICPtCS-JLwZIH8mzYa?si=ZiVnoMPS4fZ178C2",
+			},
+			{
+				text: "Subité, ¿querés pelear? y hacemos 11 en el rey de la pista",
+				url: "https://youtube.com/clip/UgkxwF9bV7tUmg7LbPeFDggtLpogaYq9Y2TA?si=WzJuyqp50n5ZrsGg",
+			},
+		],
 		versus: "rey-de-la-pista",
 	},
 	{
@@ -454,6 +472,16 @@ export const BOXERS: Boxer[] = addGetters([
 			videoID: "BlN7FgdDoHM",
 			thumbnail: "/img/boxers/workoutThumbnails/skain.webp",
 		},
+		clips: [
+			{
+				text: "Yo solo voy a decir que Karchez el año pasado de salvó, no diré nada mas",
+				url: "https://youtube.com/clip/UgkxlGr0lw1Xr65CkY4r_CfV18y4JuAVSL7y?si=P5myCxrSZRY1i7wZ",
+			},
+			{
+				text: "Estoy muy preparado y muy contento. El Rey de la Pista será un formato que dará mucho de que hablar",
+				url: "https://youtube.com/clip/UgkxyZGxKPtKZdEfTUP21jDFgEV2Ps2dvqfb?si=OwOAcfDVDgsFArDQ",
+			},
+		],
 		versus: "rey-de-la-pista",
 	},
 	{
