@@ -35,16 +35,38 @@ export default defineConfig({
 		plugins: [
 			VitePWA({
 				registerType: "autoUpdate",
-				includeAssets: ["**/*"],
-				injectRegister: "auto",
 				manifest,
 				workbox: {
-					globDirectory: "dist",
-					globPatterns: ["**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}"],
-					// Don't fallback on document based (e.g. `/some-page`) requests
-					// This removes an errant console.log message from showing up.
+					globDirectory: ".vercel/output/static",
+					globPatterns: [
+						"**/*.{html,js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}"
+					],
+					runtimeCaching: [
+						{
+							urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+							handler: "CacheFirst",
+							options: {
+								cacheName: "images",
+								expiration: {
+									maxEntries: 50,
+									maxAgeSeconds: 30 * 24 * 60 * 60,
+								},
+							},
+						},
+						{
+							urlPattern: /^https?.*/,
+							handler: "StaleWhileRevalidate",
+							options: {
+								cacheName: "static-assets",
+								expiration: {
+									maxEntries: 200,
+									maxAgeSeconds: 24 * 60 * 60 * 30,
+								},
+							},
+						},
+					],
 					navigateFallback: null,
-				},
+				}
 			}),
 		],
 	},
