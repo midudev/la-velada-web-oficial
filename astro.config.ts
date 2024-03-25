@@ -39,10 +39,9 @@ export default defineConfig({
 				workbox: {
 					globDirectory: ".vercel/output/static",
 					globPatterns: [
-						"**/*", "**/*.{js,html,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}",
+						"**/*.{html,js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}"
 					],
 					runtimeCaching: [
-						// Cachear imágenes con CacheFirst
 						{
 							urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
 							handler: "CacheFirst",
@@ -50,19 +49,18 @@ export default defineConfig({
 								cacheName: "images",
 								expiration: {
 									maxEntries: 50,
-									maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
+									maxAgeSeconds: 30 * 24 * 60 * 60,
 								},
 							},
 						},
-						// Cachear otros archivos estáticos con CacheFirst
 						{
 							urlPattern: /^https?.*/,
 							handler: "StaleWhileRevalidate",
 							options: {
 								cacheName: "static-assets",
 								expiration: {
-									maxEntries: 100,
-									maxAgeSeconds: 24 * 60 * 60, // 1 días
+									maxEntries: 200,
+									maxAgeSeconds: 24 * 60 * 60 * 30,
 								},
 							},
 						},
