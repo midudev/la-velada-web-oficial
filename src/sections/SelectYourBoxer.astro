@@ -266,7 +266,21 @@ const boxerColumns = [
 			})
 		}
 
+		function updateActiveThumbnailPosition() {
+			const boxer = new URLSearchParams(window.location.search).get("boxer")
+			const boxerActiveElement = $(`.carousel .boxer-link[data-id=${boxer}]`)
+			if (boxerActiveElement) {
+				const carouselWidth = carouselInner.clientWidth
+				const thumbnailWidth = boxerActiveElement.offsetWidth
+				const currentPosition = boxerActiveElement.offsetLeft - (carouselWidth - thumbnailWidth) / 2
+
+				carouselInner.scrollTo(currentPosition, 0)
+			}
+		}
+
 		if (mobileMediaQuery.matches) {
+			updateActiveThumbnailPosition()
+
 			carouselInner.addEventListener("scroll", () => {
 				highlightActiveBoxer()
 			})
