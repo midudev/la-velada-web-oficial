@@ -3,9 +3,10 @@ import tailwind from "@astrojs/tailwind"
 import vercel from "@astrojs/vercel/serverless"
 import { defineConfig } from "astro/config"
 import auth from "auth-astro"
+import { VitePWA } from "vite-plugin-pwa"
 
 // Helper imports
-import { seoConfig } from "./src/utils/seoConfig"
+import { seoConfig, manifest } from "./src/utils/seoConfig"
 
 // https://astro.build/config
 export default defineConfig({
@@ -31,6 +32,18 @@ export default defineConfig({
 		ssr: {
 			noExternal: ["path-to-regexp"],
 		},
-		plugins: [],
+		plugins: [
+			VitePWA({
+				registerType: "autoUpdate",
+				manifest,
+				workbox: {
+					globDirectory: '.vercel/output/static',
+					globPatterns: [
+						'**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}',
+					],
+					navigateFallback: null,
+				},
+			})
+		],
 	},
 })
