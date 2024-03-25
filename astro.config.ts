@@ -36,14 +36,13 @@ export default defineConfig({
 			VitePWA({
 				registerType: "autoUpdate",
 				manifest,
-				base: '/',
-				scope: '/',
 				workbox: {
 					globDirectory: ".vercel/output/static",
 					globPatterns: [
-						"**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}",
+						"**/*", "**/*.{js,html,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}",
 					],
 					runtimeCaching: [
+						// Cachear imágenes con CacheFirst
 						{
 							urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
 							handler: "CacheFirst",
@@ -55,29 +54,15 @@ export default defineConfig({
 								},
 							},
 						},
+						// Cachear otros archivos estáticos con CacheFirst
 						{
 							urlPattern: /^https?.*/,
-							handler: "CacheFirst",
+							handler: "StaleWhileRevalidate",
 							options: {
-								cacheName: "others",
+								cacheName: "static-assets",
 								expiration: {
 									maxEntries: 100,
-									maxAgeSeconds: 7 * 24 * 60 * 60, // 7 días
-								},
-							},
-						},
-						{
-							urlPattern: new RegExp("^https://la-velada-preview.vercel.app/"),
-							handler: "NetworkFirst",
-							options: {
-								cacheName: "api-responses",
-								networkTimeoutSeconds: 3,
-								expiration: {
-									maxEntries: 50,
-									maxAgeSeconds: 24 * 60 * 60, // 1 día
-								},
-								cacheableResponse: {
-									statuses: [0, 200],
+									maxAgeSeconds: 24 * 60 * 60, // 1 días
 								},
 							},
 						},
