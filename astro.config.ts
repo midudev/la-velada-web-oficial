@@ -36,6 +36,8 @@ export default defineConfig({
 			VitePWA({
 				registerType: "autoUpdate",
 				manifest,
+				base: '/',
+				scope: '/',
 				workbox: {
 					globDirectory: ".vercel/output/static",
 					globPatterns: [
@@ -65,7 +67,7 @@ export default defineConfig({
 							},
 						},
 						{
-							urlPattern: /^https:\/\/la-velada-preview.vercel.app\//,
+							urlPattern: new RegExp("^https://la-velada-preview.vercel.app/"),
 							handler: "NetworkFirst",
 							options: {
 								cacheName: "api-responses",
@@ -81,7 +83,7 @@ export default defineConfig({
 						},
 					],
 					navigateFallback: null,
-				},
+				}
 			}),
 		],
 	},
