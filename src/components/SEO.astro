@@ -3,14 +3,7 @@ import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
 import atomic from "/fonts/atomic.woff2"
 
 import RichResults from "@/components/RichResults.astro"
-
-export interface Preload {
-	as: string
-	href: string
-	type: string
-	rel?: "preload" | "prefetch"
-	crossorigin?: string
-}
+import type { Preload } from "@/types/Preload"
 
 interface Props {
 	title: string
@@ -68,18 +61,10 @@ const canonicalURL = canonical
 <link rel="icon" href="/img/icons/favicon.ico" sizes="32x32" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png" />
-<link rel="manifest" href="/manifest.webmanifest" />
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="msapplication-config" content="/browserconfig.xml" />
 
-{
-	!import.meta.env.DEV && (
-		<>
-			<script is:inline src="/registerSW.js" />
-			<link rel="manifest" href="/manifest.webmanifest" />
-		</>
-	)
-}
-
+<script is:inline src="/registerSW.js"></script>
+<link rel="manifest" href="/manifest.webmanifest" />
 <RichResults />
