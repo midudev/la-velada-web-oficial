@@ -4,6 +4,7 @@ import ColumnBoxers from "@/components/ColumnBoxers.astro"
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
+import HorizontalScroll from "@/icons/horizontalScroll.astro"
 
 const listOfBoxers = BOXERS.map((boxer) => {
 	const { country } = boxer
@@ -11,7 +12,7 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	return { ...boxer, countryName }
 })
 
-const selectedBoxerId = Astro.url.searchParams.get("boxer") ?? "el-mariana"
+const selectedBoxerId = Astro.url.searchParams.get("boxer")
 const selectedBoxer = listOfBoxers.find(({ id }) => id === selectedBoxerId) || listOfBoxers[0]
 
 // split in 4 columns
@@ -47,19 +48,37 @@ const boxerColumns = [
 				name={selectedBoxer.name}
 				country={selectedBoxer.country}
 				countryName={selectedBoxer.countryName}
-				loading="lazy"
+				loading={selectedBoxerId ? "eager" : "lazy"}
 			/>
 		</article>
 
 		<div class="boxers-nav hidden w-full justify-between md:flex">
 			<nav class="boxers-lists flex h-full justify-start gap-4 py-4">
-				<ColumnBoxers boxers={boxerColumns[0]} selectedBoxer={selectedBoxer} />
-				<ColumnBoxers boxers={boxerColumns[1]} selectedBoxer={selectedBoxer} class="mt-12" />
+				<ColumnBoxers
+					boxers={boxerColumns[0]}
+					selectedBoxer={selectedBoxer}
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+				<ColumnBoxers
+					boxers={boxerColumns[1]}
+					selectedBoxer={selectedBoxer}
+					class="mt-12"
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
 			</nav>
 
 			<nav class="boxers-lists flex h-full justify-end gap-2 py-4">
-				<ColumnBoxers boxers={boxerColumns[2]} selectedBoxer={selectedBoxer} class="mt-12" />
-				<ColumnBoxers boxers={boxerColumns[3]} selectedBoxer={selectedBoxer} />
+				<ColumnBoxers
+					boxers={boxerColumns[2]}
+					selectedBoxer={selectedBoxer}
+					class="mt-12"
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+				<ColumnBoxers
+					boxers={boxerColumns[3]}
+					selectedBoxer={selectedBoxer}
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
 			</nav>
 		</div>
 
@@ -81,6 +100,7 @@ const boxerColumns = [
 					}
 				</div>
 			</div>
+			<HorizontalScroll class:list={["text-primary w-16 opacity-80"]} />
 		</div>
 	</div>
 </section>
@@ -91,6 +111,9 @@ const boxerColumns = [
 	document.addEventListener("astro:page-load", () => {
 		const boxerLinks = $$(".boxer-link") as globalThis.NodeListOf<HTMLAnchorElement>
 		const boxerNav = $(".boxers-nav")
+
+		if (!boxerNav) return
+
 		const boxerTitle = $(".boxer-title") as HTMLImageElement
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement
@@ -118,13 +141,13 @@ const boxerColumns = [
 						boxerLinks.forEach((link) => {
 							const { id } = link.dataset
 							const boxerSrc = `/img/boxers/${id}-big`
-							// create link preload for each image for avif and webp
-							const avifLink = document.createElement("link")
-							avifLink.rel = "preload"
-							avifLink.as = "image"
-							avifLink.href = `${boxerSrc}.avif`
-							avifLink.type = "image/avif"
-							document.head.appendChild(avifLink)
+							// create link preload for each image for webp
+							const preloadLink = document.createElement("link")
+							preloadLink.rel = "preload"
+							preloadLink.as = "image"
+							preloadLink.href = `${boxerSrc}.webp`
+							preloadLink.type = "image/webp"
+							document.head.appendChild(preloadLink)
 						})
 					}
 				})
@@ -194,7 +217,6 @@ const boxerColumns = [
 
 			const boxerSrc = `/img/boxers/${id}-big`
 
-			boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
 			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
 			boxerTitle.innerHTML = spanNames
 			boxerCountry.src = `/img/flags/${country}.webp`
@@ -244,7 +266,21 @@ const boxerColumns = [
 			})
 		}
 
+		function updateActiveThumbnailPosition() {
+			const boxer = new URLSearchParams(window.location.search).get("boxer")
+			const boxerActiveElement = $(`.carousel .boxer-link[data-id=${boxer}]`)
+			if (boxerActiveElement) {
+				const carouselWidth = carouselInner.clientWidth
+				const thumbnailWidth = boxerActiveElement.offsetWidth
+				const currentPosition = boxerActiveElement.offsetLeft - (carouselWidth - thumbnailWidth) / 2
+
+				carouselInner.scrollTo(currentPosition, 0)
+			}
+		}
+
 		if (mobileMediaQuery.matches) {
+			updateActiveThumbnailPosition()
+
 			carouselInner.addEventListener("scroll", () => {
 				highlightActiveBoxer()
 			})
@@ -254,7 +290,7 @@ const boxerColumns = [
 
 <style>
 	.boxers-lists {
-		@apply relative w-screen overflow-x-scroll;
+		@apply relative w-screen overflow-x-scroll md:overflow-hidden;
 		scrollbar-width: none;
 	}
 

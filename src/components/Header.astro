@@ -25,9 +25,10 @@ const pages = [
 					<a
 						href={href}
 						class:list={[
-							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 text-center text-xl uppercase text-white lg:flex lg:px-7 xl:px-10",
+							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 text-center text-xl uppercase  lg:flex lg:px-7 xl:px-10",
 							{ "pointer-events-none": disabled },
-							{ "current-page": active },
+							{ "current-page text-accent": active },
+							{ "text-white": !active },
 						]}
 						id={`nav-link-${key}`}
 					>
@@ -107,7 +108,7 @@ const pages = [
 			</div>
 			<div class="-ml-[8px] -mr-[4px]">
 				<a href="/">
-					<HeroLogo class:list={"h-auto w-full"} noEffect />
+					<HeroLogo class:list={"h-auto w-full"} id="hero-logo-header" noEffect />
 				</a>
 			</div>
 
@@ -151,6 +152,9 @@ const pages = [
 	.accent-drop-shadow {
 		filter: drop-shadow(0px 0px 25px rgba(var(--color-accent-rgb), 0.25));
 	}
+
+	.current-page {
+	}
 	.current-page:before {
 		background: var(--color-accent);
 		width: 100%;
@@ -160,6 +164,7 @@ const pages = [
 		left: 0;
 		height: 8px;
 	}
+
 	.current-page-mob:before {
 		background: var(--color-accent);
 		width: 10px;

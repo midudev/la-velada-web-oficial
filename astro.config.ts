@@ -1,3 +1,4 @@
+import db from "@astrojs/db"
 import sitemap from "@astrojs/sitemap"
 import tailwind from "@astrojs/tailwind"
 import vercel from "@astrojs/vercel/serverless"
@@ -14,7 +15,7 @@ export default defineConfig({
 	devToolbar: {
 		enabled: false,
 	},
-	integrations: [tailwind(), sitemap(), auth()],
+	integrations: [tailwind(), sitemap(), auth(), db()],
 	adapter: vercel({
 		webAnalytics: {
 			enabled: true,
@@ -37,10 +38,32 @@ export default defineConfig({
 				registerType: "autoUpdate",
 				manifest,
 				workbox: {
-					globDirectory: "dist",
-					globPatterns: ["**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}"],
-					// Don't fallback on document based (e.g. `/some-page`) requests
-					// This removes an errant console.log message from showing up.
+					globDirectory: ".vercel/output/static",
+					globPatterns: ["**/*.{html,js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}"],
+					runtimeCaching: [
+						{
+							urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+							handler: "CacheFirst",
+							options: {
+								cacheName: "images",
+								expiration: {
+									maxEntries: 50,
+									maxAgeSeconds: 30 * 24 * 60 * 60,
+								},
+							},
+						},
+						{
+							urlPattern: /^https?.*/,
+							handler: "StaleWhileRevalidate",
+							options: {
+								cacheName: "static-assets",
+								expiration: {
+									maxEntries: 200,
+									maxAgeSeconds: 24 * 60 * 60 * 30,
+								},
+							},
+						},
+					],
 					navigateFallback: null,
 				},
 			}),

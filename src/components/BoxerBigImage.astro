@@ -12,22 +12,10 @@ interface Props {
 const { name, country, countryName, id, loading } = Astro.props
 ---
 
-<div
-	aria-hidden="true"
-	class="absolute inset-0 -z-10 m-auto bg-center bg-no-repeat"
-	style="
-		background-image: url('/img/effects/boxer-background.png');
-		background-size: 45%;
-		mask-image: radial-gradient(circle at bottom, transparent 26%, #000 40%);
-	"
->
-</div>
-
 <picture
 	class:list={"boxer-photo aspect-[285/428] h-auto w-full max-w-[460px]"}
 	transition:name="boxer-big-image"
 >
-	<source srcset={`/img/boxers/${id}-big.avif`} type="image/avif" />
 	<img
 		decoding="async"
 		class="aspect-[285/428] h-auto w-full object-contain"
