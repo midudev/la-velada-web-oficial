@@ -95,6 +95,7 @@ export const BOXERS: Boxer[] = addGetters([
 		weight: 65, // No encontrado
 		height: 1.7, // No es seguro
 		country: "es",
+		gallery: true,
 		versus: ["alana", "ama-blitz"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
