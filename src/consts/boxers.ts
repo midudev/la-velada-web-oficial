@@ -611,6 +611,7 @@ export const BOXERS: Boxer[] = addGetters([
 		versus: ["nissaxter", "zeling"],
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
+		gallery: true,
 		socials: {
 			twitch: "https://twitch.tv/alanalarana",
 			instagram: "https://instagram.com/alanafloresf",
