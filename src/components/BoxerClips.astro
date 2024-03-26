@@ -15,11 +15,11 @@ const hasClips = clips.length > 0
 
 {
 	hasClips && (
-		<section class="z-10 mt-2 md:mt-0">
+		<section class="z-20 mt-2 md:mt-0">
 			<ClipsModal />
 			<div class="carousel flex select-none flex-row flex-nowrap transition duration-700 md:max-w-none md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
 				{clips.map(({ text, url }, index) => (
-					<article
+					<button
 						data-url={url}
 						class:list={`clip-container group flex min-w-full max-w-[450px] flex-col justify-between  hover:saturate-150 md:min-w-0 ${index === 0 ? "block" : "hidden"} cursor-pointer md:block`}
 						data-clip-item
@@ -47,7 +47,7 @@ const hasClips = clips.length > 0
 								Ver clip
 							</Typography>
 						</footer>
-					</article>
+					</button>
 				))}
 			</div>
 			<div class="mx-auto flex max-w-60 items-center justify-between md:hidden">
@@ -113,6 +113,14 @@ const hasClips = clips.length > 0
 		$closeButton?.addEventListener("click", () => {
 			$ytFrame?.setAttribute("src", "")
 			$clipDialog.style.display = "none"
+		})
+
+		// listen escape key
+		document.addEventListener("keydown", (event) => {
+			if (event.key === "Escape") {
+				$ytFrame?.setAttribute("src", "")
+				if ($clipDialog) $clipDialog.style.display = "none"
+			}
 		})
 
 		$clipContainer?.forEach((el) => {
