@@ -1,3 +1,4 @@
+import db from "@astrojs/db"
 import sitemap from "@astrojs/sitemap"
 import tailwind from "@astrojs/tailwind"
 import vercel from "@astrojs/vercel/serverless"
@@ -14,7 +15,7 @@ export default defineConfig({
 	devToolbar: {
 		enabled: false,
 	},
-	integrations: [tailwind(), sitemap(), auth()],
+	integrations: [tailwind(), sitemap(), auth(), db()],
 	adapter: vercel({
 		webAnalytics: {
 			enabled: true,
@@ -38,9 +39,7 @@ export default defineConfig({
 				manifest,
 				workbox: {
 					globDirectory: ".vercel/output/static",
-					globPatterns: [
-						"**/*.{html,js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}"
-					],
+					globPatterns: ["**/*.{html,js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}"],
 					runtimeCaching: [
 						{
 							urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
@@ -66,7 +65,7 @@ export default defineConfig({
 						},
 					],
 					navigateFallback: null,
-				}
+				},
 			}),
 		],
 	},
