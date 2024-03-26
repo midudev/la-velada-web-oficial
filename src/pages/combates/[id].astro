@@ -3,6 +3,7 @@ import { Image } from "astro:assets"
 
 import { COMBATS } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
+import CombatFeatures from "@/sections/CombatFeatures.astro"
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
@@ -75,5 +76,6 @@ const [imageWidth, imageHeight] = combatData.titleSize
 				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 			/>
 		</div>
+		{combatData.boxers.length == 2 && <CombatFeatures boxerIds={combatData.boxers} />}
 	</main>
 </Layout>
