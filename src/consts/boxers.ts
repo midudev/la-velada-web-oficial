@@ -42,11 +42,11 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "El combate lo verá mi madre. Voy a ir con todo, voy a ganar",
-				url: "https://youtube.com/clip/UgkxZSsrfj0sR_gZ802CbVtT2F9SKtj1OxKW?si=B-u68MU9FB7-VmPo",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=W6h8FwdZR6NlmJ08&amp;clip=UgkxZSsrfj0sR_gZ802CbVtT2F9SKtj1OxKW&amp;clipt=ENnv5AUY8eTlBQ",
 			},
 			{
 				text: "Cuanto más alto, más fácil va a ser que le entre un gancho",
-				url: "https://youtube.com/clip/Ugkx-2lQ3J2MyKiOppp0UnGVO2APKh-r4cnS?si=mqpgfimZ7-nIU2ql",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=AAnuIiM4FcI4uFLu&amp;clip=Ugkx-2lQ3J2MyKiOppp0UnGVO2APKh-r4cnS&amp;clipt=EMSw5wUY3KXoBQ",
 			},
 		],
 	},
@@ -70,15 +70,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Viruzz ha dejado las drogas de doping, un aplauso",
-				url: "https://youtube.com/clip/UgkxGivF3aSpyQdc9L4P6JBE0q5ZTstNC0jm?si=m0J04aypC-2ud74U",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=1wb7fB-OfE7HzV6M&amp;clip=UgkxGivF3aSpyQdc9L4P6JBE0q5ZTstNC0jm&amp;clipt=ELWy4gMY8ITjAw",
 			},
 			{
 				text: "El año pasado me hicieron sentir que no merecía esta oportunidad, entonces me maté entrenando",
-				url: "https://youtube.com/clip/UgkxxiL9X5jvl1Pj3eirGiDOIyjrMZFQjbQs?si=nA1rCooWna03VV7g",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=xIA8r5LJaWPitSMk&amp;clip=UgkxxiL9X5jvl1Pj3eirGiDOIyjrMZFQjbQs&amp;clipt=ENWj7wMY4-jvAw",
 			},
 			{
 				text: "Siento que es muy bueno que te den una oportunidad de redención, Viruzz",
-				url: "https://youtube.com/clip/UgkxACB-VsHvjoYbtrWir9sqZomlseYCpmlV?si=Qo0S5TK_r8_-c-bk",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=HcuUn6WZf6zQMZcv&amp;clip=UgkxACB-VsHvjoYbtrWir9sqZomlseYCpmlV&amp;clipt=EO3V7gMYhtPvAw",
 			},
 		],
 		rotate: true,
@@ -109,11 +109,11 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Soy competitiva, no me gusta perder y creo que nos enfadamos mucho",
-				url: "https://youtube.com/clip/Ugkx1GFvGZOaZ9z_HvOqUUNwai5fvgFPdiHX?si=22BsoUeULnhqT73-",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=m3QZMHr7dagPabsw&amp;clip=Ugkx1GFvGZOaZ9z_HvOqUUNwai5fvgFPdiHX&amp;clipt=EMn88wIYief0Ag",
 			},
 			{
 				text: "Por mi parte ya no habrá tan buen rollo como antes",
-				url: "https://youtube.com/clip/UgkxvB5Kn63tTAz2oSsA8E-2Pq_lnA7nDmJF?si=92af92-UCIjsnV4Z",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=ccy_0Me4fseLPhdD&amp;clip=UgkxvB5Kn63tTAz2oSsA8E-2Pq_lnA7nDmJF&amp;clipt=EIztngMY9MyfAw",
 			},
 		],
 		workout: {
@@ -142,15 +142,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "No estoy preparando excusas, no soy el xocas, si pierdo, será con dignidad",
-				url: "https://youtube.com/clip/UgkxJJ3K1UB1MGsxI_WzPxyiQo-hL4YMn9KB?si=dInk9hcrBB_uSIXK",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=ly7dosYLSt4qYtTB&amp;clip=UgkxJJ3K1UB1MGsxI_WzPxyiQo-hL4YMn9KB&amp;clipt=EI73nAMY88adAw",
 			},
 			{
 				text: "Alana, veo que eres muy bonita y cuqui, pero es que yo soy de barrio",
-				url: "https://youtube.com/clip/UgkxWTeqQT62-L-LYjSBofjx2i5zsxaeHCqf?si=K08UiInfEvVsIKIe",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=yXlw1mJINtozHJh4&amp;clip=UgkxWTeqQT62-L-LYjSBofjx2i5zsxaeHCqf&amp;clipt=EJ_0qwMYs9msAw",
 			},
 			{
 				text: "Una cosa es entrenar en gimnasio, verse bonita, y otra, darse de ostias",
-				url: "https://youtube.com/clip/UgkxptfPo72fI8yntHVo2UfsuyGjpmsfI3js?si=63ttE4alT2k73Aoo",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=XXuWc4c5ywxnBHIZ&amp;clip=UgkxptfPo72fI8yntHVo2UfsuyGjpmsfI3js&amp;clipt=ELTnggMY8smDAw",
 			},
 		],
 	},
@@ -175,15 +175,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "El año pasado, la vida me cagó a trompadas y esto me vino como anillo al dedo",
-				url: "https://youtube.com/clip/UgkxtwjSORg57TZFqKsJBhUB1VqgYvL_W-cH?si=i7vlKyALk5vXaR5q",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=FEfEgIq0ajr1mhAj&amp;clip=UgkxtwjSORg57TZFqKsJBhUB1VqgYvL_W-cH&amp;clipt=EI_dygEY-cTLAQ",
 			},
 			{
 				text: "Con ese bigote de Agustín me dan ganas de pegarle",
-				url: "https://youtube.com/clip/Ugkx5U4X6gOIS3cqBerhC8OmebW7fRakNqCM?si=Z6yzxl1aQsRjrXa9",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=Y_tV3VN01CdHcsJc&amp;clip=Ugkx5U4X6gOIS3cqBerhC8OmebW7fRakNqCM&amp;clipt=ENTvywEYu8fMAQ",
 			},
 			{
 				text: "Tenemos un buen peso para que esto sea una pelea muy divertida",
-				url: "https://youtube.com/clip/Ugkx7iS-4hpvBT1QHGAabmfrVamnMu2IefPX?si=c8s5vkc5gO6UD8_q",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=277dp_i2cC-DtBSG&amp;clip=Ugkx7iS-4hpvBT1QHGAabmfrVamnMu2IefPX&amp;clipt=ELPH2gEYmJfbAQ",
 			},
 		],
 		rotate: true,
@@ -209,11 +209,11 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Me gusta pelear en el Bernabeu: El patio de la casa de Messi",
-				url: "https://youtube.com/clip/Ugkxjm_VBOO_hEVTcaT1iIn1wkqhdSgz0PEz?si=4FNXieUC5rSWA4N5",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=lZS-HU6R57I7jz1V&amp;clip=Ugkxjm_VBOO_hEVTcaT1iIn1wkqhdSgz0PEz&amp;clipt=EIuTqwIYo4isAg",
 			},
 			{
 				text: "Quiero que la pelea dure nueve minutos",
-				url: "https://youtube.com/clip/UgkxJxXzX5p5WQ-qnTCVSY_yHKLwN1mF_yRt?si=hYvXI2ERkJ3DP6ZT",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=7P28IxekBEnX1G1t&amp;clip=UgkxJxXzX5p5WQ-qnTCVSY_yHKLwN1mF_yRt&amp;clipt=ENGdpwIY6ZKoAg",
 			},
 		],
 		rotate: true,
@@ -236,11 +236,11 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "A Will le digo que no toque a Skain. A Skain, me lo pido yo",
-				url: "https://youtube.com/clip/UgkxiWzPv1OLVZmD_T_NH7XTY4QP3beSSc-V?si=CvyH-pbOAi4H5HMT",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=Vd5Q9sGrRwCpGGfu&amp;clip=UgkxiWzPv1OLVZmD_T_NH7XTY4QP3beSSc-V&amp;clipt=EMyf9wQYsOf3BA",
 			},
 			{
 				text: "¿Quién crees que es el rival más peligroso? Karchez: Nadie",
-				url: "https://youtube.com/clip/UgkxIiWOmEccr40oWJUkQzYVAkjVxLSvG2HU?si=jJtd35_Rliq97o6D",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=VHpj_R_6DVvmoYCN&amp;clip=UgkxIiWOmEccr40oWJUkQzYVAkjVxLSvG2HU&amp;clipt=EPux-QQY4on6BA",
 			},
 		],
 		versus: "rey-de-la-pista",
@@ -268,11 +268,11 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Me los bajaré a todos, decir que no, sería tener mala actitud",
-				url: "https://youtube.com/clip/UgkxDDiYcrums2e6329f6Zi2MveywHF8R-da?si=Eplk8G484ovrTM0Z",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=vloF8mfHMa6viUTK&amp;clip=UgkxDDiYcrums2e6329f6Zi2MveywHF8R-da&amp;clipt=ELTe0gQY1PvTBA",
 			},
 			{
 				text: "No puedo estar más emocionado por el reto, pero no me voy a flipar",
-				url: "https://youtube.com/clip/Ugkx1VRxwu3liP3LO5E7FxvR97Qy7VHQ-AMy?si=g0Qwd0gm2dhcZL3t",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=6DlZeV18DJEPIlT0&amp;clip=Ugkx1VRxwu3liP3LO5E7FxvR97Qy7VHQ-AMy&amp;clipt=EOeKhQUYi4iGBQ",
 			},
 		],
 		versus: "rey-de-la-pista",
@@ -295,15 +295,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Ni siquiera ha empezado la pelea, y ya estoy sintiendo adrenalina en mi cuerpo",
-				url: "https://youtube.com/clip/UgkxGm-L9MDFvEf3AjwjoGxRAn-2P0mbBcHM?si=tNDah2eREaipv6iz",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=3ZQKvE88BpT5hswd&amp;clip=UgkxGm-L9MDFvEf3AjwjoGxRAn-2P0mbBcHM&amp;clipt=EICT7QQYvvXtBA",
 			},
 			{
 				text: "Estoy muy entusiasmado por empezar a entrenar y darle a full",
-				url: "https://youtube.com/clip/UgkxPN9KOdpqCyfZMzSpASYG-GintxzHx1au?si=ki9ob750dSvegoIJ",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=O_UlJi7mFS402_lD&amp;clip=UgkxPN9KOdpqCyfZMzSpASYG-GintxzHx1au&amp;clipt=EJ6n7wQYg_fvBA",
 			},
 			{
 				text: "Si hablamos de tirar vergazos, yo no le tengo miedo a nada ni a nadie",
-				url: "https://youtube.com/clip/Ugkx1MY5pq1j1Ehe3I_w05O9OZgTCBUlhTBJ?si=p2dXn_oUyonwT2sV",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=km5i0nh60zfXtwb6&amp;clip=Ugkx1MY5pq1j1Ehe3I_w05O9OZgTCBUlhTBJ&amp;clipt=EJi9ggUYsLKDBQ",
 			},
 		],
 		versus: "rey-de-la-pista",
@@ -326,15 +326,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Espero que se acostumbren a la regla del knockout",
-				url: "https://www.youtube.com/clip/UgkxgdKFyMCvRcN-fj-tuiF1i4KB2msHncZo",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=VYSQ4bjl9r_2AWfE&amp;clip=UgkxgdKFyMCvRcN-fj-tuiF1i4KB2msHncZo&amp;clipt=ENuF5wQY3_vnBA",
 			},
 			{
 				text: "Esta sera mi prioridad de los próximos meses",
-				url: "https://youtube.com/clip/UgkxgTZz_h0N3COR9qQ6sRMmd_PSN_0CNFfJ?si=w5wRjWdKSjtiWnXx",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=spEy0cAP1b3gmK0p&amp;clip=UgkxgTZz_h0N3COR9qQ6sRMmd_PSN_0CNFfJ&amp;clipt=EPzWlAUYtb-VBQ",
 			},
 			{
 				text: "César, parepárate para tres minutos mágicos",
-				url: "https://www.youtube.com/clip/UgkxHy3xXDVJdgv9BUaArwgIYrA_ae1M5FIX",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=2BO21jfm469U_i_5&amp;clip=UgkxHy3xXDVJdgv9BUaArwgIYrA_ae1M5FIX&amp;clipt=EJ3ipQUYtdemBQ",
 			},
 		],
 	},
@@ -356,15 +356,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Me siento muy preparado para el reto, además, me siento el padre de toda la gente que hay",
-				url: "https://www.youtube.com/clip/Ugkxpgjoq-dSHfusbcM7joiiJlE6DvAz-O3V",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=TwzEhzzCIuntT7km&amp;clip=Ugkxpgjoq-dSHfusbcM7joiiJlE6DvAz-O3V&amp;clipt=ENP35AQY6-zlBA",
 			},
 			{
 				text: "Ibai, ¿dónde está el vídeo de las dominadas? Porque, si quieres, las hago aquí mismo",
-				url: "https://youtube.com/clip/UgkxRLtIUYYyPRqrRa02tpC26Ppyclg5U2G4?si=e7sqNk11GMDgpCqE",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=owA_ZlntOIMMBEiG&amp;clip=UgkxRLtIUYYyPRqrRa02tpC26Ppyclg5U2G4&amp;clipt=EMyejQUYl8GOBQ",
 			},
 			{
 				text: "Creo que el cardio será una cosa importante, entonces, estaré 60 minutos sudando como una bestia",
-				url: "https://youtube.com/clip/UgkxfeafuAmAxWjXfSHLE2rdeuiA51BI93qc?si=rKmhv-XfMm2lSRIO",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=USH-zripT5K2OQtg&amp;clip=UgkxfeafuAmAxWjXfSHLE2rdeuiA51BI93qc&amp;clipt=EPrNlgUYksOXBQ",
 			},
 		],
 		versus: "rey-de-la-pista",
@@ -418,11 +418,11 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Me emociona mucho, y me los puedo bajar a todos",
-				url: "https://youtube.com/clip/UgkxQdajCilFEG8GfFfoazDZmwQFHMG3zjW3?si=0kA6MIrGBov58T0B",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=-YCK4KohZDFRnOVT&amp;clip=UgkxQdajCilFEG8GfFfoazDZmwQFHMG3zjW3&amp;clipt=EMHC1gQYqJrXBA",
 			},
 			{
 				text: "Todos están diciendo que me van a partir, pues demuéstrenlo",
-				url: "https://youtube.com/clip/UgkxevzOvk1Ef_BGIefrB9v2YyRZEvU9a-0B?si=IgoywtV5JkUqM0gB",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=JRh3ArHOmnGABJ0f&amp;clip=UgkxevzOvk1Ef_BGIefrB9v2YyRZEvU9a-0B&amp;clipt=EK2nhgUYvPSGBQ",
 			},
 		],
 		versus: "rey-de-la-pista",
@@ -445,11 +445,11 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Estoy muy emocionado, algunos me sacan dos cabezas, entonces, mi estrategía será sacar aire",
-				url: "https://youtube.com/clip/UgkxfyqAvmfPS6r6qAFFHvfleqBWQZpj8Zfr?si=a4Did3Jb4eCXw5iB",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=jjRKCQyop5aK34Ft&amp;clip=UgkxfyqAvmfPS6r6qAFFHvfleqBWQZpj8Zfr&amp;clipt=ELjN4QQY_c_iBA",
 			},
 			{
 				text: "Todos han sido muy amables y algunos se ven muy fuertes, no sé si podré vencerlos",
-				url: "https://youtube.com/clip/Ugkxg29Xx8-7eE1qRTNKFuMCb2tZ9KdCzV-a?si=JDK7GjtmKYN7DOgs",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=E-JCK6-AamolNDky&amp;clip=Ugkxg29Xx8-7eE1qRTNKFuMCb2tZ9KdCzV-a&amp;clipt=EMXi4wQY3dfkBA",
 			},
 		],
 		versus: "rey-de-la-pista",
@@ -503,15 +503,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Aunque tenga un mes de retraso, voy a llegar a su nivel",
-				url: "https://youtube.com/clip/UgkxXwT3QIrF_18ubc4LU2t2rn0fSy36XCl9?si=f6sqmOfhnbKd-qE1",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=KrpP_rfisr6574lH&amp;clip=UgkxXwT3QIrF_18ubc4LU2t2rn0fSy36XCl9&amp;clipt=EKnl8gQYwdrzBA",
 			},
 			{
 				text: "Empezaré a entrenar y daré todo lo que pueda",
-				url: "https://youtube.com/clip/UgkxU-0uUkxYVWUrr6wdMw33KgTDlmSecjNm?si=4Hgou6TkI_jRrqwR",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=mVTh4fAevjpOvQiX&amp;clip=UgkxU-0uUkxYVWUrr6wdMw33KgTDlmSecjNm&amp;clipt=ENW19AQYjoD1BA",
 			},
 			{
 				text: "En El Rey de la Pista, el cardio no es importante, es la fuerza",
-				url: "https://youtube.com/clip/UgkxnYTPVsLLRS3h4sOEdR8--oZxVx01vCum?si=UcUZpzw5d_8NkJWK",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=4K5VTZUzRoESTtHT&amp;clip=UgkxnYTPVsLLRS3h4sOEdR8--oZxVx01vCum&amp;clipt=EJTyngUYiIqgBQ",
 			},
 		],
 
@@ -556,15 +556,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "No hay chance de que pierda. Soy un psicópata",
-				url: "https://youtube.com/clip/UgkxwyKEwj17kL8yJ2XVPNMI4dMuq-FdjYuG?si=LTAScm2qp6d7Bi4L",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=MozNtaEPpcxOOVQv&amp;clip=UgkxwyKEwj17kL8yJ2XVPNMI4dMuq-FdjYuG&amp;clipt=EOP3-QUY--z6BQ",
 			},
 			{
 				text: "¿Se supone que tiene que picar?",
-				url: "https://youtube.com/clip/UgkxCVitcQsAn1I5wO4GlZY_kMcwLKaOI7HI?si=oyHb0fJkIWWQ8wTz",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=IKDAgh-db2KYOQGN&amp;clip=UgkxCVitcQsAn1I5wO4GlZY_kMcwLKaOI7HI&amp;clipt=EMmf7wUY4ZTwBQ",
 			},
 			{
 				text: "Hablaré en el ring. No tengo nada que decir",
-				url: "https://youtube.com/clip/UgkxSCdNOmvFVB74IC_D56vglujXVWtVI60Q?si=Eqhsbja42efTdCaz",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=SeS4CM-dAmsHs1uC&amp;clip=UgkxSCdNOmvFVB74IC_D56vglujXVWtVI60Q&amp;clipt=ELL72QUYvevaBQ",
 			},
 		],
 	},
@@ -589,15 +589,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Nos apostamos los cinturones de la Velada, porque el tuyo no te lo mereces",
-				url: "https://youtube.com/clip/UgkxfYWnQtr1SDApiBtm-EBvS352rnz22bz0?si=3ek10syjTVif2Jz_",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=z8B-GDOrYBOoTASM&amp;clip=UgkxfYWnQtr1SDApiBtm-EBvS352rnz22bz0&amp;clipt=EJGo_gMYrbX_Aw",
 			},
 			{
 				text: "Shelao, te enfrentas a mi redención, no hay manera de que ganes",
-				url: "https://youtube.com/clip/UgkxO_tFZ74OirLeHBIu0xMnvHEcWtYNs7fB?si=aLY0rakseZ1ZYiYZ",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=FSIqUUhiWxGpq-jH&amp;clip=UgkxO_tFZ74OirLeHBIu0xMnvHEcWtYNs7fB&amp;clipt=EMSYjwQY3I2QBA",
 			},
 			{
 				text: "Te propongo que sea el primer combate de la Velada sin casco",
-				url: "https://youtube.com/clip/UgkxuLDeLsfhwMN1DgJoLSThw_nNNrsLFVGF?si=EHJD4g3G_-53dYbB",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=yTzZdAMlWzH3H6Je&amp;clip=UgkxuLDeLsfhwMN1DgJoLSThw_nNNrsLFVGF&amp;clipt=EK-Y_QMYoaj-Aw",
 			},
 		],
 	},
@@ -627,15 +627,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "No me siento nerviosa, sino ansiosa para que comience ya",
-				url: "https://youtube.com/clip/Ugkx0Mw7RT8n-aa7XwatTTg7zG0y8x14BMiY?si=8p0UBNrZsD0nFQHs",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=HOIBR6_dVZpkcXvx&amp;clip=Ugkx0Mw7RT8n-aa7XwatTTg7zG0y8x14BMiY&amp;clipt=EKXN9wIYtJr4Ag",
 			},
 			{
 				text: "Siento que Nissaxter viene con más motivación y a Zeling la noto con miedo",
-				url: "https://youtube.com/clip/Ugkx06ew5d2CB1oLDIc9HPOzTmR5tDi5VHi-?si=SeGMhL7Nejc0M4Bd",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=WT3jaBHM1cKZPSq_&amp;clip=Ugkx06ew5d2CB1oLDIc9HPOzTmR5tDi5VHi-&amp;clipt=EKvuhAMYoY6GAw",
 			},
 			{
 				text: "Sé del combate meses antes, pero no me puse a entrenar porque soy justa y honesta",
-				url: "https://youtube.com/clip/UgkxnCHow_qxDh6_zAdO5Tirg2UryjIgpNQi?si=X11a4D-0TPK-LnyX",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=tVGA8PKZsOc5WM13&amp;clip=UgkxnCHow_qxDh6_zAdO5Tirg2UryjIgpNQi&amp;clipt=EImekwMYkcWTAw",
 			},
 		],
 		rotate: true,
@@ -662,11 +662,11 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Si hablamos de ventajas, yo soy la que menos ha practicado de todas",
-				url: "https://youtube.com/clip/UgkxP_fhKdpqIa-DNHn21UofXxOS6dcJ46iH?si=aEOCLGdxSk82Mcgp",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=BKaoMV8KgCglctOV&amp;clip=UgkxP_fhKdpqIa-DNHn21UofXxOS6dcJ46iH&amp;clipt=EMuOlQMYiOmVAw",
 			},
 			{
 				text: "Voy a entrenar con Jhonny González, que es un campeón mundial",
-				url: "https://youtube.com/clip/Ugkx7Cx_kusf73FDmnSXKZFpkSagGjhzykoR?si=pKGVXbtOKM8umKJJ",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=GhcMIvihto9VUMe4&amp;clip=Ugkx7Cx_kusf73FDmnSXKZFpkSagGjhzykoR&amp;clipt=ELz5ogMYpuGjAw",
 			},
 		],
 		rotate: true,
@@ -692,15 +692,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Después del combate, nos podemos dar un abrazo porque lo importante es dar un buen ejemplo",
-				url: "https://youtube.com/clip/UgkxJszPGolZaON3QjSuzzh5TP2luW9qLX4W?si=_KPbivwhIxlrhMR-",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=ZDk9wPbAuoBtWMzX&amp;clip=UgkxJszPGolZaON3QjSuzzh5TP2luW9qLX4W&amp;clipt=EKerzQEY5IXOAQ",
 			},
 			{
 				text: "Siento que soy un chaval con mucha energía, pero cuando me ponen la mano encima, me caliento",
-				url: "https://youtube.com/clip/UgkxRZ3cq1lEgLDe-NizURNpwN3vPxowiITS?si=iF103l7J-MVN4MbY",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=1rqjV4PxDUxC7rko&amp;clip=UgkxRZ3cq1lEgLDe-NizURNpwN3vPxowiITS&amp;clipt=EI3L0AEY97LRAQ",
 			},
 			{
 				text: "Si a mi me tienen que nerfear en los torneos por algo será, espero no me nerfeen en la velada",
-				url: "https://youtube.com/clip/UgkxHCkkSU67P09o20vM1ZCrohVvOYDmVIh2?si=1IVMhiqKxoUYbxQe",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=-M2nhK1GQwhv_UqB&amp;clip=UgkxHCkkSU67P09o20vM1ZCrohVvOYDmVIh2&amp;clipt=EIjy0QEYmcfSAQ",
 			},
 		],
 	},
@@ -725,15 +725,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Era un sueño un día subirme aquí, muchas gracias a todos por venir",
-				url: "https://youtube.com/clip/UgkxMc_uxsDRteyleobjWTLU7VzlM74PVEul?si=oKWmaUc3mUKDQuOt",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=jMTGZCedLHl9HSsS&amp;clip=UgkxMc_uxsDRteyleobjWTLU7VzlM74PVEul&amp;clipt=EMmJiwIYrtmLAg",
 			},
 			{
 				text: "Me van a perdonar, pero creo que es el mejor combate de toda la Velada",
-				url: "https://youtube.com/clip/UgkxoHOE311rgi9xvpr3WSU0k3yaMVx7N8Lm?si=cESF8DpadP52bhBT",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=tmqKR0giCuBHUFHi&amp;clip=UgkxoHOE311rgi9xvpr3WSU0k3yaMVx7N8Lm&amp;clipt=EKntjAIYi62NAg",
 			},
 			{
 				text: "Es un rival duro y me gustó mucho, fue muy intenso desde el primer momento",
-				url: "https://youtube.com/clip/UgkxRpobly-wM3CN1F8FuuMJ9Q2GLrFNHTuZ?si=hiIeodSEwIjWmlDp4",
+				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=jYx2cJ103X0MPE5r&amp;clip=UgkxRpobly-wM3CN1F8FuuMJ9Q2GLrFNHTuZ&amp;clipt=EOKXlwIY-oyYAg",
 			},
 		],
 		rotate: true,
