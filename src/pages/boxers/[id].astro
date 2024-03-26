@@ -147,15 +147,7 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 		</section>
 	</section>
 
-	{
-		boxer.workout && (
-			<section class="my-44">
-				<SectionTitle title="Entrenamiento" description="Preparación para el combate" />
-
-				<BoxerWorkout workout={boxer.workout} />
-			</section>
-		)
-	}
+	{boxer.workout && <BoxerWorkout workout={boxer.workout} />}
 
 	{forecast && <Forecasts count={forecastCount} boxers={boxersWithForecast} />}
 	<CombatSection combatId={combat.id} combatNumber={combat.number} boxers={boxers} />
