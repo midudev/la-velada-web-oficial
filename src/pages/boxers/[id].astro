@@ -6,7 +6,6 @@ import BoxerDetailInfoRival from "@/components/BoxerDetailInfoRival.astro"
 import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
 import BoxerWorkout from "@/components/BoxerWorkout.astro"
 import BoxerGallery from "@/components/Boxers/Gallery.astro"
-import SectionTitle from "@/components/SectionTitle.astro"
 
 import Instagram from "@/icons/instagram.astro"
 import Tiktok from "@/icons/tiktok.astro"
@@ -146,15 +145,7 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 			</div>
 		</section>
 
-		{
-			boxer.workout && (
-				<section class="my-44">
-					<SectionTitle title="Entrenamiento" description="Preparación para el combate" />
-
-					<BoxerWorkout workout={boxer.workout} />
-				</section>
-			)
-		}
+		{boxer.workout && <BoxerWorkout workout={boxer.workout} />}
 
 		{boxer.gallery && <BoxerGallery id={boxer.id} name={boxer.name} />}
 
