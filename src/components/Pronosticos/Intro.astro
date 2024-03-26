@@ -40,9 +40,13 @@ import Typography from "@/components/Typography.astro"
 	const { signIn } = await import("auth-astro/client")
 	const $login = $("#login")
 
-	$login.onclick = () => {
-		signIn("twitch")
-		$login.setAttribute("aria-disabled", "true")
-		$login.querySelector("span").innerText = "Iniciando sesión..."
+	if ($login) {
+		$login.onclick = () => {
+			signIn("twitch")
+			$login.setAttribute("aria-disabled", "true")
+
+			const $span = $login.querySelector("span")
+			if ($span) $span.innerText = "Iniciando sesión..."
+		}
 	}
 </script>
