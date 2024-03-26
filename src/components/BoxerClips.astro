@@ -66,10 +66,6 @@ const hasClips = clips.length > 0
 }
 <script>
 	document.addEventListener("astro:page-load", () => {
-		const $clipDialog = document.querySelector(".clip-dialog") as HTMLElement
-		const $closeButton = document.querySelector(".close-dialog")
-		const $ytFrame = document.querySelector(".yt-iframe")
-		const $clipContainer = document.querySelectorAll(".clip-container")
 		const $carousel = document.querySelector(".carousel")
 		const $prev = document.querySelector("[data-btn-prev]")
 		const $next = document.querySelector("[data-btn-next]")
@@ -108,29 +104,6 @@ const hasClips = clips.length > 0
 				position = 0
 			}
 			updatePosition()
-		})
-
-		$closeButton?.addEventListener("click", () => {
-			$ytFrame?.setAttribute("src", "")
-			$clipDialog.style.display = "none"
-		})
-
-		// listen escape key
-		document.addEventListener("keydown", (event) => {
-			if (event.key === "Escape") {
-				$ytFrame?.setAttribute("src", "")
-				if ($clipDialog) $clipDialog.style.display = "none"
-			}
-		})
-
-		$clipContainer?.forEach((el) => {
-			el.addEventListener("click", async (event) => {
-				const currentTarget = event.currentTarget as HTMLElement
-				const { url } = currentTarget.dataset
-				if (!url) return
-				$ytFrame?.setAttribute("src", `${url}&autoplay=1`)
-				$clipDialog.style.display = "flex"
-			})
 		})
 
 		window.addEventListener("resize", updatePosition)
