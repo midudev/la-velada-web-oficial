@@ -40,42 +40,42 @@ const formattedBoxerNames = formatter.format(boxerNames)
 const [imageWidth, imageHeight] = combatData.titleSize
 ---
 
+<div class="absolute left-0 top-0 z-0 aspect-video h-[100vh] w-screen">
+	<video
+		autoplay
+		muted
+		loop
+		class="aspect-video size-full overflow-hidden object-cover opacity-0 transition-opacity duration-500"
+		style="mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, transparent);"
+		oncanplay="this.classList.add('opacity-70')"
+	>
+		<source
+			type="video/mp4"
+			src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto.mp4`}
+		/>
+	</video>
+	<!-- <div class="absolute bottom-0 w-full h-28 bg-gradient-to-b from-transparent to-black"></div> -->
+</div>
+
 <Layout
 	title={`Combate número ${combatData.number} de La Velada IV`}
 	description={`Combate entre ${formattedBoxerNames}`}
 	image={`/img/matches/og-${id}-min.jpg`}
 >
-	<main class="-mt-6">
-		<div class="relative">
-			<video
-				autoplay
-				muted
-				loop
-				class="aspect-video h-auto w-full overflow-hidden rounded-xl object-cover opacity-0 transition-opacity duration-500"
-				style="mask-image: radial-gradient(circle, black 10%, transparent 100%);"
-				oncanplay="this.classList.add('opacity-80')"
-			>
-				<source type="video/mp4" src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto.mp4`} />
-			</video>
-			<video
-				autoplay
-				muted
-				loop
-				class="absolute inset-0 -z-10 aspect-video h-auto w-full scale-110 rounded-xl object-cover opacity-0 blur-3xl transition-opacity duration-500"
-				oncanplay="this.classList.remove('opacity-0')"
-			>
-				<source type="video/mp4" src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto-low.mp4`} />
-			</video>
+	<main class="pointer-events-none md:-mt-12">
+		<div class="relative flex h-[60vh] w-full items-center justify-center md:h-[76vh]">
 			<Image
 				width={imageWidth}
 				height={imageHeight}
 				transition:name={`title-image-${id}`}
 				loading={"eager"}
-				class="absolute inset-0 m-auto h-auto max-h-96 w-full max-w-80 object-contain lg:max-w-3xl"
+				class="inset-0 h-auto max-h-96 w-full max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
 				src={`/img/matches/title-${id}.webp`}
 				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 			/>
 		</div>
-		{combatData.boxers.length == 2 && <CombatFeatures boxerIds={combatData.boxers} />}
+		<div class="pointer-events-auto">
+			{combatData.boxers.length == 2 && <CombatFeatures boxerIds={combatData.boxers} />}
+		</div>
 	</main>
 </Layout>
