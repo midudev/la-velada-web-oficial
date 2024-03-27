@@ -1,0 +1,528 @@
+<script is:inline>
+	// from: https://github.com/dgtlss/butterup/tree/main
+
+	const butterup = {
+		options: {
+			maxToasts: 3, // Max number of toasts that can be on the screen at once
+			toastLife: 3000, // How long a toast will stay on the screen before fading away
+			currentToasts: 0, // Current number of toasts on the screen
+			stackedToasts: true, // Whether or not to stack toasts
+		},
+		toast({ title, message, type, location, icon, theme, customIcon, dismissable }) {
+			/* Check if the toaster exists. If it doesn't, create it. If it does, check if there are too many toasts on the screen.
+        If there are too many, delete the oldest one and create a new one. If there aren't too many, create a new one. */
+			if (document.getElementById("toaster") == null) {
+				// toaster doesn't exist, create it
+				const toaster = document.createElement("div")
+				toaster.id = "toaster"
+				if (location == null) {
+					toaster.className = "toaster top-right"
+				} else {
+					toaster.className = `toaster ${location}`
+				}
+				document.body.appendChild(toaster)
+
+				// Create the toasting rack inside of the toaster
+				if (document.getElementById("butterupRack") == null) {
+					const rack = document.createElement("ol")
+					rack.id = "butterupRack"
+					rack.className = "rack"
+					toaster.appendChild(rack)
+				}
+			} else {
+				const toaster = document.getElementById("toaster")
+				// check what location the toaster is in
+				toaster.classList.forEach((item) => {
+					// remove any location classes from the toaster
+					if (
+						item.includes("top-right") ||
+						item.includes("top-center") ||
+						item.includes("top-left") ||
+						item.includes("bottom-right") ||
+						item.includes("bottom-center") ||
+						item.includes("bottom-left")
+					) {
+						toaster.classList.remove(item)
+					}
+				})
+				if (location == null) {
+					toaster.className = "toaster top-right"
+				} else {
+					toaster.className = `toaster ${location}`
+				}
+				const rack = document.getElementById("butterupRack")
+			}
+
+			// Check if there are too many toasts on the screen
+			if (butterup.options.currentToasts >= butterup.options.maxToasts) {
+				// there are too many toasts on the screen, delete the oldest one
+				const oldestToast = document.getElementById("butterupRack").firstChild
+				document.getElementById("butterupRack").removeChild(oldestToast)
+				butterup.options.currentToasts--
+			}
+
+			// Create the toast
+			const toast = document.createElement("li")
+			butterup.options.currentToasts++
+			toast.className = "butteruptoast"
+			// if the toast class contains a top or bottom location, add the appropriate class to the toast
+			if (
+				toaster.className.includes("top-right") ||
+				toaster.className.includes("top-center") ||
+				toaster.className.includes("top-left")
+			) {
+				toast.className += " toastDown"
+			}
+			if (
+				toaster.className.includes("bottom-right") ||
+				toaster.className.includes("bottom-center") ||
+				toaster.className.includes("bottom-left")
+			) {
+				toast.className += " toastUp"
+			}
+			toast.id = `butterupToast-${butterup.options.currentToasts}`
+			if (type != null) {
+				toast.className += ` ${type}`
+			}
+
+			if (theme != null) {
+				toast.className += ` ${theme}`
+			}
+
+			// Add the toast to the rack
+			document.getElementById("butterupRack").appendChild(toast)
+
+			// check if the user wants an icon
+			if (icon != null && icon == true) {
+				// add a div inside the toast with a class of icon
+				const toastIcon = document.createElement("div")
+				toastIcon.className = "icon"
+				toast.appendChild(toastIcon)
+				if (type != null) {
+					// add the type class to the toast
+					toast.className += ` ${type}`
+					if (type == "success") {
+						toastIcon.innerHTML =
+							'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">' +
+							'<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />' +
+							"</svg>"
+					}
+					if (type == "error") {
+						toastIcon.innerHTML =
+							'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">' +
+							'<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />' +
+							"</svg>"
+					}
+					if (type == "warning") {
+						toastIcon.innerHTML =
+							'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">' +
+							'<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />' +
+							"</svg>"
+					}
+					if (type == "info") {
+						toastIcon.innerHTML =
+							'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">' +
+							'<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />' +
+							"</svg>"
+					}
+				}
+			}
+
+			// add a div inside the toast with a class of notif
+			const toastNotif = document.createElement("div")
+			toastNotif.className = "notif"
+			toast.appendChild(toastNotif)
+
+			// add a div inside of notif with a class of desc
+			const toastDesc = document.createElement("div")
+			toastDesc.className = "desc"
+			toastNotif.appendChild(toastDesc)
+
+			// check if the user added a title
+			if (title != null) {
+				const toastTitle = document.createElement("div")
+				toastTitle.className = "title"
+				toastTitle.innerHTML = title
+				toastDesc.appendChild(toastTitle)
+			}
+
+			// check if the user added a message
+			if (message != null) {
+				const toastMessage = document.createElement("div")
+				toastMessage.className = "message"
+				toastMessage.innerHTML = message
+				toastDesc.appendChild(toastMessage)
+			}
+
+			if (dismissable != null && dismissable == true) {
+				// Add a class to the toast to make it dismissable
+				toast.className += " dismissable"
+				// when the item is clicked on, remove it from the DOM
+				toast.addEventListener("click", () => {
+					butterup.despawnToast(toast.id)
+				})
+			}
+
+			// remove the entrance animation class after the animation has finished
+			setTimeout(() => {
+				toast.className = toast.className.replace(" toastDown", "")
+				toast.className = toast.className.replace(" toastUp", "")
+			}, 500)
+
+			// despawn the toast after the specified time
+			setTimeout(() => {
+				butterup.despawnToast(toast.id)
+			}, butterup.options.toastLife)
+		},
+		despawnToast(toastId) {
+			// fade out the toast and then remove it from the DOM
+			const toast = document.getElementById(toastId)
+			// does the toast exist?
+			if (toast != null) {
+				toast.className += " fadeOutToast"
+				setTimeout(() => {
+					// set the opacity to 0
+					try {
+						toast.style.opacity = "0"
+						toast.parentNode.removeChild(toast)
+						butterup.options.currentToasts--
+					} catch (e) {
+						// do nothing
+					}
+					// if this was the last toast on the screen, remove the toaster
+					if (butterup.options.currentToasts == 0) {
+						const toaster = document.getElementById("toaster")
+						toaster.parentNode.removeChild(toaster)
+					}
+				}, 500)
+			}
+		},
+	}
+
+	window.toast = butterup.toast
+</script>
+
+<style is:global>
+	.toaster {
+		font-family:
+			ui-sans-serif,
+			system-ui,
+			-apple-system,
+			BlinkMacSystemFont,
+			Segoe UI,
+			Roboto,
+			Helvetica Neue,
+			Arial,
+			Noto Sans,
+			sans-serif,
+			Apple Color Emoji,
+			Segoe UI Emoji,
+			Segoe UI Symbol,
+			Noto Color Emoji;
+		box-sizing: border-box;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+		outline: none;
+		z-index: 999999999;
+		position: fixed;
+		padding: 5px;
+	}
+
+	.toaster.bottom-right {
+		bottom: 20px;
+		right: 20px;
+	}
+
+	.toaster.bottom-left {
+		bottom: 20px;
+		left: 20px;
+	}
+
+	.toaster.top-right {
+		top: 20px;
+		right: 20px;
+	}
+
+	.toaster.top-left {
+		top: 20px;
+		left: 20px;
+	}
+
+	.toaster.bottom-center {
+		bottom: 20px;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+	.toaster.top-center {
+		top: 20px;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+	.toaster.top-center ol.rack {
+		flex-direction: column-reverse;
+	}
+
+	.toaster.top-left ol.rack {
+		flex-direction: column-reverse;
+	}
+
+	.toaster.top-right ol.rack {
+		flex-direction: column-reverse;
+	}
+
+	.toaster.bottom-center ol.rack {
+		flex-direction: column;
+	}
+
+	.toaster.bottom-left ol.rack {
+		flex-direction: column;
+	}
+
+	.toaster.bottom-right ol.rack {
+		flex-direction: column;
+	}
+
+	ol.rack {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		/* reverse the list order so that the newest items are at the top */
+		display: flex;
+	}
+
+	ol.rack li {
+		margin-bottom: 16px;
+	}
+
+	.butteruptoast {
+		align-items: center;
+		background-color: white;
+		border-radius: 8px;
+		border: 1px solid hsl(0, 0%, 93%);
+		box-shadow: 0 4px 12px #0000001a;
+		color: #282828;
+		display: flex;
+		font-size: 21px;
+		gap: 6px;
+		max-width: 325px;
+		padding: 8px 16px;
+		text-align: center;
+	}
+
+	.butteruptoast.dismissable {
+		cursor: pointer;
+	}
+
+	.butteruptoast .icon {
+		display: flex;
+		align-items: center;
+	}
+
+	.butteruptoast .icon svg {
+		width: 20px;
+		height: 20px;
+		fill: #282828;
+	}
+
+	.notif .desc {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.notif .desc .title {
+		font-weight: 500;
+		line-height: 1.5;
+	}
+
+	.notif .desc .message {
+		font-weight: 400;
+		line-height: 1.4;
+	}
+
+	.butteruptoast.success {
+		background-color: #ebfef2;
+		color: hsl(140, 100%, 27%);
+		border: solid 1px hsl(145, 92%, 91%);
+	}
+
+	.butteruptoast.success .icon svg {
+		fill: hsl(140, 100%, 27%);
+	}
+
+	.butteruptoast.error .icon svg {
+		fill: hsl(0, 100%, 27%);
+	}
+
+	.butteruptoast.warning .icon svg {
+		fill: hsl(50, 100%, 27%);
+	}
+
+	.butteruptoast.info .icon svg {
+		fill: hsl(210, 100%, 27%);
+	}
+
+	.butteruptoast.error {
+		background-color: #fef0f0;
+		color: hsl(0, 100%, 27%);
+		border: solid 1px hsl(0, 92%, 91%);
+	}
+
+	.butteruptoast.warning {
+		background-color: #fffdf0;
+		color: hsl(50, 100%, 27%);
+		border: solid 1px hsl(50, 92%, 91%);
+	}
+
+	.butteruptoast.info {
+		background-color: #f0f8ff;
+		color: hsl(210, 100%, 27%);
+		border: solid 1px hsl(210, 92%, 91%);
+	}
+
+	/* Entrance animations */
+	/*  Note: These animations need to differ depending on the location of the toaster
+    Elements that are in the top should slide and fade down from the top
+    Elemennts that are in the bottom should slide and fade up from the bottom
+*/
+
+	.toastUp {
+		animation: slideUp 0.5s ease-in-out;
+		animation-fill-mode: forwards;
+	}
+
+	.toastDown {
+		animation: slideDown 0.5s ease-in-out;
+		animation-fill-mode: forwards;
+	}
+
+	@keyframes slideDown {
+		0% {
+			opacity: 0;
+			transform: translateY(-100%);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes slideUp {
+		0% {
+			opacity: 0;
+			transform: translateY(100%);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.fadeOutToast {
+		animation: fadeOut 0.3s ease-in-out;
+		animation-fill-mode: forwards;
+	}
+
+	@keyframes fadeOut {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+
+	/*  Additional Styles
+    These styles are an alternative to the standard option. A user can choose to use these
+    styles by setting the theme: variable per toast
+*/
+
+	/* Glass */
+
+	.butteruptoast.glass {
+		background-color: rgba(255, 255, 255, 0.42) !important;
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: none;
+		box-shadow: 0 4px 12px #0000001a;
+		color: #282828;
+	}
+
+	.butteruptoast.glass.success {
+		background-color: rgba(235, 254, 242, 0.42) !important;
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: none;
+		box-shadow: 0 4px 12px #0000001a;
+		color: hsl(140, 100%, 27%);
+	}
+
+	.butteruptoast.glass.error {
+		background-color: rgba(254, 240, 240, 0.42) !important;
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: none;
+		box-shadow: 0 4px 12px #0000001a;
+		color: hsl(0, 100%, 27%);
+	}
+
+	.butteruptoast.glass.warning {
+		background-color: rgba(255, 253, 240, 0.42) !important;
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: none;
+		box-shadow: 0 4px 12px #0000001a;
+		color: hsl(50, 100%, 27%);
+	}
+
+	.butteruptoast.glass.info {
+		background-color: rgba(240, 248, 255, 0.42) !important;
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: none;
+		box-shadow: 0 4px 12px #0000001a;
+		color: hsl(210, 100%, 27%);
+	}
+
+	/* brutalist */
+	.butteruptoast.brutalist {
+		border-radius: 0px;
+		box-shadow: 0 4px 12px #0000001a;
+		border: solid 2px #282828;
+		font-size: 13px;
+		align-items: center;
+		display: flex;
+		padding: 16px;
+		background-color: white;
+		gap: 6px;
+		color: #282828;
+		width: 325px;
+	}
+
+	.butteruptoast.brutalist.success {
+		background-color: #ebfef2;
+		color: hsl(140, 100%, 27%);
+		border: solid 2px hsl(140, 100%, 27%);
+	}
+
+	.butteruptoast.brutalist.error {
+		background-color: #fef0f0;
+		color: hsl(0, 100%, 27%);
+		border: solid 2px hsl(0, 100%, 27%);
+	}
+
+	.butteruptoast.brutalist.warning {
+		background-color: #fffdf0;
+		color: hsl(50, 100%, 27%);
+		border: solid 2px hsl(50, 100%, 27%);
+	}
+
+	.butteruptoast.brutalist.info {
+		background-color: #f0f8ff;
+		color: hsl(210, 100%, 27%);
+		border: solid 2px hsl(210, 100%, 27%);
+	}
+</style>
