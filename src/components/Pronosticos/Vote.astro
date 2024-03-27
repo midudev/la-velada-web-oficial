@@ -101,7 +101,7 @@ votes.forEach((vote) => {
 							transition:name={`title-image-${combat.id}`}
 							loading={index < 2 ? "eager" : "lazy"}
 							class:list={[
-								"pointer-events-none absolute inset-x-0 bottom-20 z-10 m-auto h-auto w-48 md:inset-0 md:h-48 md:w-auto",
+								"pointer-events-none absolute inset-x-0 bottom-20 z-10 m-auto h-auto w-48 md:inset-0 md:w-80",
 							]}
 							src={`/img/matches/title-${combat.id}.webp`}
 							alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
@@ -187,6 +187,9 @@ votes.forEach((vote) => {
 						dismissible: false,
 						type: "success",
 					})
+
+					const nextCombat = $button.parentElement?.nextElementSibling as HTMLElement
+					if (nextCombat) nextCombat.scrollIntoView({ behavior: "smooth" })
 				})
 				.catch(() => {
 					rollbackUI()
