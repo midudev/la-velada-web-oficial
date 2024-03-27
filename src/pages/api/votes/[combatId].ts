@@ -20,7 +20,7 @@ const res = (
 export const POST: APIRoute = async ({ params, request }) => {
 	const session = await getSession(request)
 
-	if (!session || session?.user?.email == null) {
+	if (!session || session.user?.email == null) {
 		return res("Unauthorized", { status: 401 })
 	}
 
