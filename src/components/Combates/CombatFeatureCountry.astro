@@ -1,0 +1,21 @@
+---
+import type { Boxer } from "@/types/Boxer"
+
+interface Props {
+	boxer: Boxer
+}
+
+const { boxer } = Astro.props
+---
+
+<td class="py-3 font-semibold">
+	<span class="flex items-center justify-center">
+		<img
+			decoding="async"
+			class:list={"pointer-events-none aspect-[3/2] h-8 w-auto object-contain object-center"}
+			alt={`Bandera de ${boxer.countryName}`}
+			src={`/img/flags/${boxer.country}.webp`}
+		/>
+		{boxer.countryName}
+	</span>
+</td>
