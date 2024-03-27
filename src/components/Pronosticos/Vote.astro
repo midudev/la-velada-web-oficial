@@ -5,7 +5,6 @@ import { Votes, db, eq } from "astro:db"
 
 import Typography from "@/components/Typography.astro"
 import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
-import { generateUserId } from "@/lib/users"
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
@@ -25,7 +24,7 @@ interface Props {
 
 const { user } = Astro.props as Props
 
-const userId = generateUserId(user)
+const userId = user.id
 const votes = await db
 	.select({ combatId: Votes.combatId, voteId: Votes.voteId })
 	.from(Votes)
