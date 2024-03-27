@@ -299,10 +299,6 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=3ZQKvE88BpT5hswd&amp;clip=UgkxGm-L9MDFvEf3AjwjoGxRAn-2P0mbBcHM&amp;clipt=EICT7QQYvvXtBA",
 			},
 			{
-				text: "Estoy muy entusiasmado por empezar a entrenar y darle a full",
-				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=O_UlJi7mFS402_lD&amp;clip=UgkxPN9KOdpqCyfZMzSpASYG-GintxzHx1au&amp;clipt=EJ6n7wQYg_fvBA",
-			},
-			{
 				text: "Si hablamos de tirar vergazos, yo no le tengo miedo a nada ni a nadie",
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=km5i0nh60zfXtwb6&amp;clip=Ugkx1MY5pq1j1Ehe3I_w05O9OZgTCBUlhTBJ&amp;clipt=EJi9ggUYsLKDBQ",
 			},
@@ -330,10 +326,6 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=VYSQ4bjl9r_2AWfE&amp;clip=UgkxgdKFyMCvRcN-fj-tuiF1i4KB2msHncZo&amp;clipt=ENuF5wQY3_vnBA",
 			},
 			{
-				text: "Esta sera mi prioridad de los próximos meses",
-				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=spEy0cAP1b3gmK0p&amp;clip=UgkxgTZz_h0N3COR9qQ6sRMmd_PSN_0CNFfJ&amp;clipt=EPzWlAUYtb-VBQ",
-			},
-			{
 				text: "César, parepárate para tres minutos mágicos",
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=2BO21jfm469U_i_5&amp;clip=UgkxHy3xXDVJdgv9BUaArwgIYrA_ae1M5FIX&amp;clipt=EJ3ipQUYtdemBQ",
 			},
@@ -356,15 +348,15 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "Me siento muy preparado para el reto, además, me siento el padre de toda la gente que hay",
+				text: "Me siento el padre de toda la gente que hay...",
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=TwzEhzzCIuntT7km&amp;clip=Ugkxpgjoq-dSHfusbcM7joiiJlE6DvAz-O3V&amp;clipt=ENP35AQY6-zlBA",
 			},
 			{
-				text: "Ibai, ¿dónde está el vídeo de las dominadas? Porque, si quieres, las hago aquí mismo",
+				text: "¿El vídeo de las dominadas? Si quieres, las hago aquí mismo",
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=owA_ZlntOIMMBEiG&amp;clip=UgkxRLtIUYYyPRqrRa02tpC26Ppyclg5U2G4&amp;clipt=EMyejQUYl8GOBQ",
 			},
 			{
-				text: "Creo que el cardio será una cosa importante, entonces, estaré 60 minutos sudando como una bestia",
+				text: "Estaré 60 minutos sudando como una bestia",
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=USH-zripT5K2OQtg&amp;clip=UgkxfeafuAmAxWjXfSHLE2rdeuiA51BI93qc&amp;clipt=EPrNlgUYksOXBQ",
 			},
 		],
@@ -389,10 +381,6 @@ export const BOXERS: Boxer[] = addGetters([
 			{
 				text: "No entendí bien la mecánica, pero se que debo pegarles a ellos. ¿No?",
 				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=dlWpIp4dRS8UAagF&amp;clip=UgkxEcgcoJaVcag3z49qN_XpjZv3CHrCJ7fL&amp;clipt=EOqZGRjP6Rk",
-			},
-			{
-				text: "Empecé a entrenar hace un año muy fuerte, hice un cambio físico y tengo más confianza de base",
-				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=QCqVXYd5ogbVcoeD&amp;clip=UgkxfP2AM59ICTRmS5ICPtCS-JLwZIH8mzYa&amp;clipt=EIK4GxiVlRw",
 			},
 			{
 				text: "Subité, ¿querés pelear? y hacemos 11 en el rey de la pista",
