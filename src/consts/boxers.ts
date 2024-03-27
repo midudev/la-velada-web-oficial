@@ -471,7 +471,7 @@ export const BOXERS: Boxer[] = addGetters([
 			tiktok: "https://www.tiktok.com/@skain24",
 		},
 		workout: {
-			videoID: "BlN7FgdDoHM",
+			videoID: "PUNBQ1_rbuo",
 			thumbnail: "/img/boxers/workoutThumbnails/skain.webp",
 		},
 		clips: [
