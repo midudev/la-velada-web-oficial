@@ -165,10 +165,11 @@ votes.forEach((vote) => {
 				$previousVoted?.classList.add("is-voted")
 
 				window.toast({
-					title: "❌ Error al guardar el voto",
+					title: "Error al guardar el voto",
 					location: "bottom-center",
 					dismissible: false,
 					type: "error",
+					icon: true,
 				})
 			}
 
@@ -182,10 +183,11 @@ votes.forEach((vote) => {
 				.then((res) => {
 					if (!res.ok) return rollbackUI()
 					window.toast({
-						title: "✅ ¡Voto registrado!",
+						title: "¡Voto registrado!",
 						location: "bottom-center",
 						dismissible: false,
 						type: "success",
+						icon: true,
 					})
 
 					const nextCombat = $button.parentElement?.nextElementSibling as HTMLElement
