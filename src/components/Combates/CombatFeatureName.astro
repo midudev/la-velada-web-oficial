@@ -1,0 +1,43 @@
+---
+import type { Boxer } from "@/types/Boxer"
+
+interface Props {
+	boxer: Boxer
+	isKingOfTheTrack?: boolean
+}
+
+const { boxer, isKingOfTheTrack } = Astro.props
+---
+
+<td class="py-3 font-semibold">
+	<div class="-mt-10">
+		<a
+			class:list={[
+				`${isKingOfTheTrack ? "p-1" : "text-xl font-bold text-accent transition hover:scale-110 hover:saturate-[150%]"}`,
+			]}
+			href={`/boxers/${boxer.id}`}
+			title={`Visita la página del boxeador ${boxer.name}`}
+		>
+			<img
+				src={`/img/boxers/${boxer.id}-small.webp`}
+				class:list={isKingOfTheTrack
+					? ["h-14 object-contain"]
+					: ["mx-auto aspect-square h-32 object-contain"]}
+				alt={`Foto en pequeño del rival ${boxer.name}`}
+				style="
+					filter: drop-shadow(0 0 5px rgba(0, 0, 0, .5));
+					mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+				"
+			/>
+			<span
+				class:list={[
+					"font-atomic text-accent",
+					{ "text-[12px]": isKingOfTheTrack },
+					{ "text-xl": !isKingOfTheTrack },
+				]}
+			>
+				{boxer.name.toLowerCase()}
+			</span>
+		</a>
+	</div>
+</td>

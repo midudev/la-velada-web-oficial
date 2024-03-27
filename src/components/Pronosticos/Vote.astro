@@ -65,7 +65,46 @@ votes.forEach((vote) => {
 
 				const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
 				const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
-				if (isKingOfTheHill) return null
+
+				if (isKingOfTheHill) {
+					return (
+						<li class="relative flex w-full max-w-3xl flex-col justify-center md:justify-between">
+							<Image
+								width={combatData.titleSize[0]}
+								height={combatData.titleSize[1]}
+								transition:name={`title-image-${combat.id}`}
+								loading="lazy"
+								class:list={["pointer-events-none m-auto -mb-20 h-auto w-48 md:inset-0 md:w-64"]}
+								src={`/img/matches/title-${combat.id}.webp`}
+								alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+								style="mask-image: linear-gradient(black 50%, transparent)"
+							/>
+							<ul class="grid grid-cols-5 gap-x-4">
+								{combatData.boxers.map((boxer) => (
+									<button
+										class:list={[
+											"vote-team group relative max-w-60 saturate-0 transition hover:scale-110 hover:saturate-100",
+											{ "is-voted": userVotes[combatData.id] === boxer },
+										]}
+										data-combat-id={combatData.id}
+										data-vote-id={boxer}
+									>
+										<div class="relative h-auto text-xs">
+											<img
+												class="h-auto max-h-96 w-full object-contain"
+												src={`/img/boxers/${boxer}-small.webp`}
+												alt={`Fotografía de ${boxer.replaceAll("-", " ")}`}
+												style="mask-image: linear-gradient(black 80%, transparent)"
+											/>
+											<span class="to-vote-text small">{boxer.replaceAll("-", " ")}</span>
+											<span class="already-voted-text small">¡tu voto!</span>
+										</div>
+									</button>
+								))}
+							</ul>
+						</li>
+					)
+				}
 
 				const { teams, boxers } = combatData
 				const [slug1, slug2] = teams ?? boxers
@@ -144,33 +183,34 @@ votes.forEach((vote) => {
 <script>
 	import { $$ } from "@/lib/dom-selector"
 
-	const $voteTeam = $$(".vote-team") as NodeListOf<HTMLButtonElement>
+	document.addEventListener("astro:page-load", () => {
+		const $voteTeam = $$(".vote-team") as NodeListOf<HTMLButtonElement>
 
-	$voteTeam.forEach(($button) => {
-		const { combatId, voteId } = $button.dataset
+		$voteTeam.forEach(($button) => {
+			const { combatId, voteId } = $button.dataset
 
-		$button.onclick = () => {
-			const $parent = $button.parentElement as HTMLElement
-			let $previousVoted: HTMLElement | null
+			$button.onclick = () => {
+				const $parent = $button.parentElement as HTMLElement
+				let $previousVoted: HTMLElement | null
 
-			if ($parent) {
-				$previousVoted = $parent.querySelector(".is-voted")
-				$previousVoted?.classList.remove("is-voted")
-			}
+				if ($parent) {
+					$previousVoted = $parent.querySelector(".is-voted")
+					$previousVoted?.classList.remove("is-voted")
+				}
 
-			$button.classList.add("is-voted")
+				$button.classList.add("is-voted")
 
-			const rollbackUI = () => {
-				$button.classList.remove("is-voted")
-				$previousVoted?.classList.add("is-voted")
+				const rollbackUI = () => {
+					$button.classList.remove("is-voted")
+					$previousVoted?.classList.add("is-voted")
 
-				window.toast({
-					title: "Error al guardar el voto",
-					location: "bottom-center",
-					dismissible: false,
-					type: "error",
-					icon: true,
-				})
+          window.toast({
+            title: "Error al guardar el voto",
+            location: "bottom-center",
+            dismissible: false,
+            type: "error",
+            icon: true,
+          })
 			}
 
 			fetch(`/api/votes/${combatId}`, {
@@ -190,13 +230,14 @@ votes.forEach((vote) => {
 						icon: true,
 					})
 
-					const nextCombat = $button.parentElement?.nextElementSibling as HTMLElement
-					if (nextCombat) nextCombat.scrollIntoView({ behavior: "smooth" })
-				})
-				.catch(() => {
-					rollbackUI()
-				})
-		}
+          const nextCombat = $button.parentElement?.nextElementSibling as HTMLElement
+          if (nextCombat) nextCombat.scrollIntoView({ behavior: "smooth" })
+        })
+        .catch(() => {
+          rollbackUI()
+        })
+			}
+		})
 	})
 </script>
 
@@ -230,6 +271,10 @@ votes.forEach((vote) => {
 		& span {
 			@apply pointer-events-none absolute bottom-2 left-0 right-0 z-50 mx-auto font-atomic text-3xl;
 			text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+
+			&.small {
+				@apply text-xl;
+			}
 		}
 	}
 </style>
