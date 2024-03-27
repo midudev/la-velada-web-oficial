@@ -163,6 +163,13 @@ votes.forEach((vote) => {
 			const rollbackUI = () => {
 				$button.classList.remove("is-voted")
 				$previousVoted?.classList.add("is-voted")
+
+				window.toast({
+					title: "❌ Error al guardar el voto",
+					location: "bottom-center",
+					dismissible: false,
+					type: "error",
+				})
 			}
 
 			fetch(`/api/votes/${combatId}`, {
@@ -174,6 +181,12 @@ votes.forEach((vote) => {
 			})
 				.then((res) => {
 					if (!res.ok) return rollbackUI()
+					window.toast({
+						title: "✅ ¡Voto registrado!",
+						location: "bottom-center",
+						dismissible: false,
+						type: "success",
+					})
 				})
 				.catch(() => {
 					rollbackUI()
