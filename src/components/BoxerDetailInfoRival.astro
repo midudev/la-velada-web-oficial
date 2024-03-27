@@ -8,31 +8,64 @@ interface Props {
 }
 
 const { title, value, id } = Astro.props
+
+const isKingOfTheTrack = value[0].versus === "rey-de-la-pista"
+const isVersus = value[0].versus.length === 2
 ---
 
-<div class="flex justify-center text-white">
+<div class="flex justify-center text-white mix-blend-screen">
 	<div
-		class="flex w-full items-start justify-between pl-2.5 pr-2.5 pt-2 text-center md:flex-col md:items-center"
+		class:list=`flex w-full text-center flex-col items-center ${isKingOfTheTrack ? "md:-mt-10 p-5" : "pl-2.5 pr-2.5 pt-2"}`
 	>
-		<h4>{title}</h4>
 		<div
-			class="flex w-full flex-row flex-wrap justify-end gap-x-2 md:justify-center md:text-center"
+			class:list={isKingOfTheTrack
+				? ["grid grid-cols-5"]
+				: [
+						isVersus
+							? "grid grid-cols-2"
+							: "flex w-full flex-row flex-wrap justify-center gap-x-2  md:justify-center md:text-center",
+					]}
 		>
 			{
 				value.map((item, index) => (
 					<>
 						<a
-							class:list={"text-xl font-bold text-accent hover:underline"}
+							class:list={
+								isKingOfTheTrack
+									? ""
+									: `bg-slate-50/5 text-xl font-bold text-accent transition hover:scale-110 hover:underline ${isVersus ? "mx-2  p-1" : ""}`
+							}
 							href={item.id}
 							title={`Visita la página del boxeador ${item.name}`}
 							id={id + (index + 1)}
 						>
-							{item.name}
+							<img
+								src={`/img/boxers/${item.id}-small.webp`}
+								class:list={
+									isKingOfTheTrack
+										? ["h-14 object-contain"]
+										: ["mx-auto aspect-square h-32 object-contain"]
+								}
+								alt={`Foto en pequeño del rival ${item.name}`}
+								style="
+										filter: drop-shadow(0 0 5px rgba(0, 0, 0, .5));
+										mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+									"
+							/>
+							<span
+								class:list={
+									isKingOfTheTrack
+										? ["text-[10px] font-bold text-accent"]
+										: ["text-xl font-bold text-accent"]
+								}
+							>
+								{item.name}
+							</span>
 						</a>
-						{index !== value.length - 1 && <span class="text-xl font-bold text-accent"> / </span>}
 					</>
 				))
 			}
 		</div>
+		<h4>{title}</h4>
 	</div>
 </div>
