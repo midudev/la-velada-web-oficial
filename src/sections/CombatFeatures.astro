@@ -1,0 +1,105 @@
+---
+import Typography from "@/components/Typography.astro"
+import { BOXERS } from "@/consts/boxers"
+interface Props {
+	boxerIds: string[]
+}
+
+const relevantBoxerData = Object.entries({
+	name: {
+		label: "Alias",
+		concat: undefined,
+	},
+	country: {
+		label: "País",
+		concat: undefined,
+	},
+	weight: {
+		label: "Peso",
+		concat: " kg",
+	},
+	height: {
+		label: "Altura",
+		concat: " cm",
+	},
+	guard: {
+		label: "Guardia",
+		concat: undefined,
+	},
+	reach: {
+		label: "Alcance",
+		concat: " cm",
+	},
+	age: {
+		label: "Edad",
+		concat: " años",
+	},
+})
+
+const { boxerIds } = Astro.props
+
+const boxers = boxerIds.map((id) => BOXERS.find((boxer) => boxer.id === id))
+---
+
+<section class="pt-40">
+	<Typography as="h2" variant="h2" color="white" class:list={"text-center"}>
+		Características
+	</Typography>
+	<Typography
+		as="p"
+		variant="body"
+		color="neutral"
+		class:list={"mx-auto mt-4 text-wrap text-center"}
+	>
+		Datos relevantes de cada contrincante
+	</Typography>
+	<table class="mt-10 w-full text-center text-white lg:text-lg">
+		<tbody>
+			{
+				relevantBoxerData.map(([key, { label, concat }]) => (
+					<tr class="mb-10 bg-gradient-to-b from-white/20 via-transparent to-transparent p-4">
+						{key == "country" ? (
+							<td class="flex items-center justify-center py-3 font-semibold">
+								<img
+									decoding="async"
+									class:list={
+										"pointer-events-none aspect-[3/2] h-8 w-auto object-contain object-center"
+									}
+									alt={`Bandera de ${boxers[0] && boxers[0]["countryName"]}`}
+									src={`/img/flags/${boxers[0] && boxers[0][key]}.webp`}
+								/>
+								{boxers[0] && boxers[0]["countryName"]}
+								{concat}
+							</td>
+						) : (
+							<td class="py-3 font-semibold">
+								{boxers[0] && boxers[0][key as keyof (typeof boxers)[0]]}
+								{concat}
+							</td>
+						)}
+						<td class="text-primary">{label}</td>
+						{key == "country" ? (
+							<td class="flex items-center justify-center py-3 font-semibold">
+								<img
+									decoding="async"
+									class:list={
+										"pointer-events-none aspect-[3/2] h-8 w-auto object-contain object-center"
+									}
+									alt={`Bandera de ${boxers[1] && boxers[1]["countryName"]}`}
+									src={`/img/flags/${boxers[1] && boxers[1][key]}.webp`}
+								/>
+								{boxers[1] && boxers[1]["countryName"]}
+								{concat}
+							</td>
+						) : (
+							<td class="font-semibold">
+								{boxers[1] && boxers[1][key as keyof (typeof boxers)[1]]}
+								{concat}
+							</td>
+						)}
+					</tr>
+				))
+			}
+		</tbody>
+	</table>
+</section>

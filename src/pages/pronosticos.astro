@@ -13,6 +13,6 @@ const session = await getSession(Astro.request)
 	description="¡Participa votando a los boxeadores que crees que ganarán sus combates!"
 >
 	<main class="flex flex-col items-center justify-center text-white">
-		{session === null ? <Intro /> : <Vote />}
+		{session === null ? <Intro /> : <Vote user={session.user} />}
 	</main>
 </Layout>
