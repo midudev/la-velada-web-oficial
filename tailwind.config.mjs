@@ -17,7 +17,7 @@ export default {
 				ice: "var(--color-twitch-ice)",
 			},
 			screens: {
-				xs: "360px",
+				"xs": "360px",
 				...defaultTheme.screens,
 				"3xl": "1650px",
 			},
@@ -25,9 +25,7 @@ export default {
 	},
 	plugins: [
 		animations,
-		function ({
-			addVariant
-		}) {
+		({ addVariant }) => {
 			addVariant("any-hover", "@media (any-hover: hover) { &:hover }")
 			addVariant("mobile", "@media (any-hover: none) { & }")
 		},
