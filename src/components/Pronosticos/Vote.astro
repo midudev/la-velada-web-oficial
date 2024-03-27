@@ -1,8 +1,10 @@
 ---
+import type { User } from "@auth/core/types"
 import { Image } from "astro:assets"
+import { Votes, db, eq } from "astro:db"
 
 import Typography from "@/components/Typography.astro"
-import { COMBATS } from "@/consts/combats"
+import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
@@ -11,15 +13,49 @@ const getCombatById = (id: string) => {
 const getBoxerNames = (boxerIds: string[]): string[] => {
 	return boxerIds.map((boxerId) => `Boxeador ${boxerId}`)
 }
+
+const createImgRoute = (combateNumber: number, slug: string) => {
+	return `/img/boxers/vote/vote-${combateNumber}-${slug}.webp`
+}
+
+interface Props {
+	user: User
+}
+
+const { user } = Astro.props as Props
+
+const userId = user.id
+const votes = await db
+	.select({ combatId: Votes.combatId, voteId: Votes.voteId })
+	.from(Votes)
+	.where(eq(Votes.userId, userId))
+
+const userVotes: Record<string, string> = {}
+votes.forEach((vote) => {
+	userVotes[vote.combatId] = vote.voteId
+})
+
+// const userVotes = votes.reduce((acc, vote) => {
+// 	acc[vote.combatId] = vote.voteId
+// 	return acc
+// }, {} as Record<string, string>)
 ---
 
 <section class="w-full">
-	<Typography class="mb-10 text-center" color="white" as="h1" variant={"atomic-title"}
+	<Typography class="mb-8 text-center" color="white" as="h1" variant={"atomic-title"}
 		>¡haz tu pronóstico!</Typography
 	>
-	<!-- <Action id="logout" class="w-full text-base" as="button" aria-label="Cerrar sesión de usuario">
-		Cerrar sesión
-	</Action> -->
+	<Typography class="mb-2 text-center" color="white" as="p" variant={"medium"}
+		>Vota tus ganadores para cada combate haciendo clic encima de cada uno</Typography
+	>
+
+	<div class="flex items-center justify-center gap-4">
+		<img class="size-12 rounded-full" src={user.image} alt={`Avatar del usuario ${user.name}`} />
+		<div class="flex flex-col justify-center">
+			<h4 class="text-lg font-bold">{user.name}</h4>
+			<button id="logout" class="text-sm font-light text-yellow-300">Cerrar sesión</button>
+		</div>
+	</div>
 
 	<ul class="flex flex-col items-center justify-center">
 		{
@@ -28,40 +64,66 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 				if (!combatData) return null
 
 				const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
-				// const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
+				const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
+				if (isKingOfTheHill) return null
+
+				const { teams, boxers } = combatData
+				const [slug1, slug2] = teams ?? boxers
+				const [image1, image2] = [
+					{ alt: slug1.replaceAll("-", ""), src: createImgRoute(combatData.number, slug1) },
+					{ alt: slug2.replaceAll("-", ""), src: createImgRoute(combatData.number, slug2) },
+				]
 
 				return (
-					<li class="relative flex w-full max-w-2xl flex-row justify-between">
-						<button class="vote-team group relative max-w-60 saturate-0 transition hover:scale-110 hover:saturate-100">
-							<img
-								class="h-auto w-full"
-								src="/img/boxers/vote-6-plex.webp"
-								alt="Fotografía de "
-								style="mask-image: linear-gradient(black 80%, transparent)"
-							/>
-							<span class="opacity-0 group-hover:animate-fade-in group-focus:animate-fade-in">
-								ganador
-							</span>
+					<li class="relative flex h-96 w-full max-w-3xl flex-row justify-center md:justify-between">
+						<button
+							class:list={[
+								"vote-team group relative max-w-60 saturate-0 transition hover:scale-110 hover:saturate-100",
+								{ "is-voted": userVotes[combatData.id] === slug1 },
+							]}
+							data-combat-id={combatData.id}
+							data-vote-id={slug1}
+						>
+							<div class="relative h-auto">
+								<img
+									class="h-auto max-h-96 w-full object-contain"
+									src={image1.src}
+									alt={`Fotografía de ${image1.alt}`}
+									style="mask-image: linear-gradient(black 80%, transparent)"
+								/>
+								<span class="to-vote-text">¡voto a este!</span>
+								<span class="already-voted-text">¡tu voto!</span>
+							</div>
 						</button>
 						<Image
 							width={combatData.titleSize[0]}
 							height={combatData.titleSize[1]}
 							transition:name={`title-image-${combat.id}`}
 							loading={index < 2 ? "eager" : "lazy"}
-							class:list={["pointer-events-none absolute inset-0 m-auto h-auto w-80"]}
+							class:list={[
+								"pointer-events-none absolute inset-x-0 bottom-20 z-10 m-auto h-auto w-48 md:inset-0 md:h-48 md:w-auto",
+							]}
 							src={`/img/matches/title-${combat.id}.webp`}
 							alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 						/>
-						<button class="vote-team group relative max-w-60 saturate-0 transition hover:scale-110 hover:saturate-100">
-							<img
-								class="h-auto w-full"
-								src="/img/boxers/vote-6-el-mariana.webp"
-								alt="Fotografía de "
-								style="mask-image: linear-gradient(black 80%, transparent)"
-							/>
-							<span class="opacity-0 group-hover:animate-fade-in group-focus:animate-fade-in">
-								ganador
-							</span>
+						<button
+							class:list={[
+								"vote-team group relative max-w-60 saturate-0 transition hover:scale-110 hover:saturate-100",
+								{ "is-voted": userVotes[combatData.id] === slug2 },
+							]}
+							data-combat-id={combatData.id}
+							data-vote-id={slug2}
+						>
+							<div class="relative h-auto">
+								<img
+									class="h-auto max-h-96 w-full object-contain"
+									src={image2.src}
+									alt={`Fotografía de ${image2.alt}`}
+									style="mask-image: linear-gradient(black 80%, transparent)"
+								/>
+								<span class="to-vote-text">¡voto a este!</span>
+								<span class="already-voted-text">¡tu voto!</span>
+							</div>
 						</button>
 					</li>
 				)
@@ -76,12 +138,67 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 	const { signOut } = await import("auth-astro/client")
 	const $logout = $("#logout")
 
-	$logout.onclick = () => signOut()
+	if ($logout) $logout.onclick = () => signOut()
+</script>
+
+<script>
+	import { $$ } from "@/lib/dom-selector"
+
+	const $voteTeam = $$(".vote-team") as NodeListOf<HTMLButtonElement>
+
+	$voteTeam.forEach(($button) => {
+		const { combatId, voteId } = $button.dataset
+
+		$button.onclick = () => {
+			const $parent = $button.parentElement as HTMLElement
+			let $previousVoted: HTMLElement | null
+
+			if ($parent) {
+				$previousVoted = $parent.querySelector(".is-voted")
+				$previousVoted?.classList.remove("is-voted")
+			}
+
+			$button.classList.add("is-voted")
+
+			fetch(`/api/votes/${combatId}`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ voteId }),
+			}).then((res) => {
+				console.log(res.ok, res.status)
+			})
+		}
+	})
 </script>
 
 <style>
-	.vote-team span {
-		@apply pointer-events-none absolute bottom-0 left-0 right-0 z-50 mx-auto font-atomic text-5xl text-green-500;
-		text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+	.vote-team {
+		& .to-vote-text,
+		& .already-voted-text {
+			@apply opacity-0 transition-opacity;
+		}
+
+		&:hover .to-vote-text {
+			@apply text-accent opacity-100;
+		}
+
+		&.is-voted {
+			@apply pointer-events-none scale-105 saturate-100;
+
+			& .to-vote-text {
+				@apply hidden;
+			}
+
+			& .already-voted-text {
+				@apply opacity-100;
+			}
+		}
+
+		& span {
+			@apply pointer-events-none absolute bottom-2 left-0 right-0 z-50 mx-auto font-atomic text-3xl text-green-500;
+			text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+		}
 	}
 </style>

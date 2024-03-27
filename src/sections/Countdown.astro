@@ -1,14 +1,17 @@
 ---
 import Date from "@/components/Date.astro"
 import { EVENT_TIMESTAMP } from "@/consts/event-date"
+import Typography from "@/components/Typography.astro"
 ---
 
 <section class="mt-20 flex flex-col place-items-center gap-y-10 md:mt-60" aria-label="cuenta atrás">
-	<p
-		class="countdown-text max-w-[250px] text-balance text-center text-lg font-medium uppercase text-accent opacity-80 sm:max-w-full md:mb-36"
-	>
-		Para el inicio de la Velada Del año faltan...
-	</p>
+	<Typography 
+	    as="h2" 
+		variant="atomic-title" 
+		color="white" 
+		class:list={"text-wrap text-center mb-16"}
+	>Para el inicio de la Velada Del año faltan...
+    </Typography>
 
 	<div
 		class="grid w-full select-none grid-cols-3 flex-col items-center justify-center gap-y-20 uppercase text-primary md:gap-x-6 md:gap-y-11"

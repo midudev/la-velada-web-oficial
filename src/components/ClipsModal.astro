@@ -1,0 +1,67 @@
+---
+
+---
+
+<dialog
+	class="clip-dialog items-center justify-center bg-transparent px-4 text-2xl text-white backdrop:bg-black/70 sm:px-0"
+>
+	<div class="relative block w-[560px] overflow-hidden bg-transparent sm:w-[740px]">
+		<iframe
+			class="yt-iframe block aspect-video h-full w-full overflow-hidden rounded bg-transparent"
+			src=""
+			title="Clips de la presentación de La Velada"
+			allow="autoplay"
+		>
+		</iframe>
+
+		<button
+			type="button"
+			class="close-dialog fixed right-8 top-8 rounded bg-black/60 p-4 transition hover:scale-110 hover:bg-accent hover:text-black"
+		>
+			<svg
+				class="size-5"
+				aria-hidden="true"
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 14 14"
+			>
+				<path
+					stroke="currentColor"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
+			</svg>
+		</button>
+	</div>
+</dialog>
+
+<script>
+	document.addEventListener("astro:page-load", () => {
+		const $clipContainer = document.querySelectorAll(".clip-container")
+		const $clipDialog = document.querySelector(".clip-dialog") as HTMLDialogElement
+		const $closeButton = document.querySelector(".close-dialog")
+		const $ytFrame = document.querySelector(".yt-iframe")
+
+		$clipDialog.addEventListener("close", (event) => {
+			$ytFrame?.setAttribute("src", "")
+		})
+
+		$closeButton?.addEventListener("click", () => $clipDialog.close())
+
+		$clipDialog.addEventListener("click", (event) => {
+			const target = event.target as HTMLElement
+			if (target === $clipDialog) $clipDialog.close()
+		})
+
+		$clipContainer?.forEach((el) => {
+			el.addEventListener("click", async (event) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				const { url } = currentTarget.dataset
+				if (!url) return
+				$ytFrame?.setAttribute("src", `${url}&autoplay=1`)
+				$clipDialog.showModal()
+			})
+		})
+	})
+</script>

@@ -104,6 +104,12 @@ const { title, description, preload, canonical, image } = Astro.props
 				position: relative;
 			}
 
+			body {
+				&:has(dialog[open]) {
+					overflow: hidden;
+				}
+			}
+
 			/* Hiding class, making content visible only to screen readers but not visually */
 			/* "sr" meaning "screen-reader" */
 			.sr-only:not(:focus):not(:active) {
