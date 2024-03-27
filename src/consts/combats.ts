@@ -23,7 +23,7 @@ export const COMBATS: Combat[] = [
 	{
 		id: "3-zeling-y-nissaxter-vs-alana-y-ama-blitz",
 		number: 3,
-		boxers: ["zeling", "alana", "nissaxter", "ama-blitz"],
+		boxers: ["zeling", "nissaxter", "alana", "ama-blitz"],
 		teams: ["zeling-nissaxter", "alana-ama-blitz"],
 		titleSize: [1525, 1525],
 	},

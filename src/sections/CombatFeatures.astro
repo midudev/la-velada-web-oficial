@@ -1,14 +1,16 @@
 ---
+import CombatFeatureCountry from "@/components/Combates/CombatFeatureCountry.astro"
+import CombatFeatureName from "@/components/Combates/CombatFeatureName.astro"
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
+
 interface Props {
 	boxerIds: string[]
 }
 
 const relevantBoxerData = Object.entries({
 	name: {
-		label: "Alias",
-		concat: undefined,
+		label: "",
 	},
 	country: {
 		label: "País",
@@ -16,11 +18,11 @@ const relevantBoxerData = Object.entries({
 	},
 	weight: {
 		label: "Peso",
-		concat: " kg",
+		concat: "kg",
 	},
 	height: {
 		label: "Altura",
-		concat: " cm",
+		concat: "m",
 	},
 	guard: {
 		label: "Guardia",
@@ -28,7 +30,7 @@ const relevantBoxerData = Object.entries({
 	},
 	reach: {
 		label: "Alcance",
-		concat: " cm",
+		concat: "cm",
 	},
 	age: {
 		label: "Edad",
@@ -39,6 +41,7 @@ const relevantBoxerData = Object.entries({
 const { boxerIds } = Astro.props
 
 const boxers = boxerIds.map((id) => BOXERS.find((boxer) => boxer.id === id))
+const middleIndex = boxers.length / 2
 ---
 
 <section class="pt-40">
@@ -58,45 +61,23 @@ const boxers = boxerIds.map((id) => BOXERS.find((boxer) => boxer.id === id))
 			{
 				relevantBoxerData.map(([key, { label, concat }]) => (
 					<tr class="mb-10 bg-gradient-to-b from-white/20 via-transparent to-transparent p-4">
-						{key == "country" ? (
-							<td class="flex items-center justify-center py-3 font-semibold">
-								<img
-									decoding="async"
-									class:list={
-										"pointer-events-none aspect-[3/2] h-8 w-auto object-contain object-center"
-									}
-									alt={`Bandera de ${boxers[0] && boxers[0]["countryName"]}`}
-									src={`/img/flags/${boxers[0] && boxers[0][key]}.webp`}
-								/>
-								{boxers[0] && boxers[0]["countryName"]}
-								{concat}
-							</td>
-						) : (
-							<td class="py-3 font-semibold">
-								{boxers[0] && boxers[0][key as keyof (typeof boxers)[0]]}
-								{concat}
-							</td>
-						)}
-						<td class="text-primary">{label}</td>
-						{key == "country" ? (
-							<td class="flex items-center justify-center py-3 font-semibold">
-								<img
-									decoding="async"
-									class:list={
-										"pointer-events-none aspect-[3/2] h-8 w-auto object-contain object-center"
-									}
-									alt={`Bandera de ${boxers[1] && boxers[1]["countryName"]}`}
-									src={`/img/flags/${boxers[1] && boxers[1][key]}.webp`}
-								/>
-								{boxers[1] && boxers[1]["countryName"]}
-								{concat}
-							</td>
-						) : (
-							<td class="font-semibold">
-								{boxers[1] && boxers[1][key as keyof (typeof boxers)[1]]}
-								{concat}
-							</td>
-						)}
+						{boxers.map((boxer, index) => {
+							if (boxer == null) return null
+
+							return (
+								<>
+									{key === "country" && <CombatFeatureCountry boxer={boxer} />}
+									{key === "name" && <CombatFeatureName boxer={boxer} />}
+									{!["country", "name"].includes(key) && (
+										<td class="py-3 font-semibold">
+											{boxer[key as keyof (typeof boxers)[0]]}
+											{concat}
+										</td>
+									)}
+									{index === middleIndex - 1 && <td class="text-primary">{label}</td>}
+								</>
+							)
+						})}
 					</tr>
 				))
 			}

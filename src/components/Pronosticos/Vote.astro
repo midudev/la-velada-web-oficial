@@ -65,13 +65,52 @@ votes.forEach((vote) => {
 
 				const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
 				const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
-				if (isKingOfTheHill) return null
+
+				if (isKingOfTheHill) {
+					return (
+						<li class="relative flex w-full max-w-3xl flex-col justify-center md:justify-between">
+							<Image
+								width={combatData.titleSize[0]}
+								height={combatData.titleSize[1]}
+								transition:name={`title-image-${combat.id}`}
+								loading="lazy"
+								class:list={["pointer-events-none m-auto -mb-20 h-auto w-48 md:inset-0 md:w-64"]}
+								src={`/img/matches/title-${combat.id}.webp`}
+								alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+								style="mask-image: linear-gradient(black 50%, transparent)"
+							/>
+							<ul class="grid grid-cols-5 gap-x-4">
+								{combatData.boxers.map((boxer) => (
+									<button
+										class:list={[
+											"vote-team group relative max-w-60 saturate-0 transition hover:scale-110 hover:saturate-100",
+											{ "is-voted": userVotes[combatData.id] === boxer },
+										]}
+										data-combat-id={combatData.id}
+										data-vote-id={boxer}
+									>
+										<div class="relative h-auto text-xs">
+											<img
+												class="h-auto max-h-96 w-full object-contain"
+												src={`/img/boxers/${boxer}-small.webp`}
+												alt={`Fotografía de ${boxer.replaceAll("-", " ")}`}
+												style="mask-image: linear-gradient(black 80%, transparent)"
+											/>
+											<span class="to-vote-text small">{boxer.replaceAll("-", " ")}</span>
+											<span class="already-voted-text small">¡tu voto!</span>
+										</div>
+									</button>
+								))}
+							</ul>
+						</li>
+					)
+				}
 
 				const { teams, boxers } = combatData
 				const [slug1, slug2] = teams ?? boxers
 				const [image1, image2] = [
-					{ alt: slug1.replaceAll("-", ""), src: createImgRoute(combatData.number, slug1) },
-					{ alt: slug2.replaceAll("-", ""), src: createImgRoute(combatData.number, slug2) },
+					{ alt: slug1.replaceAll("-", " "), src: createImgRoute(combatData.number, slug1) },
+					{ alt: slug2.replaceAll("-", " "), src: createImgRoute(combatData.number, slug2) },
 				]
 
 				return (
@@ -91,7 +130,7 @@ votes.forEach((vote) => {
 									alt={`Fotografía de ${image1.alt}`}
 									style="mask-image: linear-gradient(black 80%, transparent)"
 								/>
-								<span class="to-vote-text">¡voto a este!</span>
+								<span class="to-vote-text">¡voto a {image1.alt}!</span>
 								<span class="already-voted-text">¡tu voto!</span>
 							</div>
 						</button>
@@ -100,7 +139,9 @@ votes.forEach((vote) => {
 							height={combatData.titleSize[1]}
 							transition:name={`title-image-${combat.id}`}
 							loading={index < 2 ? "eager" : "lazy"}
-							class="pointer-events-none absolute inset-x-0 bottom-20 z-10 m-auto h-auto w-48 md:inset-0 md:h-48 md:w-auto"
+							class:list={[
+								"pointer-events-none absolute inset-x-0 bottom-20 z-10 m-auto h-auto w-48 md:inset-0 md:w-80",
+							]}
 							src={`/img/matches/title-${combat.id}.webp`}
 							alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 						/>
@@ -119,7 +160,7 @@ votes.forEach((vote) => {
 									alt={`Fotografía de ${image2.alt}`}
 									style="mask-image: linear-gradient(black 80%, transparent)"
 								/>
-								<span class="to-vote-text">¡voto a este!</span>
+								<span class="to-vote-text">¡voto a {image2.alt}!</span>
 								<span class="already-voted-text">¡tu voto!</span>
 							</div>
 						</button>
@@ -142,32 +183,59 @@ votes.forEach((vote) => {
 <script>
 	import { $$ } from "@/lib/dom-selector"
 
-	const $voteTeam = $$(".vote-team") as NodeListOf<HTMLButtonElement>
+	document.addEventListener("astro:page-load", () => {
+		const $voteTeam = $$(".vote-team") as NodeListOf<HTMLButtonElement>
 
-	$voteTeam.forEach(($button) => {
-		const { combatId, voteId } = $button.dataset
+		$voteTeam.forEach(($button) => {
+			const { combatId, voteId } = $button.dataset
 
-		$button.onclick = () => {
-			const $parent = $button.parentElement as HTMLElement
-			let $previousVoted: HTMLElement | null
+			$button.onclick = () => {
+				const $parent = $button.parentElement as HTMLElement
+				let $previousVoted: HTMLElement | null
 
-			if ($parent) {
-				$previousVoted = $parent.querySelector(".is-voted")
-				$previousVoted?.classList.remove("is-voted")
+				if ($parent) {
+					$previousVoted = $parent.querySelector(".is-voted")
+					$previousVoted?.classList.remove("is-voted")
+				}
+
+				$button.classList.add("is-voted")
+
+				const rollbackUI = () => {
+					$button.classList.remove("is-voted")
+					$previousVoted?.classList.add("is-voted")
+
+					window.toast({
+						title: "❌ Error al guardar el voto",
+						location: "bottom-center",
+						dismissible: false,
+						type: "error",
+					})
+				}
+
+				fetch(`/api/votes/${combatId}`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ voteId }),
+				})
+					.then((res) => {
+						if (!res.ok) return rollbackUI()
+						window.toast({
+							title: "✅ ¡Voto registrado!",
+							location: "bottom-center",
+							dismissible: false,
+							type: "success",
+						})
+
+						const nextCombat = $button.parentElement?.nextElementSibling as HTMLElement
+						if (nextCombat) nextCombat.scrollIntoView({ behavior: "smooth" })
+					})
+					.catch(() => {
+						rollbackUI()
+					})
 			}
-
-			$button.classList.add("is-voted")
-
-			fetch(`/api/votes/${combatId}`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ voteId }),
-			}).then((res) => {
-				console.log(res.ok, res.status)
-			})
-		}
+		})
 	})
 </script>
 
@@ -178,8 +246,12 @@ votes.forEach((vote) => {
 			@apply opacity-0 transition-opacity;
 		}
 
+		.to-vote-text {
+			@apply text-accent;
+		}
+
 		&:hover .to-vote-text {
-			@apply text-accent opacity-100;
+			@apply opacity-100;
 		}
 
 		&.is-voted {
@@ -190,13 +262,17 @@ votes.forEach((vote) => {
 			}
 
 			& .already-voted-text {
-				@apply opacity-100;
+				@apply text-green-500 opacity-100;
 			}
 		}
 
 		& span {
-			@apply pointer-events-none absolute bottom-2 left-0 right-0 z-50 mx-auto font-atomic text-3xl text-green-500;
+			@apply pointer-events-none absolute bottom-2 left-0 right-0 z-50 mx-auto font-atomic text-3xl;
 			text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+
+			&.small {
+				@apply text-xl;
+			}
 		}
 	}
 </style>
