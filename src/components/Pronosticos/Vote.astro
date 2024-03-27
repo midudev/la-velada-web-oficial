@@ -70,8 +70,8 @@ votes.forEach((vote) => {
 				const { teams, boxers } = combatData
 				const [slug1, slug2] = teams ?? boxers
 				const [image1, image2] = [
-					{ alt: slug1.replaceAll("-", ""), src: createImgRoute(combatData.number, slug1) },
-					{ alt: slug2.replaceAll("-", ""), src: createImgRoute(combatData.number, slug2) },
+					{ alt: slug1.replaceAll("-", " "), src: createImgRoute(combatData.number, slug1) },
+					{ alt: slug2.replaceAll("-", " "), src: createImgRoute(combatData.number, slug2) },
 				]
 
 				return (
@@ -91,7 +91,7 @@ votes.forEach((vote) => {
 									alt={`Fotografía de ${image1.alt}`}
 									style="mask-image: linear-gradient(black 80%, transparent)"
 								/>
-								<span class="to-vote-text">¡voto a este!</span>
+								<span class="to-vote-text">¡voto a {image1.alt}!</span>
 								<span class="already-voted-text">¡tu voto!</span>
 							</div>
 						</button>
@@ -121,7 +121,7 @@ votes.forEach((vote) => {
 									alt={`Fotografía de ${image2.alt}`}
 									style="mask-image: linear-gradient(black 80%, transparent)"
 								/>
-								<span class="to-vote-text">¡voto a este!</span>
+								<span class="to-vote-text">¡voto a {image2.alt}!</span>
 								<span class="already-voted-text">¡tu voto!</span>
 							</div>
 						</button>
@@ -189,8 +189,12 @@ votes.forEach((vote) => {
 			@apply opacity-0 transition-opacity;
 		}
 
+		.to-vote-text {
+			@apply text-accent;
+		}
+
 		&:hover .to-vote-text {
-			@apply text-accent opacity-100;
+			@apply opacity-100;
 		}
 
 		&.is-voted {
@@ -201,12 +205,12 @@ votes.forEach((vote) => {
 			}
 
 			& .already-voted-text {
-				@apply opacity-100;
+				@apply text-green-500 opacity-100;
 			}
 		}
 
 		& span {
-			@apply pointer-events-none absolute bottom-2 left-0 right-0 z-50 mx-auto font-atomic text-3xl text-green-500;
+			@apply pointer-events-none absolute bottom-2 left-0 right-0 z-50 mx-auto font-atomic text-3xl;
 			text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 		}
 	}
