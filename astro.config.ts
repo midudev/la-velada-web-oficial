@@ -39,27 +39,29 @@ export default defineConfig({
 				manifest,
 				workbox: {
 					globDirectory: ".vercel/output/static",
-					globPatterns: ["**/*.{html,js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}"],
+					globPatterns: [
+						"**/*.{html,js,css,svg,avif,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}",
+					],
 					runtimeCaching: [
 						{
-							urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+							urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif)$/,
 							handler: "CacheFirst",
 							options: {
 								cacheName: "images",
 								expiration: {
-									maxEntries: 50,
+									maxEntries: 100,
 									maxAgeSeconds: 30 * 24 * 60 * 60,
 								},
 							},
 						},
 						{
-							urlPattern: /^https?.*/,
-							handler: "StaleWhileRevalidate",
+							urlPattern: /\.(?:woff|woff2|ttf|eot|ico)$/,
+							handler: "CacheFirst",
 							options: {
-								cacheName: "static-assets",
+								cacheName: "fonts",
 								expiration: {
-									maxEntries: 200,
-									maxAgeSeconds: 24 * 60 * 60 * 30,
+									maxEntries: 10,
+									maxAgeSeconds: 30 * 24 * 60 * 60,
 								},
 							},
 						},
