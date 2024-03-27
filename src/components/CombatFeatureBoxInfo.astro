@@ -1,0 +1,23 @@
+---
+const { key, concat, boxer } = Astro.props
+---
+
+{key === "country" ? (
+	<td class="flex items-center justify-center py-3 font-semibold">
+		<img
+			decoding="async"
+			class:list={
+				"pointer-events-none aspect-[3/2] h-8 w-auto object-contain object-center"
+			}
+			alt={`Bandera de ${boxer && boxer.countryName}`}
+			src={`/img/flags/${boxer && boxer[key]}.webp`}
+		/>
+		{boxer && boxer.countryName}
+		{concat}
+	</td>
+) : (
+	<td class="py-3 font-semibold">
+		{boxer && boxer[key as keyof (typeof boxer)]}
+		{concat}
+	</td>
+)}

@@ -1,4 +1,5 @@
 ---
+import CombatFeatureBoxInfo from "@/components/CombatFeatureBoxInfo.astro"
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 
@@ -59,45 +60,9 @@ const boxers = boxerIds.map((id) => BOXERS.find((boxer) => boxer.id === id))
 			{
 				relevantBoxerData.map(([key, { label, concat }]) => (
 					<tr class="mb-10 bg-gradient-to-b from-white/20 via-transparent to-transparent p-4">
-						{key === "country" ? (
-							<td class="flex items-center justify-center py-3 font-semibold">
-								<img
-									decoding="async"
-									class:list={
-										"pointer-events-none aspect-[3/2] h-8 w-auto object-contain object-center"
-									}
-									alt={`Bandera de ${boxers[0] && boxers[0].countryName}`}
-									src={`/img/flags/${boxers[0] && boxers[0][key]}.webp`}
-								/>
-								{boxers[0] && boxers[0].countryName}
-								{concat}
-							</td>
-						) : (
-							<td class="py-3 font-semibold">
-								{boxers[0] && boxers[0][key as keyof (typeof boxers)[0]]}
-								{concat}
-							</td>
-						)}
+						<CombatFeatureBoxInfo boxer={boxers[0]} key={key} concat={concat} />
 						<td class="text-primary">{label}</td>
-						{key === "country" ? (
-							<td class="flex items-center justify-center py-3 font-semibold">
-								<img
-									decoding="async"
-									class:list={
-										"pointer-events-none aspect-[3/2] h-8 w-auto object-contain object-center"
-									}
-									alt={`Bandera de ${boxers[1] && boxers[1].countryName}`}
-									src={`/img/flags/${boxers[1] && boxers[1][key]}.webp`}
-								/>
-								{boxers[1] && boxers[1].countryName}
-								{concat}
-							</td>
-						) : (
-							<td class="font-semibold">
-								{boxers[1] && boxers[1][key as keyof (typeof boxers)[1]]}
-								{concat}
-							</td>
-						)}
+						<CombatFeatureBoxInfo boxer={boxers[1]} key={key} concat={concat} />
 					</tr>
 				))
 			}
