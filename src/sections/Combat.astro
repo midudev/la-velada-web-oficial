@@ -22,24 +22,24 @@ const createCombatDisplay = (boxers: Boxer[]) => {
 	const pairs: string[] = []
 	const seen = new Set()
 
-	boxers.forEach((boxer: Boxer) => {
+	for (const boxer of boxers) {
 		if (!seen.has(boxer.id)) {
 			seen.add(boxer.id)
 			const group = [boxer.name]
 
 			if (boxer.allies) {
-				boxer.allies.forEach((allyId) => {
+				for (const allyId of boxer.allies) {
 					const ally = boxers.find((b) => b.id === allyId)
 					if (ally && !seen.has(allyId)) {
 						seen.add(allyId)
 						group.push(ally.name)
 					}
-				})
+				}
 			}
 
 			pairs.push(group.join(" x "))
 		}
-	})
+	}
 
 	return pairs.join(" vs ")
 }

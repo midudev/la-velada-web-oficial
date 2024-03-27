@@ -1,4 +1,4 @@
-import { type Boxer } from "@/types/Boxer"
+import type { Boxer } from "@/types/Boxer"
 
 const addGetters = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
 	return boxersWithoutAge.map((boxerWithoutAge) => ({
