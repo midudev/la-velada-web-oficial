@@ -1,6 +1,7 @@
 ---
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
+
 interface Props {
 	boxerIds: string[]
 }
@@ -58,17 +59,17 @@ const boxers = boxerIds.map((id) => BOXERS.find((boxer) => boxer.id === id))
 			{
 				relevantBoxerData.map(([key, { label, concat }]) => (
 					<tr class="mb-10 bg-gradient-to-b from-white/20 via-transparent to-transparent p-4">
-						{key == "country" ? (
+						{key === "country" ? (
 							<td class="flex items-center justify-center py-3 font-semibold">
 								<img
 									decoding="async"
 									class:list={
 										"pointer-events-none aspect-[3/2] h-8 w-auto object-contain object-center"
 									}
-									alt={`Bandera de ${boxers[0] && boxers[0]["countryName"]}`}
+									alt={`Bandera de ${boxers[0] && boxers[0].countryName}`}
 									src={`/img/flags/${boxers[0] && boxers[0][key]}.webp`}
 								/>
-								{boxers[0] && boxers[0]["countryName"]}
+								{boxers[0] && boxers[0].countryName}
 								{concat}
 							</td>
 						) : (
@@ -78,17 +79,17 @@ const boxers = boxerIds.map((id) => BOXERS.find((boxer) => boxer.id === id))
 							</td>
 						)}
 						<td class="text-primary">{label}</td>
-						{key == "country" ? (
+						{key === "country" ? (
 							<td class="flex items-center justify-center py-3 font-semibold">
 								<img
 									decoding="async"
 									class:list={
 										"pointer-events-none aspect-[3/2] h-8 w-auto object-contain object-center"
 									}
-									alt={`Bandera de ${boxers[1] && boxers[1]["countryName"]}`}
+									alt={`Bandera de ${boxers[1] && boxers[1].countryName}`}
 									src={`/img/flags/${boxers[1] && boxers[1][key]}.webp`}
 								/>
-								{boxers[1] && boxers[1]["countryName"]}
+								{boxers[1] && boxers[1].countryName}
 								{concat}
 							</td>
 						) : (
