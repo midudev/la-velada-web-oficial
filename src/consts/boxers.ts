@@ -388,15 +388,15 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "No entendí bien la mecánica, pero se que debo pegarles a ellos. ¿No?",
-				url: "https://youtube.com/clip/UgkxEcgcoJaVcag3z49qN_XpjZv3CHrCJ7fL?si=jnl237KKDMjsGiCo",
+				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=dlWpIp4dRS8UAagF&amp;clip=UgkxEcgcoJaVcag3z49qN_XpjZv3CHrCJ7fL&amp;clipt=EOqZGRjP6Rk",
 			},
 			{
 				text: "Empecé a entrenar hace un año muy fuerte, hice un cambio físico y tengo más confianza de base",
-				url: "https://youtube.com/clip/UgkxfP2AM59ICTRmS5ICPtCS-JLwZIH8mzYa?si=ZiVnoMPS4fZ178C2",
+				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=QCqVXYd5ogbVcoeD&amp;clip=UgkxfP2AM59ICTRmS5ICPtCS-JLwZIH8mzYa&amp;clipt=EIK4GxiVlRw",
 			},
 			{
 				text: "Subité, ¿querés pelear? y hacemos 11 en el rey de la pista",
-				url: "https://youtube.com/clip/UgkxwF9bV7tUmg7LbPeFDggtLpogaYq9Y2TA?si=WzJuyqp50n5ZrsGg",
+				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=6ahmVqYOwsI54nme&amp;clip=UgkxwF9bV7tUmg7LbPeFDggtLpogaYq9Y2TA&amp;clipt=EI_dQhjNv0M",
 			},
 		],
 		versus: "rey-de-la-pista",
@@ -477,11 +477,11 @@ export const BOXERS: Boxer[] = addGetters([
 		clips: [
 			{
 				text: "Yo solo voy a decir que Karchez el año pasado de salvó, no diré nada mas",
-				url: "https://youtube.com/clip/UgkxlGr0lw1Xr65CkY4r_CfV18y4JuAVSL7y?si=P5myCxrSZRY1i7wZ",
+				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=9JQt5c-yDe4uJUfL&amp;clip=UgkxlGr0lw1Xr65CkY4r_CfV18y4JuAVSL7y&amp;clipt=ELj7ORicxTo",
 			},
 			{
 				text: "Estoy muy preparado y muy contento. El Rey de la Pista será un formato que dará mucho de que hablar",
-				url: "https://youtube.com/clip/UgkxyZGxKPtKZdEfTUP21jDFgEV2Ps2dvqfb?si=OwOAcfDVDgsFArDQ",
+				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=XAH2OmLeMxvo2Mbd&amp;clip=UgkxyZGxKPtKZdEfTUP21jDFgEV2Ps2dvqfb&amp;clipt=EK3IHxjrqiA",
 			},
 		],
 		versus: "rey-de-la-pista",
