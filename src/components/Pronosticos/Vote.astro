@@ -160,15 +160,24 @@ votes.forEach((vote) => {
 
 			$button.classList.add("is-voted")
 
+			const rollbackUI = () => {
+				$button.classList.remove("is-voted")
+				$previousVoted?.classList.add("is-voted")
+			}
+
 			fetch(`/api/votes/${combatId}`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({ voteId }),
-			}).then((res) => {
-				console.log(res.ok, res.status)
 			})
+				.then((res) => {
+					if (!res.ok) return rollbackUI()
+				})
+				.catch(() => {
+					rollbackUI()
+				})
 		}
 	})
 </script>

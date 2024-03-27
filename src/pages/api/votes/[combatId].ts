@@ -2,6 +2,7 @@ import type { APIRoute } from "astro"
 import { NOW, Votes, db } from "astro:db"
 import { getSession } from "auth-astro/server"
 import { object, safeParse, string } from "valibot"
+
 import { COMBATS } from "@/consts/combats"
 
 const VoteSchema = object({
@@ -33,8 +34,6 @@ export const POST: APIRoute = async ({ params, request }) => {
 	if (!success) return res("Bad request", { status: 400 })
 
 	const { voteId } = output
-	// TODO: Validate that voteId is a valid vote
-	// it should be a team or boxer field from combat
 
 	const userId = session.user.id
 	const votedAt = NOW
