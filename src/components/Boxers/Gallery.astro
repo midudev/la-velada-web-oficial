@@ -1,0 +1,157 @@
+---
+import SectionTitle from "../SectionTitle.astro"
+
+const IMAGES_TO_LOAD = 5
+
+interface Props {
+	id: string
+	name: string
+}
+
+const { id, name } = Astro.props
+---
+
+<section class="my-44">
+	<SectionTitle title="Galería de Fotos" description={`Fotos de ${name}`} />
+
+	<div id="boxer-gallery" class="relative mt-8 grid grid-cols-[1fr_0.5fr_0.5fr] gap-3">
+		{
+			Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => (
+				<a
+					class:list={[
+						" aspect-square transition hover:scale-105 hover:brightness-125",
+						{ "row-span-2": index === 0 },
+					]}
+					href={`/img/boxers/gallery/${id}/${index + 1}.webp`}
+					title={`Abrir imagen ${index} de la galería de ${name}`}
+				>
+					<figure class="h-full w-full">
+						<picture class="block h-full w-full">
+							<img
+								loading="lazy"
+								decoding="async"
+								class="aspect-square h-full w-full rounded object-cover object-top"
+								alt={`Imagen de la galería de fotos de ${name}`}
+								src={`/img/boxers/gallery/${id}/${index + 1}.webp`}
+							/>
+						</picture>
+					</figure>
+				</a>
+			))
+		}
+		<dialog
+			id="lightbox"
+			class="h-auto max-h-[90%] w-full max-w-[90%] items-center justify-center overflow-hidden bg-transparent backdrop:bg-black/70"
+		>
+			<button
+				type="button"
+				class="fixed right-8 top-8 rounded bg-black/60 p-4 text-white transition hover:scale-110 hover:bg-accent hover:text-black"
+			>
+				<svg
+					class="size-5"
+					aria-hidden="true"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 14 14"
+				>
+					<path
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
+				</svg>
+			</button>
+			<img
+				loading="lazy"
+				decoding="async"
+				class="mx-auto h-full rounded object-contain object-center"
+				alt={`Imagen de la galería de fotos de ${name}`}
+				src={`/img/boxers/gallery/${id}/1.webp`}
+			/>
+		</dialog>
+	</div>
+</section>
+
+<style>
+	#lightbox img {
+		view-transition-name: lightbox-image;
+	}
+</style>
+
+<script>
+	document.addEventListener("astro:page-load", () => {
+		const $lightbox = document.getElementById("lightbox") as HTMLDialogElement
+		const $gallery = document.getElementById("boxer-gallery") as HTMLElement
+		if (!$gallery) return
+
+		const $links = $gallery?.querySelectorAll("a")
+		const $close = $lightbox?.querySelector("button")
+
+		const updateImg = (link: HTMLElement) => {
+			const img = $lightbox?.querySelector("img")
+			const newImg = link.querySelector("img")
+			if (img && newImg) img.src = newImg.src
+		}
+
+		const close = () => {
+			$lightbox.close()
+		}
+
+		document.addEventListener("keydown", (event) => {
+			if (!$lightbox.open) return
+
+			if (event.key === "Escape") {
+				close()
+			}
+
+			if (event.key === "ArrowRight") {
+				const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
+				const next = (
+					current.nextElementSibling?.nodeName === "A"
+						? current.nextElementSibling
+						: $gallery.querySelector("a:first-of-type")
+				) as HTMLAnchorElement
+
+				next.click()
+			}
+
+			if (event.key === "ArrowLeft") {
+				const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
+				const prev = (current.previousElementSibling ||
+					$gallery.querySelector("a:last-of-type")) as HTMLAnchorElement
+				prev.click()
+			}
+		})
+
+		// al hacer click en el botón de cerrar
+		$close?.addEventListener("click", close)
+		// al hacer click en el fondo del lightbox
+		$lightbox?.addEventListener("click", close)
+
+		// al hacer click en un enlace de lightbox
+		// usar la imagen del enlace como imagen principal
+		$links.forEach((link) =>
+			link.addEventListener("click", (event) => {
+				event.preventDefault()
+				// remove current data atribute
+				$gallery.querySelector("a[data-current=true]")?.removeAttribute("data-current")
+				// set current data atribute
+				link.setAttribute("data-current", "true")
+				// add lightbox
+				if (!$lightbox.open) {
+					$lightbox.showModal()
+				}
+
+				if ($lightbox.open && document.startViewTransition) {
+					document.startViewTransition(() => {
+						updateImg(link)
+					})
+					return
+				}
+
+				updateImg(link)
+			})
+		)
+	})
+</script>

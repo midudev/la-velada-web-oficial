@@ -1,0 +1,81 @@
+---
+import Action from "@/components/Action.astro"
+import ForecastBoxer from "@/components/ForecastBoxer.astro"
+import Velocimetro from "@/components/Velocimetro.astro"
+import type { Boxer } from "@/types/Boxer"
+
+export interface BoxerWithForecast extends Boxer {
+	forecast: number
+}
+interface Props {
+	count: number
+	boxers: BoxerWithForecast[]
+}
+
+const { count, boxers } = Astro.props
+---
+
+<section class="forecastGrid mt-40 grid items-center gap-4 px-7">
+	<ForecastBoxer
+		image={`/img/boxers/${boxers[0].id}-big.webp`}
+		imageAlt={`${boxers[0].name}`}
+		boxerName={boxers[0].name}
+		boxerHref=`/boxers/${boxers[0].id}`
+		percentage={boxers[0].forecast * 100}
+		class:list={["boxer1"]}
+	/>
+	<div class="pronostico flex flex-col items-center justify-center gap-4">
+		<h2 class="text-2xl font-medium uppercase text-white">Pronóstico</h2>
+		<p class="max-w-72 text-center text-xl text-primary">
+			Probabilidad de victoria basada en {count} predicciones
+		</p>
+		<Velocimetro percentage={boxers[1].forecast * 100} />
+	</div>
+	<ForecastBoxer
+		image={`/img/boxers/${boxers[1].id}-big.webp`}
+		imageAlt={`${boxers[1].name}`}
+		boxerName={boxers[1].name}
+		boxerHref=`/boxers/${boxers[1].id}`
+		percentage={boxers[1].forecast * 100}
+		class:list={["boxer2"]}
+	/>
+	<div class="action flex w-full flex-col items-center justify-center">
+		<Action
+			class="mt-20 w-full max-w-lg text-base uppercase"
+			as="button"
+			id="add-to-calendar"
+			aria-disabled="true"
+			aria-label="próximamente"
+		>
+			Hacer pronóstico
+		</Action>
+	</div>
+</section>
+
+<style>
+	.forecastGrid {
+		grid-template-areas: "prono prono" "boxer1 boxer2" "action action";
+		column-gap: 2rem;
+		.pronostico {
+			grid-area: prono;
+		}
+		.boxer1 {
+			grid-area: boxer1;
+		}
+		.boxer2 {
+			grid-area: boxer2;
+		}
+		.action {
+			grid-area: action;
+		}
+	}
+
+	@media (min-width: 1150px) {
+		.forecastGrid {
+			grid-template-columns: repeat(3, 1fr);
+			grid-template-areas:
+				"boxer1 prono boxer2"
+				"action action action";
+		}
+	}
+</style>

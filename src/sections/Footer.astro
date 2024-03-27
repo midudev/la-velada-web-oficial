@@ -1,32 +1,18 @@
-<footer
-  class="mt-20 w-full border-primary border-t-2 flex flex-col md:flex-row justify-center items-center md:justify-between pt-6 pb-20"
->
-  <span class="text-primary text-center">
-    © 2024 La Velada del Año <span aria-hidden="true" class="hidden md:inline">|</span
-    ><br aria-hidden="true" class="block md:hidden" /> Todos los derechos reservados.
-  </span>
-  <span aria-hidden="true" class="md:hidden border-primary border-t-2 w-full mt-6 pt-6"></span>
+---
+import FooterContent from "@/components/FooterContent.astro"
+import SocialButtons from "@/components/SocialButtons.astro"
+---
 
-  <ul class="flex flex-row gap-x-6 items-center">
-    <li>
-      <a
-        target="_blank"
-        rel="noopener"
-        href="https://www.instagram.com/infolavelada"
-        class="hover:scale-125 hover:opacity-70 transition inline-block"
-      >
-        <img src="./instagram.svg" loading="lazy" alt="Logo de Instagram" />
-      </a>
-    </li>
-    <li>
-      <a
-        class="hover:scale-125 hover:opacity-70 transition inline-block"
-        target="_blank"
-        rel="noopener"
-        href="https://x.com/infoLaVelada"
-      >
-        <img src="./twitter.svg" loading="lazy" alt="Logo de Twitter" />
-      </a>
-    </li>
-  </ul>
+<footer
+	class="relative mt-20 flex w-full flex-col place-items-center pb-20 pt-14 md:flex-row md:justify-between md:pt-16"
+>
+	<hr
+		class="absolute top-0 h-[2px] w-full min-w-[18rem] border-t-0 bg-transparent bg-gradient-to-r from-transparent via-white to-transparent bg-center md:my-9"
+	/>
+	<FooterContent />
+	<hr
+		aria-hidden="true"
+		class="my-12 h-[2px] w-full min-w-[18rem] border-t-0 bg-transparent bg-gradient-to-r from-transparent via-white to-transparent bg-center md:hidden"
+	/>
+	<SocialButtons />
 </footer>

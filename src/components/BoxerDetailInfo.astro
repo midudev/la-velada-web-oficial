@@ -1,0 +1,48 @@
+---
+interface Props {
+	title: string
+	value?: string | number | string[]
+	id: string
+}
+
+const { title, value, id } = Astro.props
+---
+
+<div class="flex justify-center text-white">
+	<div class="style flex flex-col items-start text-center">
+		<h4 class="font-atomic text-lg lowercase text-accent md:text-xl">{title}</h4>
+		<p class="text-xl font-bold md:text-4xl" id={id}>
+			{value}
+		</p>
+	</div>
+</div>
+
+<style>
+	.style {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	@media (max-width: 767px) {
+		.style {
+			flex-direction: row;
+			justify-content: space-between;
+		}
+
+		h4,
+		p {
+			margin: 0;
+			padding: 2px 10px;
+		}
+
+		h4 {
+			margin-left: 0;
+		}
+
+		p {
+			margin-right: 0;
+		}
+	}
+</style>

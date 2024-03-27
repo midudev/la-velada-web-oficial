@@ -1,68 +1,212 @@
+---
+import Action from "@/components/Action.astro"
+import CalendarButton from "@/components/CalendarButton.astro"
+import Typography from "@/components/Typography.astro"
+import MapMarkerIcon from "@/icons/map-marker.astro"
+---
+
 <section
-  class="animate-fade-in animate-delay-500 mt-32 mx-auto flex flex-col justify-center items-center text-center text-primary"
+	class="mx-auto mt-16 flex animate-fade-in flex-col place-items-center text-center text-primary animate-delay-300 motion-reduce:animate-delay-[0s] motion-reduce:animate-duration-[0s] md:mt-32"
 >
-  <h2 class="uppercase text-5xl font-semibold">
-    <span class="date"> 4 de marzo</span>
-    <span aria-hidden="true" class="hidden md:inline mx-1">·</span>
-    <br aria-hidden="true" class="block md:hidden" />
-    <span class="time"></span>
-  </h2>
+	<header class="text-3xl font-semibold uppercase md:text-5xl">
+		<time class="date inline-block"></time>
+		<span class="date-time-separator hidden">
+			<span aria-hidden="true" class="mx-1 hidden md:inline">·</span>
+			<br aria-hidden="true" class="block md:hidden" />
+		</span>
+		<time class="time hidden"></time>
+	</header>
 
-  <h3 class="uppercase text-2xl font-medium flex flex-col max-w-sm mt-6">
-    <span>Evento de Presentación</span>
-    <span>Teatro Victoria (Barcelona)</span>
-  </h3>
+	<Typography
+		as="h2"
+		variant="h2"
+		color="neutral"
+		class:list={"underline-transition mt-6 flex max-w-sm flex-col transition-all duration-300 ease-in-out hover:text-accent motion-reduce:transition-none"}
+	>
+		<a
+			class="flex"
+			href="https://maps.app.goo.gl/F1oAFhFjqnvTKtC18"
+			target="_blank"
+			rel="noopener"
+			aria-label="ubicación del campo Santiago Bernabéu en google maps, se abrirá en una nueva pestaña"
+		>
+			<MapMarkerIcon class="mr-1 max-md:mt-1 md:mt-0.5 md:size-6" /> Estadio Santiago Bernabéu
+		</a>
+	</Typography>
 
-  <a
-    class={`
-    border-primary border-2 font-medium uppercase text-lg
-    px-4 py-1 mt-8
-    hover:bg-slate-300 hover:scale-125
-    transition inline-block
-  `}
-    href="https://www.teatrevictoria.com/es/cartelera/c/190_la-velada-del-ano-4.html"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    Entradas agotadas
-  </a>
+	<footer
+		class="scroll-horizontal items-top mt-6 flex flex-col flex-wrap justify-center gap-9 md:flex-row *:md:basis-1/3"
+	>
+		<div class="flex flex-col items-center justify-center gap-y-2">
+			<Action
+				class="w-full text-base"
+				as="a"
+				aria-disabled="true"
+				href="#"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="disponibles al a venta el 11 de abril, ahora mismo no están disponibles"
+			>
+				Comprar entradas
+			</Action>
+			<Typography as="span" variant="medium" color="primary" class:list={"text-center"}>
+				A la venta el 11 de Abril
+			</Typography>
+		</div>
+		<div>
+			<Action
+				class="w-full text-base"
+				as="a"
+				href="https://lavelada.store/"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="Ir a la tienda oficial, se abrirá en una nueva pestaña"
+			>
+				Ir a la tienda oficial
+			</Action>
+		</div>
+		<div>
+			<CalendarButton />
+		</div>
+	</footer>
 </section>
 
-<script is:inline>
-  const $dateSpan = document.querySelector(".date")
-  const $timeSpan = document.querySelector(".time")
+<script>
+	import { EVENT_TIMESTAMP, timeZoneAbbreviations } from "@/consts/event-date"
+	import { $ } from "@/lib/dom-selector"
 
-  const USER_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const DATE_TIMESTAMP = 1709575200000
-  const date = new Date(DATE_TIMESTAMP)
+	function getUserTimeZone(): string {
+		return Intl.DateTimeFormat().resolvedOptions().timeZone
+	}
 
-  const timeFormatOptions = {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: false,
-    timeZone: USER_TZ,
-    timeZoneName: "short"
-  }
+	// Formatea la fecha del evento considerando la zona horaria del usuario
+	function formatEventDate(timestamp: number, timeZone: string): string {
+		const options: Intl.DateTimeFormatOptions = {
+			day: "numeric",
+			month: "long",
+			timeZone,
+		}
+		return new Intl.DateTimeFormat("es-ES", options).format(new Date(timestamp))
+	}
 
-  const dateFormatOptions = {
-    day: "numeric",
-    month: "long",
-    timeZone: USER_TZ
-  }
+	// Formatea la hora del evento con el nombre de la zona horaria, ajustándose al formato de 24 horas
+	function formatEventTimeWithTimeZoneName(timestamp: number, timeZone: string): string {
+		const formattedTime = new Intl.DateTimeFormat("es-ES", {
+			hour: "numeric",
+			minute: "numeric",
+			hour12: false,
+			timeZone,
+		}).format(new Date(timestamp))
 
-  // Se usa la configuración regional "en-GB" para mostrar la abreviatura de la zona horaria (CET, PST, EST...) y no su valor en GMT
-  const time = new Intl.DateTimeFormat("en-GB", timeFormatOptions)
-    .formatToParts(date)
-    .map(({ type, value }) => {
-      if (type === "literal" && value === " ") {
-        return "H "
-      }
-      return value
-    })
-    .join("")
+		const timeZoneName =
+			timeZoneAbbreviations[timeZone] ||
+			new Intl.DateTimeFormat("es-ES", {
+				timeZone,
+				timeZoneName: "short",
+			})
+				.formatToParts(new Date(timestamp))
+				.find((part) => part.type === "timeZoneName")?.value
 
-  const day = new Intl.DateTimeFormat("es-ES", dateFormatOptions).format(date)
+		return `${formattedTime} ${timeZoneName}`
+	}
 
-  $dateSpan.innerHTML = day
-  $timeSpan.innerHTML = time
+	// Genera un datetime válido para el atributo 'datetime' del elemento <time>, respetando la zona horaria
+	function formatValidDatetime(timestamp: number, timeZone: string): string {
+		const options: Intl.DateTimeFormatOptions = {
+			year: "numeric",
+			month: "2-digit",
+			day: "2-digit",
+			hour: "2-digit",
+			minute: "2-digit",
+			second: "2-digit",
+			timeZone,
+			hour12: false,
+		}
+		return new Intl.DateTimeFormat("en-CA", options).format(new Date(timestamp))
+	}
+
+	function updateUI(
+		dateString: string,
+		timeString: string,
+		validDatetime: string,
+		{
+			showTime = true,
+		}: {
+			showTime?: boolean
+		}
+	) {
+		const $dateSpan = $(".date")
+		const $timeSpan = $(".time")
+		const $dateSeparator = $(".date-time-separator")
+
+		if ($dateSpan != null) {
+			$dateSpan.innerHTML = dateString
+			$dateSpan.setAttribute("datetime", validDatetime)
+		}
+
+		if ($timeSpan != null && showTime) {
+			$timeSpan.innerHTML = timeString
+			$timeSpan.setAttribute("datetime", validDatetime)
+			$timeSpan?.classList.remove("hidden")
+			$dateSeparator?.classList.remove("hidden")
+		}
+	}
+
+	function main() {
+		const USER_TZ = getUserTimeZone()
+		const formattedDate = formatEventDate(EVENT_TIMESTAMP, USER_TZ)
+		const formattedTime = formatEventTimeWithTimeZoneName(EVENT_TIMESTAMP, USER_TZ)
+		const validDatetime = formatValidDatetime(EVENT_TIMESTAMP, USER_TZ)
+
+		updateUI(formattedDate, formattedTime, validDatetime, {
+			showTime: false,
+		})
+	}
+
+	document.addEventListener("DOMContentLoaded", main)
+
+	// Verifica si el evento ya ha pasado
+	const eventHasPassed = EVENT_TIMESTAMP < Date.now()
+	if (eventHasPassed) {
+		const addToCalendarBtn = document.getElementById("add-to-calendar")
+		if (addToCalendarBtn) {
+			addToCalendarBtn.remove()
+		}
+	}
 </script>
+
+<style>
+	/* Efecto de subrayado animado */
+	.underline-transition {
+		background-image: linear-gradient(transparent, transparent),
+			linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
+		background-size: 0 3px;
+		background-position: 100% 100%;
+		background-repeat: no-repeat;
+		transition: background-size 0.3s ease-in-out;
+	}
+
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			transition: none;
+		}
+	}
+	.underline-transition:hover {
+		background-size: 100% 3px;
+		background-position: 0 100%;
+	}
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			background-image: linear-gradient(transparent, transparent),
+				linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
+			background-size: 0 3px;
+			background-position: 100% 100%;
+			background-repeat: no-repeat;
+			transition: background-size 0s;
+		}
+		.underline-transition:hover {
+			background-size: 100% 3px;
+			background-position: 0 100%;
+		}
+	}
+</style>

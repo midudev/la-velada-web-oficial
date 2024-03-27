@@ -1,0 +1,70 @@
+---
+import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
+import atomic from "/fonts/atomic.woff2"
+
+import RichResults from "@/components/RichResults.astro"
+import type { Preload } from "@/types/Preload"
+
+interface Props {
+	title: string
+	description: string
+	preload?: Array<Preload>
+	canonical?: string
+	image?: string
+}
+
+const { title, description, preload, canonical, image = "/img/og.jpg" } = Astro.props as Props
+
+const canonicalURL = canonical
+	? new URL(canonical, Astro.site)
+	: new URL(Astro.url.pathname, Astro.site)
+---
+
+<title>{title}</title>
+
+<meta charset="UTF-8" />
+<meta name="description" content={description} />
+
+<link rel="preload" href={atomic} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
+
+{
+	preload?.map(({ href, as, type, rel = "preload", crossorigin }) => (
+		<link {rel} {href} {as} {type} {crossorigin} />
+	))
+}
+
+<link rel="canonical" href={canonicalURL} />
+<meta name="viewport" content="width=device-width" />
+<meta name="theme-color" content="#d5ff00" />
+
+<meta name="keywords" content="velada, streamers, creadores, Ibai, boxeo, midudev" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@infoLaVelada" />
+<meta name="twitter:creator" content="@IbaiLlanos" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL(image, Astro.url)} />
+
+<meta name="og:image" content={new URL(image, Astro.url)} />
+<meta name="og:title" content={title} />
+<meta name="og:description" content={description} />
+<meta name="og:url" content={Astro.url} />
+<meta name="og:site_name" content="La Velada 4" />
+<meta name="og:type" content="website" />
+<meta name="og:locale" content="es_ES" />
+
+<meta name="robots" content="index, follow" />
+<meta name="googlebot" content="index, follow" />
+
+<link rel="icon" href="/img/icons/favicon.ico" sizes="32x32" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="msapplication-config" content="/browserconfig.xml" />
+
+<script is:inline src="/registerSW.js"></script>
+<link rel="manifest" href="/manifest.webmanifest" />
+<RichResults />

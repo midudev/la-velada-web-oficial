@@ -1,0 +1,107 @@
+---
+interface Props {
+	percentage: number
+}
+
+const { percentage } = Astro.props
+---
+
+<canvas
+	id="velocimeter"
+	width="500px"
+	height="260px"
+	class="w-full md:w-[500px]"
+	data-percentage={percentage}></canvas>
+
+<script>
+	import { $ } from "@/lib/dom-selector"
+
+	const COLORS = {
+		"accent": "#b4cd02",
+		"white": "#fff",
+		"white-50": "rgba(255, 255, 255, 0.5)",
+	}
+
+	document.addEventListener("astro:page-load", () => {
+		const canvas = $("#velocimeter") as HTMLCanvasElement
+		if (!canvas) return
+		const ctx = canvas.getContext("2d")
+
+		function updateVelocimeter() {
+			const velocimeterValue = Number.parseInt(canvas.getAttribute("data-percentage") ?? "50")
+			drawVelocimeter(velocimeterValue)
+		}
+
+		function drawVelocimeter(value: number) {
+			if (!ctx) return
+
+			const centerX = canvas.width / 2
+			const centerY = canvas.height
+			const arcWidth = 75
+			const radius = (canvas.width - arcWidth * 2) / 2 - 10
+
+			const gradientArc = ctx.createLinearGradient(0, 0, 0, canvas.height)
+			gradientArc.addColorStop(0, COLORS.accent)
+			gradientArc.addColorStop(0.25, COLORS.accent)
+			gradientArc.addColorStop(1, "transparent")
+
+			ctx.strokeStyle = gradientArc
+			ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+			ctx.beginPath()
+			ctx.arc(centerX, centerY, radius, Math.PI, 2 * Math.PI)
+			ctx.lineWidth = arcWidth
+			ctx.stroke()
+
+			const startAngle = Math.PI
+			const endAngle = (value / 100) * Math.PI + startAngle
+
+			const lineDivisionsWidth = 2
+			const linePointerWidth = 4
+			const circleLineWidth = 6
+
+			const pointerLength = radius * 1.2
+			const pointerX = centerX + pointerLength * Math.cos(endAngle)
+			const pointerY = centerY - circleLineWidth + pointerLength * Math.sin(endAngle)
+
+			ctx.beginPath()
+			ctx.moveTo(centerX, centerY - circleLineWidth)
+			ctx.lineTo(pointerX, pointerY)
+			ctx.lineWidth = linePointerWidth
+			ctx.strokeStyle = COLORS.white
+			ctx.stroke()
+
+			// hacemos un cuadrado blanco en la parte de arriba del pointer
+
+			ctx.beginPath()
+			ctx.moveTo(pointerX - 5 * Math.cos(endAngle), pointerY - 5 * Math.sin(endAngle))
+			ctx.lineWidth = linePointerWidth * 2
+			ctx.lineTo(
+				pointerX + linePointerWidth * 4 * Math.cos(endAngle),
+				pointerY + linePointerWidth * 4 * Math.sin(endAngle)
+			)
+			ctx.strokeStyle = COLORS.white
+			ctx.stroke()
+
+			// añadimos una linea divisoria en el centro
+
+			ctx.beginPath()
+			ctx.moveTo(centerX, 0)
+			ctx.lineTo(centerX, centerY)
+			ctx.lineWidth = lineDivisionsWidth
+			ctx.setLineDash([5, 15])
+			ctx.strokeStyle = COLORS["white-50"]
+			ctx.stroke()
+
+			// hacemos un circulo en el centro abajo
+
+			ctx.beginPath()
+			ctx.arc(centerX, centerY - circleLineWidth, circleLineWidth, 0, 2 * Math.PI)
+			ctx.fillStyle = "#fff"
+			ctx.fill()
+		}
+
+		// Initial draw with default value
+		updateVelocimeter()
+	})
+</script>

@@ -1,0 +1,104 @@
+---
+import Typography from "@/components/Typography.astro"
+import type { Boxer } from "@/types/Boxer"
+
+interface Props {
+	combatId: string
+	combatNumber: number
+	boxers: Boxer[]
+}
+
+const ordinals: Record<number, string> = {
+	1: "Primer",
+	2: "Segundo",
+	3: "Tercer",
+	4: "Cuarto",
+	5: "Quinto",
+	6: "Sexto",
+}
+const { combatNumber, combatId, boxers } = Astro.props
+
+const createCombatDisplay = (boxers: Boxer[]) => {
+	const pairs: string[] = []
+	const seen = new Set()
+
+	boxers.forEach((boxer: Boxer) => {
+		if (!seen.has(boxer.id)) {
+			seen.add(boxer.id)
+			const group = [boxer.name]
+
+			if (boxer.allies) {
+				boxer.allies.forEach((allyId) => {
+					const ally = boxers.find((b) => b.id === allyId)
+					if (ally && !seen.has(allyId)) {
+						seen.add(allyId)
+						group.push(ally.name)
+					}
+				})
+			}
+
+			pairs.push(group.join(" x "))
+		}
+	})
+
+	return pairs.join(" vs ")
+}
+
+const combatDisplay = createCombatDisplay(boxers)
+---
+
+<section class="mt-40 flex flex-col items-center gap-5 md:gap-10 lg:gap-0">
+	<div class:list={["relative flex w-full flex-col items-center justify-center py-20"]}>
+		<Typography
+			as="div"
+			variant="atomic-title"
+			color="primary"
+			tabindex={-1}
+			class:list={"absolute inset-0 -z-10 self-center text-center text-[20rem] opacity-20"}
+			>{combatNumber}
+		</Typography>
+		<h2 class:list={["text-center text-4xl font-semibold uppercase text-white lg:text-6xl"]}>
+			{ordinals[combatNumber]} combate
+		</h2>
+		<div class="text-center lowercase">
+			{
+				combatDisplay.split(" vs ").map((group, groupIndex, groups) => (
+					<span>
+						{group.split(" x ").map((name, nameIndex, names) => (
+							<span>
+								<Typography as="span" variant="atomic-title" color="white">
+									{name.trim()}
+								</Typography>
+								{nameIndex < names.length - 1 && (
+									<Typography as="span" variant="atomic-title" color="primary">
+										{" x "}
+									</Typography>
+								)}
+							</span>
+						))}
+						{/* Insertar vs solo si hay otro grupo después */}
+						{groupIndex < groups.length - 1 && (
+							<Typography
+								as="span"
+								variant="atomic-title"
+								color="primary"
+								class:list={["lg:text-6xl"]}
+							>
+								{" vs "}
+							</Typography>
+						)}
+					</span>
+				))
+			}
+		</div>
+	</div>
+</section>
+<div>
+	<a
+		class:list={["flex flex-col items-center justify-center text-2xl font-semibold text-accent"]}
+		href={`/combates/${combatId}`}
+		tabindex="0"
+	>
+		<span class="text-primary">Ver combate</span>
+	</a>
+</div>
