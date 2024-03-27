@@ -1,0 +1,38 @@
+---
+interface Props {
+	image: string
+	imageAlt: string
+	boxerName: string
+	boxerHref: string
+	percentage: number
+}
+
+const { image, imageAlt, boxerName, boxerHref, percentage } = Astro.props
+---
+
+<a
+	href={boxerHref}
+	class="group overflow-hidden transition-transform hover:scale-105"
+	aria-label={`Ir a la página de ${boxerName}`}
+>
+	<article>
+		<img decoding="async" class="image" src={image} alt={imageAlt} />
+		<h3
+			class="text-center text-2xl font-medium uppercase text-white transition-transform group-hover:scale-125 md:group-hover:scale-150"
+		>
+			{boxerName}
+		</h3>
+		<h4
+			class="mt-1 text-center text-6xl font-semibold text-accent transition-transform group-hover:scale-75"
+		>
+			{percentage}%
+		</h4>
+	</article>
+</a>
+
+<style>
+	.image {
+		filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
+		mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+	}
+</style>

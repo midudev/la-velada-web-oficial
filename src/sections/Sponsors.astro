@@ -1,0 +1,103 @@
+---
+import SponsorLogo from "@/components/SponsorLogo.astro"
+import Typography from "@/components/Typography.astro"
+import { SPONSORS } from "@/consts/sponsors"
+---
+
+<section>
+	<Typography as="h3" variant="h3" color="white" class:list={"text-center"}>
+		Patrocinadores
+	</Typography>
+	<Typography as="p" variant="body" color="neutral" class:list={"mt-4 text-center"}>
+		La Velada puede llevarse a cabo gracias a la colaboración de...
+	</Typography>
+	<div class="mt-12 grid select-none grid-cols-3 gap-2 md:gap-8">
+		{
+			SPONSORS.filter(({ id }) => id !== "infojobs").map(({ id, name, url, image }) => (
+				<a
+					class="company-link group relative flex h-24 items-center justify-center overflow-hidden md:h-32"
+					title={`Visita la página del patrocinador ${name}`}
+					href={url}
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label={`Link con el logo de ${name} que lleva a ${url}`}
+				>
+					<SponsorLogo
+						logo={id}
+						width={image.width}
+						height={image.height}
+						class:list={[
+							"company-logo px-5 text-white transition group-hover:scale-110 group-focus:scale-110 md:px-4",
+						]}
+					/>
+				</a>
+			))
+		}
+	</div>
+	<div class="mt-20 flex flex-col items-center justify-center gap-4 xs:flex-row">
+		<Typography as="h3" variant="body" color="neutral" class:list={"text-center"}>
+			Web patrocinada por
+		</Typography>
+
+		<a
+			class="transition hover:scale-110 focus:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:focus:scale-100"
+			href="https://www.infojobs.net"
+			title="Ir a la página de InfoJobs"
+			target="_blank"
+			aria-label="Link con el logo de Infojobs que lleva a https://www.infojobs.net"
+		>
+			<SponsorLogo
+				logo="infojobs"
+				width={128}
+				height={70}
+				class:list={[
+					"inline-block select-none text-white transition hover:text-accent focus:text-accent",
+				]}
+			/>
+		</a>
+	</div>
+</section>
+<style>
+	.company-link {
+		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+		transition: all 0.5s ease;
+	}
+
+	.company-link::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		display: block;
+		background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, transparent);
+		opacity: 0;
+		height: 50%;
+		transition:
+			opacity 0.2s ease-in-out,
+			height 0.2s ease-in-out;
+	}
+
+	@media (prefers-reduced-motion) {
+		.company-link::before {
+			transition: none;
+		}
+	}
+
+	.company-link:hover::before,
+	.company-link:focus::before {
+		opacity: 0.8;
+		height: 90%;
+		box-shadow: 0 -4px 3px rgba(50, 50, 50, 0.75);
+	}
+
+	.company-link:hover .company-logo,
+	.company-link:focus .company-logo {
+		transform: scale(1.1);
+	}
+
+	@media (prefers-reduced-motion) {
+		.company-link:hover .company-logo,
+		.company-link:focus .company-logo {
+			transform: scale(1);
+		}
+	}
+</style>

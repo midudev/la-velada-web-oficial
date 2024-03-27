@@ -1,0 +1,94 @@
+---
+import { BOXERS } from "@/consts/boxers"
+
+/** https://developers.google.com/search/docs/appearance/structured-data/organization */
+const organizationSchema = {
+	"@context": "https://schema.org",
+	"@type": "Organization",
+	"url": "https://lavelada.es",
+	"image": "/img/og.jpg",
+	"sameAs": [
+		"https://www.instagram.com/infolavelada",
+		"https://x.com/infoLaVelada",
+		"https://github.com/midudev/la-velada-web-oficial",
+	],
+	"logo": "/img/logo.png",
+	"name": "La Velada del Año 4",
+	"alternateName": "La Velada del Año IV",
+	"description":
+		"Web Oficial de La Velada del Año IV, evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos",
+}
+
+/** https://developers.google.com/search/docs/appearance/structured-data/event */
+const eventSchema = {
+	"@context": "https://schema.org",
+	"@type": "Event",
+	"name": "La Velada del Año 4",
+	"startDate": "2024-07-13T19:00:00",
+	"endDate": "2024-07-13T22:00:00",
+	"eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode", // https://schema.org/EventAttendanceModeEnumeration
+	"eventStatus": "https://schema.org/EventScheduled", // https://schema.org/EventStatusType
+	"location": {
+		"@type": "Place",
+		"name": "Estadio Santiago Bernabéu",
+		"address": {
+			"@type": "PostalAddress",
+			"streetAddress": "Av. de Concha Espina, 1",
+			"addressLocality": "Chamartín",
+			"postalCode": "28036",
+			"addressRegion": "Madrid",
+			"addressCountry": "ES",
+		},
+	},
+	"image": ["/img/og.jpg"],
+	"description":
+		"La Velada del Año es un evento de boxeo aficionado entre streamers, creadores de contenido y celebridades, organizado por Ibai Llanos.",
+	/* "offers": {}, // Añadir cuando las entradas estén disponibles https://schema.org/Offer */
+	"performer": BOXERS.map(({ name }) => ({
+		"@type": "Person",
+		"name": name,
+	})),
+	"organizer": {
+		"@type": "Person",
+		"name": "Ibai Llanos",
+		"url": "https://www.twitch.tv/ibai",
+	},
+}
+
+const FAQs = [
+	{
+		question: "¿Quién va a participar en La Velada del Año 4?",
+		answer: `Los participantes de esta edición serán: ${BOXERS.map(({ name }) => name).join(", ")}`,
+	},
+	{
+		question: "¿Cuándo tendrá lugar La Velada del Año 4?",
+		answer:
+			"La Velada del Año 4 tendrá lugar el <strong>sábado 13 de julio de 2024</strong> en el Estadio Santiago Bernabéu",
+	},
+	{
+		question: "¿Dónde tendrá lugar La Velada del Año 4?",
+		answer:
+			"La Velada del Año 4 tendrá lugar el sábado 13 de julio de 2024 en el <strong>Estadio Santiago Bernabéu</strong>",
+	},
+]
+
+/** https://developers.google.com/search/docs/appearance/structured-data/faqpage */
+const FAQSchema = {
+	"@context": "https://schema.org",
+	"@type": "FAQPage",
+	"mainEntity": [
+		FAQs.map(({ answer, question }) => ({
+			"@type": "Question",
+			"name": question,
+			"acceptedAnswer": {
+				"@type": "Answer",
+				"text": answer,
+			},
+		})),
+	],
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(eventSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(FAQSchema)} />

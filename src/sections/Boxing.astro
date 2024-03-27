@@ -1,0 +1,48 @@
+---
+import ImageOverlay from "@/components/ImageOverlay.astro"
+
+const items = [
+	{
+		imgSrc: "/img/event/evento.webp",
+		imgAlt: "Evento",
+		title: "EL EVENTO",
+		description: "Lugar y agenda del evento",
+	},
+	{
+		imgSrc: "/img/event/entradas.webp",
+		imgAlt: "Entradas",
+		title: "ENTRADAS",
+		description: "A la venta el 11 de Abril",
+	},
+	{
+		imgSrc: "/img/event/combates.webp",
+		imgAlt: "Combates",
+		title: "COMBATES",
+		description: "Información de los contrincantes",
+	},
+	{
+		imgSrc: "/img/event/pronosticos.webp",
+		imgAlt: "Pronóstico",
+		title: "PRONÓSTICOS",
+		description: "Predicciones de victoria",
+	},
+]
+---
+
+<section class="mt-32 px-4 md:mt-60">
+	<div
+		class="flex flex-col items-center justify-center gap-x-8 gap-y-20 md:grid md:grid-cols-2 md:gap-y-12"
+	>
+		{
+			items.map((item) => (
+				<ImageOverlay
+					className="max-w-md lg:max-w-none"
+					imgSrc={item.imgSrc}
+					imgAlt={item.imgAlt}
+					title={item.title}
+					description={item.description}
+				/>
+			))
+		}
+	</div>
+</section>

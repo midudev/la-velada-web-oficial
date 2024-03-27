@@ -1,0 +1,31 @@
+---
+import Action from "@/components/Action.astro"
+import HeroLogo from "@/components/HeroLogo.astro"
+import Typography from "@/components/Typography.astro"
+
+const { error, message, contextMessage } = Astro.props
+---
+
+<section
+	class="m-auto flex w-full flex-wrap place-items-center items-center justify-center text-primary"
+>
+	<a href="/">
+		<HeroLogo
+			class="m-5 h-auto w-[300px] overflow-visible text-primary animate-duration-0 md:w-[500px]"
+			disableAnimation
+		/>
+	</a>
+	<div class="m-5 mt-16 text-center">
+		<Typography as="h1" variant="atomic-title" color="primary" class:list={"mb-10 font-bold"}>
+			error {error}
+		</Typography>
+		<Typography as="h2" variant="h2" color="neutral" class:list={"text-white"}>
+			<p>{message}</p>
+		</Typography>
+		<p class="mt-5 max-w-80 text-xl">{contextMessage}</p>
+
+		<Action class="mt-7 text-center" href="/" aria-label="volver a la página principal" as="a">
+			Ir al inicio
+		</Action>
+	</div>
+</section>
