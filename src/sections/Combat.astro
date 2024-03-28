@@ -82,7 +82,8 @@ const boxerNames = combatData?.boxers ?? []
 		<h2 class:list={["text-center text-4xl font-semibold uppercase text-white lg:text-6xl"]}>
 			{ordinals[combatNumber]} combate
 		</h2>
-		<div class="text-center lowercase">
+	</div>
+	<div class="text-center lowercase">
 			{
 				combatDisplay.split(" vs ").map((group, groupIndex, groups) => (
 					<span>
@@ -113,14 +114,17 @@ const boxerNames = combatData?.boxers ?? []
 				))
 			}
 		</div>
-	</div>
 </section>
 <div>
-	<a
-		class:list={["flex flex-col items-center justify-center text-2xl font-semibold text-accent"]}
-		href={`/combates/${combatId}`}
-		tabindex="0"
-	>
-		<span class="text-primary">Ver combate</span>
-	</a>
+	<Typography
+			as="a"
+			href={`/combates/${combatId}`}
+			tabindex="0"
+			variant="h2"
+			aria-label={`Ver el combate ${combatNumber}`}
+			color="neutral"
+			withUnderlineTransition
+		>
+			Ver combate
+		</Typography>
 </div>
