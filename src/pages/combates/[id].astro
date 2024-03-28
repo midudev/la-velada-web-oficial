@@ -4,6 +4,7 @@ import { Image } from "astro:assets"
 import { COMBATS } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 import CombatFeatures from "@/sections/CombatFeatures.astro"
+import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
@@ -22,7 +23,7 @@ export const getStaticPaths = () => {
 export const prerender = true
 
 const { id } = Astro.params
-const combatData = COMBATS.find((combat) => combat.id === id)
+const combatData = getCombatById(id)
 const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
 
 if (!combatData) {
@@ -39,28 +40,12 @@ const formatter = new Intl.ListFormat("es", {
 const formattedBoxerNames = formatter.format(boxerNames)
 const [imageWidth, imageHeight] = combatData.titleSize
 ---
-
-<div class="absolute left-0 top-0 z-0 aspect-video h-[100vh] w-screen">
-	<video
-		autoplay
-		muted
-		loop
-		class="aspect-video size-full overflow-hidden object-cover opacity-0 transition-opacity duration-500"
-		style="mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, transparent);"
-		oncanplay="this.classList.add('opacity-70')"
-	>
-		<source
-			type="video/mp4"
-			src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto.mp4`}
-		/>
-	</video>
-</div>
-
 <Layout
 	title={`Combate número ${combatData.number} de La Velada IV`}
 	description={`Combate entre ${formattedBoxerNames}`}
 	image={`/img/matches/og-${id}-min.jpg`}
 >
+	<BackgroundVideo id={id} />
 	<main class="pointer-events-none md:-mt-12">
 		<div class="relative flex h-[60vh] w-full items-center justify-center md:h-[76vh]">
 			<Image
