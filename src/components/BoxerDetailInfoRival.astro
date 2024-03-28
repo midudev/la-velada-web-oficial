@@ -32,24 +32,23 @@ const isVersus = value[0].versus.length === 2
 					<a
 						class:list={[
 							`${isVersus ? "mx-2  p-1" : ""}`,
-							`${isKingOfTheTrack ? "p-1" : "bg-slate-50/5 text-xl font-bold text-accent transition hover:scale-110 hover:saturate-[150%]"}`,
+							`${isKingOfTheTrack ? "p-1" : "boxer-link text-xl font-bold text-accent"}`,
 						]}
 						href={item.id}
 						title={`Visita la página del boxeador ${item.name}`}
 						id={id + (index + 1)}
 					>
+						{!isKingOfTheTrack && (
+							<div
+								class:list={`${isVersus ? "boxer-link-background w-32" : "boxer-link-background w-full"}`}
+							/>
+						)}
+
 						<img
 							src={`/img/boxers/${item.id}-small.webp`}
-							class:list={
-								isKingOfTheTrack
-									? ["h-14 object-contain"]
-									: ["mx-auto aspect-square h-32 object-contain"]
-							}
+							class:list={isKingOfTheTrack ? ["h-14 object-contain"] : ["boxer-image "]}
 							alt={`Foto en pequeño del rival ${item.name}`}
-							style="
-										filter: drop-shadow(0 0 5px rgba(0, 0, 0, .5));
-										mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-									"
+							style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%);"
 						/>
 						<span
 							class:list={[
@@ -66,3 +65,36 @@ const isVersus = value[0].versus.length === 2
 		</div>
 	</div>
 </article>
+
+<style>
+	.boxer-link {
+		@apply relative mb-2 flex flex-col transition-opacity duration-300 ease-in-out md:size-28 xl:size-36;
+
+		&:hover {
+			@apply opacity-90;
+		}
+
+		& .boxer-image {
+			@apply z-20 transition-opacity duration-300 ease-in-out;
+			mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+			filter: grayscale(100%);
+			transition: filter 0.3s ease;
+		}
+	}
+
+	.boxer-link-background {
+		@apply absolute bottom-0 block h-3/5 opacity-25 transition-opacity duration-300 ease-in-out;
+		background: linear-gradient(
+			180deg,
+			rgba(255, 255, 255, 1) 0%,
+			rgba(255, 255, 255, 0.5) 30%,
+			rgba(0, 0, 0, 0) 95%
+		);
+	}
+
+	.boxer-link:hover .boxer-image,
+	.boxer-link.active .boxer-image {
+		scale: 1.05;
+		filter: grayscale(0%);
+	}
+</style>
