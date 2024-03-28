@@ -4,6 +4,7 @@ import { Image } from "astro:assets"
 import { COMBATS } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 import CombatFeatures from "@/sections/CombatFeatures.astro"
+import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
@@ -44,6 +45,7 @@ const [imageWidth, imageHeight] = combatData.titleSize
 	description={`Combate entre ${formattedBoxerNames}`}
 	image={`/img/matches/og-${id}-min.jpg`}
 >
+	<BackgroundVideo id={id} />
 	<main class="pointer-events-none md:-mt-12">
 		<div class="relative flex h-[60vh] w-full items-center justify-center md:h-[76vh]">
 			<Image
