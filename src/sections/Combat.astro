@@ -1,6 +1,7 @@
 ---
 import Typography from "@/components/Typography.astro"
 import type { Boxer } from "@/types/Boxer"
+import { Image } from "astro:assets"
 
 interface Props {
 	combatId: string
@@ -45,60 +46,75 @@ const createCombatDisplay = (boxers: Boxer[]) => {
 }
 
 const combatDisplay = createCombatDisplay(boxers)
+const isKingOfTheHill = ordinals[combatNumber] === "Quinto"
 ---
 
-<section class="mt-40 flex flex-col items-center gap-5 md:gap-10 lg:gap-0">
-	<div class:list={["relative flex w-full flex-col items-center justify-center py-20"]}>
-		<Typography
-			as="div"
-			variant="atomic-title"
-			color="primary"
-			tabindex={-1}
-			class:list={"absolute inset-0 -z-10 self-center text-center text-[20rem] opacity-20"}
-			>{combatNumber}
-		</Typography>
-		<h2 class:list={["text-center text-4xl font-semibold uppercase text-white lg:text-6xl"]}>
-			{ordinals[combatNumber]} combate
-		</h2>
-		<div class="text-center lowercase">
-			{
-				combatDisplay.split(" vs ").map((group, groupIndex, groups) => (
-					<span>
-						{group.split(" x ").map((name, nameIndex, names) => (
-							<span>
-								<Typography as="span" variant="atomic-title" color="white">
-									{name.trim()}
-								</Typography>
-								{nameIndex < names.length - 1 && (
-									<Typography as="span" variant="atomic-title" color="primary">
-										{" x "}
-									</Typography>
-								)}
-							</span>
-						))}
-						{/* Insertar vs solo si hay otro grupo después */}
-						{groupIndex < groups.length - 1 && (
-							<Typography
-								as="span"
-								variant="atomic-title"
-								color="primary"
-								class:list={["lg:text-6xl"]}
-							>
-								{" vs "}
-							</Typography>
-						)}
-					</span>
-				))
-			}
-		</div>
+<section class:list={["relativa mt-44"]}>
+	<Typography
+		as="div"
+		variant="atomic-title"
+		color="primary"
+		tabindex={-1}
+		class:list={"-z-10  self-center text-center text-[20rem] opacity-20"}
+		>{combatNumber}
+	</Typography>
+	<h2 class:list={["-mt-40 text-center text-4xl font-semibold uppercase text-white lg:text-6xl"]}>
+		{ordinals[combatNumber]} combate
+	</h2>
+	<div class="flex items-center justify-center">
+		<a
+			class="group relative -mt-56 flex aspect-square h-[54rem] w-full transform-gpu justify-center transition-transform hover:scale-105 hover:saturate-150"
+			href={`/combates/${combatId}`}
+			title={`Ir al combate ${combatNumber} de la Velada IV`}
+		>
+			<img
+				decoding="async"
+				class:list={[
+					"absolute bottom-0 mx-auto h-[44rem] w-[44rem] object-contain",
+					{ "group-hover:scale-115 -bottom-20 z-20 md:z-10": isKingOfTheHill },
+					{ "z-10 group-hover:scale-105 ": !isKingOfTheHill },
+				]}
+				src={`/img/matches/combat-${combatId}.webp`}
+				alt={`Fotografía del combate entre ${combatDisplay}`}
+				style="mask-image: linear-gradient(black 90%, transparent 100%);"
+			/>
+			<Image
+				width={500}
+				height={500}
+				transition:name={`title-image-${combatId}`}
+				class:list={[
+					"group-hover:saturate-15 absolute left-1/2 h-auto max-h-[15rem] w-auto -translate-x-1/2 transform-gpu transition-all duration-300 ease-in-out group-hover:scale-75",
+					{ "bottom-10 z-10 md:z-20": isKingOfTheHill },
+					{ "bottom-5 z-20": !isKingOfTheHill },
+				]}
+				src={`/img/matches/title-${combatId}.webp`}
+				alt={`Fotografía del combate entre ${combatDisplay}`}
+			/>
+			<div
+				class="gradient-box absolute bottom-0 z-0 block h-2/5 w-full opacity-25 transition-opacity duration-300 ease-in-out group-hover:brightness-50 group-hover:filter"
+			>
+			</div>
+		</a>
 	</div>
 </section>
 <div>
 	<a
-		class:list={["flex flex-col items-center justify-center text-2xl font-semibold text-accent"]}
+		class:list={[" flex flex-col items-center justify-center text-2xl font-semibold text-accent"]}
 		href={`/combates/${combatId}`}
 		tabindex="0"
 	>
 		<span class="text-primary">Ver combate</span>
 	</a>
 </div>
+
+<style>
+	.gradient-box {
+		@apply bg-gradient-to-b;
+		background-image: linear-gradient(
+			180deg,
+			rgba(255, 255, 255, 1) 0%,
+			rgba(255, 255, 255, 0.5) 30%,
+			rgba(0, 0, 0, 0) 95%
+		);
+	}
+</style>
