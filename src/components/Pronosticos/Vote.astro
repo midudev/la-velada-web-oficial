@@ -15,7 +15,7 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 }
 
 const createImgRoute = (combateNumber: number, slug: string) => {
-	return `/img/boxers/vote/vote-${combateNumber}-${slug}.webp`
+	return `https://cdn.lavelada.dev/boxers/vote/vote-${combateNumber}-${slug}.webp`
 }
 
 interface Props {
@@ -75,7 +75,7 @@ votes.forEach((vote) => {
 								transition:name={`title-image-${combat.id}`}
 								loading="lazy"
 								class:list={["pointer-events-none m-auto -mb-20 h-auto w-48 md:inset-0 md:w-64"]}
-								src={`/img/matches/title-${combat.id}.webp`}
+								src={`https://cdn.lavelada.dev/matches/title-${combat.id}.webp`}
 								alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 								style="mask-image: linear-gradient(black 50%, transparent)"
 							/>
@@ -92,7 +92,7 @@ votes.forEach((vote) => {
 										<div class="relative h-auto text-xs">
 											<img
 												class="h-auto max-h-96 w-full object-contain"
-												src={`/img/boxers/${boxer}-small.webp`}
+												src={`https://cdn.lavelada.dev/boxers/${boxer}-small.webp`}
 												alt={`Fotografía de ${boxer.replaceAll("-", " ")}`}
 												style="mask-image: linear-gradient(black 80%, transparent)"
 											/>
@@ -142,7 +142,7 @@ votes.forEach((vote) => {
 							class:list={[
 								"pointer-events-none absolute inset-x-0 bottom-20 z-10 m-auto h-auto w-48 md:inset-0 md:w-80",
 							]}
-							src={`/img/matches/title-${combat.id}.webp`}
+							src={`https://cdn.lavelada.dev/matches/title-${combat.id}.webp`}
 							alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 						/>
 						<button
@@ -204,38 +204,38 @@ votes.forEach((vote) => {
 					$button.classList.remove("is-voted")
 					$previousVoted?.classList.add("is-voted")
 
-          window.toast({
-            title: "Error al guardar el voto",
-            location: "bottom-center",
-            dismissible: false,
-            type: "error",
-            icon: true,
-          })
-			}
-
-			fetch(`/api/votes/${combatId}`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ voteId }),
-			})
-				.then((res) => {
-					if (!res.ok) return rollbackUI()
 					window.toast({
-						title: "¡Voto registrado!",
+						title: "Error al guardar el voto",
 						location: "bottom-center",
 						dismissible: false,
-						type: "success",
+						type: "error",
 						icon: true,
 					})
+				}
 
-          const nextCombat = $button.parentElement?.nextElementSibling as HTMLElement
-          if (nextCombat) nextCombat.scrollIntoView({ behavior: "smooth" })
-        })
-        .catch(() => {
-          rollbackUI()
-        })
+				fetch(`/api/votes/${combatId}`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ voteId }),
+				})
+					.then((res) => {
+						if (!res.ok) return rollbackUI()
+						window.toast({
+							title: "¡Voto registrado!",
+							location: "bottom-center",
+							dismissible: false,
+							type: "success",
+							icon: true,
+						})
+
+						const nextCombat = $button.parentElement?.nextElementSibling as HTMLElement
+						if (nextCombat) nextCombat.scrollIntoView({ behavior: "smooth" })
+					})
+					.catch(() => {
+						rollbackUI()
+					})
 			}
 		})
 	})
