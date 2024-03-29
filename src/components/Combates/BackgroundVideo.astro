@@ -1,0 +1,22 @@
+---
+interface Props {
+	id: string
+}
+
+const { id } = Astro.props
+---
+<div class="fixed left-0 top-0 -z-10 aspect-video h-[100vh] w-screen">
+	<video
+		autoplay
+		muted
+		loop
+		class="aspect-video size-full overflow-hidden object-cover opacity-0 transition-opacity duration-500"
+		style="mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, transparent);"
+		oncanplay="this.classList.add('opacity-70')"
+	>
+		<source
+			type="video/mp4"
+			src={`https://pub-b708fa93d7064977b256b094eb906703.r2.dev/${id}-corto.mp4`}
+		/>
+	</video>
+</div>
