@@ -11,6 +11,7 @@ import { manifest, seoConfig } from "./src/utils/seoConfig"
 
 // https://astro.build/config
 export default defineConfig({
+	compressHTML: true,
 	prefetch: true,
 	devToolbar: {
 		enabled: false,
