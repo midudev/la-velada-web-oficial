@@ -248,14 +248,10 @@ const boxerColumns = [
 		const mobileMediaQuery = window.matchMedia("(max-width: 768px)")
 
 		function highlightBoxer(link: HTMLAnchorElement) {
-			if (
-				link.getBoundingClientRect().left >
-					carouselInner.getBoundingClientRect().width / 2 -
-						link.getBoundingClientRect().width * 0.75 &&
-				link.getBoundingClientRect().left <
-					carouselInner.getBoundingClientRect().width / 2 +
-						link.getBoundingClientRect().width * 0.25
-			) {
+			const rect = link.getBoundingClientRect()
+			const { width } = carouselInner.getBoundingClientRect()
+
+			if (rect.left > width / 2 - rect.width * 0.75 && rect.left < width / 2 + rect.width * 0.25) {
 				activateBoxer(link, link, carouselInner, false, false)
 			}
 		}
