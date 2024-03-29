@@ -1,0 +1,147 @@
+---
+// BoxerCarousel.astro
+import type { Boxer } from "@/types/Boxer"
+import HorizontalScroll from "../icons/horizontalScroll.astro"
+import ColumnBoxers from "./ColumnBoxers.astro"
+
+const { listOfBoxers, selectedBoxer } = Astro.props
+---
+
+<div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
+	<div class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll">
+		{
+			listOfBoxers.map((boxer: Boxer, index: number) => (
+				<div
+					class:list={`carousel-item w-[40%] flex-shrink-0 snap-center px-2
+						${index === 0 ? "ml-[30%]" : ""}
+						${index === listOfBoxers.length - 1 ? "mr-[30%]" : ""}`}
+					data-id={boxer.id}
+				>
+					<ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
+				</div>
+			))
+		}
+	</div>
+</div>
+<HorizontalScroll class="w-16 text-primary opacity-80" />
+
+<script>
+	import { $, $$ } from "@/lib/dom-selector"
+
+	document.addEventListener("astro:page-load", () => {
+		const carouselInner = $(".carousel-inner")
+
+		if (!carouselInner) return
+
+		let lastKnownScrollPosition = 0
+		let ticking = false
+		const boxerLinks = $$(".boxer-link") as NodeListOf<HTMLElement>
+
+		function checkAndEmitBoxerInCenter(scrollPos: number) {
+			let closestBoxerId = null
+			let minDistanceToCenter = Number.POSITIVE_INFINITY
+
+			const centerPosition = scrollPos + carouselInner.offsetWidth / 2
+
+			boxerLinks.forEach((link) => {
+				const linkCenter = link.offsetLeft + link.offsetWidth / 2
+				const distanceToCenter = Math.abs(linkCenter - centerPosition)
+
+				if (distanceToCenter < minDistanceToCenter) {
+					closestBoxerId = link.dataset.id
+					minDistanceToCenter = distanceToCenter
+				}
+			})
+
+			if (closestBoxerId) {
+				emitBoxerSelectedEvent(closestBoxerId)
+			}
+		}
+
+		function emitBoxerSelectedEvent(boxerId: string) {
+			const event = new CustomEvent("boxerSelected", { detail: { boxerId } })
+			document.dispatchEvent(event)
+		}
+
+		document.addEventListener("boxerSelected", (event) => {
+			const { boxerId } = event.detail
+			highlightActiveBoxer(boxerId)
+			updateAlliesAndOpponents(boxerId)
+		})
+
+		function highlightActiveBoxer(activeBoxerId: string) {
+			boxerLinks.forEach((link: HTMLElement) => {
+				link.classList.remove("active")
+				if (link.dataset.id === activeBoxerId) {
+					link.classList.add("active")
+				}
+			})
+		}
+
+		function updateAlliesAndOpponents(activeBoxerId: string) {
+			const activeBoxerLink = Array.from(boxerLinks).find(
+				(link: HTMLElement) => link.dataset.id === activeBoxerId
+			)
+
+			if (!activeBoxerLink) return
+
+			const allies = activeBoxerLink.dataset.allies?.split(",") || []
+			const opponents = activeBoxerLink.dataset.opponents?.split(",") || []
+
+			Array.from(boxerLinks).forEach((link: HTMLElement) => {
+				link.classList.remove("ally", "opponent")
+				if (allies.includes(link.dataset.id)) {
+					link.classList.add("ally")
+				}
+				if (opponents.includes(link.dataset.id)) {
+					link.classList.add("opponent")
+				}
+			})
+		}
+
+		if (!carouselInner) return
+
+		carouselInner.addEventListener("scroll", () => {
+			lastKnownScrollPosition = carouselInner.scrollLeft
+
+			if (!ticking) {
+				window.requestAnimationFrame(() => {
+					checkAndEmitBoxerInCenter(lastKnownScrollPosition)
+					ticking = false
+				})
+
+				ticking = true
+			}
+		})
+	})
+</script>
+
+<style>
+	@media (max-width: 768px) {
+		.carousel {
+			scrollbar-width: none;
+		}
+
+		.carousel::-webkit-scrollbar {
+			display: none;
+		}
+
+		.carousel-inner {
+			transition: transform 0.3s ease-in-out;
+			scrollbar-width: none;
+		}
+
+		.carousel-inner::-webkit-scrollbar {
+			display: none;
+		}
+
+		.carousel-item {
+			transition: opacity 0.3s ease-in-out;
+		}
+
+		.carousel-item.active {
+			opacity: 1;
+			scale: 1.2;
+		}
+	}
+</style>

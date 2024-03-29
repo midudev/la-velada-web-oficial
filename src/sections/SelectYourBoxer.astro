@@ -1,10 +1,10 @@
 ---
 import BoxerBigImage from "@/components/BoxerBigImage.astro"
+import BoxerCarousel from "@/components/BoxerCarousel.astro"
 import ColumnBoxers from "@/components/ColumnBoxers.astro"
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
-import HorizontalScroll from "@/icons/horizontalScroll.astro"
 
 const listOfBoxers = BOXERS.map((boxer) => {
 	const { country } = boxer
@@ -83,24 +83,7 @@ const boxerColumns = [
 		</div>
 
 		<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
-			<div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
-				<div class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll">
-					{
-						listOfBoxers.map((boxer, index) => (
-							<div
-								class:list={`
-									carousel-item w-[40%] flex-shrink-0 snap-center px-2
-									${index === 0 ? "ml-[30%]" : ""}
-									${index === listOfBoxers.length - 1 ? "mr-[30%]" : ""}
-								`}
-							>
-								<ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
-							</div>
-						))
-					}
-				</div>
-			</div>
-			<HorizontalScroll class:list={["text-primary w-16 opacity-80"]} />
+			<BoxerCarousel listOfBoxers={listOfBoxers} selectedBoxer={selectedBoxer} />
 		</div>
 	</div>
 </section>
@@ -225,6 +208,14 @@ const boxerColumns = [
 			boxerCountry.alt = `Bandera de ${countryName}`
 		}
 
+		document.addEventListener("boxerSelected", (event) => {
+			const { boxerId } = (event as CustomEvent).detail
+			const selectedBoxerElement = $(`.boxer-link[data-id='${boxerId}']`)
+			if (selectedBoxerElement) {
+				activateBoxer(selectedBoxerElement, selectedBoxerElement, boxerNav, true)
+			}
+		})
+
 		boxerLinks.forEach((link) => {
 			link.addEventListener("click", (event: MouseEvent) => {
 				const currentTarget = event.currentTarget as HTMLElement
@@ -241,50 +232,6 @@ const boxerColumns = [
 				activateBoxer(currentTarget, link, boxerNav, true)
 			})
 		})
-
-		const carouselInner = $(".carousel-inner") as HTMLElement
-
-		// detect match media change for mobile
-		const mobileMediaQuery = window.matchMedia("(max-width: 768px)")
-
-		function highlightBoxer(link: HTMLAnchorElement) {
-			if (
-				link.getBoundingClientRect().left >
-					carouselInner.getBoundingClientRect().width / 2 -
-						link.getBoundingClientRect().width * 0.75 &&
-				link.getBoundingClientRect().left <
-					carouselInner.getBoundingClientRect().width / 2 +
-						link.getBoundingClientRect().width * 0.25
-			) {
-				activateBoxer(link, link, carouselInner, false, false)
-			}
-		}
-
-		function highlightActiveBoxer() {
-			boxerLinks.forEach((link) => {
-				highlightBoxer(link)
-			})
-		}
-
-		function updateActiveThumbnailPosition() {
-			const boxer = new URLSearchParams(window.location.search).get("boxer")
-			const boxerActiveElement = $(`.carousel .boxer-link[data-id=${boxer}]`)
-			if (boxerActiveElement) {
-				const carouselWidth = carouselInner.clientWidth
-				const thumbnailWidth = boxerActiveElement.offsetWidth
-				const currentPosition = boxerActiveElement.offsetLeft - (carouselWidth - thumbnailWidth) / 2
-
-				carouselInner.scrollTo(currentPosition, 0)
-			}
-		}
-
-		if (mobileMediaQuery.matches) {
-			updateActiveThumbnailPosition()
-
-			carouselInner.addEventListener("scroll", () => {
-				highlightActiveBoxer()
-			})
-		}
 	})
 </script>
 
@@ -297,34 +244,6 @@ const boxerColumns = [
 	@media (min-width: 1280px) {
 		.boxers-lists {
 			@apply h-auto w-full max-w-none overflow-hidden py-2;
-		}
-	}
-
-	@media (max-width: 768px) {
-		.carousel {
-			scrollbar-width: none;
-		}
-
-		.carousel::-webkit-scrollbar {
-			display: none;
-		}
-
-		.carousel-inner {
-			transition: transform 0.3s ease-in-out;
-			scrollbar-width: none;
-		}
-
-		.carousel-inner::-webkit-scrollbar {
-			display: none;
-		}
-
-		.carousel-item {
-			transition: opacity 0.3s ease-in-out;
-		}
-
-		.carousel-item.active {
-			opacity: 1;
-			scale: 1.2;
 		}
 	}
 </style>
