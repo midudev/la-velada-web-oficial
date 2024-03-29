@@ -1,8 +1,9 @@
 ---
+import { Image } from "astro:assets"
+
 import Typography from "@/components/Typography.astro"
 import { COMBATS } from "@/consts/combats"
 import type { Boxer } from "@/types/Boxer"
-import Image from "astro/components/Image.astro"
 
 interface Props {
 	combatId: string
@@ -52,9 +53,9 @@ const combatData = COMBATS.find((combat) => combat.id === combatId)
 const boxerNames = combatData?.boxers ?? []
 ---
 
-<section class="md:mt-40 mt-10 flex flex-col items-center gap-5 md:gap-10 lg:gap-0">
+<section class="mt-10 flex flex-col items-center gap-5 md:mt-40 md:gap-10 lg:gap-0">
 	<div class:list={["relative flex w-full flex-col items-center justify-center py-20"]}>
-		<div class='absolute inset-0 -z-10 opacity-20 grid place-items-center'>
+		<div class="absolute inset-0 -z-10 grid place-items-center opacity-20">
 			{
 				combatData ? (
 					<Image
@@ -63,7 +64,7 @@ const boxerNames = combatData?.boxers ?? []
 						transition:name={`title-image-${combatId}`}
 						loading={"eager"}
 						class="inset-0 h-auto max-h-96 w-full max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
-						src={`/img/matches/title-${combatId}.webp`}
+						src={`https://cdn.lavelada.dev/matches/title-${combatId}.webp`}
 						alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 					/>
 				) : (
