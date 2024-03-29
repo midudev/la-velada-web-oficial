@@ -1,10 +1,4 @@
-export interface Combat {
-	id: string
-	boxers: string[] // es un string porque hace referencia a los ids de los boxeadores
-	number: number
-	titleSize: [number, number]
-	teams?: string[]
-}
+import type { Combat } from "@/types/Combat"
 
 export const REY_DE_LA_PISTA_ID = "5-rey-de-la-pista"
 export const COMBATS: Combat[] = [
