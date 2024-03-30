@@ -132,19 +132,21 @@ const { id, name } = Astro.props
 				$gallery.querySelector("a[data-current=true]")?.removeAttribute("data-current")
 				// set current data atribute
 				link.setAttribute("data-current", "true")
-				// add lightbox
-				if (!$lightbox.open) {
-					$lightbox.showModal()
-				}
 
+				// update de image before show lightbox
 				if ($lightbox.open && document.startViewTransition) {
 					document.startViewTransition(() => {
 						updateImg(link)
 					})
 					return
+				} else {
+					updateImg(link)
 				}
 
-				updateImg(link)
+				// add lightbox
+				if (!$lightbox.open) {
+					$lightbox.showModal()
+				}
 			})
 		)
 	})
