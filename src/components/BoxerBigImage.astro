@@ -12,22 +12,29 @@ interface Props {
 const { name, country, countryName, id, loading } = Astro.props
 ---
 
-<picture
-	class:list={"boxer-photo aspect-[285/428] h-auto w-full max-w-[460px]"}
-	transition:name="boxer-big-image"
->
-	<img
-		decoding="async"
-		class="aspect-[285/428] h-auto w-full object-contain"
-		alt={`Fotografía de ${name}`}
-		src={`https://cdn.lavelada.dev/boxers/${id}-big.webp`}
-		style="
+<div class="aspect-[285/428] h-auto w-full max-w-[460px]">
+	<picture
+		class:list={"boxer-photo absolute z-10 aspect-[285/428] h-auto w-full max-w-[460px]"}
+		transition:name="boxer-big-image"
+	>
+		<a
+			class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none"
+			href=`/boxers/${id}`
+		>
+			<img
+				decoding="async"
+				class="aspect-[285/428] h-auto w-full object-contain"
+				alt={`Fotografía de ${name}`}
+				src={`https://cdn.lavelada.dev/boxers/${id}-big.webp`}
+				style="
 			filter: drop-shadow(0 0 5px rgba(0, 0, 0, .5));
 			mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 		"
-		loading={loading}
-	/>
-</picture>
+				loading={loading}
+			/>
+		</a>
+	</picture>
+</div>
 
 <div
 	class="absolute bottom-10 z-10 flex max-w-md flex-col items-center justify-center text-wrap md:-bottom-32"
@@ -35,14 +42,16 @@ const { name, country, countryName, id, loading } = Astro.props
 >
 	<BoxerTitleName name={name} />
 
-	<img
-		decoding="async"
-		transition:name="boxer-flag"
-		class:list={"boxer-flag mask-flag pointer-events-none aspect-[3/2] h-auto w-28 object-contain object-center"}
-		alt={`Bandera de ${countryName}`}
-		src={`https://cdn.lavelada.dev/flags/${country}.webp`}
-		loading={loading}
-	/>
+	<div class="boxer-flag-wrapper mask-flag h-auto w-28 object-contain object-center">
+		<img
+			decoding="async"
+			transition:name="boxer-flag"
+			class:list={"boxer-flag mask-flag pointer-events-none aspect-[3/2] h-auto w-28"}
+			alt={`Bandera de ${countryName}`}
+			src={`https://cdn.lavelada.dev/flags/${country}.webp`}
+			loading={loading}
+		/>
+	</div>
 </div>
 
 <style>

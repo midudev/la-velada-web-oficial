@@ -117,6 +117,7 @@ const boxerColumns = [
 		const boxerTitle = $(".boxer-title") as HTMLImageElement
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
 		const boxerCountry = $(".boxer-flag") as HTMLImageElement
+		const boxerFlag = $(".boxer-flag-wrapper") as HTMLDivElement
 
 		const updatedSelectedBoxerId =
 			localStorage.getItem("selected:boxer") ||
@@ -184,6 +185,34 @@ const boxerColumns = [
 					</a>
 			`
 
+			const isLoading = id ? "eager" : "lazy"
+
+			const boxerImageLink = `
+				<a href="/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
+					<img
+						decoding="async"
+						class="aspect-[285/428] h-auto w-full object-contain"
+						alt={"Fotografía de ${name}"}
+						src="https://cdn.lavelada.dev/boxers/${id}-big.webp"
+						style="filter: drop-shadow(0 0 5px rgba(0, 0, 0, .5));mask-image: linear-gradient(to bottom, black 80%, transparent 100%);"
+						loading=${isLoading}
+					/>
+				</a>
+			`
+
+			const boxerFlagLink = `
+				<a href="/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
+					<img
+						decoding="async"
+						transition:name="boxer-flag"
+						class:list={"boxer-flag mask-flag pointer-events-none aspect-[3/2] h-auto w-28 object-contain object-center"}
+						alt="Bandera de ${countryName}"
+						src="https://cdn.lavelada.dev/flags/${country}.webp"
+						loading=${isLoading}
+					/>
+				</a>
+			`
+
 			nav?.querySelector(".active")?.classList.remove("active")
 			nav
 				?.querySelectorAll(".opponent")
@@ -219,6 +248,8 @@ const boxerColumns = [
 
 			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
 			boxerTitle.innerHTML = spanNames
+			boxerPhoto.innerHTML = boxerImageLink
+			boxerFlag.innerHTML = boxerFlagLink
 			boxerCountry.src = `https://cdn.lavelada.dev/flags/${country}.webp`
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
 
