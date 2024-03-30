@@ -20,7 +20,7 @@ const { name, country, countryName, id, loading } = Astro.props
 		decoding="async"
 		class="aspect-[285/428] h-auto w-full object-contain"
 		alt={`Fotografía de ${name}`}
-		src={`/img/boxers/${id}-big.webp`}
+		src={`https://cdn.lavelada.dev/boxers/${id}-big.webp`}
 		style="
 			filter: drop-shadow(0 0 5px rgba(0, 0, 0, .5));
 			mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
@@ -40,28 +40,20 @@ const { name, country, countryName, id, loading } = Astro.props
 		transition:name="boxer-flag"
 		class:list={"boxer-flag mask-flag pointer-events-none aspect-[3/2] h-auto w-28 object-contain object-center"}
 		alt={`Bandera de ${countryName}`}
-		src={`/img/flags/${country}.webp`}
+		src={`https://cdn.lavelada.dev/flags/${country}.webp`}
 		loading={loading}
 	/>
 </div>
 
 <style>
 	.mask-flag {
-		-webkit-mask-image: url(/img/flags/maskflag.webp);
-		mask-image: url(/img/flags/maskflag.webp);
-		-webkit-mask-repeat: no-repeat;
+		mask-image: url("/img/flags/maskflag.webp");
 		mask-repeat: no-repeat;
-		-webkit-mask-size: contain;
 		mask-size: contain;
-		-webkit-mask-position: center;
 		mask-position: center;
-		-webkit-mask-origin: content-box;
 		mask-origin: content-box;
-		-webkit-mask-clip: content-box;
 		mask-clip: content-box;
-		-webkit-mask-composite: source-in;
 		mask-composite: source-in;
-		-webkit-mask-mode: alpha;
 		mask-mode: alpha;
 	}
 </style>

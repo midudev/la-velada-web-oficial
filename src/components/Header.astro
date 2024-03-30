@@ -61,7 +61,7 @@ const pages = [
 			</div>
 			<nav class="flex w-full flex-col items-center gap-5">
 				<img
-					src="/img/lvda.webp"
+					src="https://cdn.lavelada.dev/lvda.webp"
 					alt="lvda logo"
 					class="accent-drop-shadow my-4 max-w-60 drop-shadow-lg"
 					loading="lazy"
@@ -106,8 +106,8 @@ const pages = [
 				style="background:linear-gradient(to right, transparent 3%, white 35%, white 100%)"
 			>
 			</div>
-			<div class="-ml-[8px] -mr-[4px]">
-				<a href="/">
+			<div class="focus-within-ring -ml-[8px] -mr-[4px]">
+				<a href="/" class="focus-visible:!ring-0">
 					<HeroLogo class:list={"h-auto w-full"} id="hero-logo-header" noEffect />
 				</a>
 			</div>
@@ -135,6 +135,10 @@ const pages = [
 	.nav-item:hover .background,
 	.nav-item:focus .background {
 		opacity: 1;
+	}
+
+	.focus-within-ring {
+		@apply focus-within:ring-1 focus-within:ring-white focus-within:ring-offset-1;
 	}
 
 	#menuMobileContent {

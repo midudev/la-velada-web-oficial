@@ -43,7 +43,9 @@
 		const $closeButton = document.querySelector(".close-dialog")
 		const $ytFrame = document.querySelector(".yt-iframe")
 
-		$clipDialog.addEventListener("close", (event) => {
+		if (!$clipDialog) return
+
+		$clipDialog.addEventListener("close", () => {
 			$ytFrame?.setAttribute("src", "")
 		})
 

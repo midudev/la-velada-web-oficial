@@ -24,7 +24,7 @@ const boxerColumns = [
 ]
 ---
 
-<section class="md:my-40 mt-20 mb-10 transform-gpu">
+<section class="mb-10 mt-20 transform-gpu md:my-40">
 	<Typography
 		as="h3"
 		variant="atomic-title"
@@ -100,7 +100,7 @@ const boxerColumns = [
 					}
 				</div>
 			</div>
-			<HorizontalScroll class:list={["text-primary w-16 opacity-80"]} />
+			<HorizontalScroll class:list={["w-16 text-primary opacity-80"]} />
 		</div>
 	</div>
 </section>
@@ -140,7 +140,7 @@ const boxerColumns = [
 						// get all images and preload them
 						boxerLinks.forEach((link) => {
 							const { id } = link.dataset
-							const boxerSrc = `/img/boxers/${id}-big`
+							const boxerSrc = `https://cdn.lavelada.dev/boxers/${id}-big`
 							// create link preload for each image for webp
 							const preloadLink = document.createElement("link")
 							preloadLink.rel = "preload"
@@ -215,11 +215,11 @@ const boxerColumns = [
 				history.replaceState({}, "", `?boxer=${id}`)
 			}
 
-			const boxerSrc = `/img/boxers/${id}-big`
+			const boxerSrc = `https://cdn.lavelada.dev/boxers/${id}-big`
 
 			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
 			boxerTitle.innerHTML = spanNames
-			boxerCountry.src = `/img/flags/${country}.webp`
+			boxerCountry.src = `https://cdn.lavelada.dev/flags/${country}.webp`
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
 
 			boxerCountry.alt = `Bandera de ${countryName}`
@@ -248,14 +248,10 @@ const boxerColumns = [
 		const mobileMediaQuery = window.matchMedia("(max-width: 768px)")
 
 		function highlightBoxer(link: HTMLAnchorElement) {
-			if (
-				link.getBoundingClientRect().left >
-					carouselInner.getBoundingClientRect().width / 2 -
-						link.getBoundingClientRect().width * 0.75 &&
-				link.getBoundingClientRect().left <
-					carouselInner.getBoundingClientRect().width / 2 +
-						link.getBoundingClientRect().width * 0.25
-			) {
+			const rect = link.getBoundingClientRect()
+			const { width } = carouselInner.getBoundingClientRect()
+
+			if (rect.left > width / 2 - rect.width * 0.75 && rect.left < width / 2 + rect.width * 0.25) {
 				activateBoxer(link, link, carouselInner, false, false)
 			}
 		}

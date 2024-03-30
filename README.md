@@ -41,8 +41,8 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 
 ### Capturas de pantalla de la web de La Velada IV
 
-![Captura de pantalla en móvil](./public/img/github/Mobile_README.png)
-![Captura de pantalla en ordenador](./public/img/github/Desktop_README.png)
+![Captura de pantalla en ordenador](https://github.com/midudev/la-velada-web-oficial/assets/1561955/b4080e89-d6e5-4fad-8303-b91e1142cf65)
+![Captura de pantalla en móvil](https://github.com/midudev/la-velada-web-oficial/assets/1561955/ded00bc0-6b82-4644-a079-5b33902f7eff)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
