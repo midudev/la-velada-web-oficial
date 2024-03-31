@@ -41,7 +41,8 @@
 		const $clipContainer = document.querySelectorAll(".clip-container")
 		const $clipDialog = document.querySelector(".clip-dialog") as HTMLDialogElement
 		const $closeButton = document.querySelector(".close-dialog")
-		const $ytFrame = document.querySelector(".yt-iframe")
+		let $ytFrame = document.querySelector(".yt-iframe") as HTMLIFrameElement
+		const ytFrameCopy = $ytFrame
 
 		if (!$clipDialog) return
 
@@ -49,7 +50,10 @@
 			$ytFrame?.setAttribute("src", "")
 		})
 
-		$closeButton?.addEventListener("click", () => $clipDialog.close())
+		$closeButton?.addEventListener("click", () => {
+			$clipDialog.close()
+			$ytFrame?.remove()
+		})
 
 		$clipDialog.addEventListener("click", (event) => {
 			const target = event.target as HTMLElement
@@ -61,7 +65,13 @@
 				const currentTarget = event.currentTarget as HTMLElement
 				const { url } = currentTarget.dataset
 				if (!url) return
-				$ytFrame?.setAttribute("src", `${url}&autoplay=1`)
+				$ytFrame = document.querySelector(".yt-iframe") as HTMLIFrameElement
+				if ($ytFrame !== null) {
+					$ytFrame.setAttribute("src", `${url}&autoplay=1`)
+				} else {
+					$clipDialog?.querySelector("div")?.prepend(ytFrameCopy)
+					ytFrameCopy.setAttribute("src", `${url}&autoplay=1`)
+				}
 				$clipDialog.showModal()
 			})
 		})
