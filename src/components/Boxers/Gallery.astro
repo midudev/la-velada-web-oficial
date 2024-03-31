@@ -41,7 +41,7 @@ const { id, name } = Astro.props
 		}
 		<dialog
 			id="lightbox"
-			class="-z-10 h-auto max-h-[90%] w-full max-w-[90%] items-center justify-center overflow-hidden bg-transparent backdrop:bg-black/70"
+			class="h-screen w-screen items-center justify-center overflow-hidden bg-transparent backdrop:bg-black/70"
 		>
 			<button
 				type="button"
@@ -56,10 +56,11 @@ const { id, name } = Astro.props
 						d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
 				</svg>
 			</button>
-			<div class="z-50 mx-auto flex h-full w-full items-center justify-center gap-5">
+			<div class="mx-auto flex h-full w-full items-center justify-center gap-5">
+				<div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
 				<button
 					data-btn-prev
-					class="group transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100"
+					class="group z-10 transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100"
 				>
 					<img
 						class="size-16 opacity-85 group-hover:opacity-100"
@@ -71,13 +72,13 @@ const { id, name } = Astro.props
 				<img
 					loading="lazy"
 					decoding="async"
-					class="boxer-gallery-img h-full rounded object-contain object-center"
+					class="boxer-gallery-img z-10 h-full rounded object-contain object-center"
 					alt={`Imagen de la galería de fotos de ${name}`}
 					src={`https://cdn.lavelada.dev/boxers/gallery/${id}/1.webp`}
 				/>
 				<button
 					data-btn-next
-					class="group transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100"
+					class="group z-10 transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100"
 				>
 					<img
 						class="size-16 rotate-180 opacity-85 group-hover:opacity-100"
@@ -164,6 +165,12 @@ const { id, name } = Astro.props
 
 		// al hacer click en el botón de cerrar
 		$close?.addEventListener("click", close)
+
+		$lightbox?.addEventListener("click", (event) => {
+			const $dialogBg = document.querySelector("[data-dialog-bg]") as HTMLDivElement
+			const canClose = event.target === $dialogBg
+			if (canClose) close()
+		})
 
 		// al hacer click en un enlace de lightbox
 		// usar la imagen del enlace como imagen principal
