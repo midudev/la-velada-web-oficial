@@ -22,7 +22,7 @@ const { id, name } = Astro.props
 						" aspect-square transition hover:scale-105 hover:brightness-125",
 						{ "row-span-2": index === 0 },
 					]}
-					href={`/img/boxers/gallery/${id}/${index + 1}.webp`}
+					href={`https://cdn.lavelada.dev/boxers/gallery/${id}/${index + 1}.webp`}
 					title={`Abrir imagen ${index} de la galería de ${name}`}
 				>
 					<figure class="h-full w-full">
@@ -32,7 +32,7 @@ const { id, name } = Astro.props
 								decoding="async"
 								class="aspect-square h-full w-full rounded object-cover object-top"
 								alt={`Imagen de la galería de fotos de ${name}`}
-								src={`/img/boxers/gallery/${id}/${index + 1}.webp`}
+								src={`https://cdn.lavelada.dev/boxers/gallery/${id}/${index + 1}.webp`}
 							/>
 						</picture>
 					</figure>
@@ -47,13 +47,7 @@ const { id, name } = Astro.props
 				type="button"
 				class="fixed right-8 top-8 rounded bg-black/60 p-4 text-white transition hover:scale-110 hover:bg-accent hover:text-black"
 			>
-				<svg
-					class="size-5"
-					aria-hidden="true"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 14 14"
-				>
+				<svg class="size-5" aria-hidden="true" fill="none" viewBox="0 0 14 14">
 					<path
 						stroke="currentColor"
 						stroke-linecap="round"
@@ -67,7 +61,7 @@ const { id, name } = Astro.props
 				decoding="async"
 				class="mx-auto h-full rounded object-contain object-center"
 				alt={`Imagen de la galería de fotos de ${name}`}
-				src={`/img/boxers/gallery/${id}/1.webp`}
+				src={`https://cdn.lavelada.dev/boxers/gallery/${id}/1.webp`}
 			/>
 		</dialog>
 	</div>
@@ -138,19 +132,21 @@ const { id, name } = Astro.props
 				$gallery.querySelector("a[data-current=true]")?.removeAttribute("data-current")
 				// set current data atribute
 				link.setAttribute("data-current", "true")
-				// add lightbox
-				if (!$lightbox.open) {
-					$lightbox.showModal()
-				}
 
+				// update de image before show lightbox
 				if ($lightbox.open && document.startViewTransition) {
 					document.startViewTransition(() => {
 						updateImg(link)
 					})
 					return
+				} else {
+					updateImg(link)
 				}
 
-				updateImg(link)
+				// add lightbox
+				if (!$lightbox.open) {
+					$lightbox.showModal()
+				}
 			})
 		)
 	})

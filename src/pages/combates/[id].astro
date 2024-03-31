@@ -1,10 +1,10 @@
 ---
 import { Image } from "astro:assets"
 
+import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
 import { COMBATS } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 import CombatFeatures from "@/sections/CombatFeatures.astro"
-import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
@@ -40,10 +40,11 @@ const formatter = new Intl.ListFormat("es", {
 const formattedBoxerNames = formatter.format(boxerNames)
 const [imageWidth, imageHeight] = combatData.titleSize
 ---
+
 <Layout
 	title={`Combate número ${combatData.number} de La Velada IV`}
 	description={`Combate entre ${formattedBoxerNames}`}
-	image={`/img/matches/og-${id}-min.jpg`}
+	image={`https://cdn.lavelada.dev/matches/og-${id}-min.jpg`}
 >
 	<BackgroundVideo id={id} />
 	<main class="pointer-events-none md:-mt-12">
@@ -54,7 +55,7 @@ const [imageWidth, imageHeight] = combatData.titleSize
 				transition:name={`title-image-${id}`}
 				loading={"eager"}
 				class="inset-0 h-auto max-h-96 w-full max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
-				src={`/img/matches/title-${id}.webp`}
+				src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
 				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 			/>
 		</div>
