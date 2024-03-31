@@ -41,7 +41,7 @@ const { id, name } = Astro.props
 		}
 		<dialog
 			id="lightbox"
-			class="h-screen w-screen items-center justify-center overflow-hidden bg-transparent backdrop:bg-black/70"
+			class="h-auto max-h-[80%] w-auto max-w-[80%] items-center justify-center overflow-hidden bg-transparent backdrop:bg-black/70 lg:max-h-[90%] lg:w-full lg:max-w-[90%]"
 		>
 			<button
 				type="button"
@@ -60,7 +60,7 @@ const { id, name } = Astro.props
 				<div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
 				<button
 					data-btn-prev
-					class="group z-10 transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100"
+					class="group z-10 hidden transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 lg:block"
 				>
 					<img
 						class="size-16 opacity-85 group-hover:opacity-100"
@@ -78,7 +78,7 @@ const { id, name } = Astro.props
 				/>
 				<button
 					data-btn-next
-					class="group z-10 transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100"
+					class="group z-10 hidden transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 lg:block"
 				>
 					<img
 						class="size-16 rotate-180 opacity-85 group-hover:opacity-100"
@@ -168,7 +168,7 @@ const { id, name } = Astro.props
 
 		$lightbox?.addEventListener("click", (event) => {
 			const $dialogBg = document.querySelector("[data-dialog-bg]") as HTMLDivElement
-			const canClose = event.target === $dialogBg
+			const canClose = event.target === $dialogBg || event.target === $lightbox
 			if (canClose) close()
 		})
 
