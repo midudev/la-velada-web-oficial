@@ -116,7 +116,6 @@ const boxerColumns = [
 
 		const boxerTitle = $(".boxer-title") as HTMLImageElement
 		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
-		const boxerCountry = $(".boxer-flag") as HTMLImageElement
 		const boxerFlag = $(".boxer-flag-wrapper") as HTMLDivElement
 
 		const updatedSelectedBoxerId =
@@ -244,16 +243,9 @@ const boxerColumns = [
 				history.replaceState({}, "", `?boxer=${id}`)
 			}
 
-			const boxerSrc = `https://cdn.lavelada.dev/boxers/${id}-big`
-
-			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
 			boxerTitle.innerHTML = spanNames
 			boxerPhoto.innerHTML = boxerImageLink
 			boxerFlag.innerHTML = boxerFlagLink
-			boxerCountry.src = `https://cdn.lavelada.dev/flags/${country}.webp`
-			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
-
-			boxerCountry.alt = `Bandera de ${countryName}`
 		}
 
 		boxerLinks.forEach((link) => {
