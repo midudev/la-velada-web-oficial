@@ -47,12 +47,20 @@
 		if (!$clipDialog) return
 
 		$clipDialog.addEventListener("close", () => {
-			$ytFrame?.setAttribute("src", "")
+			if ($ytFrame !== null) {
+				$ytFrame.setAttribute("src", "")
+			} else {
+				ytFrameCopy.setAttribute("src", "")
+			}
 		})
 
 		$closeButton?.addEventListener("click", () => {
 			$clipDialog.close()
-			$ytFrame?.remove()
+			if ($ytFrame !== null) {
+				$ytFrame.remove()
+			} else {
+				ytFrameCopy.remove()
+			}
 		})
 
 		$clipDialog.addEventListener("click", (event) => {
