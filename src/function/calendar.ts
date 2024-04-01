@@ -1,5 +1,8 @@
 import type { CalendarProviders, VeladaDate, VeladaEvent } from "@/types/Calendar"
 
+/**
+ * Adds the event to the Calendar dependig on the provider, see {@link CalendarProviders}.
+ */
 function addToCalendar(providerUrl: string, provider: CalendarProviders, event: VeladaEvent) {
 	switch (provider) {
 		case "google":
@@ -10,7 +13,16 @@ function addToCalendar(providerUrl: string, provider: CalendarProviders, event: 
 	}
 }
 
-function encodeURL(url: string, urlParams: Record<string, string>, action = true) {
+/**
+ * Encodes URL using {@link encodeURIComponent} for the `url` and the `searchParams`.
+ *
+ * @param url URL.
+ * @param urlParams Search parameters for the URL.
+ * @param [action] True if `action=...` is specified, false otherwise.
+ *
+ * @returns {string} encodedUrl Encoded URL joint by `&`.
+ */
+function encodeURL(url: string, urlParams: Record<string, string>, action: boolean = true): string {
 	if (action) url += "&"
 	const newUrl = Object.keys(urlParams)
 		.map((key: string) => {
@@ -20,6 +32,9 @@ function encodeURL(url: string, urlParams: Record<string, string>, action = true
 	return url + newUrl
 }
 
+/**
+ * Adds the event to Google Calendar, using its format.
+ */
 function addToGoogleCalendar(url: string, event: VeladaEvent): void {
 	const { startTime, endTime } = formatDate(generateDate(event))
 
@@ -35,6 +50,14 @@ function addToGoogleCalendar(url: string, event: VeladaEvent): void {
 	window.open(encodedUrl, "_blank")
 }
 
+/**
+ * Formats date into a provider friendly way, see {@link CalendarProviders}.
+ *
+ * @param {VeladaDate} date
+ *
+ * @example
+ * const date = formatDate(generateDate(event))
+ */
 function formatDate({ start, end, c, event }: VeladaDate) {
 	const newDate = new window.Date(
 		start.toLocaleString("en-US", {
@@ -56,6 +79,13 @@ function formatDate({ start, end, c, event }: VeladaDate) {
 	}
 }
 
+/**
+ * Generates a valid Date to be formatted for the providers and returns and object, see {@link formatDate}.
+ *
+ * @param {VeladaEvent} event The event.
+ *
+ * @returns {VeladaDate} eventDate The date start and end times and day, c, and the event itself.
+ */
 function generateDate(event: VeladaEvent): VeladaDate {
 	const start = event.startDate.split("-")
 	const [sYear, sMonth, sDay] = start
@@ -72,7 +102,18 @@ function generateDate(event: VeladaEvent): VeladaDate {
 	}
 }
 
-function sanitizeHtml(details: string, tag = false): string {
+/**
+ * Sanitize details string into HTML valid characters.
+ *
+ * @example
+ * const details = "¡Arranca la Velada del Año!<br><br>Entra a Twitch y no te lo pierdas → [url]https://twitch.tv/ibai[/url]"
+ * const sanitized = sanitizeHtml(details)
+ * sanitized = '¡Arranca la Velada del Año!\n\nEntra a Twitch y no te lo pierdas → <a href="https://twitch.tv/ibai" target="_blank" rel="noopener">https://twitch.tv/ibai</a>'
+ *
+ * @param details Event details, the part that displays text information.
+ * @param tag True if the details are meant to be rendered with the current tags, false otherwise.
+ */
+function sanitizeHtml(details: string, tag: boolean = false): string {
 	const regex = {
 		newLines: /<br\s*\/?>/gi,
 		elementsWithLink: /\[(|\/)(url|br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi,
