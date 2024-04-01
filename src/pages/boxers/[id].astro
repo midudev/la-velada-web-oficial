@@ -3,16 +3,10 @@ import BoxerBigImage from "@/components/BoxerBigImage.astro"
 import BoxerClips from "@/components/BoxerClips.astro"
 import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro"
 import BoxerDetailInfoRival from "@/components/BoxerDetailInfoRival.astro"
-import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
+import BoxerSocials from "@/components/BoxerSocials.astro"
 import BoxerWorkout from "@/components/BoxerWorkout.astro"
 import BoxerGallery from "@/components/Boxers/Gallery.astro"
 import Typography from "@/components/Typography.astro"
-
-import Instagram from "@/icons/instagram.astro"
-import Tiktok from "@/icons/tiktok.astro"
-import Twitch from "@/icons/twitch.astro"
-import X from "@/icons/x.astro"
-import YouTube from "@/icons/youtube.astro"
 
 import { BOXERS } from "@/consts/boxers"
 import { COMBATS } from "@/consts/combats"
@@ -137,23 +131,17 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 			<Typography as="h3" variant="h3" color="white" class:list={"mb-12 text-center"}>
 				REDES SOCIALES
 			</Typography>
-			<div class="m-auto grid w-10/12 grid-cols-2 gap-4 md:w-full md:grid-cols-5">
-				<BoxerSocialLink href={boxer.socials.twitch}>
-					<Twitch />
-				</BoxerSocialLink>
-				<BoxerSocialLink href={boxer.socials.instagram}>
-					<Instagram />
-				</BoxerSocialLink>
-				<BoxerSocialLink href={boxer.socials.twitter}>
-					<X />
-				</BoxerSocialLink>
-				<BoxerSocialLink href={boxer.socials.youtube}>
-					<YouTube />
-				</BoxerSocialLink>
-				<BoxerSocialLink href={boxer.socials.tiktok}>
-					<Tiktok />
-				</BoxerSocialLink>
-			</div>
+			{
+				Object.keys(boxer.socials).length < 5 ? (
+					<div class="m-auto grid w-10/12 grid-cols-2 gap-4 md:w-full md:grid-cols-4">
+						<BoxerSocials socials={boxer.socials} />
+					</div>
+				) : (
+					<div class="m-auto grid w-10/12 grid-cols-2 gap-4 md:w-full md:grid-cols-5">
+						<BoxerSocials socials={boxer.socials} />
+					</div>
+				)
+			}
 		</section>
 
 		{boxer.workout && <BoxerWorkout workout={boxer.workout} />}
