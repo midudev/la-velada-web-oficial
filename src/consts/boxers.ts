@@ -142,7 +142,7 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "No estoy preparando excusas, no soy el xocas, si pierdo, será con dignidad",
+				text: "No estoy preparando excusas, no soy el xokas, si pierdo, será con dignidad",
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=ly7dosYLSt4qYtTB&amp;clip=UgkxJJ3K1UB1MGsxI_WzPxyiQo-hL4YMn9KB&amp;clipt=EI73nAMY88adAw",
 			},
 			{
@@ -383,7 +383,7 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=dlWpIp4dRS8UAagF&amp;clip=UgkxEcgcoJaVcag3z49qN_XpjZv3CHrCJ7fL&amp;clipt=EOqZGRjP6Rk",
 			},
 			{
-				text: "Subité, ¿querés pelear? y hacemos 11 en el rey de la pista",
+				text: "Subite, ¿querés pelear? y hacemos 11 en el rey de la pista",
 				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=6ahmVqYOwsI54nme&amp;clip=UgkxwF9bV7tUmg7LbPeFDggtLpogaYq9Y2TA&amp;clipt=EI_dQhjNv0M",
 			},
 		],
@@ -464,11 +464,11 @@ export const BOXERS: Boxer[] = addGetters([
 		},
 		clips: [
 			{
-				text: "Yo solo voy a decir que Karchez el año pasado de salvó, no diré nada mas",
+				text: "Yo solo voy a decir que Karchez el año pasado se salvó, no diré nada más",
 				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=9JQt5c-yDe4uJUfL&amp;clip=UgkxlGr0lw1Xr65CkY4r_CfV18y4JuAVSL7y&amp;clipt=ELj7ORicxTo",
 			},
 			{
-				text: "Estoy muy preparado y muy contento. El Rey de la Pista será un formato que dará mucho de que hablar",
+				text: "Estoy muy preparado y muy contento. El Rey de la Pista será un formato que dará mucho de qué hablar",
 				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=XAH2OmLeMxvo2Mbd&amp;clip=UgkxyZGxKPtKZdEfTUP21jDFgEV2Ps2dvqfb&amp;clipt=EK3IHxjrqiA",
 			},
 		],
