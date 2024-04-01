@@ -1,6 +1,6 @@
 import type { VeladaEvent } from "@/types/Calendar"
 
-export const VELADAEVENT: VeladaEvent = {
+export const VELADA_EVENT: VeladaEvent = {
 	name: "🥊 La Velada del Año 4 - El Evento del Año",
 	details:
 		"¡Arranca la Velada del Año!<br><br>Entra a Twitch y no te lo pierdas → [url]https://twitch.tv/ibai[/url]",
