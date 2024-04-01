@@ -54,28 +54,10 @@ import Action from "@/components/Action.astro"
 	}
 </style>
 <script>
+	import { VELADAEVENT } from "@/consts/calendar"
+	import { addToCalendar } from "@/function/calendar"
 	import { $, $$ } from "@/lib/dom-selector"
-
-	interface VeladaEvent {
-		name: string
-		details: string
-		startDate: string
-		endDate: string
-		startTime: string
-		endTime: string
-		timeZone: string
-		location: string
-		iCalFileName: string
-	}
-
-	interface VeladaDate {
-		start: Date
-		end: Date
-		c: boolean
-		event: VeladaEvent
-	}
-
-	type CalendarProviders = "google" | "apple" | "ms365" | "msteams"
+	import type { CalendarProviders } from "@/types/Calendar"
 
 	// selectors
 	const $openButton = $("#calendar-open")
@@ -84,26 +66,13 @@ import Action from "@/components/Action.astro"
 	const $close = $("#calendar-close")
 	const $calendarOptions = $$("#calendar-options > a")
 
-	const eventData: VeladaEvent = {
-		name: "🥊 La Velada del Año 4 - El Evento del Año",
-		details:
-			"¡Arranca la Velada del Año!<br><br>Entra a Twitch y no te lo pierdas → [url]https://twitch.tv/ibai[/url]",
-		startDate: "2024-07-13",
-		endDate: "2024-07-13",
-		startTime: "19:00",
-		endTime: "22:00",
-		timeZone: "Europe/Madrid",
-		location: "Spain",
-		iCalFileName: "Reminder-Event",
-	}
-
 	$calendarOptions?.forEach((link: any) => {
 		link.addEventListener("click", (ev: PointerEvent) => {
 			ev.preventDefault()
 			const element = ev.target as HTMLAnchorElement
 			const providerUrl = element.href
 			const provider = element.id as CalendarProviders
-			addToCalendar(providerUrl, provider, eventData)
+			addToCalendar(providerUrl, provider, VELADAEVENT)
 		})
 	})
 	// show the overlay and the dialog
@@ -119,100 +88,4 @@ import Action from "@/components/Action.astro"
 		$overlay.classList.add("hidden")
 		$close.classList.add("hidden")
 	})
-
-	function addToCalendar(providerUrl: string, provider: CalendarProviders, event: VeladaEvent) {
-		switch (provider) {
-			case "google":
-				addToGoogleCalendar(providerUrl, event)
-				break
-			default:
-				throw new Error("NOT YET IMPLEMENTED").stack
-		}
-	}
-
-	function encodeURL(url: string, urlParams: Record<string, string>, action = true) {
-		if (action) url += "&"
-		const newUrl = Object.keys(urlParams)
-			.map((key: string) => {
-				return `${encodeURIComponent(key)}=${encodeURIComponent(urlParams[key])}`
-			})
-			.join("&")
-		return url + newUrl
-	}
-
-	function addToGoogleCalendar(url: string, event: VeladaEvent): void {
-		const { startTime, endTime } = formatDate(generateDate(event))
-
-		event.details = sanitizeHtml(event.details)
-		const urlParams = {
-			dates: `${startTime}/${endTime}`,
-			text: event.name,
-			location: event.location,
-			details: event.details,
-		}
-
-		const encodedUrl = encodeURL(url, urlParams)
-		window.open(encodedUrl, "_blank")
-	}
-
-	function formatDate({ start, end, c, event }: VeladaDate) {
-		const newDate = new window.Date(
-			start.toLocaleString("en-US", {
-				timeZone: "UTC",
-			})
-		)
-		const newLocalDate = new window.Date(
-			new window.Date(newDate.toLocaleString("en-US", { timeZone: event.timeZone }))
-		)
-		const offset = newLocalDate.getTime() - newDate.getTime()
-		start.setTime(start.getTime() + offset)
-		end.setTime(end.getTime() + offset)
-		const cleanStart = start.toISOString().replace(".000", "").replace(/-/g, "").replace(/:/g, "")
-		const cleanEnd = end.toISOString().replace(".000", "").replace(/-/g, "").replace(/:/g, "")
-		return {
-			startTime: cleanStart,
-			endTime: cleanEnd,
-			recurrence: c,
-		}
-	}
-
-	function generateDate(event: VeladaEvent): VeladaDate {
-		const start = event.startDate.split("-")
-		const [sYear, sMonth, sDay] = start
-		const end = event.endDate.split("-")
-		const [eYear, eMonth, eDay] = end
-		const startDate = new Date(`${sYear}-${sMonth}-${sDay}T${event.startTime}:00.000+00:00`)
-		const endDate = new Date(`${eYear}-${eMonth}-${eDay}T${event.endTime}:00.000+00:00`)
-
-		return {
-			start: startDate,
-			end: endDate,
-			c: !0,
-			event,
-		}
-	}
-
-	function sanitizeHtml(details: string, t = !1): string {
-		const regex = {
-			newLines: /<br\s*\/?>/gi,
-			elementsWithLink: /\[(|\/)(url|br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]|((\|.*)\[\/url\])/gi,
-			elements: /\[(\/|)(br|hr|p|b|strong|u|i|em|li|ul|ol|h\d)\]/gi,
-			links: /\[url\]([\w&$+.,:;=~!*'?@^%#|\s\-()/]*)\[\/url\]/gi,
-		}
-		details = details.replace(regex.newLines, "\n")
-		if (t) {
-			details = details.replace(regex.elementsWithLink, "")
-		} else {
-			details = details.replace(regex.elements, "<$1$2>").replace(regex.links, (_, matchedLink) => {
-				let a = `<a href="${(matchedLink = matchedLink.split("|"))[0]}" target="_blank" rel="noopener">`
-				if (matchedLink.length > 1 && matchedLink[1] !== "") {
-					a += matchedLink[1]
-				} else {
-					a += matchedLink[0]
-				}
-				return `${a}</a>`
-			})
-		}
-		return details
-	}
 </script>
