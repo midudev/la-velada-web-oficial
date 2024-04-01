@@ -341,7 +341,7 @@ export const BOXERS: Boxer[] = addGetters([
 		country: "es",
 		socials: {
 			twitch: "https://twitch.tv/sezarbluelive",
-			instagram: "https://instagram.com/sezarblue/",
+			instagram: "https://instagram.com/sezarblue",
 			twitter: "https://twitter.com/soysezarblue",
 			youtube: "https://youtube.com/sezarblue",
 			tiktok: "https://tiktok.com/@sezar_blue_",
