@@ -1,5 +1,5 @@
 ---
-import SectionTitle from "../SectionTitle.astro"
+import SectionTitle from "@/components/SectionTitle.astro"
 
 const IMAGES_TO_LOAD = 5
 
@@ -41,7 +41,7 @@ const { id, name } = Astro.props
 		}
 		<dialog
 			id="lightbox"
-			class="h-auto max-h-[90%] w-full max-w-[90%] items-center justify-center overflow-hidden bg-transparent backdrop:bg-black/70"
+			class="h-auto max-h-[80%] w-auto max-w-[80%] items-center justify-center overflow-hidden bg-transparent backdrop:bg-black/70 lg:max-h-[90%] lg:w-full lg:max-w-[90%]"
 		>
 			<button
 				type="button"
@@ -56,19 +56,44 @@ const { id, name } = Astro.props
 						d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
 				</svg>
 			</button>
-			<img
-				loading="lazy"
-				decoding="async"
-				class="mx-auto h-full rounded object-contain object-center"
-				alt={`Imagen de la galería de fotos de ${name}`}
-				src={`https://cdn.lavelada.dev/boxers/gallery/${id}/1.webp`}
-			/>
+			<div class="mx-auto flex h-full w-full items-center justify-center gap-5">
+				<div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
+				<button
+					data-btn-prev
+					class="group z-10 hidden transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 lg:block"
+				>
+					<img
+						class="size-16 opacity-85 group-hover:opacity-100"
+						src="https://cdn.lavelada.dev/ui/left-arrow.svg"
+						alt="Imagen anterior"
+						title="Ir a la imagen anterior"
+					/>
+				</button>
+				<img
+					loading="lazy"
+					decoding="async"
+					class="boxer-gallery-img z-10 h-full rounded object-contain object-center"
+					alt={`Imagen de la galería de fotos de ${name}`}
+					src={`https://cdn.lavelada.dev/boxers/gallery/${id}/1.webp`}
+				/>
+				<button
+					data-btn-next
+					class="group z-10 hidden transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 lg:block"
+				>
+					<img
+						class="size-16 rotate-180 opacity-85 group-hover:opacity-100"
+						src="https://cdn.lavelada.dev/ui/left-arrow.svg"
+						alt="Imagen siguiente"
+						title="Ir a la imagen siguiente"
+					/>
+				</button>
+			</div>
 		</dialog>
 	</div>
 </section>
 
 <style>
-	#lightbox img {
+	#lightbox img.boxer-gallery-img {
 		view-transition-name: lightbox-image;
 	}
 </style>
@@ -83,14 +108,44 @@ const { id, name } = Astro.props
 		const $close = $lightbox?.querySelector("button")
 
 		const updateImg = (link: HTMLElement) => {
-			const img = $lightbox?.querySelector("img")
-			const newImg = link.querySelector("img")
+			const img = $lightbox?.querySelector(".boxer-gallery-img") as HTMLImageElement
+			const newImg = link.querySelector("img") as HTMLImageElement
 			if (img && newImg) img.src = newImg.src
 		}
 
 		const close = () => {
 			$lightbox.close()
 		}
+
+		const showPrevImage = () => {
+			const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
+			const prev = (current.previousElementSibling ||
+				$gallery.querySelector("a:last-of-type")) as HTMLAnchorElement
+			prev.click()
+		}
+
+		const showNextImage = () => {
+			const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
+			const next = (
+				current.nextElementSibling?.nodeName === "A"
+					? current.nextElementSibling
+					: $gallery.querySelector("a:first-of-type")
+			) as HTMLAnchorElement
+			next.click()
+		}
+
+		document.addEventListener("click", (event) => {
+			if (!$lightbox.open) return
+			const target = event.target as HTMLElement
+			const isPrev = target.title.includes("anterior")
+			const next = target.title.includes("siguiente")
+			if (isPrev) {
+				showPrevImage()
+			}
+			if (next) {
+				showNextImage()
+			}
+		})
 
 		document.addEventListener("keydown", (event) => {
 			if (!$lightbox.open) return
@@ -100,28 +155,22 @@ const { id, name } = Astro.props
 			}
 
 			if (event.key === "ArrowRight") {
-				const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
-				const next = (
-					current.nextElementSibling?.nodeName === "A"
-						? current.nextElementSibling
-						: $gallery.querySelector("a:first-of-type")
-				) as HTMLAnchorElement
-
-				next.click()
+				showNextImage()
 			}
 
 			if (event.key === "ArrowLeft") {
-				const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
-				const prev = (current.previousElementSibling ||
-					$gallery.querySelector("a:last-of-type")) as HTMLAnchorElement
-				prev.click()
+				showPrevImage()
 			}
 		})
 
 		// al hacer click en el botón de cerrar
 		$close?.addEventListener("click", close)
-		// al hacer click en el fondo del lightbox
-		$lightbox?.addEventListener("click", close)
+
+		$lightbox?.addEventListener("click", (event) => {
+			const $dialogBg = document.querySelector("[data-dialog-bg]") as HTMLDivElement
+			const canClose = event.target === $dialogBg || event.target === $lightbox
+			if (canClose) close()
+		})
 
 		// al hacer click en un enlace de lightbox
 		// usar la imagen del enlace como imagen principal
