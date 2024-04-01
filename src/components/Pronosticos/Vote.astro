@@ -68,7 +68,7 @@ votes.forEach((vote) => {
 
 				if (isKingOfTheHill) {
 					return (
-						<li class="relative flex w-full max-w-3xl flex-col justify-center md:justify-between">
+						<li class="not-completed relative flex w-full max-w-3xl flex-col justify-center md:justify-between">
 							<Image
 								width={combatData.titleSize[0]}
 								height={combatData.titleSize[1]}
@@ -83,7 +83,7 @@ votes.forEach((vote) => {
 								{combatData.boxers.map((boxer) => (
 									<button
 										class:list={[
-											"vote-team group relative max-w-60 saturate-0 transition hover:scale-110 hover:saturate-100",
+											"vote-team king-team group relative max-w-60 saturate-0 transition hover:scale-110 hover:saturate-100",
 											{ "is-voted": userVotes[combatData.id] === boxer },
 										]}
 										data-combat-id={combatData.id}
@@ -114,7 +114,7 @@ votes.forEach((vote) => {
 				]
 
 				return (
-					<li class="relative flex h-96 w-full max-w-3xl flex-row justify-center md:justify-between">
+					<li class="not-completed relative flex h-96 w-full max-w-3xl flex-row justify-center md:justify-between">
 						<button
 							class:list={[
 								"vote-team group relative max-w-60 saturate-0 transition hover:scale-110 hover:saturate-100",
@@ -188,17 +188,28 @@ votes.forEach((vote) => {
 
 		$voteTeam.forEach(($button) => {
 			const { combatId, voteId } = $button.dataset
+			const $parent = $button.parentElement as HTMLElement
 
+			// maneja evento onlick para cada botón
 			$button.onclick = () => {
-				const $parent = $button.parentElement as HTMLElement
 				let $previousVoted: HTMLElement | null
 
+				// controla que no haya dos boxeadores votados
 				if ($parent) {
 					$previousVoted = $parent.querySelector(".is-voted")
 					$previousVoted?.classList.remove("is-voted")
 				}
 
 				$button.classList.add("is-voted")
+
+				// marca el combate como completado
+				if ($parent && $button.className.includes("king-team")) {
+					$parent.parentElement?.classList.remove("not-completed")
+					$parent.parentElement?.classList.add("completed")
+				} else {
+					$parent.classList.remove("not-completed")
+					$parent.classList.add("completed")
+				}
 
 				const rollbackUI = () => {
 					$button.classList.remove("is-voted")
@@ -230,12 +241,30 @@ votes.forEach((vote) => {
 							icon: true,
 						})
 
-						const nextCombat = $button.parentElement?.nextElementSibling as HTMLElement
-						if (nextCombat) nextCombat.scrollIntoView({ behavior: "smooth" })
+						// hace scroll hasta el siguiente combate en el DOM si esta sin completar
+						if ($$(".not-completed").length > 0) {
+							const nextCombat = $button.className.includes("king-team")
+								? ($button.parentElement?.parentElement?.nextElementSibling as HTMLElement)
+								: ($button.parentElement?.nextElementSibling as HTMLElement)
+							if (nextCombat?.className.includes("not-completed"))
+								nextCombat.scrollIntoView({ behavior: "smooth" })
+						}
 					})
 					.catch(() => {
 						rollbackUI()
 					})
+			}
+
+			// marca el combate como completado si algun boxeador esta votado
+			if ($button.className.includes("is-voted")) {
+				// marca el combate como completado
+				if ($parent && $button.className.includes("king-team")) {
+					$parent.parentElement?.classList.remove("not-completed")
+					$parent.parentElement?.classList.add("completed")
+				} else {
+					$parent.classList.remove("not-completed")
+					$parent.classList.add("completed")
+				}
 			}
 		})
 	})
