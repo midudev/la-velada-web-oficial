@@ -10,7 +10,7 @@ const { boxer, isKingOfTheTrack } = Astro.props
 ---
 
 <td class="py-3 font-semibold">
-	<div class="-mt-10">
+	<div class="-mt-10 flex flex-col items-center">
 		<a
 			class:list={[
 				`${isKingOfTheTrack ? "p-1" : "text-xl font-bold text-accent transition hover:scale-110 hover:saturate-[150%]"}`,
@@ -22,7 +22,7 @@ const { boxer, isKingOfTheTrack } = Astro.props
 				src={`https://cdn.lavelada.dev/boxers/${boxer.id}-small.webp`}
 				class:list={isKingOfTheTrack
 					? ["h-14 object-contain"]
-					: ["mx-auto aspect-square h-32 object-contain"]}
+					: ["aspect-square h-32 object-contain"]}
 				alt={`Foto en pequeño del rival ${boxer.name}`}
 				style="
 					filter: drop-shadow(0 0 5px rgba(0, 0, 0, .5));
