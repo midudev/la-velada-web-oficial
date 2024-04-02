@@ -17,4 +17,4 @@ export interface VeladaDate {
 	event: VeladaEvent
 }
 
-export type CalendarProviders = "google" | "apple" | "ms365" | "msteams"
+export type CalendarProviders = "google" | "apple" | "outlook" | "msteams"
