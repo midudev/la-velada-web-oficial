@@ -126,7 +126,7 @@ export const BOXERS: Boxer[] = addGetters([
 		name: "Nissaxter",
 		realName: "Cristina Magadán",
 		birthDate: new Date(1994, 3, 4),
-		weight: 55, // No es seguro
+		weight: 45,
 		height: 1.64,
 		country: "es",
 		gallery: true,
