@@ -8,6 +8,9 @@ function addToCalendar(providerUrl: string, provider: CalendarProviders, event: 
 		case "google":
 			addToGoogleCalendar(providerUrl, event)
 			break
+		case "outlook":
+			addToOutlookCalendar(providerUrl, event)
+			break
 		default:
 			throw new Error("NOT YET IMPLEMENTED")
 	}
@@ -32,11 +35,16 @@ function encodeURL(url: string, urlParams: Record<string, string>, action: boole
 	return url + newUrl
 }
 
+function openUrl(url: string) {
+	const openLink = window.open(url, "_blank", "noopener,noreferrer")
+	if (openLink) openLink.opener = null
+}
+
 /**
  * Adds the event to Google Calendar, using its format.
  */
 function addToGoogleCalendar(url: string, event: VeladaEvent): void {
-	const { startTime, endTime } = formatDate(generateDate(event))
+	const { startTime, endTime } = formatDate(generateDate(event), "clean")
 
 	event.details = sanitizeHtml(event.details)
 	const urlParams = {
@@ -47,7 +55,26 @@ function addToGoogleCalendar(url: string, event: VeladaEvent): void {
 	}
 
 	const encodedUrl = encodeURL(url, urlParams)
-	window.open(encodedUrl, "_blank")
+	openUrl(encodedUrl)
+}
+
+/**
+ * Adds the event to Google Calendar, using its format.
+ */
+function addToOutlookCalendar(url: string, event: VeladaEvent): void {
+	const { startTime, endTime } = formatDate(generateDate(event), "delimiters")
+
+	event.details = sanitizeHtml(event.details)
+	const urlParams = {
+		startdt: startTime,
+		enddt: endTime,
+		subject: event.name,
+		location: event.location,
+		body: event.details,
+	}
+
+	const encodedUrl = encodeURL(url, urlParams)
+	openUrl(encodedUrl)
 }
 
 /**
@@ -58,7 +85,7 @@ function addToGoogleCalendar(url: string, event: VeladaEvent): void {
  * @example
  * const date = formatDate(generateDate(event))
  */
-function formatDate({ start, end, c, event }: VeladaDate) {
+function formatDate({ start, end, c, event }: VeladaDate, format: "delimiters" | "clean") {
 	const newDate = new window.Date(
 		start.toLocaleString("en-US", {
 			timeZone: "UTC",
@@ -70,12 +97,23 @@ function formatDate({ start, end, c, event }: VeladaDate) {
 	const offset = newLocalDate.getTime() - newDate.getTime()
 	start.setTime(start.getTime() + offset)
 	end.setTime(end.getTime() + offset)
+	const delimitersStart = start.toISOString().replace(".000", "")
+	const delimitersEnd = end.toISOString().replace(".000", "")
 	const cleanStart = start.toISOString().replace(".000", "").replace(/-/g, "").replace(/:/g, "")
 	const cleanEnd = end.toISOString().replace(".000", "").replace(/-/g, "").replace(/:/g, "")
-	return {
-		startTime: cleanStart,
-		endTime: cleanEnd,
-		recurrence: c,
+
+	if (format === "clean") {
+		return {
+			startTime: cleanStart,
+			endTime: cleanEnd,
+			recurrence: c,
+		}
+	} else {
+		return {
+			startTime: delimitersStart,
+			endTime: delimitersEnd,
+			recurrence: c,
+		}
 	}
 }
 
