@@ -77,7 +77,6 @@ function addToAppleCalendar(event: VeladaEvent): void {
 	}
 
 	generateIcsFormat(format)
-	// window.open(`data:text/calendar;charset=utf8,${calendar}`)
 }
 
 /**
