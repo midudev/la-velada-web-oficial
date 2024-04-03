@@ -8,7 +8,7 @@
 [![Issues][issues-shield]][issues-url]
 
 <a href="https://github.com/midudev/la-velada-web-oficial">
-  <img width="300px" src="./public/img/drawn-x-logo.webp" alt="Logo" width="800" />
+  <img width="300px" src="https://cdn.lavelada.dev/drawn-x-logo.webp" alt="Logo" width="800" />
 </a>
 
 ## Web oficial de La Velada IV
@@ -23,7 +23,7 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 
 - [Web oficial de La Velada IV](#web-oficial-de-la-velada-iv)
 - [Características principales](#características-principales)
-  - [Capturas de pantalla de la web de La Velada IV:](#capturas-de-pantalla-de-la-web-de-la-velada-iv)
+  - [Capturas de pantalla de la web de La Velada IV](#capturas-de-pantalla-de-la-web-de-la-velada-iv)
 - [Para empezar](#para-empezar)
   - [Prerequisitos](#prerequisitos)
   - [Instalación](#instalación)
@@ -57,7 +57,8 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
   # o
   nvm use <version>
   ```
-> Si quieres automatizar el proceso, puedes crear un script siguiendo la [documentación oficial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file)
+
+  > Si quieres automatizar el proceso, puedes crear un script siguiendo la [documentación oficial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file)
 
 <details>
 	<summary>Pequeño script de automatización</summary>
@@ -77,20 +78,22 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 	```
 
 - For Windows:
-	```powershell
-	# $PROFILE
-	function Change-Node-Version {
-		param($path)
-		& Set-Location $path
-		$pwd = pwd
-		if ( Test-Path "$pwd\\.nvmrc" ) {
-			$version = Get-Content .nvmrc
-			nvm use $version
-		}
-	}
-	New-Alias -Name cd -Value Change-Node-Version -Force -Option AllScope
-	```
- </details>
+
+  ```powershell
+  # $PROFILE
+  function Change-Node-Version {
+  	param($path)
+  	& Set-Location $path
+  	$pwd = pwd
+  	if ( Test-Path "$pwd\\.nvmrc" ) {
+  		$version = Get-Content .nvmrc
+  		nvm use $version
+  	}
+  }
+  New-Alias -Name cd -Value Change-Node-Version -Force -Option AllScope
+  ```
+
+  </details>
 
 - PNPM (es nuestra recomendación por su eficiencia y rapidez)
 
