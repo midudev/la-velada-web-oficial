@@ -13,12 +13,12 @@ const { name, country, countryName, id, loading } = Astro.props
 ---
 
 <picture
-	class:list={"boxer-photo aspect-[285/428] h-auto w-full max-w-[460px]"}
+	class:list={"boxer-photo -z-20 aspect-[285/428] h-auto w-full max-w-[460px]"}
 	transition:name="boxer-big-image"
 >
 	<img
 		decoding="async"
-		class="aspect-[285/428] h-auto w-full object-contain"
+		class="aspect-[285/428] h-auto w-full border border-red-500 object-contain"
 		alt={`Fotografía de ${name}`}
 		src={`https://cdn.lavelada.dev/boxers/${id}-big.webp`}
 		style="
