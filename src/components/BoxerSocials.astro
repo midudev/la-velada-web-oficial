@@ -1,0 +1,62 @@
+---
+import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
+import Typography from "@/components/Typography.astro"
+import Instagram from "@/icons/instagram.astro"
+import Tiktok from "@/icons/tiktok.astro"
+import Twitch from "@/icons/twitch.astro"
+import X from "@/icons/x.astro"
+import Youtube from "@/icons/youtube.astro"
+
+import type { Boxer } from "@/types/Boxer"
+
+interface Props {
+	socials: Boxer["socials"]
+}
+const { socials } = Astro.props
+---
+
+<>
+	<Typography as="h3" variant="h3" color="white" class:list={"mb-12 text-center"}>
+		REDES SOCIALES
+	</Typography>
+	<div class="mx-auto flex max-w-[600px] flex-wrap justify-center gap-2 lg:max-w-full">
+		{
+			Object.keys(socials).map((social) => {
+				switch (social) {
+					case "twitter":
+						return (
+							<BoxerSocialLink href={socials[social]}>
+								<X />
+							</BoxerSocialLink>
+						)
+					case "twitch":
+						return (
+							<BoxerSocialLink href={socials[social]}>
+								<Twitch />
+							</BoxerSocialLink>
+						)
+					case "youtube":
+						return (
+							<BoxerSocialLink href={socials[social]}>
+								<Youtube />
+							</BoxerSocialLink>
+						)
+					case "tiktok":
+						return (
+							<BoxerSocialLink href={socials[social]}>
+								<Tiktok />
+							</BoxerSocialLink>
+						)
+					case "instagram":
+						return (
+							<BoxerSocialLink href={socials[social]}>
+								<Instagram />
+							</BoxerSocialLink>
+						)
+					default:
+						return null
+				}
+			})
+		}
+	</div>
+</>
