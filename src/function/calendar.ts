@@ -14,6 +14,9 @@ function addToCalendar(providerUrl: string, provider: CalendarProviders, event: 
 		case "msteams":
 			addToMicrosoftTeams(providerUrl, event)
 			break
+		case "apple":
+			addToAppleCalendar(event)
+			break
 		default:
 			throw new Error("NOT YET IMPLEMENTED")
 	}
@@ -59,6 +62,76 @@ function addToGoogleCalendar(url: string, event: VeladaEvent): void {
 
 	const encodedUrl = encodeURL(url, urlParams)
 	openUrl(encodedUrl)
+}
+
+function addToAppleCalendar(event: VeladaEvent): void {
+	const { startTime, endTime } = formatDate(generateDate(event), "clean")
+
+	event.details = sanitizeHtml(event.details)
+	const format = {
+		startTime,
+		endTime,
+		location: event.location,
+		subject: event.name,
+		details: event.details,
+	}
+
+	generateIcsFormat(format)
+	// window.open(`data:text/calendar;charset=utf8,${calendar}`)
+}
+
+/**
+ * Generates a calendar format following the `.ics` standard and creates a
+ * downloadable file.
+ */
+function generateIcsFormat({
+	startTime,
+	endTime,
+	location,
+	subject,
+	details,
+}: {
+	startTime: string
+	endTime: string
+	location: string
+	subject: string
+	details: string
+}): void {
+	const SEPARATOR = navigator.userAgent.includes("Win") ? "\r\n" : "\n"
+	const calendarEvents: string[] = []
+	const calendarStart = [
+		"BEGIN:VCALENDAR",
+		"VERSION:2.0",
+		"X-WR-CALNAME:La velada del año 4",
+		"PRODID:-// github.com/midudev/la-velada-web-oficial // v1.0.0 // EN",
+		"CALSCALE:GREGORIAN",
+	].join(SEPARATOR)
+	const calendarEnd = `${SEPARATOR}END:VCALENDAR`
+
+	const description = `X-ALT-DESC;FMTTYPE=text/html:\r\n<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 3.2//EN"">\r\n<HTML><BODY>\r\n${details}\r\n</BODY></HTML>`
+
+	const calendarEvent = [
+		"BEGIN:VEVENT",
+		`DTSTAMP:${startTime}`,
+		`DTSTART:${startTime}`,
+		`DTEND:${endTime}`,
+		`LOCATION:${location}`,
+		`SUMMARY:${subject}`,
+		description,
+		"STATUS:CONFIRMED",
+		"SEQUENCE:0",
+		"END:VEVENT",
+	].join(SEPARATOR)
+	calendarEvents.push(calendarEvent)
+	const calendar = calendarStart + SEPARATOR + calendarEvents.join(SEPARATOR) + calendarEnd
+
+	const downloadLink = document.createElement("a")
+	downloadLink.href = `data:text/calendar;charset=utf8,${calendar}`
+	downloadLink.download = "La Velada del Año 4.ics"
+
+	document.body.appendChild(downloadLink)
+	downloadLink.click()
+	document.body.removeChild(downloadLink)
 }
 
 /**
