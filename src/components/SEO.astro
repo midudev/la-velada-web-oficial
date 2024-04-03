@@ -12,7 +12,13 @@ interface Props {
 	image?: string
 }
 
-const { title, description, preload, canonical, image = "/img/og.jpg" } = Astro.props as Props
+const {
+	title,
+	description,
+	preload,
+	canonical,
+	image = "https://cdn.lavelada.dev/og.jpg",
+} = Astro.props as Props
 
 const canonicalURL = canonical
 	? new URL(canonical, Astro.site)
