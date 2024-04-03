@@ -3,7 +3,6 @@ import type { APIRoute } from "astro"
 import { NOW, Votes, db } from "astro:db"
 import { getSession } from "auth-astro/server"
 import { object, safeParse, string } from "valibot"
-import type { Combat } from "@/types/Combat.ts"
 
 import { COMBATS } from "@/consts/combats"
 
