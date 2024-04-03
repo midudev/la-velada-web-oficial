@@ -1,7 +1,5 @@
 import type { APIRoute } from "astro"
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 import { NOW, Votes, db } from "astro:db"
 import { getSession } from "auth-astro/server"
 import { object, safeParse, string } from "valibot"
@@ -31,7 +29,7 @@ export const POST: APIRoute = async ({ params, request }) => {
 	const { combatId } = params
 	if (!combatId) return res("CombatId is required", { status: 400 })
 
-	const combatData = COMBATS.find((c: Combat) => c.id === combatId)
+	const combatData = COMBATS.find((c) => c.id === combatId)
 	if (!combatData) return res("Combat not found", { status: 404 })
 
 	const { success, output } = safeParse(VoteSchema, await request.json())
@@ -47,7 +45,6 @@ export const POST: APIRoute = async ({ params, request }) => {
 
 	try {
 		await db.insert(Votes).values(vote).onConflictDoUpdate({
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
 			target: Votes.id,
 			set: {
 				combatId,
