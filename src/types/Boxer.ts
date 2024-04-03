@@ -1,3 +1,5 @@
+export type BoxerGender = "masculino" | "femenino"
+
 export interface Boxer {
 	id: string
 	name: string
@@ -12,6 +14,7 @@ export interface Boxer {
 	versus: string | string[]
 	guard?: string
 	reach?: number
+	gender?: BoxerGender
 	socials: {
 		twitch?: string
 		instagram?: string
