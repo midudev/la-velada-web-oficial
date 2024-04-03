@@ -11,6 +11,9 @@ function addToCalendar(providerUrl: string, provider: CalendarProviders, event: 
 		case "outlook":
 			addToOutlookCalendar(providerUrl, event)
 			break
+		case "msteams":
+			addToMicrosoftTeams(providerUrl, event)
+			break
 		default:
 			throw new Error("NOT YET IMPLEMENTED")
 	}
@@ -52,6 +55,25 @@ function addToGoogleCalendar(url: string, event: VeladaEvent): void {
 		text: event.name,
 		location: event.location,
 		details: event.details,
+	}
+
+	const encodedUrl = encodeURL(url, urlParams)
+	openUrl(encodedUrl)
+}
+
+/**
+ * Adds the event to Microsoft Teams meeting, using its format.
+ */
+function addToMicrosoftTeams(url: string, event: VeladaEvent): void {
+	const { startTime, endTime } = formatDate(generateDate(event), "delimiters")
+
+	event.details = sanitizeHtml(event.details)
+	const urlParams = {
+		startTime,
+		endTime,
+		subject: event.name,
+		location: event.location,
+		content: event.details,
 	}
 
 	const encodedUrl = encodeURL(url, urlParams)
