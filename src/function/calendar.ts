@@ -1,5 +1,24 @@
 import type { CalendarProviders, VeladaDate, VeladaEvent } from "@/types/Calendar"
 
+function isIOS(): boolean {
+	if (
+		/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor) ||
+		(navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+	) {
+		return true
+	} else {
+		return false
+	}
+}
+
+function isAndroid(): boolean {
+	if (/android/i.test(navigator.userAgent || navigator.vendor)) {
+		return true
+	} else {
+		return false
+	}
+}
+
 /**
  * Adds the event to the Calendar dependig on the provider, see {@link CalendarProviders}.
  */
@@ -53,6 +72,19 @@ function addToGoogleCalendar(url: string, event: VeladaEvent): void {
 	const { startTime, endTime } = formatDate(generateDate(event), "clean")
 
 	event.details = sanitizeHtml(event.details)
+	if (isAndroid() || isIOS()) {
+		const format = {
+			startTime,
+			endTime,
+			location: event.location,
+			subject: event.name,
+			details: event.details,
+		}
+
+		generateIcsFormat(format)
+		return
+	}
+
 	const urlParams = {
 		dates: `${startTime}/${endTime}`,
 		text: event.name,
@@ -140,6 +172,19 @@ function addToMicrosoftTeams(url: string, event: VeladaEvent): void {
 	const { startTime, endTime } = formatDate(generateDate(event), "delimiters")
 
 	event.details = sanitizeHtml(event.details)
+	if (isAndroid() || isIOS()) {
+		const format = {
+			startTime,
+			endTime,
+			location: event.location,
+			subject: event.name,
+			details: event.details,
+		}
+
+		generateIcsFormat(format)
+		return
+	}
+
 	const urlParams = {
 		startTime,
 		endTime,
@@ -159,6 +204,19 @@ function addToOutlookCalendar(url: string, event: VeladaEvent): void {
 	const { startTime, endTime } = formatDate(generateDate(event), "delimiters")
 
 	event.details = sanitizeHtml(event.details)
+	if (isAndroid() || isIOS()) {
+		const format = {
+			startTime,
+			endTime,
+			location: event.location,
+			subject: event.name,
+			details: event.details,
+		}
+
+		generateIcsFormat(format)
+		return
+	}
+
 	const urlParams = {
 		startdt: startTime,
 		enddt: endTime,
