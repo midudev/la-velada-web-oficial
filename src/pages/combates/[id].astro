@@ -20,8 +20,6 @@ export const getStaticPaths = () => {
 	}))
 }
 
-export const prerender = true
-
 const { id } = Astro.params
 const combatData = getCombatById(id)
 const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
