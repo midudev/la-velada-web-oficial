@@ -5,7 +5,7 @@ export interface Boxer {
 	age: number
 	gallery?: boolean
 	realName: string
-	weight: number
+	weight?: number
 	height: number
 	country: string
 	countryName?: string
