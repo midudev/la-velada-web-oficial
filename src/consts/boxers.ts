@@ -27,7 +27,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Osvaldo Palacios Flores",
 		gender: "masculino",
 		birthDate: new Date(1998, 6, 23),
-		weight: 87,
 		height: 1.95,
 		country: "mx",
 		versus: "plex",
@@ -57,7 +56,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Cristóbal Andrés Álvarez Leiva",
 		gender: "masculino",
 		birthDate: new Date(1990, 5, 8),
-		weight: 93,
 		height: 1.88,
 		country: "cl",
 		versus: "viruzz",
@@ -95,7 +93,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Alicia González",
 		gender: "femenino",
 		birthDate: new Date(1995, 10, 3),
-		weight: 65, // No encontrado
 		height: 1.7, // No es seguro
 		country: "es",
 		gallery: true,
@@ -130,7 +127,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Cristina Magadán",
 		gender: "femenino",
 		birthDate: new Date(1994, 3, 4),
-		weight: 45,
 		height: 1.64,
 		country: "es",
 		gallery: true,
@@ -165,7 +161,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Rodrigo Ezequiel Carrera",
 		gender: "masculino",
 		birthDate: new Date(2000, 9, 9),
-		weight: 61,
 		height: 1.65,
 		country: "ar",
 		versus: "agustin-51",
@@ -200,7 +195,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Lautaro Damián del Campo",
 		gender: "masculino",
 		birthDate: new Date(1997, 8, 8),
-		weight: 105,
 		height: 1.83,
 		country: "ar",
 		versus: "guanyar",
@@ -231,7 +225,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "José Carlos Sánchez",
 		gender: "masculino",
 		birthDate: new Date(2000, 7, 4),
-		weight: 85, // No encontrado
 		height: 1.84,
 		country: "es",
 		socials: {
@@ -259,7 +252,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Sergio Bolaños",
 		gender: "masculino",
 		birthDate: new Date(1998, 3, 13),
-		weight: 87, // No encontrado
 		height: 1.91, // No es seguro
 		guard: "Derecha",
 		country: "es",
@@ -292,7 +284,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Aldo Geovanni",
 		gender: "masculino",
 		birthDate: new Date(1996, 9, 14),
-		weight: 80, // No encontrado
 		height: 1.79,
 		country: "mx",
 		socials: {
@@ -320,7 +311,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Ángelo Valdés",
 		gender: "masculino",
 		birthDate: new Date(2000, 5, 29),
-		weight: 85, // No encontrado
 		height: 1.85, // No encontrado
 		country: "do",
 		socials: {
@@ -347,7 +337,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "César González",
 		gender: "masculino",
 		birthDate: new Date(1973, 7, 29),
-		weight: 87,
 		height: 1.77,
 		country: "es",
 		socials: {
@@ -379,7 +368,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Germán Usinger",
 		gender: "masculino",
 		birthDate: new Date(1999, 5, 7),
-		weight: 75, // No encontrado
 		height: 1.69, // No es seguro
 		country: "ar",
 		socials: {
@@ -407,7 +395,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Angerson Esneider",
 		gender: "masculino",
 		birthDate: new Date(2001, 0, 7),
-		weight: 85, // No es seguro
 		height: 1.91,
 		country: "co",
 		socials: {
@@ -435,7 +422,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Roberto Sebastián Guadarrama Jiménez",
 		gender: "masculino",
 		birthDate: new Date(1998, 6, 29),
-		weight: 85, // No encontrado
 		height: 1.69, // No es seguro
 		country: "mx",
 		socials: {
@@ -463,7 +449,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "David Carbó Ferrer",
 		gender: "masculino",
 		birthDate: new Date(1997, 2, 10),
-		weight: 83, // No encontrado
 		height: 1.83, // No encontrado
 		country: "es",
 		socials: {
@@ -495,7 +480,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Yoel Ramírez Pulido",
 		gender: "masculino",
 		birthDate: new Date(1994, 11, 9),
-		weight: 71,
 		height: 1.8,
 		country: "es",
 		socials: {
@@ -543,7 +527,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Daniel Alonso Góndez",
 		gender: "masculino",
 		birthDate: new Date(2001, 8, 20),
-		weight: 70,
 		height: 1.97,
 		country: "es",
 		versus: "el-mariana",
@@ -580,7 +563,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Víctor Mélida Cambra",
 		gender: "masculino",
 		birthDate: new Date(1992, 4, 1),
-		weight: 85,
 		height: 1.82,
 		country: "es",
 		versus: "shelao",
@@ -614,7 +596,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Alana Flores",
 		gender: "femenino",
 		birthDate: new Date(2000, 11, 15),
-		weight: 55,
 		height: 1.7,
 		country: "mx",
 		versus: ["nissaxter", "zeling"],
@@ -654,7 +635,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Amairani Garza Alonso",
 		gender: "femenino",
 		birthDate: new Date(1995, 2, 1),
-		weight: 55, // No es seguro
 		height: 1.58,
 		country: "mx",
 		versus: ["zeling", "nissaxter"],
@@ -686,7 +666,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "José Agustín Peréz Nuñéz",
 		gender: "masculino",
 		birthDate: new Date(2000, 10, 18),
-		weight: 62, // No es seguro
 		height: 1.7,
 		country: "es",
 		versus: "carreraaa",
@@ -720,7 +699,6 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Diego Iglesias",
 		gender: "masculino",
 		birthDate: new Date(1998, 8, 28),
-		weight: 85,
 		height: 1.88,
 		country: "es",
 		versus: "la-cobra",

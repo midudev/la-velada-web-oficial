@@ -1,6 +1,5 @@
 ---
 import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
-import atomic from "/fonts/atomic.woff2"
 
 import RichResults from "@/components/RichResults.astro"
 import type { Preload } from "@/types/Preload"
@@ -13,7 +12,13 @@ interface Props {
 	image?: string
 }
 
-const { title, description, preload, canonical, image = "/img/og.jpg" } = Astro.props as Props
+const {
+	title,
+	description,
+	preload,
+	canonical,
+	image = "https://cdn.lavelada.dev/og.jpg",
+} = Astro.props as Props
 
 const canonicalURL = canonical
 	? new URL(canonical, Astro.site)
@@ -26,7 +31,13 @@ const canonicalURL = canonical
 <meta name="description" content={description} />
 
 <link rel="preconnect" href="https://cdn.lavelada.dev" />
-<link rel="preload" href={atomic} as="font" type="font/woff2" crossorigin />
+<link
+	rel="preload"
+	href={"https://cdn.lavelada.dev/fonts/font-atomic.woff2"}
+	as="font"
+	type="font/woff2"
+	crossorigin
+/>
 <link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
 
 {
