@@ -6,7 +6,7 @@ interface Props {
 const { id } = Astro.props
 ---
 
-<div class="fixed left-0 top-0 -z-10 aspect-video h-[100vh] w-screen">
+<div class="fixed left-0 top-0 -z-10 aspect-video h-[100vh] w-screen" id="bg-video">
 	<video
 		autoplay
 		muted
@@ -18,3 +18,16 @@ const { id } = Astro.props
 		<source type="video/mp4" src={`https://cdn.lavelada.dev/${id}-corto.mp4`} />
 	</video>
 </div>
+
+<script>
+	import { $ } from "@/lib/dom-selector"
+
+	const $bgVideoDiv = $("#bg-video")
+
+	const playVideo = () => {
+		if ($bgVideoDiv) $bgVideoDiv.querySelector("video")?.play()
+		else document.removeEventListener("astro:page-load", playVideo)
+	}
+
+	document.addEventListener("astro:page-load", playVideo)
+</script>
