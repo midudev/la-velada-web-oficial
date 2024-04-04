@@ -1,15 +1,15 @@
 ---
-export interface Props {
+interface Props {
 	id: string
 	class?: string
 	noEffect?: boolean
 }
 
-const { id } = Astro.props as Props
+const { id, class: classList, noEffect } = Astro.props as Props
 ---
 
 <svg
-	class:list={Astro.props.class}
+	class:list={classList}
 	width="800"
 	height="679"
 	fill="none"
@@ -31,11 +31,6 @@ const { id } = Astro.props as Props
 		>
 		</path>
 	</symbol>
-	{
-		Astro.props.noEffect && (
-			<use href="#hero-logo-header" class="text-[#f1ffaa]/70 blur-xl md:blur-md" />
-		)
-	}
-	<use href="#hero-logo-header" class:list={Astro.props.noEffect ? "text-white" : "text-primary"}
-	></use>
+	{noEffect && <use href="#hero-logo-header" class="text-[#f1ffaa]/70 blur-xl md:blur-md" />}
+	<use href="#hero-logo-header" class:list={noEffect ? "text-white" : "text-primary"}></use>
 </svg>
