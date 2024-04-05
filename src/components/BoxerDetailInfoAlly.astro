@@ -1,0 +1,74 @@
+---
+import type { Boxer } from "@/types/Boxer"
+
+interface Props {
+	title: string
+	value: Boxer[]
+	id: string
+}
+
+const { title, value, id } = Astro.props
+---
+
+<article class="absolute bottom-0 left-[275%] flex justify-center text-white">
+	<div class="flex w-full flex-col items-center pl-2.5 pr-2.5 pt-2 text-center">
+		<h4>{title}</h4>
+		<div
+			class="flex w-full flex-row flex-wrap justify-center gap-x-2 md:justify-center md:text-center"
+		>
+			{
+				value.map((item, index) => (
+					<a
+						class="boxer-link  mx-2 p-1 text-xl font-bold text-accent"
+						href={item.id}
+						title={`Visita la página del boxeador ${item.name}`}
+						id={id + (index + 1)}
+					>
+						<div class="boxer-link-background w-32" />
+
+						<img
+							src={`https://cdn.lavelada.dev/boxers/${item.id}-small.webp`}
+							class="boxer-image"
+							alt={`Foto en pequeño del rival ${item.name}`}
+							style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%);"
+						/>
+						<span class="font-atomic text-xl text-accent">{item.name.toLowerCase()}</span>
+					</a>
+				))
+			}
+		</div>
+	</div>
+</article>
+
+<style>
+	.boxer-link {
+		@apply relative mb-2 flex flex-col transition-opacity duration-300 ease-in-out md:size-28 xl:size-36;
+
+		&:hover {
+			@apply opacity-90;
+		}
+
+		& .boxer-image {
+			@apply z-20 transition-opacity duration-300 ease-in-out;
+			mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+			filter: grayscale(100%);
+			transition: filter 0.3s ease;
+		}
+	}
+
+	.boxer-link-background {
+		@apply absolute bottom-0 block h-3/5 opacity-25 transition-opacity duration-300 ease-in-out;
+		background: linear-gradient(
+			180deg,
+			rgba(255, 255, 255, 1) 0%,
+			rgba(255, 255, 255, 0.5) 30%,
+			rgba(0, 0, 0, 0) 95%
+		);
+	}
+
+	.boxer-link:hover .boxer-image,
+	.boxer-link.active .boxer-image {
+		scale: 1.05;
+		filter: grayscale(0%);
+	}
+</style>

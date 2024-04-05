@@ -2,6 +2,7 @@
 import BoxerBigImage from "@/components/BoxerBigImage.astro"
 import BoxerClips from "@/components/BoxerClips.astro"
 import BoxerDetailInfo from "@/components/BoxerDetailInfo.astro"
+import BoxerDetailInfoAlly from "@/components/BoxerDetailInfoAlly.astro"
 import BoxerDetailInfoRival from "@/components/BoxerDetailInfoRival.astro"
 import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
 import BoxerWorkout from "@/components/BoxerWorkout.astro"
@@ -62,6 +63,15 @@ if (typeof boxer.versus === "object") {
 	rivals = boxers.filter((rival: Boxer) => rival.id !== boxer.id)
 }
 
+let allies: Boxer[] = []
+if (typeof boxer.allies === "object") {
+	for (const vs of boxer.allies) {
+		allies = allies.concat(BOXERS.filter((ally: Boxer) => ally.id === vs))
+	}
+} else {
+	allies = boxers.filter((ally: Boxer) => ally.id !== boxer.id)
+}
+
 if (forecast) {
 	forecast.forecastData.forEach((forecastData) => {
 		const boxer = boxers.find((boxer) => boxer.id === forecastData.boxerId)
@@ -95,11 +105,14 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 		<section class="relative flex flex-col items-center justify-center">
 			<div class="flex w-full flex-col md:flex-row md:gap-10">
 				<div
-					class="left-10 order-2 flex w-full flex-col md:absolute md:order-1 md:w-[300px] md:gap-y-20"
+					class="left-10 order-2 flex w-full flex-col md:absolute md:order-1 md:w-[300px] md:gap-y-5"
 				>
 					<BoxerClips clips={boxer.clips} />
 					<div class="hidden md:block">
 						<BoxerDetailInfoRival title={rivalOrRivals} value={rivals} id="boxer-rival-desk" />
+						<div class="hidden md:block">
+							<BoxerDetailInfoAlly title={"Aliada"} value={allies} id="boxer-rival-desk" />
+						</div>
 					</div>
 				</div>
 
@@ -118,7 +131,7 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 				</div>
 
 				<div
-					class="order-3 mx-auto flex w-full max-w-[450px] flex-col md:w-auto md:max-w-none md:gap-y-20 lg:w-1/4"
+					class="order-3 mx-auto flex h-full w-full max-w-[450px] flex-col md:w-auto md:max-w-none md:gap-y-20 lg:w-1/4"
 				>
 					<BoxerDetailInfo title="Edad" value={`${boxer.age} años`} id="boxer-edad" />
 					{
