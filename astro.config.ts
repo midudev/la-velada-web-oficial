@@ -41,7 +41,7 @@ export default defineConfig({
 				workbox: {
 					globDirectory: ".vercel/output/static",
 					globPatterns: [
-						"**/*.{html,js,css,svg,avif,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}",
+						"**/*.{html,js,css,woff,woff2,ttf,eot,ico}",
 					],
 					runtimeCaching: [
 						{
