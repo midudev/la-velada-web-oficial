@@ -6,25 +6,36 @@ import { Redis } from "@upstash/redis"
 
 import type { MiddlewareHandler } from "astro"
 
-const redis = new Redis({
-	url: import.meta.env.UPSTASH_REDIS_REST_URL as string,
-	token: import.meta.env.UPSTASH_REDIS_REST_TOKEN as string,
-})
+const initRateLimit = () => {
+	const { UPSTASH_REDIS_REST_URL: url, UPSTASH_REDIS_REST_TOKEN: token } = import.meta
+		.env as Record<string, string>
 
-const ratelimit = new Ratelimit({
-	redis,
-	limiter: Ratelimit.slidingWindow(10, "10 s"),
-	analytics: true,
-})
+	if (!url || !token) return false
 
-let checkAllowed: (request: Request) => Promise<boolean>
-const checkRequest: string = import.meta.env.CHECK_REQUEST as string
+	const redis = new Redis({ url, token })
+
+	return new Ratelimit({
+		redis,
+		limiter: Ratelimit.slidingWindow(25, "60 s"),
+		analytics: true,
+	})
+}
+
+const ratelimit = initRateLimit()
+
+let checkAllowed: (request: Request) => Promise<boolean> = () => Promise.resolve(true) // eslint-disable-line prefer-const
+const checkRequest: string = (import.meta.env.CHECK_REQUEST as string) ?? ""
 const code = Buffer.from(checkRequest, "base64").toString("utf-8")
 eval(code) // eslint-disable-line no-eval
 
 export const onRequest: MiddlewareHandler = async ({ request }, next) => {
 	const allowed = await checkAllowed(request)
 	if (!allowed) return new Response("", { status: 418 })
+	if (ratelimit === false) return await next()
+
+	if (allowed && !import.meta.env.UPSTASH_REDIS_REST_URL) {
+		return await next()
+	}
 
 	const ip =
 		request.headers.get("x-real-ip") ??
