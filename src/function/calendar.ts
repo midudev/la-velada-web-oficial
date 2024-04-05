@@ -1,10 +1,7 @@
 import type { CalendarProviders, VeladaDate, VeladaEvent } from "@/types/Calendar"
 
 function isIOS(): boolean {
-	if (
-		/iPad|iPhone|iPod/i.test(navigator.userAgent || navigator.vendor) ||
-		(navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
-	) {
+	if (/iPad|iPhone|iPod/i.test(navigator.userAgent)) {
 		return true
 	} else {
 		return false
@@ -12,7 +9,7 @@ function isIOS(): boolean {
 }
 
 function isAndroid(): boolean {
-	if (/android/i.test(navigator.userAgent || navigator.vendor)) {
+	if (/android/i.test(navigator.userAgent)) {
 		return true
 	} else {
 		return false
