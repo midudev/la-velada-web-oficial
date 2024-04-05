@@ -23,7 +23,7 @@ const initRateLimit = () => {
 
 const ratelimit = initRateLimit()
 
-let checkAllowed: (request: Request) => Promise<boolean> = () => Promise.resolve(true) // eslint-disable-line prefer-const
+let checkAllowed: (request: Request) => Promise<boolean>
 const checkRequest: string = (import.meta.env.CHECK_REQUEST as string) ?? ""
 const code = Buffer.from(checkRequest, "base64").toString("utf-8")
 eval(code) // eslint-disable-line no-eval
