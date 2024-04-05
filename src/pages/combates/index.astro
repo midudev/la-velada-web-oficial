@@ -4,6 +4,7 @@ import { Image } from "astro:assets"
 import Typography from "@/components/Typography.astro"
 import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
+import { isFirefox } from "@/lib/browser"
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
@@ -14,7 +15,10 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 }
 ---
 
-<Layout description={"Todos los combates de La Velada del Año IV"} title={"Combates - La Velada del Año IV"}>
+<Layout
+	description={"Todos los combates de La Velada del Año IV"}
+	title={"Combates - La Velada del Año IV"}
+>
 	<main class="flex min-h-screen flex-col items-center text-[#b4cd02]">
 		<div class="mx-auto w-full max-w-4xl p-8">
 			<Typography
@@ -54,18 +58,33 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 										alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 										style="mask-image: linear-gradient(black 90%, transparent 100%);"
 									/>
-									<Image
-										width={combatData.titleSize[0]}
-										height={combatData.titleSize[1]}
-										loading={index < 2 ? "eager" : "lazy"}
-										class:list={[
-											"group-hover:saturate-15 absolute  left-1/2 h-auto max-h-[15rem] w-auto -translate-x-1/2 transform-gpu transition-all duration-300 ease-in-out group-hover:scale-75",
-											{ "top-10 z-10 md:z-20": isKingOfTheHill },
-											{ "-bottom-20 z-20": !isKingOfTheHill },
-										]}
-										src={`https://cdn.lavelada.dev/matches/title-${combat.id}.webp`}
-										alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
-									/>
+									{isFirefox() ? (
+										<Image
+											width={combatData.titleSize[0]}
+											height={combatData.titleSize[1]}
+											loading={index < 2 ? "eager" : "lazy"}
+											class:list={[
+												"group-hover:saturate-15 absolute  left-1/2 h-auto max-h-[15rem] w-auto -translate-x-1/2 transform-gpu transition-all duration-300 ease-in-out group-hover:scale-75",
+												{ "top-10 z-10 md:z-20": isKingOfTheHill },
+												{ "-bottom-20 z-20": !isKingOfTheHill },
+											]}
+											src={`https://cdn.lavelada.dev/matches/title-${combat.id}.webp`}
+											alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+										/>
+									) : (
+										<Image
+											width={combatData.titleSize[0]}
+											height={combatData.titleSize[1]}
+											loading={index < 2 ? "eager" : "lazy"}
+											class:list={[
+												"group-hover:saturate-15 absolute  left-1/2 h-auto max-h-[15rem] w-auto -translate-x-1/2 transform-gpu transition-all duration-300 ease-in-out group-hover:scale-75",
+												{ "top-10 z-10 md:z-20": isKingOfTheHill },
+												{ "-bottom-20 z-20": !isKingOfTheHill },
+											]}
+											src={`https://cdn.lavelada.dev/matches/title-${combat.id}.webp`}
+											alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+										/>
+									)}
 									<div class="gradient-box absolute bottom-0 z-0 block h-2/5 w-full opacity-25 transition-opacity duration-300 ease-in-out group-hover:brightness-50 group-hover:filter" />
 								</a>
 							</li>
