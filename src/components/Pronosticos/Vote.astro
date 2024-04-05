@@ -109,8 +109,11 @@ votes.forEach((vote) => {
 				const { teams, boxers } = combatData
 				const [slug1, slug2] = teams ?? boxers
 				const [image1, image2] = [
-					{ alt: slug1.replaceAll("-", " "), src: createImgRoute(combatData.number, slug1) },
-					{ alt: slug2.replaceAll("-", " "), src: createImgRoute(combatData.number, slug2) },
+					{ alt: slug1.replaceAll("-", " y "), src: createImgRoute(combatData.number, slug1) },
+					{
+						alt: slug2.replace("-", " y ").replace("-", ""),
+						src: createImgRoute(combatData.number, slug2),
+					},
 				]
 
 				return (
