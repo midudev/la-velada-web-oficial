@@ -69,19 +69,6 @@ function addToGoogleCalendar(url: string, event: VeladaEvent): void {
 	const { startTime, endTime } = formatDate(generateDate(event), "clean")
 
 	event.details = sanitizeHtml(event.details)
-	if (isAndroid() || isIOS()) {
-		const format = {
-			startTime,
-			endTime,
-			location: event.location,
-			subject: event.name,
-			details: event.details,
-		}
-
-		generateIcsFormat(format)
-		return
-	}
-
 	const urlParams = {
 		dates: `${startTime}/${endTime}`,
 		text: event.name,
@@ -169,19 +156,6 @@ function addToMicrosoftTeams(url: string, event: VeladaEvent): void {
 	const { startTime, endTime } = formatDate(generateDate(event), "delimiters")
 
 	event.details = sanitizeHtml(event.details)
-	if (isAndroid() || isIOS()) {
-		const format = {
-			startTime,
-			endTime,
-			location: event.location,
-			subject: event.name,
-			details: event.details,
-		}
-
-		generateIcsFormat(format)
-		return
-	}
-
 	const urlParams = {
 		startTime,
 		endTime,
@@ -201,19 +175,6 @@ function addToOutlookCalendar(url: string, event: VeladaEvent): void {
 	const { startTime, endTime } = formatDate(generateDate(event), "delimiters")
 
 	event.details = sanitizeHtml(event.details)
-	if (isAndroid() || isIOS()) {
-		const format = {
-			startTime,
-			endTime,
-			location: event.location,
-			subject: event.name,
-			details: event.details,
-		}
-
-		generateIcsFormat(format)
-		return
-	}
-
 	const urlParams = {
 		startdt: startTime,
 		enddt: endTime,
