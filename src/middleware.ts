@@ -2,25 +2,31 @@
 import { Buffer } from "node:buffer"
 
 import { Ratelimit } from "@upstash/ratelimit"
-
-// for deno: see above
-import { Redis } from "@upstash/redis" // see below for cloudflare and fastly adapters
+import { Redis } from "@upstash/redis"
 
 import type { MiddlewareHandler } from "astro"
 
-const redis = new Redis({
-	url: import.meta.env.UPSTASH_REDIS_REST_URL as string,
-	token: import.meta.env.UPSTASH_REDIS_REST_TOKEN as string,
-})
+const isProd = import.meta.env.VERCEL as string
 
-const ratelimit = new Ratelimit({
-	redis,
-	limiter: Ratelimit.slidingWindow(10, "10 s"),
-	analytics: true,
-})
+let redis: Redis
+let ratelimit: Ratelimit
 
-let checkAllowed: (request: Request) => Promise<boolean>
-const checkRequest: string = import.meta.env.CHECK_REQUEST as string
+if (isProd) {
+	redis = new Redis({
+		url: import.meta.env.UPSTASH_REDIS_REST_URL as string,
+		token: import.meta.env.UPSTASH_REDIS_REST_TOKEN as string,
+	})
+
+	ratelimit = new Ratelimit({
+		redis,
+		limiter: Ratelimit.slidingWindow(10, "10 s"),
+		analytics: true,
+	})
+}
+
+let checkAllowed: (request: Request) => Promise<boolean> = () => Promise.resolve(true) // eslint-disable-line prefer-const
+
+const checkRequest: string = isProd ? (import.meta.env.CHECK_REQUEST as string) : ""
 const code = Buffer.from(checkRequest, "base64").toString("utf-8")
 eval(code) // eslint-disable-line no-eval
 
@@ -34,8 +40,14 @@ export const onRequest: MiddlewareHandler = async ({ request }, next) => {
 		request.headers.get("cf-connecting-ip") ??
 		"0.0.0.0"
 
-	const { success } = await ratelimit.limit(ip)
-	if (success) return await next()
+	if (ratelimit) {
+		const { success } = await ratelimit.limit(ip)
+		if (success) return await next()
+	}
+
+	console.log({ ratelimit, allowed })
+
+	if (allowed) return await next()
 
 	return new Response("", { status: 418 })
 }
