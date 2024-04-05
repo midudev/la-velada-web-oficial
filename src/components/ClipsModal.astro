@@ -3,7 +3,7 @@
 ---
 
 <dialog
-	class="clip-dialog items-center justify-center bg-transparent px-4 text-2xl text-white backdrop:bg-black/70 sm:px-0"
+	class="clip-dialog items-center justify-center bg-transparent px-4 text-2xl text-white sm:px-0"
 >
 	<div class="relative block w-[560px] overflow-hidden bg-transparent sm:w-[740px]">
 		<iframe
@@ -35,6 +35,26 @@
 		</button>
 	</div>
 </dialog>
+
+<style>
+	.clip-dialog[open]::backdrop {
+		background-color: rgba(0, 0, 0, 0.7);
+
+		animation-name: join-anim;
+		animation-duration: 200ms;
+		animation-fill-mode: forwards;
+		animation-timing-function: ease-in-out;
+	}
+
+	@keyframes join-anim {
+		from {
+			background-color: rgba(0, 0, 0, 0);
+		}
+		to {
+			background-color: rgba(0, 0, 0, 0.7);
+		}
+	}
+</style>
 
 <script>
 	document.addEventListener("astro:page-load", () => {
