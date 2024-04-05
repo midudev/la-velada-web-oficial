@@ -29,7 +29,7 @@ const code = Buffer.from(checkRequest, "base64").toString("utf-8")
 eval(code) // eslint-disable-line no-eval
 
 export const onRequest: MiddlewareHandler = async ({ request }, next) => {
-	const allowed = await checkAllowed(request)
+	const allowed = typeof checkAllowed === "function" ? await checkAllowed(request) : true
 	if (!allowed) return new Response("", { status: 418 })
 	if (ratelimit === false) return await next()
 
