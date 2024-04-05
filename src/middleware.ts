@@ -16,7 +16,7 @@ const initRateLimit = () => {
 
 	return new Ratelimit({
 		redis,
-		limiter: Ratelimit.slidingWindow(25, "60 s"),
+		limiter: Ratelimit.slidingWindow(30, "60 s"),
 		analytics: true,
 	})
 }
