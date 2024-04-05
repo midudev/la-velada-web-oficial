@@ -22,11 +22,9 @@ const { id } = Astro.props
 <script>
 	import { $ } from "@/lib/dom-selector"
 
-	const $bgVideoDiv = $("#bg-video")
-
 	const playVideo = () => {
+		const $bgVideoDiv = $("#bg-video")
 		if ($bgVideoDiv) $bgVideoDiv.querySelector("video")?.play()
-		else document.removeEventListener("astro:page-load", playVideo)
 	}
 
 	document.addEventListener("astro:page-load", playVideo)
