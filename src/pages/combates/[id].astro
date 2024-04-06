@@ -4,6 +4,7 @@ import { Image } from "astro:assets"
 import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
 import { COMBATS } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
+import { isFirefox } from "@/lib/browser"
 import CombatFeatures from "@/sections/CombatFeatures.astro"
 
 const getCombatById = (id: string) => {
@@ -47,15 +48,28 @@ const [imageWidth, imageHeight] = combatData.titleSize
 	<BackgroundVideo id={id} />
 	<main class="pointer-events-none md:-mt-12">
 		<div class="relative flex h-[60vh] w-full items-center justify-center md:h-[76vh]">
-			<Image
-				width={imageWidth}
-				height={imageHeight}
-				transition:name={`title-image-${id}`}
-				loading={"eager"}
-				class="inset-0 h-auto max-h-96 w-full max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
-				src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
-				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
-			/>
+			{
+				isFirefox() ? (
+					<Image
+						width={imageWidth}
+						height={imageHeight}
+						loading={"eager"}
+						class="inset-0 h-auto max-h-96 w-full max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
+						src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
+						alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+					/>
+				) : (
+					<Image
+						width={imageWidth}
+						height={imageHeight}
+						transition:name={`title-image-${id}`}
+						loading={"eager"}
+						class="inset-0 h-auto max-h-96 w-full max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
+						src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
+						alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+					/>
+				)
+			}
 		</div>
 		<div class="pointer-events-auto">
 			{combatData.boxers.length <= 4 && <CombatFeatures boxerIds={combatData.boxers} />}
