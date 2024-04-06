@@ -94,6 +94,7 @@ const preloadBoxerImage: Preload[] = [
 const rivalOrRivals = rivals.length > 1 ? "Rivales" : "Rival"
 const guardBoxer = boxer.guard === undefined ? "Desconocida" : boxer.guard
 const flagAlt = countryName === undefined ? "un país" : countryName.name
+const is2v2 = allies.length > 0
 ---
 
 <Layout
@@ -109,7 +110,7 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 				>
 					<BoxerClips clips={boxer.clips} />
 					{
-						allies < 1 && (
+						!is2v2 && (
 							<div class="hidden md:block">
 								<BoxerDetailInfoRival title={rivalOrRivals} value={rivals} id="boxer-rival-desk" />
 							</div>
@@ -149,12 +150,11 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 				</div>
 			</div>
 			{
-				allies.length > 0 && (
+				is2v2 && (
 					<section
 						class:list={[
 							"order-4 flex w-full justify-between",
-							{ "-translate-y-24": boxer.clips.length === 3 },
-							{ "-translate-y-56": boxer.clips.length <= 2 },
+							`${boxer.clips && boxer.clips.length > 2 ? "-translate-y-24" : "-translate-y-56"}`,
 						]}
 					>
 						<div class="order-1 hidden md:block">
@@ -167,9 +167,7 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 				)
 			}
 		</section>
-		<section
-			class:list={["mt-20", { "md:mt-10": allies.lenght > 0 }, { "md:mt-64": allies.length < 1 }]}
-		>
+		<section class:list={["mt-20", { "md:mt-10": is2v2 }, { "md:mt-64": !is2v2 }]}>
 			<Typography as="h3" variant="h3" color="white" class:list={"mb-12 text-center"}>
 				REDES SOCIALES
 			</Typography>
