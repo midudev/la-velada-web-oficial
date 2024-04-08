@@ -10,7 +10,7 @@ const getCombatById = (id: string) => {
 }
 
 const getBoxerNames = (boxerIds: string[]): string[] => {
-	return boxerIds.map((boxerId) => `Boxeador ${boxerId}`)
+	return boxerIds.map((boxerId) => `${boxerId}`)
 }
 ---
 
@@ -46,17 +46,32 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 									title={`Ir al combate ${combatData.number} de la Velada IV`}
 								>
 									<img
+										transition:name={`${combat.id}-member-1`}
 										decoding="async"
 										loading={index < 2 ? "eager" : "lazy"}
 										class:list={[
-											"absolute bottom-0  mx-auto h-auto w-full",
+											"absolute bottom-0 left-0 h-auto w-full max-w-48",
 											{ "group-hover:scale-115 z-20 md:z-10": isKingOfTheHill },
 											{ "z-10 group-hover:scale-105 ": !isKingOfTheHill },
 										]}
-										src={`https://cdn.lavelada.dev/matches/combat-${combat.id}.webp`}
-										alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+										src={`https://cdn.lavelada.dev/boxers/vote/vote-${combat.number}-${boxerNames[0]}.webp`}
+										alt={`Fotografía de ${boxerNames[0]}`}
 										style="mask-image: linear-gradient(black 90%, transparent 100%);"
 									/>
+									<img
+										transition:name={`${combat.id}-member-2`}
+										decoding="async"
+										loading={index < 2 ? "eager" : "lazy"}
+										class:list={[
+											"absolute bottom-0 right-0 h-auto w-full max-w-48",
+											{ "group-hover:scale-115 z-20 md:z-10": isKingOfTheHill },
+											{ "z-10 group-hover:scale-105 ": !isKingOfTheHill },
+										]}
+										src={`https://cdn.lavelada.dev/boxers/vote/vote-${combat.number}-${boxerNames[1]}.webp`}
+										alt={`Fotografía de ${boxerNames[1]}`}
+										style="mask-image: linear-gradient(black 90%, transparent 100%);"
+									/>
+
 									<Image
 										width={combatData.titleSize[0]}
 										height={combatData.titleSize[1]}
