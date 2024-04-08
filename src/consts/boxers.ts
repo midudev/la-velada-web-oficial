@@ -83,6 +83,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "xJqhfK5oXK4",
 			thumbnail: "/boxers/workoutThumbnails/shelao.webp",
+			name: "Shelao",
 		},
 	},
 	{
@@ -116,6 +117,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "bVlV1HejQag",
 			thumbnail: "/boxers/workoutThumbnails/zeling.webp",
+			name: "Zeling",
 		},
 	},
 	{
@@ -250,6 +252,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "I8R5sQXjpKk",
 			thumbnail: "/boxers/workoutThumbnails/peldanyos.webp",
+			name: "Peldanyos",
 		},
 		socials: {
 			twitch: "https://twitch.tv/peldanyos",
@@ -446,6 +449,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "PUNBQ1_rbuo",
 			thumbnail: "/boxers/workoutThumbnails/skain.webp",
+			name: "Skain",
 		},
 		clips: [
 			{
@@ -524,6 +528,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "svXhWZ1sZJE",
 			thumbnail: "/boxers/workoutThumbnails/plex.webp",
+			name: "YoSoyPlex",
 		},
 		clips: [
 			{
@@ -593,6 +598,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "FXzCBTRWouA",
 			thumbnail: "/boxers/workoutThumbnails/alana.webp",
+			name: "Alana",
 		},
 		clips: [
 			{
