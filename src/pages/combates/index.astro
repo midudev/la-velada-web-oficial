@@ -10,7 +10,11 @@ const getCombatById = (id: string) => {
 }
 
 const getBoxerNames = (boxerIds: string[]): string[] => {
-	return boxerIds.map((boxerId) => `${boxerId}`)
+	return boxerIds.map((boxerId) => `Boxeador ${boxerId}`)
+}
+
+const createImgRoute = (combateNumber: number, slug: string) => {
+	return `https://cdn.lavelada.dev/boxers/vote/vote-${combateNumber}-${slug}.webp`
 }
 ---
 
@@ -38,6 +42,13 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 						const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
 						const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
 
+						const { teams, boxers } = combatData
+						const [slug1, slug2] = teams ?? boxers
+						const [image1, image2] = [
+							{ alt: slug1.replaceAll("-", " "), src: createImgRoute(combatData.number, slug1) },
+							{ alt: slug2.replaceAll("-", " "), src: createImgRoute(combatData.number, slug2) },
+						]
+
 						return (
 							<li class:list={["col-span-4 rounded-xl lg:col-span-2"]}>
 								<a
@@ -54,8 +65,8 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 											{ "group-hover:scale-115 z-20 md:z-10": isKingOfTheHill },
 											{ "z-10 group-hover:scale-105 ": !isKingOfTheHill },
 										]}
-										src={`https://cdn.lavelada.dev/boxers/vote/vote-${combat.number}-${boxerNames[0]}.webp`}
-										alt={`Fotografía de ${boxerNames[0]}`}
+										src={image1.src}
+										alt={image1.alt}
 										style="mask-image: linear-gradient(black 90%, transparent 100%);"
 									/>
 									<img
@@ -67,8 +78,8 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 											{ "group-hover:scale-115 z-20 md:z-10": isKingOfTheHill },
 											{ "z-10 group-hover:scale-105 ": !isKingOfTheHill },
 										]}
-										src={`https://cdn.lavelada.dev/boxers/vote/vote-${combat.number}-${boxerNames[1]}.webp`}
-										alt={`Fotografía de ${boxerNames[1]}`}
+										src={image2.src}
+										alt={image2.alt}
 										style="mask-image: linear-gradient(black 90%, transparent 100%);"
 									/>
 
