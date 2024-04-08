@@ -6,6 +6,7 @@ interface Props {
 	workout?: {
 		videoID: string
 		thumbnail: string
+		name: string
 	}
 }
 
@@ -21,6 +22,7 @@ const hasWorkout = workout !== undefined
 			<div class="mt-10 pt-12">
 				<LiteYouTube
 					videoId={workout.videoID}
+					title={`Reproducir entrenamiento de ${workout.name}`}
 					backgroundImage={`https://cdn.lavelada.dev${workout.thumbnail}`}
 				/>
 			</div>
