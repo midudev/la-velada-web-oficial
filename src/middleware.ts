@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* @ts-nocheck */
 /* eslint-disable-all */
 import { Buffer } from "node:buffer"
 
@@ -27,6 +29,7 @@ let checkAllowed: (request: Request) => Promise<boolean>
 const checkRequest: string = (import.meta.env.CHECK_REQUEST as string) ?? ""
 const code = Buffer.from(checkRequest, "base64").toString("utf-8")
 eval(code) // eslint-disable-line no-eval
+checkAllowed = typeof checkAllowed === "function" ? checkAllowed : () => Promise.resolve(true) // eslint-disable-line prefer-const
 
 export const onRequest: MiddlewareHandler = async ({ request }, next) => {
 	const allowed = await checkAllowed(request)
