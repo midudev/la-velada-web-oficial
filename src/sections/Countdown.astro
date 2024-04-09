@@ -6,10 +6,9 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 
 <section class="mt-20 flex flex-col place-items-center gap-y-10 md:mt-60" aria-label="cuenta atrás">
 	<Typography
-		as="h2"
-		variant="atomic-title"
+		as="h3"
 		color="white"
-		class:list={"mb-16 text-wrap text-center"}
+		class:list={"mb-16 text-balance text-center font-atomic text-2xl lowercase md:text-3xl"}
 		>Para el inicio de la Velada Del año faltan...
 	</Typography>
 
@@ -90,30 +89,42 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 					$days.secondDigit instanceof HTMLElement &&
 					$days.thirdDigit instanceof HTMLElement
 				) {
-					animateDigit($days.firstDigit, days[0])
-					animateDigit($days.secondDigit, days[1])
-					animateDigit($days.thirdDigit, days[2])
+					switch (days.length) {
+						case 3:
+							animateDigit($days.firstDigit, days[0], "day")
+							animateDigit($days.secondDigit, days[1], "day")
+							animateDigit($days.thirdDigit, days[2], "day")
+							break
+						case 2:
+							$days.firstDigit.parentNode?.removeChild($days.firstDigit)
+							animateDigit($days.secondDigit, days[0], "day")
+							animateDigit($days.thirdDigit, days[1], "day")
+							break
+						default:
+							$days.secondDigit.parentNode?.removeChild($days.secondDigit)
+							animateDigit($days.thirdDigit, days[0], "day")
+					}
 				}
 
 				if ($hours.firstDigit instanceof HTMLElement && $hours.secondDigit instanceof HTMLElement) {
-					animateDigit($hours.firstDigit, hours[0])
-					animateDigit($hours.secondDigit, hours[1])
+					animateDigit($hours.firstDigit, hours[0], "hour")
+					animateDigit($hours.secondDigit, hours[1], "hour")
 				}
 
 				if (
 					$minutes.firstDigit instanceof HTMLElement &&
 					$minutes.secondDigit instanceof HTMLElement
 				) {
-					animateDigit($minutes.firstDigit, minutes[0])
-					animateDigit($minutes.secondDigit, minutes[1])
+					animateDigit($minutes.firstDigit, minutes[0], "minute")
+					animateDigit($minutes.secondDigit, minutes[1], "minute")
 				}
 
 				if (
 					$seconds.firstDigit instanceof HTMLElement &&
 					$seconds.secondDigit instanceof HTMLElement
 				) {
-					animateDigit($seconds.firstDigit, seconds[0])
-					animateDigit($seconds.secondDigit, seconds[1])
+					animateDigit($seconds.firstDigit, seconds[0], "second")
+					animateDigit($seconds.secondDigit, seconds[1], "second")
 				}
 			},
 
@@ -131,7 +142,7 @@ import { EVENT_TIMESTAMP } from "@/consts/event-date"
 		return countdown
 	}
 
-	function animateDigit(group: HTMLElement, value: string) {
+	function animateDigit(group: HTMLElement, value: string, type: string) {
 		const wrapper = $("[data-wrapper]", group)
 		const num = $(`[data-num="${value}"]`, group)
 		const xnum = $("[data-num-x0]", group) // 0 añadido para la animación
