@@ -13,9 +13,12 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 	return boxerIds.map((boxerId) => `Boxeador ${boxerId}`)
 }
 
+
 const createImgRoute = (combateNumber: number, slug: string) => {
 	return `https://cdn.lavelada.dev/boxers/vote/vote-${combateNumber}-${slug}.webp`
 }
+
+export const prerender = true
 ---
 
 <Layout
