@@ -146,6 +146,11 @@ export const prerender = true
 					<BoxerDetailInfo title="Guardia" value={guardBoxer} id="boxer-guardia" />
 
 					<div class="mx-auto block max-w-96 md:hidden">
+						{
+							is2v2 && (
+								<BoxerDetailInfoAlly title={"Aliada"} value={allies} id="boxer-ally-mobile" />
+							)
+						}
 						<BoxerDetailInfoRival title={rivalOrRivals} value={rivals} id="boxer-rival-mobile" />
 					</div>
 				</div>
@@ -155,14 +160,14 @@ export const prerender = true
 					<section
 						class:list={[
 							"order-4 flex w-full justify-between",
-							`${boxer.clips && boxer.clips.length > 2 ? "-translate-y-24" : "-translate-y-56"}`,
+							`${boxer.clips && boxer.clips.length > 2 ? "md:translate-y-5 lg:-translate-y-24" : "md:-translate-y-5 lg:-translate-y-56"}`,
 						]}
 					>
 						<div class="order-1 hidden md:block">
 							<BoxerDetailInfoRival title={rivalOrRivals} value={rivals} id="boxer-rival-desk" />
 						</div>
 						<div class="order-2 hidden pr-5 md:block">
-							<BoxerDetailInfoAlly title={"Aliada"} value={allies} id="boxer-rival-desk" />
+							<BoxerDetailInfoAlly title={"Aliada"} value={allies} id="boxer-ally-desk" />
 						</div>
 					</section>
 				)
