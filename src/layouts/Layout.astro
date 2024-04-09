@@ -12,6 +12,7 @@ import type { Preload } from "@/types/Preload"
 import TwitchLiveBox from "@/components/TwitchLiveBox.astro"
 import Toast from "@/components/ui/Toast.astro"
 import Footer from "@/sections/Footer.astro"
+import Sponsors from "@/sections/Sponsors.astro"
 import "@fontsource-variable/jost"
 
 interface Props {
@@ -55,6 +56,7 @@ const { title, description, preload, canonical, image } = Astro.props
 			id="main-content"
 		>
 			<slot />
+			<Sponsors />
 			<Footer />
 			<KonamiCode />
 			<Toast />
