@@ -13,7 +13,6 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 	return boxerIds.map((boxerId) => `Boxeador ${boxerId}`)
 }
 
-
 const createImgRoute = (combateNumber: number, slug: string) => {
 	return `https://cdn.lavelada.dev/boxers/vote/vote-${combateNumber}-${slug}.webp`
 }
@@ -64,7 +63,7 @@ export const prerender = true
 										decoding="async"
 										loading={index < 2 ? "eager" : "lazy"}
 										class:list={[
-											"absolute bottom-0 left-0 h-auto w-full max-w-52",
+											"absolute bottom-0 left-0 h-full max-h-80 w-auto",
 											{ "group-hover:scale-115 z-20 md:z-10": isKingOfTheHill },
 											{ "z-10 group-hover:scale-105 ": !isKingOfTheHill },
 										]}
@@ -77,7 +76,7 @@ export const prerender = true
 										decoding="async"
 										loading={index < 2 ? "eager" : "lazy"}
 										class:list={[
-											"absolute bottom-0 right-0 h-auto w-full max-w-52",
+											"absolute bottom-0 right-0 h-full max-h-80 w-auto",
 											{ "group-hover:scale-115 z-20 md:z-10": isKingOfTheHill },
 											{ "z-10 group-hover:scale-105 ": !isKingOfTheHill },
 										]}
