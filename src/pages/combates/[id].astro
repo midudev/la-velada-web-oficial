@@ -20,8 +20,6 @@ export const getStaticPaths = () => {
 	}))
 }
 
-export const prerender = true
-
 const { id } = Astro.params
 const combatData = getCombatById(id)
 const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
@@ -39,11 +37,13 @@ const formatter = new Intl.ListFormat("es", {
 
 const formattedBoxerNames = formatter.format(boxerNames)
 const [imageWidth, imageHeight] = combatData.titleSize
+
+export const prerender = true
 ---
 
 <Layout
-	title={`Combate número ${combatData.number} de La Velada IV`}
-	description={`Combate entre ${formattedBoxerNames}`}
+	title={`Combate #${combatData.number} - La Velada del Año IV`}
+	description={`Combate entre ${formattedBoxerNames} en La Velada del Año IV`}
 	image={`https://cdn.lavelada.dev/matches/og-${id}-min.jpg`}
 >
 	<BackgroundVideo id={id} />

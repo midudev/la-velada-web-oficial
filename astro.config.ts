@@ -22,9 +22,6 @@ export default defineConfig({
 			enabled: true,
 		},
 	}),
-	build: {
-		inlineStylesheets: "always",
-	},
 	output: "server",
 	site: seoConfig.baseURL,
 	vite: {
@@ -40,9 +37,7 @@ export default defineConfig({
 				manifest,
 				workbox: {
 					globDirectory: ".vercel/output/static",
-					globPatterns: [
-						"**/*.{html,js,css,svg,avif,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}",
-					],
+					globPatterns: ["**/*.{html,js,css,woff,woff2,ttf,eot,ico}"],
 					runtimeCaching: [
 						{
 							urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif)$/,

@@ -1,10 +1,9 @@
 ---
-import SponsorLogo from "@/components/SponsorLogo.astro"
 import Typography from "@/components/Typography.astro"
 import { SPONSORS } from "@/consts/sponsors"
 ---
 
-<section>
+<section class="mt-20 md:mt-60">
 	<Typography as="h3" variant="h3" color="white" class="text-center">
 		Patrocinadores
 	</Typography>
@@ -22,10 +21,13 @@ import { SPONSORS } from "@/consts/sponsors"
 					rel="noopener noreferrer"
 					aria-label={`Link con el logo de ${name} que lleva a ${url}`}
 				>
-					<SponsorLogo
-						logo={id}
+					<img
+						src={`https://cdn.lavelada.dev/sponsors/${id}.svg`}
 						width={image.width}
+						loading="lazy"
 						height={image.height}
+						fetchpriority="low"
+						alt={`Logo de ${name}`}
 						class="company-logo px-5 text-white transition group-hover:scale-110 group-focus:scale-110 md:px-4"
 					/>
 				</a>
@@ -44,10 +46,13 @@ import { SPONSORS } from "@/consts/sponsors"
 			target="_blank"
 			aria-label="Link con el logo de Infojobs que lleva a https://www.infojobs.net"
 		>
-			<SponsorLogo
-				logo="infojobs"
+			<img
+				src={"https://cdn.lavelada.dev/sponsors/infojobs.svg"}
+				loading="lazy"
 				width={128}
 				height={70}
+				fetchpriority="low"
+				alt={"Logo de InfoJobs"}
 				class="inline-block select-none text-white transition hover:text-accent focus:text-accent"
 			/>
 		</a>
