@@ -12,7 +12,9 @@ import { manifest, seoConfig } from "./src/utils/seoConfig"
 // https://astro.build/config
 export default defineConfig({
 	compressHTML: true,
-	prefetch: true,
+	prefetch: {
+		defaultStrategy: "viewport",
+	},
 	devToolbar: {
 		enabled: false,
 	},
