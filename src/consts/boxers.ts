@@ -716,8 +716,9 @@ export const BOXERS: Boxer[] = addGetters([
 		],
 		rotate: true,
 		workout: {
+			name: "Entrenamiento de Guanyar",
 			videoID: "ju-B__1NDMM",
-			thumbnail: "/boxers/workoutThumbnails/shelao.webp",
-		}
+			thumbnail: "/boxers/workoutThumbnails/guanyar.webp",
+		},
 	},
 ] as const)
