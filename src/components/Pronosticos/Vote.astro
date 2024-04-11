@@ -104,8 +104,18 @@ votes.forEach((vote) => {
 				const { teams, boxers } = combatData
 				const [slug1, slug2] = teams ?? boxers
 				const [image1, image2] = [
-					{ alt: slug1.replaceAll("-", " "), src: createImgRoute(combatData.number, slug1) },
-					{ alt: slug2.replaceAll("-", " "), src: createImgRoute(combatData.number, slug2) },
+					{
+						alt: () => slug1.replaceAll("-", " y "),
+						src: createImgRoute(combatData.number, slug1),
+					},
+					{
+						alt: () => {
+							const splittedSlug2 = slug2.split("-")
+							if (splittedSlug2.length > 2) return slug2.replace("-", " y ").replace("-", "")
+							return slug2.replaceAll("-", "")
+						},
+						src: createImgRoute(combatData.number, slug2),
+					},
 				]
 
 				return (
@@ -125,7 +135,7 @@ votes.forEach((vote) => {
 									alt={`Fotografía de ${image1.alt}`}
 									style="mask-image: linear-gradient(black 80%, transparent)"
 								/>
-								<span class="to-vote-text">¡voto a {image1.alt}!</span>
+								<span class="to-vote-text">¡voto por {image1.alt}!</span>
 								<span class="already-voted-text">¡tu voto!</span>
 							</div>
 						</button>
@@ -155,7 +165,7 @@ votes.forEach((vote) => {
 									alt={`Fotografía de ${image2.alt}`}
 									style="mask-image: linear-gradient(black 80%, transparent)"
 								/>
-								<span class="to-vote-text">¡voto a {image2.alt}!</span>
+								<span class="to-vote-text">¡voto por {image2.alt}!</span>
 								<span class="already-voted-text">¡tu voto!</span>
 							</div>
 						</button>
