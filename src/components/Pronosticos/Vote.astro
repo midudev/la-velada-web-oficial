@@ -89,6 +89,7 @@ votes.forEach((vote) => {
 												class="h-auto max-h-96 w-full object-contain"
 												src={`https://cdn.lavelada.dev/boxers/${boxer}-small.webp`}
 												alt={`Fotografía de ${boxer.replaceAll("-", " ")}`}
+												title={`Votar a ${boxer.replaceAll("-", " ")}`}
 												style="mask-image: linear-gradient(black 80%, transparent)"
 											/>
 											<span class="to-vote-text small">{boxer.replaceAll("-", " ")}</span>
@@ -132,10 +133,11 @@ votes.forEach((vote) => {
 								<img
 									class="h-auto max-h-96 w-full object-contain"
 									src={image1.src}
-									alt={`Fotografía de ${image1.alt}`}
+									alt={`Fotografía de ${image1.alt()}`}
+									title={`Votar a ${image1.alt()}`}
 									style="mask-image: linear-gradient(black 80%, transparent)"
 								/>
-								<span class="to-vote-text">¡voto por {image1.alt}!</span>
+								<span class="to-vote-text">¡voto por {image1.alt()}!</span>
 								<span class="already-voted-text">¡tu voto!</span>
 							</div>
 						</button>
@@ -162,10 +164,11 @@ votes.forEach((vote) => {
 								<img
 									class="h-auto max-h-96 w-full object-contain"
 									src={image2.src}
-									alt={`Fotografía de ${image2.alt}`}
+									alt={`Fotografía de ${image2.alt()}`}
+									title={`Votar a ${image2.alt()}`}
 									style="mask-image: linear-gradient(black 80%, transparent)"
 								/>
-								<span class="to-vote-text">¡voto por {image2.alt}!</span>
+								<span class="to-vote-text">¡voto por {image2.alt()}!</span>
 								<span class="already-voted-text">¡tu voto!</span>
 							</div>
 						</button>
