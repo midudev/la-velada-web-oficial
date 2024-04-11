@@ -38,6 +38,11 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/elmariana",
 			tiktok: "https://tiktok.com/@elmarianaa",
 		},
+		workout: {
+			videoID: "A_EDoq70XqY",
+			thumbnail: "",
+			name: "ElMariana",
+		},
 		clips: [
 			{
 				text: "El combate lo verá mi madre. Voy a ir con todo, voy a ganar",
