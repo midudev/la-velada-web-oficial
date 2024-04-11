@@ -38,6 +38,11 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/elmariana",
 			tiktok: "https://tiktok.com/@elmarianaa",
 		},
+		workout: {
+			videoID: "A_EDoq70XqY",
+			thumbnail: "/boxers/workoutThumbnails/el-mariana.webp",
+			name: "ElMariana",
+		},
 		clips: [
 			{
 				text: "El combate lo verá mi madre. Voy a ir con todo, voy a ganar",
@@ -81,7 +86,7 @@ export const BOXERS: Boxer[] = addGetters([
 		],
 		rotate: true,
 		workout: {
-			videoID: "xJqhfK5oXK4",
+			videoID: "2CEk7rufxno",
 			thumbnail: "/boxers/workoutThumbnails/shelao.webp",
 			name: "Shelao",
 		},
@@ -710,5 +715,10 @@ export const BOXERS: Boxer[] = addGetters([
 			},
 		],
 		rotate: true,
+		workout: {
+			name: "Entrenamiento de Guanyar",
+			videoID: "ju-B__1NDMM",
+			thumbnail: "/boxers/workoutThumbnails/guanyar.webp",
+		},
 	},
 ] as const)
