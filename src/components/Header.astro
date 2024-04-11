@@ -14,6 +14,7 @@ const pages = [
 		name: "Entradas",
 		href: "https://www.entradas.com/artist/la-velada-del-ano/?affiliate=LVL",
 		soonDate: "11 de abril · 21:30 (CET)",
+		target: "_blank",
 	},
 ].map((page) => ({
 	...page,
@@ -24,10 +25,12 @@ const pages = [
 <header class="mb-10 h-16 max-w-[100vw] lg:h-24">
 	<nav class="group flex h-full w-full items-center justify-between px-10 lg:justify-center">
 		{
-			pages.map(({ name, href, active, soonDate }, key) => (
+			pages.map(({ name, href, active, soonDate, target }, key) => (
 				<>
 					<a
 						href={href}
+						target={target}
+						rel={target === "_blank" ? "noopener noreferrer" : undefined}
 						class:list={[
 							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 text-center text-xl uppercase  lg:flex lg:px-7 xl:px-10",
 							{ "current-page text-accent": active },
