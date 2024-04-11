@@ -29,6 +29,7 @@ export interface Boxer {
 	workout?: {
 		videoID: string
 		thumbnail: string
+		name: string
 	}
 	rotate?: boolean
 	allies?: string[]
