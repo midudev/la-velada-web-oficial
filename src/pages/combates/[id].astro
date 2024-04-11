@@ -59,16 +59,17 @@ export const prerender = true
 >
 	<BackgroundVideo id={id} />
 	<main class="pointer-events-none md:-mt-12">
-		<div class="relative flex h-[60vh] w-full items-center justify-center md:h-[76vh]">
+		<div
+			class="full-width relative flex h-[60vh] w-screen items-center justify-center overflow-x-clip md:h-[76vh]"
+		>
 			<img
 				transition:name={`${combatData.id}-member-1`}
 				decoding="async"
 				src={image1.src}
 				alt={image1.alt}
 				style="mask-image: linear-gradient(black 90%, transparent 100%);"
-				class="h-[1000px] w-auto"
+				class="relative left-[30%] h-[400px] w-auto sm:left-[5%] lg:h-[1000px] xl:h-[1500px]"
 			/>
-
 			<Image
 				width={imageWidth}
 				height={imageHeight}
@@ -78,14 +79,13 @@ export const prerender = true
 				src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
 				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 			/>
-
 			<img
 				transition:name={`${combatData.id}-member-2`}
 				decoding="async"
 				src={image2.src}
 				alt={image2.alt}
 				style="mask-image: linear-gradient(black 90%, transparent 100%);"
-				class="h-[1000px] w-auto"
+				class="relative right-[30%] h-[400px] w-auto sm:right-[5%] lg:h-[1000px] xl:h-[1500px]"
 			/>
 		</div>
 		<div class="pointer-events-auto">
@@ -93,3 +93,14 @@ export const prerender = true
 		</div>
 	</main>
 </Layout>
+
+<style>
+	.full-width {
+		width: 100vw;
+		position: relative;
+		left: 50%;
+		right: 50%;
+		margin-left: -50vw;
+		margin-right: -50vw;
+	}
+</style>
