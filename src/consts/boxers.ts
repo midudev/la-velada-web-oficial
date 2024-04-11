@@ -373,6 +373,11 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/unicornioperro",
 			tiktok: "https://tiktok.com/@german.usinger",
 		},
+		workout: {
+			videoID: "m7BEJLwX7dM",
+			thumbnail: "/boxers/workoutThumbnails/unicornio.webp",
+			name: "Unicornio",
+		},
 		clips: [
 			{
 				text: "No entendí bien la mecánica, pero se que debo pegarles a ellos. ¿No?",
