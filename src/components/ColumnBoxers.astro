@@ -59,7 +59,7 @@ const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
 					decoding="async"
 					src={`https://cdn.lavelada.dev/boxers/${id}-small.webp`}
 					alt={`Foto en pequeño del ${gender === "masculino" ? "boxeador" : "boxeadora"} ${name}`}
-					class:list={`boxer-image aspect-square h-full w-full object-contain ${rotate ? "rotate-y-180" : ""}`}
+					class:list={`boxer-image ${rotate ? "rotate-y-180" : ""}`}
 					loading={imgLoading}
 				/>
 			</a>
@@ -76,7 +76,7 @@ const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
 		}
 
 		& .boxer-image {
-			@apply z-20 h-full object-contain transition-opacity duration-300 ease-in-out;
+			@apply z-20 aspect-square h-full w-full object-contain transition-opacity duration-300 ease-in-out;
 			mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
 			filter: grayscale(100%);
 			transition: filter 0.3s ease;

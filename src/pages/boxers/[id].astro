@@ -30,8 +30,6 @@ export function getStaticPaths() {
 	})
 }
 
-export const prerender = true
-
 const { id } = Astro.params
 
 const [boxer] = BOXERS.filter((boxer) => boxer.id === id)
@@ -86,6 +84,8 @@ const preloadBoxerImage: Preload[] = [
 const rivalOrRivals = rivals.length > 1 ? "Rivales" : "Rival"
 const guardBoxer = boxer.guard === undefined ? "Desconocida" : boxer.guard
 const flagAlt = countryName === undefined ? "un país" : countryName.name
+
+export const prerender = true
 ---
 
 <Layout
