@@ -6,6 +6,8 @@ import HeroLogo from "@/components/HeroLogo.astro"
 import SocialButtons from "@/components/SocialButtons.astro"
 import { MOBILE_MENU_CONTENT_ID } from "@/consts/mobile-menu"
 
+const normalizedPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname.slice(0,-1) : Astro.url.pathname;
+
 const pages = [
 	{ name: "El Evento", href: "/" },
 	{ name: "Combates", href: "/combates" },
@@ -18,7 +20,7 @@ const pages = [
 	},
 ].map((page) => ({
 	...page,
-	active: Astro.url.pathname === page.href,
+	active: normalizedPath === page.href,
 }))
 ---
 
