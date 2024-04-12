@@ -50,30 +50,4 @@ export const manifest: Partial<ManifestOptions> = {
 			purpose: "any maskable",
 		},
 	],
-	screenshots: [
-		{
-			src: "https://cdn.lavelada.dev/screenshots/desktop_1.jpg",
-			type: "image/jpeg",
-			sizes: "1024x964",
-			form_factor: "wide",
-		},
-		{
-			src: "https://cdn.lavelada.dev/screenshots/desktop_2.jpg",
-			type: "image/jpeg",
-			sizes: "1024x964",
-			form_factor: "wide",
-		},
-		{
-			src: "https://cdn.lavelada.dev/screenshots/mobile_1.jpg",
-			type: "image/jpeg",
-			sizes: "360x593",
-			form_factor: "narrow",
-		},
-		{
-			src: "https://cdn.lavelada.dev/screenshots/mobile_2.jpg",
-			type: "image/jpeg",
-			sizes: "360x593",
-			form_factor: "narrow",
-		},
-	],
 }

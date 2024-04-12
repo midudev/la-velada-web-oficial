@@ -2,6 +2,7 @@
 import { Image } from "astro:assets"
 
 import Typography from "@/components/Typography.astro"
+import { BOXERS } from "@/consts/boxers"
 import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 import { isFirefox } from "@/lib/browser"
@@ -13,6 +14,8 @@ const getCombatById = (id: string) => {
 const getBoxerNames = (boxerIds: string[]): string[] => {
 	return boxerIds.map((boxerId) => `Boxeador ${boxerId}`)
 }
+
+export const prerender = true
 ---
 
 <Layout
@@ -36,15 +39,36 @@ const getBoxerNames = (boxerIds: string[]): string[] => {
 						const combatData = getCombatById(combat.id)
 						if (!combatData) return null
 
-						const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
+						const boxerNames = getBoxerNames(combatData.boxers)
 						const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
+						const isTeams = combatData.teams !== undefined
+
+						const boxerFullNames: string[] = []
+						BOXERS.forEach((boxer) => {
+							combatData.boxers.forEach((boxerId) => {
+								if (boxer.id === boxerId) boxerFullNames.push(boxer.name)
+							})
+						})
+
+						let formattedCombats = ""
+						if (isTeams) {
+							formattedCombats = boxerFullNames
+								.map((name, index) => {
+									if (index === 1) return `${name} vs `
+									if (index === boxerFullNames.length - 1) return name
+									return `${name} y `
+								})
+								.join("")
+						} else {
+							formattedCombats = boxerFullNames.join(" vs ")
+						}
 
 						return (
 							<li class:list={["col-span-4 rounded-xl lg:col-span-2"]}>
 								<a
 									class="group relative inline-block aspect-square h-auto w-full transform-gpu transition-transform hover:scale-105 hover:saturate-150"
 									href={`/combates/${combat.id}`}
-									title={`Ir al combate ${combatData.number} de la Velada IV`}
+									title={`Ir al combate ${combatData.number}: ${formattedCombats}`}
 								>
 									<img
 										decoding="async"

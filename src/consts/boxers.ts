@@ -38,6 +38,11 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/elmariana",
 			tiktok: "https://tiktok.com/@elmarianaa",
 		},
+		workout: {
+			videoID: "A_EDoq70XqY",
+			thumbnail: "/boxers/workoutThumbnails/el-mariana.webp",
+			name: "ElMariana",
+		},
 		clips: [
 			{
 				text: "El combate lo verá mi madre. Voy a ir con todo, voy a ganar",
@@ -81,8 +86,9 @@ export const BOXERS: Boxer[] = addGetters([
 		],
 		rotate: true,
 		workout: {
-			videoID: "xJqhfK5oXK4",
+			videoID: "2CEk7rufxno",
 			thumbnail: "/boxers/workoutThumbnails/shelao.webp",
+			name: "Shelao",
 		},
 	},
 	{
@@ -116,6 +122,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "bVlV1HejQag",
 			thumbnail: "/boxers/workoutThumbnails/zeling.webp",
+			name: "Zeling",
 		},
 	},
 	{
@@ -250,6 +257,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "I8R5sQXjpKk",
 			thumbnail: "/boxers/workoutThumbnails/peldanyos.webp",
+			name: "Peldanyos",
 		},
 		socials: {
 			twitch: "https://twitch.tv/peldanyos",
@@ -365,6 +373,11 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/unicornioperro",
 			tiktok: "https://tiktok.com/@german.usinger",
 		},
+		workout: {
+			videoID: "m7BEJLwX7dM",
+			thumbnail: "/boxers/workoutThumbnails/unicornio.webp",
+			name: "Unicornio",
+		},
 		clips: [
 			{
 				text: "No entendí bien la mecánica, pero se que debo pegarles a ellos. ¿No?",
@@ -446,6 +459,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "PUNBQ1_rbuo",
 			thumbnail: "/boxers/workoutThumbnails/skain.webp",
+			name: "Skain",
 		},
 		clips: [
 			{
@@ -524,6 +538,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "svXhWZ1sZJE",
 			thumbnail: "/boxers/workoutThumbnails/plex.webp",
+			name: "YoSoyPlex",
 		},
 		clips: [
 			{
@@ -593,6 +608,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "FXzCBTRWouA",
 			thumbnail: "/boxers/workoutThumbnails/alana.webp",
+			name: "Alana",
 		},
 		clips: [
 			{
@@ -704,5 +720,10 @@ export const BOXERS: Boxer[] = addGetters([
 			},
 		],
 		rotate: true,
+		workout: {
+			name: "Guanyar",
+			videoID: "ju-B__1NDMM",
+			thumbnail: "/boxers/workoutThumbnails/guanyar.webp",
+		},
 	},
 ] as const)
