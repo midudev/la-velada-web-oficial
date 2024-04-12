@@ -18,7 +18,9 @@ const pages = [
 	},
 ].map((page) => ({
 	...page,
-	active: Astro.url.pathname === page.href,
+	active:
+		(Astro.url.pathname === page.href || Astro.url.pathname === `${page.href}/`) &&
+		(page.href !== "/" || Astro.url.pathname === "/"),
 }))
 ---
 
