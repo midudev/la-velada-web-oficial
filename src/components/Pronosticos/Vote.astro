@@ -127,8 +127,9 @@ votes.forEach((vote) => {
 					{
 						alt: () => {
 							const splittedSlug2 = slug2.split("-")
+							if (slug2 === "agustin-51") return slug2.replace("-", "")
 							if (splittedSlug2.length > 2) return slug2.replace("-", " y ").replace("-", "")
-							return slug2.replaceAll("-", "")
+							return slug2.replaceAll("-", " ")
 						},
 						src: createImgRoute(combatData.number, slug2),
 					},
