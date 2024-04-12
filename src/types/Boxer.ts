@@ -5,7 +5,7 @@ export interface Boxer {
 	age: number
 	gallery?: boolean
 	realName: string
-	weight: number
+	weight?: number
 	height: number
 	country: string
 	countryName?: string
@@ -26,6 +26,7 @@ export interface Boxer {
 	workout?: {
 		videoID: string
 		thumbnail: string
+		name: string
 	}
 	rotate?: boolean
 	allies?: string[]

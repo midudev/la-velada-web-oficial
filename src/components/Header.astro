@@ -9,8 +9,13 @@ import { MOBILE_MENU_CONTENT_ID } from "@/consts/mobile-menu"
 const pages = [
 	{ name: "El Evento", href: "/" },
 	{ name: "Combates", href: "/combates" },
-	{ name: "Pronósticos", href: "/pronosticos", disabled: true, soonDate: "Próximamente" },
-	{ name: "Entradas", href: "/entradas", disabled: true, soonDate: "11 de abril" },
+	{ name: "Pronósticos", href: "/pronosticos" },
+	{
+		name: "Entradas",
+		href: "https://www.entradas.com/artist/la-velada-del-ano/?affiliate=LVL",
+		soonDate: "11 de abril · 21:30 (CET)",
+		target: "_blank",
+	},
 ].map((page) => ({
 	...page,
 	active: Astro.url.pathname === page.href,
@@ -20,24 +25,24 @@ const pages = [
 <header class="mb-10 h-16 max-w-[100vw] lg:h-24">
 	<nav class="group flex h-full w-full items-center justify-between px-10 lg:justify-center">
 		{
-			pages.map(({ disabled, name, href, active, soonDate }, key) => (
+			pages.map(({ name, href, active, soonDate, target }, key) => (
 				<>
 					<a
 						href={href}
+						target={target}
+						rel={target === "_blank" ? "noopener noreferrer" : undefined}
 						class:list={[
 							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 text-center text-xl uppercase  lg:flex lg:px-7 xl:px-10",
-							{ "pointer-events-none": disabled },
 							{ "current-page text-accent": active },
 							{ "text-white": !active },
 						]}
 						id={`nav-link-${key}`}
 					>
 						<span class="z-10">{name}</span>
-						{disabled ? (
+						{soonDate && (
 							<span class="absolute mt-10 -skew-x-6 text-xs text-accent">{soonDate}</span>
-						) : (
-							<div class="background absolute -z-10 h-full w-full" />
 						)}
+						<div class="background absolute -z-10 h-full w-full" />
 					</a>
 					{key === 1 && <div class:list={"hidden w-64 lg:block"} />}
 				</>
@@ -71,19 +76,18 @@ const pages = [
 					style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
 				/>
 				{
-					pages.map(({ disabled, name, href, active, soonDate }, key) => (
+					pages.map(({ name, href, active, soonDate }, key) => (
 						<>
 							<a
 								href={href}
 								class:list={[
 									"relative flex flex-col items-center justify-center gap-2 text-xl capitalize",
-									{ "pointer-events-none": disabled },
 									{ "current-page-mob": active },
 								]}
 								id={`navmob-link-${key}`}
 							>
 								<span class="z-10 uppercase text-primary">{name}</span>
-								{disabled && <span class="text-accent">{soonDate}</span>}
+								{soonDate && <span class="text-accent">{soonDate}</span>}
 							</a>
 							<hr
 								class="h-[2px] w-full border-t-0"
