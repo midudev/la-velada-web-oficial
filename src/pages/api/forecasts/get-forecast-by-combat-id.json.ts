@@ -1,8 +1,7 @@
 import type { APIRoute } from "astro"
+
 import { COMBATS } from "@/consts/combats"
 import { FORECASTS } from "@/consts/forecasts"
-
-export const prerender = false
 
 export const GET: APIRoute = ({ url }) => {
 	const combatId = url.searchParams.get("id")
