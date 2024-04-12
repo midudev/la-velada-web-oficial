@@ -84,14 +84,15 @@ const boxerColumns = [
 
 		<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
 			<div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
-				<div class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll">
+				<div
+					class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll pr-[40%]"
+				>
 					{
 						listOfBoxers.map((boxer, index) => (
 							<div
 								class:list={`
-									carousel-item w-[40%] flex-shrink-0 snap-center px-2
-									${index === 0 ? "ml-[30%]" : ""}
-									${index === listOfBoxers.length - 1 ? "mr-[30%]" : ""}
+									carousel-item w-[70%] flex-shrink-0 snap-center px-2
+									${index === 0 ? "ml-[65%]" : ""}
 								`}
 							>
 								<ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
