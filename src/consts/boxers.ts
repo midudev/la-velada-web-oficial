@@ -39,6 +39,11 @@ export const BOXERS: Boxer[] = addGetters([
 			youtube: "https://youtube.com/elmariana",
 			tiktok: "https://tiktok.com/@elmarianaa",
 		},
+		workout: {
+			videoID: "A_EDoq70XqY",
+			thumbnail: "/boxers/workoutThumbnails/el-mariana.webp",
+			name: "ElMariana",
+		},
 		clips: [
 			{
 				text: "El combate lo verá mi madre. Voy a ir con todo, voy a ganar",
@@ -83,7 +88,7 @@ export const BOXERS: Boxer[] = addGetters([
 		],
 		rotate: true,
 		workout: {
-			videoID: "xJqhfK5oXK4",
+			videoID: "2CEk7rufxno",
 			thumbnail: "/boxers/workoutThumbnails/shelao.webp",
 			name: "Shelao",
 		},
@@ -379,6 +384,11 @@ export const BOXERS: Boxer[] = addGetters([
 			twitter: "https://twitter.com/GermanUsinger",
 			youtube: "https://youtube.com/unicornioperro",
 			tiktok: "https://tiktok.com/@german.usinger",
+		},
+		workout: {
+			videoID: "m7BEJLwX7dM",
+			thumbnail: "/boxers/workoutThumbnails/unicornio.webp",
+			name: "Unicornio",
 		},
 		clips: [
 			{
@@ -732,5 +742,10 @@ export const BOXERS: Boxer[] = addGetters([
 			},
 		],
 		rotate: true,
+		workout: {
+			name: "Guanyar",
+			videoID: "ju-B__1NDMM",
+			thumbnail: "/boxers/workoutThumbnails/guanyar.webp",
+		},
 	},
 ] as const)
