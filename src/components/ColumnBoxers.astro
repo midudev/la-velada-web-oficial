@@ -34,7 +34,7 @@ const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
 
 <div class:list={`flex flex-col ${className}`}>
 	{
-		boxers.map(({ id, name, country, countryName, weight, rotate, versus, allies }) => (
+		boxers.map(({ id, name, country, countryName, weight, rotate, versus, allies, gender }) => (
 			<a
 				href={`/boxers/${id}`}
 				class:list={[
@@ -45,7 +45,7 @@ const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
 						opponent: isOpponent(id, versus),
 					},
 				]}
-				title={`Visita la página del boxeador ${name}`}
+				title={`Visita la página del ${gender === "masculino" ? "boxeador" : "boxeadora"} ${name}`}
 				data-id={id}
 				data-name={name}
 				data-country={country}
@@ -58,7 +58,7 @@ const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
 				<img
 					decoding="async"
 					src={`https://cdn.lavelada.dev/boxers/${id}-small.webp`}
-					alt={`Foto en pequeño del boxeador ${name}`}
+					alt={`Foto en pequeño del ${gender === "masculino" ? "boxeador" : "boxeadora"} ${name}`}
 					class:list={`boxer-image ${rotate ? "rotate-y-180" : ""}`}
 					loading={imgLoading}
 				/>
