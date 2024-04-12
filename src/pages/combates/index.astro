@@ -44,6 +44,37 @@ export const prerender = true
 						const boxerNames = combatData ? getBoxerNames(combatData.boxers) : []
 						const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
 
+						if (isKingOfTheHill) {
+							return (
+								<li class:list={["col-span-4 rounded-xl lg:col-span-2"]}>
+									<a
+										class="group relative inline-block aspect-square h-auto w-full transform-gpu transition-transform hover:scale-105 hover:saturate-150"
+										href={`/combates/${combat.id}`}
+										title={`Ir al combate ${combatData.number} de la Velada IV`}
+									>
+										<img
+											decoding="async"
+											loading={index < 2 ? "eager" : "lazy"}
+											class="group-hover:scale-115 absolute  bottom-0 z-20 mx-auto h-auto w-full md:z-10"
+											src={`https://cdn.lavelada.dev/matches/combat-${combat.id}.webp`}
+											alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+											style="mask-image: linear-gradient(black 90%, transparent 100%);"
+										/>
+										<Image
+											width={combatData.titleSize[0]}
+											height={combatData.titleSize[1]}
+											transition:name={`title-image-${combat.id}`}
+											loading={index < 2 ? "eager" : "lazy"}
+											class:list="group-hover:saturate-15 absolute  left-1/2 h-auto max-h-[15rem] w-auto -translate-x-1/2 transform-gpu transition-all duration-300 ease-in-out group-hover:scale-75 top-10 z-10 md:z-20"
+											src={`https://cdn.lavelada.dev/matches/title-${combat.id}.webp`}
+											alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+										/>
+										<div class="gradient-box absolute bottom-0 z-0 block h-2/5 w-full opacity-25 transition-opacity duration-300 ease-in-out group-hover:brightness-50 group-hover:filter" />
+									</a>
+								</li>
+							)
+						}
+
 						const { teams, boxers } = combatData
 						const [slug1, slug2] = teams ?? boxers
 						const [image1, image2] = [
