@@ -5,20 +5,14 @@ import Typography from "@/components/Typography.astro"
 import { COMBATS } from "@/consts/combats"
 import type { Boxer } from "@/types/Boxer"
 
+import { ordinals } from "@/consts/ordinals"
+
 interface Props {
 	combatId: string
 	combatNumber: number
 	boxers: Boxer[]
 }
 
-const ordinals: Record<number, string> = {
-	1: "Primer",
-	2: "Segundo",
-	3: "Tercer",
-	4: "Cuarto",
-	5: "Quinto",
-	6: "Sexto",
-}
 const { combatNumber, combatId, boxers } = Astro.props
 
 const createCombatDisplay = (boxers: Boxer[]) => {

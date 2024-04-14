@@ -2,7 +2,9 @@
 import { Image } from "astro:assets"
 
 import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
+import Typography from "@/components/Typography.astro"
 import { COMBATS } from "@/consts/combats"
+import { ordinals } from "@/consts/ordinals"
 import Layout from "@/layouts/Layout.astro"
 import CombatFeatures from "@/sections/CombatFeatures.astro"
 
@@ -33,6 +35,7 @@ if (!combatData) {
 		status: 404,
 	}
 }
+const ordinal = ordinals[combatData.number]
 
 const { teams, boxers } = combatData
 const [slug1, slug2] = teams ?? boxers
@@ -88,6 +91,15 @@ export const prerender = true
 				class="relative right-36 h-[600px] w-auto md:h-[1000px] xl:right-24 xl:h-[1500px]"
 			/>
 		</div>
+
+		<div class="mt-20 flex items-center justify-center">
+			<span class="bg-accent px-5 py-2">
+				<Typography as="span" variant="h2" color="white" class="m-auto inline"
+					>{ordinal} combate</Typography
+				>
+			</span>
+		</div>
+
 		<div class="pointer-events-auto">
 			{combatData.boxers.length <= 4 && <CombatFeatures boxerIds={combatData.boxers} />}
 		</div>
