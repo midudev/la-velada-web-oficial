@@ -10,7 +10,7 @@
 export const $ = <T extends HTMLElement>(
 	selector: string,
 	context: Document | HTMLElement = document
-) => context.querySelector<T>(selector)!
+) => context.querySelector<T>(selector)
 
 /**
  * Get elements from dom by selector string
