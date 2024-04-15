@@ -11,15 +11,6 @@ export const SPONSORS: Array<Sponsors> = [
 		},
 	},
 	{
-		id: "revolut",
-		name: "Revolut",
-		url: "https://revolut.com/",
-		image: {
-			width: 177,
-			height: 32,
-		},
-	},
-	{
 		id: "prime",
 		name: "Prime",
 		url: "https://drinkprime.com/",
@@ -29,12 +20,12 @@ export const SPONSORS: Array<Sponsors> = [
 		},
 	},
 	{
-		id: "alsa",
-		name: "Alsa",
-		url: "https://alsa.es/",
+		id: "revolut",
+		name: "Revolut",
+		url: "https://revolut.com/",
 		image: {
-			width: 133,
-			height: 38,
+			width: 177,
+			height: 32,
 		},
 	},
 	{
@@ -47,12 +38,21 @@ export const SPONSORS: Array<Sponsors> = [
 		},
 	},
 	{
-		id: "cerave",
-		name: "Cerave",
-		url: "https://cerave.es/",
+		id: "coca-cola",
+		name: "Coca-Cola",
+		url: "https://www.coca-cola.com/es/es",
 		image: {
-			width: 180,
-			height: 53,
+			width: 220,
+			height: 94,
+		},
+	},
+	{
+		id: "alsa",
+		name: "Alsa",
+		url: "https://alsa.es/",
+		image: {
+			width: 133,
+			height: 38,
 		},
 	},
 	{
@@ -65,12 +65,12 @@ export const SPONSORS: Array<Sponsors> = [
 		},
 	},
 	{
-		id: "grefusa",
-		name: "Grefusa",
-		url: "https://grefusa.com/",
+		id: "cerave",
+		name: "Cerave",
+		url: "https://cerave.es/",
 		image: {
-			width: 144,
-			height: 69,
+			width: 180,
+			height: 53,
 		},
 	},
 	{
@@ -80,6 +80,15 @@ export const SPONSORS: Array<Sponsors> = [
 		image: {
 			width: 176,
 			height: 73,
+		},
+	},
+	{
+		id: "grefusa",
+		name: "Grefusa",
+		url: "https://grefusa.com/",
+		image: {
+			width: 144,
+			height: 69,
 		},
 	},
 	{
