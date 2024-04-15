@@ -6,9 +6,14 @@ import HeroLogo from "@/components/HeroLogo.astro"
 import SocialButtons from "@/components/SocialButtons.astro"
 import { MOBILE_MENU_CONTENT_ID } from "@/consts/mobile-menu"
 
+// remote last slash from pathname
+const pathname = Astro.url.pathname.endsWith("/")
+	? Astro.url.pathname.slice(0, -1)
+	: Astro.url.pathname
+
 const pages = [
 	{ name: "El Evento", href: "/" },
-	{ name: "Combates", href: "/combates", active: Astro.url.pathname.startsWith("/combates") },
+	{ name: "Combates", href: "/combates", active: pathname.startsWith("/combates") },
 	{ name: "Pronósticos", href: "/pronosticos" },
 	{
 		name: "Entradas",
@@ -19,7 +24,7 @@ const pages = [
 	},
 ].map((page) => ({
 	...page,
-	active: page.active ?? Astro.url.pathname === page.href,
+	active: page.active ?? pathname === page.href,
 }))
 ---
 
