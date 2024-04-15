@@ -3,6 +3,7 @@ import type { User } from "@auth/core/types"
 import { Image } from "astro:assets"
 import { Votes, db, eq } from "astro:db"
 
+import Action from "@/components/Action.astro"
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
@@ -46,27 +47,37 @@ const votes = await db
 	.where(eq(Votes.userId, userId))
 
 const userVotes: Record<string, string> = {}
-votes.forEach((vote) => {
+votes.forEach((vote: any) => {
 	userVotes[vote.combatId] = vote.voteId
 })
 ---
 
 <section class="w-full">
-	<Typography class="mb-8 text-center" color="white" as="h1" variant={"atomic-title"}
-		>¡haz tu pronóstico!</Typography
-	>
-	<Typography class="mb-2 text-center" color="white" as="p" variant={"medium"}
-		>Vota tus ganadores para cada combate haciendo clic encima de cada uno</Typography
-	>
-
-	<div class="flex items-center justify-center gap-4">
-		<img class="size-12 rounded-full" src={user.image} alt={`Avatar del usuario ${user.name}`} />
-		<div class="flex flex-col justify-center">
-			<h4 class="text-lg font-bold">{user.name}</h4>
-			<button id="logout" class="text-sm font-light text-yellow-300">Cerrar sesión</button>
+	<main class="flex flex-row justify-between">
+		<div>
+			<Typography class="mb-8 text-center" color="white" as="h1" variant={"atomic-title"}
+				>¡haz tu pronóstico!</Typography
+			>
+			<Typography class="mb-2 text-center" color="white" as="p" variant={"medium"}
+				>Vota tus ganadores para cada combate haciendo clic encima de cada uno</Typography
+			>
 		</div>
-	</div>
 
+		<div class="flex items-center justify-center gap-4">
+			<img class="size-12 rounded-full" src={user.image} alt={`Avatar del usuario ${user.name}`} />
+			<div class="flex flex-col justify-center">
+				<h4 class="text-lg font-bold">{user.name}</h4>
+				<Action
+					id="logout"
+					class="w-full text-sm md:text-base"
+					as="button"
+					aria-label="Iniciar sesión de usuario"
+				>
+					Cerrar sesión
+				</Action>
+			</div>
+		</div>
+	</main>
 	<ul class="flex flex-col items-center justify-center">
 		{
 			COMBATS.map((combat, index) => {
