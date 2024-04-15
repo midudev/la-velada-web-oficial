@@ -9,6 +9,7 @@ type SponsorId =
 	| "el-pozo"
 	| "maxibon"
 	| "infojobs"
+	| "coca-cola"
 type SponsorName =
 	| "Vicio"
 	| "Revolut"
@@ -20,6 +21,7 @@ type SponsorName =
 	| "ElPozo"
 	| "Maxibon"
 	| "InfoJobs"
+	| "Coca-Cola"
 
 export interface Sponsors {
 	id: SponsorId
