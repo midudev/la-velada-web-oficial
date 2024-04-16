@@ -611,7 +611,7 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Alana Flores",
 		gender: "femenino",
 		birthDate: new Date(2000, 11, 15),
-		height: 1.7,
+		height: 1.56,
 		country: "mx",
 		versus: ["nissaxter", "zeling"],
 		guard: "Izquierda", // encontrado
