@@ -10,8 +10,12 @@ const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
 }
 
-const getBoxerNames = (boxerIds: string[]) => {
-	return boxerIds.map((boxerId) => boxerId)
+const getBoxerNames = (boxerIds: string[]): string[] => {
+	return boxerIds.map((boxerId) => `Boxeador ${boxerId}`)
+}
+
+const createImgRoute = (combateNumber: number, slug: string) => {
+	return `https://cdn.lavelada.dev/boxers/vote/vote-${combateNumber}-${slug}.webp`
 }
 
 export const getStaticPaths = () => {
@@ -29,6 +33,13 @@ if (!combatData) {
 		status: 404,
 	}
 }
+
+const { teams, boxers } = combatData
+const [slug1, slug2] = teams ?? boxers
+const [image1, image2] = [
+	{ alt: slug1.replaceAll("-", " "), src: createImgRoute(combatData.number, slug1) },
+	{ alt: slug2.replaceAll("-", " "), src: createImgRoute(combatData.number, slug2) },
+]
 
 const formatter = new Intl.ListFormat("es", {
 	style: "short",
@@ -48,15 +59,33 @@ export const prerender = true
 >
 	<BackgroundVideo id={id} />
 	<main class="pointer-events-none md:-mt-12">
-		<div class="relative flex h-[60vh] w-full items-center justify-center md:h-[76vh]">
+		<div
+			class="full-width relative flex h-[60vh] w-screen items-center justify-center overflow-x-clip md:h-[76vh]"
+		>
+			<img
+				transition:name={`${combatData.id}-member-1`}
+				decoding="async"
+				src={image1.src}
+				alt={image1.alt}
+				style="mask-image: linear-gradient(black 90%, transparent 100%);"
+				class="relative left-36 h-[600px] w-auto md:h-[1000px] xl:left-24 xl:h-[1500px]"
+			/>
 			<Image
 				width={imageWidth}
 				height={imageHeight}
 				transition:name={`title-image-${id}`}
 				loading={"eager"}
-				class="inset-0 h-auto max-h-96 w-full max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
+				class="inset-0 h-auto max-h-96 max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
 				src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
 				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+			/>
+			<img
+				transition:name={`${combatData.id}-member-2`}
+				decoding="async"
+				src={image2.src}
+				alt={image2.alt}
+				style="mask-image: linear-gradient(black 90%, transparent 100%);"
+				class="relative right-36 h-[600px] w-auto md:h-[1000px] xl:right-24 xl:h-[1500px]"
 			/>
 		</div>
 		<div class="pointer-events-auto">
@@ -64,3 +93,14 @@ export const prerender = true
 		</div>
 	</main>
 </Layout>
+
+<style>
+	.full-width {
+		width: 100vw;
+		position: relative;
+		left: 50%;
+		right: 50%;
+		margin-left: -50vw;
+		margin-right: -50vw;
+	}
+</style>
