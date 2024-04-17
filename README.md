@@ -122,10 +122,20 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
    ```
 
 3. Ejecuta el proyecto
-
+	 - Base de datos remota (necesario linkear con proyecto de Astro Studio)
    ```sh
    pnpm run dev
    ```
+   - Base de datos local
+   ```sh
+   pnpm run start
+   ```
+
+4. Autenticación mediante twitch (opcional)
+   - Accede a la [consola de twitch](https://dev.twitch.tv/), crea un proyecto y obtén tu client id y client secret
+   - Genera un hash aleatorio, puedes usar el siguiente comando ```openssl rand -hex 32```
+   - Crea un archivo llamado ```.env.local``` y copia el contenido de [.env.demo](.env.demo) en él
+   - Reemplaza el texto copiado de demo en ```.env.local``` con tu id, secreto y hash
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
