@@ -1,14 +1,14 @@
 import { type Boxer } from "@/types/Boxer"
 
-const addGetters = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
-	return boxersWithoutAge.map((boxerWithoutAge) => ({
-		...boxerWithoutAge,
+const addGetters = (boxers: Boxer[]): Boxer[] => {
+	return boxers.map((b) => ({
+		...b,
 		get age() {
 			return new Date(new Date().getTime() - this.birthDate.getTime()).getFullYear() - 1970
 		},
 		// El enemigo de mi enemigo es mi amigo
 		get allies() {
-			return boxersWithoutAge
+			return boxers
 				.filter(
 					(ally) =>
 						(Array.isArray(ally.versus)
@@ -28,6 +28,7 @@ export const BOXERS: Boxer[] = addGetters([
 		gender: "masculino",
 		birthDate: new Date(1998, 6, 23),
 		height: 1.95,
+		age: 25,
 		country: "mx",
 		versus: "plex",
 		guard: "Izquierda",
@@ -62,6 +63,8 @@ export const BOXERS: Boxer[] = addGetters([
 		gender: "masculino",
 		birthDate: new Date(1990, 5, 8),
 		height: 1.88,
+		age: 33,
+		weight: 95,
 		country: "cl",
 		versus: "viruzz",
 		guard: "Izquierda", // encontrado
@@ -99,7 +102,9 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Alicia González",
 		gender: "femenino",
 		birthDate: new Date(1995, 10, 3),
-		height: 1.7, // No es seguro
+		height: 1.71,
+		weight: 65,
+		age: 28,
 		country: "es",
 		gallery: true,
 		versus: ["alana", "ama-blitz"],
@@ -135,6 +140,8 @@ export const BOXERS: Boxer[] = addGetters([
 		gender: "femenino",
 		birthDate: new Date(1994, 3, 4),
 		height: 1.64,
+		weight: 46,
+		age: 30,
 		country: "es",
 		gallery: true,
 		versus: ["alana", "ama-blitz"],
@@ -169,6 +176,8 @@ export const BOXERS: Boxer[] = addGetters([
 		gender: "masculino",
 		birthDate: new Date(2000, 9, 9),
 		height: 1.65,
+		weight: 60,
+		age: 23,
 		country: "ar",
 		versus: "agustin-51",
 		guard: "Izquierda", // encontrado
@@ -202,7 +211,9 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Lautaro Damián del Campo",
 		gender: "masculino",
 		birthDate: new Date(1997, 8, 8),
-		height: 1.83,
+		height: 1.82,
+		weight: 108,
+		age: 26,
 		country: "ar",
 		versus: "guanyar",
 		guard: "Izquierda", // encontrado
@@ -233,6 +244,8 @@ export const BOXERS: Boxer[] = addGetters([
 		gender: "masculino",
 		birthDate: new Date(2000, 7, 4),
 		height: 1.84,
+		weight: 88,
+		age: 23,
 		country: "es",
 		socials: {
 			twitch: "https://twitch.tv/karchez",
@@ -259,7 +272,9 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Sergio Bolaños",
 		gender: "masculino",
 		birthDate: new Date(1998, 3, 13),
-		height: 1.91, // No es seguro
+		height: 1.9,
+		weight: 87,
+		age: 25,
 		guard: "Derecha",
 		country: "es",
 		workout: {
@@ -293,6 +308,8 @@ export const BOXERS: Boxer[] = addGetters([
 		gender: "masculino",
 		birthDate: new Date(1996, 9, 14),
 		height: 1.79,
+		weight: 80,
+		age: 27,
 		country: "mx",
 		socials: {
 			twitch: "https://twitch.tv/aldo_geo",
@@ -319,7 +336,9 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Ángelo Valdés",
 		gender: "masculino",
 		birthDate: new Date(2000, 5, 29),
-		height: 1.85, // No encontrado
+		height: 1.85,
+		weight: 95,
+		age: 23,
 		country: "do",
 		socials: {
 			instagram: "https://instagram.com/mrangelovaldes",
@@ -345,7 +364,9 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "César González",
 		gender: "masculino",
 		birthDate: new Date(1973, 7, 29),
-		height: 1.77,
+		height: 1.75,
+		weight: 96,
+		age: 50,
 		country: "es",
 		socials: {
 			twitch: "https://twitch.tv/sezarbluelive",
@@ -376,7 +397,9 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Germán Usinger",
 		gender: "masculino",
 		birthDate: new Date(1999, 5, 7),
-		height: 1.69, // No es seguro
+		height: 1.75,
+		weight: 81,
+		age: 25,
 		country: "ar",
 		socials: {
 			twitch: "https://twitch.tv/unicornio",
@@ -408,7 +431,9 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Angerson Esneider",
 		gender: "masculino",
 		birthDate: new Date(2001, 0, 7),
-		height: 1.91,
+		height: 1.88,
+		weight: 92,
+		age: 23,
 		country: "co",
 		socials: {
 			twitch: "https://twitch.tv/pelicanger",
@@ -435,7 +460,9 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Roberto Sebastián Guadarrama Jiménez",
 		gender: "masculino",
 		birthDate: new Date(1998, 6, 29),
-		height: 1.69, // No es seguro
+		height: 1.65,
+		weight: 63,
+		age: 25,
 		country: "mx",
 		socials: {
 			twitch: "https://twitch.tv/robertocein",
@@ -462,7 +489,9 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "David Carbó Ferrer",
 		gender: "masculino",
 		birthDate: new Date(1997, 2, 10),
-		height: 1.83, // No encontrado
+		height: 1.83,
+		weight: 72,
+		age: 27,
 		country: "es",
 		socials: {
 			twitch: "https://twitch.tv/skain",
@@ -495,6 +524,8 @@ export const BOXERS: Boxer[] = addGetters([
 		gender: "masculino",
 		birthDate: new Date(1994, 11, 9),
 		height: 1.8,
+		weight: 74,
+		age: 29,
 		country: "es",
 		socials: {
 			twitch: "https://twitch.tv/folagorlives",
@@ -542,6 +573,8 @@ export const BOXERS: Boxer[] = addGetters([
 		gender: "masculino",
 		birthDate: new Date(2001, 8, 20),
 		height: 1.97,
+		weight: 77,
+		age: 22,
 		country: "es",
 		versus: "el-mariana",
 		guard: "Izquierda", // encontrado
@@ -579,6 +612,8 @@ export const BOXERS: Boxer[] = addGetters([
 		gender: "masculino",
 		birthDate: new Date(1992, 4, 1),
 		height: 1.82,
+		weight: 86,
+		age: 31,
 		country: "es",
 		versus: "shelao",
 		guard: "Izquierda", // encontrado
@@ -612,6 +647,8 @@ export const BOXERS: Boxer[] = addGetters([
 		gender: "femenino",
 		birthDate: new Date(2000, 11, 15),
 		height: 1.56,
+		weight: 50,
+		age: 23,
 		country: "mx",
 		versus: ["nissaxter", "zeling"],
 		guard: "Izquierda", // encontrado
@@ -652,6 +689,8 @@ export const BOXERS: Boxer[] = addGetters([
 		gender: "femenino",
 		birthDate: new Date(1995, 2, 1),
 		height: 1.58,
+		weight: 60.6,
+		age: 30,
 		country: "mx",
 		versus: ["zeling", "nissaxter"],
 		guard: "Izquierda", // encontrado
@@ -682,7 +721,9 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "José Agustín Peréz Nuñéz",
 		gender: "masculino",
 		birthDate: new Date(2000, 10, 18),
-		height: 1.7,
+		height: 1.69,
+		weight: 61.7,
+		age: 23,
 		country: "es",
 		versus: "carreraaa",
 		guard: "Izquierda", // encontrado
@@ -715,7 +756,9 @@ export const BOXERS: Boxer[] = addGetters([
 		realName: "Diego Iglesias",
 		gender: "masculino",
 		birthDate: new Date(1998, 8, 28),
-		height: 1.88,
+		height: 1.9,
+		weight: 125,
+		age: 26,
 		country: "es",
 		versus: "la-cobra",
 		guard: "Izquierda", // encontrado
