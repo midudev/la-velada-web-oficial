@@ -20,9 +20,15 @@ const {
 	image = "https://cdn.lavelada.dev/og.jpg",
 } = Astro.props as Props
 
-const canonicalURL = canonical
-	? new URL(canonical, Astro.site)
-	: new URL(Astro.url.pathname, Astro.site)
+let canonicalURL
+
+if (Astro.url.host.includes("localhost")) {
+	canonicalURL = new URL("http://localhost:4321", Astro.site)
+} else {
+	canonicalURL = canonical
+		? new URL(canonical, Astro.site)
+		: new URL(Astro.url.pathname, Astro.site)
+}
 ---
 
 <title>{title}</title>
