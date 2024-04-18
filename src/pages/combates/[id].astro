@@ -2,7 +2,7 @@
 import { Image } from "astro:assets"
 
 import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
-import { COMBATS } from "@/consts/combats"
+import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 import CombatFeatures from "@/sections/CombatFeatures.astro"
 
@@ -48,6 +48,7 @@ const formatter = new Intl.ListFormat("es", {
 
 const formattedBoxerNames = formatter.format(boxerNames)
 const [imageWidth, imageHeight] = combatData.titleSize
+const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
 
 export const prerender = true
 ---
@@ -62,14 +63,18 @@ export const prerender = true
 		<div
 			class="full-width relative flex h-[60vh] w-screen items-center justify-center overflow-x-clip md:h-[76vh]"
 		>
-			<img
-				transition:name={`${combatData.id}-member-1`}
-				decoding="async"
-				src={image1.src}
-				alt={image1.alt}
-				style="mask-image: linear-gradient(black 90%, transparent 100%);"
-				class="relative left-28 h-full w-auto md:h-screen lg:left-24 xl:left-0"
-			/>
+			{
+				!isKingOfTheHill && (
+					<img
+						transition:name={`${combatData.id}-member-1`}
+						decoding="async"
+						src={image1.src}
+						alt={image1.alt}
+						style="mask-image: linear-gradient(black 90%, transparent 100%);"
+						class="relative left-28 h-full w-auto md:h-screen lg:left-24 xl:left-0"
+					/>
+				)
+			}
 			<Image
 				width={imageWidth}
 				height={imageHeight}
@@ -79,14 +84,18 @@ export const prerender = true
 				src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
 				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 			/>
-			<img
-				transition:name={`${combatData.id}-member-2`}
-				decoding="async"
-				src={image2.src}
-				alt={image2.alt}
-				style="mask-image: linear-gradient(black 90%, transparent 100%);"
-				class="relative right-28 h-full w-auto md:h-screen lg:right-24 xl:right-0"
-			/>
+			{
+				!isKingOfTheHill && (
+					<img
+						transition:name={`${combatData.id}-member-2`}
+						decoding="async"
+						src={image2.src}
+						alt={image2.alt}
+						style="mask-image: linear-gradient(black 90%, transparent 100%);"
+						class="relative right-28 h-full w-auto md:h-screen lg:right-24 xl:right-0"
+					/>
+				)
+			}
 		</div>
 		<div class="pointer-events-auto">
 			{combatData.boxers.length <= 4 && <CombatFeatures boxerIds={combatData.boxers} />}
