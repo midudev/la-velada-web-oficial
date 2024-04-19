@@ -2,7 +2,7 @@
 import { Image } from "astro:assets"
 
 import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
-import { COMBATS } from "@/consts/combats"
+import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 import CombatFeatures from "@/sections/CombatFeatures.astro"
 
@@ -33,7 +33,7 @@ if (!combatData) {
 		status: 404,
 	}
 }
-
+const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
 const { teams, boxers } = combatData
 const [slug1, slug2] = teams ?? boxers
 const [image1, image2] = [
@@ -60,39 +60,68 @@ export const prerender = true
 	<BackgroundVideo id={id} />
 	<main class="pointer-events-none md:-mt-12">
 		<div
-			class="full-width relative flex h-[60vh] w-screen items-center justify-center overflow-x-clip md:h-[76vh]"
+			class:list={[
+				"full-width relative flex h-[60vh] w-screen items-center justify-center overflow-x-clip md:h-[76vh]",
+				{ "flex-col": isKingOfTheHill },
+			]}
 		>
-			<img
-				transition:name={`${combatData.id}-member-1`}
-				decoding="async"
-				src={image1.src}
-				alt={image1.alt}
-				style="mask-image: linear-gradient(black 90%, transparent 100%);"
-				class="relative left-36 h-[600px] w-auto md:h-[1000px] xl:left-24 xl:h-[1500px]"
-			/>
-			<Image
-				width={imageWidth}
-				height={imageHeight}
-				transition:name={`title-image-${id}`}
-				loading={"eager"}
-				class="inset-0 h-auto max-h-96 max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
-				src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
-				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
-			/>
-			<img
-				transition:name={`${combatData.id}-member-2`}
-				decoding="async"
-				src={image2.src}
-				alt={image2.alt}
-				style="mask-image: linear-gradient(black 90%, transparent 100%);"
-				class="relative right-36 h-[600px] w-auto md:h-[1000px] xl:right-24 xl:h-[1500px]"
-			/>
-		</div>
-		<div class="pointer-events-auto">
-			{combatData.boxers.length <= 4 && <CombatFeatures boxerIds={combatData.boxers} />}
+			{
+				!isKingOfTheHill ? (
+					<>
+						<img
+							transition:name={`${combatData.id}-member-1`}
+							decoding="async"
+							src={image1.src}
+							alt={image1.alt}
+							style="mask-image: linear-gradient(black 90%, transparent 100%);"
+							class="relative left-36 h-[600px] w-auto md:h-[1000px] xl:left-24 xl:h-[1500px]"
+						/>
+						<Image
+							width={imageWidth}
+							height={imageHeight}
+							transition:name={`title-image-${combatData.id}`}
+							loading={"eager"}
+							class="inset-0 h-auto max-h-96 max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
+							src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
+							alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+						/>
+						<img
+							transition:name={`${combatData.id}-member-2`}
+							decoding="async"
+							src={image2.src}
+							alt={image2.alt}
+							style="mask-image: linear-gradient(black 90%, transparent 100%);"
+							class="relative right-36 h-[600px] w-auto md:h-[1000px] xl:right-24 xl:h-[1500px]"
+						/>
+					</>
+				) : (
+					<>
+						<img
+							transition:name={`${combatData.id}-members`}
+							decoding="async"
+							src={`https://cdn.lavelada.dev/matches/combat-${combatData.id}.webp`}
+							alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+							style="mask-image: linear-gradient(black 90%, transparent 100%);"
+							class="relative h-[600px] w-auto md:h-[1000px] lg:top-16 xl:h-[1500px]"
+						/>
+						<Image
+							width={imageWidth}
+							height={imageHeight}
+							transition:name={`title-image-${combatData.id}`}
+							loading={"eager"}
+							class="relative -top-10 h-auto max-h-96 max-w-80 scale-100 object-contain sm:scale-110 md:-top-20 lg:max-w-3xl"
+							src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
+							alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+						/>
+					</>
+				)
+			}
 		</div>
 	</main>
 </Layout>
+<div class="pointer-events-auto">
+	{combatData.boxers.length <= 4 && <CombatFeatures boxerIds={combatData.boxers} />}
+</div>
 
 <style>
 	.full-width {
