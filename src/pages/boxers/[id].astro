@@ -6,6 +6,7 @@ import BoxerDetailInfoRival from "@/components/BoxerDetailInfoRival.astro"
 import BoxerSocials from "@/components/BoxerSocials.astro"
 import BoxerWorkout from "@/components/BoxerWorkout.astro"
 import BoxerGallery from "@/components/Boxers/Gallery.astro"
+import Typography from "@/components/Typography.astro"
 
 import { BOXERS } from "@/consts/boxers"
 import { COMBATS } from "@/consts/combats"
@@ -127,7 +128,12 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 			</div>
 		</section>
 		<section class="mt-20 md:mt-64">
-			<BoxerSocials socials={boxer.socials} />
+			<Typography as="h3" variant="h3" color="white" class:list={"mb-12 text-center"}>
+				REDES SOCIALES
+			</Typography>
+			<div class="mx-auto flex max-w-[600px] flex-wrap justify-center gap-2 lg:max-w-full">
+				<BoxerSocials socials={boxer.socials} />
+			</div>
 		</section>
 
 		{boxer.workout && <BoxerWorkout workout={boxer.workout} />}
