@@ -15,13 +15,13 @@ const hasClips = clips.length > 0
 
 {
 	hasClips && (
-		<section class="z-20 mt-2 md:mt-0">
+		<section class="z-20 mx-auto mt-2 max-w-96 overflow-x-hidden py-5 md:mt-0">
 			<ClipsModal />
-			<div class="carousel mx-auto flex max-w-96 select-none flex-row flex-nowrap px-4 transition duration-700 md:max-w-none md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
+			<div class="carousel flex select-none flex-row flex-nowrap items-center transition duration-700 md:max-w-none md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
 				{clips.map(({ text, url }, index) => (
 					<button
 						data-url={url}
-						class:list={`clip-container group flex min-w-full max-w-[450px] flex-col justify-between  hover:saturate-150 md:min-w-0 ${index === 0 ? "block" : "hidden"} cursor-pointer md:block`}
+						class:list={`clip-container group flex min-w-full flex-col justify-between hover:saturate-150 md:min-w-0 ${"block"} cursor-pointer md:block`}
 						data-clip-item
 					>
 						<Typography
@@ -69,28 +69,18 @@ const hasClips = clips.length > 0
 	)
 }
 <script>
+	import { $ } from "@/lib/dom-selector"
+
 	document.addEventListener("astro:page-load", () => {
-		const $carousel = document.querySelector(".carousel")
-		const $prev = document.querySelector("[data-btn-prev]")
-		const $next = document.querySelector("[data-btn-next]")
-		const $clipIndex = document.querySelector("[data-clip-index]")
-		const $clipItems = document.querySelectorAll("[data-clip-item]")
+		const $carousel = $(".carousel")
+		const $prev = $("[data-btn-prev]")
+		const $next = $("[data-btn-next]")
+		const $clipIndex = $("[data-clip-index]")
 
 		let position = 0
 
 		const updatePosition = () => {
-			if (window.innerWidth < 768) {
-				$clipItems.forEach(($item, index) => {
-					$item.classList.toggle("hidden", index !== position)
-					$item.classList.toggle("block", index === position)
-				})
-			} else {
-				$clipItems.forEach(($item) => {
-					$item.classList.remove("hidden")
-					$item.classList.add("block")
-				})
-			}
-
+			$carousel?.setAttribute("style", `transform: translateX(-${100 * position}%)`)
 			if ($clipIndex) $clipIndex.innerHTML = `Cita ${position + 1}/${$carousel?.children.length}`
 		}
 
