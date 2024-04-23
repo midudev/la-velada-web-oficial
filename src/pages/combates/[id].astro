@@ -61,20 +61,16 @@ export const prerender = true
 	<BackgroundVideo id={id} />
 	<main class="pointer-events-none md:-mt-12">
 		<div
-			class="full-width relative flex h-[60vh] w-screen items-center justify-center overflow-x-clip md:h-[76vh]"
+			class="full-width relative z-[-10] flex h-[60vh] w-screen items-center justify-center overflow-x-clip md:h-[76vh]"
 		>
-			{
-				!isKingOfTheHill && (
-					<img
-						transition:name={`${combatData.id}-member-1`}
-						decoding="async"
-						src={image1.src}
-						alt={image1.alt}
-						style="mask-image: linear-gradient(black 90%, transparent 100%);"
-						class="relative left-28 h-full w-auto md:h-screen lg:left-24 xl:left-0"
-					/>
-				)
-			}
+			<img
+				transition:name={`${combatData.id}-member-1`}
+				decoding="async"
+				src={image1.src}
+				alt={image1.alt}
+				style="mask-image: linear-gradient(black 90%, transparent 100%);"
+				class="relative left-36 h-[600px] w-auto md:h-[1000px] xl:-left-10 xl:h-[1200px]"
+			/>
 			<Image
 				width={imageWidth}
 				height={imageHeight}
@@ -84,18 +80,14 @@ export const prerender = true
 				src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
 				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 			/>
-			{
-				!isKingOfTheHill && (
-					<img
-						transition:name={`${combatData.id}-member-2`}
-						decoding="async"
-						src={image2.src}
-						alt={image2.alt}
-						style="mask-image: linear-gradient(black 90%, transparent 100%);"
-						class="relative right-28 h-full w-auto md:h-screen lg:right-24 xl:right-0"
-					/>
-				)
-			}
+			<img
+				transition:name={`${combatData.id}-member-2`}
+				decoding="async"
+				src={image2.src}
+				alt={image2.alt}
+				style="mask-image: linear-gradient(black 90%, transparent 100%);"
+				class="relative right-36 h-[600px] w-auto md:h-[1000px] xl:-right-10 xl:h-[1200px]"
+			/>
 		</div>
 		<div class="pointer-events-auto">
 			{combatData.boxers.length <= 4 && <CombatFeatures boxerIds={combatData.boxers} />}
