@@ -20,9 +20,12 @@ const {
 	image = "https://cdn.lavelada.dev/og.jpg",
 } = Astro.props as Props
 
-const canonicalURL = canonical
-	? new URL(canonical, Astro.site)
-	: new URL(Astro.url.pathname, Astro.site)
+const determineCanonicalURL = () => {
+	if (Astro.url.host.includes("localhost")) return "http://localhost:4321"
+	return canonical || Astro.url.pathname
+}
+
+const canonicalURL = new URL(determineCanonicalURL(), Astro.site)
 ---
 
 <title>{title}</title>
@@ -76,6 +79,6 @@ const canonicalURL = canonical
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="msapplication-config" content="/browserconfig.xml" />
 
-<script is:inline src="/registerSW.js"></script>
+<!--<script is:inline src="/registerSW.js"></script>-->
 <link rel="manifest" href="/manifest.webmanifest" />
 <RichResults />
