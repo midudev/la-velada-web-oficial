@@ -41,13 +41,13 @@ interface Props {
 const { user } = Astro.props as Props
 
 const userId = user.id
-const votes = await db
+const votes: { combatId: string; voteId: string }[] = await db
 	.select({ combatId: Votes.combatId, voteId: Votes.voteId })
 	.from(Votes)
 	.where(eq(Votes.userId, userId))
 
 const userVotes: Record<string, string> = {}
-votes.forEach((vote: any) => {
+votes.forEach((vote) => {
 	userVotes[vote.combatId] = vote.voteId
 })
 ---
