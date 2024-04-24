@@ -56,7 +56,7 @@ export const butterup: ButterupProps = {
 			message = "",
 			type = ToastType.Success,
 			location = ToastLocation.TopRight,
-			icon,
+			icon = false,
 			theme = "",
 			dismissible = false,
 		} = toastOptions
