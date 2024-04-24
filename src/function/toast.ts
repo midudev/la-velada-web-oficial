@@ -62,12 +62,14 @@ export const butterup: ButterupProps = {
 		} = toastOptions
 
 		const getToaster = () => {
-			let toaster = document.getElementById("toaster")
+			let toaster = document.getElementById("toaster") as HTMLElement
 			if (toaster) {
-				toaster.classList.forEach((item) => {
+				toaster.classList.forEach((classItem) => {
 					// remove any location classes from the toaster
-					if (Object.values(ToastLocation).some((toastLocation) => item.includes(toastLocation))) {
-						toaster?.classList.remove(item)
+					if (
+						Object.values(ToastLocation).some((toastLocation) => classItem.includes(toastLocation))
+					) {
+						toaster.classList.remove(classItem)
 					}
 				})
 				toaster.className = `toaster ${location}`
