@@ -114,7 +114,7 @@ export const butterup: ButterupProps = {
 
 		if (
 			[ToastLocation.BottomRight, ToastLocation.BottomCenter, ToastLocation.BottomLeft].some(
-				(toastLocationTop) => toaster.className.includes(toastLocationTop)
+				(toastLocationBottom) => toaster.className.includes(toastLocationBottom)
 			)
 		) {
 			toast.className += " toastUp"
