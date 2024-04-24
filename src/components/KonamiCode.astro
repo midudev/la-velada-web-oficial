@@ -1,4 +1,9 @@
 <style is:global>
+	:root {
+		--x: 0;
+		--y: 0;
+	}
+
 	.bubbles {
 		border-radius: 50%;
 		object-fit: cover;
@@ -31,6 +36,38 @@
 			transform: rotate(0deg);
 		}
 	}
+
+	i.bubble-soap {
+		position: absolute;
+		width: 20px;
+		height: 20px;
+		background: transparent;
+		z-index: 50;
+		border-radius: 50%;
+		pointer-events: none;
+		box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.5);
+		animation: soap 2s ease-in forwards;
+	}
+
+	i.bubble-soap::before {
+		content: "";
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+		background: radial-gradient(#fff, transparent);
+		transform: scale(0.25) translate(-70%, -70%);
+	}
+
+	@keyframes soap {
+		from {
+			transform: translate(0, 0);
+		}
+
+		to {
+			transform: translate(var(--x), var(--y));
+		}
+	}
 </style>
 
 <script>
@@ -38,8 +75,10 @@
 	import { Konami } from "@/function/konami"
 	import { checkAndRemoveContainer, getContributors, showContributors } from "@/function/miduCode"
 	import { $ } from "@/lib/dom-selector"
+	import { generateBubbles } from "../function/soapCode"
 
-	const { rotateY, gloveCursor, amongUsCursor, lolCursor, midu, devContributors } = konamiCodes
+	const { rotateY, gloveCursor, amongUsCursor, lolCursor, midu, devContributors, soap } =
+		konamiCodes
 	let konamiCodeInprogress = false
 	const $container = $("#main-content")!
 	const $miduContainer = document.createElement("div")
@@ -93,6 +132,15 @@
 			keyPressed: key,
 			onSuccess: () => {
 				$("body")!.style.cursor = "url('/img/cursor/among-us.cur'), auto"
+			},
+		})
+
+		Konami({
+			code: soap,
+			keyPressed: key,
+			onSuccess: () => {
+				$("body")!.style.cursor = "url('/img/cursor/soap.cur'), auto"
+				generateBubbles()
 			},
 		})
 

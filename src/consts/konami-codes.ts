@@ -16,4 +16,5 @@ export const konamiCodes = {
 	lolCursor: ["l", "o", "l"],
 	midu: ["m", "i", "d", "u"],
 	devContributors: ["d", "e", "v"],
+	soap: ["s", "o", "a", "p"],
 }
