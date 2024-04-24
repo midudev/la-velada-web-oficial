@@ -205,6 +205,7 @@ votes.forEach((vote) => {
 </script>
 
 <script>
+	import { ToastLocation, ToastType } from "@/function/toast"
 	import { $$ } from "@/lib/dom-selector"
 
 	document.addEventListener("astro:page-load", () => {
@@ -241,9 +242,9 @@ votes.forEach((vote) => {
 
 					window.toast({
 						title: "Error al guardar el voto",
-						location: "bottom-center",
+						location: ToastLocation.BottomCenter,
 						dismissible: false,
-						type: "error",
+						type: ToastType.Error,
 						icon: true,
 					})
 				}
@@ -259,9 +260,9 @@ votes.forEach((vote) => {
 						if (!res.ok) return rollbackUI()
 						window.toast({
 							title: "¡Voto registrado!",
-							location: "bottom-center",
+							location: ToastLocation.BottomCenter,
 							dismissible: false,
-							type: "success",
+							type: ToastType.Success,
 							icon: true,
 						})
 

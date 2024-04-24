@@ -1,3 +1,7 @@
-interface Window {
-	toast: (options: ToastOptions) => void
+declare global {
+	interface Window {
+		toast: (options: ToastOptions) => void
+	}
 }
+
+export {}
