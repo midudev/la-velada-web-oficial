@@ -67,11 +67,9 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 
 	document.addEventListener("astro:page-load", () => {
 		const $forecast = $("#forecast") as HTMLElement
-		console.log($forecast)
 		if ($forecast == null) return
 
 		const combatId = $forecast.getAttribute("data-combat-id")
-		console.log(combatId)
 		fetch(`/api/forecasts/get-forecast-by-combat-id.json?id=${combatId}`)
 			.then((res) => res.json())
 			.then((json: { data: { totalVotes: number; percentageVotes: Record<string, number> } }) => {
