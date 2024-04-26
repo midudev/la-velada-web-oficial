@@ -41,16 +41,15 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 			<Action
 				class="w-full text-base"
 				as="a"
-				aria-disabled="true"
-				href="#"
+				href="https://www.entradas.com/artist/la-velada-del-ano/?affiliate=LVL"
 				target="_blank"
 				rel="noopener noreferrer"
-				aria-label="disponibles al a venta el 11 de abril, ahora mismo no están disponibles"
+				aria-label="disponibles al a venta el 11 de abril a las 21:30 (CET), ahora mismo no están disponibles"
 			>
 				Comprar entradas
 			</Action>
 			<Typography as="span" variant="medium" color="primary" class:list={"text-center"}>
-				A la venta el 11 de Abril
+				¡Agotadas!
 			</Typography>
 		</div>
 		<div>
@@ -163,7 +162,7 @@ import MapMarkerIcon from "@/icons/map-marker.astro"
 		})
 	}
 
-	document.addEventListener("DOMContentLoaded", main)
+	document.addEventListener("astro:page-load", main)
 
 	// Verifica si el evento ya ha pasado
 	const eventHasPassed = EVENT_TIMESTAMP < Date.now()
