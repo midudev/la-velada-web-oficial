@@ -18,7 +18,7 @@ const hasClips = clips.length > 0
 		<section class="z-20 mx-auto mt-2 max-w-96 overflow-x-hidden py-5 md:mt-0">
 			<ClipsModal />
 			<div class="carousel flex select-none flex-row flex-nowrap items-center transition duration-700 md:max-w-none md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
-				{clips.map(({ text, url }, index) => (
+				{clips.map(({ text, url }) => (
 					<button
 						data-url={url}
 						class:list={`clip-container group flex min-w-full flex-col justify-between hover:saturate-150 md:min-w-0 ${"block"} cursor-pointer md:block`}
@@ -68,6 +68,7 @@ const hasClips = clips.length > 0
 		</section>
 	)
 }
+
 <script>
 	import { $ } from "@/lib/dom-selector"
 
