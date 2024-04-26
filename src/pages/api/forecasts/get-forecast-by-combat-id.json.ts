@@ -19,8 +19,7 @@ export const GET: APIRoute = async ({ url }) => {
 		return new Response(JSON.stringify({ error: "Combat Not found" }), { status: 404 })
 	}
 
-	// 3. comprobar en la cache, que tenemos el pronóstico
-	// guardado.
+	// 3. comprobar en la cache, que tenemos el pronóstico guardado.
 	const cache = await db
 		.select({ data: Cache.data, timestamp: Cache.timestamp })
 		.from(Cache)
@@ -55,16 +54,16 @@ export const GET: APIRoute = async ({ url }) => {
 		.insert(Cache)
 		.values({
 			id: combatId,
-			data: percentageVotes,
+			data: { percentageVotes, totalVotes },
 			timestamp: new Date(),
 		})
 		.onConflictDoUpdate({
 			target: Cache.id,
 			set: {
-				data: percentageVotes,
+				data: { percentageVotes, totalVotes },
 				timestamp: new Date(),
 			},
 		})
 
-	return new Response(JSON.stringify({ percentageVotes }))
+	return new Response(JSON.stringify({ data: { percentageVotes, totalVotes } }))
 }
