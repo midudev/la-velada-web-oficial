@@ -368,10 +368,10 @@ export const BOXERS: Boxer[] = addGetters([
 		name: "Sezar Blue",
 		realName: "César González",
 		gender: "masculino",
-		birthDate: new Date(1973, 7, 29),
+		birthDate: new Date(1977, 8, 29),
 		height: 1.75,
 		weight: 96,
-		age: 50,
+		age: 46,
 		country: "es",
 		socials: {
 			twitch: "https://twitch.tv/sezarbluelive",
