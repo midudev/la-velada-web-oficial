@@ -3,9 +3,9 @@
 ---
 
 <dialog
-	class="clip-dialog items-center justify-center bg-transparent px-4 text-2xl text-white backdrop:bg-black/70 sm:px-0"
+	class="clip-dialog items-center justify-center bg-transparent px-4 text-2xl text-white sm:px-0"
 >
-	<div class="relative block w-[560px] overflow-hidden bg-transparent sm:w-[740px]">
+	<div class="relative block w-[80vw] max-w-[1000px] bg-transparent">
 		<iframe
 			class="yt-iframe block aspect-video h-full w-full overflow-hidden rounded bg-transparent"
 			src=""
@@ -36,13 +36,35 @@
 	</div>
 </dialog>
 
+<style>
+	.clip-dialog[open]::backdrop {
+		background-color: rgba(0, 0, 0, 0.7);
+
+		animation-name: join-anim;
+		animation-duration: 200ms;
+		animation-fill-mode: forwards;
+		animation-timing-function: ease-in-out;
+	}
+
+	@keyframes join-anim {
+		from {
+			background-color: rgba(0, 0, 0, 0);
+		}
+		to {
+			background-color: rgba(0, 0, 0, 0.7);
+		}
+	}
+</style>
+
 <script>
+	import { $, $$ } from "@/lib/dom-selector"
+
 	document.addEventListener("astro:page-load", () => {
-		const $clipContainer = document.querySelectorAll(".clip-container")
-		const $clipDialog = document.querySelector(".clip-dialog") as HTMLDialogElement
-		const $closeButton = document.querySelector(".close-dialog")
-		let $ytFrame = document.querySelector(".yt-iframe") as HTMLIFrameElement
-		const ytFrameCopy = $ytFrame
+		const $clipContainer = $$(".clip-container")
+		const $clipDialog = $(".clip-dialog") as HTMLDialogElement
+		const $closeButton = $(".close-dialog")
+		const $ytFrame = $(".yt-iframe")
+	  const ytFrameCopy = $ytFrame
 
 		if (!$clipDialog) return
 

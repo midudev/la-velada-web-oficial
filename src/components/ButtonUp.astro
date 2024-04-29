@@ -19,9 +19,11 @@
 </div>
 
 <script>
+	import { $ } from "@/lib/dom-selector"
+
 	document.addEventListener("astro:page-load", () => {
 		let timeout: number = 0 // Identificador para clearTimeout
-		const $button = document.getElementById("scroll-to-top") as HTMLButtonElement
+		const $button = $("#scroll-to-top") as HTMLButtonElement
 
 		const DISPLAY = { BLOCK: "block", NONE: "none" } as const
 

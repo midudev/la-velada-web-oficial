@@ -1,0 +1,97 @@
+name: Reportar problema
+description: Reporta un problema
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "# Pre-requisitos"
+  - type: checkboxes
+    id: pre-requisitos
+    attributes:
+      label: Señala los requisitos cumplidos
+      description: |
+        Asegúrate de cumplir estos requisitos antes de reportar un problema
+      options:
+        - label: Estoy corriendo la última versión.
+          required: true
+        - label: |
+            He revisado si ya hay un issue creado con características similares.
+          required: true
+  - type: markdown
+    attributes:
+      value: "# Comportamiento"
+  - type: textarea
+    id: comportamiento-esperado
+    attributes:
+      label: Comportamiento esperado
+      description: Describe el comportamiento esperado de la issue
+      placeholder: Esta feature debería hacer ...
+  - type: textarea
+    id: comportamiento-actual
+    attributes:
+      label: Comportamiento actual
+      description: Describe el comportamiento actual de la issue
+      placeholder: Esta feature hace ...
+  - type: markdown
+    attributes:
+      value: "# Información"
+  - type: textarea
+    id: informacion-bug
+    attributes:
+      label: Información del bug
+      description: Aporta información sobre el bug
+      placeholder: Este bug ocurre cuando ...
+  - type: textarea
+    id: pasos-reproducir
+    attributes:
+      label: Pasos para reproducirlo
+      description: Pasos necesarios para reproducir el bug
+      placeholder: |
+        1. Paso1
+        2. Paso2
+  - type: markdown
+    attributes:
+      value: "# Contexto"
+  - type: dropdown
+    id: navegadores
+    attributes:
+      label: ¿En qué navegadores encuentras el problema?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+        - Opera
+        - Todos los navegadores
+  - type: input
+    id: version-navegador
+    attributes:
+      label: Versión del navegador
+      description: Versión del navegador en el cuál encuentras el problema
+      placeholder: Chrome v124.0.6367.92 ...
+  - type: dropdown
+    id: sistema-operativo
+    attributes:
+      label: Sistema operativo
+      description: Sistema operativo en el cuál encuentras el problema
+      multiple: true
+      options:
+        - Windows
+        - MacOS
+        - Linux
+        - Android
+        - Todos los sistemas
+  - type: markdown
+    attributes:
+      value: "# Información adicional"
+  - type: textarea
+    attributes:
+      label: Añade información adicional si fuese necesario
+      description: Imágenes, link del código, fragmento de código ...
+      placeholder: |
+        ```typescript
+        const variable = "..."
+        ```
+        ...

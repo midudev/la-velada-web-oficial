@@ -1,14 +1,14 @@
 import { type Boxer } from "@/types/Boxer"
 
-const addGetters = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
-	return boxersWithoutAge.map((boxerWithoutAge) => ({
-		...boxerWithoutAge,
+const addGetters = (boxers: Boxer[]): Boxer[] => {
+	return boxers.map((b) => ({
+		...b,
 		get age() {
 			return new Date(new Date().getTime() - this.birthDate.getTime()).getFullYear() - 1970
 		},
 		// El enemigo de mi enemigo es mi amigo
 		get allies() {
-			return boxersWithoutAge
+			return boxers
 				.filter(
 					(ally) =>
 						(Array.isArray(ally.versus)
@@ -25,9 +25,10 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "el-mariana",
 		name: "El Mariana",
 		realName: "Osvaldo Palacios Flores",
+		gender: "masculino",
 		birthDate: new Date(1998, 6, 23),
-		weight: 87,
 		height: 1.95,
+		age: 25,
 		country: "mx",
 		versus: "plex",
 		guard: "Izquierda",
@@ -38,6 +39,11 @@ export const BOXERS: Boxer[] = addGetters([
 			twitter: "https://twitter.com/elmarianaa",
 			youtube: "https://youtube.com/elmariana",
 			tiktok: "https://tiktok.com/@elmarianaa",
+		},
+		workout: {
+			videoID: "A_EDoq70XqY",
+			thumbnail: "/boxers/workoutThumbnails/el-mariana.webp",
+			name: "ElMariana",
 		},
 		clips: [
 			{
@@ -54,9 +60,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "shelao",
 		name: "Shelao",
 		realName: "Cristóbal Andrés Álvarez Leiva",
+		gender: "masculino",
 		birthDate: new Date(1990, 5, 8),
-		weight: 93,
 		height: 1.88,
+		age: 33,
+		weight: 95,
 		country: "cl",
 		versus: "viruzz",
 		guard: "Izquierda", // encontrado
@@ -83,17 +91,20 @@ export const BOXERS: Boxer[] = addGetters([
 		],
 		rotate: true,
 		workout: {
-			videoID: "xJqhfK5oXK4",
+			videoID: "2CEk7rufxno",
 			thumbnail: "/boxers/workoutThumbnails/shelao.webp",
+			name: "Shelao",
 		},
 	},
 	{
 		id: "zeling",
 		name: "Zeling",
 		realName: "Alicia González",
+		gender: "femenino",
 		birthDate: new Date(1995, 10, 3),
-		weight: 65, // No encontrado
-		height: 1.7, // No es seguro
+		height: 1.71,
+		weight: 65,
+		age: 28,
 		country: "es",
 		gallery: true,
 		versus: ["alana", "ama-blitz"],
@@ -119,15 +130,18 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "bVlV1HejQag",
 			thumbnail: "/boxers/workoutThumbnails/zeling.webp",
+			name: "Zeling",
 		},
 	},
 	{
 		id: "nissaxter",
 		name: "Nissaxter",
 		realName: "Cristina Magadán",
+		gender: "femenino",
 		birthDate: new Date(1994, 3, 4),
-		weight: 55, // No es seguro
 		height: 1.64,
+		weight: 46,
+		age: 30,
 		country: "es",
 		gallery: true,
 		versus: ["alana", "ama-blitz"],
@@ -159,9 +173,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "carreraaa",
 		name: "Carreraaa",
 		realName: "Rodrigo Ezequiel Carrera",
+		gender: "masculino",
 		birthDate: new Date(2000, 9, 9),
-		weight: 61,
 		height: 1.65,
+		weight: 60,
+		age: 23,
 		country: "ar",
 		versus: "agustin-51",
 		guard: "Izquierda", // encontrado
@@ -193,9 +209,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "la-cobra",
 		name: "La Cobra",
 		realName: "Lautaro Damián del Campo",
+		gender: "masculino",
 		birthDate: new Date(1997, 8, 8),
-		weight: 105,
-		height: 1.83,
+		height: 1.82,
+		weight: 108,
+		age: 26,
 		country: "ar",
 		versus: "guanyar",
 		guard: "Izquierda", // encontrado
@@ -218,14 +236,21 @@ export const BOXERS: Boxer[] = addGetters([
 			},
 		],
 		rotate: true,
+		workout: {
+			videoID: "7yrsrPQv_TM",
+			thumbnail: "/boxers/workoutThumbnails/la-cobra.webp",
+			name: "La Cobra",
+		},
 	},
 	{
 		id: "karchez",
 		name: "Karchez",
 		realName: "José Carlos Sánchez",
+		gender: "masculino",
 		birthDate: new Date(2000, 7, 4),
-		weight: 85, // No encontrado
 		height: 1.84,
+		weight: 88,
+		age: 23,
 		country: "es",
 		socials: {
 			twitch: "https://twitch.tv/karchez",
@@ -250,14 +275,17 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "peldanyos",
 		name: "Peldanyos",
 		realName: "Sergio Bolaños",
+		gender: "masculino",
 		birthDate: new Date(1998, 3, 13),
-		weight: 87, // No encontrado
-		height: 1.91, // No es seguro
+		height: 1.9,
+		weight: 87,
+		age: 25,
 		guard: "Derecha",
 		country: "es",
 		workout: {
 			videoID: "I8R5sQXjpKk",
 			thumbnail: "/boxers/workoutThumbnails/peldanyos.webp",
+			name: "Peldanyos",
 		},
 		socials: {
 			twitch: "https://twitch.tv/peldanyos",
@@ -282,9 +310,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "aldo-geo",
 		name: "Aldo Geo",
 		realName: "Aldo Geovanni",
+		gender: "masculino",
 		birthDate: new Date(1996, 9, 14),
-		weight: 80, // No encontrado
 		height: 1.79,
+		weight: 80,
+		age: 27,
 		country: "mx",
 		socials: {
 			twitch: "https://twitch.tv/aldo_geo",
@@ -309,9 +339,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "will",
 		name: "Will",
 		realName: "Ángelo Valdés",
+		gender: "masculino",
 		birthDate: new Date(2000, 5, 29),
-		weight: 85, // No encontrado
-		height: 1.85, // No encontrado
+		height: 1.85,
+		weight: 95,
+		age: 23,
 		country: "do",
 		socials: {
 			instagram: "https://instagram.com/mrangelovaldes",
@@ -335,9 +367,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "sezar-blue",
 		name: "Sezar Blue",
 		realName: "César González",
+		gender: "masculino",
 		birthDate: new Date(1973, 7, 29),
-		weight: 87,
-		height: 1.77,
+		height: 1.75,
+		weight: 96,
+		age: 50,
 		country: "es",
 		socials: {
 			twitch: "https://twitch.tv/sezarbluelive",
@@ -366,9 +400,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "unicornio",
 		name: "Unicornio",
 		realName: "Germán Usinger",
+		gender: "masculino",
 		birthDate: new Date(1999, 5, 7),
-		weight: 75, // No encontrado
-		height: 1.69, // No es seguro
+		height: 1.75,
+		weight: 81,
+		age: 25,
 		country: "ar",
 		socials: {
 			twitch: "https://twitch.tv/unicornio",
@@ -376,6 +412,11 @@ export const BOXERS: Boxer[] = addGetters([
 			twitter: "https://twitter.com/GermanUsinger",
 			youtube: "https://youtube.com/unicornioperro",
 			tiktok: "https://tiktok.com/@german.usinger",
+		},
+		workout: {
+			videoID: "m7BEJLwX7dM",
+			thumbnail: "/boxers/workoutThumbnails/unicornio.webp",
+			name: "Unicornio",
 		},
 		clips: [
 			{
@@ -393,9 +434,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "pelicanger",
 		name: "Pelicanger",
 		realName: "Angerson Esneider",
+		gender: "masculino",
 		birthDate: new Date(2001, 0, 7),
-		weight: 85, // No es seguro
-		height: 1.91,
+		height: 1.88,
+		weight: 92,
+		age: 23,
 		country: "co",
 		socials: {
 			twitch: "https://twitch.tv/pelicanger",
@@ -420,9 +463,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "roberto-cein",
 		name: "RobertoCein",
 		realName: "Roberto Sebastián Guadarrama Jiménez",
+		gender: "masculino",
 		birthDate: new Date(1998, 6, 29),
-		weight: 85, // No encontrado
-		height: 1.69, // No es seguro
+		height: 1.65,
+		weight: 63,
+		age: 25,
 		country: "mx",
 		socials: {
 			twitch: "https://twitch.tv/robertocein",
@@ -447,9 +492,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "skain",
 		name: "Skain",
 		realName: "David Carbó Ferrer",
+		gender: "masculino",
 		birthDate: new Date(1997, 2, 10),
-		weight: 83, // No encontrado
-		height: 1.83, // No encontrado
+		height: 1.83,
+		weight: 72,
+		age: 27,
 		country: "es",
 		socials: {
 			twitch: "https://twitch.tv/skain",
@@ -461,6 +508,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "PUNBQ1_rbuo",
 			thumbnail: "/boxers/workoutThumbnails/skain.webp",
+			name: "Skain",
 		},
 		clips: [
 			{
@@ -478,9 +526,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "folagor",
 		name: "Folagor",
 		realName: "Yoel Ramírez Pulido",
+		gender: "masculino",
 		birthDate: new Date(1994, 11, 9),
-		weight: 71,
 		height: 1.8,
+		weight: 74,
+		age: 29,
 		country: "es",
 		socials: {
 			twitch: "https://twitch.tv/folagorlives",
@@ -525,9 +575,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "plex",
 		name: "YoSoyPlex",
 		realName: "Daniel Alonso Góndez",
+		gender: "masculino",
 		birthDate: new Date(2001, 8, 20),
-		weight: 70,
 		height: 1.97,
+		weight: 77,
+		age: 22,
 		country: "es",
 		versus: "el-mariana",
 		guard: "Izquierda", // encontrado
@@ -541,6 +593,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "svXhWZ1sZJE",
 			thumbnail: "/boxers/workoutThumbnails/plex.webp",
+			name: "YoSoyPlex",
 		},
 		clips: [
 			{
@@ -561,9 +614,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "viruzz",
 		name: "Viruzz",
 		realName: "Víctor Mélida Cambra",
+		gender: "masculino",
 		birthDate: new Date(1992, 4, 1),
-		weight: 85,
 		height: 1.82,
+		weight: 86,
+		age: 31,
 		country: "es",
 		versus: "shelao",
 		guard: "Izquierda", // encontrado
@@ -594,9 +649,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "alana",
 		name: "Alana",
 		realName: "Alana Flores",
+		gender: "femenino",
 		birthDate: new Date(2000, 11, 15),
-		weight: 55,
-		height: 1.7,
+		height: 1.56,
+		weight: 50,
+		age: 23,
 		country: "mx",
 		versus: ["nissaxter", "zeling"],
 		guard: "Izquierda", // encontrado
@@ -612,6 +669,7 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "FXzCBTRWouA",
 			thumbnail: "/boxers/workoutThumbnails/alana.webp",
+			name: "Alana",
 		},
 		clips: [
 			{
@@ -633,9 +691,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "ama-blitz",
 		name: "Amablitz",
 		realName: "Amairani Garza Alonso",
+		gender: "femenino",
 		birthDate: new Date(1995, 2, 1),
-		weight: 55, // No es seguro
 		height: 1.58,
+		weight: 60.6,
+		age: 30,
 		country: "mx",
 		versus: ["zeling", "nissaxter"],
 		guard: "Izquierda", // encontrado
@@ -664,9 +724,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "agustin-51",
 		name: "Agustin51",
 		realName: "José Agustín Peréz Nuñéz",
+		gender: "masculino",
 		birthDate: new Date(2000, 10, 18),
-		weight: 62, // No es seguro
-		height: 1.7,
+		height: 1.69,
+		weight: 61.7,
+		age: 23,
 		country: "es",
 		versus: "carreraaa",
 		guard: "Izquierda", // encontrado
@@ -697,9 +759,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "guanyar",
 		name: "Guanyar",
 		realName: "Diego Iglesias",
+		gender: "masculino",
 		birthDate: new Date(1998, 8, 28),
-		weight: 85,
-		height: 1.88,
+		height: 1.9,
+		weight: 125,
+		age: 26,
 		country: "es",
 		versus: "la-cobra",
 		guard: "Izquierda", // encontrado
@@ -726,5 +790,10 @@ export const BOXERS: Boxer[] = addGetters([
 			},
 		],
 		rotate: true,
+		workout: {
+			name: "Guanyar",
+			videoID: "ju-B__1NDMM",
+			thumbnail: "/boxers/workoutThumbnails/guanyar.webp",
+		},
 	},
 ] as const)
