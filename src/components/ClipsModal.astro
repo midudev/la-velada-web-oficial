@@ -57,11 +57,13 @@
 </style>
 
 <script>
+	import { $, $$ } from "@/lib/dom-selector"
+
 	document.addEventListener("astro:page-load", () => {
-		const $clipContainer = document.querySelectorAll(".clip-container")
-		const $clipDialog = document.querySelector(".clip-dialog") as HTMLDialogElement
-		const $closeButton = document.querySelector(".close-dialog")
-		const $ytFrame = document.querySelector(".yt-iframe")
+		const $clipContainer = $$(".clip-container")
+		const $clipDialog = $(".clip-dialog") as HTMLDialogElement
+		const $closeButton = $(".close-dialog")
+		const $ytFrame = $(".yt-iframe")
 
 		if (!$clipDialog) return
 
