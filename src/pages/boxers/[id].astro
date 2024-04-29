@@ -7,6 +7,7 @@ import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
 import BoxerWorkout from "@/components/BoxerWorkout.astro"
 import BoxerGallery from "@/components/Boxers/Gallery.astro"
 import Typography from "@/components/Typography.astro"
+import Forecasts from "@/sections/Forecasts.astro"
 
 import Instagram from "@/icons/instagram.astro"
 import Tiktok from "@/icons/tiktok.astro"
@@ -15,12 +16,10 @@ import X from "@/icons/x.astro"
 import YouTube from "@/icons/youtube.astro"
 
 import { BOXERS } from "@/consts/boxers"
-import { COMBATS } from "@/consts/combats"
+import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import { COUNTRIES } from "@/consts/countries"
-import { FORECASTS } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
-import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
 import type { Boxer } from "@/types/Boxer"
 import type { Preload } from "@/types/Preload"
 
@@ -46,12 +45,7 @@ if (!boxers) {
 	return new Response(JSON.stringify("Boxers not found"), { status: 404 })
 }
 
-const forecast = FORECASTS.find((forecast) => forecast.combatId === combat.id)
-
 const countryName = COUNTRIES[boxer.country]
-
-const boxersWithForecast: BoxerWithForecast[] = []
-let forecastCount = 0
 
 let rivals: Boxer[] = []
 if (typeof boxer.versus === "object") {
@@ -60,16 +54,6 @@ if (typeof boxer.versus === "object") {
 	}
 } else {
 	rivals = boxers.filter((rival: Boxer) => rival.id !== boxer.id)
-}
-
-if (forecast) {
-	forecast.forecastData.forEach((forecastData) => {
-		const boxer = boxers.find((boxer) => boxer.id === forecastData.boxerId)
-		if (boxer) {
-			boxersWithForecast.push({ ...boxer, forecast: forecastData.forecast })
-			forecastCount += forecastData.predictionsCount
-		}
-	})
 }
 
 const preloadBoxerImage: Preload[] = [
@@ -164,9 +148,12 @@ export const prerender = true
 
 		{boxer.gallery && <BoxerGallery id={boxer.id} name={boxer.name} />}
 
-		{forecast && <Forecasts count={forecastCount} boxers={boxersWithForecast} />}
+		{
+			combat.id !== REY_DE_LA_PISTA_ID &&
+				combat.id !== "3-zeling-y-nissaxter-vs-alana-y-ama-blitz" && (
+					<Forecasts combatId={combat.id} />
+				)
+		}
 		<CombatSection combatId={combat.id} combatNumber={combat.number} boxers={boxers} />
 	</main>
 </Layout>
-
-<script></script>

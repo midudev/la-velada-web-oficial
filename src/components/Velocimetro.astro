@@ -1,17 +1,4 @@
----
-interface Props {
-	percentage: number
-}
-
-const { percentage } = Astro.props
----
-
-<canvas
-	id="velocimeter"
-	width="500px"
-	height="260px"
-	class="w-full md:w-[500px]"
-	data-percentage={percentage}></canvas>
+<canvas id="velocimeter" width="500px" height="260px" class="w-full md:w-[500px]"></canvas>
 
 <script>
 	import { $ } from "@/lib/dom-selector"
@@ -28,7 +15,10 @@ const { percentage } = Astro.props
 		const ctx = canvas.getContext("2d")
 
 		function updateVelocimeter() {
-			const velocimeterValue = Number.parseInt(canvas.getAttribute("data-percentage") ?? "50")
+			const percentage = canvas.getAttribute("data-percentage")
+			if (!percentage) return
+
+			const velocimeterValue = Number(percentage)
 			drawVelocimeter(velocimeterValue)
 		}
 
@@ -103,5 +93,11 @@ const { percentage } = Astro.props
 
 		// Initial draw with default value
 		updateVelocimeter()
+
+		window.addEventListener("forecast:loaded", (event) => {
+			const { detail } = event as CustomEvent<string>
+			canvas.setAttribute("data-percentage", detail)
+			updateVelocimeter()
+		})
 	})
 </script>

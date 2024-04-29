@@ -2,7 +2,7 @@ import type { Forecast } from "@/types/Forecast"
 
 export const FORECASTS: Forecast[] = [
 	{
-		combatId: "1",
+		combatId: "1-agustin-51-vs-carreraaa",
 		forecastData: [
 			{
 				boxerId: "carreraaa",
