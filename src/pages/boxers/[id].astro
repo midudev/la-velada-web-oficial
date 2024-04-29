@@ -7,6 +7,7 @@ import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
 import BoxerWorkout from "@/components/BoxerWorkout.astro"
 import BoxerGallery from "@/components/Boxers/Gallery.astro"
 import Typography from "@/components/Typography.astro"
+import Forecasts from "@/sections/Forecasts.astro"
 
 import Instagram from "@/icons/instagram.astro"
 import Tiktok from "@/icons/tiktok.astro"
@@ -15,12 +16,10 @@ import X from "@/icons/x.astro"
 import YouTube from "@/icons/youtube.astro"
 
 import { BOXERS } from "@/consts/boxers"
-import { COMBATS } from "@/consts/combats"
+import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import { COUNTRIES } from "@/consts/countries"
-import { FORECASTS } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
-import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
 import type { Boxer } from "@/types/Boxer"
 import type { Preload } from "@/types/Preload"
 
@@ -29,8 +28,6 @@ export function getStaticPaths() {
 		return { params: { id } }
 	})
 }
-
-export const prerender = true
 
 const { id } = Astro.params
 
@@ -48,12 +45,7 @@ if (!boxers) {
 	return new Response(JSON.stringify("Boxers not found"), { status: 404 })
 }
 
-const forecast = FORECASTS.find((forecast) => forecast.combatId === combat.id)
-
 const countryName = COUNTRIES[boxer.country]
-
-const boxersWithForecast: BoxerWithForecast[] = []
-let forecastCount = 0
 
 let rivals: Boxer[] = []
 if (typeof boxer.versus === "object") {
@@ -62,16 +54,6 @@ if (typeof boxer.versus === "object") {
 	}
 } else {
 	rivals = boxers.filter((rival: Boxer) => rival.id !== boxer.id)
-}
-
-if (forecast) {
-	forecast.forecastData.forEach((forecastData) => {
-		const boxer = boxers.find((boxer) => boxer.id === forecastData.boxerId)
-		if (boxer) {
-			boxersWithForecast.push({ ...boxer, forecast: forecastData.forecast })
-			forecastCount += forecastData.predictionsCount
-		}
-	})
 }
 
 const preloadBoxerImage: Preload[] = [
@@ -86,11 +68,13 @@ const preloadBoxerImage: Preload[] = [
 const rivalOrRivals = rivals.length > 1 ? "Rivales" : "Rival"
 const guardBoxer = boxer.guard === undefined ? "Desconocida" : boxer.guard
 const flagAlt = countryName === undefined ? "un país" : countryName.name
+
+export const prerender = true
 ---
 
 <Layout
-	description={`Información del luchador ${boxer.name}`}
-	title={`${boxer.name} - Información del boxeador de La Velada IV`}
+	description={`Información del ${boxer.gender === "masculino" ? "luchador" : "luchadora"} ${boxer.name}`}
+	title={`${boxer.name} - La Velada del Año IV`}
 	preload={preloadBoxerImage}
 >
 	<main>
@@ -123,7 +107,11 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 					class="order-3 mx-auto flex w-full max-w-[450px] flex-col md:w-auto md:max-w-none md:gap-y-20 lg:w-1/4"
 				>
 					<BoxerDetailInfo title="Edad" value={`${boxer.age} años`} id="boxer-edad" />
-					<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg`} id="boxer-peso" />
+					{
+						boxer.weight && (
+							<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg`} id="boxer-peso" />
+						)
+					}
 					<BoxerDetailInfo title="Altura" value={`${boxer.height} m`} id="boxer-altura" />
 					<BoxerDetailInfo title="Guardia" value={guardBoxer} id="boxer-guardia" />
 
@@ -160,9 +148,12 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 
 		{boxer.gallery && <BoxerGallery id={boxer.id} name={boxer.name} />}
 
-		{forecast && <Forecasts count={forecastCount} boxers={boxersWithForecast} />}
+		{
+			combat.id !== REY_DE_LA_PISTA_ID &&
+				combat.id !== "3-zeling-y-nissaxter-vs-alana-y-ama-blitz" && (
+					<Forecasts combatId={combat.id} />
+				)
+		}
 		<CombatSection combatId={combat.id} combatNumber={combat.number} boxers={boxers} />
 	</main>
 </Layout>
-
-<script></script>

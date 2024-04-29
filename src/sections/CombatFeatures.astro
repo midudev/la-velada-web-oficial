@@ -59,27 +59,32 @@ const middleIndex = boxers.length / 2
 	<table class="mt-10 w-full text-center text-white lg:text-lg">
 		<tbody>
 			{
-				relevantBoxerData.map(([key, { label, concat }]) => (
-					<tr class="mb-10 bg-gradient-to-b from-black/0 via-transparent/40 to-transparent/40 p-4">
-						{boxers.map((boxer, index) => {
-							if (boxer == null) return null
+				relevantBoxerData.map(([key, { label, concat }]) => {
+					// no mostrar el peso hasta el pesaje oficial
+					if (key === "weight") return null
 
-							return (
-								<>
-									{key === "country" && <CombatFeatureCountry boxer={boxer} />}
-									{key === "name" && <CombatFeatureName boxer={boxer} />}
-									{!["country", "name"].includes(key) && (
-										<td class="py-3 font-semibold">
-											{boxer[key as keyof (typeof boxers)[0]]}
-											{concat}
-										</td>
-									)}
-									{index === middleIndex - 1 && <td class="text-primary">{label}</td>}
-								</>
-							)
-						})}
-					</tr>
-				))
+					return (
+						<tr class="mb-10 bg-gradient-to-b from-black/0 via-transparent/40 to-transparent/40 p-4">
+							{boxers.map((boxer, index) => {
+								if (boxer == null) return null
+
+								return (
+									<>
+										{key === "country" && <CombatFeatureCountry boxer={boxer} />}
+										{key === "name" && <CombatFeatureName boxer={boxer} />}
+										{!["country", "name"].includes(key) && (
+											<td class="py-3 font-semibold">
+												{boxer[key as keyof (typeof boxers)[0]]}
+												{concat}
+											</td>
+										)}
+										{index === middleIndex - 1 && <td class="text-primary">{label}</td>}
+									</>
+								)
+							})}
+						</tr>
+					)
+				})
 			}
 		</tbody>
 	</table>

@@ -16,7 +16,7 @@ const { boxer, isKingOfTheTrack } = Astro.props
 				`${isKingOfTheTrack ? "p-1" : "text-xl font-bold text-accent transition hover:scale-110 hover:saturate-[150%]"}`,
 			]}
 			href={`/boxers/${boxer.id}`}
-			title={`Visita la página del boxeador ${boxer.name}`}
+			title={`Visita la página ${boxer.gender === "masculino" ? "del boxeador" : "de la boxeadora"} ${boxer.name}`}
 		>
 			<img
 				src={`https://cdn.lavelada.dev/boxers/${boxer.id}-small.webp`}

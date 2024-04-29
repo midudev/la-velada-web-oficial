@@ -118,10 +118,12 @@ const boxerNames = combatData?.boxers ?? []
 </section>
 <div>
 	<a
-		class:list={["flex flex-col items-center justify-center text-2xl font-semibold text-accent"]}
+		class:list={[
+			"flex flex-col items-center justify-center text-2xl font-semibold text-accent transition hover:scale-110 focus:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:focus:scale-100",
+		]}
 		href={`/combates/${combatId}`}
 		tabindex="0"
 	>
-		<span class="text-primary">Ver combate</span>
+		<span class="text-primary hover:text-white">Ver combate</span>
 	</a>
 </div>

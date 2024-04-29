@@ -29,7 +29,7 @@ export default function countdown(startTime: TimeInput, opts?: Options) {
 
 	if (opts?.endTime) validateDate(opts.endTime)
 
-	let intervalId: globalThis.NodeJS.Timeout | number | null = null
+	let intervalId: globalThis.NodeJS.Timeout | null = null
 
 	function start() {
 		const offset = opts?.endTime
