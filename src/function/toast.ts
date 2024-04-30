@@ -1,4 +1,5 @@
 // from: https://github.com/dgtlss/butterup/tree/main
+import { $ } from "@/lib/dom-selector"
 
 export enum ToastType {
 	Success = "success",
@@ -62,7 +63,7 @@ export const butterup: ButterupProps = {
 		} = toastOptions
 
 		const getToaster = () => {
-			let toaster = document.getElementById("toaster") as HTMLElement
+			let toaster = $("#toaster") as HTMLElement
 			if (toaster) {
 				toaster.classList.forEach((classItem) => {
 					// remove any location classes from the toaster
@@ -81,7 +82,7 @@ export const butterup: ButterupProps = {
 			toaster.className = `toaster ${location}`
 			document.body.appendChild(toaster)
 
-			if (document.getElementById("butterupRack")) return toaster
+			if ($("#butterupRack")) return toaster
 
 			// Create the toasting rack inside of the toaster
 			const rack = document.createElement("ol")
@@ -96,8 +97,8 @@ export const butterup: ButterupProps = {
 		// Check if there are too many toasts on the screen
 		if (butterup.options.currentToasts >= butterup.options.maxToasts) {
 			// there are too many toasts on the screen, delete the oldest one
-			const oldestToast = document.getElementById("butterupRack")?.firstChild
-			if (oldestToast) document.getElementById("butterupRack")?.removeChild(oldestToast)
+			const oldestToast = $("#butterupRack")?.firstChild
+			if (oldestToast) $("#butterupRack")?.removeChild(oldestToast)
 			butterup.options.currentToasts--
 		}
 
@@ -127,7 +128,7 @@ export const butterup: ButterupProps = {
 		if (theme) toast.className += ` ${theme}`
 
 		// Add the toast to the rack
-		document.getElementById("butterupRack")?.appendChild(toast)
+		$("#butterupRack")?.appendChild(toast)
 
 		// check if the user wants an icon
 		;(() => {
@@ -210,7 +211,7 @@ export const butterup: ButterupProps = {
 		}, butterup.options.toastLife)
 	},
 	despawnToast(toastId) {
-		const toast = document.getElementById(toastId)
+		const toast = $(`#${toastId}`)
 		if (!toast) return
 		// fade out the toast and then remove it from the DOM
 		toast.className += " fadeOutToast"
@@ -226,7 +227,7 @@ export const butterup: ButterupProps = {
 			}
 			// if this was the last toast on the screen, remove the toaster
 			if (butterup.options.currentToasts !== 0) return
-			const toaster = document.getElementById("toaster")
+			const toaster = $("#toaster")
 			if (!toaster) return
 			toaster.parentNode?.removeChild(toaster)
 		}, 500)
