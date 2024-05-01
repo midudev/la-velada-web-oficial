@@ -141,6 +141,8 @@
 	>
 </span>
 <script>
+	import { $ } from "@/lib/dom-selector"
+
 	let intervalId: NodeJS.Timeout
 	type AnimatedXElement = SVGGElement | null
 
@@ -152,9 +154,9 @@
 		if (prefersReducedMotion) return
 
 		intervalId && clearInterval(intervalId)
-		const $svgGroup1 = document.getElementById("layer1") as AnimatedXElement
-		const $svgGroup2 = document.getElementById("layer2") as AnimatedXElement
-		const $svgGroup3 = document.getElementById("layer3") as AnimatedXElement
+		const $svgGroup1 = $("#layer1") as AnimatedXElement
+		const $svgGroup2 = $("#layer2") as AnimatedXElement
+		const $svgGroup3 = $("#layer3") as AnimatedXElement
 
 		intervalId = setInterval(() => drawGroup([$svgGroup1, $svgGroup2, $svgGroup3]), INTERVAL_TIME)
 	})

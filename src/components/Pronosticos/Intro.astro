@@ -44,9 +44,14 @@ import Typography from "@/components/Typography.astro"
 		$login.onclick = () => {
 			signIn("twitch")
 			$login.setAttribute("aria-disabled", "true")
-
 			const $span = $login.querySelector("span")
+
 			if ($span) $span.innerText = "Iniciando sesión..."
+			// Añade un temporizador que restablezca el botón después de 3 segundos
+			setTimeout(() => {
+				$login.removeAttribute("aria-disabled")
+				if ($span) $span.innerText = "¡Inicia sesión para participar!"
+			}, 3000)
 		}
 	}
 </script>
