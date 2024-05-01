@@ -1,7 +1,10 @@
 ---
+import BoxerBigImage from "@/components/BoxerBigImage.astro"
+import ColumnBoxers from "@/components/ColumnBoxers.astro"
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
+import HorizontalScroll from "@/icons/horizontalScroll.astro"
 
 const listOfBoxers = BOXERS.map((boxer) => {
 	const { country } = boxer
@@ -9,169 +12,316 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	return { ...boxer, countryName }
 })
 
-const baseUrl = "#"
+const selectedBoxerId = Astro.url.searchParams.get("boxer")
+const selectedBoxer = listOfBoxers.find(({ id }) => id === selectedBoxerId) || listOfBoxers[0]
+
+// split in 4 columns
+const boxerColumns = [
+	listOfBoxers.slice(0, 6),
+	listOfBoxers.slice(6, 11),
+	listOfBoxers.slice(11, 16),
+	listOfBoxers.slice(16, 22),
+]
 ---
 
-<section class="my-40">
-	<Typography as="h3" variant="atomic-title" color="primary" class:list={"text-center"}>
+<section class="mb-20 mt-20 transform-gpu md:my-40">
+	<Typography
+		as="h3"
+		variant="atomic-title"
+		color="primary"
+		class:list={"text-center"}
+		id="selectedBoxer"
+	>
 		elige tu luchador
 	</Typography>
 
-	<div class="flex flex-col items-center justify-center gap-8">
+	<Typography as="p" variant="body" color="neutral" class="mt-4 text-center">
+		Conoce los detalles de cada boxeador
+	</Typography>
+
+	<div class="mt-8 flex flex-col items-center justify-center gap-8 md:mt-32 md:flex-row lg:mt-0">
 		<article
-			class="relative flex w-full flex-col items-center justify-center"
-			style="view-transition-name: boxer;"
+			class="relative flex w-full max-w-[70%] flex-col items-center justify-center md:absolute md:max-w-full lg:-mt-32"
 		>
-			<header
-				class="relative flex w-full flex-col items-center justify-center bg-center bg-no-repeat"
-				style="background-image: url('/img/effects/boxer-background.png'); background-size: 75%;"
-			>
-				<img
-					class="boxer-photo h-[600px] w-[480px] object-contain"
-					alt="Fotografía de El Mariana"
-					src="/img/boxers/el-mariana-big.webp"
-					style="filter: drop-shadow(0 0 10px rgba(0, 0, 0, 1));"
-				/>
-				<img
-					class="boxer-title absolute bottom-14 h-auto w-[480px]"
-					alt="El Mariana"
-					src="/img/boxers/el-mariana-title.webp"
-				/>
-				<img
-					class="boxer-flag h-20 w-24 object-contain object-center"
-					alt="Bandera de México"
-					src="/img/flags/mx.webp"
-				/>
-			</header>
-
-			<footer class="absolute bottom-0 flex w-full justify-between text-center text-white">
-				<div class="flex flex-col gap-y-2">
-					<h4 class="text-lg">País</h4>
-					<p class="text-lg font-bold">México</p>
-					<a
-						href={baseUrl}
-						class="mt-10 inline-block font-semibold text-accent transition hover:scale-110"
-					>
-						Ver combate
-					</a>
-				</div>
-
-				<div class="flex flex-col gap-y-2">
-					<h4 class="text-lg">Peso</h4>
-					<p class="text-lg font-bold">61 kg</p>
-					<a
-						href={baseUrl}
-						class="mt-10 inline-block font-semibold text-accent transition hover:scale-110"
-					>
-						Ver perfil
-					</a>
-				</div>
-			</footer>
+			<BoxerBigImage
+				id={selectedBoxer.id}
+				name={selectedBoxer.name}
+				country={selectedBoxer.country}
+				countryName={selectedBoxer.countryName}
+				loading={selectedBoxerId ? "eager" : "lazy"}
+			/>
 		</article>
-		<aside class="mt-12 grid gap-x-10 gap-y-8">
-			{
-				listOfBoxers.map(({ id, name, country, countryName }) => (
-					<a
-						class="boxer-link group relative flex h-20 items-center justify-center"
-						title={`Visita la página del boxeador ${name}`}
-						href={baseUrl}
-						data-id={id}
-						data-name={name}
-						data-country={country}
-						data-country-name={countryName}
-					>
-						<img
-							loading="lazy"
-							src={`/img/boxers/${id}-small.png`}
-							alt={`Foto en pequeño del boxeador ${name}`}
-							class="boxer-image -mt-20 w-full object-contain px-2 transition group-hover:scale-110"
-						/>
-					</a>
-				))
-			}
-		</aside>
+
+		<div class="boxers-nav hidden w-full justify-between md:flex">
+			<nav class="boxers-lists flex h-full justify-start gap-4 py-4">
+				<ColumnBoxers
+					boxers={boxerColumns[0]}
+					selectedBoxer={selectedBoxer}
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+				<ColumnBoxers
+					boxers={boxerColumns[1]}
+					selectedBoxer={selectedBoxer}
+					class="mt-12"
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+			</nav>
+
+			<nav class="boxers-lists flex h-full justify-end gap-2 py-4">
+				<ColumnBoxers
+					boxers={boxerColumns[2]}
+					selectedBoxer={selectedBoxer}
+					class="mt-12"
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+				<ColumnBoxers
+					boxers={boxerColumns[3]}
+					selectedBoxer={selectedBoxer}
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+			</nav>
+		</div>
+
+		<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
+			<div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
+				<div
+					class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll pr-[40%]"
+				>
+					{
+						listOfBoxers.map((boxer, index) => (
+							<div
+								class:list={`
+									carousel-item w-[70%] flex-shrink-0 snap-center px-2
+									${index === 0 ? "ml-[65%]" : ""}
+								`}
+							>
+								<ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
+							</div>
+						))
+					}
+				</div>
+			</div>
+			<HorizontalScroll class:list={["w-16 text-primary opacity-80"]} />
+		</div>
 	</div>
 </section>
 
 <script>
-	const boxerLinks = document.querySelectorAll(".boxer-link")
-	const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
-	const boxerPhoto = document.querySelector(".boxer-photo") as HTMLImageElement
-	const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
+	import { $, $$ } from "@/lib/dom-selector"
 
-	boxerLinks.forEach((link) => {
-		link.addEventListener("mouseenter", (event) => {
-			const { id, name, country, countryName } = (event.currentTarget as HTMLElement)?.dataset
+	document.addEventListener("astro:page-load", () => {
+		const boxerLinks = $$(".boxer-link") as globalThis.NodeListOf<HTMLAnchorElement>
+		const boxerNav = $(".boxers-nav")
 
-			const boxerSrc = `/img/boxers/${id}-big.webp`
-			const titleSrc = `/img/boxers/${id}-title.webp`
+		if (!boxerNav) return
 
-			boxerPhoto.src = boxerSrc
-			boxerTitle.src = titleSrc
-			boxerCountry.src = `/img/flags/${country}.webp`
+		const boxerTitle = $(".boxer-title") as HTMLImageElement
+		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
+		const boxerCountry = $(".boxer-flag") as HTMLImageElement
 
-			boxerPhoto.alt = `Fotografía de ${name}`
-			boxerTitle.alt = name!
+		const updatedSelectedBoxerId =
+			localStorage.getItem("selected:boxer") ||
+			new URLSearchParams(window.location.search).get("boxer") ||
+			"el-mariana"
+
+		const updatedSelectedBoxerElement: HTMLElement | null = $(
+			`.boxer-link[data-id=${updatedSelectedBoxerId}]`
+		)
+		if (updatedSelectedBoxerElement) {
+			activateBoxer(updatedSelectedBoxerElement, updatedSelectedBoxerElement, boxerNav, true)
+		}
+
+		// detect with intersection observer that the $boxerNav is in viewport
+		const boxerNavObserver = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						// disconnect observer to do this only once
+						boxerNavObserver.disconnect()
+						// get all images and preload them
+						boxerLinks.forEach((link) => {
+							const { id } = link.dataset
+							const boxerSrc = `https://cdn.lavelada.dev/boxers/${id}-big`
+							// create link preload for each image for webp
+							const preloadLink = document.createElement("link")
+							preloadLink.rel = "preload"
+							preloadLink.as = "image"
+							preloadLink.href = `${boxerSrc}.webp`
+							preloadLink.type = "image/webp"
+							document.head.appendChild(preloadLink)
+						})
+					}
+				})
+			},
+			{
+				root: null,
+				threshold: 0.1,
+			}
+		)
+		boxerNavObserver.observe(boxerNav)
+
+		function activateBoxer(
+			element: HTMLElement,
+			link: HTMLElement,
+			nav: HTMLElement,
+			replaceUrl: boolean = false,
+			showAlliesAndOpponents: boolean = true
+		) {
+			if (element?.classList.contains("active")) return
+
+			const { id, name, country, countryName, opponents = "", allies = "" } = element?.dataset
+
+			if (!id || !name || !country || !countryName) return
+
+			const splitName = name.split(" ")
+			const lastName = splitName[splitName.length - 1]
+			const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
+			const spanNames = `
+					<a href="/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
+						<span class="flex flex-col">
+							<span class="text-4xl">${firstNames?.toLocaleLowerCase()}</span>
+							<span>${lastName?.toLocaleLowerCase()}</span>
+						</span>
+					</a>
+			`
+
+			nav?.querySelector(".active")?.classList.remove("active")
+			nav
+				?.querySelectorAll(".opponent")
+				?.forEach((opponentEl) => opponentEl.classList.remove("opponent"))
+			nav?.querySelectorAll(".ally")?.forEach((allyEl) => allyEl.classList.remove("ally"))
+
+			link.classList.add("active")
+
+			if (showAlliesAndOpponents) {
+				allies.split(",").map((ally) =>
+					boxerLinks.forEach((link) => {
+						if (link.dataset.id === ally) {
+							link.classList.add("ally")
+						}
+					})
+				)
+
+				opponents.split(",").map((opponent) =>
+					boxerLinks.forEach((link) => {
+						const { id: linkId, opponents: linkOpponents } = link.dataset
+						if (linkId === opponent || (linkOpponents === opponent && linkId !== id)) {
+							link.classList.add("opponent")
+						}
+					})
+				)
+			}
+
+			if (replaceUrl) {
+				history.replaceState({}, "", `?boxer=${id}`)
+			}
+
+			const boxerSrc = `https://cdn.lavelada.dev/boxers/${id}-big`
+
+			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
+			boxerTitle.innerHTML = spanNames
+			boxerCountry.src = `https://cdn.lavelada.dev/flags/${country}.webp`
+			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
+
 			boxerCountry.alt = `Bandera de ${countryName}`
+		}
+
+		boxerLinks.forEach((link) => {
+			link.addEventListener("click", (event: MouseEvent) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				const boxerId = currentTarget.getAttribute("data-id")
+				if (boxerId) localStorage.setItem("selected:boxer", JSON.stringify(boxerId))
+				activateBoxer(currentTarget, currentTarget, boxerNav, true)
+			})
 		})
+
+		boxerLinks.forEach((link) => {
+			link.addEventListener("mouseenter", (event) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				if (currentTarget.classList.contains("active")) return
+				activateBoxer(currentTarget, link, boxerNav, true)
+			})
+		})
+
+		const carouselInner = $(".carousel-inner") as HTMLElement
+
+		// detect match media change for mobile
+		const mobileMediaQuery = window.matchMedia("(max-width: 768px)")
+
+		function highlightBoxer(link: HTMLAnchorElement) {
+			const rect = link.getBoundingClientRect()
+			const { width } = carouselInner.getBoundingClientRect()
+
+			if (rect.left > width / 2 - rect.width * 0.75 && rect.left < width / 2 + rect.width * 0.25) {
+				activateBoxer(link, link, carouselInner, false, false)
+			}
+		}
+
+		function highlightActiveBoxer() {
+			boxerLinks.forEach((link) => {
+				highlightBoxer(link)
+			})
+		}
+
+		function updateActiveThumbnailPosition() {
+			const boxer = new URLSearchParams(window.location.search).get("boxer")
+			const boxerActiveElement = $(`.carousel .boxer-link[data-id=${boxer}]`)
+			if (boxerActiveElement) {
+				const carouselWidth = carouselInner.clientWidth
+				const thumbnailWidth = boxerActiveElement.offsetWidth
+				const currentPosition = boxerActiveElement.offsetLeft - (carouselWidth - thumbnailWidth) / 2
+
+				carouselInner.scrollTo(currentPosition, 0)
+			}
+		}
+
+		if (mobileMediaQuery.matches) {
+			updateActiveThumbnailPosition()
+
+			carouselInner.addEventListener("scroll", () => {
+				highlightActiveBoxer()
+			})
+		}
 	})
 </script>
 
 <style>
-	.boxer-link {
-		background: linear-gradient(
-			to bottom,
-			rgba(255, 255, 255, 0.1) 0%,
-			transparent 40%,
-			transparent 100%
-		);
-		transition: all 0.5s ease;
+	.boxers-lists {
+		@apply relative w-screen overflow-x-scroll md:overflow-hidden;
+		scrollbar-width: none;
 	}
 
-	.boxer-link::before {
-		content: "";
-		position: absolute;
-		inset: 0;
-		display: block;
-		background: linear-gradient(
-			to bottom,
-			rgba(255, 255, 255, 0.2) 0%,
-			transparent 40%,
-			transparent 100%
-		);
-		opacity: 0;
-		height: 50%;
-		transition:
-			opacity 0.2s ease-in-out,
-			height 0.2s ease-in-out;
+	@media (min-width: 1280px) {
+		.boxers-lists {
+			@apply h-auto w-full max-w-none overflow-hidden py-2;
+		}
 	}
 
-	.boxer-link:hover::before {
-		opacity: 0.8;
-		height: 90%;
-		box-shadow: 0 0px 3px rgba(50, 50, 50, 0.75);
-	}
+	@media (max-width: 768px) {
+		.carousel {
+			scrollbar-width: none;
+		}
 
-	.boxer-image {
-		transition: transform 0.3s ease-in-out;
-	}
+		.carousel::-webkit-scrollbar {
+			display: none;
+		}
 
-	.boxer-link:hover .boxer-image {
-		transform: scale(1.1);
-	}
+		.carousel-inner {
+			transition: transform 0.3s ease-in-out;
+			scrollbar-width: none;
+		}
 
-	aside {
-		display: grid;
-		grid-template-columns: repeat(12, 1fr);
-		grid-auto-rows: 40px;
+		.carousel-inner::-webkit-scrollbar {
+			display: none;
+		}
 
-		a {
-			grid-column: span 2;
+		.carousel-item {
+			transition: opacity 0.3s ease-in-out;
+		}
 
-			&:nth-child(11n + 7) {
-				grid-column-start: 2;
-				grid-column-end: 4;
-			}
+		.carousel-item.active {
+			opacity: 1;
+			scale: 1.2;
 		}
 	}
 </style>

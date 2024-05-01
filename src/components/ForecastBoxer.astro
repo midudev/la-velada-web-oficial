@@ -1,0 +1,38 @@
+---
+interface Props {
+	image: string
+	imageAlt: string
+	boxerId: string
+	boxerName: string
+	boxerHref: string
+}
+
+const { image, imageAlt, boxerId, boxerName, boxerHref } = Astro.props
+---
+
+<a
+	href={boxerHref}
+	class="group overflow-hidden transition-transform hover:scale-105"
+	aria-label={`Ir a la página de ${boxerName}`}
+>
+	<article>
+		<img decoding="async" class="image" src={image} alt={imageAlt} />
+		<h3
+			class="text-center text-2xl font-medium uppercase text-white transition-transform group-hover:scale-125 md:group-hover:scale-150"
+		>
+			{boxerName}
+		</h3>
+		<h4
+			data-id={boxerId}
+			class="boxer-forecast mt-1 text-center text-6xl font-semibold text-accent transition-transform group-hover:scale-75"
+		>
+			&nbsp;
+		</h4>
+	</article>
+</a>
+
+<style>
+	.image {
+		mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+	}
+</style>

@@ -4,48 +4,46 @@ import Typography from "@/components/Typography.astro"
 ---
 
 <section
-	class="group mb-32 mt-80 flex w-full flex-col items-center justify-center px-20 font-medium text-primary"
+	class="group mb-10 flex w-full flex-col items-center justify-center px-20 font-medium text-primary md:mb-48 md:pt-16"
 	aria-label="descripción del evento"
 >
 	<hr
-		class="-z-10 -mt-12 h-[2px] min-w-[20rem] border-t-0 bg-transparent bg-gradient-to-r from-transparent via-white to-transparent sm:w-full sm:max-w-64 md:max-w-lg"
+		class="h-[2px] min-w-[18rem] max-w-lg border-t-0 bg-transparent bg-gradient-to-r from-transparent via-white to-transparent sm:w-full"
 	/>
+
 	<a
 		href="https://www.twitch.tv/ibai"
 		target="_blank"
 		rel="nofollow noopener"
-		class="mx-auto -mt-11 mb-8 duration-200 hover:scale-110 motion-safe:transition"
+		class="group/twitch mb-8 mt-0"
 		aria-hidden="true"
 		tabindex="-1"
+		title="Enlace al canal de Twitch de Ibai Llanos"
 	>
-		<div class="w-14 md:w-20">
+		<div
+			class="mx-auto -mt-8 mb-4 w-14 scale-75 duration-200 group-hover/twitch:scale-90 motion-safe:transition md:-mt-8 md:mb-9 md:scale-110 md:group-hover/twitch:scale-125"
+		>
 			<TwitchLogo />
+		</div>
+
+		<div class="duration-200 group-hover/twitch:scale-110 motion-safe:transition">
+			<span
+				class="skew-x-10 block -rotate-6 text-center font-atomic text-xl text-white underline-offset-8 transition sm:text-2xl md:text-5xl"
+				>en directo
+			</span>
+			<Typography
+				as="h2"
+				variant="bigger"
+				color="primary"
+				class:list={"-mt-2 text-wrap text-center"}
+				class="flex justify-center text-2xl md:text-5xl"
+			>
+				twitch.tv/ibai
+			</Typography>
 		</div>
 	</a>
 
-	<a
-		class="flex flex-col items-center transition duration-200 hover:scale-110"
-		href="https://www.twitch.tv/ibai"
-		target="_blank"
-		rel="noopener"
-		title="Enlace al canal de Twitch de Ibai Llanos"
-		aria-label="Enlace al canal de Twitch de Ibai Llanos"
-	>
-		<span
-			class="-rotate-6 skew-x-6 text-center font-atomic text-xl text-white underline-offset-8 transition sm:text-3xl md:text-5xl"
-			>en directo
-		</span>
-		<Typography
-			as="h2"
-			variant="bigger"
-			color="primary"
-			class:list={"-mt-2 text-wrap text-center"}
-			class="flex justify-center transition"
-		>
-			twitch.tv/ibai
-		</Typography>
-	</a>
 	<hr
-		class="my-12 h-[2px] min-w-[20rem] border-t-0 bg-transparent bg-gradient-to-r from-transparent via-white to-transparent sm:w-full sm:max-w-64 md:max-w-lg"
+		class="my-7 h-[2px] w-full min-w-[18rem] max-w-lg border-t-0 bg-transparent bg-gradient-to-r from-transparent via-white to-transparent md:my-9"
 	/>
 </section>

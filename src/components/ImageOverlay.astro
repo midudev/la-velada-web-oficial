@@ -1,0 +1,27 @@
+---
+interface Props {
+	imgSrc: string
+	imgAlt: string
+	title: string
+	description: string
+	className?: string
+}
+
+const { className, imgSrc, imgAlt, title, description } = Astro.props
+---
+
+<div
+	class:list={[
+		className,
+		"relative flex h-full w-full flex-col items-center justify-center gap-5 px-8 sm:w-full md:px-20 lg:px-28",
+	]}
+	style="background: linear-gradient(180deg, transparent 0%, transparent 21%, #222222 20%, rgba(17, 17, 17, 0) 90%);"
+>
+	<img decoding="async" src={imgSrc} alt={imgAlt} class="h-40 w-auto select-none object-cover" />
+	<div class="content mt-1 text-center">
+		<h1 class="title mb-0.5 text-xl font-semibold text-accent lg:text-3xl">
+			{title}
+		</h1>
+		<p class="description text-md text-neutral-300 lg:text-lg">{description}</p>
+	</div>
+</div>

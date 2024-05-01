@@ -1,5 +1,15 @@
+---
+interface Props {
+	id: string
+	class?: string
+	noEffect?: boolean
+}
+
+const { id, class: classList, noEffect } = Astro.props as Props
+---
+
 <svg
-	class:list={Astro.props.class}
+	class:list={classList}
 	width="800"
 	height="679"
 	fill="none"
@@ -7,7 +17,7 @@
 	role="img"
 	aria-label="Logotipo de La Velada 4"
 >
-	<symbol id="hero-logo">
+	<symbol id={id}>
 		<path
 			fill="currentColor"
 			stroke="currentColor"
@@ -21,6 +31,6 @@
 		>
 		</path>
 	</symbol>
-	<use href="#hero-logo" class="text-[#f1ffaa]/70 blur-xl md:blur-md"></use>
-	<use href="#hero-logo" class="text-primary"></use>
+	{noEffect && <use href="#hero-logo-header" class="text-[#f1ffaa]/70 blur-xl md:blur-md" />}
+	<use href="#hero-logo-header" class:list={noEffect ? "text-white" : "text-primary"}></use>
 </svg>

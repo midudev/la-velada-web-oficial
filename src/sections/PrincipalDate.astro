@@ -1,8 +1,8 @@
 ---
-import CalendarButton from "@/components/CalendarButton.astro"
-import MapMarkerIcon from "@/icons/map-marker.astro"
 import Action from "@/components/Action.astro"
+import CalendarButton from "@/components/CalendarButton.astro"
 import Typography from "@/components/Typography.astro"
+import MapMarkerIcon from "@/icons/map-marker.astro"
 ---
 
 <section
@@ -21,7 +21,7 @@ import Typography from "@/components/Typography.astro"
 		as="h2"
 		variant="h2"
 		color="neutral"
-		class:list={"underline-transition mt-6 flex max-w-sm flex-col transition-all duration-300 ease-in-out hover:text-accent"}
+		class:list={"underline-transition mt-6 flex max-w-sm flex-col transition-all duration-300 ease-in-out hover:text-accent motion-reduce:transition-none"}
 	>
 		<a
 			class="flex"
@@ -34,24 +34,39 @@ import Typography from "@/components/Typography.astro"
 		</a>
 	</Typography>
 
-	<footer class="scroll-horizontal items-top mt-6 flex w-full flex-col gap-9 xs:w-auto md:flex-row">
-		<div class="mx-auto flex w-[90%] flex-col items-center justify-center gap-y-2 xs:w-80">
+	<footer
+		class="scroll-horizontal items-top mt-6 flex flex-col flex-wrap justify-center gap-9 md:flex-row *:md:basis-1/3"
+	>
+		<div class="flex flex-col items-center justify-center gap-y-2">
 			<Action
-				class="!w-full !text-base xs:!text-xl"
+				class="w-full text-base"
 				as="a"
-				aria-disabled="true"
-				href="#"
+				href="https://www.entradas.com/artist/la-velada-del-ano/?affiliate=LVL"
 				target="_blank"
 				rel="noopener noreferrer"
-				aria-label="entradas agotadas, se abrirá en una nueva pestaña"
+				aria-label="disponibles al a venta el 11 de abril a las 21:30 (CET), ahora mismo no están disponibles"
 			>
 				Comprar entradas
 			</Action>
 			<Typography as="span" variant="medium" color="primary" class:list={"text-center"} style="font-size: 1.35rem;">
 				Próximamente
+			<Typography as="span" variant="medium" color="primary" class:list={"text-center"}>
+				¡Agotadas!
 			</Typography>
 		</div>
-		<div class="mx-auto w-[90%] xs:w-80">
+		<div>
+			<Action
+				class="w-full text-base"
+				as="a"
+				href="https://lavelada.store/"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="Ir a la tienda oficial, se abrirá en una nueva pestaña"
+			>
+				Ir a la tienda oficial
+			</Action>
+		</div>
+		<div>
 			<CalendarButton />
 		</div>
 	</footer>
@@ -59,6 +74,7 @@ import Typography from "@/components/Typography.astro"
 
 <script>
 	import { EVENT_TIMESTAMP, timeZoneAbbreviations } from "@/consts/event-date"
+	import { $ } from "@/lib/dom-selector"
 
 	function getUserTimeZone(): string {
 		return Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -120,9 +136,9 @@ import Typography from "@/components/Typography.astro"
 			showTime?: boolean
 		}
 	) {
-		const $dateSpan = document.querySelector(".date")
-		const $timeSpan = document.querySelector(".time")
-		const $dateSeparator = document.querySelector(".date-time-separator")
+		const $dateSpan = $(".date")
+		const $timeSpan = $(".time")
+		const $dateSeparator = $(".date-time-separator")
 
 		if ($dateSpan != null) {
 			$dateSpan.innerHTML = dateString
@@ -148,12 +164,12 @@ import Typography from "@/components/Typography.astro"
 		})
 	}
 
-	document.addEventListener("DOMContentLoaded", main)
+	document.addEventListener("astro:page-load", main)
 
 	// Verifica si el evento ya ha pasado
 	const eventHasPassed = EVENT_TIMESTAMP < Date.now()
 	if (eventHasPassed) {
-		const addToCalendarBtn = document.getElementById("add-to-calendar")
+		const addToCalendarBtn = $("#add-to-calendar")
 		if (addToCalendarBtn) {
 			addToCalendarBtn.remove()
 		}
@@ -170,8 +186,28 @@ import Typography from "@/components/Typography.astro"
 		background-repeat: no-repeat;
 		transition: background-size 0.3s ease-in-out;
 	}
+
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			transition: none;
+		}
+	}
 	.underline-transition:hover {
 		background-size: 100% 3px;
 		background-position: 0 100%;
+	}
+	@media (prefers-reduced-motion) {
+		.underline-transition {
+			background-image: linear-gradient(transparent, transparent),
+				linear-gradient(var(--color-accent) 20%, var(--color-accent) 80%);
+			background-size: 0 3px;
+			background-position: 100% 100%;
+			background-repeat: no-repeat;
+			transition: background-size 0s;
+		}
+		.underline-transition:hover {
+			background-size: 100% 3px;
+			background-position: 0 100%;
+		}
 	}
 </style>

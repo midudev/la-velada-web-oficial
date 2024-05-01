@@ -8,24 +8,28 @@
 [![Issues][issues-shield]][issues-url]
 
 <a href="https://github.com/midudev/la-velada-web-oficial">
-  <img src="./public/img/github/og.png" alt="Logo" width="800" />
+  <img width="300px" src="https://cdn.lavelada.dev/drawn-x-logo.webp" alt="Logo" width="800" />
 </a>
 
 ## Web oficial de La Velada IV
 
 La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de contenido y otras celebridades sobre un ring.\
-[Reportar error](https://github.com/midudev/la-velada-web-oficial/issues) · [Sugerir algo](https://github.com/midudev/la-velada-web-oficial/issues)
+[Diseño de Figma](https://www.figma.com/file/7uUHCJ7YhJEoB24EZ00lXC/240405-LVDA-IV?type=design&node-id=0-1&mode=design&t=CUK9cH8DXhKXx31U-0) · [Reportar error](https://github.com/midudev/la-velada-web-oficial/issues) · [Sugerir algo](https://github.com/midudev/la-velada-web-oficial/issues)
 
 </div>
 
 <details>
 <summary>Tabla de contenidos</summary>
 
-1. [Características principales](#características-principales)
-2. [Para empezar](#para-empezar)
-   - [Prerequisitos](#prerequisitos)
-   - [Instalación](#instalación)
-3. [Contribuir al proyecto](#contribuir-al-proyecto)
+- [Web oficial de La Velada IV](#web-oficial-de-la-velada-iv)
+- [Características principales](#características-principales)
+  - [Capturas de pantalla de la web de La Velada IV](#capturas-de-pantalla-de-la-web-de-la-velada-iv)
+- [Para empezar](#para-empezar)
+  - [Prerequisitos](#prerequisitos)
+  - [Instalación](#instalación)
+- [Contribuir al proyecto](#contribuir-al-proyecto)
+  - [Contribuir desde Stackblitz](#contribuir-desde-stackblitz)
+- [🛠️ Stack](#️-stack)
 
 </details>
 
@@ -35,16 +39,61 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 - **Compra de boletos**: Permite a los usuarios dirigirlos a la compra de boletos fácilmente.
 - **Redes sociales**: Conoce las redes oficiales donde podrás informarte sobre el evento.
 
-### Capturas de pantalla de la web de La Velada IV:
+### Capturas de pantalla de la web de La Velada IV
 
-![Captura de pantalla en móvil](./public/img/github/Mobile_README.png)
-![Captura de pantalla en ordenador](./public/img/github/Desktop_README.png)
+![Captura de pantalla en ordenador](https://github.com/midudev/la-velada-web-oficial/assets/1561955/b4080e89-d6e5-4fad-8303-b91e1142cf65)
+![Captura de pantalla en móvil](https://github.com/midudev/la-velada-web-oficial/assets/1561955/ded00bc0-6b82-4644-a079-5b33902f7eff)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
 ## Para empezar
 
 ### Prerequisitos
+
+- NVM (recomendado para asegurar versión de Node) ver [documentación oficial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
+
+  ```sh
+  nvm use
+  # o
+  nvm use <version>
+  ```
+
+  > Si quieres automatizar el proceso, puedes crear un script siguiendo la [documentación oficial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file)
+
+<details>
+	<summary>Pequeño script de automatización</summary>
+	
+- For Linux/MacOS:
+	```sh
+	# .bashrc | .zshrc | cualquier archivo de configuración
+	# pequeño script para cambiar de version al entrar al directorio
+	cd() {
+  builtin cd "$@"
+		if [[ -f .nvmrc ]]; then
+			nvm use > /dev/null
+			# Si quieres que te diga la versión
+			nvm use
+		fi
+	}
+	```
+
+- For Windows:
+
+  ```powershell
+  # $PROFILE
+  function Change-Node-Version {
+  	param($path)
+  	& Set-Location $path
+  	$pwd = pwd
+  	if ( Test-Path "$pwd\\.nvmrc" ) {
+  		$version = Get-Content .nvmrc
+  		nvm use $version
+  	}
+  }
+  New-Alias -Name cd -Value Change-Node-Version -Force -Option AllScope
+  ```
+
+  </details>
 
 - PNPM (es nuestra recomendación por su eficiencia y rapidez)
 
@@ -73,10 +122,20 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
    ```
 
 3. Ejecuta el proyecto
-
+	 - Base de datos remota (necesario linkear con proyecto de Astro Studio)
    ```sh
    pnpm run dev
    ```
+   - Base de datos local
+   ```sh
+   pnpm run start
+   ```
+
+4. Autenticación mediante twitch (opcional)
+   - Accede a la [consola de twitch](https://dev.twitch.tv/), crea un proyecto y obtén tu client id y client secret
+   - Genera un hash aleatorio, puedes usar el siguiente comando ```openssl rand -hex 32```
+   - Crea un archivo llamado ```.env.local``` y copia el contenido de [.env.demo](.env.demo) en él
+   - Reemplaza el texto copiado de demo en ```.env.local``` con tu id, secreto y hash
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
@@ -91,7 +150,7 @@ Aquí tienes una guía rápida:
 1. Haz un [_fork_](https://github.com/midudev/la-velada-web-oficial/fork) del Proyecto
 2. Clona tu [_fork_](https://github.com/midudev/la-velada-web-oficial/fork) (`git clone <URL del fork>`)
 3. Añade el repositorio original como remoto (`git remote add upstream <URL del repositorio original>`)
-4. Crea tu Rama de Funcionalidad (`git checkout -b feature/CaracteristicaIncreible`)
+4. Crea tu Rama de Funcionalidad (`git switch -c feature/CaracteristicaIncreible`)
 5. Realiza tus Cambios (`git commit -m 'Add: alguna CaracterísticaIncreible'`)
 6. Haz Push a la Rama (`git push origin feature/CaracteristicaIncreible`)
 7. Abre una [_pull request_](https://github.com/midudev/la-velada-web-oficial/pulls)

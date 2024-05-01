@@ -1,60 +1,105 @@
 ---
 interface Props {
+	wrapperClassName: string
 	dateType: string
 	attribute: Record<string, string>
 	max: number
+	position?: string
+	className?: string
+	height: string
 }
 
-const { dateType, attribute } = Astro.props
+const { dateType, position, attribute, className, height, max, wrapperClassName } = Astro.props
 const maximumSplit = Astro.props.max.toString().split("")
 
 // + 1 porque hay que tener en cuenta el 0
 const maxFirst = Number.parseInt(maximumSplit[0]) + 1
 const maxSecond = 9
-
+const maxThird = 9
 // + 1 porque hay que tener en cuenta el 0 para las transiciones
 const firstDigitHeight = (1 / (maxFirst + 1)) * 100
-const secondDigitHeight = (1 / (maxFirst + 1)) * 100
+const secondDigitHeight = (1 / (maxSecond + 1)) * 100
+const thirdDigitHeight = (1 / (maxThird + 1)) * 100
 ---
 
-<div class="flex w-16 flex-col place-items-center gap-y-2">
-	<div class="relative overflow-hidden" {...attribute}>
-		<div class="float-left block h-10 w-auto overflow-hidden" data-first-group>
-			<div
-				class="translate-y-0 transition-transform duration-[800ms] motion-reduce:duration-0"
-				data-wrapper
-			>
+<div
+	class:list=`relative w-full ${position} flex flex-col items-center justify-center text-center before:absolute before:inset-x-[-5px] before:inset-y-0 before:bg-gradient-to-b before:from-white/5 before:via-transparent before:to-transparent before:[clip-path:polygon(3.5%_0,100%_0%,97.5%_100%,0%_100%)] before:pointer-events-none`
+>
+	<div
+		class:list={["relative flex -skew-x-6 overflow-hidden font-atomic", wrapperClassName]}
+		{...attribute}
+	>
+		<div class:list={`float-left block ${height} overflow-hidden`} data-first-group>
+			<div class="" data-wrapper>
 				{
-					Array.from({ length: maxFirst }, () => 0).map((_, index) => (
+					Array.from({ length: maxFirst + 1 }, () => 0).map((_, index) => (
 						// + 1 porque hay que tener en cuenta el 0 para las transiciones
 						<div data-num={index} style={`height: ${firstDigitHeight}%`}>
-							<span class="text-4xl tabular-nums">{index}</span>
+							<span
+								class:list={`tabular-nums ${className} block h-fit select-none overflow-hidden`}
+							>
+								{index}
+							</span>
 						</div>
 					))
 				}
-				<div style={`height: ${firstDigitHeight}%`} data-num-x0>
-					<span class="text-4xl tabular-nums">0</span>
+				<div style={{ height: `${firstDigitHeight}%`, transition: "height 0.3s ease" }} data-num-x0>
+					<span class:list={`tabular-nums  ${className}`}>0</span>
 				</div>
 			</div>
 		</div>
-		<div class="float-left block h-10 w-auto overflow-hidden" data-second-group>
+		<div class:list={`float-left block ${height} w-auto overflow-hidden`} data-second-group>
 			<div
 				class="translate-y-0 transition-transform duration-[800ms] motion-reduce:duration-0"
 				data-wrapper
 			>
 				{
-					Array.from({ length: maxSecond }, () => 0).map((_, index) => (
+					Array.from({ length: maxSecond + 1 }, () => 0).map((_, index) => (
 						// + 1 porque hay que tener en cuenta el 0 para las transiciones
 						<div data-num={index} style={`height: ${secondDigitHeight}%`}>
-							<span class="text-4xl tabular-nums">{index}</span>
+							<span
+								class:list={`tabular-nums ${className} block h-fit select-none overflow-hidden`}
+							>
+								{index}
+							</span>
 						</div>
 					))
 				}
-				<div style={`height: ${secondDigitHeight}%`} data-num-x0>
-					<span class="text-4xl tabular-nums">0</span>
+				<div
+					style={{ height: `${secondDigitHeight}%`, transition: "height 0.3s ease" }}
+					data-num-x0
+				>
+					<span class:list={`tabular-nums ${className} `}>0</span>
 				</div>
 			</div>
 		</div>
+		{
+			max > 99 && (
+				<div class:list={`float-block ${height} w-auto overflow-hidden`} data-third-group>
+					<div
+						class="translate-y-0 transition-transform duration-[800ms] motion-reduce:duration-0"
+						data-wrapper
+					>
+						{Array.from({ length: maxThird + 1 }, () => 0).map((_, index) => (
+							// + 1 porque hay que tener en cuenta el 0 para las transiciones
+							<div data-num={index} style={`height: ${thirdDigitHeight}%`}>
+								<span
+									class:list={`tabular-nums ${className} block h-fit select-none overflow-hidden`}
+								>
+									{index}
+								</span>
+							</div>
+						))}
+						<div
+							style={{ height: `${secondDigitHeight}%`, transition: "height 0.3s ease" }}
+							data-num-x0
+						>
+							<span class:list={`tabular-nums ${className} `}>0</span>
+						</div>
+					</div>
+				</div>
+			)
+		}
 	</div>
-	<span class="text-center text-xs">{dateType}</span>
+	<span class="-skew-x-6 text-center text-sm md:text-xl">{dateType}</span>
 </div>

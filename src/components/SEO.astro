@@ -1,13 +1,31 @@
 ---
 import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
 
+import RichResults from "@/components/RichResults.astro"
+import type { Preload } from "@/types/Preload"
+
 interface Props {
 	title: string
 	description: string
-	preloadImgLCP: string
+	preload?: Array<Preload>
+	canonical?: string
+	image?: string
 }
 
-const { title, description, preloadImgLCP } = Astro.props
+const {
+	title,
+	description,
+	preload,
+	canonical,
+	image = "https://cdn.lavelada.dev/og.jpg",
+} = Astro.props as Props
+
+const determineCanonicalURL = () => {
+	if (Astro.url.host.includes("localhost")) return "http://localhost:4321"
+	return canonical || Astro.url.pathname
+}
+
+const canonicalURL = new URL(determineCanonicalURL(), Astro.site)
 ---
 
 <title>{title}</title>
@@ -15,15 +33,23 @@ const { title, description, preloadImgLCP } = Astro.props
 <meta charset="UTF-8" />
 <meta name="description" content={description} />
 
+<link rel="preconnect" href="https://cdn.lavelada.dev" />
+<link
+	rel="preload"
+	href={"https://cdn.lavelada.dev/fonts/font-atomic.woff2"}
+	as="font"
+	type="font/woff2"
+	crossorigin
+/>
 <link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
+
 {
-	preloadImgLCP && (
-		<link rel="preload" href={preloadImgLCP} as="image" type="image/webp" crossorigin />
-	)
+	preload?.map(({ href, as, type, rel = "preload", crossorigin }) => (
+		<link {rel} {href} {as} {type} {crossorigin} />
+	))
 }
 
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="canonical" href="https://lavelada.es" />
+<link rel="canonical" href={canonicalURL} />
 <meta name="viewport" content="width=device-width" />
 <meta name="theme-color" content="#d5ff00" />
 
@@ -34,15 +60,25 @@ const { title, description, preloadImgLCP } = Astro.props
 <meta name="twitter:creator" content="@IbaiLlanos" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content="https://lavelada.es/og.png" />
+<meta name="twitter:image" content={new URL(image, Astro.url)} />
 
-<meta name="og:image" content="https://lavelada.es/og.png" />
+<meta name="og:image" content={new URL(image, Astro.url)} />
 <meta name="og:title" content={title} />
 <meta name="og:description" content={description} />
-<meta name="og:url" content="https://lavelada.es" />
+<meta name="og:url" content={Astro.url} />
 <meta name="og:site_name" content="La Velada 4" />
 <meta name="og:type" content="website" />
 <meta name="og:locale" content="es_ES" />
 
 <meta name="robots" content="index, follow" />
 <meta name="googlebot" content="index, follow" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="msapplication-config" content="/browserconfig.xml" />
+
+<script is:inline src="/registerSW.js"></script>
+<link rel="manifest" href="/manifest.webmanifest" />
+<RichResults />

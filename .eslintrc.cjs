@@ -4,6 +4,10 @@ process.env.ESLINT_TSCONFIG = "tsconfig.json"
  * @type {import("eslint").Linter.Config}
  */
 module.exports = {
+	globals: {
+		NodeJS: true,
+		NodeListOf: true,
+	},
 	env: {
 		es2022: true,
 		node: true,
@@ -50,7 +54,7 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: ["*.astro"],
+			files: ["*.astro", "src/utils/serviceWorker.ts"],
 			parser: "astro-eslint-parser",
 			parserOptions: {
 				parser: "@typescript-eslint/parser",
