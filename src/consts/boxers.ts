@@ -591,7 +591,7 @@ export const BOXERS: Boxer[] = addGetters([
 			tiktok: "https://tiktok.com/@yosoyplexx",
 		},
 		workout: {
-			videoID: "svXhWZ1sZJE",
+			videoID: "sOCpqgG6YS0",
 			thumbnail: "/boxers/workoutThumbnails/plex.webp",
 			name: "YoSoyPlex",
 		},
