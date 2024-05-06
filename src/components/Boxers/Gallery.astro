@@ -99,9 +99,11 @@ const { id, name } = Astro.props
 </style>
 
 <script>
+	import { $ } from "@/lib/dom-selector"
+
 	document.addEventListener("astro:page-load", () => {
-		const $lightbox = document.getElementById("lightbox") as HTMLDialogElement
-		const $gallery = document.getElementById("boxer-gallery") as HTMLElement
+		const $lightbox = $("#lightbox") as HTMLDialogElement
+		const $gallery = $("#boxer-gallery") as HTMLElement
 		if (!$gallery) return
 
 		const $links = $gallery?.querySelectorAll("a")
@@ -167,7 +169,7 @@ const { id, name } = Astro.props
 		$close?.addEventListener("click", close)
 
 		$lightbox?.addEventListener("click", (event) => {
-			const $dialogBg = document.querySelector("[data-dialog-bg]") as HTMLDivElement
+			const $dialogBg = $("[data-dialog-bg]") as HTMLDivElement
 			const canClose = event.target === $dialogBg || event.target === $lightbox
 			if (canClose) close()
 		})
