@@ -9,7 +9,6 @@ import NoiseBackground from "@/components/NoiseBackground.astro"
 import SEO from "@/components/SEO.astro"
 import type { Preload } from "@/types/Preload"
 
-import Toast from "@/components/ui/Toast.astro"
 import Footer from "@/sections/Footer.astro"
 import Sponsors from "@/sections/Sponsors.astro"
 import "@fontsource-variable/jost"
@@ -57,7 +56,6 @@ const { title, description, preload, canonical, image } = Astro.props
 			<Sponsors />
 			<Footer />
 			<KonamiCode />
-			<Toast />
 			<!-----------------------------
      `    ``               `
       ``  _ `      `       ``
@@ -77,6 +75,13 @@ const { title, description, preload, canonical, image } = Astro.props
 		</div>
 		<ButtonUp />
 		<style is:global>
+			@import "butterup-toast/dist/butterup.css";
+
+			.butteruptoast.dark {
+				font-size: 21px;
+				padding: 15px 20px;
+			}
+
 			:root {
 				--color-primary: #ddd;
 				--color-secondary: #333;

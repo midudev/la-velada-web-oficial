@@ -205,6 +205,8 @@ votes.forEach((vote) => {
 </script>
 
 <script>
+	import { butterup } from "butterup-toast"
+
 	import { $$ } from "@/lib/dom-selector"
 
 	document.addEventListener("astro:page-load", () => {
@@ -239,12 +241,12 @@ votes.forEach((vote) => {
 					$button.classList.remove("is-voted")
 					$previousVoted?.classList.add("is-voted")
 
-					window.toast({
+					butterup.toast({
 						title: "Error al guardar el voto",
 						location: "bottom-center",
-						dismissible: false,
 						type: "error",
 						icon: true,
+						theme: "dark",
 					})
 				}
 
@@ -257,12 +259,12 @@ votes.forEach((vote) => {
 				})
 					.then((res) => {
 						if (!res.ok) return rollbackUI()
-						window.toast({
+						butterup.toast({
 							title: "¡Voto registrado!",
 							location: "bottom-center",
-							dismissible: false,
 							type: "success",
 							icon: true,
+							theme: "dark",
 						})
 
 						// hace scroll hasta el siguiente combate en el DOM si esta sin completar
