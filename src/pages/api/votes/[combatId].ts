@@ -34,12 +34,13 @@ export const POST: APIRoute = async ({ params, request }) => {
 	if (!success) return res("Bad request", { status: 400 })
 
 	const { voteId } = output
-	const boxerData = combatData.boxers.find((b) => {
-		if (combatData.teams !== undefined) {
-			return voteId.includes(b)
-		}
-		return b === voteId
-	})
+	let boxerData;
+	if (combatData.teams !== undefined) {
+		boxerData = combatData.teams.find((t) => t === voteId)
+	}
+	else {
+		boxerData = combatData.boxers.find((b) => b === voteId)
+	}
 	if (!boxerData) return res("Boxer not found", { status: 404 })
 
 	const userId = session.user.id
