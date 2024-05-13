@@ -367,6 +367,11 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=2BO21jfm469U_i_5&amp;clip=UgkxHy3xXDVJdgv9BUaArwgIYrA_ae1M5FIX&amp;clipt=EJ3ipQUYtdemBQ",
 			},
 		],
+		workout: {
+			videoID: "GWLZSfJsSCo",
+			thumbnail: "/boxers/workoutThumbnails/will.webp",
+			name: "Will",
+		},
 	},
 	{
 		id: "sezar-blue",
