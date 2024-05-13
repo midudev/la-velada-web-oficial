@@ -168,6 +168,11 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=XXuWc4c5ywxnBHIZ&amp;clip=UgkxptfPo72fI8yntHVo2UfsuyGjpmsfI3js&amp;clipt=ELTnggMY8smDAw",
 			},
 		],
+		workout: {
+			videoID: "zqatWGonjt4",
+			thumbnail: "/boxers/workoutThumbnails/nissaxter.webp",
+			name: "Nissaxter",
+		},
 	},
 	{
 		id: "carreraaa",
