@@ -7,6 +7,7 @@ import BoxerSocialLink from "@/components/BoxerSocialLink.astro"
 import BoxerWorkout from "@/components/BoxerWorkout.astro"
 import BoxerGallery from "@/components/Boxers/Gallery.astro"
 import Typography from "@/components/Typography.astro"
+import Forecasts from "@/sections/Forecasts.astro"
 
 import Instagram from "@/icons/instagram.astro"
 import Tiktok from "@/icons/tiktok.astro"
@@ -17,10 +18,8 @@ import YouTube from "@/icons/youtube.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COMBATS } from "@/consts/combats"
 import { COUNTRIES } from "@/consts/countries"
-import { FORECASTS } from "@/consts/forecasts"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
-import Forecasts, { type BoxerWithForecast } from "@/sections/Forecasts.astro"
 import type { Boxer } from "@/types/Boxer"
 import type { Preload } from "@/types/Preload"
 
@@ -29,8 +28,6 @@ export function getStaticPaths() {
 		return { params: { id } }
 	})
 }
-
-export const prerender = true
 
 const { id } = Astro.params
 
@@ -48,12 +45,7 @@ if (!boxers) {
 	return new Response(JSON.stringify("Boxers not found"), { status: 404 })
 }
 
-const forecast = FORECASTS.find((forecast) => forecast.combatId === combat.id)
-
 const countryName = COUNTRIES[boxer.country]
-
-const boxersWithForecast: BoxerWithForecast[] = []
-let forecastCount = 0
 
 let rivals: Boxer[] = []
 if (typeof boxer.versus === "object") {
@@ -64,20 +56,10 @@ if (typeof boxer.versus === "object") {
 	rivals = boxers.filter((rival: Boxer) => rival.id !== boxer.id)
 }
 
-if (forecast) {
-	forecast.forecastData.forEach((forecastData) => {
-		const boxer = boxers.find((boxer) => boxer.id === forecastData.boxerId)
-		if (boxer) {
-			boxersWithForecast.push({ ...boxer, forecast: forecastData.forecast })
-			forecastCount += forecastData.predictionsCount
-		}
-	})
-}
-
 const preloadBoxerImage: Preload[] = [
 	{
 		as: "image",
-		href: `/img/boxers/${id}-big.webp`,
+		href: `https://cdn.lavelada.dev/boxers/${id}-big.webp`,
 		type: "image/webp",
 		rel: "preload",
 	},
@@ -86,11 +68,13 @@ const preloadBoxerImage: Preload[] = [
 const rivalOrRivals = rivals.length > 1 ? "Rivales" : "Rival"
 const guardBoxer = boxer.guard === undefined ? "Desconocida" : boxer.guard
 const flagAlt = countryName === undefined ? "un país" : countryName.name
+
+export const prerender = true
 ---
 
 <Layout
-	description={`Información del luchador ${boxer.name}`}
-	title={`${boxer.name} - Información del boxeador de La Velada IV`}
+	description={`Información del ${boxer.gender === "masculino" ? "luchador" : "luchadora"} ${boxer.name}`}
+	title={`${boxer.name} - La Velada del Año IV`}
 	preload={preloadBoxerImage}
 >
 	<main>
@@ -122,22 +106,26 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 				<div
 					class="order-3 mx-auto flex w-full max-w-[450px] flex-col md:w-auto md:max-w-none md:gap-y-20 lg:w-1/4"
 				>
-					<BoxerDetailInfo title="Edad" value={boxer.age} id="boxer-edad" />
-					<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg.`} id="boxer-peso" />
-					<BoxerDetailInfo title="Altura" value={`${boxer.height} m.`} id="boxer-altura" />
+					<BoxerDetailInfo title="Edad" value={`${boxer.age} años`} id="boxer-edad" />
+					{
+						boxer.weight && (
+							<BoxerDetailInfo title="Peso" value={`${boxer.weight} kg`} id="boxer-peso" />
+						)
+					}
+					<BoxerDetailInfo title="Altura" value={`${boxer.height} m`} id="boxer-altura" />
 					<BoxerDetailInfo title="Guardia" value={guardBoxer} id="boxer-guardia" />
 
-					<div class="block md:hidden">
+					<div class="mx-auto block max-w-96 md:hidden">
 						<BoxerDetailInfoRival title={rivalOrRivals} value={rivals} id="boxer-rival-mobile" />
 					</div>
 				</div>
 			</div>
 		</section>
-		<section class="md:mt-64 mt-20">
+		<section class="mt-20 md:mt-64">
 			<Typography as="h3" variant="h3" color="white" class:list={"mb-12 text-center"}>
 				REDES SOCIALES
 			</Typography>
-			<div class="flex w-full flex-col md:flex-row md:gap-10">
+			<div class="mx-auto flex max-w-[600px] flex-wrap justify-center gap-2 lg:max-w-full">
 				<BoxerSocialLink href={boxer.socials.twitch}>
 					<Twitch />
 				</BoxerSocialLink>
@@ -160,9 +148,8 @@ const flagAlt = countryName === undefined ? "un país" : countryName.name
 
 		{boxer.gallery && <BoxerGallery id={boxer.id} name={boxer.name} />}
 
-		{forecast && <Forecasts count={forecastCount} boxers={boxersWithForecast} />}
+		<Forecasts combatId={combat.id} />
+
 		<CombatSection combatId={combat.id} combatNumber={combat.number} boxers={boxers} />
 	</main>
 </Layout>
-
-<script></script>

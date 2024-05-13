@@ -16,9 +16,18 @@ const Votes = {
 	},
 }
 
+const Cache = {
+	columns: {
+		id: column.text({ primaryKey: true }),
+		data: column.json(),
+		timestamp: column.date(),
+	},
+}
+
 // https://astro.build/db/config
 export default defineDb({
 	tables: {
+		Cache,
 		VoteSelections,
 		Votes,
 	},

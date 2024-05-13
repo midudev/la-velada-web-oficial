@@ -42,7 +42,7 @@ const genericHamburgerLine = `h-[2px] ${width} bg-gray-300 transition ease trans
 
 		$$(DISPLAY.hamburgerMenuClass).forEach((button) => {
 			button.addEventListener("click", () => {
-				const hamburgerButton = $(DISPLAY.hamburgerMenuClass)
+				const hamburgerButton = $(DISPLAY.hamburgerMenuClass)!
 				hamburgerButton.classList.toggle(DISPLAY.open)
 				const isMenuOpen = hamburgerButton.classList.contains(DISPLAY.open)
 				hamburgerButton.setAttribute("aria-expanded", String(isMenuOpen))
