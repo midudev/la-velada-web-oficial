@@ -72,7 +72,7 @@ const isCombatIntern = normalizedPathName.startsWith("/combates/")
 					style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
 				/>
 			</div>
-			<nav class="flex w-full flex-col items-center gap-5">
+			<nav class="navContent flex w-full flex-col items-center gap-5">
 				<img
 					src="https://cdn.lavelada.dev/lvda.webp"
 					alt="lvda logo"
@@ -234,9 +234,14 @@ const isCombatIntern = normalizedPathName.startsWith("/combates/")
 <script>
 	import { $ } from "@/lib/dom-selector"
 
-	function toggleMenu(nav: HTMLElement | null, menuMobileContent: HTMLElement | null) {
+	function toggleMenu(
+		nav: HTMLElement | null,
+		menuMobileContent: HTMLElement | null,
+		navContent: HTMLElement | null
+	) {
 		menuMobileContent?.classList.toggle("open")
 		nav?.classList.toggle("open")
+		navContent?.classList.toggle("animate-bounce-fade-in")
 		document.body.classList.toggle("overflow-hidden")
 		document.body.classList.toggle("lg:overflow-auto")
 	}
@@ -246,14 +251,17 @@ const isCombatIntern = normalizedPathName.startsWith("/combates/")
 		const menuButton = $("#menuButton")
 		const innerMenuButton = $("#innerMenuButton")
 		const menuMobileContext = $("#menuMobileContent")
+		const navContent = $(".navContent")
 
-		menuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav, menuMobileContext))
+		menuButton?.addEventListener("hamburgerButtonClicked", () =>
+			toggleMenu(nav, menuMobileContext, navContent)
+		)
 		innerMenuButton?.addEventListener("hamburgerButtonClicked", () =>
-			toggleMenu(nav, menuMobileContext)
+			toggleMenu(nav, menuMobileContext, navContent)
 		)
 
 		if (menuMobileContext?.classList.contains("open")) {
-			toggleMenu(nav, menuMobileContext)
+			toggleMenu(nav, menuMobileContext, navContent)
 		}
 	})
 </script>
