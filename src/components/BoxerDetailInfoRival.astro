@@ -34,8 +34,8 @@ const isVersus = value[0].versus.length === 2
 							`${isVersus ? "mx-2  p-1" : ""}`,
 							`${isKingOfTheTrack ? "p-1" : "boxer-link text-xl font-bold text-accent"}`,
 						]}
-						href={item.id}
-						title={`Visita la página del boxeador ${item.name}`}
+						href={`/boxers/${item.id}`}
+						title={`Visita la página ${item.gender === "masculino" ? "del boxeador" : "de la boxeadora"} ${item.name}`}
 						id={id + (index + 1)}
 					>
 						{!isKingOfTheTrack && (
@@ -45,7 +45,7 @@ const isVersus = value[0].versus.length === 2
 						)}
 
 						<img
-							src={`/img/boxers/${item.id}-small.webp`}
+							src={`https://cdn.lavelada.dev/boxers/${item.id}-small.webp`}
 							class:list={isKingOfTheTrack ? ["h-14 object-contain"] : ["boxer-image "]}
 							alt={`Foto en pequeño del rival ${item.name}`}
 							style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%);"

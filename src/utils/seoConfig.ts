@@ -10,7 +10,7 @@ export const seoConfig = {
 		"Web Oficial de La Velada del Año IV, evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos.",
 	type: "website",
 	image: {
-		url: "https://lavelada.es/img/og.jpg",
+		url: "https://cdn.lavelada.dev/og.jpg",
 		alt: "La Velada",
 		width: 705,
 		height: 606,
@@ -48,32 +48,6 @@ export const manifest: Partial<ManifestOptions> = {
 			sizes: "512x512",
 			type: "image/png",
 			purpose: "any maskable",
-		},
-	],
-	screenshots: [
-		{
-			src: "/img/screenshots/desktop_1.jpg",
-			type: "image/jpeg",
-			sizes: "1024x964",
-			form_factor: "wide",
-		},
-		{
-			src: "/img/screenshots/desktop_2.jpg",
-			type: "image/jpeg",
-			sizes: "1024x964",
-			form_factor: "wide",
-		},
-		{
-			src: "/img/screenshots/mobile_1.jpg",
-			type: "image/jpeg",
-			sizes: "360x593",
-			form_factor: "narrow",
-		},
-		{
-			src: "/img/screenshots/mobile_2.jpg",
-			type: "image/jpeg",
-			sizes: "360x593",
-			form_factor: "narrow",
 		},
 	],
 }

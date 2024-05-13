@@ -1,3 +1,5 @@
+export type BoxerGender = "masculino" | "femenino"
+
 export interface Boxer {
 	id: string
 	name: string
@@ -5,13 +7,14 @@ export interface Boxer {
 	age: number
 	gallery?: boolean
 	realName: string
-	weight: number
+	weight?: number
 	height: number
 	country: string
 	countryName?: string
 	versus: string | string[]
 	guard?: string
 	reach?: number
+	gender?: BoxerGender
 	socials: {
 		twitch?: string
 		instagram?: string
@@ -26,6 +29,7 @@ export interface Boxer {
 	workout?: {
 		videoID: string
 		thumbnail: string
+		name: string
 	}
 	rotate?: boolean
 	allies?: string[]
