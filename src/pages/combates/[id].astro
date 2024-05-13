@@ -5,6 +5,7 @@ import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
 import { COMBATS } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 import CombatFeatures from "@/sections/CombatFeatures.astro"
+import Forecasts from "@/sections/Forecasts.astro"
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
@@ -91,6 +92,7 @@ export const prerender = true
 		<div class="pointer-events-auto">
 			{combatData.boxers.length <= 4 && <CombatFeatures boxerIds={combatData.boxers} />}
 		</div>
+		<Forecasts combatId={id} />
 	</main>
 </Layout>
 
