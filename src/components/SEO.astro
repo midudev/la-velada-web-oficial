@@ -1,16 +1,31 @@
 ---
 import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
-import atomic from "/fonts/atomic.woff2"
 
 import RichResults from "@/components/RichResults.astro"
+import type { Preload } from "@/types/Preload"
 
 interface Props {
 	title: string
 	description: string
-	preloadImgLCP?: string
+	preload?: Array<Preload>
+	canonical?: string
+	image?: string
 }
 
-const { title, description, preloadImgLCP } = Astro.props
+const {
+	title,
+	description,
+	preload,
+	canonical,
+	image = "https://cdn.lavelada.dev/og.jpg",
+} = Astro.props as Props
+
+const determineCanonicalURL = () => {
+	if (Astro.url.host.includes("localhost")) return "http://localhost:4321"
+	return canonical || Astro.url.pathname
+}
+
+const canonicalURL = new URL(determineCanonicalURL(), Astro.site)
 ---
 
 <title>{title}</title>
@@ -18,17 +33,23 @@ const { title, description, preloadImgLCP } = Astro.props
 <meta charset="UTF-8" />
 <meta name="description" content={description} />
 
+<link rel="preconnect" href="https://cdn.lavelada.dev" />
+<link
+	rel="preload"
+	href={"https://cdn.lavelada.dev/fonts/font-atomic.woff2"}
+	as="font"
+	type="font/woff2"
+	crossorigin
+/>
 <link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
-<link rel="preload" href={atomic} as="font" type="font/woff2" crossorigin />
 
 {
-	preloadImgLCP && (
-		<link rel="preload" href={preloadImgLCP} as="image" type="image/webp" crossorigin />
-	)
+	preload?.map(({ href, as, type, rel = "preload", crossorigin }) => (
+		<link {rel} {href} {as} {type} {crossorigin} />
+	))
 }
 
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="canonical" href="https://lavelada.es" />
+<link rel="canonical" href={canonicalURL} />
 <meta name="viewport" content="width=device-width" />
 <meta name="theme-color" content="#d5ff00" />
 
@@ -39,53 +60,25 @@ const { title, description, preloadImgLCP } = Astro.props
 <meta name="twitter:creator" content="@IbaiLlanos" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content="https://lavelada.es/img/og.jpg" />
+<meta name="twitter:image" content={new URL(image, Astro.url)} />
 
-<meta name="og:image" content="https://lavelada.es/img/og.jpg" />
-<meta name="og:title" content={title} />
-<meta name="og:description" content={description} />
-<meta name="og:url" content="https://lavelada.es" />
-<meta name="og:site_name" content="La Velada 4" />
-<meta name="og:type" content="website" />
-<meta name="og:locale" content="es_ES" />
+<meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:site_name" content="La Velada 4" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="es_ES" />
 
 <meta name="robots" content="index, follow" />
 <meta name="googlebot" content="index, follow" />
 
-<!-- PWA Support -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png" />
 
-<!-- Favicons. -->
-<!-- 16 -->
-<link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16x16.png" />
-<!-- 20 -->
-<link rel="icon" type="image/png" sizes="20x20" href="/img/icons/favicon-20x20.png" />
-<!-- 24 -->
-<link rel="icon" type="image/png" sizes="24x24" href="/img/icons/favicon-24x24.png" />
-<!-- 48 -->
-<link rel="icon" type="image/png" sizes="48x48" href="/img/icons/favicon-48x48.png" />
-<!-- 64 -->
-<link rel="icon" type="image/png" sizes="64x64" href="/img/icons/favicon-64x64.png" />
-<!-- 128 -->
-<link rel="icon" type="image/png" sizes="128x128" href="/img/icons/favicon-128x128.png" />
-<!-- 144 -->
-<link rel="icon" type="image/png" sizes="144x144" href="/img/icons/favicon-144x144.png" />
-<!-- 256 -->
-<link rel="icon" type="image/png" sizes="256x256" href="/img/icons/favicon-256x256.png" />
-<!-- 512 -->
-<link rel="icon" type="image/png" sizes="512x512" href="/img/icons/favicon-512x512.png" />
-<link rel="shortcut icon" type="image/x-icon" href="/img/icons/favicon.ico" />
-
-<!-- Sitemap -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="msapplication-config" content="/browserconfig.xml" />
 
-<!-- Worker Registration -->
-{
-	!import.meta.env.DEV && (
-		<>
-			<script is:inline src="/registerSW.js" />
-			<link rel="manifest" href="/manifest.webmanifest" />
-		</>
-	)
-}
-
+<script is:inline src="/registerSW.js"></script>
+<link rel="manifest" href="/manifest.webmanifest" />
 <RichResults />

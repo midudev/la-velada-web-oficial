@@ -1,0 +1,31 @@
+---
+import LiteYouTube from "./LiteYouTube.astro"
+import SectionTitle from "./SectionTitle.astro"
+
+interface Props {
+	workout?: {
+		videoID: string
+		thumbnail: string
+		name: string
+	}
+}
+
+const { workout = undefined } = Astro.props
+const hasWorkout = workout !== undefined
+---
+
+{
+	hasWorkout && (
+		<section class="mb-10 mt-20 md:my-44">
+			<SectionTitle title="Entrenamiento" description="Preparación para el combate" />
+
+			<div class="mt-10 pt-12">
+				<LiteYouTube
+					videoId={workout.videoID}
+					title={`Reproducir entrenamiento de ${workout.name}`}
+					backgroundImage={`https://cdn.lavelada.dev${workout.thumbnail}`}
+				/>
+			</div>
+		</section>
+	)
+}

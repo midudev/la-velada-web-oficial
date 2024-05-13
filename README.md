@@ -8,7 +8,7 @@
 [![Issues][issues-shield]][issues-url]
 
 <a href="https://github.com/midudev/la-velada-web-oficial">
-  <img width="300px" src="./public/img/drawn-x-logo.webp" alt="Logo" width="800" />
+  <img width="300px" src="https://cdn.lavelada.dev/drawn-x-logo.webp" alt="Logo" width="800" />
 </a>
 
 ## Web oficial de La Velada IV
@@ -23,7 +23,7 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 
 - [Web oficial de La Velada IV](#web-oficial-de-la-velada-iv)
 - [Características principales](#características-principales)
-  - [Capturas de pantalla de la web de La Velada IV:](#capturas-de-pantalla-de-la-web-de-la-velada-iv)
+  - [Capturas de pantalla de la web de La Velada IV](#capturas-de-pantalla-de-la-web-de-la-velada-iv)
 - [Para empezar](#para-empezar)
   - [Prerequisitos](#prerequisitos)
   - [Instalación](#instalación)
@@ -41,8 +41,8 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 
 ### Capturas de pantalla de la web de La Velada IV
 
-![Captura de pantalla en móvil](./public/img/github/Mobile_README.png)
-![Captura de pantalla en ordenador](./public/img/github/Desktop_README.png)
+![Captura de pantalla en ordenador](https://github.com/midudev/la-velada-web-oficial/assets/1561955/b4080e89-d6e5-4fad-8303-b91e1142cf65)
+![Captura de pantalla en móvil](https://github.com/midudev/la-velada-web-oficial/assets/1561955/ded00bc0-6b82-4644-a079-5b33902f7eff)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
@@ -57,12 +57,13 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
   # o
   nvm use <version>
   ```
-> Si quieres automatizar el proceso, puedes crear un script siguiendo la [documentación oficial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file)
+
+  > Si quieres automatizar el proceso, puedes crear un script siguiendo la [documentación oficial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file)
 
 <details>
 	<summary>Pequeño script de automatización</summary>
 	
-- For Linux/MacOS:
+- En Linux/MacOS:
 	```sh
 	# .bashrc | .zshrc | cualquier archivo de configuración
 	# pequeño script para cambiar de version al entrar al directorio
@@ -76,21 +77,23 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 	}
 	```
 
-- For Windows:
-	```powershell
-	# $PROFILE
-	function Change-Node-Version {
-		param($path)
-		& Set-Location $path
-		$pwd = pwd
-		if ( Test-Path "$pwd\\.nvmrc" ) {
-			$version = Get-Content .nvmrc
-			nvm use $version
-		}
-	}
-	New-Alias -Name cd -Value Change-Node-Version -Force -Option AllScope
-	```
- </details>
+- En Windows:
+
+  ```powershell
+  # $PROFILE
+  function Change-Node-Version {
+  	param($path)
+  	& Set-Location $path
+  	$pwd = pwd
+  	if ( Test-Path "$pwd\\.nvmrc" ) {
+  		$version = Get-Content .nvmrc
+  		nvm use $version
+  	}
+  }
+  New-Alias -Name cd -Value Change-Node-Version -Force -Option AllScope
+  ```
+
+  </details>
 
 - PNPM (es nuestra recomendación por su eficiencia y rapidez)
 
@@ -119,10 +122,20 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
    ```
 
 3. Ejecuta el proyecto
-
+	 - Base de datos remota (necesario linkear con proyecto de Astro Studio)
    ```sh
    pnpm run dev
    ```
+   - Base de datos local
+   ```sh
+   pnpm run start
+   ```
+
+4. Autenticación mediante twitch (opcional)
+   - Accede a la [consola de twitch](https://dev.twitch.tv/), crea un proyecto y obtén tu client id y client secret
+   - Genera un hash aleatorio, puedes usar el siguiente comando ```openssl rand -hex 32```
+   - Crea un archivo llamado ```.env.local``` y copia el contenido de [.env.demo](.env.demo) en él
+   - Reemplaza el texto copiado de demo en ```.env.local``` con tu id, secreto y hash
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
@@ -152,7 +165,7 @@ Si quieres contribuir de una manera mas sencilla, puedes iniciar este proyecto d
 
 **¡Gracias a todos los colaboradores que han hecho posible este proyecto!**
 
-[![Contribuidores](https://contrib.rocks/image?repo=midudev/la-velada-web-oficial)](https://github.com/midudev/la-velada-web-oficial/graphs/contributors)
+[![Contribuidores](https://contrib.rocks/image?repo=midudev/la-velada-web-oficial&max=500&columns=20)](https://github.com/midudev/la-velada-web-oficial/graphs/contributors)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 

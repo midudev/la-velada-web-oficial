@@ -1,0 +1,70 @@
+---
+const { streamer = "ibai" } = Astro.props
+---
+
+<div
+	id="live"
+	class="fixed right-4 top-4 hidden rounded-lg bg-accent p-2 text-center font-bold text-gray-950 shadow-accent transition-all ease-in"
+>
+	<input type="hidden" id="streamer" name="streamer" value=`${streamer}` />
+	<button
+		id="live-close"
+		class="absolute right-6 top-0 cursor-pointer rounded-full border-none px-1 py-2 text-xs font-bold text-white"
+		>Cerrar 𝖷</button
+	>
+	<div id="live-frame" class="aspect-video"></div>
+	<div class="flex flex-col items-center justify-center gap-y-2 pt-1 text-sm">
+		<p class="flex items-center justify-center">
+			<svg x="0" y="0" viewBox="0 0 2400 2800" height="24" width="28" xml:space="preserve">
+				<path fill="#fff" d="M2200 1300l-400 400h-400l-350 350v-350H600V200h1600z"></path>
+				<g>
+					<path
+						fill="#9146ff"
+						d="M500 0L0 500v1800h600v500l500-500h400l900-900V0H500zm1700 1300l-400 400h-400l-350 350v-350H600V200h1600v1100z"
+					></path>
+					<path fill="#9146ff" d="M1700 550h200v600h-200zM1150 550h200v600h-200z"></path>
+				</g>
+			</svg>¡La velada ha comenzado. Estamos en directo en Twitch!
+		</p>
+		<p>
+			<a
+				href=`https://twitch.tv/${streamer}`
+				target="_blank"
+				rel="noopener noreferrer"
+				class="border-b-2 border-t-2 border-gray-950"
+			>
+				¡Entra ya!
+			</a>
+		</p>
+	</div>
+</div>
+
+<script is:inline>
+	const CONFIG = {
+		MIDU_API_UPTIME_WORKER: "https://midudev-apis.midudev.workers.dev/uptime",
+		VELADA_DATE: "2024-07-13 19:00:00 GMT+0100",
+		TWITCH_PLAYER_URL: "https://player.twitch.tv",
+	}
+	const streamer = document.querySelector("#streamer").value
+	const isVeladaTime = new Date().getTime() >= new Date(CONFIG.VELADA_DATE).getTime()
+	if (isVeladaTime) {
+		fetch(`${CONFIG.MIDU_API_UPTIME_WORKER}/${streamer}`)
+			.then((res) => res.json())
+			.then(({ online }) => {
+				if (online) {
+					document.querySelector("#live").style.display = "block"
+					document.querySelector("#live-frame").innerHTML =
+						`<iframe src="${CONFIG.TWITCH_PLAYER_URL}/?channel=${streamer}&parent=${document.location.hostname}" frameborder="0" width="380" height="200" allowfullscreen="true" scrolling="no"></iframe>`
+				}
+			})
+			.catch((err) => {
+				console.error(err)
+			})
+	}
+
+	const closeButton = document.querySelector("#live-close")
+	closeButton?.addEventListener("click", () => {
+		document.querySelector("#live").style.display = "none"
+		document.querySelector("#live").innerHTML = ""
+	})
+</script>
