@@ -12,8 +12,6 @@ import Action from "@/components/Action.astro"
 </Action>
 
 <script is:inline>
-	import { $ } from "@/lib/dom-selector"
-
 	document.addEventListener("astro:page-load", () => {
 		const config = {
 			name: "🥊 La Velada del Año 4 - El Evento del Año",
@@ -44,7 +42,7 @@ import Action from "@/components/Action.astro"
 			})
 		}
 
-		const button = $("#add-to-calendar")
+		const button = document.querySelector("#add-to-calendar")
 
 		const handleClick = async () => {
 			if (status === "loading") return
