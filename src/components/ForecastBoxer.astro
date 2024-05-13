@@ -2,12 +2,12 @@
 interface Props {
 	image: string
 	imageAlt: string
+	boxerId: string
 	boxerName: string
 	boxerHref: string
-	percentage: number
 }
 
-const { image, imageAlt, boxerName, boxerHref, percentage } = Astro.props
+const { image, imageAlt, boxerId, boxerName, boxerHref } = Astro.props
 ---
 
 <a
@@ -23,16 +23,16 @@ const { image, imageAlt, boxerName, boxerHref, percentage } = Astro.props
 			{boxerName}
 		</h3>
 		<h4
-			class="mt-1 text-center text-6xl font-semibold text-accent transition-transform group-hover:scale-75"
+			data-id={boxerId}
+			class="boxer-forecast mt-1 text-center text-6xl font-semibold text-accent transition-transform group-hover:scale-75"
 		>
-			{percentage}%
+			&nbsp;
 		</h4>
 	</article>
 </a>
 
 <style>
 	.image {
-		filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
 		mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 	}
 </style>

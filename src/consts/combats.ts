@@ -5,7 +5,7 @@ export const COMBATS: Combat[] = [
 	{
 		id: "1-agustin-51-vs-carreraaa",
 		number: 1,
-		boxers: ["agustin-51", "carreraaa"],
+		boxers: ["carreraaa", "agustin-51"],
 		titleSize: [1920, 1012],
 	},
 	{
@@ -47,7 +47,7 @@ export const COMBATS: Combat[] = [
 	{
 		id: "6-el-mariana-vs-plex",
 		number: 6,
-		boxers: ["el-mariana", "plex"],
+		boxers: ["plex", "el-mariana"],
 		titleSize: [1920, 950],
 	},
 ]
