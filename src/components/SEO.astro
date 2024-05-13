@@ -1,6 +1,5 @@
 ---
 import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
-import atomic from "/fonts/atomic.woff2"
 
 import RichResults from "@/components/RichResults.astro"
 import type { Preload } from "@/types/Preload"
@@ -13,11 +12,20 @@ interface Props {
 	image?: string
 }
 
-const { title, description, preload, canonical, image = "/img/og.jpg" } = Astro.props as Props
+const {
+	title,
+	description,
+	preload,
+	canonical,
+	image = "https://cdn.lavelada.dev/og.jpg",
+} = Astro.props as Props
 
-const canonicalURL = canonical
-	? new URL(canonical, Astro.site)
-	: new URL(Astro.url.pathname, Astro.site)
+const determineCanonicalURL = () => {
+	if (Astro.url.host.includes("localhost")) return "http://localhost:4321"
+	return canonical || Astro.url.pathname
+}
+
+const canonicalURL = new URL(determineCanonicalURL(), Astro.site)
 ---
 
 <title>{title}</title>
@@ -25,7 +33,14 @@ const canonicalURL = canonical
 <meta charset="UTF-8" />
 <meta name="description" content={description} />
 
-<link rel="preload" href={atomic} as="font" type="font/woff2" crossorigin />
+<link rel="preconnect" href="https://cdn.lavelada.dev" />
+<link
+	rel="preload"
+	href={"https://cdn.lavelada.dev/fonts/font-atomic.woff2"}
+	as="font"
+	type="font/woff2"
+	crossorigin
+/>
 <link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
 
 {
@@ -47,13 +62,13 @@ const canonicalURL = canonical
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={new URL(image, Astro.url)} />
 
-<meta name="og:image" content={new URL(image, Astro.url)} />
-<meta name="og:title" content={title} />
-<meta name="og:description" content={description} />
-<meta name="og:url" content={Astro.url} />
-<meta name="og:site_name" content="La Velada 4" />
-<meta name="og:type" content="website" />
-<meta name="og:locale" content="es_ES" />
+<meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:site_name" content="La Velada 4" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="es_ES" />
 
 <meta name="robots" content="index, follow" />
 <meta name="googlebot" content="index, follow" />
