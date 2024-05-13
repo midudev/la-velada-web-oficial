@@ -1,41 +1,56 @@
 ---
-import HamburgerButton from "@/components/HamburgerButton.astro"
-import HeroLogo from "@/components/HeroLogo.astro"
 import DrawnXLogo from "@/components/DrawnXLogo.astro"
 import FooterContent from "@/components/FooterContent.astro"
+import HamburgerButton from "@/components/HamburgerButton.astro"
+import HeroLogo from "@/components/HeroLogo.astro"
 import SocialButtons from "@/components/SocialButtons.astro"
+import { MOBILE_MENU_CONTENT_ID } from "@/consts/mobile-menu"
+
+// remote last slash from pathname
+const { pathname } = Astro.url
+const normalizedPathName =
+	pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname
 
 const pages = [
 	{ name: "El Evento", href: "/" },
-	{ name: "Combates", href: "/combates", disabled: true },
-	{ name: "Pronósticos", href: "/pronosticos", disabled: true },
-	{ name: "Entradas", href: "/entradas", disabled: true },
+	{ name: "Combates", href: "/combates", active: normalizedPathName.startsWith("/combates") },
+	{ name: "Pronósticos", href: "/pronosticos" },
+	{
+		name: "Entradas",
+		href: "https://www.entradas.com/artist/la-velada-del-ano/?affiliate=LVL",
+		soonDate: "¡Agotadas!",
+		disabled: true,
+		target: "_blank",
+	},
 ].map((page) => ({
 	...page,
-	active: Astro.url.pathname === page.href,
+	active: page.active ?? normalizedPathName === page.href,
 }))
+
+const isCombatIntern = normalizedPathName.startsWith("/combates/")
 ---
 
-<header class="mb-10 h-16 max-w-[100vw] lg:h-24" transition:persist>
+<header class="mb-10 h-16 max-w-[100vw] lg:h-24">
 	<nav class="group flex h-full w-full items-center justify-between px-10 lg:justify-center">
 		{
-			pages.map(({ disabled, name, href, active }, key) => (
+			pages.map(({ name, href, active, soonDate, target }, key) => (
 				<>
 					<a
 						href={href}
+						target={target}
+						rel={target === "_blank" ? "noopener noreferrer" : undefined}
 						class:list={[
-							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 text-center text-xl uppercase text-white lg:flex lg:px-7 xl:px-10",
-							{ "pointer-events-none": disabled },
-							{ "current-page": active },
+							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 text-center text-xl uppercase  lg:flex lg:px-7 xl:px-10",
+							{ "current-page text-accent": active },
+							{ "text-white": !active },
 						]}
 						id={`nav-link-${key}`}
 					>
 						<span class="z-10">{name}</span>
-						{disabled ? (
-							<span class="absolute mt-10 -skew-x-6 text-xs text-accent">Próximamente</span>
-						) : (
-							<div class="background absolute -z-10 h-full w-full" />
+						{soonDate && (
+							<span class="absolute z-10 mt-10 -skew-x-6 text-xs text-accent">{soonDate}</span>
 						)}
+						<div class="background absolute -z-10 h-full w-full" />
 					</a>
 					{key === 1 && <div class:list={"hidden w-64 lg:block"} />}
 				</>
@@ -45,7 +60,7 @@ const pages = [
 		<HamburgerButton class:list={"block lg:hidden"} id="menuButton" />
 		<div
 			class="fixed inset-0 z-[888] flex w-screen flex-col items-center overflow-x-auto bg-[var(--background-color)] px-10 lg:hidden"
-			id="menuMobileContent"
+			id={MOBILE_MENU_CONTENT_ID}
 		>
 			<aside class="flex min-h-16 w-full items-center justify-between">
 				<span class="text-xl font-semibold uppercase text-primary">Menú</span>
@@ -59,28 +74,28 @@ const pages = [
 			</div>
 			<nav class="flex w-full flex-col items-center gap-5">
 				<img
-					src="/img/lvda.webp"
+					src="https://cdn.lavelada.dev/lvda.webp"
 					alt="lvda logo"
 					class="accent-drop-shadow my-4 max-w-60 drop-shadow-lg"
+					loading="lazy"
 				/>
 				<hr
 					class="h-[2px] w-full border-t-0"
 					style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
 				/>
 				{
-					pages.map(({ disabled, name, href, active }, key) => (
+					pages.map(({ name, href, active, soonDate }, key) => (
 						<>
 							<a
 								href={href}
 								class:list={[
 									"relative flex flex-col items-center justify-center gap-2 text-xl capitalize",
-									{ "pointer-events-none": disabled },
 									{ "current-page-mob": active },
 								]}
 								id={`navmob-link-${key}`}
 							>
 								<span class="z-10 uppercase text-primary">{name}</span>
-								{disabled && <span class="text-accent">Próximamente</span>}
+								{soonDate && <span class="text-accent">{soonDate}</span>}
 							</a>
 							<hr
 								class="h-[2px] w-full border-t-0"
@@ -99,15 +114,22 @@ const pages = [
 	<div class="relative flex h-2 w-full flex-col items-center">
 		<div class="gridBottomBarContainer absolute grid w-full items-center justify-between">
 			<div
-				class="h-[2px] w-full border-t-0"
-				style="background:linear-gradient(to right, transparent 3%, white 35%, white 100%)"
+				class:list={[
+					"h-[2px] w-full rounded-l-[30%] border-t-0",
+					{ gridBottomBarContainerLineLeft: !isCombatIntern },
+				]}
 			>
 			</div>
-			<div class="-mx-2 -ml-4"><HeroLogo class:list={" w-full"} noEffect /></div>
-			<!-- <div class="bg-red-500">la velada del año</div> -->
+			<div class="focus-within-ring -ml-[8px] -mr-[4px]">
+				<a href="/" class="focus-visible:!ring-0">
+					<HeroLogo class:list={"h-auto w-full"} id="hero-logo-header" noEffect />
+				</a>
+			</div>
 			<div
-				class="h-[2px] w-full border-t-0"
-				style="background:linear-gradient(to left, transparent 3%, white 35%, white 100%)"
+				class:list={[
+					"h-[2px] w-full rounded-l-[30%] border-t-0",
+					{ gridBottomBarContainerLineRight: !isCombatIntern },
+				]}
 			>
 			</div>
 		</div>
@@ -130,6 +152,10 @@ const pages = [
 		opacity: 1;
 	}
 
+	.focus-within-ring {
+		@apply focus-within:ring-1 focus-within:ring-white focus-within:ring-offset-1;
+	}
+
 	#menuMobileContent {
 		opacity: 0;
 		pointer-events: none;
@@ -145,7 +171,11 @@ const pages = [
 	.accent-drop-shadow {
 		filter: drop-shadow(0px 0px 25px rgba(var(--color-accent-rgb), 0.25));
 	}
+
+	.current-page {
+	}
 	.current-page:before {
+		view-transition-name: nav-item;
 		background: var(--color-accent);
 		width: 100%;
 		content: "";
@@ -154,6 +184,7 @@ const pages = [
 		left: 0;
 		height: 8px;
 	}
+
 	.current-page-mob:before {
 		background: var(--color-accent);
 		width: 10px;
@@ -169,6 +200,14 @@ const pages = [
 	.gridBottomBarContainer {
 		grid-template-columns: 1fr 6rem 1fr;
 		grid-template-rows: 4px;
+	}
+
+	.gridBottomBarContainerLineLeft {
+		background: linear-gradient(to right, transparent 3%, white 35%, white 100%);
+	}
+
+	.gridBottomBarContainerLineRight {
+		background: linear-gradient(to left, transparent 3%, white 35%, white 100%);
 	}
 
 	@media (min-width: 1024px) {
@@ -193,20 +232,28 @@ const pages = [
 </style>
 
 <script>
-	import { $ } from "@/consts/dom-selector"
+	import { $ } from "@/lib/dom-selector"
+
+	function toggleMenu(nav: HTMLElement | null, menuMobileContent: HTMLElement | null) {
+		menuMobileContent?.classList.toggle("open")
+		nav?.classList.toggle("open")
+		document.body.classList.toggle("overflow-hidden")
+		document.body.classList.toggle("lg:overflow-auto")
+	}
 
 	document.addEventListener("astro:page-load", () => {
 		const nav = $("nav")
 		const menuButton = $("#menuButton")
 		const innerMenuButton = $("#innerMenuButton")
+		const menuMobileContext = $("#menuMobileContent")
 
-		menuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
-		innerMenuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav))
+		menuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav, menuMobileContext))
+		innerMenuButton?.addEventListener("hamburgerButtonClicked", () =>
+			toggleMenu(nav, menuMobileContext)
+		)
 
-		function toggleMenu(nav: HTMLElement | null) {
-			$("#menuMobileContent")?.classList.toggle("open")
-			nav?.classList.toggle("open")
-			document.body.classList.toggle("overflow-hidden")
+		if (menuMobileContext?.classList.contains("open")) {
+			toggleMenu(nav, menuMobileContext)
 		}
 	})
 </script>

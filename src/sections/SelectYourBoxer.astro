@@ -1,8 +1,10 @@
 ---
+import BoxerBigImage from "@/components/BoxerBigImage.astro"
 import ColumnBoxers from "@/components/ColumnBoxers.astro"
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COUNTRIES } from "@/consts/countries"
+import HorizontalScroll from "@/icons/horizontalScroll.astro"
 
 const listOfBoxers = BOXERS.map((boxer) => {
 	const { country } = boxer
@@ -10,16 +12,19 @@ const listOfBoxers = BOXERS.map((boxer) => {
 	return { ...boxer, countryName }
 })
 
+const selectedBoxerId = Astro.url.searchParams.get("boxer")
+const selectedBoxer = listOfBoxers.find(({ id }) => id === selectedBoxerId) || listOfBoxers[0]
+
 // split in 4 columns
 const boxerColumns = [
-	listOfBoxers.slice(0, 3),
-	listOfBoxers.slice(3, 6),
-	listOfBoxers.slice(6, 9),
-	listOfBoxers.slice(9, 12),
+	listOfBoxers.slice(0, 6),
+	listOfBoxers.slice(6, 11),
+	listOfBoxers.slice(11, 16),
+	listOfBoxers.slice(16, 22),
 ]
 ---
 
-<section class="my-40 hidden md:block">
+<section class="mb-20 mt-20 transform-gpu md:my-40">
 	<Typography
 		as="h3"
 		variant="atomic-title"
@@ -34,135 +39,289 @@ const boxerColumns = [
 		Conoce los detalles de cada boxeador
 	</Typography>
 
-	<div class="mt-32 flex flex-row items-center justify-center gap-8">
-		<article class="absolute flex w-full flex-col items-center justify-center">
-			<div
-				aria-hidden="true"
-				class="absolute inset-0 -z-10 m-auto bg-center bg-no-repeat"
-				style="
-					background-image: url('/img/effects/boxer-background.png');
-					background-size: 45%;
-					mask-image: radial-gradient(circle at bottom, transparent 26%, #000 40%);
-					"
-			>
-			</div>
-			<picture
-				class:list={"boxer-photo aspect-[285/428] h-auto w-[450px]"}
-				transition:name="boxer-big-image"
-			>
-				<source srcset="/img/boxers/el-mariana-big.avif" type="image/avif" />
-				<img
-					class="aspect-[285/428] h-auto w-full object-contain"
-					alt="Fotografía de El Mariana"
-					src="/img/boxers/el-mariana-big.webp"
-					style="
-						filter: drop-shadow(0 0 20px rgba(0, 0, 0, .5));
-						mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-					"
-				/>
-			</picture>
-
-			<div class="absolute bottom-14 mb-10 max-w-md text-wrap">
-				<Typography
-					as="h4"
-					variant="boxer-title"
-					color="primary"
-					class:list={"boxer-title -skew-y-6 text-center"}
-				>
-					<span class="flex flex-col">
-						<span class="text-4xl"> el </span>
-						mariana
-					</span>
-				</Typography>
-			</div>
-
-			<img
-				class:list={"boxer-flag pointer-events-none aspect-[3/2] h-auto w-28 object-contain object-center"}
-				alt="Bandera de México"
-				src="/img/flags/mx.webp"
+	<div class="mt-8 flex flex-col items-center justify-center gap-8 md:mt-32 md:flex-row lg:mt-0">
+		<article
+			class="relative flex w-full max-w-[70%] flex-col items-center justify-center md:absolute md:max-w-full lg:-mt-32"
+		>
+			<BoxerBigImage
+				id={selectedBoxer.id}
+				name={selectedBoxer.name}
+				country={selectedBoxer.country}
+				countryName={selectedBoxer.countryName}
+				loading={selectedBoxerId ? "eager" : "lazy"}
 			/>
 		</article>
-		<div class="boxers-nav flex w-full justify-between">
-			<nav class="boxers-lists flex justify-start h-full gap-2 py-4">
-				<ColumnBoxers boxers={boxerColumns[0]} />
-				<ColumnBoxers boxers={boxerColumns[1]} class="mt-4" />
+
+		<div class="boxers-nav hidden w-full justify-between md:flex">
+			<nav class="boxers-lists flex h-full justify-start gap-4 py-4">
+				<ColumnBoxers
+					boxers={boxerColumns[0]}
+					selectedBoxer={selectedBoxer}
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+				<ColumnBoxers
+					boxers={boxerColumns[1]}
+					selectedBoxer={selectedBoxer}
+					class="mt-12"
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
 			</nav>
 
 			<nav class="boxers-lists flex h-full justify-end gap-2 py-4">
-				<ColumnBoxers boxers={boxerColumns[2]} class="mt-4" />
-				<ColumnBoxers boxers={boxerColumns[3]} />
+				<ColumnBoxers
+					boxers={boxerColumns[2]}
+					selectedBoxer={selectedBoxer}
+					class="mt-12"
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
+				<ColumnBoxers
+					boxers={boxerColumns[3]}
+					selectedBoxer={selectedBoxer}
+					imgLoading={!selectedBoxerId ? "lazy" : undefined}
+				/>
 			</nav>
+		</div>
+
+		<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
+			<div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
+				<div
+					class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll pr-[40%]"
+				>
+					{
+						listOfBoxers.map((boxer, index) => (
+							<div
+								class:list={`
+									carousel-item w-[70%] flex-shrink-0 snap-center px-2
+									${index === 0 ? "ml-[65%]" : ""}
+								`}
+							>
+								<ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
+							</div>
+						))
+					}
+				</div>
+			</div>
+			<HorizontalScroll class:list={["w-16 text-primary opacity-80"]} />
 		</div>
 	</div>
 </section>
 
 <script>
+	import { $, $$ } from "@/lib/dom-selector"
+
 	document.addEventListener("astro:page-load", () => {
-		const boxerLinks = document.querySelectorAll(
-			".boxer-link"
-		) as globalThis.NodeListOf<HTMLAnchorElement>
-		const boxerNav = document.querySelector(".boxers-nav")
-		const boxerTitle = document.querySelector(".boxer-title") as HTMLImageElement
-		const boxerPhoto = document.querySelector(".boxer-photo") as HTMLPictureElement
-		const boxerCountry = document.querySelector(".boxer-flag") as HTMLImageElement
+		const boxerLinks = $$(".boxer-link") as globalThis.NodeListOf<HTMLAnchorElement>
+		const boxerNav = $(".boxers-nav")
 
-		function activateBoxer(element: HTMLElement, link: HTMLElement, replaceUrl: boolean = false) {
-			if (element.classList.contains("active")) return
+		if (!boxerNav) return
 
-			const { id, name, country, countryName } = element?.dataset
+		const boxerTitle = $(".boxer-title") as HTMLImageElement
+		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
+		const boxerCountry = $(".boxer-flag") as HTMLImageElement
 
-			const splitName = name?.split(" ") ?? []
+		const updatedSelectedBoxerId =
+			localStorage.getItem("selected:boxer") ||
+			new URLSearchParams(window.location.search).get("boxer") ||
+			"el-mariana"
+
+		const updatedSelectedBoxerElement: HTMLElement | null = $(
+			`.boxer-link[data-id=${updatedSelectedBoxerId}]`
+		)
+		if (updatedSelectedBoxerElement) {
+			activateBoxer(updatedSelectedBoxerElement, updatedSelectedBoxerElement, boxerNav, true)
+		}
+
+		// detect with intersection observer that the $boxerNav is in viewport
+		const boxerNavObserver = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						// disconnect observer to do this only once
+						boxerNavObserver.disconnect()
+						// get all images and preload them
+						boxerLinks.forEach((link) => {
+							const { id } = link.dataset
+							const boxerSrc = `https://cdn.lavelada.dev/boxers/${id}-big`
+							// create link preload for each image for webp
+							const preloadLink = document.createElement("link")
+							preloadLink.rel = "preload"
+							preloadLink.as = "image"
+							preloadLink.href = `${boxerSrc}.webp`
+							preloadLink.type = "image/webp"
+							document.head.appendChild(preloadLink)
+						})
+					}
+				})
+			},
+			{
+				root: null,
+				threshold: 0.1,
+			}
+		)
+		boxerNavObserver.observe(boxerNav)
+
+		function activateBoxer(
+			element: HTMLElement,
+			link: HTMLElement,
+			nav: HTMLElement,
+			replaceUrl: boolean = false,
+			showAlliesAndOpponents: boolean = true
+		) {
+			if (element?.classList.contains("active")) return
+
+			const { id, name, country, countryName, opponents = "", allies = "" } = element?.dataset
+
+			if (!id || !name || !country || !countryName) return
+
+			const splitName = name.split(" ")
 			const lastName = splitName[splitName.length - 1]
 			const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
 			const spanNames = `
-				<span class="flex flex-col">
-					<span class="text-4xl">${firstNames?.toLocaleLowerCase()}</span>
-					<span class="last-name">${lastName?.toLocaleLowerCase()}</span>
-				</span>
+					<a href="/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
+						<span class="flex flex-col">
+							<span class="text-4xl">${firstNames?.toLocaleLowerCase()}</span>
+							<span>${lastName?.toLocaleLowerCase()}</span>
+						</span>
+					</a>
 			`
 
-			boxerNav?.querySelector(".active")?.classList.remove("active")
+			nav?.querySelector(".active")?.classList.remove("active")
+			nav
+				?.querySelectorAll(".opponent")
+				?.forEach((opponentEl) => opponentEl.classList.remove("opponent"))
+			nav?.querySelectorAll(".ally")?.forEach((allyEl) => allyEl.classList.remove("ally"))
+
 			link.classList.add("active")
+
+			if (showAlliesAndOpponents) {
+				allies.split(",").map((ally) =>
+					boxerLinks.forEach((link) => {
+						if (link.dataset.id === ally) {
+							link.classList.add("ally")
+						}
+					})
+				)
+
+				opponents.split(",").map((opponent) =>
+					boxerLinks.forEach((link) => {
+						const { id: linkId, opponents: linkOpponents } = link.dataset
+						if (linkId === opponent || (linkOpponents === opponent && linkId !== id)) {
+							link.classList.add("opponent")
+						}
+					})
+				)
+			}
+
 			if (replaceUrl) {
 				history.replaceState({}, "", `?boxer=${id}`)
 			}
 
-			const boxerSrc = `/img/boxers/${id}-big`
+			const boxerSrc = `https://cdn.lavelada.dev/boxers/${id}-big`
 
-			boxerPhoto.getElementsByTagName("source")[0].srcset = `${boxerSrc}.avif`
 			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
-			boxerTitle.innerHTML = spanNames ?? ""
-			boxerCountry.src = `/img/flags/${country}.webp`
+			boxerTitle.innerHTML = spanNames
+			boxerCountry.src = `https://cdn.lavelada.dev/flags/${country}.webp`
 			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
+
 			boxerCountry.alt = `Bandera de ${countryName}`
 		}
 
-		const urlParams = new URLSearchParams(window.location.search)
-		const boxerId = urlParams.get("boxer") ?? "el-mariana"
-		const boxerEl = document.querySelector(`[data-id="${boxerId}"]`) as HTMLElement
-		if (boxerEl) {
-			activateBoxer(boxerEl, boxerEl, false)
-		}
+		boxerLinks.forEach((link) => {
+			link.addEventListener("click", (event: MouseEvent) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				const boxerId = currentTarget.getAttribute("data-id")
+				if (boxerId) localStorage.setItem("selected:boxer", JSON.stringify(boxerId))
+				activateBoxer(currentTarget, currentTarget, boxerNav, true)
+			})
+		})
 
 		boxerLinks.forEach((link) => {
 			link.addEventListener("mouseenter", (event) => {
 				const currentTarget = event.currentTarget as HTMLElement
 				if (currentTarget.classList.contains("active")) return
-				activateBoxer(currentTarget, link, true)
+				activateBoxer(currentTarget, link, boxerNav, true)
 			})
 		})
+
+		const carouselInner = $(".carousel-inner") as HTMLElement
+
+		// detect match media change for mobile
+		const mobileMediaQuery = window.matchMedia("(max-width: 768px)")
+
+		function highlightBoxer(link: HTMLAnchorElement) {
+			const rect = link.getBoundingClientRect()
+			const { width } = carouselInner.getBoundingClientRect()
+
+			if (rect.left > width / 2 - rect.width * 0.75 && rect.left < width / 2 + rect.width * 0.25) {
+				activateBoxer(link, link, carouselInner, false, false)
+			}
+		}
+
+		function highlightActiveBoxer() {
+			boxerLinks.forEach((link) => {
+				highlightBoxer(link)
+			})
+		}
+
+		function updateActiveThumbnailPosition() {
+			const boxer = new URLSearchParams(window.location.search).get("boxer")
+			const boxerActiveElement = $(`.carousel .boxer-link[data-id=${boxer}]`)
+			if (boxerActiveElement) {
+				const carouselWidth = carouselInner.clientWidth
+				const thumbnailWidth = boxerActiveElement.offsetWidth
+				const currentPosition = boxerActiveElement.offsetLeft - (carouselWidth - thumbnailWidth) / 2
+
+				carouselInner.scrollTo(currentPosition, 0)
+			}
+		}
+
+		if (mobileMediaQuery.matches) {
+			updateActiveThumbnailPosition()
+
+			carouselInner.addEventListener("scroll", () => {
+				highlightActiveBoxer()
+			})
+		}
 	})
 </script>
 
 <style>
 	.boxers-lists {
-		@apply relative h-32 w-screen overflow-x-scroll;
+		@apply relative w-screen overflow-x-scroll md:overflow-hidden;
 		scrollbar-width: none;
 	}
 
 	@media (min-width: 1280px) {
 		.boxers-lists {
 			@apply h-auto w-full max-w-none overflow-hidden py-2;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.carousel {
+			scrollbar-width: none;
+		}
+
+		.carousel::-webkit-scrollbar {
+			display: none;
+		}
+
+		.carousel-inner {
+			transition: transform 0.3s ease-in-out;
+			scrollbar-width: none;
+		}
+
+		.carousel-inner::-webkit-scrollbar {
+			display: none;
+		}
+
+		.carousel-item {
+			transition: opacity 0.3s ease-in-out;
+		}
+
+		.carousel-item.active {
+			opacity: 1;
+			scale: 1.2;
 		}
 	}
 </style>
