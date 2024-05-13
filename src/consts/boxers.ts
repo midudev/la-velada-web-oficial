@@ -1,14 +1,14 @@
 import { type Boxer } from "@/types/Boxer"
 
-const addGetters = (boxersWithoutAge: Omit<Boxer, "age">[]): Boxer[] => {
-	return boxersWithoutAge.map((boxerWithoutAge) => ({
-		...boxerWithoutAge,
+const addGetters = (boxers: Boxer[]): Boxer[] => {
+	return boxers.map((b) => ({
+		...b,
 		get age() {
 			return new Date(new Date().getTime() - this.birthDate.getTime()).getFullYear() - 1970
 		},
 		// El enemigo de mi enemigo es mi amigo
 		get allies() {
-			return boxersWithoutAge
+			return boxers
 				.filter(
 					(ally) =>
 						(Array.isArray(ally.versus)
@@ -25,9 +25,10 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "el-mariana",
 		name: "El Mariana",
 		realName: "Osvaldo Palacios Flores",
+		gender: "masculino",
 		birthDate: new Date(1998, 6, 23),
-		weight: 87,
 		height: 1.95,
+		age: 25,
 		country: "mx",
 		versus: "plex",
 		guard: "Izquierda",
@@ -36,8 +37,13 @@ export const BOXERS: Boxer[] = addGetters([
 			twitch: "https://twitch.tv/elmariana",
 			instagram: "https://instagram.com/elmarianaa",
 			twitter: "https://twitter.com/elmarianaa",
-			youtube: "https://youtube.com/c/elmariana",
+			youtube: "https://youtube.com/elmariana",
 			tiktok: "https://tiktok.com/@elmarianaa",
+		},
+		workout: {
+			videoID: "A_EDoq70XqY",
+			thumbnail: "/boxers/workoutThumbnails/el-mariana.webp",
+			name: "ElMariana",
 		},
 		clips: [
 			{
@@ -54,9 +60,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "shelao",
 		name: "Shelao",
 		realName: "Cristóbal Andrés Álvarez Leiva",
+		gender: "masculino",
 		birthDate: new Date(1990, 5, 8),
-		weight: 93,
 		height: 1.88,
+		age: 33,
+		weight: 95,
 		country: "cl",
 		versus: "viruzz",
 		guard: "Izquierda", // encontrado
@@ -64,7 +72,7 @@ export const BOXERS: Boxer[] = addGetters([
 		socials: {
 			twitch: "https://twitch.tv/shelao",
 			instagram: "https://instagram.com/crissalva40",
-			youtube: "https://youtube.com/c/shelao",
+			youtube: "https://youtube.com/shelao",
 			tiktok: "https://tiktok.com/@shelao",
 		},
 		clips: [
@@ -83,17 +91,20 @@ export const BOXERS: Boxer[] = addGetters([
 		],
 		rotate: true,
 		workout: {
-			videoID: "xJqhfK5oXK4",
+			videoID: "2CEk7rufxno",
 			thumbnail: "/boxers/workoutThumbnails/shelao.webp",
+			name: "Shelao",
 		},
 	},
 	{
 		id: "zeling",
 		name: "Zeling",
 		realName: "Alicia González",
+		gender: "femenino",
 		birthDate: new Date(1995, 10, 3),
-		weight: 65, // No encontrado
-		height: 1.7, // No es seguro
+		height: 1.71,
+		weight: 65,
+		age: 28,
 		country: "es",
 		gallery: true,
 		versus: ["alana", "ama-blitz"],
@@ -102,8 +113,8 @@ export const BOXERS: Boxer[] = addGetters([
 		socials: {
 			twitch: "https://twitch.tv/zeling",
 			instagram: "https://instagram.com/zeiing",
-			twitter: "https://twitter.com/zeling",
-			youtube: "https://www.youtube.com/channel/UCTfejVE5het7QO8WCY7yIQA",
+			twitter: "https://twitter.com/zeiing",
+			youtube: "https://youtube.com/@zeling_",
 			tiktok: "https://tiktok.com/@zeliing",
 		},
 		clips: [
@@ -119,15 +130,18 @@ export const BOXERS: Boxer[] = addGetters([
 		workout: {
 			videoID: "bVlV1HejQag",
 			thumbnail: "/boxers/workoutThumbnails/zeling.webp",
+			name: "Zeling",
 		},
 	},
 	{
 		id: "nissaxter",
 		name: "Nissaxter",
 		realName: "Cristina Magadán",
+		gender: "femenino",
 		birthDate: new Date(1994, 3, 4),
-		weight: 55, // No es seguro
 		height: 1.64,
+		weight: 46,
+		age: 30,
 		country: "es",
 		gallery: true,
 		versus: ["alana", "ama-blitz"],
@@ -137,12 +151,12 @@ export const BOXERS: Boxer[] = addGetters([
 			twitch: "https://twitch.tv/nissaxter",
 			instagram: "https://instagram.com/nissaxter",
 			twitter: "https://twitter.com/nissaxter",
-			youtube: "https://www.youtube.com/channel/UCjUjTl1MiPdAwRxklFLNklg",
+			youtube: "https://youtube.com/nissaxter_",
 			tiktok: "https://tiktok.com/@nissaxter_",
 		},
 		clips: [
 			{
-				text: "No estoy preparando excusas, no soy el xocas, si pierdo, será con dignidad",
+				text: "No estoy preparando excusas, no soy el xokas, si pierdo, será con dignidad",
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=ly7dosYLSt4qYtTB&amp;clip=UgkxJJ3K1UB1MGsxI_WzPxyiQo-hL4YMn9KB&amp;clipt=EI73nAMY88adAw",
 			},
 			{
@@ -154,24 +168,31 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=XXuWc4c5ywxnBHIZ&amp;clip=UgkxptfPo72fI8yntHVo2UfsuyGjpmsfI3js&amp;clipt=ELTnggMY8smDAw",
 			},
 		],
+		workout: {
+			videoID: "zqatWGonjt4",
+			thumbnail: "/boxers/workoutThumbnails/nissaxter.webp",
+			name: "Nissaxter",
+		},
 	},
 	{
 		id: "carreraaa",
 		name: "Carreraaa",
 		realName: "Rodrigo Ezequiel Carrera",
+		gender: "masculino",
 		birthDate: new Date(2000, 9, 9),
-		weight: 61,
 		height: 1.65,
+		weight: 60,
+		age: 23,
 		country: "ar",
 		versus: "agustin-51",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
 			twitch: "https://twitch.tv/carreraaa",
-			instagram: "https://www.instagram.com/rodricarreraaa/",
+			instagram: "https://instagram.com/rodricarreraaa",
 			twitter: "http://twitter.com/rodricarreraaa",
 			youtube: "http://youtube.com/carreraaa",
-			tiktok: "https://www.tiktok.com/@carreproroblox74",
+			tiktok: "https://tiktok.com/@carreproroblox74",
 		},
 		clips: [
 			{
@@ -193,19 +214,21 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "la-cobra",
 		name: "La Cobra",
 		realName: "Lautaro Damián del Campo",
+		gender: "masculino",
 		birthDate: new Date(1997, 8, 8),
-		weight: 105,
-		height: 1.83,
+		height: 1.82,
+		weight: 108,
+		age: 26,
 		country: "ar",
 		versus: "guanyar",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
-			twitch: "https://www.twitch.tv/lacobraaa",
-			instagram: "https://www.instagram.com/lautarodelcampo/",
+			twitch: "https://twitch.tv/lacobraaa",
+			instagram: "https://instagram.com/lautarodelcampo",
 			twitter: "https://twitter.com/lautarodeIcampo",
-			youtube: "https://www.youtube.com/channel/UCCfPkh8osJPC2pPq283kKXg",
-			tiktok: "https://www.tiktok.com/@lacobraaa.9",
+			youtube: "https://youtube.com/@lacobraaa",
+			tiktok: "https://tiktok.com/@lacobraaa.9",
 		},
 		clips: [
 			{
@@ -218,20 +241,27 @@ export const BOXERS: Boxer[] = addGetters([
 			},
 		],
 		rotate: true,
+		workout: {
+			videoID: "HFR0F2G71y4",
+			thumbnail: "/boxers/workoutThumbnails/la-cobra.webp",
+			name: "La Cobra",
+		},
 	},
 	{
 		id: "karchez",
 		name: "Karchez",
 		realName: "José Carlos Sánchez",
+		gender: "masculino",
 		birthDate: new Date(2000, 7, 4),
-		weight: 85, // No encontrado
 		height: 1.84,
+		weight: 88,
+		age: 23,
 		country: "es",
 		socials: {
-			twitch: "https://www.twitch.tv/karchez",
-			instagram: "https://www.instagram.com/karchezz/",
+			twitch: "https://twitch.tv/karchez",
+			instagram: "https://instagram.com/karchezz",
 			twitter: "https://twitter.com/Karchezzz",
-			youtube: "https://www.youtube.com/Karchez",
+			youtube: "https://youtube.com/Karchez",
 			tiktok: "https://tiktok.com/@karchez",
 		},
 		clips: [
@@ -250,14 +280,17 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "peldanyos",
 		name: "Peldanyos",
 		realName: "Sergio Bolaños",
+		gender: "masculino",
 		birthDate: new Date(1998, 3, 13),
-		weight: 87, // No encontrado
-		height: 1.91, // No es seguro
+		height: 1.9,
+		weight: 87,
+		age: 25,
 		guard: "Derecha",
 		country: "es",
 		workout: {
 			videoID: "I8R5sQXjpKk",
 			thumbnail: "/boxers/workoutThumbnails/peldanyos.webp",
+			name: "Peldanyos",
 		},
 		socials: {
 			twitch: "https://twitch.tv/peldanyos",
@@ -282,16 +315,18 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "aldo-geo",
 		name: "Aldo Geo",
 		realName: "Aldo Geovanni",
+		gender: "masculino",
 		birthDate: new Date(1996, 9, 14),
-		weight: 80, // No encontrado
 		height: 1.79,
+		weight: 80,
+		age: 27,
 		country: "mx",
 		socials: {
-			twitch: "https://www.twitch.tv/aldo_geo/about",
-			instagram: "https://www.instagram.com/_aldogeo_/",
+			twitch: "https://twitch.tv/aldo_geo",
+			instagram: "https://instagram.com/_aldogeo_",
 			twitter: "https://twitter.com/aldogeotv",
-			youtube: "https://www.youtube.com/user/aldogeo100",
-			tiktok: "https://www.tiktok.com/@aldo_geo?lang=es",
+			youtube: "https://youtube.com/aldogeo100",
+			tiktok: "https://tiktok.com/@aldo_geo",
 		},
 		clips: [
 			{
@@ -309,9 +344,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "will",
 		name: "Will",
 		realName: "Ángelo Valdés",
+		gender: "masculino",
 		birthDate: new Date(2000, 5, 29),
-		weight: 85, // No encontrado
-		height: 1.85, // No encontrado
+		height: 1.85,
+		weight: 95,
+		age: 23,
 		country: "do",
 		socials: {
 			instagram: "https://instagram.com/mrangelovaldes",
@@ -330,21 +367,28 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=2BO21jfm469U_i_5&amp;clip=UgkxHy3xXDVJdgv9BUaArwgIYrA_ae1M5FIX&amp;clipt=EJ3ipQUYtdemBQ",
 			},
 		],
+		workout: {
+			videoID: "GWLZSfJsSCo",
+			thumbnail: "/boxers/workoutThumbnails/will.webp",
+			name: "Will",
+		},
 	},
 	{
 		id: "sezar-blue",
 		name: "Sezar Blue",
 		realName: "César González",
-		birthDate: new Date(1973, 7, 29),
-		weight: 87,
-		height: 1.77,
+		gender: "masculino",
+		birthDate: new Date(1977, 8, 29),
+		height: 1.75,
+		weight: 96,
+		age: 46,
 		country: "es",
 		socials: {
-			twitch: "https://www.twitch.tv/sezarbluelive",
-			instagram: "https://www.instagram.com/sezarblue/",
+			twitch: "https://twitch.tv/sezarbluelive",
+			instagram: "https://instagram.com/sezarblue",
 			twitter: "https://twitter.com/soysezarblue",
-			youtube: "https://www.youtube.com/sezarblue",
-			tiktok: "https://www.tiktok.com/@sezar_blue_",
+			youtube: "https://youtube.com/sezarblue",
+			tiktok: "https://tiktok.com/@sezar_blue_",
 		},
 		clips: [
 			{
@@ -366,16 +410,23 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "unicornio",
 		name: "Unicornio",
 		realName: "Germán Usinger",
+		gender: "masculino",
 		birthDate: new Date(1999, 5, 7),
-		weight: 75, // No encontrado
-		height: 1.69, // No es seguro
+		height: 1.75,
+		weight: 81,
+		age: 25,
 		country: "ar",
 		socials: {
 			twitch: "https://twitch.tv/unicornio",
-			instagram: "https://www.instagram.com/germanusinger",
+			instagram: "https://instagram.com/germanusinger",
 			twitter: "https://twitter.com/GermanUsinger",
-			youtube: "https://youtube.com/c/unicornioperro",
-			tiktok: "https://www.tiktok.com/@german.usinger",
+			youtube: "https://youtube.com/unicornioperro",
+			tiktok: "https://tiktok.com/@german.usinger",
+		},
+		workout: {
+			videoID: "m7BEJLwX7dM",
+			thumbnail: "/boxers/workoutThumbnails/unicornio.webp",
+			name: "Unicornio",
 		},
 		clips: [
 			{
@@ -383,7 +434,7 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=dlWpIp4dRS8UAagF&amp;clip=UgkxEcgcoJaVcag3z49qN_XpjZv3CHrCJ7fL&amp;clipt=EOqZGRjP6Rk",
 			},
 			{
-				text: "Subité, ¿querés pelear? y hacemos 11 en el rey de la pista",
+				text: "Subite, ¿querés pelear? y hacemos 11 en el rey de la pista",
 				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=6ahmVqYOwsI54nme&amp;clip=UgkxwF9bV7tUmg7LbPeFDggtLpogaYq9Y2TA&amp;clipt=EI_dQhjNv0M",
 			},
 		],
@@ -393,16 +444,18 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "pelicanger",
 		name: "Pelicanger",
 		realName: "Angerson Esneider",
+		gender: "masculino",
 		birthDate: new Date(2001, 0, 7),
-		weight: 85, // No es seguro
-		height: 1.91,
+		height: 1.88,
+		weight: 92,
+		age: 23,
 		country: "co",
 		socials: {
-			twitch: "https://www.twitch.tv/pelicanger",
-			instagram: "https://www.instagram.com/pelicanger__",
+			twitch: "https://twitch.tv/pelicanger",
+			instagram: "https://instagram.com/pelicanger__",
 			twitter: "https://twitter.com/offpeli",
-			youtube: "https://www.youtube.com/c/Pelicanger",
-			tiktok: "https://www.tiktok.com/@pelicanger.oficial",
+			youtube: "https://youtube.com/Pelicanger",
+			tiktok: "https://tiktok.com/@pelicanger.oficial",
 		},
 		clips: [
 			{
@@ -420,16 +473,18 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "roberto-cein",
 		name: "RobertoCein",
 		realName: "Roberto Sebastián Guadarrama Jiménez",
+		gender: "masculino",
 		birthDate: new Date(1998, 6, 29),
-		weight: 85, // No encontrado
-		height: 1.69, // No es seguro
+		height: 1.65,
+		weight: 63,
+		age: 25,
 		country: "mx",
 		socials: {
-			twitch: "https://m.twitch.tv/robertocein/home",
-			instagram: "https://www.instagram.com/robertocein/",
+			twitch: "https://twitch.tv/robertocein",
+			instagram: "https://instagram.com/robertocein",
 			twitter: "https://twitter.com/Roberto_Cein",
-			youtube: "https://www.youtube.com/channel/UCt8RJDArdFmULfqNENimQvw",
-			tiktok: "https://www.tiktok.com/@roberto_cein?lang=es",
+			youtube: "https://youtube.com/c/robertocein1",
+			tiktok: "https://tiktok.com/@roberto_cein",
 		},
 		clips: [
 			{
@@ -447,28 +502,31 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "skain",
 		name: "Skain",
 		realName: "David Carbó Ferrer",
+		gender: "masculino",
 		birthDate: new Date(1997, 2, 10),
-		weight: 83, // No encontrado
-		height: 1.83, // No encontrado
+		height: 1.83,
+		weight: 72,
+		age: 27,
 		country: "es",
 		socials: {
-			twitch: "https://www.twitch.tv/skain",
-			instagram: "https://www.instagram.com/skain24",
+			twitch: "https://twitch.tv/skain",
+			instagram: "https://instagram.com/skain24",
 			twitter: "https://twitter.com/skain24",
-			youtube: "https://www.youtube.com/@skain24",
-			tiktok: "https://www.tiktok.com/@skain24",
+			youtube: "https://youtube.com/@skain24",
+			tiktok: "https://tiktok.com/@skain24",
 		},
 		workout: {
 			videoID: "PUNBQ1_rbuo",
 			thumbnail: "/boxers/workoutThumbnails/skain.webp",
+			name: "Skain",
 		},
 		clips: [
 			{
-				text: "Yo solo voy a decir que Karchez el año pasado de salvó, no diré nada mas",
+				text: "Yo solo voy a decir que Karchez el año pasado se salvó, no diré nada más",
 				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=9JQt5c-yDe4uJUfL&amp;clip=UgkxlGr0lw1Xr65CkY4r_CfV18y4JuAVSL7y&amp;clipt=ELj7ORicxTo",
 			},
 			{
-				text: "Estoy muy preparado y muy contento. El Rey de la Pista será un formato que dará mucho de que hablar",
+				text: "Estoy muy preparado y muy contento. El Rey de la Pista será un formato que dará mucho de qué hablar",
 				url: "https://www.youtube.com/embed/k70W5W5UFjU?si=XAH2OmLeMxvo2Mbd&amp;clip=UgkxyZGxKPtKZdEfTUP21jDFgEV2Ps2dvqfb&amp;clipt=EK3IHxjrqiA",
 			},
 		],
@@ -478,16 +536,18 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "folagor",
 		name: "Folagor",
 		realName: "Yoel Ramírez Pulido",
+		gender: "masculino",
 		birthDate: new Date(1994, 11, 9),
-		weight: 71,
 		height: 1.8,
+		weight: 74,
+		age: 29,
 		country: "es",
 		socials: {
-			twitch: "https://www.twitch.tv/folagorlives",
-			instagram: "https://www.instagram.com/yoel__ramirez",
+			twitch: "https://twitch.tv/folagorlives",
+			instagram: "https://instagram.com/yoel__ramirez",
 			twitter: "https://twitter.com/FolagoR",
-			tiktok: "https://www.tiktok.com/@folagor_official",
-			youtube: "https://www.youtube.com/Folagor03",
+			tiktok: "https://tiktok.com/@folagor_official",
+			youtube: "https://youtube.com/Folagor03",
 		},
 		clips: [
 			{
@@ -525,9 +585,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "plex",
 		name: "YoSoyPlex",
 		realName: "Daniel Alonso Góndez",
+		gender: "masculino",
 		birthDate: new Date(2001, 8, 20),
-		weight: 70,
 		height: 1.97,
+		weight: 77,
+		age: 22,
 		country: "es",
 		versus: "el-mariana",
 		guard: "Izquierda", // encontrado
@@ -535,12 +597,13 @@ export const BOXERS: Boxer[] = addGetters([
 		socials: {
 			instagram: "https://instagram.com/yosoyplex",
 			twitter: "https://twitter.com/yosoyplex",
-			youtube: "https://youtube.com/c/YoSoyPlex",
+			youtube: "https://youtube.com/YoSoyPlex",
 			tiktok: "https://tiktok.com/@yosoyplexx",
 		},
 		workout: {
 			videoID: "svXhWZ1sZJE",
 			thumbnail: "/boxers/workoutThumbnails/plex.webp",
+			name: "YoSoyPlex",
 		},
 		clips: [
 			{
@@ -561,9 +624,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "viruzz",
 		name: "Viruzz",
 		realName: "Víctor Mélida Cambra",
+		gender: "masculino",
 		birthDate: new Date(1992, 4, 1),
-		weight: 85,
 		height: 1.82,
+		weight: 86,
+		age: 31,
 		country: "es",
 		versus: "shelao",
 		guard: "Izquierda", // encontrado
@@ -572,7 +637,7 @@ export const BOXERS: Boxer[] = addGetters([
 			twitch: "https://twitch.tv/byviruzz",
 			instagram: "https://instagram.com/victormelida",
 			twitter: "https://twitter.com/byViruZz",
-			youtube: "https://youtube.com/c/byViruZz",
+			youtube: "https://youtube.com/byViruZz",
 			tiktok: "https://tiktok.com/@victormelida",
 		},
 		clips: [
@@ -594,9 +659,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "alana",
 		name: "Alana",
 		realName: "Alana Flores",
+		gender: "femenino",
 		birthDate: new Date(2000, 11, 15),
-		weight: 55,
-		height: 1.7,
+		height: 1.56,
+		weight: 50,
+		age: 23,
 		country: "mx",
 		versus: ["nissaxter", "zeling"],
 		guard: "Izquierda", // encontrado
@@ -606,12 +673,13 @@ export const BOXERS: Boxer[] = addGetters([
 			twitch: "https://twitch.tv/alanalarana",
 			instagram: "https://instagram.com/alanafloresf",
 			twitter: "https://twitter.com/alanafloresf",
-			youtube: "https://youtube.com/c/alanalarana",
+			youtube: "https://youtube.com/alanalarana",
 			tiktok: "https://tiktok.com/@alanatwitch",
 		},
 		workout: {
 			videoID: "FXzCBTRWouA",
 			thumbnail: "/boxers/workoutThumbnails/alana.webp",
+			name: "Alana",
 		},
 		clips: [
 			{
@@ -633,9 +701,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "ama-blitz",
 		name: "Amablitz",
 		realName: "Amairani Garza Alonso",
+		gender: "femenino",
 		birthDate: new Date(1995, 2, 1),
-		weight: 55, // No es seguro
 		height: 1.58,
+		weight: 60.6,
+		age: 30,
 		country: "mx",
 		versus: ["zeling", "nissaxter"],
 		guard: "Izquierda", // encontrado
@@ -645,7 +715,7 @@ export const BOXERS: Boxer[] = addGetters([
 			twitch: "https://twitch.tv/amablitz",
 			instagram: "https://instagram.com/amablitz",
 			twitter: "https://twitter.com/amablitz",
-			youtube: "https://youtube.com/c/amablitz",
+			youtube: "https://youtube.com/amablitz",
 			tiktok: "https://tiktok.com/@amablitz",
 		},
 		clips: [
@@ -664,19 +734,21 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "agustin-51",
 		name: "Agustin51",
 		realName: "José Agustín Peréz Nuñéz",
+		gender: "masculino",
 		birthDate: new Date(2000, 10, 18),
-		weight: 62, // No es seguro
-		height: 1.7,
+		height: 1.69,
+		weight: 61.7,
+		age: 23,
 		country: "es",
 		versus: "carreraaa",
 		guard: "Izquierda", // encontrado
 		reach: 168, // No encontrado
 		socials: {
 			twitch: "https://twitch.tv/agustin51",
-			instagram: "https://www.instagram.com/IMAGUS51",
+			instagram: "https://instagram.com/imagus51",
 			twitter: "https://twitter.com/ImAgus51",
-			youtube: "https://www.youtube.com/channel/UC1Bb0DVSgXLKuLbenbpkb8g",
-			tiktok: "https://www.tiktok.com/@agustin51",
+			youtube: "https://youtube.com/Agustin5111",
+			tiktok: "https://tiktok.com/@agustin51",
 		},
 		clips: [
 			{
@@ -697,9 +769,11 @@ export const BOXERS: Boxer[] = addGetters([
 		id: "guanyar",
 		name: "Guanyar",
 		realName: "Diego Iglesias",
+		gender: "masculino",
 		birthDate: new Date(1998, 8, 28),
-		weight: 85,
-		height: 1.88,
+		height: 1.9,
+		weight: 125,
+		age: 26,
 		country: "es",
 		versus: "la-cobra",
 		guard: "Izquierda", // encontrado
@@ -708,7 +782,7 @@ export const BOXERS: Boxer[] = addGetters([
 			twitch: "https://twitch.tv/guanyar",
 			instagram: "https://instagram.com/guanyarr",
 			twitter: "https://twitter.com/guanyarr",
-			youtube: "https://www.youtube.com/channel/UCEy75s5IJw-ISYDu1d7HzlA?view_as=subscriber",
+			youtube: "https://youtube.com/GUANYAR",
 			tiktok: "https://tiktok.com/@guanyar",
 		},
 		clips: [
@@ -726,5 +800,10 @@ export const BOXERS: Boxer[] = addGetters([
 			},
 		],
 		rotate: true,
+		workout: {
+			name: "Guanyar",
+			videoID: "ju-B__1NDMM",
+			thumbnail: "/boxers/workoutThumbnails/guanyar.webp",
+		},
 	},
 ] as const)
