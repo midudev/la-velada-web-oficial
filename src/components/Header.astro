@@ -26,6 +26,8 @@ const pages = [
 	...page,
 	active: page.active ?? normalizedPathName === page.href,
 }))
+
+const isCombatIntern = normalizedPathName.startsWith("/combates/")
 ---
 
 <header class="mb-10 h-16 max-w-[100vw] lg:h-24">
@@ -70,7 +72,7 @@ const pages = [
 					style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
 				/>
 			</div>
-			<nav class="flex w-full flex-col items-center gap-5">
+			<nav class="navContent flex w-full flex-col items-center gap-5">
 				<img
 					src="https://cdn.lavelada.dev/lvda.webp"
 					alt="lvda logo"
@@ -112,8 +114,10 @@ const pages = [
 	<div class="relative flex h-2 w-full flex-col items-center">
 		<div class="gridBottomBarContainer absolute grid w-full items-center justify-between">
 			<div
-				class="h-[2px] w-full rounded-l-[30%] border-t-0"
-				style="background:linear-gradient(to right, transparent 3%, white 35%, white 100%)"
+				class:list={[
+					"h-[2px] w-full rounded-l-[30%] border-t-0",
+					{ gridBottomBarContainerLineLeft: !isCombatIntern },
+				]}
 			>
 			</div>
 			<div class="focus-within-ring -ml-[8px] -mr-[4px]">
@@ -121,10 +125,11 @@ const pages = [
 					<HeroLogo class:list={"h-auto w-full"} id="hero-logo-header" noEffect />
 				</a>
 			</div>
-
 			<div
-				class="h-[2px] w-full rounded-r-[30%] border-t-0 bg-white"
-				style="background:linear-gradient(to left, transparent 3%, white 35%, white 100%);"
+				class:list={[
+					"h-[2px] w-full rounded-l-[30%] border-t-0",
+					{ gridBottomBarContainerLineRight: !isCombatIntern },
+				]}
 			>
 			</div>
 		</div>
@@ -197,6 +202,14 @@ const pages = [
 		grid-template-rows: 4px;
 	}
 
+	.gridBottomBarContainerLineLeft {
+		background: linear-gradient(to right, transparent 3%, white 35%, white 100%);
+	}
+
+	.gridBottomBarContainerLineRight {
+		background: linear-gradient(to left, transparent 3%, white 35%, white 100%);
+	}
+
 	@media (min-width: 1024px) {
 		.gridBottomBarContainer {
 			grid-template-columns: 1fr 9rem 1fr;
@@ -221,9 +234,14 @@ const pages = [
 <script>
 	import { $ } from "@/lib/dom-selector"
 
-	function toggleMenu(nav: HTMLElement | null, menuMobileContent: HTMLElement | null) {
+	function toggleMenu(
+		nav: HTMLElement | null,
+		menuMobileContent: HTMLElement | null,
+		navContent: HTMLElement | null
+	) {
 		menuMobileContent?.classList.toggle("open")
 		nav?.classList.toggle("open")
+		navContent?.classList.toggle("animate-bounce-fade-in")
 		document.body.classList.toggle("overflow-hidden")
 		document.body.classList.toggle("lg:overflow-auto")
 	}
@@ -233,14 +251,17 @@ const pages = [
 		const menuButton = $("#menuButton")
 		const innerMenuButton = $("#innerMenuButton")
 		const menuMobileContext = $("#menuMobileContent")
+		const navContent = $(".navContent")
 
-		menuButton?.addEventListener("hamburgerButtonClicked", () => toggleMenu(nav, menuMobileContext))
+		menuButton?.addEventListener("hamburgerButtonClicked", () =>
+			toggleMenu(nav, menuMobileContext, navContent)
+		)
 		innerMenuButton?.addEventListener("hamburgerButtonClicked", () =>
-			toggleMenu(nav, menuMobileContext)
+			toggleMenu(nav, menuMobileContext, navContent)
 		)
 
 		if (menuMobileContext?.classList.contains("open")) {
-			toggleMenu(nav, menuMobileContext)
+			toggleMenu(nav, menuMobileContext, navContent)
 		}
 	})
 </script>

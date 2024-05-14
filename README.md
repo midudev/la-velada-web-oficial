@@ -63,7 +63,7 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 <details>
 	<summary>Pequeño script de automatización</summary>
 	
-- For Linux/MacOS:
+- En Linux/MacOS:
 	```sh
 	# .bashrc | .zshrc | cualquier archivo de configuración
 	# pequeño script para cambiar de version al entrar al directorio
@@ -77,7 +77,7 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 	}
 	```
 
-- For Windows:
+- En Windows:
 
   ```powershell
   # $PROFILE

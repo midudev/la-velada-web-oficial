@@ -16,7 +16,7 @@ import X from "@/icons/x.astro"
 import YouTube from "@/icons/youtube.astro"
 
 import { BOXERS } from "@/consts/boxers"
-import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
+import { COMBATS } from "@/consts/combats"
 import { COUNTRIES } from "@/consts/countries"
 import Layout from "@/layouts/Layout.astro"
 import CombatSection from "@/sections/Combat.astro"
@@ -148,12 +148,8 @@ export const prerender = true
 
 		{boxer.gallery && <BoxerGallery id={boxer.id} name={boxer.name} />}
 
-		{
-			combat.id !== REY_DE_LA_PISTA_ID &&
-				combat.id !== "3-zeling-y-nissaxter-vs-alana-y-ama-blitz" && (
-					<Forecasts combatId={combat.id} />
-				)
-		}
+		<Forecasts combatId={combat.id} />
+
 		<CombatSection combatId={combat.id} combatNumber={combat.number} boxers={boxers} />
 	</main>
 </Layout>

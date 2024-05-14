@@ -1,0 +1,8 @@
+<main class="flex min-h-screen items-center justify-center text-center">
+	Redirigiendo a Twitch...
+</main>
+
+<script>
+	const { signIn } = await import("auth-astro/client")
+	signIn("twitch", { callbackUrl: "/auth/twitch/callback" })
+</script>
