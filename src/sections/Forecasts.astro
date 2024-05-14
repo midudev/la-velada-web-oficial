@@ -3,7 +3,7 @@ import Action from "@/components/Action.astro"
 import ForecastBoxer from "@/components/ForecastBoxer.astro"
 import Velocimetro from "@/components/Velocimetro.astro"
 import { BOXERS } from "@/consts/boxers"
-import { COMBATS } from "@/consts/combats"
+import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 
 export interface Props {
 	combatId: string
@@ -15,52 +15,90 @@ const combat = COMBATS.find((combat) => combat.id === combatId)
 const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer)) ?? []
 ---
 
-<section
-	id="forecast"
-	data-combat-id={combatId}
-	class="forecastGrid mt-40 grid items-center gap-4 px-7"
->
-	{
-		boxers[0] && (
-			<ForecastBoxer
-				image={`https://cdn.lavelada.dev/boxers/${boxers[0].id}-big.webp`}
-				imageAlt={`${boxers[0].name}`}
-				boxerId={boxers[0].id}
-				boxerName={boxers[0].name}
-				boxerHref={`/boxers/${boxers[0].id}`}
-				class:list={["boxer1"]}
-			/>
-		)
-	}
-	<div class="pronostico flex flex-col items-center justify-center gap-4">
-		<h2 class="text-2xl font-medium uppercase text-white">Pronóstico</h2>
-		<p class="max-w-72 text-center text-xl text-primary opacity-0">
-			Basado en <span class="font-semibold text-accent">0</span> predicciones
-		</p>
-		{boxers[1] && <Velocimetro />}
-	</div>
-	{
-		boxers[1] && (
-			<ForecastBoxer
-				image={`https://cdn.lavelada.dev/boxers/${boxers[1].id}-big.webp`}
-				imageAlt={`${boxers[1].name}`}
-				boxerId={boxers[1].id}
-				boxerName={boxers[1].name}
-				boxerHref={`/boxers/${boxers[1].id}`}
-				class:list={["boxer2"]}
-			/>
-		)
-	}
-	<div class="action flex w-full flex-col items-center justify-center">
-		<Action
-			class="mt-20 w-full max-w-lg text-center text-base uppercase text-primary"
-			as="a"
-			href="/pronosticos"
+{
+	combatId === REY_DE_LA_PISTA_ID && <section
+			id="forecast"
+			data-combat-id={combatId}
+			class="forecastGrid mt-40 flex flex-col items-center gap-4 px-7"
 		>
-			¡Haz tu pronóstico!
-		</Action>
-	</div>
-</section>
+			<div class="pronostico flex flex-col items-center justify-center gap-4">
+				<h2 class="text-2xl font-medium uppercase text-white">Pronóstico</h2>
+				<p class="max-w-72 text-center text-xl text-primary opacity-0">
+					Basado en <span class="font-semibold text-accent">0</span> predicciones
+				</p>
+			</div>
+
+			<div class="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-5 gap-8">
+			{boxers.map((boxer) => boxer && (
+				<ForecastBoxer
+					image={`https://cdn.lavelada.dev/boxers/${boxer.id}-small.webp`}
+					imageAlt={`${boxer.name}`}
+					boxerId={boxer.id}
+					boxerName={boxer.name}
+					boxerHref={`/boxers/${boxer.id}`}
+					class:list={["boxer-forecast"]}
+					isSmall={true}
+				/>
+			))}
+			</div>
+
+			<div class="action flex w-full flex-col items-center justify-center">
+				<Action
+					class="mt-20 w-full max-w-lg text-center text-base uppercase text-primary"
+					as="a"
+					href="/pronosticos"
+				>
+					¡Haz tu pronóstico!
+				</Action>
+			</div>
+	</section>
+}
+
+{ combatId !== REY_DE_LA_PISTA_ID && combatId !== "3-zeling-y-nissaxter-vs-alana-y-ama-blitz" && (
+		<section
+			id="forecast"
+			data-combat-id={combatId}
+			class="forecastGrid mt-40 grid items-center gap-4 px-7"
+		>
+			{boxers[0] && (
+				<ForecastBoxer
+					image={`https://cdn.lavelada.dev/boxers/${boxers[0].id}-big.webp`}
+					imageAlt={`${boxers[0].name}`}
+					boxerId={boxers[0].id}
+					boxerName={boxers[0].name}
+					boxerHref={`/boxers/${boxers[0].id}`}
+					class:list={["boxer1"]}
+				/>
+			)}
+			<div class="pronostico flex flex-col items-center justify-center gap-4">
+				<h2 class="text-2xl font-medium uppercase text-white">Pronóstico</h2>
+				<p class="max-w-72 text-center text-xl text-primary opacity-0">
+					Basado en <span class="font-semibold text-accent">0</span> predicciones
+				</p>
+				{boxers[1] && <Velocimetro />}
+			</div>
+			{boxers[1] && (
+				<ForecastBoxer
+					image={`https://cdn.lavelada.dev/boxers/${boxers[1].id}-big.webp`}
+					imageAlt={`${boxers[1].name}`}
+					boxerId={boxers[1].id}
+					boxerName={boxers[1].name}
+					boxerHref={`/boxers/${boxers[1].id}`}
+					class:list={["boxer2"]}
+				/>
+			)}
+			<div class="action flex w-full flex-col items-center justify-center">
+				<Action
+					class="mt-20 w-full max-w-lg text-center text-base uppercase text-primary"
+					as="a"
+					href="/pronosticos"
+				>
+					¡Haz tu pronóstico!
+				</Action>
+			</div>
+		</section>
+	)
+}
 
 <script>
 	import { $ } from "@/lib/dom-selector"
@@ -76,14 +114,20 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 				const { totalVotes, percentageVotes } = json?.data ?? {}
 				if (totalVotes == null || totalVotes === 0) return
 
-				const [, lastBoxer] = $forecast.querySelectorAll(".boxer-forecast")
-				const lastBoxerId = lastBoxer.getAttribute("data-id")
-				if (lastBoxerId == null) return
+				const allBoxers = $forecast.querySelectorAll(".boxer-forecast")
 
-				const percentage = percentageVotes[lastBoxerId]
-				if (percentage) {
-					const event = new CustomEvent("forecast:loaded", { detail: percentage })
-					dispatchEvent(event)
+				const isKingOfTheHill = allBoxers.length > 4
+
+				if (!isKingOfTheHill) {
+					const [, lastBoxer] = $forecast.querySelectorAll(".boxer-forecast")
+					const lastBoxerId = lastBoxer.getAttribute("data-id")
+					if (lastBoxerId == null) return
+
+					const percentage = percentageVotes[lastBoxerId]
+					if (percentage) {
+						const event = new CustomEvent("forecast:loaded", { detail: percentage })
+						dispatchEvent(event)
+					}
 				}
 
 				const $pronostico = $forecast.querySelector(".pronostico") as HTMLElement

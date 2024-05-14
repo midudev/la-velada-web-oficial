@@ -2,9 +2,10 @@
 import { Image } from "astro:assets"
 
 import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
-import { COMBATS } from "@/consts/combats"
+import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 import CombatFeatures from "@/sections/CombatFeatures.astro"
+import Forecasts from "@/sections/Forecasts.astro"
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
@@ -48,6 +49,7 @@ const formatter = new Intl.ListFormat("es", {
 
 const formattedBoxerNames = formatter.format(boxerNames)
 const [imageWidth, imageHeight] = combatData.titleSize
+const isKingOfTheHill = combatData.id === REY_DE_LA_PISTA_ID
 
 export const prerender = true
 ---
@@ -58,39 +60,48 @@ export const prerender = true
 	image={`https://cdn.lavelada.dev/matches/og-${id}-min.jpg`}
 >
 	<BackgroundVideo id={id} />
-	<main class="pointer-events-none md:-mt-12">
+	<main class="md:-mt-12">
 		<div
 			class="full-width relative z-[-10] flex h-[60vh] w-screen items-center justify-center overflow-x-clip md:h-[76vh]"
 		>
-			<img
-				transition:name={`${combatData.id}-member-1`}
-				decoding="async"
-				src={image1.src}
-				alt={image1.alt}
-				style="mask-image: linear-gradient(black 90%, transparent 100%);"
-				class="relative left-36 h-[600px] w-auto md:h-[1000px] xl:-left-10 xl:h-[1200px]"
-			/>
+			{
+				!isKingOfTheHill && (
+					<img
+						transition:name={`${combatData.id}-member-1`}
+						decoding="async"
+						src={image1.src}
+						alt={image1.alt}
+						style="mask-image: linear-gradient(black 90%, transparent 100%);"
+						class="relative left-36 h-[600px] w-auto md:h-[1000px] xl:-left-10 xl:h-[1200px]"
+					/>
+				)
+			}
 			<Image
 				width={imageWidth}
 				height={imageHeight}
 				transition:name={`title-image-${id}`}
 				loading={"eager"}
-				class="inset-0 h-auto max-h-96 max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
+				class="inset-0 z-10 h-auto max-h-96 max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-xl lg:scale-90"
 				src={`https://cdn.lavelada.dev/matches/title-${id}.webp`}
 				alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
 			/>
-			<img
-				transition:name={`${combatData.id}-member-2`}
-				decoding="async"
-				src={image2.src}
-				alt={image2.alt}
-				style="mask-image: linear-gradient(black 90%, transparent 100%);"
-				class="relative right-36 h-[600px] w-auto md:h-[1000px] xl:-right-10 xl:h-[1200px]"
-			/>
+			{
+				!isKingOfTheHill && (
+					<img
+						transition:name={`${combatData.id}-member-2`}
+						decoding="async"
+						src={image2.src}
+						alt={image2.alt}
+						style="mask-image: linear-gradient(black 90%, transparent 100%);"
+						class="relative right-36 h-[600px] w-auto md:h-[1000px] xl:-right-10 xl:h-[1200px]"
+					/>
+				)
+			}
 		</div>
 		<div class="pointer-events-auto">
 			{combatData.boxers.length <= 4 && <CombatFeatures boxerIds={combatData.boxers} />}
 		</div>
+		<Forecasts combatId={id} />
 	</main>
 </Layout>
 
