@@ -5,6 +5,7 @@ import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
 import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 import CombatFeatures from "@/sections/CombatFeatures.astro"
+import Forecasts from "@/sections/Forecasts.astro"
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
@@ -59,7 +60,7 @@ export const prerender = true
 	image={`https://cdn.lavelada.dev/matches/og-${id}-min.jpg`}
 >
 	<BackgroundVideo id={id} />
-	<main class="pointer-events-none md:-mt-12">
+	<main class="md:-mt-12">
 		<div
 			class="full-width relative z-[-10] flex h-[60vh] w-screen items-center justify-center overflow-x-clip md:h-[76vh]"
 		>
@@ -100,6 +101,7 @@ export const prerender = true
 		<div class="pointer-events-auto">
 			{combatData.boxers.length <= 4 && <CombatFeatures boxerIds={combatData.boxers} />}
 		</div>
+		<Forecasts combatId={id} />
 	</main>
 </Layout>
 

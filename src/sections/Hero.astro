@@ -3,20 +3,33 @@ import AnimatedX from "@/components/AnimatedX.astro"
 import HeroLogo from "@/components/HeroLogo.astro"
 ---
 
+<script>
+	const twitchLink = document.querySelector("a[href='https://www.twitch.tv/ibai']")
+
+	setTimeout(() => {
+		if (twitchLink) {
+			twitchLink.classList.remove("opacity-0", "invisible") // Adjust this line if you're using 'hidden'
+		}
+		if (twitchLink) {
+			twitchLink.classList.add("opacity-100", "visible") // Add any classes to make it visible or animate
+		}
+	}, 5)
+</script>
 <section class="flex flex-col place-items-center gap-4 lg:gap-9">
 	<h1 class="sr-only bg-black/30">Presentación de la Velada del Año IV</h1>
 	<a
-		class="relative -rotate-6 font-atomic text-2xl text-white underline-offset-8 transition duration-200 hover:scale-110 motion-reduce:duration-0 motion-reduce:hover:scale-100 md:text-4xl"
+		class="invisible -rotate-6 animate-fade-in font-atomic text-2xl text-white underline-offset-8 opacity-0 transition duration-1000 hover:scale-110 hover:underline md:text-4xl"
 		href="https://www.twitch.tv/ibai"
 		target="_blank"
 		rel="noopener"
 		title="Enlace al canal de Twitch de Ibai Llanos"
 		aria-label="Enlace al canal de Twitch de Ibai Llanos"
 	>
-		<span class="relative">twitch.tv/ibai</span>
+		twitch.tv/ibai
 	</a>
 	<div class="relative">
 		<AnimatedX />
+
 		<div
 			class="absolute inset-0 -z-10 m-auto w-full rounded-full bg-black/50 blur-2xl md:size-[400px]"
 		>
