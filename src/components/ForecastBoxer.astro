@@ -2,12 +2,13 @@
 interface Props {
 	image: string
 	imageAlt: string
+	boxerId: string
 	boxerName: string
 	boxerHref: string
-	percentage: number
+	isSmall?: boolean
 }
 
-const { image, imageAlt, boxerName, boxerHref, percentage } = Astro.props
+const { image, imageAlt, boxerId, boxerName, boxerHref, isSmall = false } = Astro.props
 ---
 
 <a
@@ -18,21 +19,29 @@ const { image, imageAlt, boxerName, boxerHref, percentage } = Astro.props
 	<article>
 		<img decoding="async" class="image" src={image} alt={imageAlt} />
 		<h3
-			class="text-center text-2xl font-medium uppercase text-white transition-transform group-hover:scale-125 md:group-hover:scale-150"
+			class:list={[
+				"text-center font-medium uppercase text-white transition-transform group-hover:scale-125 md:group-hover:scale-150",
+				isSmall && "text-lg",
+				!isSmall && "text-2xl",
+			]}
 		>
 			{boxerName}
 		</h3>
 		<h4
-			class="mt-1 text-center text-6xl font-semibold text-accent transition-transform group-hover:scale-75"
+			data-id={boxerId}
+			class:list={[
+				"boxer-forecast mt-1 text-center font-semibold text-accent transition-transform group-hover:scale-75",
+				isSmall && "text-3xl",
+				!isSmall && "text-6xl",
+			]}
 		>
-			{percentage}%
+			&nbsp;
 		</h4>
 	</article>
 </a>
 
 <style>
 	.image {
-		filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
 		mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 	}
 </style>

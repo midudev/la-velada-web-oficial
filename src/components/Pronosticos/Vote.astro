@@ -4,14 +4,29 @@ import { Image } from "astro:assets"
 import { Votes, db, eq } from "astro:db"
 
 import Typography from "@/components/Typography.astro"
+import { BOXERS } from "@/consts/boxers"
 import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
+import type { BoxerGender } from "@/types/Boxer"
+
+const boxers = BOXERS
 
 const getCombatById = (id: string) => {
 	return COMBATS.find((combat) => combat.id === id)
 }
 
+const getBoxerGender = (boxerId: string): BoxerGender => {
+	boxers.forEach((boxer) => {
+		if (boxer.id === boxerId) return boxer.gender
+	})
+	return "masculino"
+}
+
 const getBoxerNames = (boxerIds: string[]): string[] => {
-	return boxerIds.map((boxerId) => `Boxeador ${boxerId}`)
+	return boxerIds.map((boxerId) => {
+		const gender = getBoxerGender(boxerId)
+		if (gender === "masculino") return `Boxeador ${boxerId}`
+		return `Boxeadora ${boxerId}`
+	})
 }
 
 const createImgRoute = (combateNumber: number, slug: string) => {
@@ -34,11 +49,6 @@ const userVotes: Record<string, string> = {}
 votes.forEach((vote) => {
 	userVotes[vote.combatId] = vote.voteId
 })
-
-// const userVotes = votes.reduce((acc, vote) => {
-// 	acc[vote.combatId] = vote.voteId
-// 	return acc
-// }, {} as Record<string, string>)
 ---
 
 <section class="w-full">
@@ -88,6 +98,7 @@ votes.forEach((vote) => {
 										]}
 										data-combat-id={combatData.id}
 										data-vote-id={boxer}
+										title={`Votar a ${boxer.replaceAll("-", " ")}`}
 									>
 										<div class="relative h-auto text-xs">
 											<img
@@ -109,8 +120,19 @@ votes.forEach((vote) => {
 				const { teams, boxers } = combatData
 				const [slug1, slug2] = teams ?? boxers
 				const [image1, image2] = [
-					{ alt: slug1.replaceAll("-", " "), src: createImgRoute(combatData.number, slug1) },
-					{ alt: slug2.replaceAll("-", " "), src: createImgRoute(combatData.number, slug2) },
+					{
+						alt: () => slug1.replaceAll("-", " y "),
+						src: createImgRoute(combatData.number, slug1),
+					},
+					{
+						alt: () => {
+							const splittedSlug2 = slug2.split("-")
+							if (slug2 === "agustin-51") return slug2.replace("-", "")
+							if (splittedSlug2.length > 2) return slug2.replace("-", " y ").replace("-", "")
+							return slug2.replaceAll("-", " ")
+						},
+						src: createImgRoute(combatData.number, slug2),
+					},
 				]
 
 				return (
@@ -122,15 +144,16 @@ votes.forEach((vote) => {
 							]}
 							data-combat-id={combatData.id}
 							data-vote-id={slug1}
+							title={`Votar a ${image1.alt()}`}
 						>
 							<div class="relative h-auto">
 								<img
 									class="h-auto max-h-96 w-full object-contain"
 									src={image1.src}
-									alt={`Fotografía de ${image1.alt}`}
+									alt={`Fotografía de ${image1.alt()}`}
 									style="mask-image: linear-gradient(black 80%, transparent)"
 								/>
-								<span class="to-vote-text">¡voto a {image1.alt}!</span>
+								<span class="to-vote-text">¡voto por {image1.alt()}!</span>
 								<span class="already-voted-text">¡tu voto!</span>
 							</div>
 						</button>
@@ -152,15 +175,16 @@ votes.forEach((vote) => {
 							]}
 							data-combat-id={combatData.id}
 							data-vote-id={slug2}
+							title={`Votar a ${image2.alt()}`}
 						>
 							<div class="relative h-auto">
 								<img
 									class="h-auto max-h-96 w-full object-contain"
 									src={image2.src}
-									alt={`Fotografía de ${image2.alt}`}
+									alt={`Fotografía de ${image2.alt()}`}
 									style="mask-image: linear-gradient(black 80%, transparent)"
 								/>
-								<span class="to-vote-text">¡voto a {image2.alt}!</span>
+								<span class="to-vote-text">¡voto por {image2.alt()}!</span>
 								<span class="already-voted-text">¡tu voto!</span>
 							</div>
 						</button>
