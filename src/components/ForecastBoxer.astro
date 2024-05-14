@@ -5,9 +5,10 @@ interface Props {
 	boxerId: string
 	boxerName: string
 	boxerHref: string
+	isSmall?: boolean
 }
 
-const { image, imageAlt, boxerId, boxerName, boxerHref } = Astro.props
+const { image, imageAlt, boxerId, boxerName, boxerHref, isSmall = false } = Astro.props
 ---
 
 <a
@@ -18,13 +19,21 @@ const { image, imageAlt, boxerId, boxerName, boxerHref } = Astro.props
 	<article>
 		<img decoding="async" class="image" src={image} alt={imageAlt} />
 		<h3
-			class="text-center text-2xl font-medium uppercase text-white transition-transform group-hover:scale-125 md:group-hover:scale-150"
+			class:list={[
+				"text-center font-medium uppercase text-white transition-transform group-hover:scale-125 md:group-hover:scale-150",
+				isSmall && "text-lg",
+				!isSmall && "text-2xl",
+			]}
 		>
 			{boxerName}
 		</h3>
 		<h4
 			data-id={boxerId}
-			class="boxer-forecast mt-1 text-center text-6xl font-semibold text-accent transition-transform group-hover:scale-75"
+			class:list={[
+				"boxer-forecast mt-1 text-center font-semibold text-accent transition-transform group-hover:scale-75",
+				isSmall && "text-3xl",
+				!isSmall && "text-6xl",
+			]}
 		>
 			&nbsp;
 		</h4>
