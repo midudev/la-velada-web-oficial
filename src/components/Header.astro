@@ -32,7 +32,7 @@ const isCombatIntern = normalizedPathName.startsWith("/combates/")
 <header class="mb-10 h-16 max-w-[100vw] lg:h-24">
 	<nav class="group flex h-full w-full items-center justify-between px-10 lg:justify-center">
 		{
-			pages.map(({ name, href, active, soonDate, target }, key) => (
+			pages.map(({ name, href, active, target }, key) => (
 				<>
 					<a
 						href={href}
@@ -46,9 +46,6 @@ const isCombatIntern = normalizedPathName.startsWith("/combates/")
 						id={`nav-link-${key}`}
 					>
 						<span class="z-10">{name}</span>
-						{soonDate && (
-							<span class="absolute z-10 mt-10 -skew-x-6 text-xs text-accent">{soonDate}</span>
-						)}
 						<div class="background absolute -z-10 h-full w-full" />
 					</a>
 					{key === 1 && <div class:list={"hidden w-64 lg:block"} />}
@@ -83,7 +80,7 @@ const isCombatIntern = normalizedPathName.startsWith("/combates/")
 					style="background:linear-gradient(to right, transparent 0%, white 50%, transparent 100%)"
 				/>
 				{
-					pages.map(({ name, href, active, soonDate }, key) => (
+					pages.map(({ name, href, active }, key) => (
 						<>
 							<a
 								href={href}
@@ -94,7 +91,6 @@ const isCombatIntern = normalizedPathName.startsWith("/combates/")
 								id={`navmob-link-${key}`}
 							>
 								<span class="z-10 uppercase text-primary">{name}</span>
-								{soonDate && <span class="text-accent">{soonDate}</span>}
 							</a>
 							<hr
 								class="h-[2px] w-full border-t-0"
