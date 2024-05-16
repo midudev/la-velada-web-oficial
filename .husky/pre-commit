@@ -1,1 +1,15 @@
-npx lint-staged
+#!/bin/bash
+
+# Verificar el sistema operativo
+if [ "$OSTYPE" = "msys" ] || [ "$OSTYPE" = "win32" ]; then
+  # Si es Windows, ejecutar npx.cmd lint-staged
+  npx.cmd lint-staged
+else
+  # Si no es Windows, intentar ejecutar npx lint-staged
+	if command -v npx 2> /dev/null; then
+    npx lint-staged
+  else
+    echo "El comando 'npx' no está disponible. Por favor, instale 'npx' para continuar."
+    exit 1
+  fi
+fi
