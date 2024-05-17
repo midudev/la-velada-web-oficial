@@ -4,29 +4,28 @@ interface Props {
 }
 
 const { id } = Astro.props
+
+const url = `https://cdn.lavelada.dev/${id}-corto.mp4`
 ---
 
 <div class="fixed left-0 top-0 -z-10 aspect-video h-[100vh] w-screen" id="bg-video">
 	<video
+		id="video-player"
+		autoplay
 		muted
 		loop
 		class="aspect-video size-full overflow-hidden object-cover opacity-0 transition-opacity duration-500"
 		style="mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, transparent);"
 		oncanplay="this.classList.add('opacity-70')"
+		playsinline
+		src={url}
 	>
-		<source type="video/mp4" src={`https://cdn.lavelada.dev/${id}-corto.mp4`} />
+		<source type="video/mp4" src={url} />
 	</video>
 </div>
 
-<script>
+<script is:inline>
 	import { $ } from "@/lib/dom-selector"
 
-	const $bgVideoDiv = $("#bg-video")
-
-	const playVideo = () => {
-		if ($bgVideoDiv) $bgVideoDiv.querySelector("video")?.play()
-		else document.removeEventListener("astro:page-load", playVideo)
-	}
-
-	document.addEventListener("astro:page-load", playVideo)
+	$("#video-player").load()
 </script>
