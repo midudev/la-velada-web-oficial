@@ -63,15 +63,27 @@
 		const $clipContainer = $$(".clip-container")
 		const $clipDialog = $(".clip-dialog") as HTMLDialogElement
 		const $closeButton = $(".close-dialog")
-		const $ytFrame = $(".yt-iframe")
+		let $ytFrame = $(".yt-iframe")
+		const ytFrameCopy = $ytFrame
 
 		if (!$clipDialog) return
 
 		$clipDialog.addEventListener("close", () => {
-			$ytFrame?.setAttribute("src", "")
+			if ($ytFrame !== null) {
+				$ytFrame.setAttribute("src", "")
+			} else {
+				ytFrameCopy?.setAttribute("src", "")
+			}
 		})
 
-		$closeButton?.addEventListener("click", () => $clipDialog.close())
+		$closeButton?.addEventListener("click", () => {
+			$clipDialog.close()
+			if ($ytFrame !== null) {
+				$ytFrame.remove()
+			} else {
+				ytFrameCopy?.remove()
+			}
+		})
 
 		$clipDialog.addEventListener("click", (event) => {
 			const target = event.target as HTMLElement
@@ -83,7 +95,15 @@
 				const currentTarget = event.currentTarget as HTMLElement
 				const { url } = currentTarget.dataset
 				if (!url) return
-				$ytFrame?.setAttribute("src", `${url}&autoplay=1`)
+				$ytFrame = $(".yt-iframe") as HTMLIFrameElement
+				if ($ytFrame !== null) {
+					$ytFrame.setAttribute("src", `${url}&autoplay=1`)
+				} else {
+					if (ytFrameCopy) {
+						$clipDialog?.querySelector("div")?.prepend(ytFrameCopy)
+						ytFrameCopy.setAttribute("src", `${url}&autoplay=1`)
+					}
+				}
 				$clipDialog.showModal()
 			})
 		})
