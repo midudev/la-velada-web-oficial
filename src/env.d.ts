@@ -1,3 +1,5 @@
+/// <reference path="../.astro/db-types.d.ts" />
+/// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
 
 interface ImportMetaEnv {
@@ -6,4 +8,10 @@ interface ImportMetaEnv {
 
 interface ImportMeta {
 	readonly env: ImportMetaEnv
+}
+
+declare global {
+	interface Window {
+		toast: function
+	}
 }

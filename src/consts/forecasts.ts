@@ -1,27 +1,18 @@
-export interface Forecast {
-	combatId: string
-	forecastData: ForecastData[]
-}
-
-export interface ForecastData {
-	boxerId: string
-	forecast: number
-	predictionsCount: number
-}
+import type { Forecast } from "@/types/Forecast"
 
 export const FORECASTS: Forecast[] = [
 	{
-		combatId: "1",
+		combatId: "1-agustin-51-vs-carreraaa",
 		forecastData: [
-			{
-				boxerId: "agustin-51",
-				forecast: 0.3,
-				predictionsCount: 30,
-			},
 			{
 				boxerId: "carreraaa",
 				forecast: 0.7,
 				predictionsCount: 70,
+			},
+			{
+				boxerId: "agustin-51",
+				forecast: 0.3,
+				predictionsCount: 30,
 			},
 		],
 	},
@@ -59,14 +50,14 @@ export const FORECASTS: Forecast[] = [
 		combatId: "6",
 		forecastData: [
 			{
-				boxerId: "el-mariana",
-				forecast: 0.6,
-				predictionsCount: 60,
-			},
-			{
 				boxerId: "plex",
 				forecast: 0.4,
 				predictionsCount: 40,
+			},
+			{
+				boxerId: "el-mariana",
+				forecast: 0.6,
+				predictionsCount: 60,
 			},
 		],
 	},

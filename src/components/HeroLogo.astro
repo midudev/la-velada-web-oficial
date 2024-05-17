@@ -1,5 +1,16 @@
+---
+interface Props {
+	id: string
+	class?: string
+	noEffect?: boolean
+	animated?: boolean
+}
+
+const { id, class: classList, noEffect, animated = true } = Astro.props as Props
+---
+
 <svg
-	class:list={Astro.props.class}
+	class:list={classList}
 	width="800"
 	height="679"
 	fill="none"
@@ -7,11 +18,12 @@
 	role="img"
 	aria-label="Logotipo de La Velada 4"
 >
-	<symbol id="hero-logo">
+	<symbol id={id}>
 		<path
 			fill="currentColor"
 			stroke="currentColor"
 			d="M363.933 2.427h13.752c-.194 22.247-.391 44.491-.585 66.738 3.93-.33 7.865-.584 11.804-.759-.015 3.17-.031 6.337-.044 9.507a260.26 260.26 0 0 0-25.908 2.608zm27.126 75.386c5.26-25.343 10.382-50.319 15.354-75.383h14.68c5.195 25.3 10.53 50.99 15.956 77.529a262.327 262.327 0 0 0-13.035-1.44 19513.85 19513.85 0 0 1-10.089-58.489 7672.546 7672.546 0 0 1-9.582 57.565"
+			class:list={[{ "animate-fade-in-up": animated }]}
 		>
 		</path>
 		<path
@@ -21,6 +33,16 @@
 		>
 		</path>
 	</symbol>
-	{Astro.props.noEffect && <use href="#hero-logo" class="text-[#f1ffaa]/70 blur-xl md:blur-md" />}
-	<use href="#hero-logo" class:list={Astro.props.noEffect ? "text-white" : "text-primary"}></use>
+	{
+		noEffect && (
+			<use
+				href="#hero-logo-header"
+				class:list={["text-[#f1ffaa]/70 blur-xl md:blur-md", animated ? "animate-fade-in-up" : ""]}
+			/>
+		)
+	}
+	<use
+		href="#hero-logo-header"
+		class:list={[noEffect ? "text-white" : "text-primary", animated ? "animate-fade-in-up" : ""]}
+	></use>
 </svg>

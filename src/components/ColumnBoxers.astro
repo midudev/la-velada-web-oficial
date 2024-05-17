@@ -1,22 +1,51 @@
 ---
+import type { HTMLAttributes } from "astro/types"
+
 import type { Boxer } from "@/types/Boxer"
 
 interface Props {
 	boxers: Boxer[]
 	class?: string
-	selectedBoxerId: string
+	selectedBoxer: Boxer
+	imgLoading?: HTMLAttributes<"img">["loading"]
 }
 
-const { boxers, class: className = "", selectedBoxerId } = Astro.props
+const { boxers, class: className = "", selectedBoxer, imgLoading } = Astro.props
+
+const isAlly = (id: Boxer["id"]) => selectedBoxer.allies?.includes(id)
+
+const hasSameOpponents = (selectedBoxerOpponents: string[], opponents: string[]) => {
+	return selectedBoxerOpponents.every((sBoxerOpponent) => opponents.includes(sBoxerOpponent))
+}
+
+const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
+	const selectedBoxerOpponents = Array.isArray(selectedBoxer.versus)
+		? selectedBoxer.versus
+		: [selectedBoxer.versus]
+
+	const opponents = Array.isArray(versus) ? versus : [versus]
+
+	return (
+		selectedBoxerOpponents.includes(id) ||
+		(hasSameOpponents(selectedBoxerOpponents, opponents) && id !== selectedBoxer.id && !isAlly(id))
+	)
+}
 ---
 
 <div class:list={`flex flex-col ${className}`}>
 	{
-		boxers.map(({ id, name, country, countryName, weight, rotate, versus, allies }) => (
+		boxers.map(({ id, name, country, countryName, weight, rotate, versus, allies, gender }) => (
 			<a
 				href={`/boxers/${id}`}
-				class:list={["boxer-link", { active: selectedBoxerId === id }]}
-				title={`Visita la página del boxeador ${name}`}
+				class:list={[
+					"boxer-link",
+					{
+						active: selectedBoxer.id === id,
+						ally: isAlly(id),
+						opponent: isOpponent(id, versus),
+					},
+				]}
+				title={`Visita la página ${gender === "masculino" ? "del boxeador" : "de la boxeadora"} ${name}`}
 				data-id={id}
 				data-name={name}
 				data-country={country}
@@ -28,10 +57,10 @@ const { boxers, class: className = "", selectedBoxerId } = Astro.props
 				<div class="boxer-link-background" />
 				<img
 					decoding="async"
-					src={`/img/boxers/${id}-small.webp`}
-					alt={`Foto en pequeño del boxeador ${name}`}
-					class:list={`boxer-image aspect-square h-full w-full object-contain ${rotate ? "rotate-y-180" : ""}`}
-					loading="lazy"
+					src={`https://cdn.lavelada.dev/boxers/${id}-small.webp`}
+					alt={`Foto en pequeño ${gender === "masculino" ? "del boxeador" : "de la boxeadora"} ${name}`}
+					class:list={`boxer-image ${rotate ? "rotate-y-180" : ""}`}
+					loading={imgLoading}
 				/>
 			</a>
 		))
@@ -47,7 +76,7 @@ const { boxers, class: className = "", selectedBoxerId } = Astro.props
 		}
 
 		& .boxer-image {
-			@apply z-20 h-full object-contain transition-opacity duration-300 ease-in-out;
+			@apply z-20 aspect-square h-full w-full object-contain transition-opacity duration-300 ease-in-out;
 			mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
 			filter: grayscale(100%);
 			transition: filter 0.3s ease;
@@ -66,12 +95,14 @@ const { boxers, class: className = "", selectedBoxerId } = Astro.props
 
 	.boxer-link:hover .boxer-image,
 	.boxer-link.active .boxer-image {
+		transition: scale 0.3s ease-in-out;
 		scale: 1.05;
 		filter: grayscale(0%);
 	}
 
 	.boxer-link.ally {
 		& .boxer-image {
+			transition: scale 0.3s ease-in-out;
 			scale: 1.05;
 		}
 
@@ -84,6 +115,7 @@ const { boxers, class: className = "", selectedBoxerId } = Astro.props
 
 	.boxer-link.opponent {
 		& .boxer-image {
+			transition: scale 0.3s ease-in-out;
 			scale: 1.05;
 		}
 

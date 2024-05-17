@@ -1,5 +1,8 @@
 ---
+import { Image } from "astro:assets"
+
 import Typography from "@/components/Typography.astro"
+import { COMBATS } from "@/consts/combats"
 import type { Boxer } from "@/types/Boxer"
 
 interface Props {
@@ -17,47 +20,110 @@ const ordinals: Record<number, string> = {
 	6: "Sexto",
 }
 const { combatNumber, combatId, boxers } = Astro.props
+
+const createCombatDisplay = (boxers: Boxer[]) => {
+	const pairs: string[] = []
+	const seen = new Set()
+
+	boxers.forEach((boxer: Boxer) => {
+		if (!seen.has(boxer.id)) {
+			seen.add(boxer.id)
+			const group = [boxer.name]
+
+			if (boxer.allies) {
+				boxer.allies.forEach((allyId) => {
+					const ally = boxers.find((b) => b.id === allyId)
+					if (ally && !seen.has(allyId)) {
+						seen.add(allyId)
+						group.push(ally.name)
+					}
+				})
+			}
+
+			pairs.push(group.join(" x "))
+		}
+	})
+
+	return pairs.join(" vs ")
+}
+
+const combatDisplay = createCombatDisplay(boxers)
+
+const combatData = COMBATS.find((combat) => combat.id === combatId)
+const boxerNames = combatData?.boxers ?? []
 ---
 
-<section class="mt-40 flex flex-col items-center gap-5 md:gap-10 lg:gap-0">
+<section class="mt-10 flex flex-col items-center gap-5 md:mt-40 md:gap-10 lg:gap-0">
 	<div class:list={["relative flex w-full flex-col items-center justify-center py-20"]}>
-		<Typography
-			as="div"
-			variant="atomic-title"
-			color="primary"
-			tabindex={-1}
-			class:list={"absolute inset-0 -z-10 self-center text-center text-[20rem] opacity-20"}
-			>{combatNumber}
-		</Typography>
-		<h2 class:list={["text-center text-4xl font-semibold uppercase text-white  lg:text-6xl"]}>
-			<span class:list={["flex flex-col items-center gap-2"]}>
-				<span>
-					{ordinals[combatNumber]} combate
-				</span>
-				<div class="lowercase">
-					{
-						boxers.map((boxer, index) => (
+		<div class="absolute inset-0 -z-10 grid place-items-center opacity-20">
+			{
+				combatData ? (
+					<Image
+						width={combatData.titleSize[0]}
+						height={combatData.titleSize[1]}
+						transition:name={`title-image-${combatId}`}
+						loading={"eager"}
+						class="inset-0 h-auto max-h-96 w-full max-w-80 scale-100 object-contain sm:scale-110 lg:max-w-3xl"
+						src={`https://cdn.lavelada.dev/matches/title-${combatId}.webp`}
+						alt={`Fotografía del combate entre ${boxerNames.join(", ")}`}
+					/>
+				) : (
+					<Typography
+						as="div"
+						variant="atomic-title"
+						color="primary"
+						tabindex={-1}
+						class:list={"text-center text-[20rem]"}
+					>
+						{combatNumber}
+					</Typography>
+				)
+			}
+		</div>
+		<h2 class:list={["text-center text-4xl font-semibold uppercase text-white lg:text-6xl"]}>
+			{ordinals[combatNumber]} combate
+		</h2>
+		<div class="text-center lowercase">
+			{
+				combatDisplay.split(" vs ").map((group, groupIndex, groups) => (
+					<span>
+						{group.split(" x ").map((name, nameIndex, names) => (
 							<span>
-								{boxer.name}
-								{index < boxers.length - 1 && (
+								<Typography as="span" variant="atomic-title" color="white">
+									{name.trim()}
+								</Typography>
+								{nameIndex < names.length - 1 && (
 									<Typography as="span" variant="atomic-title" color="primary">
-										vs
+										{" x "}
 									</Typography>
 								)}
 							</span>
-						))
-					}
-				</div>
-			</span>
-		</h2>
-	</div>
-	<div>
-		<a
-			class:list={["flex flex-col items-center justify-center text-2xl font-semibold text-accent"]}
-			href={`/combates/${combatId}`}
-			tabindex="0"
-		>
-			<span class="text-primary">Ver combate</span>
-		</a>
+						))}
+						{/* Insertar vs solo si hay otro grupo después */}
+						{groupIndex < groups.length - 1 && (
+							<Typography
+								as="span"
+								variant="atomic-title"
+								color="primary"
+								class:list={["lg:text-6xl"]}
+							>
+								{" vs "}
+							</Typography>
+						)}
+					</span>
+				))
+			}
+		</div>
 	</div>
 </section>
+<div>
+	<a
+		class:list={[
+			"flex flex-col items-center justify-center text-2xl font-semibold text-accent transition hover:scale-110 focus:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:focus:scale-100",
+		]}
+		href={`/combates/${combatId}`}
+		tabindex="0"
+	>
+		<span class="text-primary hover:text-white">Ver combate</span>
+	</a>
+</div>
