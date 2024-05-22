@@ -13,30 +13,33 @@ const { image, imageAlt, boxerId, boxerName, boxerHref, isSmall = false } = Astr
 
 <a
 	href={boxerHref}
-	class="group overflow-hidden transition-transform hover:scale-105"
+	class:list={[
+		"group relative transition-transform hover:scale-105 ",
+		isSmall ? "pb-[68px]" : "pb-[72px] md:pb-[96px]",
+	]}
 	aria-label={`Ir a la página de ${boxerName}`}
 >
 	<article>
 		<img decoding="async" class="image" src={image} alt={imageAlt} />
-		<h3
-			class:list={[
-				"text-center font-medium uppercase text-white transition-transform group-hover:scale-125 md:group-hover:scale-150",
-				isSmall && "text-lg",
-				!isSmall && "text-2xl",
-			]}
-		>
-			{boxerName}
-		</h3>
-		<h4
-			data-id={boxerId}
-			class:list={[
-				"boxer-forecast mt-1 text-center font-semibold text-accent transition-transform group-hover:scale-75",
-				isSmall && "text-3xl",
-				!isSmall && "text-6xl",
-			]}
-		>
-			&nbsp;
-		</h4>
+		<div class="absolute bottom-0 left-2/4 -translate-x-2/4 text-center">
+			<h3
+				class:list={[
+					"text-nowrap font-medium uppercase text-white transition-transform group-hover:scale-110 md:group-hover:scale-150",
+					isSmall ? "text-lg" : "text-2xl",
+				]}
+			>
+				{boxerName}
+			</h3>
+			<h4
+				data-id={boxerId}
+				class:list={[
+					"boxer-forecast mt-1 text-3xl font-semibold text-accent transition-transform group-hover:scale-75",
+					!isSmall && "md:text-6xl",
+				]}
+			>
+				&nbsp;
+			</h4>
+		</div>
 	</article>
 </a>
 
