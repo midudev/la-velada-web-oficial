@@ -72,7 +72,7 @@ const { id, name } = Astro.props
 				<img
 					loading="lazy"
 					decoding="async"
-					class="boxer-gallery-img z-10 h-full rounded object-contain object-center"
+					class="swipe-element boxer-gallery-img z-10 h-full rounded object-contain object-center"
 					alt={`Imagen de la galería de fotos de ${name}`}
 					src={`https://cdn.lavelada.dev/boxers/gallery/${id}/1.webp`}
 				/>
@@ -135,6 +135,67 @@ const { id, name } = Astro.props
 			) as HTMLAnchorElement
 			next.click()
 		}
+
+		const swipeImage = (event: TouchEvent, swipeLeft: () => void, swipeRight: () => void) => {
+			const DECISION_THRESHOLD = 100 as const
+			const target = event.target as HTMLImageElement | null
+			if (target === null) return
+			let isSwiping = false
+			let pullDeltaX = 0
+
+			if (isSwiping) return
+			const isSwipeable = target.classList.contains("swipe-element")
+			if (!isSwipeable) return
+			target.style.transition = "none"
+			const initialX = event.touches[0].pageX
+
+			document.addEventListener("touchmove", onSwipe, { passive: true })
+			document.addEventListener("touchend", onSwipeEnd, { passive: true })
+
+			function onSwipe(event: TouchEvent) {
+				if (target === null) return
+				const currentX = event.touches[0].pageX
+				pullDeltaX = currentX - initialX
+				if (pullDeltaX === 0) return
+				isSwiping = true
+				target.style.transform = `translateX(${pullDeltaX}px)`
+				target.style.opacity = `${DECISION_THRESHOLD / Math.abs(pullDeltaX)}`
+				target.style.transition = "none"
+			}
+
+			function onSwipeEnd(_event: TouchEvent) {
+				if (target === null) return
+				document.removeEventListener("touchmove", onSwipe)
+				document.removeEventListener("touchend", onSwipeEnd)
+				document.removeEventListener("touchstart", (event) =>
+					swipeImage(event, swipeLeft, swipeRight)
+				)
+				const decision = Math.abs(pullDeltaX) >= DECISION_THRESHOLD
+				if (decision) {
+					const showNext = pullDeltaX > 0
+					target.style.transition = "none"
+					if (showNext) {
+						showNextImage()
+					} else {
+						showPrevImage()
+					}
+				} else {
+					target.style.transition = "transform 0.2s ease-in-out"
+				}
+				isSwiping = false
+				pullDeltaX = 0
+				target.style.transform = "none"
+				target.style.opacity = "100"
+			}
+		}
+
+		document.addEventListener(
+			"touchstart",
+			(event) => swipeImage(event, showPrevImage, showNextImage),
+			{
+				passive: true,
+			}
+		)
 
 		document.addEventListener("click", (event) => {
 			if (!$lightbox.open) return
