@@ -92,12 +92,6 @@ const { id, name } = Astro.props
 	</div>
 </section>
 
-<style>
-	#lightbox img.boxer-gallery-img {
-		view-transition-name: lightbox-image;
-	}
-</style>
-
 <script>
 	import { $ } from "@/lib/dom-selector"
 
@@ -185,12 +179,7 @@ const { id, name } = Astro.props
 				link.setAttribute("data-current", "true")
 
 				// update de image before show lightbox
-				if ($lightbox.open && document.startViewTransition) {
-					document.startViewTransition(() => {
-						updateImg(link)
-					})
-					return
-				} else {
+				if ($lightbox.open) {
 					updateImg(link)
 				}
 
