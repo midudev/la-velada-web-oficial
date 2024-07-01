@@ -29,6 +29,7 @@ export const BOXERS: Boxer[] = addGetters([
 		birthDate: new Date(1998, 6, 23),
 		height: 1.95,
 		age: 25,
+		weight: 87,
 		country: "mx",
 		versus: "plex",
 		guard: "Izquierda",
