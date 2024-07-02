@@ -28,6 +28,7 @@ export interface Sponsors {
 	name: SponsorName
 	url: string
 	image: {
+		name?: string
 		width: number
 		height: number
 	}

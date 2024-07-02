@@ -33,6 +33,7 @@ export const SPONSORS: Array<Sponsors> = [
 		name: "Spotify",
 		url: "https://spotify.com/",
 		image: {
+			name: "spotify-3",
 			width: 207,
 			height: 52,
 		},
