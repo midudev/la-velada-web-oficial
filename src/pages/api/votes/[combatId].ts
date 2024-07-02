@@ -43,6 +43,11 @@ export const POST: APIRoute = async ({ params, request }) => {
 	if (!boxerData) return res("Boxer not found", { status: 404 })
 
 	const userId = session.user.id
+
+	if (userId === undefined) {
+		return res("Unauthorized", { status: 401 })
+	}
+
 	const votedAt = NOW
 
 	const newId = `${userId}-${combatId}`
