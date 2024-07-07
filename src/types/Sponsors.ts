@@ -1,7 +1,7 @@
 type SponsorId =
 	| "vicio"
 	| "revolut"
-	| "prime"
+	| "prime-h"
 	| "alsa"
 	| "spotify"
 	| "cerave"
@@ -10,6 +10,9 @@ type SponsorId =
 	| "maxibon"
 	| "infojobs"
 	| "coca-cola"
+	| "mahou"
+	| "g-shock"
+
 type SponsorName =
 	| "Vicio"
 	| "Revolut"
@@ -22,12 +25,15 @@ type SponsorName =
 	| "Maxibon"
 	| "InfoJobs"
 	| "Coca-Cola"
+	| "Mahou"
+	| "G-Shock"
 
 export interface Sponsors {
 	id: SponsorId
 	name: SponsorName
 	url: string
 	image: {
+		name?: string
 		width: number
 		height: number
 	}
