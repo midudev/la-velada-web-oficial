@@ -11,11 +11,11 @@ export const SPONSORS: Array<Sponsors> = [
 		},
 	},
 	{
-		id: "prime",
+		id: "prime-h",
 		name: "Prime",
 		url: "https://drinkprime.com/",
 		image: {
-			width: 144,
+			width: 200,
 			height: 49,
 		},
 	},
@@ -33,6 +33,7 @@ export const SPONSORS: Array<Sponsors> = [
 		name: "Spotify",
 		url: "https://spotify.com/",
 		image: {
+			name: "spotify-3",
 			width: 207,
 			height: 52,
 		},
@@ -88,6 +89,24 @@ export const SPONSORS: Array<Sponsors> = [
 		url: "https://grefusa.com/",
 		image: {
 			width: 144,
+			height: 69,
+		},
+	},
+	{
+		id: "mahou",
+		name: "Mahou",
+		url: "https://www.mahou.es/",
+		image: {
+			width: 200,
+			height: 100,
+		},
+	},
+	{
+		id: "g-shock",
+		name: "G-Shock",
+		url: "https://gshock.casio.com/es/",
+		image: {
+			width: 200,
 			height: 69,
 		},
 	},
