@@ -19,7 +19,7 @@ const { id, name } = Astro.props
 			Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => (
 				<a
 					class:list={[
-						" aspect-square transition hover:scale-105 hover:brightness-125",
+						"aspect-square transition hover:scale-105 hover:brightness-125",
 						{ "row-span-2": index === 0 },
 					]}
 					href={`https://cdn.lavelada.dev/boxers/gallery/${id}/${index + 1}.webp`}
@@ -91,12 +91,6 @@ const { id, name } = Astro.props
 		</dialog>
 	</div>
 </section>
-
-<style>
-	#lightbox img.boxer-gallery-img {
-		view-transition-name: lightbox-image;
-	}
-</style>
 
 <script>
 	import { $ } from "@/lib/dom-selector"
@@ -185,12 +179,7 @@ const { id, name } = Astro.props
 				link.setAttribute("data-current", "true")
 
 				// update de image before show lightbox
-				if ($lightbox.open && document.startViewTransition) {
-					document.startViewTransition(() => {
-						updateImg(link)
-					})
-					return
-				} else {
+				if ($lightbox.open) {
 					updateImg(link)
 				}
 

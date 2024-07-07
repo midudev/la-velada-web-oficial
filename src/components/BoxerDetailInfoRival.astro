@@ -24,15 +24,15 @@ const isVersus = value[0].versus.length === 2
 				: [
 						isVersus
 							? "grid grid-cols-2"
-							: "flex w-full flex-row flex-wrap justify-center gap-x-2  md:justify-center md:text-center",
+							: "flex w-full flex-row flex-wrap justify-center gap-x-2 md:justify-center md:text-center",
 					]}
 		>
 			{
 				value.map((item, index) => (
 					<a
 						class:list={[
-							`${isVersus ? "mx-2  p-1" : ""}`,
-							`${isKingOfTheTrack ? "p-1" : "boxer-link text-xl font-bold text-accent"}`,
+							`${isVersus ? "mx-2 p-1" : ""}`,
+							`${isKingOfTheTrack ? "p-1" : "boxer-link z-20 text-xl font-bold text-accent"}`,
 						]}
 						href={`/boxers/${item.id}`}
 						title={`Visita la página ${item.gender === "masculino" ? "del boxeador" : "de la boxeadora"} ${item.name}`}
@@ -46,7 +46,7 @@ const isVersus = value[0].versus.length === 2
 
 						<img
 							src={`https://cdn.lavelada.dev/boxers/${item.id}-small.webp`}
-							class:list={isKingOfTheTrack ? ["h-14 object-contain"] : ["boxer-image "]}
+							class:list={isKingOfTheTrack ? ["h-14 object-contain"] : ["boxer-image"]}
 							alt={`Foto en pequeño del rival ${item.name}`}
 							style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%);"
 						/>

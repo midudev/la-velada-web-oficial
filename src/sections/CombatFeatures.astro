@@ -54,15 +54,12 @@ const middleIndex = boxers.length / 2
 		color="neutral"
 		class:list={"mx-auto mt-4 text-wrap text-center"}
 	>
-		Datos relevantes de cada contrincante
+		Datos relevantes de los boxeadores
 	</Typography>
 	<table class="mt-10 w-full text-center text-white lg:text-lg">
 		<tbody>
 			{
 				relevantBoxerData.map(([key, { label, concat }]) => {
-					// no mostrar el peso hasta el pesaje oficial
-					if (key === "weight") return null
-
 					return (
 						<tr class="mb-10 bg-gradient-to-b from-black/0 via-transparent/40 to-transparent/40 p-4">
 							{boxers.map((boxer, index) => {

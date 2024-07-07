@@ -29,6 +29,7 @@ export const BOXERS: Boxer[] = addGetters([
 		birthDate: new Date(1998, 6, 23),
 		height: 1.95,
 		age: 25,
+		weight: 87,
 		country: "mx",
 		versus: "plex",
 		guard: "Izquierda",
@@ -168,6 +169,11 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=XXuWc4c5ywxnBHIZ&amp;clip=UgkxptfPo72fI8yntHVo2UfsuyGjpmsfI3js&amp;clipt=ELTnggMY8smDAw",
 			},
 		],
+		workout: {
+			videoID: "zqatWGonjt4",
+			thumbnail: "/boxers/workoutThumbnails/nissaxter.webp",
+			name: "Nissaxter",
+		},
 	},
 	{
 		id: "carreraaa",
@@ -237,7 +243,7 @@ export const BOXERS: Boxer[] = addGetters([
 		],
 		rotate: true,
 		workout: {
-			videoID: "7yrsrPQv_TM",
+			videoID: "HFR0F2G71y4",
 			thumbnail: "/boxers/workoutThumbnails/la-cobra.webp",
 			name: "La Cobra",
 		},
@@ -362,6 +368,11 @@ export const BOXERS: Boxer[] = addGetters([
 				url: "https://www.youtube.com/embed/ct0Hr6zYZGU?si=2BO21jfm469U_i_5&amp;clip=UgkxHy3xXDVJdgv9BUaArwgIYrA_ae1M5FIX&amp;clipt=EJ3ipQUYtdemBQ",
 			},
 		],
+		workout: {
+			videoID: "GWLZSfJsSCo",
+			thumbnail: "/boxers/workoutThumbnails/will.webp",
+			name: "Will",
+		},
 	},
 	{
 		id: "sezar-blue",
