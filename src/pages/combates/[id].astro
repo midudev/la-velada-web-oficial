@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets"
 
+import Action from "@/components/Action.astro"
 import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
 import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
@@ -35,7 +36,7 @@ if (!combatData) {
 	}
 }
 
-const { teams, boxers } = combatData
+const { teams, boxers, videoUrl } = combatData
 const [slug1, slug2] = teams ?? boxers
 const [image1, image2] = [
 	{ alt: slug1.replaceAll("-", " "), src: createImgRoute(combatData.number, slug1) },
@@ -102,6 +103,19 @@ export const prerender = true
 			{combatData.boxers.length <= 4 && <CombatFeatures boxerIds={combatData.boxers} />}
 		</div>
 		<Forecasts combatId={id} />
+
+		<div class="action flex w-full flex-col items-center justify-center">
+			<Action
+				class="mt-20 w-full max-w-lg text-center text-base uppercase text-primary"
+				as="a"
+				href={videoUrl}
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label={`Ver combate entre ${boxerNames.join("y ")} en el canal de Ibai`}
+			>
+				¡Ver combate!
+			</Action>
+		</div>
 	</main>
 </Layout>
 
