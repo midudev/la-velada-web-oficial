@@ -1,5 +1,4 @@
 ---
-import Action from "@/components/Action.astro"
 import ForecastBoxer from "@/components/ForecastBoxer.astro"
 import Velocimetro from "@/components/Velocimetro.astro"
 import { BOXERS } from "@/consts/boxers"
@@ -41,16 +40,6 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 				/>
 			))}
 			</div>
-
-			<div class="action flex w-full flex-col items-center justify-center">
-				<Action
-					class="mt-20 w-full max-w-lg text-center text-base uppercase text-primary"
-					as="a"
-					href="/pronosticos"
-				>
-					¡Haz tu pronóstico!
-				</Action>
-			</div>
 	</section>
 }
 
@@ -86,16 +75,6 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 				boxerHref={"/boxers/alana"}
 				class:list={["boxer2"]}
 			/>
-
-		<div class="action flex w-full flex-col items-center justify-center">
-			<Action
-				class="mt-20 w-full max-w-lg text-center text-base uppercase text-primary"
-				as="a"
-				href="/pronosticos"
-			>
-				¡Haz tu pronóstico!
-			</Action>
-		</div>
 	</section>
 )}
 
@@ -132,21 +111,12 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 					class:list={["boxer2"]}
 				/>
 			)}
-			<div class="action flex w-full flex-col items-center justify-center">
-				<Action
-					class="mt-20 w-full max-w-lg text-center text-base uppercase text-primary"
-					as="a"
-					href="/pronosticos"
-				>
-					¡Haz tu pronóstico!
-				</Action>
-			</div>
 		</section>
 	)
 }
 
 <script>
-	import { $ } from "@/lib/dom-selector"
+	import { $ } from '@/lib/dom-selector'
 
 	document.addEventListener("astro:page-load", () => {
 		const $forecast = $("#forecast") as HTMLElement
