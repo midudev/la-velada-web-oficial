@@ -1,8 +1,11 @@
 ---
+import { getSession } from "auth-astro/server"
+
+import Intro from "@/components/Pronosticos/Intro.astro"
+import Vote from "@/components/Pronosticos/Vote.astro"
 import Layout from "@/layouts/Layout.astro"
 
-import { COMBATS } from "@/consts/combats"
-import Forecasts from "@/sections/Forecasts.astro"
+const session = await getSession(Astro.request)
 ---
 
 <Layout
@@ -10,6 +13,6 @@ import Forecasts from "@/sections/Forecasts.astro"
 	description="¡Participa votando a los boxeadores que crees que ganarán sus combates!"
 >
 	<main class="flex flex-col items-center justify-center text-white">
-		{COMBATS.map((combat) => <Forecasts combatId={combat.id} />)}
+		{session === null ? <Intro /> : <Vote user={session.user} />}
 	</main>
 </Layout>
