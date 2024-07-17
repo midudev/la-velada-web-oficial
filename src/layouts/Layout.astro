@@ -167,5 +167,15 @@ const { title, description, preload, canonical, image } = Astro.props
 				pointer-events: all;
 			}
 		</style>
+		<script type="speculationrules">
+			{
+			  "prerender": [{
+				"where": {
+				  "href_matches": "/*"
+				},
+				"eagerness": "moderate"
+			  }]
+			}
+		</script>
 	</body>
 </html>
