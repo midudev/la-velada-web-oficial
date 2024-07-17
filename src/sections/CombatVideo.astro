@@ -1,0 +1,40 @@
+---
+import DrawnXLogo from "@/components/DrawnXLogo.astro"
+import LiteYouTube from "@/components/LiteYouTube.astro"
+import Typography from "@/components/Typography.astro"
+import { COMBATS } from "@/consts/combats"
+
+const { combatId } = Astro.props
+
+const combat = COMBATS.find((combat) => combat.id === combatId)
+
+if (!combat) return null
+
+const { title, video } = combat
+---
+
+<section class="mt-10 overflow-hidden px-2 pb-48 pt-16 sm:pb-56 sm:pt-32 md:pt-32">
+	<Typography as="h3" variant="h3" color="white" class:list={"text-center"}>
+		¡Revive el combate!
+	</Typography>
+
+	<Typography
+		as="p"
+		variant="body"
+		color="neutral"
+		class:list={"mx-auto mt-4 max-w-[250px] text-wrap text-center"}
+	>
+		Vuelve a ver el combate {title}
+	</Typography>
+
+	<div class="relative mt-8">
+		<DrawnXLogo
+			class:list={"absolute inset-0 -z-10 m-auto scale-125 select-none drop-shadow-[0_0_40px_rgba(213,255,0,1)]"}
+		/>
+		<LiteYouTube
+			videoId={video}
+			backgroundImage={`/img/combats/${combatId}.webp`}
+			title="Reproducir presentación de La Velada del Año"
+		/>
+	</div>
+</section>

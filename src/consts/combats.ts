@@ -8,6 +8,7 @@ export const COMBATS: Combat[] = [
 		boxers: ["carreraaa", "agustin-51"],
 		titleSize: [1920, 1012],
 		title: "Agustin 51 vs Carreraaa",
+		video: "IPbkwObKdlU",
 	},
 	{
 		id: "2-guanyar-vs-la-cobra",
@@ -15,6 +16,7 @@ export const COMBATS: Combat[] = [
 		boxers: ["guanyar", "la-cobra"],
 		titleSize: [1920, 927],
 		title: "Guanyar vs La Cobra",
+		video: "jdchidzFY6Y",
 	},
 	{
 		id: "3-zeling-y-nissaxter-vs-alana-y-ama-blitz",
@@ -23,6 +25,7 @@ export const COMBATS: Combat[] = [
 		teams: ["zeling-nissaxter", "alana-ama-blitz"],
 		titleSize: [1525, 1525],
 		title: "Zeling y Nissaxter vs Alana y Ama Blitz",
+		video: "yF-ahJkOYyI",
 	},
 	{
 		id: "4-viruzz-vs-shelao",
@@ -30,6 +33,7 @@ export const COMBATS: Combat[] = [
 		boxers: ["viruzz", "shelao"],
 		titleSize: [1623, 1077],
 		title: "Viruzz vs Shelao",
+		video: "qW2lfuM8uH4",
 	},
 	{
 		id: REY_DE_LA_PISTA_ID,
@@ -48,6 +52,7 @@ export const COMBATS: Combat[] = [
 		],
 		titleSize: [1185, 1139],
 		title: "Rey de la Pista",
+		video: "m8Is6KAYIZ4",
 	},
 	{
 		id: "6-el-mariana-vs-plex",
@@ -55,5 +60,6 @@ export const COMBATS: Combat[] = [
 		boxers: ["plex", "el-mariana"],
 		titleSize: [1920, 950],
 		title: "El Mariana vs Plex",
+		video: "WnryYJ0k-_0",
 	},
 ]

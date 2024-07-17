@@ -5,6 +5,7 @@ import BackgroundVideo from "@/components/Combates/BackgroundVideo.astro"
 import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
 import Layout from "@/layouts/Layout.astro"
 import CombatFeatures from "@/sections/CombatFeatures.astro"
+import CombatVideo from "@/sections/CombatVideo.astro"
 import Forecasts from "@/sections/Forecasts.astro"
 
 const getCombatById = (id: string) => {
@@ -98,6 +99,7 @@ export const prerender = true
 				)
 			}
 		</div>
+		<CombatVideo combatId={id} />
 		<div class="pointer-events-auto">
 			{combatData.boxers.length <= 4 && <CombatFeatures boxerIds={combatData.boxers} />}
 		</div>
