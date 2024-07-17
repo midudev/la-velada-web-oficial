@@ -1,5 +1,4 @@
 ---
-import Action from "@/components/Action.astro"
 import ForecastBoxer from "@/components/ForecastBoxer.astro"
 import Velocimetro from "@/components/Velocimetro.astro"
 import { BOXERS } from "@/consts/boxers"
@@ -17,9 +16,8 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 
 {
 	combatId === REY_DE_LA_PISTA_ID && <section
-			id="forecast"
 			data-combat-id={combatId}
-			class="forecastGrid mt-40 flex flex-col items-center gap-4 px-7"
+			class="forecast forecastGrid mt-40 flex flex-col items-center gap-4 px-7"
 		>
 			<div class="pronostico flex flex-col items-center justify-center gap-4">
 				<h2 class="text-2xl font-medium uppercase text-white">Pronóstico</h2>
@@ -42,7 +40,7 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 			))}
 			</div>
 
-			<div class="action flex w-full flex-col items-center justify-center">
+			{/* <div class="action flex w-full flex-col items-center justify-center">
 				<Action
 					class="mt-20 w-full max-w-lg text-center text-base uppercase text-primary"
 					as="a"
@@ -50,15 +48,14 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 				>
 					¡Haz tu pronóstico!
 				</Action>
-			</div>
+			</div> */}
 	</section>
 }
 
 { combatId === "3-zeling-y-nissaxter-vs-alana-y-ama-blitz" && (
 	<section
-		id="forecast"
 		data-combat-id={combatId}
-		class="forecastGrid mt-40 grid items-center gap-4 px-7"
+		class="forecast forecastGrid mt-40 grid items-center gap-4 px-7"
 	>
 
 		<ForecastBoxer
@@ -75,7 +72,7 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 			<p class="max-w-72 text-center text-xl text-primary opacity-0">
 				Basado en <span class="font-semibold text-accent">0</span> predicciones
 			</p>
-			<Velocimetro />
+			<Velocimetro id={combatId} />
 		</div>
 
 			<ForecastBoxer
@@ -87,7 +84,7 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 				class:list={["boxer2"]}
 			/>
 
-		<div class="action flex w-full flex-col items-center justify-center">
+		{/* <div class="action flex w-full flex-col items-center justify-center">
 			<Action
 				class="mt-20 w-full max-w-lg text-center text-base uppercase text-primary"
 				as="a"
@@ -95,15 +92,14 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 			>
 				¡Haz tu pronóstico!
 			</Action>
-		</div>
+		</div> */}
 	</section>
 )}
 
 { combatId !== REY_DE_LA_PISTA_ID && combatId !== "3-zeling-y-nissaxter-vs-alana-y-ama-blitz" && (
 		<section
-			id="forecast"
 			data-combat-id={combatId}
-			class="forecastGrid mt-40 grid items-center gap-4 px-7"
+			class="forecast forecastGrid mt-40 grid items-center gap-4 px-7"
 		>
 			{boxers[0] && (
 				<ForecastBoxer
@@ -120,7 +116,7 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 				<p class="max-w-72 text-center text-xl text-primary opacity-0">
 					Basado en <span class="font-semibold text-accent">0</span> predicciones
 				</p>
-				{boxers[1] && <Velocimetro />}
+				{boxers[1] && <Velocimetro id={combatId} />}
 			</div>
 			{boxers[1] && (
 				<ForecastBoxer
@@ -132,7 +128,7 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 					class:list={["boxer2"]}
 				/>
 			)}
-			<div class="action flex w-full flex-col items-center justify-center">
+			{/* <div class="action flex w-full flex-col items-center justify-center">
 				<Action
 					class="mt-20 w-full max-w-lg text-center text-base uppercase text-primary"
 					as="a"
@@ -140,54 +136,55 @@ const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer))
 				>
 					¡Haz tu pronóstico!
 				</Action>
-			</div>
+			</div> */}
 		</section>
 	)
 }
 
 <script>
-	import { $ } from "@/lib/dom-selector"
+	import { $, $$ } from "@/lib/dom-selector"
 
 	document.addEventListener("astro:page-load", () => {
-		const $forecast = $("#forecast") as HTMLElement
-		if ($forecast == null) return
+		const $allForecasts = $$(".forecast") as NodeListOf<HTMLElement>
+		if ($allForecasts.length === 0) return
 
-		const combatId = $forecast.getAttribute("data-combat-id")
-		fetch(`/api/forecasts/get-forecast-by-combat-id.json?id=${combatId}`)
-			.then((res) => res.json())
-			.then((json: { data: { totalVotes: number; percentageVotes: Record<string, number> } }) => {
-				const { totalVotes, percentageVotes } = json?.data ?? {}
-				console.log({ totalVotes, percentageVotes })
+		$allForecasts.forEach(($forecast) => {
+			const combatId = $forecast.getAttribute("data-combat-id")
+			fetch(`/api/forecasts/get-forecast-by-combat-id.json?id=${combatId}`)
+				.then((res) => res.json())
+				.then((json: { data: { totalVotes: number; percentageVotes: Record<string, number> } }) => {
+					const { totalVotes, percentageVotes } = json?.data ?? {}
 
-				if (totalVotes == null || totalVotes === 0) return
+					if (totalVotes == null || totalVotes === 0) return
 
-				const allBoxers = $forecast.querySelectorAll(".boxer-forecast")
+					const allBoxers = $forecast.querySelectorAll(".boxer-forecast")
 
-				const isKingOfTheHill = allBoxers.length > 4
+					const isKingOfTheHill = allBoxers.length > 4
 
-				if (!isKingOfTheHill) {
-					const [, lastBoxer] = $forecast.querySelectorAll(".boxer-forecast")
-					const lastBoxerId = lastBoxer.getAttribute("data-id")
-					if (lastBoxerId == null) return
+					if (!isKingOfTheHill) {
+						const [, lastBoxer] = $forecast.querySelectorAll(".boxer-forecast")
+						const lastBoxerId = lastBoxer.getAttribute("data-id")
+						if (lastBoxerId == null) return
 
-					const percentage = percentageVotes[lastBoxerId]
-					if (percentage) {
-						const event = new CustomEvent("forecast:loaded", { detail: percentage })
-						dispatchEvent(event)
+						const percentage = percentageVotes[lastBoxerId]
+						if (percentage) {
+							const event = new CustomEvent("forecast:loaded", { detail: { combatId, percentage } })
+							dispatchEvent(event)
+						}
 					}
-				}
 
-				const $pronostico = $forecast.querySelector(".pronostico") as HTMLElement
-				$pronostico.querySelector(".opacity-0")?.classList.remove("opacity-0")
+					const $pronostico = $forecast.querySelector(".pronostico") as HTMLElement
+					$pronostico.querySelector(".opacity-0")?.classList.remove("opacity-0")
 
-				const $pronosticoNumber = $pronostico.querySelector("span")
-				if ($pronosticoNumber) $pronosticoNumber.innerText = totalVotes.toString()
+					const $pronosticoNumber = $pronostico.querySelector("span")
+					if ($pronosticoNumber) $pronosticoNumber.innerText = totalVotes.toString()
 
-				Object.entries(percentageVotes).forEach(([boxerId, forecast]) => {
-					const el = $(`.boxer-forecast[data-id="${boxerId}"]`)
-					if (el) el.innerText = `${forecast.toFixed(2)}%`
+					Object.entries(percentageVotes).forEach(([boxerId, forecast]) => {
+						const el = $(`.boxer-forecast[data-id="${boxerId}"]`)
+						if (el) el.innerText = `${forecast.toFixed(2)}%`
+					})
 				})
-			})
+		})
 	})
 </script>
 

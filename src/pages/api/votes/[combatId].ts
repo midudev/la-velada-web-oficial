@@ -1,9 +1,5 @@
 import type { APIRoute } from "astro"
-import { NOW, Votes, db } from "astro:db"
-import { getSession } from "auth-astro/server"
-import { object, safeParse, string } from "valibot"
-
-import { COMBATS } from "@/consts/combats"
+import { object, string } from "valibot"
 
 const VoteSchema = object({
 	voteId: string(),
@@ -17,56 +13,58 @@ const res = (
 	{ status, statusText, headers }: { status?: number; statusText?: string; headers?: Headers }
 ) => new Response(body, { status, statusText, headers })
 
-export const POST: APIRoute = async ({ params, request }) => {
-	const session = await getSession(request)
+export const POST: APIRoute = ({ params, request }) => {
+	return res("Unauthorized", { status: 401 })
 
-	if (!session || session?.user?.email == null) {
-		return res("Unauthorized", { status: 401 })
-	}
+	// const session = await getSession(request)
 
-	const { combatId } = params
-	if (!combatId) return res("CombatId is required", { status: 400 })
+	// if (!session || session?.user?.email == null) {
+	// 	return res("Unauthorized", { status: 401 })
+	// }
 
-	const combatData = COMBATS.find((c) => c.id === combatId)
-	if (!combatData) return res("Combat not found", { status: 404 })
+	// const { combatId } = params
+	// if (!combatId) return res("CombatId is required", { status: 400 })
 
-	const { success, output } = safeParse(VoteSchema, await request.json())
-	if (!success) return res("Bad request", { status: 400 })
+	// const combatData = COMBATS.find((c) => c.id === combatId)
+	// if (!combatData) return res("Combat not found", { status: 404 })
 
-	const { voteId } = output
-	let boxerData: string | undefined
-	if (combatData.teams !== undefined) {
-		boxerData = combatData.teams.find((t) => t === voteId)
-	} else {
-		boxerData = combatData.boxers.find((b) => b === voteId)
-	}
-	if (!boxerData) return res("Boxer not found", { status: 404 })
+	// const { success, output } = safeParse(VoteSchema, await request.json())
+	// if (!success) return res("Bad request", { status: 400 })
 
-	const userId = session.user.id
+	// const { voteId } = output
+	// let boxerData: string | undefined
+	// if (combatData.teams !== undefined) {
+	// 	boxerData = combatData.teams.find((t) => t === voteId)
+	// } else {
+	// 	boxerData = combatData.boxers.find((b) => b === voteId)
+	// }
+	// if (!boxerData) return res("Boxer not found", { status: 404 })
 
-	if (userId === undefined) {
-		return res("Unauthorized", { status: 401 })
-	}
+	// const userId = session.user.id
 
-	const votedAt = NOW
+	// if (userId === undefined) {
+	// 	return res("Unauthorized", { status: 401 })
+	// }
 
-	const newId = `${userId}-${combatId}`
-	const vote = { id: newId, userId, votedAt, voteId, combatId }
+	// const votedAt = NOW
 
-	try {
-		await db.insert(Votes).values(vote).onConflictDoUpdate({
-			target: Votes.id,
-			set: {
-				combatId,
-				userId,
-				voteId,
-				votedAt,
-			},
-		})
-	} catch (error) {
-		console.error(error)
-		return res("Error inserting vote", { status: 500 })
-	}
+	// const newId = `${userId}-${combatId}`
+	// const vote = { id: newId, userId, votedAt, voteId, combatId }
 
-	return res("OK", { status: 200 })
+	// try {
+	// 	await db.insert(Votes).values(vote).onConflictDoUpdate({
+	// 		target: Votes.id,
+	// 		set: {
+	// 			combatId,
+	// 			userId,
+	// 			voteId,
+	// 			votedAt,
+	// 		},
+	// 	})
+	// } catch (error) {
+	// 	console.error(error)
+	// 	return res("Error inserting vote", { status: 500 })
+	// }
+
+	// return res("OK", { status: 200 })
 }

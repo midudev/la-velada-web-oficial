@@ -1,8 +1,14 @@
-<canvas id="velocimeter" width="500px" height="260px" class="w-full md:w-[500px]"></canvas>
+---
+const { id } = Astro.props
+---
 
-<script>
-	import { $ } from "@/lib/dom-selector"
+<canvas
+	id={`velocimeter-${id}`}
+	width="500px"
+	height="260px"
+	class="velocimeter w-full md:w-[500px]"></canvas>
 
+<script define:vars={{ id }}>
 	const COLORS = {
 		"accent": "#b4cd02",
 		"white": "#fff",
@@ -10,7 +16,7 @@
 	}
 
 	document.addEventListener("astro:page-load", () => {
-		const canvas = $("#velocimeter") as HTMLCanvasElement
+		const canvas = document.querySelector(`#velocimeter-${id}`)
 		if (!canvas) return
 		const ctx = canvas.getContext("2d")
 
@@ -22,7 +28,7 @@
 			drawVelocimeter(velocimeterValue)
 		}
 
-		function drawVelocimeter(value: number) {
+		function drawVelocimeter(value) {
 			if (!ctx) return
 
 			const centerX = canvas.width / 2
@@ -95,8 +101,12 @@
 		updateVelocimeter()
 
 		window.addEventListener("forecast:loaded", (event) => {
-			const { detail } = event as CustomEvent<string>
-			canvas.setAttribute("data-percentage", detail)
+			const { detail } = event
+			const { combatId, percentage } = detail
+
+			if (combatId !== id) return
+
+			canvas.setAttribute("data-percentage", percentage)
 			updateVelocimeter()
 		})
 	})
