@@ -5,4 +5,5 @@ export interface Combat {
 	teams?: string[]
 	titleSize: [number, number]
 	title: string
+	video: string
 }
