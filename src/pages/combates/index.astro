@@ -4,6 +4,7 @@ import { Image } from "astro:assets"
 import Typography from "@/components/Typography.astro"
 import { BOXERS } from "@/consts/boxers"
 import { COMBATS, REY_DE_LA_PISTA_ID } from "@/consts/combats"
+import CombatCarousel from "@/components/CombatCarousel.astro"
 import Layout from "@/layouts/Layout.astro"
 import type { BoxerGender } from "@/types/Boxer"
 
@@ -172,6 +173,9 @@ export const prerender = true
 					})
 				}
 			</ul>
+		</div>
+		<div class="w-full lg:flex lg:items-center">
+			<CombatCarousel />
 		</div>
 	</main>
 </Layout>
