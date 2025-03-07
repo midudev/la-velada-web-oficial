@@ -17,7 +17,7 @@ const hasClips = clips.length > 0
 	hasClips && (
 		<section class="z-20 mx-auto mt-2 max-w-96 overflow-x-hidden py-5 md:mt-0 md:overflow-x-visible">
 			<ClipsModal />
-			<div class="carousel flex select-none flex-row flex-nowrap items-center transition duration-700 md:max-w-none md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
+			<div class="carousel flex flex-row flex-nowrap items-center transition duration-700 select-none md:max-w-none md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
 				{clips.map(({ text, url }) => (
 					<button
 						data-url={url}
@@ -29,7 +29,7 @@ const hasClips = clips.length > 0
 							variant="atomic-quote"
 							color="primary"
 							class:list={
-								"flex flex-1 -skew-y-6 items-center justify-center text-pretty text-center transition group-hover:scale-110"
+								"flex flex-1 -skew-y-6 items-center justify-center text-center text-pretty transition group-hover:scale-110"
 							}
 						>
 							"{text.toLowerCase()}"

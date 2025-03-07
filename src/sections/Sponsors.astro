@@ -10,7 +10,7 @@ import { SPONSORS } from "@/consts/sponsors"
 	<Typography as="p" variant="body" color="neutral" class:list={"mt-4 text-center"}>
 		La Velada puede llevarse a cabo gracias a la colaboración de...
 	</Typography>
-	<div class="mt-12 grid select-none grid-cols-3 gap-2 md:gap-8">
+	<div class="mt-12 grid grid-cols-3 gap-2 select-none md:gap-8">
 		{
 			SPONSORS.filter(({ id }) => id !== "infojobs").map(({ id, name, url, image }) => (
 				<a
@@ -34,7 +34,7 @@ import { SPONSORS } from "@/consts/sponsors"
 			))
 		}
 	</div>
-	<div class="mt-20 flex flex-col items-center justify-center gap-4 xs:flex-row">
+	<div class="xs:flex-row mt-20 flex flex-col items-center justify-center gap-4">
 		<Typography as="h3" variant="body" color="neutral" class:list={"text-center"}>
 			Web patrocinada por
 		</Typography>
@@ -53,7 +53,7 @@ import { SPONSORS } from "@/consts/sponsors"
 				height={70}
 				fetchpriority="low"
 				alt={"Logo de InfoJobs"}
-				class="inline-block select-none text-white transition hover:text-accent focus:text-accent"
+				class="hover:text-accent focus:text-accent inline-block text-white transition select-none"
 			/>
 		</a>
 	</div>

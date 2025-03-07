@@ -68,6 +68,7 @@ const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
 </div>
 
 <style>
+	@reference "../global.css";
 	.boxer-link {
 		@apply relative mb-2 flex flex-col items-center justify-center transition-opacity duration-300 ease-in-out md:size-28 xl:size-36;
 
@@ -108,7 +109,7 @@ const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
 
 		&::after {
 			content: "aliada";
-			@apply pointer-events-none absolute bottom-0 z-50 font-atomic text-2xl text-green-500;
+			@apply pointer-events-none absolute bottom-0 z-50 text-2xl text-green-500;
 			text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 		}
 	}
@@ -121,7 +122,7 @@ const isOpponent = (id: Boxer["id"], versus: Boxer["versus"]) => {
 
 		&::after {
 			content: "versus";
-			@apply pointer-events-none absolute bottom-0 z-50 font-atomic text-2xl text-red-500;
+			@apply pointer-events-none absolute bottom-0 z-50 text-2xl text-red-500;
 			text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 		}
 	}

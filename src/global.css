@@ -1,0 +1,165 @@
+@import "tailwindcss";
+@plugin "@midudev/tailwind-animations";
+
+@font-face {
+	font-family: "Anisette";
+	src: url("fonts/Anisette Light.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Anisette";
+	src: url("fonts/Anisette Medium.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Anisette";
+	src: url("fonts/Anisette Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Anisette";
+	src: url("fonts/Anisette Black.woff2") format("woff2");
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: Atomic;
+	font-display: swap;
+	src: url("https://cdn.lavelada.dev/fonts/.woff2") format("woff2");
+}
+
+/* Tailwind CSS v4 Configuration */
+@theme {
+	--font-family-anisette: "Anisette", system-ui, sans-serif;
+	--font-family-gopher: "Gopher", system-ui, sans-serif;
+	--font-family-mistral: "Mistral", system-ui, sans-serif;
+
+	--color-teal: #5ebeb7;
+	--color-cream: #efe5ca;
+	--color-coral: #f28e7b;
+	--color-magenta: #da3180;
+	--color-purple: #803382;
+	--color-wine: #54002d;
+	--color-brown: #675346;
+	--color-navy: #101426;
+	--color-white: #ffffff;
+	--color-twitch: #9146ff;
+	--color-twitch-ice: #f0f0ff;
+
+	--breakpoint-xs: 360px;
+	--breakpoint-3xl: 1650px;
+}
+
+/* Root variables */
+:root {
+	--color-teal: #5ebeb7;
+	--color-teal-rgb: 94, 190, 183;
+
+	--color-cream: #efe5ca;
+	--color-cream-rgb: 239, 229, 202;
+
+	--color-coral: #f28e7b;
+	--color-coral-rgb: 242, 142, 123;
+
+	--color-magenta: #da3180;
+	--color-magenta-rgb: 218, 49, 128;
+
+	--color-purple: #803382;
+	--color-purple-rgb: 128, 51, 130;
+
+	--color-wine: #54002d;
+	--color-wine-rgb: 84, 0, 45;
+
+	--color-brown: #675346;
+	--color-brown-rgb: 103, 83, 70;
+
+	--color-navy: #101426;
+	--color-navy-rgb: 16, 20, 38;
+
+	--color-white: #ffffff;
+	--color-white-rgb: 255, 255, 255;
+
+	--background-color: #f8f7eb;
+	--background-twitch: var(--color-twitch-ice);
+
+	--color-twitch: #9146ff;
+	--color-twitch-ice: #f0f0ff;
+}
+
+/* Global styles */
+html {
+	font-family: "Anisette", system-ui, sans-serif;
+	background: var(--background-color);
+	color: var(--color-navy);
+	scrollbar-gutter: stable;
+}
+
+main {
+	position: relative;
+}
+
+body:has(dialog[open]) {
+	overflow: hidden;
+}
+
+/* Hiding class, making content visible only to screen readers but not visually */
+/* "sr" meaning "screen-reader" */
+.sr-only:not(:focus):not(:active) {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+@media (hover: hover) {
+	::-webkit-scrollbar {
+		width: 10px;
+		border-radius: 10px;
+	}
+
+	::-webkit-scrollbar-thumb {
+		border-radius: 10px;
+		background-color: var(--color-cream);
+		border: 2px solid transparent;
+		background-clip: content-box;
+	}
+
+	::-webkit-scrollbar-thumb:active {
+		background-color: #666;
+	}
+
+	::-webkit-scrollbar-track {
+		background: var(--background-image);
+	}
+
+	::-webkit-scrollbar-corner {
+		background: var(--background-image);
+	}
+}
+
+* {
+	scrollbar-color: var(--color-cream) transparent;
+	scrollbar-width: thin;
+}
+
+.anchor-main-content {
+	pointer-events: none;
+}
+
+.anchor-main-content:focus {
+	pointer-events: all;
+}

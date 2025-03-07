@@ -1,6 +1,4 @@
 ---
-import jost from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2"
-
 import RichResults from "@/components/RichResults.astro"
 import type { Preload } from "@/types/Preload"
 
@@ -36,12 +34,12 @@ const canonicalURL = new URL(determineCanonicalURL(), Astro.site)
 <link rel="preconnect" href="https://cdn.lavelada.dev" />
 <link
 	rel="preload"
-	href={"https://cdn.lavelada.dev/fonts/font-atomic.woff2"}
+	href={"https://cdn.lavelada.dev/fonts/.woff2"}
 	as="font"
 	type="font/woff2"
 	crossorigin
 />
-<link rel="preload" href={jost} as="font" type="font/woff2" crossorigin />
+<!-- <link rel="preload" href={jost} as="font" type="font/woff2" crossorigin /> -->
 
 {
 	preload?.map(({ href, as, type, rel = "preload", crossorigin }) => (
