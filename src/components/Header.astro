@@ -12,9 +12,13 @@ const normalizedPathName =
 	pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname
 
 const pages = [
-	{ name: "El Evento", href: "/" },
-	{ name: "Combates", href: "/combates", active: normalizedPathName.startsWith("/combates") },
-	{ name: "Pronósticos", href: "/pronosticos" },
+	{ name: "La Velada 2025", href: "https://infolavelada.com/" },
+	{
+		name: "Combates",
+		href: "/2024/combates",
+		active: normalizedPathName.startsWith("/2024/combates"),
+	},
+	{ name: "Pronósticos", href: "/2024/pronosticos" },
 	{
 		name: "Tienda Oficial",
 		href: "https://lavelada.store/",
@@ -25,7 +29,7 @@ const pages = [
 	active: page.active ?? normalizedPathName === page.href,
 }))
 
-const isCombatIntern = normalizedPathName.startsWith("/combates/")
+const isCombatIntern = normalizedPathName.startsWith("/2024/combates/")
 ---
 
 <header class="mb-10 h-16 max-w-[100vw] lg:h-24">
