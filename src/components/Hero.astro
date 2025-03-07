@@ -1,5 +1,6 @@
 ---
 import { SPONSORS } from "@/consts/sponsors"
+import Countdown from "@/components/Countdown.astro"
 ---
 
 <section
@@ -7,7 +8,8 @@ import { SPONSORS } from "@/consts/sponsors"
 >
 	<img
 		src="/img/background-la-velada.webp"
-		class="animate-fade-in pointer-events-none absolute top-0 z-0 h-screen w-screen object-cover"
+		class="animate-fade-in pointer-events-none absolute top-0 z-0 h-screen w-screen object-cover select-none"
+		draggable="false"
 	/>
 	<h1 class="sr-only">Presentación de la Velada del Año IV</h1>
 
@@ -35,7 +37,7 @@ import { SPONSORS } from "@/consts/sponsors"
 
 	<!-- Secondary Sponsors Row -->
 	<div
-		class="animate-fade-in animate-delay-800 relative mx-auto mb-20 flex max-w-4xl flex-wrap items-center justify-center gap-2 px-4 md:gap-4"
+		class="animate-fade-in animate-delay-800 relative mx-auto mb-7 md:mb-20 flex max-w-4xl flex-wrap items-center justify-center gap-2 px-4 md:gap-4"
 	>
 		{
 			SPONSORS.filter(({ id }) =>
@@ -64,31 +66,37 @@ import { SPONSORS } from "@/consts/sponsors"
 		</h2>
 
 		<!-- Logo -->
-		<div class="animate-fade-in-up animate-delay-400 relative mb-8 flex justify-center">
+		<div class="animate-fade-in-up animate-delay-400 relative mb-4 md:mb-8 flex justify-center">
 			<img
 				src="/img/logo-la-velada-v.webp"
 				alt="Logo de La Velada Del Año"
-				class="relative z-10 w-[200px] md:w-[300px] lg:w-[240px]"
+				class="relative z-10 w-[200px] md:w-[300px] lg:w-[240px] select-none"
+				draggable="false"
 			/>
 		</div>
 	</div>
 
+	<!-- Countdown -->
+<div class="animate-fade-in-up animate-delay-500 absolute inset-x-0 flex items-center justify-center">
+		<Countdown />
+	</div>
+
 	<!-- Bottom Info -->
 	<div
-		class="animate-fade-in animate-delay-700 absolute right-0 bottom-16 left-0 flex flex-col justify-between px-8 text-[var(--color-wine)] md:flex-row md:px-16"
+		class="animate-fade-in animate-delay-700 absolute right-0 bottom-2 sm:bottom-4 left-0 flex flex-col justify-between px-4 sm:px-8 text-[var(--color-wine)] md:flex-row md:px-16 z-10"
 	>
-		<div class="text-stroke mb-6 md:mb-0">
-			<p class="text-md text-center leading-tight font-bold md:text-lg">10 DE MARZO</p>
-			<p class="text-center text-lg leading-tight font-normal md:text-xl">
+		<div class="text-stroke mb-2 md:mb-0">
+			<p class="text-sm text-center leading-tight font-bold md:text-lg">10 DE MARZO</p>
+			<p class="text-center text-base leading-tight font-normal md:text-xl">
 				TWITCH.TV/<span class="font-bold">IBAI</span>
 			</p>
 		</div>
 
 		<div class="text-stroke text-right">
-			<p class="text-md text-center leading-tight font-normal md:text-lg">
+			<p class="text-sm text-center leading-tight font-normal md:text-lg">
 				TEATRO <span class="font-medium">VICTORIA</span>
 			</p>
-			<p class="text-center text-lg leading-tight font-medium md:text-xl">BARCELONA</p>
+			<p class="text-center text-base leading-tight font-medium md:text-xl">BARCELONA</p>
 		</div>
 	</div>
 </section>
