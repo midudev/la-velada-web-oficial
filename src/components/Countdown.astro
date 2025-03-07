@@ -1,22 +1,23 @@
 ---
 import Date from "@/components/Date.astro"
 
-const EVENT_TIMESTAMP = 1741631400000
+interface Props {
+	timestamp: number
+}
+
+const { timestamp } = Astro.props
 ---
 
-<section 
-  class="flex flex-col place-items-center w-full px-2 py-2 md:p-4" 
-  aria-label="cuenta atrás"
->
+<section class="flex w-full flex-col place-items-center px-2 py-2 md:p-4" aria-label="cuenta atrás">
 	<div
-		class="grid select-none grid-cols-2 md:grid-cols-4 flex-col items-center justify-center gap-2 md:gap-3 uppercase text-[var(--color-white)]"
-		data-date={EVENT_TIMESTAMP}
+		class="grid grid-cols-2 flex-col items-center justify-center gap-2 text-[var(--color-white)] uppercase select-none md:grid-cols-4 md:gap-3"
+		data-date={timestamp}
 		role="timer"
 	>
 		<Date
 			dateType="DÍAS"
 			attribute={{ "data-days": "" }}
-			className="font-bold text-6xl md:text-7xl lg:text-8xl"
+			className="text-6xl font-bold md:text-7xl lg:text-8xl"
 			wrapperClassName="my-0"
 			height={"h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]"}
 			max={129}
@@ -27,7 +28,7 @@ const EVENT_TIMESTAMP = 1741631400000
 			wrapperClassName="my-0"
 			dateType="HORAS"
 			attribute={{ "data-hours": "" }}
-			className="font-bold text-6xl md:text-7xl lg:text-8xl"
+			className="text-6xl font-bold md:text-7xl lg:text-8xl"
 			height={"h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]"}
 			max={23}
 			withBackground={true}
@@ -37,7 +38,7 @@ const EVENT_TIMESTAMP = 1741631400000
 			wrapperClassName="my-0"
 			dateType="MINUTOS"
 			attribute={{ "data-minutes": "" }}
-			className="font-bold text-6xl md:text-7xl lg:text-8xl"
+			className="text-6xl font-bold md:text-7xl lg:text-8xl"
 			height={"h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]"}
 			max={59}
 			withBackground={true}
@@ -47,7 +48,7 @@ const EVENT_TIMESTAMP = 1741631400000
 			wrapperClassName="my-0"
 			dateType="SEGUNDOS"
 			attribute={{ "data-seconds": "" }}
-			className="font-bold text-6xl md:text-7xl lg:text-8xl"
+			className="text-6xl font-bold md:text-7xl lg:text-8xl"
 			height={"h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]"}
 			max={59}
 			withBackground={true}
@@ -167,7 +168,7 @@ const EVENT_TIMESTAMP = 1741631400000
 		}
 	}
 
-  document.addEventListener('DOMContentLoaded', () => {
+	document.addEventListener("DOMContentLoaded", () => {
 		const countdown = initCountdown()
 		countdown && countdown.start()
 	})

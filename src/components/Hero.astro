@@ -6,6 +6,12 @@ const isOnline = await checkIsChannelOnlineInTwitch("ibai")
 
 const twitchParentUrl = import.meta.env.PROD ? "www.infolavelada.com" : "localhost"
 const twitchUrl = `https://player.twitch.tv/?channel=ibai&parent=${twitchParentUrl}`
+
+const EVENT_TIMESTAMP = 1741631400000
+const currentTimestamp = new Date().getTime()
+
+const timeIsExpired = currentTimestamp > EVENT_TIMESTAMP
+const showStreamingEvent = isOnline && timeIsExpired
 ---
 
 <section
@@ -80,30 +86,30 @@ const twitchUrl = `https://player.twitch.tv/?channel=ibai&parent=${twitchParentU
 			/>
 		</div>
 	</div>
-	<div
-		class="animate-fade-in-up animate-delay-500 absolute inset-x-0 flex items-center justify-center"
-	>
-		<Countdown />
-	</div>
 
-	<div
-		class="animate-fade-in bg-cream/90 mx-auto mb-40 block w-full max-w-5xl rounded-md p-4 delay-1000"
-	>
-		{
-			isOnline && (
-				<div class="relative aspect-video w-full rounded-3xl">
-					<iframe
-						src={twitchUrl}
-						frameborder="0"
-						allowfullscreen="true"
-						height="720"
-						width="1280"
-						class="animate-fade-in bg-cream h-full w-full rounded shadow-2xl backdrop-blur-md delay-1000"
-					/>
-				</div>
-			)
-		}
-	</div>
+	{
+		!showStreamingEvent ? (
+			<div class="animate-fade-in-up animate-delay-500 absolute inset-x-0 flex items-center justify-center">
+				<Countdown timestamp={EVENT_TIMESTAMP} />
+			</div>
+		) : (
+			<div class="animate-fade-in bg-cream/90 mx-auto mb-40 block w-full max-w-5xl rounded-md p-4 delay-1000">
+				{isOnline && (
+					<div class="relative aspect-video w-full rounded-3xl">
+						<iframe
+							src={twitchUrl}
+							frameborder="0"
+							allowfullscreen="true"
+							height="720"
+							width="1280"
+							class="animate-fade-in bg-cream h-full w-full rounded shadow-2xl backdrop-blur-md delay-1000"
+						/>
+					</div>
+				)}
+			</div>
+		)
+	}
+
 	<!-- Bottom Info -->
 	<div
 		class="animate-fade-in animate-delay-700 absolute right-0 bottom-2 left-0 z-10 flex flex-col justify-between px-4 text-[var(--color-wine)] sm:bottom-4 sm:px-8 md:flex-row md:px-16"
