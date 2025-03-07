@@ -3,20 +3,24 @@ import { SPONSORS } from "@/consts/sponsors"
 ---
 
 <section
-	class="relative min-h-screen w-full overflow-hidden bg-[var(--background-color)] bg-[url(/img/background-la-velada.webp)] bg-cover bg-center bg-no-repeat pt-10 pb-20"
+	class="relative min-h-screen w-full overflow-hidden bg-[var(--background-color)] pt-10 pb-20"
 >
+	<img
+		src="/img/background-la-velada.webp"
+		class="animate-fade-in pointer-events-none absolute top-0 z-0 h-screen w-screen object-cover"
+	/>
 	<h1 class="sr-only">Presentación de la Velada del Año IV</h1>
 
 	<!-- Sponsors -->
 	<div
-		class="mx-auto mb-2 flex max-w-6xl flex-wrap items-center justify-center gap-6 px-4 md:gap-3.5"
+		class="animate-fade-in animate-delay-700 relative mx-auto mb-2 flex max-w-6xl flex-wrap items-center justify-center gap-2 px-4 md:gap-4"
 	>
 		{
 			SPONSORS.filter(({ id }) =>
 				["alsa", "spotify", "revolut", "vicio", "coca-cola"].includes(id)
 			).map(({ id, name, url, image, icon: Icon }) => (
 				<a
-					class="transition hover:scale-105 focus:scale-105"
+					class="text-[var(--color-wine)] opacity-70 transition hover:scale-105 hover:opacity-100 focus:scale-105"
 					href={url}
 					target="_blank"
 					rel="noopener noreferrer"
@@ -31,14 +35,14 @@ import { SPONSORS } from "@/consts/sponsors"
 
 	<!-- Secondary Sponsors Row -->
 	<div
-		class="mx-auto mb-20 flex max-w-4xl flex-wrap items-center justify-center gap-6 px-4 md:gap-3.5"
+		class="animate-fade-in animate-delay-800 relative mx-auto mb-20 flex max-w-4xl flex-wrap items-center justify-center gap-2 px-4 md:gap-4"
 	>
 		{
 			SPONSORS.filter(({ id }) =>
 				["infojobs", "grefusa", "cerave", "nothing", "mahou", "maxibon"].includes(id)
 			).map(({ name, url, image, icon: Icon }) => (
 				<a
-					class="transition hover:scale-105 focus:scale-105"
+					class="text-[var(--color-wine)] opacity-70 transition hover:scale-105 hover:opacity-100 focus:scale-105"
 					href={url}
 					target="_blank"
 					rel="noopener noreferrer"
@@ -53,10 +57,14 @@ import { SPONSORS } from "@/consts/sponsors"
 
 	<div class="relative mx-auto max-w-7xl px-4 text-center">
 		<!-- Main Content -->
-		<h2 class="pb-4 text-sm font-medium text-[var(--color-wine)] uppercase">Presentación de</h2>
+		<h2
+			class="animate-fade-in animate-delay-300 pb-4 text-sm font-medium text-[var(--color-wine)] uppercase"
+		>
+			Presentación de
+		</h2>
 
 		<!-- Logo -->
-		<div class="relative mb-8 flex justify-center">
+		<div class="animate-fade-in-up animate-delay-400 relative mb-8 flex justify-center">
 			<img
 				src="/img/logo-la-velada-v.webp"
 				alt="Logo de La Velada Del Año"
@@ -67,7 +75,7 @@ import { SPONSORS } from "@/consts/sponsors"
 
 	<!-- Bottom Info -->
 	<div
-		class="absolute right-0 bottom-16 left-0 flex flex-col justify-between px-8 text-[var(--color-wine)] md:flex-row md:px-16"
+		class="animate-fade-in animate-delay-700 absolute right-0 bottom-16 left-0 flex flex-col justify-between px-8 text-[var(--color-wine)] md:flex-row md:px-16"
 	>
 		<div class="text-stroke mb-6 md:mb-0">
 			<p class="text-md text-center leading-tight font-bold md:text-lg">10 DE MARZO</p>
