@@ -34,6 +34,7 @@ export interface Sponsors {
 	id: SponsorId
 	name: SponsorName
 	url: string
+	icon: any
 	image: {
 		name?: string
 		width: number
