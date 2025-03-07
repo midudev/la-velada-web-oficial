@@ -1,0 +1,109 @@
+---
+import { SPONSORS } from "@/consts/sponsors"
+---
+
+<section
+	class="relative min-h-screen w-full overflow-hidden bg-[var(--background-color)] bg-[url(/img/background-la-velada.webp)] bg-[length:100%_100%] bg-center bg-no-repeat pt-10 pb-20"
+>
+	<h1 class="sr-only">Presentación de la Velada del Año IV</h1>
+
+	<!-- Sponsors -->
+	<div
+		class="mx-auto mb-2 flex max-w-6xl flex-wrap items-center justify-center gap-6 px-4 md:gap-3.5"
+	>
+		{
+			SPONSORS.filter(({ id }) =>
+				["alsa", "spotify", "revolut", "vicio", "coca-cola"].includes(id)
+			).map(({ id, name, url, image, icon: Icon }) => (
+				<a
+					class="transition hover:scale-105 focus:scale-105"
+					href={url}
+					target="_blank"
+					rel="noopener noreferrer"
+					title={`Visita la página del patrocinador ${name}`}
+					aria-label={`Link con el logo de ${name} que lleva a ${url}`}
+				>
+					<Icon width={image.width} height={image.height} />
+				</a>
+			))
+		}
+	</div>
+
+	<!-- Secondary Sponsors Row -->
+	<div
+		class="mx-auto mb-20 flex max-w-4xl flex-wrap items-center justify-center gap-6 px-4 md:gap-3.5"
+	>
+		{
+			SPONSORS.filter(({ id }) =>
+				["infojobs", "grefusa", "cerave", "nothing", "mahou", "maxibon"].includes(id)
+			).map(({ name, url, image, icon: Icon }) => (
+				<a
+					class="transition hover:scale-105 focus:scale-105"
+					href={url}
+					target="_blank"
+					rel="noopener noreferrer"
+					title={`Visita la página del patrocinador ${name}`}
+					aria-label={`Link con el logo de ${name} que lleva a ${url}`}
+				>
+					<Icon width={image.width} height={image.height} />
+				</a>
+			))
+		}
+	</div>
+
+	<div class="relative mx-auto max-w-7xl px-4 text-center">
+		<!-- Main Content -->
+		<h2 class="pb-4 text-sm font-medium text-[var(--color-wine)] uppercase">Presentación de</h2>
+
+		<!-- Logo -->
+		<div class="relative mb-8 flex justify-center">
+			<img
+				src="/img/logo-la-velada-v.webp"
+				alt="Logo de La Velada Del Año"
+				class="relative z-10 w-[200px] md:w-[300px] lg:w-[240px]"
+			/>
+		</div>
+	</div>
+
+	<!-- Bottom Info -->
+	<div
+		class="absolute right-0 bottom-16 left-0 flex flex-col justify-between px-8 text-[var(--color-wine)] md:flex-row md:px-16"
+	>
+		<div class="mb-6 md:mb-0">
+			<p class="text-md text-center leading-tight font-bold md:text-lg">10 DE MARZO</p>
+			<p class="text-center text-lg leading-tight font-normal md:text-xl">
+				TWITCH.TV/<span class="font-bold">IBAI</span>
+			</p>
+		</div>
+
+		<div class="text-right">
+			<p class="text-md text-center leading-tight font-normal md:text-lg">
+				TEATRO <span class="font-medium">VICTORIA</span>
+			</p>
+			<p class="text-center text-lg leading-tight font-medium md:text-xl">BARCELONA</p>
+		</div>
+	</div>
+</section>
+
+<style>
+	/* Add any additional styles if needed */
+	a {
+		transition: transform 0.3s ease;
+	}
+
+	a:hover,
+	a:focus {
+		transform: scale(1.05);
+	}
+
+	@media (prefers-reduced-motion) {
+		a {
+			transition: none;
+		}
+
+		a:hover,
+		a:focus {
+			transform: none;
+		}
+	}
+</style>
