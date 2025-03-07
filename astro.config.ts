@@ -26,6 +26,16 @@ export default defineConfig({
 		},
 	}),
 	output: "server",
+	redirects: {
+		"/": "/2024",
+		"/boxers/[...id]": "/2024/boxers/[...id]",
+		"/pronosticos": "/2024/pronosticos",
+		"/privacy-policy": "/2024/privacy-policy",
+		"/legal-advice": "/2024/legal-advice",
+		"/404": "/2024/404",
+		"/combates": "/2024/combates",
+		"/combate/[...id]": "/2024/combate/[...id]",
+	},
 	site: seoConfig.baseURL,
 	vite: {
 		build: {
