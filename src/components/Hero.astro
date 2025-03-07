@@ -1,5 +1,10 @@
 ---
 import { SPONSORS } from "@/consts/sponsors"
+import { checkIsChannelOnlineInTwitch } from "@/utils/check-is-channel-online-in-twitch"
+const isOnline = await checkIsChannelOnlineInTwitch("ibai")
+
+const twitchParentUrl = import.meta.env.PROD ? "www.infolavelada.com" : "localhost"
+const twitchUrl = `https://player.twitch.tv/?channel=ibai&parent=${twitchParentUrl}`
 ---
 
 <section
@@ -7,7 +12,7 @@ import { SPONSORS } from "@/consts/sponsors"
 >
 	<img
 		src="/img/background-la-velada.webp"
-		class="animate-fade-in pointer-events-none absolute top-0 z-0 h-screen w-screen object-cover"
+		class="animate-fade-in pointer-events-none fixed top-0 z-0 h-screen w-screen object-cover"
 	/>
 	<h1 class="sr-only">Presentación de la Velada del Año IV</h1>
 
@@ -71,6 +76,25 @@ import { SPONSORS } from "@/consts/sponsors"
 				class="relative z-10 w-[200px] md:w-[300px] lg:w-[240px]"
 			/>
 		</div>
+	</div>
+
+	<div
+		class="animate-fade-in bg-cream/90 mx-auto mb-40 block w-full max-w-5xl rounded-md p-4 delay-1000"
+	>
+		{
+			isOnline && (
+				<div class="relative aspect-video w-full rounded-3xl">
+					<iframe
+						src={twitchUrl}
+						frameborder="0"
+						allowfullscreen="true"
+						height="720"
+						width="1280"
+						class="animate-fade-in bg-cream h-full w-full rounded shadow-2xl backdrop-blur-md delay-1000"
+					/>
+				</div>
+			)
+		}
 	</div>
 
 	<!-- Bottom Info -->
