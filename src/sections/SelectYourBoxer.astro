@@ -24,7 +24,7 @@ const boxerColumns = [
 ]
 ---
 
-<section class="mb-20 mt-20 transform-gpu md:my-40">
+<section class="mt-20 mb-20 transform-gpu md:my-40">
 	<Typography
 		as="h3"
 		variant="atomic-title"
@@ -83,9 +83,9 @@ const boxerColumns = [
 		</div>
 
 		<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
-			<div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
+			<div class="carousel mt-8 w-full max-w-[100vw] overflow-x-scroll overflow-y-hidden">
 				<div
-					class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll pr-[40%]"
+					class="carousel-inner flex snap-x snap-mandatory overflow-x-scroll overflow-y-hidden pr-[40%]"
 				>
 					{
 						listOfBoxers.map((boxer, index) => (
@@ -98,7 +98,7 @@ const boxerColumns = [
 					}
 				</div>
 			</div>
-			<HorizontalScroll class:list={["w-16 text-primary opacity-80"]} />
+			<HorizontalScroll class:list={["text-primary w-16 opacity-80"]} />
 		</div>
 	</div>
 </section>
@@ -283,6 +283,7 @@ const boxerColumns = [
 </script>
 
 <style>
+	@reference "../global.css";
 	.boxers-lists {
 		@apply relative w-screen overflow-x-scroll md:overflow-hidden;
 		scrollbar-width: none;

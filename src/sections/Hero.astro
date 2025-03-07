@@ -1,77 +1,110 @@
 ---
-import AnimatedX from "@/components/AnimatedX.astro"
-import HeroLogo from "@/components/HeroLogo.astro"
+import SponsorLogo from "@/components/SponsorLogo.astro"
+import { SPONSORS } from "@/consts/sponsors"
 ---
 
-<script>
-	const twitchLink = document.querySelector("a[href='https://www.twitch.tv/ibai']")
+<section
+	class="relative min-h-screen w-full overflow-hidden bg-[var(--background-color)] bg-[url(/img/background-la-velada.webp)] bg-[length:100%_100%] bg-center bg-no-repeat pt-10 pb-20"
+>
+	<h1 class="sr-only">Presentación de la Velada del Año IV</h1>
 
-	setTimeout(() => {
-		if (twitchLink) {
-			twitchLink.classList.remove("opacity-0", "invisible") // Adjust this line if you're using 'hidden'
-		}
-		if (twitchLink) {
-			twitchLink.classList.add("opacity-100", "visible") // Add any classes to make it visible or animate
-		}
-	}, 5)
-</script>
-<section class="flex flex-col place-items-center gap-4 lg:gap-9">
-	<h1 class="sr-only bg-black/30">Presentación de la Velada del Año IV</h1>
-	<a
-		class="invisible -rotate-6 animate-fade-in font-atomic text-2xl text-white underline-offset-8 opacity-0 transition duration-1000 hover:scale-110 hover:underline md:text-4xl"
-		href="https://www.twitch.tv/ibai"
-		target="_blank"
-		rel="noopener"
-		title="Enlace al canal de Twitch de Ibai Llanos"
-		aria-label="Enlace al canal de Twitch de Ibai Llanos"
+	<!-- Sponsors -->
+	<div
+		class="mx-auto mb-2 flex max-w-6xl flex-wrap items-center justify-center gap-6 px-4 md:gap-3.5"
 	>
-		twitch.tv/ibai
-	</a>
-	<div class="relative">
-		<AnimatedX />
+		{
+			SPONSORS.filter(({ id }) =>
+				["alsa", "spotify", "revolut", "vicio", "coca-cola"].includes(id)
+			).map(({ id, name, url, image }) => (
+				<a
+					class="transition hover:scale-105 focus:scale-105"
+					href={url}
+					target="_blank"
+					rel="noopener noreferrer"
+					title={`Visita la página del patrocinador ${name}`}
+					aria-label={`Link con el logo de ${name} que lleva a ${url}`}
+				>
+					<SponsorLogo id={id} name={name} width={image.width} height={image.height} />
+				</a>
+			))
+		}
+	</div>
 
-		<div
-			class="absolute inset-0 -z-10 m-auto w-full rounded-full bg-black/50 blur-2xl md:size-[400px]"
-		>
+	<!-- Secondary Sponsors Row -->
+	<div
+		class="mx-auto mb-20 flex max-w-4xl flex-wrap items-center justify-center gap-6 px-4 md:gap-3.5"
+	>
+		{
+			SPONSORS.filter(({ id }) =>
+				["infojobs", "grefusa", "cerave", "nothing", "mahou", "maxibon"].includes(id)
+			).map(({ id, name, url, image }) => (
+				<a
+					class="transition hover:scale-105 focus:scale-105"
+					href={url}
+					target="_blank"
+					rel="noopener noreferrer"
+					title={`Visita la página del patrocinador ${name}`}
+					aria-label={`Link con el logo de ${name} que lleva a ${url}`}
+				>
+					<SponsorLogo id={id} name={name} width={image.width} height={image.height} />
+				</a>
+			))
+		}
+	</div>
+
+	<div class="relative mx-auto max-w-7xl px-4 text-center">
+		<!-- Main Content -->
+		<h2 class="pb-4 text-sm font-medium text-[var(--color-wine)] uppercase">Presentación de</h2>
+
+		<!-- Logo -->
+		<div class="relative mb-8 flex justify-center">
+			<img
+				src="/img/logo-la-velada-v.webp"
+				alt="Logo de La Velada Del Año"
+				class="relative z-10 w-[200px] md:w-[300px] lg:w-[240px]"
+			/>
 		</div>
-		<HeroLogo class="h-auto w-[250px] overflow-visible md:w-[500px]" id="hero-logo-main" noEffect />
+	</div>
+
+	<!-- Bottom Info -->
+	<div
+		class="absolute right-0 bottom-16 left-0 flex flex-col justify-between px-8 text-[var(--color-wine)] md:flex-row md:px-16"
+	>
+		<div class="mb-6 md:mb-0">
+			<p class="text-md text-center leading-tight font-bold md:text-lg">10 DE MARZO</p>
+			<p class="text-center text-lg leading-tight font-normal md:text-xl">
+				TWITCH.TV/<span class="font-bold">IBAI</span>
+			</p>
+		</div>
+
+		<div class="text-right">
+			<p class="text-md text-center leading-tight font-normal md:text-lg">
+				TEATRO <span class="font-medium">VICTORIA</span>
+			</p>
+			<p class="text-center text-lg leading-tight font-medium md:text-xl">BARCELONA</p>
+		</div>
 	</div>
 </section>
+
 <style>
-	a::before {
-		content: "";
-		position: absolute;
-		left: 0;
-		bottom: -2px;
-		width: 100%;
-		height: 3px;
-		background-color: white;
-		transform-origin: right;
-		transform: scaleX(0);
-		transition: transform 0.2s ease-in-out;
+	/* Add any additional styles if needed */
+	a {
+		transition: transform 0.3s ease;
 	}
 
-	a:hover::before {
-		transform: scaleX(1);
-		transform-origin: left;
+	a:hover,
+	a:focus {
+		transform: scale(1.05);
 	}
+
 	@media (prefers-reduced-motion) {
-		a::before {
-			content: "";
-			position: absolute;
-			left: 0;
-			bottom: -2px;
-			width: 100%;
-			height: 3px;
-			background-color: white;
-			transform-origin: right;
-			transform: scaleX(0);
-			transition: transform 0s;
+		a {
+			transition: none;
 		}
 
-		a:hover::before {
-			transform: scaleX(1);
-			transform-origin: left;
+		a:hover,
+		a:focus {
+			transform: none;
 		}
 	}
 </style>

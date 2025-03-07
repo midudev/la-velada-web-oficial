@@ -1,9 +1,8 @@
 import db from "@astrojs/db"
 import sitemap from "@astrojs/sitemap"
-import tailwind from "@astrojs/tailwind"
-import vercel from "@astrojs/vercel/serverless"
+import vercel from "@astrojs/vercel"
+import tailwindcss from "@tailwindcss/vite"
 import { defineConfig } from "astro/config"
-import auth from "auth-astro"
 import { VitePWA } from "vite-plugin-pwa"
 
 // Helper imports
@@ -19,7 +18,7 @@ export default defineConfig({
 	devToolbar: {
 		enabled: false,
 	},
-	integrations: [tailwind(), sitemap(), auth(), db()],
+	integrations: [sitemap(), /* auth(), */ db()],
 	adapter: vercel({
 		webAnalytics: {
 			enabled: true,
@@ -28,13 +27,11 @@ export default defineConfig({
 	output: "server",
 	site: seoConfig.baseURL,
 	vite: {
-		build: {
-			cssMinify: "lightningcss",
-		},
 		ssr: {
 			noExternal: ["path-to-regexp"],
 		},
 		plugins: [
+			tailwindcss(),
 			VitePWA({
 				registerType: "autoUpdate",
 				manifest,

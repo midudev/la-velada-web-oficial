@@ -13,7 +13,7 @@ const { boxer, isKingOfTheTrack } = Astro.props
 	<div class="-mt-10 flex flex-col items-center">
 		<a
 			class:list={[
-				`${isKingOfTheTrack ? "p-1" : "text-xl font-bold text-accent transition hover:scale-110 hover:saturate-[150%]"}`,
+				`${isKingOfTheTrack ? "p-1" : "text-accent text-xl font-bold transition hover:scale-110 hover:saturate-[150%]"}`,
 			]}
 			href={`/boxers/${boxer.id}`}
 			title={`Visita la página ${boxer.gender === "masculino" ? "del boxeador" : "de la boxeadora"} ${boxer.name}`}
@@ -31,7 +31,7 @@ const { boxer, isKingOfTheTrack } = Astro.props
 			/>
 			<span
 				class:list={[
-					"font-atomic text-accent",
+					"text-accent",
 					{ "text-[12px]": isKingOfTheTrack },
 					{ "text-xl": !isKingOfTheTrack },
 				]}
