@@ -1,5 +1,10 @@
 ---
-const { id } = Astro.props
+interface Props {
+	id: string
+	percentage: number
+}
+
+const { id, percentage } = Astro.props
 ---
 
 <canvas
@@ -8,7 +13,7 @@ const { id } = Astro.props
 	height="260px"
 	class="velocimeter w-full md:w-[500px]"></canvas>
 
-<script define:vars={{ id }}>
+<script define:vars={{ id, percentage }}>
 	const COLORS = {
 		"accent": "#b4cd02",
 		"white": "#fff",
@@ -18,6 +23,7 @@ const { id } = Astro.props
 	document.addEventListener("astro:page-load", () => {
 		const canvas = document.querySelector(`#velocimeter-${id}`)
 		if (!canvas) return
+		canvas.setAttribute("data-percentage", percentage)
 		const ctx = canvas.getContext("2d")
 
 		function updateVelocimeter() {
@@ -99,15 +105,5 @@ const { id } = Astro.props
 
 		// Initial draw with default value
 		updateVelocimeter()
-
-		window.addEventListener("forecast:loaded", (event) => {
-			const { detail } = event
-			const { combatId, percentage } = detail
-
-			if (combatId !== id) return
-
-			canvas.setAttribute("data-percentage", percentage)
-			updateVelocimeter()
-		})
 	})
 </script>
