@@ -12,7 +12,7 @@ const normalizedPathName =
 	pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname
 
 const pages = [
-	{ name: "La Velada 2025", href: "https://infolavelada.com/" },
+	{ name: "La Velada 2025", href: "https://www.infolavelada.com/" },
 	{
 		name: "Combates",
 		href: "/2024/combates",
@@ -42,7 +42,7 @@ const isCombatIntern = normalizedPathName.startsWith("/2024/combates/")
 						target={target}
 						rel={target === "_blank" ? "noopener noreferrer" : undefined}
 						class:list={[
-							"nav-item relative hidden h-full select-none flex-col items-center justify-center gap-1 text-center text-xl uppercase lg:flex lg:px-7 xl:px-10",
+							"nav-item relative hidden h-full flex-col items-center justify-center gap-1 text-center text-xl uppercase select-none lg:flex lg:px-7 xl:px-10",
 							{ "current-page text-accent": active },
 							{ "text-white": !active },
 						]}
@@ -62,7 +62,7 @@ const isCombatIntern = normalizedPathName.startsWith("/2024/combates/")
 			id={MOBILE_MENU_CONTENT_ID}
 		>
 			<aside class="flex min-h-16 w-full items-center justify-between">
-				<span class="text-xl font-semibold uppercase text-primary">Menú</span>
+				<span class="text-primary text-xl font-semibold uppercase">Menú</span>
 				<HamburgerButton id="innerMenuButton" />
 			</aside>
 			<div class="flex min-h-2 w-full items-center">
@@ -93,7 +93,7 @@ const isCombatIntern = normalizedPathName.startsWith("/2024/combates/")
 								]}
 								id={`navmob-link-${key}`}
 							>
-								<span class="z-10 uppercase text-primary">{name}</span>
+								<span class="text-primary z-10 uppercase">{name}</span>
 							</a>
 							<hr
 								class="h-[2px] w-full border-t-0"
@@ -118,7 +118,7 @@ const isCombatIntern = normalizedPathName.startsWith("/2024/combates/")
 				]}
 			>
 			</div>
-			<div class="focus-within-ring -ml-[8px] -mr-[4px]">
+			<div class="focus-within-ring -mr-[4px] -ml-[8px]">
 				<a href="/" class="focus-visible:!ring-0">
 					<HeroLogo class:list={"h-auto w-full"} id="hero-logo-header" animated={false} />
 				</a>
