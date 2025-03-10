@@ -2,15 +2,13 @@
 import Countdown from "@/components/Countdown.astro"
 import { SPONSORS } from "@/consts/sponsors"
 import { checkIsChannelOnlineInTwitch } from "@/utils/check-is-channel-online-in-twitch"
+import { EVENT_TIMESTAMP, isEventExpired, getTwitchUrl } from "@/consts/event-date"
+
 const isOnline = await checkIsChannelOnlineInTwitch("ibai")
 
-const twitchParentUrl = import.meta.env.PROD ? "www.infolavelada.com" : "localhost"
-const twitchUrl = `https://player.twitch.tv/?channel=ibai&parent=${twitchParentUrl}`
+const twitchUrl = getTwitchUrl("ibai")
 
-const EVENT_TIMESTAMP = 1741631400000
-const currentTimestamp = new Date().getTime()
-
-const timeIsExpired = currentTimestamp > EVENT_TIMESTAMP
+const timeIsExpired = isEventExpired()
 const showStreamingEvent = isOnline && timeIsExpired
 ---
 
