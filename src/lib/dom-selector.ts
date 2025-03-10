@@ -11,9 +11,7 @@ export const $ = <T extends HTMLElement>(
 	selector: string,
 	context: Document | HTMLElement = document
 ) => {
-	console.log("Selecting element with:", { selector, context })
 	const element = context.querySelector<T>(selector)
-	console.log("Found element:", element)
 	return element
 }
 
@@ -29,8 +27,6 @@ export const $$ = <T extends HTMLElement>(
 	selector: string,
 	context: Document | HTMLElement = document
 ) => {
-	console.log("Selecting elements with:", { selector, context })
 	const elements = context.querySelectorAll<T>(selector)
-	console.log("Found elements:", elements)
 	return elements
 }
