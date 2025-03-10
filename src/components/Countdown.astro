@@ -133,9 +133,21 @@ const { timestamp } = Astro.props
 
 				if (!$countdown) return
 
-				$countdown.innerHTML = "¡El evento de presentación ha empezado! 🎉"
+				$countdown.innerHTML = `¡El evento de presentación ha empezado! <span class='[text-shadow:none]'>🎉</span>
+						<div class="flex w-full items-center justify-center w-full">
+								<a
+									href="https://www.twitch.tv/ibai"
+									target="_blank"
+									class="text-white text-stroke-dark mt-4 hover:scale-105 transition inline-flex cursor-pointer text-center text-base leading-tight font-normal md:text-xl"
+								>
+									<span class="text-center text-base leading-tight font-normal md:text-xl">
+										TWITCH.TV/<span class="font-bold">IBAI</span>
+									</span>
+								</a>
+							</div>
+					`
 				$countdown.className =
-					"text-[var(--color-white)] uppercase font-semibold animate-fade-in text-lg sm:text-xl md:text-2xl text-center p-4"
+					"text-[var(--color-white)] uppercase font-semibold animate-fade-in text-lg sm:text-xl md:text-2xl text-center p-4 text-stroke-dark"
 			},
 		})
 
