@@ -12,204 +12,176 @@ const { combatId } = Astro.props
 
 const combat = COMBATS.find((combat) => combat.id === combatId)
 const boxers = combat?.boxers.map((boxer) => BOXERS.find((b) => b.id === boxer)) ?? []
+
+const allPredictions = {
+	"1-agustin-51-vs-carreraaa": {
+		totalVotes: 12694,
+		percentageVotes: {
+			"carreraaa": 62.41,
+			"agustin-51": 37.59,
+		},
+	},
+	"2-guanyar-vs-la-cobra": {
+		totalVotes: 12263,
+		percentageVotes: {
+			"guanyar": 60.92,
+			"la-cobra": 39.08,
+		},
+	},
+	"3-zeling-y-nissaxter-vs-alana-y-ama-blitz": {
+		totalVotes: 0,
+		percentageVotes: {
+			"zeling": 0,
+			"nissaxter": 0,
+			"alana": 0,
+			"ama-blitz": 0,
+		},
+	},
+	"4-viruzz-vs-shelao": {
+		totalVotes: 12383,
+		percentageVotes: {
+			viruzz: 44.9,
+			shelao: 55.1,
+		},
+	},
+	"5-rey-de-la-pista": {
+		totalVotes: 12357,
+		percentageVotes: {
+			"roberto-cein": 3.59,
+			"aldo-geo": 24.8,
+			"folagor": 4.49,
+			"karchez": 5.22,
+			"pelicanger": 8.17,
+			"peldanyos": 22.4,
+			"unicornio": 11.44,
+			"skain": 5.64,
+			"sezar-blue": 7.67,
+			"will": 6.57,
+		},
+	},
+	"6-el-mariana-vs-plex": {
+		totalVotes: 15629,
+		percentageVotes: {
+			"plex": 43.87,
+			"el-mariana": 56.13,
+		},
+	},
+}
+
+const { totalVotes, percentageVotes } = allPredictions[combatId] ?? {}
 ---
 
-{
-	combatId === REY_DE_LA_PISTA_ID && <section
-			data-combat-id={combatId}
-			class="forecast forecastGrid mt-40 flex flex-col items-center gap-4 px-7"
-		>
-			<div class="pronostico flex flex-col items-center justify-center gap-4">
-				<h2 class="text-2xl font-medium uppercase text-white">Pronóstico</h2>
-				<p class="max-w-72 text-center text-xl text-primary opacity-0">
-					Basado en <span class="font-semibold text-accent">0</span> predicciones
-				</p>
-			</div>
+<>
+	{
+		combatId === REY_DE_LA_PISTA_ID && (
+			<section
+				data-combat-id={combatId}
+				class="forecast forecastGrid mt-40 flex flex-col items-center gap-4 px-7"
+			>
+				<div class="pronostico flex flex-col items-center justify-center gap-4">
+					<h2 class="text-2xl font-medium uppercase text-white">Pronóstico</h2>
+					<p class="max-w-72 text-center text-xl text-primary opacity-0">
+						Basado en <span class="font-semibold text-accent">{totalVotes}</span> predicciones
+					</p>
+				</div>
 
-			<div class="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-5 gap-8">
-			{boxers.map((boxer) => boxer && (
+				<div class="grid grid-cols-2 gap-8 sm:grid-cols-4 xl:grid-cols-5">
+					{boxers.map(
+						(boxer) =>
+							boxer && (
+								<ForecastBoxer
+									image={`https://cdn.lavelada.dev/boxers/${boxer.id}-small.webp`}
+									imageAlt={`${boxer.name}`}
+									boxerId={boxer.id}
+									percentage={percentageVotes[boxer.id]}
+									boxerName={boxer.name}
+									boxerHref={`/2024/boxers/${boxer.id}`}
+									class:list={["boxer-forecast"]}
+									isSmall={true}
+								/>
+							)
+					)}
+				</div>
+			</section>
+		)
+	}
+
+	{
+		combatId === "3-zeling-y-nissaxter-vs-alana-y-ama-blitz" && (
+			<section
+				data-combat-id={combatId}
+				class="forecast forecastGrid mt-40 grid items-center gap-4 px-7"
+			>
 				<ForecastBoxer
-					image={`https://cdn.lavelada.dev/boxers/${boxer.id}-small.webp`}
-					imageAlt={`${boxer.name}`}
-					boxerId={boxer.id}
-					boxerName={boxer.name}
-					boxerHref={`/2024/boxers/${boxer.id}`}
-					class:list={["boxer-forecast"]}
-					isSmall={true}
-				/>
-			))}
-			</div>
-	</section>
-}
-
-{ combatId === "3-zeling-y-nissaxter-vs-alana-y-ama-blitz" && (
-	<section
-		data-combat-id={combatId}
-		class="forecast forecastGrid mt-40 grid items-center gap-4 px-7"
-	>
-
-		<ForecastBoxer
-			image={"https://cdn.lavelada.dev/boxers/vote/vote-3-zeling-nissaxter.webp"}
-			imageAlt={"Zeling y Nissaxter"}
-			boxerId={"zeling-nissaxter"}
-			boxerName={"Zeling y Nissaxter"}
-			boxerHref={"/2024/boxers/nissaxter"}
-			class:list={["boxer1"]}
-		/>
-
-		<div class="pronostico flex flex-col items-center justify-center gap-4">
-			<h2 class="text-2xl font-medium uppercase text-white">Pronóstico</h2>
-			<p class="max-w-72 text-center text-xl text-primary opacity-0">
-				Basado en <span class="font-semibold text-accent">0</span> predicciones
-			</p>
-			<Velocimetro id={combatId} />
-		</div>
-
-			<ForecastBoxer
-				image={"https://cdn.lavelada.dev/boxers/vote/vote-3-alana-ama-blitz.webp"}
-				imageAlt={"Alana y Ama Blitz"}
-				boxerId={"alana-ama-blitz"}
-				boxerName={"Alana y Ama Blitz"}
-				boxerHref={"/2024/boxers/alana"}
-				class:list={["boxer2"]}
-			/>
-	</section>
-)}
-
-{ combatId !== REY_DE_LA_PISTA_ID && combatId !== "3-zeling-y-nissaxter-vs-alana-y-ama-blitz" && (
-		<section
-			data-combat-id={combatId}
-			class="forecast forecastGrid mt-40 grid items-center gap-4 px-7"
-		>
-			{boxers[0] && (
-				<ForecastBoxer
-					image={`https://cdn.lavelada.dev/boxers/${boxers[0].id}-big.webp`}
-					imageAlt={`${boxers[0].name}`}
-					boxerId={boxers[0].id}
-					boxerName={boxers[0].name}
-					boxerHref={`/2024/boxers/${boxers[0].id}`}
+					image={"https://cdn.lavelada.dev/boxers/vote/vote-3-zeling-nissaxter.webp"}
+					imageAlt={"Zeling y Nissaxter"}
+					percentage={0}
+					boxerId={"zeling-nissaxter"}
+					boxerName={"Zeling y Nissaxter"}
+					boxerHref={"/2024/boxers/nissaxter"}
 					class:list={["boxer1"]}
 				/>
-			)}
-			<div class="pronostico flex flex-col items-center justify-center gap-4">
-				<h2 class="text-2xl font-medium uppercase text-white">Pronóstico</h2>
-				<p class="max-w-72 text-center text-xl text-primary opacity-0">
-					Basado en <span class="font-semibold text-accent">0</span> predicciones
-				</p>
-				{boxers[1] && <Velocimetro id={combatId} />}
-			</div>
-			{boxers[1] && (
+
+				<div class="pronostico flex flex-col items-center justify-center gap-4">
+					<h2 class="text-2xl font-medium uppercase text-white">Pronóstico</h2>
+					{/* <p class="max-w-72 text-center text-xl text-primary opacity-0">
+						Basado en <span class="font-semibold text-accent">0</span> predicciones
+					</p> */}
+					{/* <Velocimetro percentage={0} id={combatId} /> */}
+				</div>
+
 				<ForecastBoxer
-					image={`https://cdn.lavelada.dev/boxers/${boxers[1].id}-big.webp`}
-					imageAlt={`${boxers[1].name}`}
-					boxerId={boxers[1].id}
-					boxerName={boxers[1].name}
-					boxerHref={`/2024/boxers/${boxers[1].id}`}
+					image={"https://cdn.lavelada.dev/boxers/vote/vote-3-alana-ama-blitz.webp"}
+					imageAlt={"Alana y Ama Blitz"}
+					percentage={0}
+					boxerId={"alana-ama-blitz"}
+					boxerName={"Alana y Ama Blitz"}
+					boxerHref={"/2024/boxers/alana"}
 					class:list={["boxer2"]}
 				/>
-			)}
-		</section>
-	)
-}
+			</section>
+		)
+	}
 
-<script>
-	import { $, $$ } from "@/lib/dom-selector"
-
-	document.addEventListener("astro:page-load", () => {
-		const $allForecasts = $$(".forecast") as NodeListOf<HTMLElement>
-		if ($allForecasts.length === 0) return
-
-		$allForecasts.forEach(($forecast) => {
-			const combatId = $forecast.getAttribute("data-combat-id")
-
-			const allPredictions = {
-				"1-agustin-51-vs-carreraaa": {
-					totalVotes: 12694,
-					percentageVotes: {
-						"carreraaa": 62.41,
-						"agustin-51": 37.59
-					}
-				},
-				"2-guanyar-vs-la-cobra": {
-					totalVotes: 12263,
-					percentageVotes: {
-						"guanyar": 60.92,
-						"la-cobra": 39.08
-					}
-				},
-				"3-zeling-y-nissaxter-vs-alana-y-ama-blitz": {
-					totalVotes: 0,
-					percentageVotes: {
-						"zeling": 0,
-						"nissaxter": 0,
-						"alana": 0,
-						"ama-blitz": 0
-					}
-				},
-				"4-viruzz-vs-shelao": {
-					totalVotes: 12383,
-					percentageVotes: {
-						"viruzz": 44.90,
-						"shelao": 55.10
-					},
-				},
-				"5-rey-de-la-pista": {
-					totalVotes: 12357,
-					percentageVotes: {
-						"roberto-cein": 3.59,
-						"aldo-geo": 24.80,
-						"folagor": 4.49,
-						"karchez": 5.22,
-						"pelicanger": 8.17,
-						"peldanyos": 22.40,
-						"unicornio": 11.44,
-						"skain": 5.64,
-						"sezar-blue": 7.67,
-						"will": 6.57,
-					}
-				},
-				"6-el-mariana-vs-plex": {
-					totalVotes: 15629,
-					percentageVotes: {
-						"plex": 43.87,
-						"el-mariana": 56.13
-					}
-				},
-			}
-
-			const { totalVotes, percentageVotes } = allPredictions[combatId] ?? {}
-
-			if (totalVotes == null || totalVotes === 0) return
-
-			const allBoxers = $forecast.querySelectorAll(".boxer-forecast")
-
-			const isKingOfTheHill = allBoxers.length > 4
-
-			if (!isKingOfTheHill) {
-				const [, lastBoxer] = $forecast.querySelectorAll(".boxer-forecast")
-				const lastBoxerId = lastBoxer.getAttribute("data-id")
-				if (lastBoxerId == null) return
-
-				const percentage = percentageVotes[lastBoxerId]
-				if (percentage) {
-					const event = new CustomEvent("forecast:loaded", { detail: { combatId, percentage } })
-					dispatchEvent(event)
-				}
-			}
-
-			const $pronostico = $forecast.querySelector(".pronostico") as HTMLElement
-			$pronostico.querySelector(".opacity-0")?.classList.remove("opacity-0")
-
-			const $pronosticoNumber = $pronostico.querySelector("span")
-			if ($pronosticoNumber) $pronosticoNumber.innerText = totalVotes.toString()
-
-			Object.entries(percentageVotes).forEach(([boxerId, forecast]) => {
-				const el = $(`.boxer-forecast[data-id="${boxerId}"]`)
-				if (el) el.innerText = `${forecast.toFixed(2)}%`
-			})
-		})
-	})
-</script>
+	{
+		combatId !== REY_DE_LA_PISTA_ID && combatId !== "3-zeling-y-nissaxter-vs-alana-y-ama-blitz" && (
+			<section
+				data-combat-id={combatId}
+				class="forecast forecastGrid mt-40 grid items-center gap-4 px-7"
+			>
+				{boxers[0] && (
+					<ForecastBoxer
+						image={`https://cdn.lavelada.dev/boxers/${boxers[0].id}-big.webp`}
+						imageAlt={`${boxers[0].name}`}
+						boxerId={boxers[0].id}
+						percentage={percentageVotes[boxers[0].id]}
+						boxerName={boxers[0].name}
+						boxerHref={`/2024/boxers/${boxers[0].id}`}
+						class:list={["boxer1"]}
+					/>
+				)}
+				<div class="pronostico flex flex-col items-center justify-center gap-4">
+					<h2 class="text-2xl font-medium uppercase text-white">Pronóstico</h2>
+					<p class="max-w-72 text-center text-xl text-primary opacity-0">
+						Basado en <span class="font-semibold text-accent">0</span> predicciones
+					</p>
+					{boxers[1] && <Velocimetro percentage={percentageVotes[boxers[1].id]} id={combatId} />}
+				</div>
+				{boxers[1] && (
+					<ForecastBoxer
+						image={`https://cdn.lavelada.dev/boxers/${boxers[1].id}-big.webp`}
+						imageAlt={`${boxers[1].name}`}
+						percentage={percentageVotes[boxers[1].id]}
+						boxerId={boxers[1].id}
+						boxerName={boxers[1].name}
+						boxerHref={`/2024/boxers/${boxers[1].id}`}
+						class:list={["boxer2"]}
+					/>
+				)}
+			</section>
+		)
+	}
+</>
 
 <style>
 	.forecastGrid {

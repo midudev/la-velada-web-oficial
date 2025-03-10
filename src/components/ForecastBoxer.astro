@@ -6,9 +6,10 @@ interface Props {
 	boxerName: string
 	boxerHref: string
 	isSmall?: boolean
+	percentage: number
 }
 
-const { image, imageAlt, boxerId, boxerName, boxerHref, isSmall = false } = Astro.props
+const { image, imageAlt, boxerId, boxerName, boxerHref, isSmall = false, percentage } = Astro.props
 ---
 
 <a
@@ -37,7 +38,7 @@ const { image, imageAlt, boxerId, boxerName, boxerHref, isSmall = false } = Astr
 					!isSmall && "md:text-6xl",
 				]}
 			>
-				&nbsp;
+				{percentage ? `${percentage.toFixed(2)}%` : ""}
 			</h4>
 		</div>
 	</article>
