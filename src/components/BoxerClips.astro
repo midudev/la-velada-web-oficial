@@ -72,36 +72,34 @@ const hasClips = clips.length > 0
 <script>
 	import { $ } from "@/lib/dom-selector"
 
-	document.addEventListener("astro:page-load", () => {
-		const $carousel = $(".carousel")
-		const $prev = $("[data-btn-prev]")
-		const $next = $("[data-btn-next]")
-		const $clipIndex = $("[data-clip-index]")
+	const $carousel = $(".carousel")
+	const $prev = $("[data-btn-prev]")
+	const $next = $("[data-btn-next]")
+	const $clipIndex = $("[data-clip-index]")
 
-		let position = 0
+	let position = 0
 
-		const updatePosition = () => {
-			$carousel?.setAttribute("style", `transform: translateX(-${100 * position}%)`)
-			if ($clipIndex) $clipIndex.innerHTML = `Cita ${position + 1}/${$carousel?.children.length}`
+	const updatePosition = () => {
+		$carousel?.setAttribute("style", `transform: translateX(-${100 * position}%)`)
+		if ($clipIndex) $clipIndex.innerHTML = `Cita ${position + 1}/${$carousel?.children.length}`
+	}
+
+	$prev?.addEventListener("click", () => {
+		position--
+		if (position < 0) {
+			position = ($carousel?.children.length ?? 1) - 1
 		}
-
-		$prev?.addEventListener("click", () => {
-			position--
-			if (position < 0) {
-				position = ($carousel?.children.length ?? 1) - 1
-			}
-			updatePosition()
-		})
-
-		$next?.addEventListener("click", () => {
-			position++
-			if ($carousel?.children.length && position >= $carousel?.children.length) {
-				position = 0
-			}
-			updatePosition()
-		})
-
-		window.addEventListener("resize", updatePosition)
 		updatePosition()
 	})
+
+	$next?.addEventListener("click", () => {
+		position++
+		if ($carousel?.children.length && position >= $carousel?.children.length) {
+			position = 0
+		}
+		updatePosition()
+	})
+
+	window.addEventListener("resize", updatePosition)
+	updatePosition()
 </script>

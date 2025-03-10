@@ -21,37 +21,35 @@
 <script>
 	import { $ } from "@/lib/dom-selector"
 
-	document.addEventListener("astro:page-load", () => {
-		let timeout: number = 0 // Identificador para clearTimeout
-		const $button = $("#scroll-to-top") as HTMLButtonElement
+	let timeout: number = 0 // Identificador para clearTimeout
+	const $button = $("#scroll-to-top") as HTMLButtonElement
 
-		const DISPLAY = { BLOCK: "block", NONE: "none" } as const
+	const DISPLAY = { BLOCK: "block", NONE: "none" } as const
 
-		// Función para mostrar u ocultar el botón
-		function toggleScrollToTop() {
-			const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
-			const display = scrollTop > 20 ? DISPLAY.BLOCK : DISPLAY.NONE
+	// Función para mostrar u ocultar el botón
+	function toggleScrollToTop() {
+		const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
+		const display = scrollTop > 20 ? DISPLAY.BLOCK : DISPLAY.NONE
 
-			if ($button) {
-				const parent = $button.closest("#button-up")
-				parent?.classList.toggle("opacity-0", display === DISPLAY.NONE)
-				$button.classList.toggle("cursor-default", display === DISPLAY.NONE)
-			}
+		if ($button) {
+			const parent = $button.closest("#button-up")
+			parent?.classList.toggle("opacity-0", display === DISPLAY.NONE)
+			$button.classList.toggle("cursor-default", display === DISPLAY.NONE)
 		}
+	}
 
-		function throttledScrollHandler() {
-			if (!timeout) {
-				timeout = requestAnimationFrame(() => {
-					toggleScrollToTop()
-					timeout = 0
-				})
-			}
+	function throttledScrollHandler() {
+		if (!timeout) {
+			timeout = requestAnimationFrame(() => {
+				toggleScrollToTop()
+				timeout = 0
+			})
 		}
+	}
 
-		window.addEventListener("scroll", throttledScrollHandler)
+	window.addEventListener("scroll", throttledScrollHandler)
 
-		$button.addEventListener("click", () => {
-			window.scrollTo({ top: 0, behavior: "smooth" })
-		})
+	$button.addEventListener("click", () => {
+		window.scrollTo({ top: 0, behavior: "smooth" })
 	})
 </script>

@@ -59,53 +59,51 @@
 <script>
 	import { $, $$ } from "@/lib/dom-selector"
 
-	document.addEventListener("astro:page-load", () => {
-		const $clipContainer = $$(".clip-container")
-		const $clipDialog = $(".clip-dialog") as HTMLDialogElement
-		const $closeButton = $(".close-dialog")
-		let $ytFrame = $(".yt-iframe")
-		const ytFrameCopy = $ytFrame
+	const $clipContainer = $$(".clip-container")
+	const $clipDialog = $(".clip-dialog") as HTMLDialogElement
+	const $closeButton = $(".close-dialog")
+	let $ytFrame = $(".yt-iframe")
+	const ytFrameCopy = $ytFrame
 
-		if (!$clipDialog) return
+	if (!$clipDialog) throw new Error("Clip dialog")
 
-		$clipDialog.addEventListener("close", () => {
+	$clipDialog.addEventListener("close", () => {
+		if ($ytFrame !== null) {
+			$ytFrame.setAttribute("src", "")
+		} else {
+			ytFrameCopy?.setAttribute("src", "")
+		}
+	})
+
+	$closeButton?.addEventListener("click", () => {
+		$clipDialog.close()
+		if ($ytFrame !== null) {
+			$ytFrame.remove()
+		} else {
+			ytFrameCopy?.remove()
+		}
+	})
+
+	$clipDialog.addEventListener("click", (event) => {
+		const target = event.target as HTMLElement
+		if (target === $clipDialog) $clipDialog.close()
+	})
+
+	$clipContainer?.forEach((el) => {
+		el.addEventListener("click", async (event) => {
+			const currentTarget = event.currentTarget as HTMLElement
+			const { url } = currentTarget.dataset
+			if (!url) throw new Error("Url")
+			$ytFrame = $(".yt-iframe") as HTMLIFrameElement
 			if ($ytFrame !== null) {
-				$ytFrame.setAttribute("src", "")
+				$ytFrame.setAttribute("src", `${url}&autoplay=1`)
 			} else {
-				ytFrameCopy?.setAttribute("src", "")
-			}
-		})
-
-		$closeButton?.addEventListener("click", () => {
-			$clipDialog.close()
-			if ($ytFrame !== null) {
-				$ytFrame.remove()
-			} else {
-				ytFrameCopy?.remove()
-			}
-		})
-
-		$clipDialog.addEventListener("click", (event) => {
-			const target = event.target as HTMLElement
-			if (target === $clipDialog) $clipDialog.close()
-		})
-
-		$clipContainer?.forEach((el) => {
-			el.addEventListener("click", async (event) => {
-				const currentTarget = event.currentTarget as HTMLElement
-				const { url } = currentTarget.dataset
-				if (!url) return
-				$ytFrame = $(".yt-iframe") as HTMLIFrameElement
-				if ($ytFrame !== null) {
-					$ytFrame.setAttribute("src", `${url}&autoplay=1`)
-				} else {
-					if (ytFrameCopy) {
-						$clipDialog?.querySelector("div")?.prepend(ytFrameCopy)
-						ytFrameCopy.setAttribute("src", `${url}&autoplay=1`)
-					}
+				if (ytFrameCopy) {
+					$clipDialog?.querySelector("div")?.prepend(ytFrameCopy)
+					ytFrameCopy.setAttribute("src", `${url}&autoplay=1`)
 				}
-				$clipDialog.showModal()
-			})
+			}
+			$clipDialog.showModal()
 		})
 	})
 </script>

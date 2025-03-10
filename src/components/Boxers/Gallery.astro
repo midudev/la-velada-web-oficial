@@ -95,99 +95,96 @@ const { id, name } = Astro.props
 <script>
 	import { $ } from "@/lib/dom-selector"
 
-	document.addEventListener("astro:page-load", () => {
-		const $lightbox = $("#lightbox") as HTMLDialogElement
-		const $gallery = $("#boxer-gallery") as HTMLElement
-		if (!$gallery) return
+	const $lightbox = $("#lightbox") as HTMLDialogElement
+	const $gallery = $("#boxer-gallery") as HTMLElement
+	if (!$gallery) throw new Error("Gallery")
 
-		const $links = $gallery?.querySelectorAll("a")
-		const $close = $lightbox?.querySelector("button")
+	const $close = $lightbox?.querySelector("button")
 
-		const updateImg = (link: HTMLElement) => {
-			const img = $lightbox?.querySelector(".boxer-gallery-img") as HTMLImageElement
-			const newImg = link.querySelector("img") as HTMLImageElement
-			if (img && newImg) img.src = newImg.src
+	const updateImg = (link: HTMLElement) => {
+		const img = $lightbox?.querySelector(".boxer-gallery-img") as HTMLImageElement
+		const newImg = link.querySelector("img") as HTMLImageElement
+		if (img && newImg) img.src = newImg.src
+	}
+
+	const close = () => {
+		$lightbox.close()
+	}
+
+	const showPrevImage = () => {
+		const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
+		const prev = (current.previousElementSibling ||
+			$gallery.querySelector("a:last-of-type")) as HTMLAnchorElement
+		prev.click()
+	}
+
+	const showNextImage = () => {
+		const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
+		const next = (
+			current.nextElementSibling?.nodeName === "A"
+				? current.nextElementSibling
+				: $gallery.querySelector("a:first-of-type")
+		) as HTMLAnchorElement
+		next.click()
+	}
+
+	document.addEventListener("click", (event) => {
+		if (!$lightbox.open) return
+		const target = event.target as HTMLElement
+		const isPrev = target.title.includes("anterior")
+		const next = target.title.includes("siguiente")
+		if (isPrev) {
+			showPrevImage()
 		}
-
-		const close = () => {
-			$lightbox.close()
+		if (next) {
+			showNextImage()
 		}
-
-		const showPrevImage = () => {
-			const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
-			const prev = (current.previousElementSibling ||
-				$gallery.querySelector("a:last-of-type")) as HTMLAnchorElement
-			prev.click()
-		}
-
-		const showNextImage = () => {
-			const current = $gallery.querySelector("a[data-current=true]") as HTMLAnchorElement
-			const next = (
-				current.nextElementSibling?.nodeName === "A"
-					? current.nextElementSibling
-					: $gallery.querySelector("a:first-of-type")
-			) as HTMLAnchorElement
-			next.click()
-		}
-
-		document.addEventListener("click", (event) => {
-			if (!$lightbox.open) return
-			const target = event.target as HTMLElement
-			const isPrev = target.title.includes("anterior")
-			const next = target.title.includes("siguiente")
-			if (isPrev) {
-				showPrevImage()
-			}
-			if (next) {
-				showNextImage()
-			}
-		})
-
-		document.addEventListener("keydown", (event) => {
-			if (!$lightbox.open) return
-
-			if (event.key === "Escape") {
-				close()
-			}
-
-			if (event.key === "ArrowRight") {
-				showNextImage()
-			}
-
-			if (event.key === "ArrowLeft") {
-				showPrevImage()
-			}
-		})
-
-		// al hacer click en el botón de cerrar
-		$close?.addEventListener("click", close)
-
-		$lightbox?.addEventListener("click", (event) => {
-			const $dialogBg = $("[data-dialog-bg]") as HTMLDivElement
-			const canClose = event.target === $dialogBg || event.target === $lightbox
-			if (canClose) close()
-		})
-
-		// al hacer click en un enlace de lightbox
-		// usar la imagen del enlace como imagen principal
-		$links.forEach((link) =>
-			link.addEventListener("click", (event) => {
-				event.preventDefault()
-				// remove current data atribute
-				$gallery.querySelector("a[data-current=true]")?.removeAttribute("data-current")
-				// set current data atribute
-				link.setAttribute("data-current", "true")
-
-				// update de image before show lightbox
-				if ($lightbox.open) {
-					updateImg(link)
-				}
-
-				// add lightbox
-				if (!$lightbox.open) {
-					$lightbox.showModal()
-				}
-			})
-		)
 	})
+
+	document.addEventListener("keydown", (event) => {
+		if (!$lightbox.open) return
+
+		if (event.key === "Escape") {
+			close()
+		}
+
+		if (event.key === "ArrowRight") {
+			showNextImage()
+		}
+
+		if (event.key === "ArrowLeft") {
+			showPrevImage()
+		}
+	})
+
+	// al hacer click en el botón de cerrar
+	$close?.addEventListener("click", close)
+
+	$lightbox?.addEventListener("click", (event) => {
+		const $dialogBg = $("[data-dialog-bg]") as HTMLDivElement
+		const canClose = event.target === $dialogBg || event.target === $lightbox
+		if (canClose) close()
+	})
+
+	// al hacer click en un enlace de lightbox
+	// usar la imagen del enlace como imagen principal
+	$links.forEach((link) =>
+		link.addEventListener("click", (event) => {
+			event.preventDefault()
+			// remove current data atribute
+			$gallery.querySelector("a[data-current=true]")?.removeAttribute("data-current")
+			// set current data atribute
+			link.setAttribute("data-current", "true")
+
+			// update de image before show lightbox
+			if ($lightbox.open) {
+				updateImg(link)
+			}
+
+			// add lightbox
+			if (!$lightbox.open) {
+				$lightbox.showModal()
+			}
+		})
+	)
 </script>
