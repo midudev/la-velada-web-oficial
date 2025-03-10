@@ -106,74 +106,73 @@ const boxerColumns = [
 <script>
 	import { $, $$ } from "@/lib/dom-selector"
 
-	document.addEventListener("astro:page-load", () => {
-		const boxerLinks = $$(".boxer-link") as globalThis.NodeListOf<HTMLAnchorElement>
-		const boxerNav = $(".boxers-nav")
+	const boxerLinks = $$(".boxer-link") as globalThis.NodeListOf<HTMLAnchorElement>
+	const boxerNav = $(".boxers-nav")
 
-		if (!boxerNav) return
+	if (!boxerNav) throw new Error("Boxer nav")
 
-		const boxerTitle = $(".boxer-title") as HTMLImageElement
-		const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
-		const boxerCountry = $(".boxer-flag") as HTMLImageElement
+	const boxerTitle = $(".boxer-title") as HTMLImageElement
+	const boxerPhoto = $(".boxer-photo") as HTMLPictureElement
+	const boxerCountry = $(".boxer-flag") as HTMLImageElement
 
-		const updatedSelectedBoxerId =
-			localStorage.getItem("selected:boxer") ||
-			new URLSearchParams(window.location.search).get("boxer") ||
-			"el-mariana"
+	const updatedSelectedBoxerId =
+		localStorage.getItem("selected:boxer") ||
+		new URLSearchParams(window.location.search).get("boxer") ||
+		"el-mariana"
 
-		const updatedSelectedBoxerElement: HTMLElement | null = $(
-			`.boxer-link[data-id=${updatedSelectedBoxerId}]`
-		)
-		if (updatedSelectedBoxerElement) {
-			activateBoxer(updatedSelectedBoxerElement, updatedSelectedBoxerElement, boxerNav, true)
+	const updatedSelectedBoxerElement: HTMLElement | null = $(
+		`.boxer-link[data-id=${updatedSelectedBoxerId}]`
+	)
+	if (updatedSelectedBoxerElement) {
+		activateBoxer(updatedSelectedBoxerElement, updatedSelectedBoxerElement, boxerNav, true)
+	}
+
+	// detect with intersection observer that the $boxerNav is in viewport
+	const boxerNavObserver = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					// disconnect observer to do this only once
+					boxerNavObserver.disconnect()
+					// get all images and preload them
+					boxerLinks.forEach((link) => {
+						const { id } = link.dataset
+						const boxerSrc = `https://cdn.lavelada.dev/boxers/${id}-big`
+						// create link preload for each image for webp
+						const preloadLink = document.createElement("link")
+						preloadLink.rel = "preload"
+						preloadLink.as = "image"
+						preloadLink.href = `${boxerSrc}.webp`
+						preloadLink.type = "image/webp"
+						document.head.appendChild(preloadLink)
+					})
+				}
+			})
+		},
+		{
+			root: null,
+			threshold: 0.1,
 		}
+	)
+	boxerNavObserver.observe(boxerNav)
 
-		// detect with intersection observer that the $boxerNav is in viewport
-		const boxerNavObserver = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						// disconnect observer to do this only once
-						boxerNavObserver.disconnect()
-						// get all images and preload them
-						boxerLinks.forEach((link) => {
-							const { id } = link.dataset
-							const boxerSrc = `https://cdn.lavelada.dev/boxers/${id}-big`
-							// create link preload for each image for webp
-							const preloadLink = document.createElement("link")
-							preloadLink.rel = "preload"
-							preloadLink.as = "image"
-							preloadLink.href = `${boxerSrc}.webp`
-							preloadLink.type = "image/webp"
-							document.head.appendChild(preloadLink)
-						})
-					}
-				})
-			},
-			{
-				root: null,
-				threshold: 0.1,
-			}
-		)
-		boxerNavObserver.observe(boxerNav)
+	function activateBoxer(
+		element: HTMLElement,
+		link: HTMLElement,
+		nav: HTMLElement,
+		replaceUrl: boolean = false,
+		showAlliesAndOpponents: boolean = true
+	) {
+		if (element?.classList.contains("active")) throw new Error("Active")
 
-		function activateBoxer(
-			element: HTMLElement,
-			link: HTMLElement,
-			nav: HTMLElement,
-			replaceUrl: boolean = false,
-			showAlliesAndOpponents: boolean = true
-		) {
-			if (element?.classList.contains("active")) return
+		const { id, name, country, countryName, opponents = "", allies = "" } = element?.dataset
 
-			const { id, name, country, countryName, opponents = "", allies = "" } = element?.dataset
+		if (!id || !name || !country || !countryName) throw new Error("Missing data")
 
-			if (!id || !name || !country || !countryName) return
-
-			const splitName = name.split(" ")
-			const lastName = splitName[splitName.length - 1]
-			const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
-			const spanNames = `
+		const splitName = name.split(" ")
+		const lastName = splitName[splitName.length - 1]
+		const firstNames = splitName.slice(0, splitName.length - 1).join(" ")
+		const spanNames = `
 					<a href="/2024/boxers/${id}" class="boxer-link underline-transition transition-all duration-300 hover:text-accent motion-reduce:transition-none">
 						<span class="flex flex-col">
 							<span class="text-4xl">${firstNames?.toLocaleLowerCase()}</span>
@@ -182,104 +181,103 @@ const boxerColumns = [
 					</a>
 			`
 
-			nav?.querySelector(".active")?.classList.remove("active")
-			nav
-				?.querySelectorAll(".opponent")
-				?.forEach((opponentEl) => opponentEl.classList.remove("opponent"))
-			nav?.querySelectorAll(".ally")?.forEach((allyEl) => allyEl.classList.remove("ally"))
+		nav?.querySelector(".active")?.classList.remove("active")
+		nav
+			?.querySelectorAll(".opponent")
+			?.forEach((opponentEl) => opponentEl.classList.remove("opponent"))
+		nav?.querySelectorAll(".ally")?.forEach((allyEl) => allyEl.classList.remove("ally"))
 
-			link.classList.add("active")
+		link.classList.add("active")
 
-			if (showAlliesAndOpponents) {
-				allies.split(",").map((ally) =>
-					boxerLinks.forEach((link) => {
-						if (link.dataset.id === ally) {
-							link.classList.add("ally")
-						}
-					})
-				)
+		if (showAlliesAndOpponents) {
+			allies.split(",").map((ally) =>
+				boxerLinks.forEach((link) => {
+					if (link.dataset.id === ally) {
+						link.classList.add("ally")
+					}
+				})
+			)
 
-				opponents.split(",").map((opponent) =>
-					boxerLinks.forEach((link) => {
-						const { id: linkId, opponents: linkOpponents } = link.dataset
-						if (linkId === opponent || (linkOpponents === opponent && linkId !== id)) {
-							link.classList.add("opponent")
-						}
-					})
-				)
-			}
-
-			if (replaceUrl) {
-				history.replaceState({}, "", `?boxer=${id}`)
-			}
-
-			const boxerSrc = `https://cdn.lavelada.dev/boxers/${id}-big`
-
-			boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
-			boxerTitle.innerHTML = spanNames
-			boxerCountry.src = `https://cdn.lavelada.dev/flags/${country}.webp`
-			boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
-
-			boxerCountry.alt = `Bandera de ${countryName}`
+			opponents.split(",").map((opponent) =>
+				boxerLinks.forEach((link) => {
+					const { id: linkId, opponents: linkOpponents } = link.dataset
+					if (linkId === opponent || (linkOpponents === opponent && linkId !== id)) {
+						link.classList.add("opponent")
+					}
+				})
+			)
 		}
 
-		boxerLinks.forEach((link) => {
-			link.addEventListener("click", (event: MouseEvent) => {
-				const currentTarget = event.currentTarget as HTMLElement
-				const boxerId = currentTarget.getAttribute("data-id")
-				if (boxerId) localStorage.setItem("selected:boxer", JSON.stringify(boxerId))
-				activateBoxer(currentTarget, currentTarget, boxerNav, true)
-			})
+		if (replaceUrl) {
+			history.replaceState({}, "", `?boxer=${id}`)
+		}
+
+		const boxerSrc = `https://cdn.lavelada.dev/boxers/${id}-big`
+
+		boxerPhoto.getElementsByTagName("img")[0].src = `${boxerSrc}.webp`
+		boxerTitle.innerHTML = spanNames
+		boxerCountry.src = `https://cdn.lavelada.dev/flags/${country}.webp`
+		boxerPhoto.getElementsByTagName("img")[0].alt = `Fotografía de ${name}`
+
+		boxerCountry.alt = `Bandera de ${countryName}`
+	}
+
+	boxerLinks.forEach((link) => {
+		link.addEventListener("click", (event: MouseEvent) => {
+			const currentTarget = event.currentTarget as HTMLElement
+			const boxerId = currentTarget.getAttribute("data-id")
+			if (boxerId) localStorage.setItem("selected:boxer", JSON.stringify(boxerId))
+			activateBoxer(currentTarget, currentTarget, boxerNav, true)
 		})
-
-		boxerLinks.forEach((link) => {
-			link.addEventListener("mouseenter", (event) => {
-				const currentTarget = event.currentTarget as HTMLElement
-				if (currentTarget.classList.contains("active")) return
-				activateBoxer(currentTarget, link, boxerNav, true)
-			})
-		})
-
-		const carouselInner = $(".carousel-inner") as HTMLElement
-
-		// detect match media change for mobile
-		const mobileMediaQuery = window.matchMedia("(max-width: 768px)")
-
-		function highlightBoxer(link: HTMLAnchorElement) {
-			const rect = link.getBoundingClientRect()
-			const { width } = carouselInner.getBoundingClientRect()
-
-			if (rect.left > width / 2 - rect.width * 0.75 && rect.left < width / 2 + rect.width * 0.25) {
-				activateBoxer(link, link, carouselInner, false, false)
-			}
-		}
-
-		function highlightActiveBoxer() {
-			boxerLinks.forEach((link) => {
-				highlightBoxer(link)
-			})
-		}
-
-		function updateActiveThumbnailPosition() {
-			const boxer = new URLSearchParams(window.location.search).get("boxer")
-			const boxerActiveElement = $(`.carousel .boxer-link[data-id=${boxer}]`)
-			if (boxerActiveElement) {
-				const carouselWidth = carouselInner.clientWidth
-				const thumbnailWidth = boxerActiveElement.offsetWidth
-				const currentPosition = boxerActiveElement.offsetLeft - (carouselWidth - thumbnailWidth) / 2
-
-				carouselInner.scrollTo(currentPosition, 0)
-			}
-		}
-
-		if (mobileMediaQuery.matches) {
-			updateActiveThumbnailPosition()
-
-			carouselInner.addEventListener("scroll", () => {
-				highlightActiveBoxer()
-			})
-		}
 	})
+
+	boxerLinks.forEach((link) => {
+		link.addEventListener("mouseenter", (event) => {
+			const currentTarget = event.currentTarget as HTMLElement
+			if (currentTarget.classList.contains("active")) throw new Error("Mouse enter")
+			activateBoxer(currentTarget, link, boxerNav, true)
+		})
+	})
+
+	const carouselInner = $(".carousel-inner") as HTMLElement
+
+	// detect match media change for mobile
+	const mobileMediaQuery = window.matchMedia("(max-width: 768px)")
+
+	function highlightBoxer(link: HTMLAnchorElement) {
+		const rect = link.getBoundingClientRect()
+		const { width } = carouselInner.getBoundingClientRect()
+
+		if (rect.left > width / 2 - rect.width * 0.75 && rect.left < width / 2 + rect.width * 0.25) {
+			activateBoxer(link, link, carouselInner, false, false)
+		}
+	}
+
+	function highlightActiveBoxer() {
+		boxerLinks.forEach((link) => {
+			highlightBoxer(link)
+		})
+	}
+
+	function updateActiveThumbnailPosition() {
+		const boxer = new URLSearchParams(window.location.search).get("boxer")
+		const boxerActiveElement = $(`.carousel .boxer-link[data-id=${boxer}]`)
+		if (boxerActiveElement) {
+			const carouselWidth = carouselInner.clientWidth
+			const thumbnailWidth = boxerActiveElement.offsetWidth
+			const currentPosition = boxerActiveElement.offsetLeft - (carouselWidth - thumbnailWidth) / 2
+
+			carouselInner.scrollTo(currentPosition, 0)
+		}
+	}
+
+	if (mobileMediaQuery.matches) {
+		updateActiveThumbnailPosition()
+
+		carouselInner.addEventListener("scroll", () => {
+			highlightActiveBoxer()
+		})
+	}
 </script>
 
 <style>

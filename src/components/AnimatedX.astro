@@ -150,20 +150,18 @@
 	const STROKES = { none: "none", accent: "var(--color-accent)" }
 
 	const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-	document.addEventListener("astro:page-load", () => {
-		if (prefersReducedMotion) return
+	if (prefersReducedMotion) throw new Error("Prefers reduced motion")
 
-		intervalId && clearInterval(intervalId)
-		const $svgGroup1 = $("#layer1") as AnimatedXElement
-		const $svgGroup2 = $("#layer2") as AnimatedXElement
-		const $svgGroup3 = $("#layer3") as AnimatedXElement
+	intervalId && clearInterval(intervalId)
+	const $svgGroup1 = $("#layer1") as AnimatedXElement
+	const $svgGroup2 = $("#layer2") as AnimatedXElement
+	const $svgGroup3 = $("#layer3") as AnimatedXElement
 
-		intervalId = setInterval(() => drawGroup([$svgGroup1, $svgGroup2, $svgGroup3]), INTERVAL_TIME)
-	})
+	intervalId = setInterval(() => drawGroup([$svgGroup1, $svgGroup2, $svgGroup3]), INTERVAL_TIME)
 
 	function drawGroup($svgGroups: AnimatedXElement[]): void {
 		$svgGroups.forEach((gElement: AnimatedXElement) => {
-			if (gElement === null) return
+			if (gElement === null) throw new Error("Group")
 			const random = Math.floor(Math.random() * gElement.children.length)
 			const el = gElement.children[random] as SVGPathElement
 			const actualStroke = el.style.stroke
@@ -171,7 +169,7 @@
 
 			if (hasNoStroke) {
 				el.style.stroke = STROKES.accent
-				return
+				throw new Error("Stroke is none")
 			}
 
 			el.style.stroke = STROKES.none
