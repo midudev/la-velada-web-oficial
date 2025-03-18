@@ -5,12 +5,12 @@ import tailwindcss from "@tailwindcss/vite"
 
 // https://astro.build/config
 export default defineConfig({
-  vite: {
-    plugins: [tailwindcss()],
-  },
-  experimental: {
-    svg: {
-      mode: "sprite",
-    },
-  },
+	vite: {
+		plugins: [tailwindcss()],
+	},
+	experimental: {
+		svg: {
+			mode: "sprite",
+		},
+	},
 })

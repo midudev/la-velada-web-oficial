@@ -1,36 +1,36 @@
 type SponsorId =
-  | "vicio"
-  | "revolut"
-  | "alsa"
-  | "spotify"
-  | "cerave"
-  | "grefusa"
-  | "maxibon"
-  | "infojobs"
-  | "coca-cola"
-  | "mahou"
-  | "nothing"
+	| "vicio"
+	| "revolut"
+	| "alsa"
+	| "spotify"
+	| "cerave"
+	| "grefusa"
+	| "maxibon"
+	| "infojobs"
+	| "coca-cola"
+	| "mahou"
+	| "nothing"
 
 type SponsorName =
-  | "Vicio"
-  | "Revolut"
-  | "Alsa"
-  | "Spotify"
-  | "Cerave"
-  | "Grefusa"
-  | "Maxibon"
-  | "Infojobs"
-  | "Coca-Cola"
-  | "Mahou"
-  | "Nothing"
+	| "Vicio"
+	| "Revolut"
+	| "Alsa"
+	| "Spotify"
+	| "Cerave"
+	| "Grefusa"
+	| "Maxibon"
+	| "Infojobs"
+	| "Coca-Cola"
+	| "Mahou"
+	| "Nothing"
 
 export interface Sponsors {
-  id: SponsorId
-  name: SponsorName
-  url: string
-  image: {
-    logo: any
-    width: number
-    height: number
-  }
+	id: SponsorId
+	name: SponsorName
+	url: string
+	image: {
+		logo: any
+		width: number
+		height: number
+	}
 }
