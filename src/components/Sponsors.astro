@@ -1,11 +1,12 @@
 ---
+import SectionContainer from "@/components/sectionContainer.astro";
 import { SPONSORS } from "@/consts/sponsors";
 
 const firstRow = SPONSORS.slice(0, 5);
 const secondRow = SPONSORS.slice(5);
 ---
 
-<section id="sponsors">
+<SectionContainer id="sponsors">
   <div class="flex justify-around gap-4">
     {
       firstRow.map(({ url, image, name, label }) => (
@@ -34,4 +35,4 @@ const secondRow = SPONSORS.slice(5);
       ))
     }
   </div>
-</section>
+</sectionContainer>
