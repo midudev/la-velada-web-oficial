@@ -1,50 +1,63 @@
 ---
 import X from "@/assets/svg/x.svg";
 import Instagram from "@/assets/svg/instagram.svg";
-import GitHub from "@/assets/svg/github.svg";
 ---
 
-<footer class="relative w-full h-[400px] pb-32">
-  <div
-    class="absolute inset-0 bg-cover bg-bottom bg-[url('/images/footer.webp')]
-    [mask-image:linear-gradient(transparent,black_50%)]"
-  >
-  </div>
+<footer class="bg-[#1a1a1a] py-8 px-4">
+  <div class="container mx-auto max-w-6xl">
+    <div class="divider mb-8"></div>
 
-  <div
-    class="relative h-full flex flex-col justify-center items-center text-[#2a1f26]"
-  >
-    <div class="footer-content">
-      <p>© 2025 La Velada del Año. Todos los derechos reservados.</p>
-    </div>
+    <div class="flex justify-between items-center">
+      <div class="text-gray-400 text-sm flex gap-4">
+        <span>© 2025 La Velada del Año</span>
+        <span>Todos los derechos reservados</span>
+        <a
+            href="/aviso-legal"
+            class="text-gray-400 hover:text-white transition-colors"
+        >
+          Aviso legal
+        </a>
+        <a
+            href="/politica-privacidad"
+            class="text-gray-400 hover:text-white transition-colors"
+        >
+          Política de privacidad
+        </a>
+      </div>
 
-    <div class="flex flex-row gap-x-2 items-center justify-center mt-4">
-      <a
-        class="hover:scale-125 transition"
-        aria-label="Visitar perfil de InfoLaVelada en X"
-        href="https://x.com/infolavelada"
-        target="_blank"
-      >
-        <X />
-      </a>
-
-      <a
-        class="hover:scale-125 transition"
-        aria-label="Visitar perfil de InfoLaVelada en Instagram"
-        href="https://instagram.com/infoLaVelada"
-        target="_blank"
-      >
-        <Instagram />
-      </a>
-
-      <a
-        class="hover:scale-125 transition"
-        aria-label="Visitar repositorio de la Velada Oficial en GitHub"
-        href="https://github.com/midudev/la-velada-web-oficial"
-        target="_blank"
-      >
-        <GitHub />
-      </a>
+      <div class="flex gap-4">
+        <a
+            href="https://instagram.com/infoLaVelada"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Síguenos en Instagram"
+            class="text-gray-400 hover:text-white transition-colors"
+        >
+          <Instagram class="size-6" />
+        </a>
+        <a
+            href="https://x.com/infolavelada"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Síguenos en X"
+            class="text-gray-400 hover:text-white transition-colors"
+        >
+          <X class="size-6" />
+        </a>
+      </div>
     </div>
   </div>
 </footer>
+
+<style>
+  .divider {
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(128, 128, 128, 0.5) 25%,
+        rgba(128, 128, 128, 0.5) 75%,
+        transparent 100%
+    );
+  }
+</style>
