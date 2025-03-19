@@ -82,7 +82,7 @@ export const SPONSORS: Sponsors[] = [
   {
     id: "maxibon",
     name: "Maxibon",
-    url: "https://www.maxibon.com/",
+    url: "https://www.froneri.es/",
     label: "Ir a la pagina web de Maxibon",
     image: {
       logo: Maxibon,
@@ -134,4 +134,4 @@ export const SPONSORS: Sponsors[] = [
       height: 200,
     },
   },
-] as const
+] as const;
