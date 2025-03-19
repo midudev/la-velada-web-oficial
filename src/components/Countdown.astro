@@ -1,0 +1,99 @@
+---
+const targetDate = new Date('2025-07-26T00:00:00');
+
+function getTimeRemaining() {
+    const now = new Date();
+    const difference = targetDate.getTime() - now.getTime();
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds };
+}
+
+const timeRemaining = getTimeRemaining();
+---
+
+<section class="py-24 px-4 bg-[#1a1a1a]">
+    <div class="max-w-2xl mx-auto">
+        <div class="flex flex-col items-center gap-4">
+            <!-- Days at the top -->
+            <div class="countdown-card rounded-xl p-8 shadow-2xl border border-white/10 w-full max-w-sm">
+                <div class="flex flex-col items-center">
+                    <span data-countdown="days" class="countdown-value text-[80px] font-bold text-[#B4CD02]">{timeRemaining.days}</span>
+                    <span class="text-[16px] text-white/80 uppercase font-medium">Días</span>
+                </div>
+            </div>
+
+            <!-- Hours, Minutes, Seconds in a row -->
+            <div class="grid grid-cols-3 gap-4 w-full">
+                <div class="countdown-card rounded-xl p-8 shadow-2xl border border-white/10">
+                    <div class="flex flex-col items-center">
+                        <span data-countdown="hours" class="countdown-value text-[60px] font-bold text-[#B4CD02]">{timeRemaining.hours}</span>
+                        <span class="text-[14px] text-white/80 uppercase font-medium">Horas</span>
+                    </div>
+                </div>
+
+                <div class="countdown-card rounded-xl p-8 shadow-2xl border border-white/10">
+                    <div class="flex flex-col items-center">
+                        <span data-countdown="minutes" class="countdown-value text-[60px] font-bold text-[#B4CD02]">{timeRemaining.minutes}</span>
+                        <span class="text-[14px] text-white/80 uppercase font-medium">Minutos</span>
+                    </div>
+                </div>
+
+                <div class="countdown-card rounded-xl p-8 shadow-2xl border border-white/10">
+                    <div class="flex flex-col items-center">
+                        <span data-countdown="seconds" class="countdown-value text-[60px] font-bold text-[#B4CD02]">{timeRemaining.seconds}</span>
+                        <span class="text-[14px] text-white/80 uppercase font-medium">Segundos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .countdown-value {
+        font-family: Arial, sans-serif;
+        min-width: 1.5em;
+        text-align: center;
+    }
+
+    .countdown-card {
+        background: linear-gradient(to bottom, #111111 0%, #222222 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .countdown-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.15) 100%);
+        pointer-events: none;
+    }
+</style>
+
+<script>
+    function updateCountdown() {
+        const targetDate = new Date('2025-07-26T00:00:00');
+        const now = new Date();
+        const difference = targetDate.getTime() - now.getTime();
+
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        document.querySelector('[data-countdown="days"]').textContent = days.toString().padStart(3, '0');
+        document.querySelector('[data-countdown="hours"]').textContent = hours.toString().padStart(2, '0');
+        document.querySelector('[data-countdown="minutes"]').textContent = minutes.toString().padStart(2, '0');
+        document.querySelector('[data-countdown="seconds"]').textContent = seconds.toString().padStart(2, '0');
+    }
+
+    // Update immediately and then every second
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+</script>
