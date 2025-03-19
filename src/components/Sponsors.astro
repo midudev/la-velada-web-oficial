@@ -1,33 +1,37 @@
 ---
-import { SPONSORS } from "../consts/sponsors"
+import { SPONSORS } from '../consts/sponsors';
 
-const firstRow = SPONSORS.slice(0, 5)
-const secondRow = SPONSORS.slice(5)
+const firstRow = SPONSORS.slice(0, 5);
+const secondRow = SPONSORS.slice(5);
 ---
 
-<section id="sponsors">
-  <div class="grid grid-cols-5 gap-4">
+<section id='sponsors'>
+  <div class='grid grid-cols-5 w-full justify-items-center gap-4'>
     {
       firstRow.map(({ url, image, name }) => (
         <a
           href={url}
-          target="_blank"
-          class="size-14 hover:scale-125 transition text-[#2a1f26] flex justify-center items-center"
+          target='_blank'
+          class='size-14 hover:scale-125 transition text-[#2a1f26] flex justify-center items-center'
         >
-          <image.logo class="h-14 w-auto" />
+          <image.logo
+            width={image.width}
+            height={image.height}
+            class='h-14 w-auto'
+          />
         </a>
       ))
     }
   </div>
-  <div class="grid grid-cols-6 gap-4">
+  <div class='grid grid-cols-6 justify-items-center gap-4'>
     {
       secondRow.map(({ url, image, name }) => (
         <a
           href={url}
-          target="_blank"
-          class="size-14 hover:scale-125 transition text-[#2a1f26] flex justify-center items-center"
+          target='_blank'
+          class='size-14 hover:scale-125 transition text-[#2a1f26] flex justify-center items-center'
         >
-          <image.logo class="h-14 w-auto" />
+          <image.logo class='h-14 w-auto' />
         </a>
       ))
     }
