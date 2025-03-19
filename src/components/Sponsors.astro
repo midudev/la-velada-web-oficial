@@ -8,10 +8,11 @@ const secondRow = SPONSORS.slice(5);
 <section id="sponsors">
   <div class="flex justify-around gap-4">
     {
-      firstRow.map(({ url, image, name }) => (
+      firstRow.map(({ url, image, name, label }) => (
         <a
           href={url}
           target="_blank"
+          aria-label={label ?? name}
           class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
         >
           <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
@@ -21,10 +22,11 @@ const secondRow = SPONSORS.slice(5);
   </div>
   <div class="flex justify-around gap-4">
     {
-      secondRow.map(({ url, image, name }) => (
+      secondRow.map(({ url, image, name, label }) => (
         <a
           href={url}
           target="_blank"
+          aria-label={label ?? name}
           class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
         >
           <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
