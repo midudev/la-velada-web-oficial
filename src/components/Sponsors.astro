@@ -1,37 +1,40 @@
 ---
-import { SPONSORS } from "@/consts/sponsors";
-
-const firstRow = SPONSORS.slice(0, 5);
-const secondRow = SPONSORS.slice(5);
+import { SPONSORS } from "@/consts/sponsors"
 ---
 
-<section id="sponsors">
-  <div class="flex justify-around gap-4">
+<section class="mx-auto max-w-6xl mt-12" id="sponsors">
+  <div
+    class="grid grid-cols-3 gap-4 grid-flow-dense p-4 auto-rows-[100px] md:auto-rows-[120px] text-[#2a1f26]"
+  >
     {
-      firstRow.map(({ url, image, name, label }) => (
-        <a
-          href={url}
-          target="_blank"
-          aria-label={label ?? name}
-          class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
-        >
-          <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
-        </a>
-      ))
-    }
-  </div>
-  <div class="flex justify-around gap-4">
-    {
-      secondRow.map(({ url, image, name, label }) => (
-        <a
-          href={url}
-          target="_blank"
-          aria-label={label ?? name}
-          class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
-        >
-          <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
-        </a>
-      ))
+      SPONSORS.map(({ url, image, name, label }, index) => {
+        let spanClasses = ""
+
+        if (index === 4) {
+          spanClasses = "col-span-1 row-span-2"
+        } else if (index === 2) {
+          spanClasses = "row-span-2"
+        } else if (index === 9) {
+          spanClasses = "row-span-2"
+        } else if (index === SPONSORS.length - 1 && SPONSORS.length % 3 === 2) {
+          spanClasses = "col-span-2"
+        }
+
+        return (
+          <a
+            href={url}
+            target="_blank"
+            aria-label={label ?? name}
+            class={`flex items-center justify-center group p-4 rounded-xl bg-gradient-to-t from-[#a5b4c8]/20 from-15% via-[#facfc9]/10 via-30% to-pink-500/10 to-90% hover:to-pink-500/20 transition ${spanClasses}`}
+          >
+            <image.logo
+              width={image.width}
+              height={image.height}
+              class="company-logo h-28 md:h-32 px-5 transition group-hover:scale-110 group-focus:scale-110 md:px-4"
+            />
+          </a>
+        )
+      })
     }
   </div>
 </section>
