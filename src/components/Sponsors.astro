@@ -5,8 +5,8 @@ const firstRow = SPONSORS.slice(0, 5);
 const secondRow = SPONSORS.slice(5);
 ---
 
-<section id="sponsors" aria-label="Sponsors de la Velada del año V">
-  <div class="grid grid-cols-5 gap-4">
+<section id="sponsors">
+  <div class="flex justify-around gap-4">
     {
       firstRow.map(({ url, image, name }) => (
         <a
@@ -14,12 +14,12 @@ const secondRow = SPONSORS.slice(5);
           target="_blank"
           class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
         >
-			<image.logo class="h-14 w-auto" alt={name} />
+          <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
         </a>
       ))
     }
   </div>
-  <div class="grid grid-cols-6 gap-4">
+  <div class="flex justify-around gap-4">
     {
       secondRow.map(({ url, image, name }) => (
         <a
@@ -27,7 +27,7 @@ const secondRow = SPONSORS.slice(5);
           target="_blank"
           class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
         >
-			<image.logo class="h-14 w-auto" alt={name} />
+          <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
         </a>
       ))
     }
