@@ -28,6 +28,7 @@ export interface Sponsors {
   id: SponsorId
   name: SponsorName
   url: string
+  label: string
   image: {
     logo: any
     width: number
