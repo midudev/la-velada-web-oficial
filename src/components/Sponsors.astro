@@ -8,10 +8,11 @@ const secondRow = SPONSORS.slice(5)
 <section id="sponsors">
   <div class="grid grid-cols-5 gap-4">
     {
-      firstRow.map(({ url, image, name }) => (
+      firstRow.map(({ url, image, name, label }) => (
         <a
           href={url}
           target="_blank"
+          aria-label={label ?? name}
           class="size-14 hover:scale-125 transition text-[#2a1f26] flex justify-center items-center"
         >
           <image.logo class="h-14 w-auto" />
@@ -21,10 +22,11 @@ const secondRow = SPONSORS.slice(5)
   </div>
   <div class="grid grid-cols-6 gap-4">
     {
-      secondRow.map(({ url, image, name }) => (
+      secondRow.map(({ url, image, name, label }) => (
         <a
           href={url}
           target="_blank"
+          aria-label={label ?? name}
           class="size-14 hover:scale-125 transition text-[#2a1f26] flex justify-center items-center"
         >
           <image.logo class="h-14 w-auto" />
