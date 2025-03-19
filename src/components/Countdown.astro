@@ -17,9 +17,9 @@ const { timestamp } = Astro.props
 		<Date
 			dateType="DÍAS"
 			attribute={{ "data-days": "" }}
-			className="text-6xl font-bold md:text-7xl lg:text-8xl"
+			className="text-counter text-6xl font-bold md:text-7xl lg:text-8xl"
 			wrapperClassName="my-0"
-			height={"h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]"}
+			height={"h-[3.6rem] sm:h-[3.9rem] md:h-[4.3rem] lg:h-[5.6rem]"}
 			max={129}
 			withBackground={true}
 		/>
@@ -28,8 +28,8 @@ const { timestamp } = Astro.props
 			wrapperClassName="my-0"
 			dateType="HORAS"
 			attribute={{ "data-hours": "" }}
-			className="text-6xl font-bold md:text-7xl lg:text-8xl"
-			height={"h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]"}
+			className="text-counter text-6xl font-bold md:text-7xl lg:text-8xl"
+			height={"h-[3.6rem] sm:h-[3.9rem] md:h-[4.3rem] lg:h-[5.6rem]"}
 			max={23}
 			withBackground={true}
 		/>
@@ -38,8 +38,8 @@ const { timestamp } = Astro.props
 			wrapperClassName="my-0"
 			dateType="MINUTOS"
 			attribute={{ "data-minutes": "" }}
-			className="text-6xl font-bold md:text-7xl lg:text-8xl"
-			height={"h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]"}
+			className="text-counter text-6xl font-bold md:text-7xl lg:text-8xl"
+			height={"h-[3.6rem] sm:h-[3.9rem] md:h-[4.3rem] lg:h-[5.6rem]"}
 			max={59}
 			withBackground={true}
 		/>
@@ -48,8 +48,8 @@ const { timestamp } = Astro.props
 			wrapperClassName="my-0"
 			dateType="SEGUNDOS"
 			attribute={{ "data-seconds": "" }}
-			className="text-6xl font-bold md:text-7xl lg:text-8xl"
-			height={"h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]"}
+			className="text-counter text-6xl font-bold md:text-7xl lg:text-8xl"
+			height={"h-[3.6rem] sm:h-[3.9rem] md:h-[4.3rem] lg:h-[5.6rem]"}
 			max={59}
 			withBackground={true}
 		/>
@@ -176,6 +176,7 @@ const { timestamp } = Astro.props
 			} else {
 				wrapper.classList.toggle("duration-[800ms]", true)
 				wrapper.classList.toggle("transition-transform", true)
+				wrapper.classList.toggle("ease-[cubic-bezier(.26,.99,1,.22)]", true)
 			}
 		}
 	}
