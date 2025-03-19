@@ -1,16 +1,16 @@
-import type { Sponsors } from "../types/sponsors";
+import type { Sponsors } from "@/types/sponsors";
 
-import Alsa from "../assets/sponsors/Alsa.svg";
-import Cerave from "../assets/sponsors/Cerave.svg";
-import CocaCola from "../assets/sponsors/CocaCola.svg";
-import Grefusa from "../assets/sponsors/Grefusa.svg";
-import Infojobs from "../assets/sponsors/Infojobs.svg";
-import Mahou from "../assets/sponsors/Mahou.svg";
-import Maxibon from "../assets/sponsors/Maxibon.svg";
-import Nothing from "../assets/sponsors/Nothing.svg";
-import Revolut from "../assets/sponsors/Revolut.svg";
-import Spotify from "../assets/sponsors/Spotify.svg";
-import Vicio from "../assets/sponsors/Vicio.svg";
+import Alsa from "@/assets/sponsors/Alsa.svg";
+import Cerave from "@/assets/sponsors/Cerave.svg";
+import CocaCola from "@/assets/sponsors/CocaCola.svg";
+import Grefusa from "@/assets/sponsors/Grefusa.svg";
+import Infojobs from "@/assets/sponsors/Infojobs.svg";
+import Mahou from "@/assets/sponsors/Mahou.svg";
+import Maxibon from "@/assets/sponsors/Maxibon.svg";
+import Nothing from "@/assets/sponsors/Nothing.svg";
+import Revolut from "@/assets/sponsors/Revolut.svg";
+import Spotify from "@/assets/sponsors/Spotify.svg";
+import Vicio from "@/assets/sponsors/Vicio.svg";
 
 export const SPONSORS: Sponsors[] = [
   {
