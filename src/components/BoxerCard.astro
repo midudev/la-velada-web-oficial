@@ -1,11 +1,12 @@
 ---
-const { id, name } = Astro.props
+const { id, name, opponent } = Astro.props
 ---
 
 <a
   class="boxer-card inline-block transition hover:-translate-y-3 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded overflow-hidden"
   href={`/luchador/${id}`}
   data-id={id}
+  data-opponent={opponent}
 >
   <img
     class="aspect-[900/1200] h-full w-full object-cover"
@@ -25,6 +26,20 @@ const { id, name } = Astro.props
     const boxerCards = document.querySelectorAll(".boxer-card")
     let timeoutId: number | null = null
 
+    const highlightOpponent = (opponentId: string) => {
+      const opponentCard = document.querySelector(`[data-id="${opponentId}"]`)
+      opponentCard?.classList.add('-translate-y-3')
+      opponentCard?.querySelector('div')?.classList.remove('opacity-0')
+      opponentCard?.querySelector('div')?.classList.add('opacity-100')
+    }
+
+    const removeOpponentHighlight = (opponentId: string) => {
+      const opponentCard = document.querySelector(`[data-id="${opponentId}"]`)
+      opponentCard?.classList.remove('-translate-y-3')
+      opponentCard?.querySelector('div')?.classList.remove('opacity-100')
+      opponentCard?.querySelector('div')?.classList.add('opacity-0')
+    }
+
     boxerCards.forEach((singleBoxerCard) => {
       singleBoxerCard.addEventListener("mouseenter", () => {
         if (timeoutId) {
@@ -32,16 +47,21 @@ const { id, name } = Astro.props
         }
 
         const id = singleBoxerCard.getAttribute("data-id")
+        const opponentId = singleBoxerCard.getAttribute("data-opponent")
+
         if (id) {
-          // Dispatch a custom event to notify a boxer card id is hovered
+          if (opponentId) highlightOpponent(opponentId)
           const event = new CustomEvent("boxer-card-hovered", {
-            detail: { id },
+            detail: { id, opponentId },
           })
           document.dispatchEvent(event)
         }
       })
 
       singleBoxerCard.addEventListener("mouseleave", () => {
+        const opponentId = singleBoxerCard.getAttribute("data-opponent")
+        if (opponentId) removeOpponentHighlight(opponentId)
+
         timeoutId = setTimeout(() => {
           const event = new CustomEvent("boxer-card-exit")
           document.dispatchEvent(event)

@@ -6,6 +6,7 @@ const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
 const rightRow = firstRow.slice(3)
 const secondRow = FIGHTERS.slice(6)
+const secondLeftRow = secondRow.slice(0, 4)
 ---
 
 <section class="relative flex min-h-screen w-full">
@@ -61,16 +62,32 @@ const secondRow = FIGHTERS.slice(6)
         class="relative top-24 mx-auto h-20 flex w-full items-center justify-center"
       >
         {
-          FIGHTERS.map(({ id, name }) => (
-            <img
-              data-id={`hero-text-${id}`}
-              src={`/images/fighters/text/${id}.png`}
-              alt={name}
-              decoding="async"
-              class="w-auto h-full absolute hidden mask-fade-text"
-              fetchpriority="low"
-            />
-          ))
+          FIGHTERS.map(({ id, name }) => {
+            const opponent = FIGHTERS.find(f => f.id === id)?.opponent
+            const opponentName = FIGHTERS.find(f => f.id === opponent)?.name
+            const isLeftSide = [...leftRow, ...secondLeftRow].some(fighter => fighter.id === id)
+
+            return (
+              <div data-id={`hero-text-${id}`} class="hidden absolute w-full flex justify-center items-center gap-10">
+                <img
+                  src={`/images/fighters/text/${id}.png`}
+                  alt={name}
+                  decoding="async"
+                  class={`max-w-sm z-21 mask-fade-text ${isLeftSide ? 'order-1' : 'order-3'}`}
+                  fetchpriority="low"
+                />
+                {opponent && opponentName && (
+                  <img
+                    src={`/images/fighters/text/${opponent}.png`}
+                    alt={opponentName}
+                    decoding="async"
+                    class={`max-w-sm z-21  mask-fade-text ${isLeftSide ? 'order-3' : 'order-1'}`}
+                    fetchpriority="low"
+                  />
+                )}
+              </div>
+            )
+          })
         }
       </div>
 
@@ -78,17 +95,37 @@ const secondRow = FIGHTERS.slice(6)
         class="mask-fade-bottom relative bottom-0 mx-auto h-[80vh] flex w-full items-center justify-center"
       >
         {
-          FIGHTERS.map(({ id, name }) => (
-            <img
-              transition:name={`image-${id}`}
-              data-id={`hero-image-${id}`}
-              src={`/images/fighters/big/${id}.png`}
-              alt={name}
-              decoding="async"
-              class="w-auto h-full absolute hidden"
-              fetchpriority="low"
-            />
-          ))
+          FIGHTERS.map(({ id, name }) => {
+            const isLeftSide = [...leftRow, ...secondLeftRow].some(fighter => fighter.id === id)
+            const animationClass = isLeftSide ? 'animate-fade-left' : 'animate-fade-right'
+            const mainTranslate = isLeftSide ? '-translate-x-64' : 'translate-x-64'
+            const opponentTranslate = isLeftSide ? 'translate-x-64' : '-translate-x-64'
+            
+            return (
+              <div data-fighter-wrapper={id} class="hidden absolute inset-0 flex items-center justify-center">
+                <img
+                  transition:name={`image-${id}`}
+                  data-id={`hero-image-${id}`}
+                  src={`/images/fighters/big/${id}.png`}
+                  alt={name}
+                  decoding="async"
+                  class={`w-auto h-full absolute ${animationClass} ${mainTranslate} z-20`}
+                  fetchpriority="low"
+                />
+                <p class="text-white z-30 text-5xl">VS</p>
+                {FIGHTERS.find(f => f.id === id)?.opponent && (
+                  <img
+                    data-id={`hero-image-${FIGHTERS.find(f => f.id === id)?.opponent}`}
+                    src={`/images/fighters/big/${FIGHTERS.find(f => f.id === id)?.opponent}.png`}
+                    alt={FIGHTERS.find(f => f.id === FIGHTERS.find(f => f.id === id)?.opponent)?.name}
+                    decoding="async"
+                    class={`w-auto h-full absolute ${!isLeftSide ? 'animate-fade-left' : 'animate-fade-right'} ${opponentTranslate} z-10`}
+                    fetchpriority="low"
+                  />
+                )}
+              </div>
+            )
+          })
         }
       </div>
     </div>
@@ -98,15 +135,17 @@ const secondRow = FIGHTERS.slice(6)
     >
       <div class="flex flex-wrap justify-between w-full px-4">
         <div class="flex flex-wrap justify-start gap-4">
-          {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+          {leftRow.map(({ id, name, opponent }) => (
+            <BoxerCard id={id} name={name} opponent={opponent} />
+          ))}
         </div>
         <div class="flex flex-wrap justify-end gap-4">
-          {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+          {rightRow.map(({ id, name, opponent }) => <BoxerCard id={id} name={name} opponent={opponent} />)}
         </div>
       </div>
 
       <div class="flex flex-wrap justify-between gap-4">
-        {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+        {secondRow.map(({ id, name, opponent }) => <BoxerCard id={id} name={name} opponent={opponent} />)}
       </div>
     </div>
   </div>
@@ -122,61 +161,93 @@ const secondRow = FIGHTERS.slice(6)
       transparent 100%
     );
   }
+
+  @keyframes fadeRight {
+    from {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-fade-right {
+    animation: fadeRight 0.5s ease-out forwards;
+  }
+
+  .animate-fade-left {
+    animation: fadeLeft 0.5s ease-out forwards;
+  }
 </style>
 
 <script>
   document.addEventListener("astro:page-load", () => {
     const $landing = document.querySelector("#landing")
-
     let currentFighterId: string | null = null
+    let currentOpponentId: string | null = null
 
-    document.addEventListener("boxer-card-exit", () => {
-      $landing?.classList.remove("hidden")
-
-      if (currentFighterId) {
-        document
-          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.add("hidden")
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add("hidden")
-
-        currentFighterId = null
-      }
-    })
-
-    document.addEventListener("boxer-card-hovered", (event: Event) => {
-      const customEvent = event as CustomEvent<{ id: string }>
-      const id = customEvent.detail.id
-
-      // si el luchador que entras es el mismo que ya se muestra
-      // entonces no hacemos nada
-      if (currentFighterId === id) return
-
-      // si ya estamos mostrando un luchador, tenemos que ocultarlo
-      if (currentFighterId) {
-        document
-          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.add("hidden")
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add("hidden")
-      }
-
-      $landing?.classList.add("hidden")
-
-      // mostramos el luchador que quiere ver el usuario
+    const showFighter = (id: string) => {
       document
         .querySelector(`[data-id="hero-text-${id}"]`)
         ?.classList.remove("hidden")
 
       document
-        .querySelector(`[data-id="hero-image-${id}"]`)
+        .querySelector(`[data-fighter-wrapper="${id}"]`)
         ?.classList.remove("hidden")
+    }
+
+    const hideFighter = (id: string) => {
+      document
+        .querySelector(`[data-id="hero-text-${id}"]`)
+        ?.classList.add("hidden")
+
+      document
+        .querySelector(`[data-fighter-wrapper="${id}"]`)
+        ?.classList.add("hidden")
+    }
+
+    document.addEventListener("boxer-card-exit", () => {
+      $landing?.classList.remove("hidden")
+
+      if (currentFighterId) {
+        hideFighter(currentFighterId)
+        if (currentOpponentId) hideFighter(currentOpponentId)
+        currentFighterId = null
+        currentOpponentId = null
+      }
+    })
+
+    document.addEventListener("boxer-card-hovered", (event: Event) => {
+      const customEvent = event as CustomEvent<{ id: string, opponent: string }>
+      const { id, opponent } = customEvent.detail
+
+      if (currentFighterId === id) return
+
+      if (currentFighterId) {
+        hideFighter(currentFighterId)
+        if (currentOpponentId) hideFighter(currentOpponentId)
+      }
+
+      $landing?.classList.add("hidden")
+
+      showFighter(id)
+      if (opponent) showFighter(opponent)
 
       currentFighterId = id
+      currentOpponentId = opponent
     })
   })
 </script>
