@@ -1,9 +1,9 @@
 ---
-const { id, name } = Astro.props
+const { id, name, class: extraClass } = Astro.props;
 ---
 
 <a
-  class="boxer-card inline-block transition hover:-translate-y-3 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded overflow-hidden"
+  class={`boxer-card ${extraClass} inline-block transition hover:-translate-y-3 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative overflow-hidden`}
   href={`/luchador/${id}`}
   data-id={id}
 >
@@ -20,33 +20,43 @@ const { id, name } = Astro.props
   </div>
 </a>
 
+<style>
+  .boxer-left {
+    clip-path: polygon(0% 0%, 95% 0%, 100% 100%, 5% 100%);
+  }
+
+  .boxer-right {
+    clip-path: polygon(5% 0%,100% 0%,95% 100%,0% 100%)
+  }
+</style>
+
 <script>
   document.addEventListener("astro:page-load", () => {
-    const boxerCards = document.querySelectorAll(".boxer-card")
-    let timeoutId: number | null = null
+    const boxerCards = document.querySelectorAll(".boxer-card");
+    let timeoutId: number | null = null;
 
     boxerCards.forEach((singleBoxerCard) => {
       singleBoxerCard.addEventListener("mouseenter", () => {
         if (timeoutId) {
-          clearTimeout(timeoutId)
+          clearTimeout(timeoutId);
         }
 
-        const id = singleBoxerCard.getAttribute("data-id")
+        const id = singleBoxerCard.getAttribute("data-id");
         if (id) {
           // Dispatch a custom event to notify a boxer card id is hovered
           const event = new CustomEvent("boxer-card-hovered", {
             detail: { id },
-          })
-          document.dispatchEvent(event)
+          });
+          document.dispatchEvent(event);
         }
-      })
+      });
 
       singleBoxerCard.addEventListener("mouseleave", () => {
         timeoutId = setTimeout(() => {
-          const event = new CustomEvent("boxer-card-exit")
-          document.dispatchEvent(event)
-        }, 500)
-      })
-    })
-  })
+          const event = new CustomEvent("boxer-card-exit");
+          document.dispatchEvent(event);
+        }, 500);
+      });
+    });
+  });
 </script>
