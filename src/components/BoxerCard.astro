@@ -24,9 +24,14 @@ const { id, name } = Astro.props
 <script>
   document.addEventListener("astro:page-load", () => {
     const boxerCards = document.querySelectorAll(".boxer-card")
+    let timeoutId: number | null = null
 
     boxerCards.forEach((singleBoxerCard) => {
       singleBoxerCard.addEventListener("mouseenter", () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+        }
+
         const id = singleBoxerCard.getAttribute("data-id")
         if (id) {
           // Dispatch a custom event to notify a boxer card id is hovered
@@ -37,14 +42,12 @@ const { id, name } = Astro.props
         }
       })
 
-      // singleBoxerCard.addEventListener("mouseleave", () => {
-      //   const id = singleBoxerCard.getAttribute("data-id")
-      //   if (id) {
-      //     // Dispatch a custom event to notify a boxer card id is hovered
-      //     const event = new CustomEvent("boxer-card-hovered", { detail: { id } })
-      //     document.dispatchEvent(event)
-      //   }
-      // })
+      singleBoxerCard.addEventListener("mouseleave", () => {
+        timeoutId = setTimeout(() => {
+          const event = new CustomEvent("boxer-card-exit")
+          document.dispatchEvent(event)
+        }, 500)
+      })
     })
   })
 </script>
