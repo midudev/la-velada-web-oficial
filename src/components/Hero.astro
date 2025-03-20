@@ -8,7 +8,7 @@ const rightRow = firstRow.slice(3)
 const secondRow = FIGHTERS.slice(6)
 ---
 
-<section class="relative flex min-h-screen w-full">
+<section class="relative flex min-h-screen w-full group pointer-events-none">
   <div
     class="bg-[url('/images/hero.png')] bg-cover bg-center w-full mask-fade-bottom absolute inset-0"
   >
@@ -17,7 +17,7 @@ const secondRow = FIGHTERS.slice(6)
   <div class="relative flex flex-col items-center p-8 w-full text-center">
     <div
       id="landing"
-      class="absolute inset-0 flex flex-col items-center w-full py-32"
+      class="absolute inset-0 flex flex-col items-center w-full py-32 group-hover:opacity-0 transition-opacity duration-300"
     >
       <h3
         class="font-light text-theme-seashell leading-[100%] mt-4 animate-fade-in animate-delay-300"
@@ -126,13 +126,9 @@ const secondRow = FIGHTERS.slice(6)
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const $landing = document.querySelector("#landing")
-
     let currentFighterId: string | null = null
 
     document.addEventListener("boxer-card-exit", () => {
-      $landing?.classList.remove("hidden")
-
       if (currentFighterId) {
         document
           .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
@@ -164,8 +160,6 @@ const secondRow = FIGHTERS.slice(6)
           .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
           ?.classList.add("hidden")
       }
-
-      $landing?.classList.add("hidden")
 
       // mostramos el luchador que quiere ver el usuario
       document
