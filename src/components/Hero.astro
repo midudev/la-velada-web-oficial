@@ -34,14 +34,18 @@ const secondRow = FIGHTERS.slice(6)
         />
         <div class="absolute bg-pink-400/80 blur-2xl z-0 size-64 top-0"></div>
       </figure>
+
+      <div class="relative">
       <h3
         class="font-light text-theme-seashell leading-[100%] mt-4 animate-fade-in animate-delay-500"
       >
         ESTADIO<br />LA CARTUJA,<br /><strong>SEVILLA</strong>
       </h3>
+      <div class="absolute bg-pink-400/80 blur-2xl z-0 w-full h-full -inset-2"></div>
       <h3
         class="font-light text-theme-raisin-black leading-[100%] mt-4 animate-fade-in animate-delay-700"
       >
+        </div>
         <a
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
@@ -58,7 +62,7 @@ const secondRow = FIGHTERS.slice(6)
       class="pointer-events-none absolute inset-0 flex flex-col items-center"
     >
       <div
-        class="relative top-24 mx-auto h-20 flex w-full items-center justify-center"
+        class="relative top-96 mx-auto h-[4.5rem] flex w-full items-center justify-center z-1"
       >
         {
           FIGHTERS.map(({ id, name }) => (
@@ -163,6 +167,14 @@ const secondRow = FIGHTERS.slice(6)
         document
           .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
           ?.classList.add("hidden")
+
+        document
+          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+          ?.classList.remove("animate-zoom-in")
+
+        document
+          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+          ?.classList.remove("animate-slide-up-fade")
       }
 
       $landing?.classList.add("hidden")
@@ -175,6 +187,14 @@ const secondRow = FIGHTERS.slice(6)
       document
         .querySelector(`[data-id="hero-image-${id}"]`)
         ?.classList.remove("hidden")
+
+      document
+        .querySelector(`[data-id="hero-text-${id}"]`)
+        ?.classList.add("animate-zoom-in")
+
+      document
+        .querySelector(`[data-id="hero-image-${id}"]`)
+        ?.classList.add("animate-slide-up-fade")
 
       currentFighterId = id
     })
