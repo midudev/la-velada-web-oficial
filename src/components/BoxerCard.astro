@@ -1,7 +1,6 @@
 ---
-const { id, name } = Astro.props;
+const { id, name } = Astro.props
 ---
-
 <a
   class="boxer-card inline-block transition hover:-translate-y-3 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded overflow-hidden"
   href={`/luchador/${id}`}
@@ -21,41 +20,74 @@ const { id, name } = Astro.props;
 </a>
 
 <script>
- document.addEventListener("astro:page-load", () => {
-  const boxerCards = document.querySelectorAll(".boxer-card")
-  let timeoutId: number | null = null
+  document.addEventListener("astro:page-load", () => {
+    const boxerCards = document.querySelectorAll(".boxer-card");
+    let timeoutId: number | null = null;
 
-  boxerCards.forEach((singleBoxerCard) => {
-    const handleMouseEnter = () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId)
-      }
+    const eventListeners = [];
 
-      const id = singleBoxerCard.getAttribute("data-id")
-      if (id) {
-        const event = new CustomEvent("boxer-card-hovered", {
-          detail: { id },
-        })
-        document.dispatchEvent(event)
-      }
-    }
+    boxerCards.forEach((singleBoxerCard) => {
+      // Flag to track if the card is clicked
+      let isClicked = false;
 
-    const handleMouseLeave = () => {
-      timeoutId = setTimeout(() => {
-        const event = new CustomEvent("boxer-card-exit")
-        document.dispatchEvent(event)
-      }, 500)
-    }
+      const mouseEnterHandler = () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
 
-    singleBoxerCard.addEventListener("mouseenter", handleMouseEnter)
-    singleBoxerCard.addEventListener("mouseleave", handleMouseLeave)
+        const id = singleBoxerCard.getAttribute("data-id");
+        if (id) {
+          const event = new CustomEvent("boxer-card-hovered", {
+            detail: { id },
+          });
+          document.dispatchEvent(event);
+        }
+      };
 
-    // Cleanup on component unmount
-    singleBoxerCard.addEventListener("remove", () => {
-      singleBoxerCard.removeEventListener("mouseenter", handleMouseEnter)
-      singleBoxerCard.removeEventListener("mouseleave", handleMouseLeave)
-    })
-  })
-})
+      const mouseLeaveHandler = () => {
+        if (isClicked) {
+          return;
+        }
 
+        timeoutId = setTimeout(() => {
+          const event = new CustomEvent("boxer-card-exit");
+          document.dispatchEvent(event);
+        }, 500);
+      };
+
+      const clickHandler = () => {
+        isClicked = true;
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+      };
+
+      // Attach event listeners
+      singleBoxerCard.addEventListener("mouseenter", mouseEnterHandler);
+      singleBoxerCard.addEventListener("mouseleave", mouseLeaveHandler);
+      singleBoxerCard.addEventListener("click", clickHandler);
+
+      // Store references to the listeners for cleanup
+      eventListeners.push({
+        element: singleBoxerCard,
+        events: [
+          { type: "mouseenter", handler: mouseEnterHandler },
+          { type: "mouseleave", handler: mouseLeaveHandler },
+          { type: "click", handler: clickHandler },
+        ],
+      });
+    });
+
+    // Cleanup function for removing event listeners
+    const cleanupEventListeners = () => {
+      eventListeners.forEach(({ element, events }) => {
+        events.forEach(({ type, handler }) => {
+          element.removeEventListener(type, handler);
+        });
+      });
+    };
+
+    // Call cleanup on page unload or when Astro component is destroyed
+    window.addEventListener("beforeunload", cleanupEventListeners);
+  });
 </script>
