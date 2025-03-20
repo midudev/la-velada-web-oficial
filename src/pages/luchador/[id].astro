@@ -4,8 +4,19 @@ import Layout from "@/layouts/Layout.astro"
 
 const { id } = Astro.params
 
-const fighter = FIGHTERS.find((fighter) => fighter.id === id)
+let fighter
 
+try {
+  fighter = FIGHTERS.find((fighter) => fighter.id === id)
+
+  // Si no hay luchador emitir error para redirigir a 404
+  if (!fighter) {
+    throw new Error('Fighter not found')
+  }
+} catch (error) {
+  // redirigir a 404
+  return Astro.redirect('/404')
+}
 export const prerender = false
 ---
 
