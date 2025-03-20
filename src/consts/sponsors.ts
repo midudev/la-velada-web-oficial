@@ -11,8 +11,11 @@ import Nothing from "@/assets/sponsors/Nothing.svg";
 import Revolut from "@/assets/sponsors/Revolut.svg";
 import Spotify from "@/assets/sponsors/Spotify.svg";
 import Vicio from "@/assets/sponsors/Vicio.svg";
-
+import Ghost from "@/assets/sponsors/GhostRacingFirma.png";
 export const SPONSORS: Sponsors[] = [
+  
+
+  
   {
     id: "alsa",
     name: "Alsa",

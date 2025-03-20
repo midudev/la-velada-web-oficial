@@ -10,6 +10,7 @@ type SponsorId =
 | "coca-cola"
 | "mahou"
 | "nothing"
+| "ghost"
 
 type SponsorName = 
 | "Vicio"
@@ -23,6 +24,7 @@ type SponsorName =
 | "Coca-Cola"
 | "Mahou"
 | "Nothing"
+| "Ghost"
 
 export interface Sponsors {
   id: SponsorId
