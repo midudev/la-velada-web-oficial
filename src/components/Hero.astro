@@ -1,68 +1,71 @@
 ---
-import { FIGHTERS } from "@/consts/fighters"
-import BoxerCard from "./BoxerCard.astro"
+import { FIGHTERS } from '@/consts/fighters';
+import BoxerCard from './BoxerCard.astro';
 
-const firstRow = FIGHTERS.slice(0, 6)
-const leftRow = firstRow.slice(0, 3)
-const rightRow = firstRow.slice(3)
-const secondRow = FIGHTERS.slice(6)
+const firstRow = FIGHTERS.slice(0, 6);
+const leftRow = firstRow.slice(0, 3);
+const rightRow = firstRow.slice(3);
+const secondRow = FIGHTERS.slice(6);
 ---
 
-<section class="relative flex min-h-screen w-full">
+<section class='relative flex min-h-screen w-full'>
   <div
     class="bg-[url('/images/hero.png')] bg-cover bg-center w-full mask-fade-bottom absolute inset-0"
   >
   </div>
 
-  <div class="relative flex flex-col items-center p-8 w-full text-center">
+  <div class='relative flex flex-col items-center p-8 w-full text-center'>
     <div
-      id="landing"
-      class="absolute inset-0 flex flex-col items-center w-full py-32"
+      id='landing'
+      class='absolute inset-0 flex flex-col items-center w-full py-32'
     >
       <h3
-        class="font-light text-theme-seashell leading-[100%] mt-4 animate-fade-in animate-delay-300"
+        class='font-light text-theme-seashell leading-[100%] mt-4 animate-fade-in animate-delay-300'
       >
         <strong>26</strong> DE <br /><strong>JULIO</strong>
       </h3>
-      <figure class="relative mt-8 animate-fade-in">
+      <figure class='relative mt-8 animate-fade-in'>
         <img
-          class="w-64 h-auto z-20 relative"
-          src="/images/logo.png"
-          fetchpriority="high"
-          alt="La Velada del Año V"
-          decoding="async"
+          class='w-64 h-auto z-20 relative'
+          src='/images/logo.png'
+          fetchpriority='high'
+          alt='La Velada del Año V'
+          decoding='async'
         />
-        <div class="absolute bg-pink-400/80 blur-2xl z-0 size-64 top-0"></div>
+        <div class='absolute bg-pink-400/80 blur-2xl z-0 size-64 top-0'></div>
       </figure>
 
-      <div class="relative">
-      <h3
-        class="font-light text-theme-seashell leading-[100%] mt-4 animate-fade-in animate-delay-500"
-      >
-        ESTADIO<br />LA CARTUJA,<br /><strong>SEVILLA</strong>
-      </h3>
-      <div class="absolute bg-pink-400/80 blur-2xl z-0 w-full h-full -inset-2"></div>
-      <h3
-        class="font-light text-theme-raisin-black leading-[100%] mt-4 animate-fade-in animate-delay-700"
-      >
+      <div class='relative'>
+        <h3
+          class='font-light text-theme-seashell leading-[100%] mt-4 animate-fade-in animate-delay-500'
+        >
+          ESTADIO<br />LA CARTUJA,<br /><strong>SEVILLA</strong>
+        </h3>
+        <div
+          class='absolute bg-pink-400/80 blur-2xl z-0 w-full h-full -inset-2'
+        >
         </div>
+        <h3
+          class='font-light text-theme-raisin-black leading-[100%] mt-4 animate-fade-in animate-delay-700'
+        >
+        </h3>
         <a
-          href="https://twitch.tv/ibai"
-          rel="noopener noreferrer"
-          target="_blank"
-          class="inline-block transition hover:scale-125"
+          href='https://twitch.tv/ibai'
+          rel='noopener noreferrer'
+          target='_blank'
+          class='inline-block transition hover:scale-125'
         >
           TWITCH.TV<br /><strong>IBAI</strong>
         </a>
-      </h3>
+      </div>
     </div>
 
     <div
-      id="fighter-container"
-      class="pointer-events-none absolute inset-0 flex flex-col items-center"
+      id='fighter-container'
+      class='pointer-events-none absolute inset-0 flex flex-col items-center'
     >
       <div
-        class="relative top-96 mx-auto h-[4.5rem] flex w-full items-center justify-center z-1"
+        class='relative top-0 mx-auto h-[4.5rem] flex w-full items-center justify-center z-1'
       >
         {
           FIGHTERS.map(({ id, name }) => (
@@ -70,16 +73,21 @@ const secondRow = FIGHTERS.slice(6)
               data-id={`hero-text-${id}`}
               src={`/images/fighters/text/${id}.png`}
               alt={name}
-              decoding="async"
-              class="w-auto h-full absolute hidden mask-fade-text"
-              fetchpriority="low"
+              decoding='async'
+              class='w-auto h-full absolute hidden mask-fade-text top-96'
+              fetchpriority='low'
             />
           ))
         }
       </div>
+      <div
+        id='hero-gif'
+        class="fixed top-0 mx-auto left-0 inset-0 bg-black/50 w-full bg-[url('/images/ray.gif')] bg-cover bg-no-repeat bg-center max-h-[40vh] opacity-50 hidden mask-fade-bottom"
+      >
+      </div>
 
       <div
-        class="mask-fade-bottom relative bottom-0 mx-auto h-[80vh] flex w-full items-center justify-center"
+        class='mask-fade-bottom relative bottom-0 mx-auto h-[80vh] flex w-full items-center justify-center'
       >
         {
           FIGHTERS.map(({ id, name }) => (
@@ -88,9 +96,9 @@ const secondRow = FIGHTERS.slice(6)
               data-id={`hero-image-${id}`}
               src={`/images/fighters/big/${id}.png`}
               alt={name}
-              decoding="async"
-              class="w-auto h-full absolute hidden"
-              fetchpriority="low"
+              decoding='async'
+              class='w-auto h-full absolute hidden z-1'
+              fetchpriority='low'
             />
           ))
         }
@@ -98,18 +106,18 @@ const secondRow = FIGHTERS.slice(6)
     </div>
 
     <div
-      class="relative flex flex-col items-center justify-end p-8 h-full w-full max-w-6xl gap-4"
+      class='relative flex flex-col items-center justify-end p-8 h-full w-full max-w-6xl gap-4'
     >
-      <div class="flex flex-wrap justify-between w-full px-4">
-        <div class="flex flex-wrap justify-start gap-4">
+      <div class='flex flex-wrap justify-between w-full px-4'>
+        <div class='flex flex-wrap justify-start gap-4'>
           {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
         </div>
-        <div class="flex flex-wrap justify-end gap-4">
+        <div class='flex flex-wrap justify-end gap-4'>
           {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
         </div>
       </div>
 
-      <div class="flex flex-wrap justify-between gap-4">
+      <div class='flex flex-wrap justify-between gap-4'>
         {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
       </div>
     </div>
@@ -129,74 +137,78 @@ const secondRow = FIGHTERS.slice(6)
 </style>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
-    const $landing = document.querySelector("#landing")
+  document.addEventListener('astro:page-load', () => {
+    const $landing = document.querySelector('#landing');
 
-    let currentFighterId: string | null = null
+    let currentFighterId: string | null = null;
 
-    document.addEventListener("boxer-card-exit", () => {
-      $landing?.classList.remove("hidden")
+    document.addEventListener('boxer-card-exit', () => {
+      $landing?.classList.remove('hidden');
 
       if (currentFighterId) {
         document
           .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.add("hidden")
+          ?.classList.add('hidden');
 
         document
           .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add("hidden")
+          ?.classList.add('hidden');
 
-        currentFighterId = null
+        document.querySelector(`#hero-gif`)?.classList.add('hidden');
+
+        currentFighterId = null;
       }
-    })
+    });
 
-    document.addEventListener("boxer-card-hovered", (event: Event) => {
-      const customEvent = event as CustomEvent<{ id: string }>
-      const id = customEvent.detail.id
+    document.addEventListener('boxer-card-hovered', (event: Event) => {
+      const customEvent = event as CustomEvent<{ id: string }>;
+      const id = customEvent.detail.id;
 
       // si el luchador que entras es el mismo que ya se muestra
       // entonces no hacemos nada
-      if (currentFighterId === id) return
+      if (currentFighterId === id) return;
 
       // si ya estamos mostrando un luchador, tenemos que ocultarlo
       if (currentFighterId) {
         document
           .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.add("hidden")
+          ?.classList.add('hidden');
 
         document
           .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add("hidden")
+          ?.classList.add('hidden');
 
         document
           .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.remove("animate-zoom-in")
+          ?.classList.remove('animate-zoom-in');
 
         document
           .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.remove("animate-slide-up-fade")
+          ?.classList.remove('animate-slide-up-fade');
       }
 
-      $landing?.classList.add("hidden")
+      $landing?.classList.add('hidden');
 
       // mostramos el luchador que quiere ver el usuario
       document
         .querySelector(`[data-id="hero-text-${id}"]`)
-        ?.classList.remove("hidden")
+        ?.classList.remove('hidden');
 
       document
         .querySelector(`[data-id="hero-image-${id}"]`)
-        ?.classList.remove("hidden")
+        ?.classList.remove('hidden');
 
       document
         .querySelector(`[data-id="hero-text-${id}"]`)
-        ?.classList.add("animate-zoom-in")
+        ?.classList.add('animate-zoom-in');
 
       document
         .querySelector(`[data-id="hero-image-${id}"]`)
-        ?.classList.add("animate-slide-up-fade")
+        ?.classList.add('animate-slide-up-fade');
 
-      currentFighterId = id
-    })
-  })
+      document.querySelector(`#hero-gif`)?.classList.remove('hidden');
+
+      currentFighterId = id;
+    });
+  });
 </script>
