@@ -1,53 +1,17 @@
 ---
 import { SPONSORS } from "@/consts/sponsors"
-
-const firstRow = SPONSORS.slice(0, 5)
-const secondRow = SPONSORS.slice(5)
+import SponsorCard from "./SponsorCard.astro"
 ---
 
-<section id="sponsors" class="mx-auto max-w-xl py-36">
-  <h2 class="mb-4 text-4xl font-light text-center text-dark-magenta">
-    <div class="block sm:inline">
-      <strong class="font-normal">Patrocinadores</strong>
-    </div>
-    <div class="block sm:inline">del evento</div>
-  </h2>
-  <div class="w-full flex justify-center items-center flex-col-reverse gap-8 md:flex-col md:gap-5 py-5">
-    <div class="w-1/2 flex flex-wrap justify-evenly gap-8 max-w-md md:flex-row md:w-[100%] md:justify-around md:gap-5">
-    {
-      firstRow.map(({ url, image, name, label }) => (
-        <a
-          href={url}
-          target="_blank"
-          aria-label={label ?? name}
-          class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
-        >
-          <image.logo
-            width={image.width}
-            height={image.width}
-            class="h-14 w-auto"
-          />
-        </a>
-      ))
-    }
+<section class="flex flex-col items-center justify-center mt-4" id="sponsors">
+  <h4 class="text-3xl text-transparent bg-clip-text bg-gradient-to-b from-raisin-black via-raisin-black to-french-mauve">
+    <strong>PATROCINADORES</strong> DEL EVENTO
+  </h4>
+  <div class="h-1 mt-4 mb-4 bg-gradient-to-r from-transparent via-french-mauve to-transparent w-3/4 rounded-full"/>
+  <div class="flex transition-all ease-in-out justify-center flex-wrap w-full lg:w-3/4 xl:w-1/2 sm:w-3/4">
+    {SPONSORS.map(({url,image,name,label}) => (
+      <SponsorCard url={url} image={image} name={name} label={label} /> 
+    ))}
   </div>
-  <div class="w-1/2 flex flex-wrap justify-evenly gap-8 max-w-md md:flex-row md:w-[100%] md:justify-around md:gap-5">
-    {
-      secondRow.map(({ url, image, name, label }) => (
-        <a
-          href={url}
-          target="_blank"
-          aria-label={label ?? name}
-          class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
-        >
-          <image.logo
-            width={image.width}
-            height={image.width}
-            class="h-14 w-auto"
-          />
-        </a>
-      ))
-    }
-  </div>
-</div>
+  <div class="h-1 mt-4 mb-4 bg-gradient-to-r from-transparent via-french-mauve to-transparent w-3/4 rounded-full"/>
 </section>

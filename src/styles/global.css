@@ -9,11 +9,32 @@
   --font-primary: "Anisette";
 
   /* Velada V Custom Colors */
-  --color-theme-french-mauve:oklch(67.65% 0.1539 329.18);
-  --color-theme-raisin-black:oklch(25.53% 0.0209 340.25);
-  --color-theme-tickle-me-pink:oklch(75.65% 0.143 355.9);
-  --color-theme-seashell:oklch(95.25% 0.0147 33.07);
-  --color-theme-turquoise:oklch(82.97% 0.148864 181.7442);
+  --color-french-mauve:oklch(67.65% 0.1539 329.18);
+  --color-raisin-black:oklch(25.53% 0.0209 340.25);
+  --color-tickle-me-pink:oklch(75.65% 0.143 355.9);
+  --color-seashell:oklch(95.25% 0.0147 33.07);
+  --color-turquoise:oklch(82.97% 0.148864 181.7442);
+
+  @keyframes gradient-shift-hover {
+    0%{
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @keyframes gradient-shift-unhover {
+    0%{
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  --animate-gradient-hover : gradient-shift-hover 0.5s ease forwards;
+  --animate-gradient-unhover : gradient-shift-unhover 0.5s ease forwards;
 }
 
 @font-face {
