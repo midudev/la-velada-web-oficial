@@ -63,7 +63,7 @@ const secondLeftRow = secondRow.slice(0, 4)
       class="pointer-events-none absolute inset-0 flex flex-col items-center"
     >
       <div
-        class="relative top-96 mx-auto h-[4.5rem] flex w-full items-center justify-center z-1"
+        class="relative top-15 mx-auto h-[4.5rem] flex w-3xl items-center justify-center z-50"
       >
         {
           FIGHTERS.map(({ id, name }) => {
@@ -72,12 +72,12 @@ const secondLeftRow = secondRow.slice(0, 4)
             const isLeftSide = [...leftRow, ...secondLeftRow].some(fighter => fighter.id === id)
 
             return (
-              <div data-id={`hero-text-${id}`} class="hidden absolute w-full flex justify-center items-center gap-10">
+              <div data-id={`hero-text-${id}`} class="hidden absolute max-w-md max-h-md flex justify-center items-center gap-22">
                 <img
                   src={`/images/fighters/text/${id}.png`}
                   alt={name}
                   decoding="async"
-                  class={`max-w-sm z-21 mask-fade-text ${isLeftSide ? 'order-1' : 'order-3'}`}
+                  class={`w-auto h-auto mask-fade-text animate-fade-down ${isLeftSide ? 'order-1' : 'order-3'}`}
                   fetchpriority="low"
                 />
                 {opponent && opponentName && (
@@ -85,7 +85,7 @@ const secondLeftRow = secondRow.slice(0, 4)
                     src={`/images/fighters/text/${opponent}.png`}
                     alt={opponentName}
                     decoding="async"
-                    class={`max-w-sm z-21  mask-fade-text ${isLeftSide ? 'order-3' : 'order-1'}`}
+                    class={`w-auto h-full mask-fade-text animate-fade-down ${isLeftSide ? 'order-3' : 'order-1'}`}
                     fetchpriority="low"
                   />
                 )}
@@ -186,6 +186,21 @@ const secondLeftRow = secondRow.slice(0, 4)
       opacity: 1;
       transform: translateX(0);
     }
+  }
+
+  @keyframes fadeDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-down {
+    animation: fadeDown 0.5s ease-out forwards;
   }
 
   .animate-fade-right {
