@@ -2,10 +2,12 @@
 import { FIGHTERS } from "@/consts/fighters"
 import BoxerCard from "./BoxerCard.astro"
 
-const firstRow = FIGHTERS.slice(0, 6)
-const leftRow = firstRow.slice(0, 3)
-const rightRow = firstRow.slice(3)
-const secondRow = FIGHTERS.slice(6)
+const topSection = FIGHTERS.slice(0, 6)
+const topLeftSection = topSection.slice(0, 3)
+const topRightSection = topSection.slice(3)
+const bottomSection = FIGHTERS.slice(6)
+const bottomLeftSection = bottomSection.slice(0, 4)
+const bottomRightSection = bottomSection.slice(4)
 ---
 
 <section class="relative flex min-h-screen w-full">
@@ -94,21 +96,28 @@ const secondRow = FIGHTERS.slice(6)
     </div>
 
     <div
-      class="relative flex flex-col items-center justify-end p-8 h-full w-full max-w-6xl gap-4"
+      class="relative hidden sm:flex flex-col items-center justify-end p-8 h-full w-full max-w-6xl gap-4 "
     >
       <div class="flex flex-wrap justify-between w-full px-4">
         <div class="flex flex-wrap justify-start gap-4">
-          {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+          {topLeftSection.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
         </div>
         <div class="flex flex-wrap justify-end gap-4">
-          {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+          {topRightSection.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
         </div>
       </div>
 
       <div class="flex flex-wrap justify-between gap-4">
-        {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+        {bottomSection.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
       </div>
     </div>
+    
+      <div class="absolute left-0 flex flex-col gap-4">
+          {[...topLeftSection, ...bottomLeftSection].reverse().map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+      </div>
+      
+      <div class="absolute right-0 flex flex-col gap-4">
+          {[...bottomRightSection, ...topRightSection].map(({ id, name }) => <BoxerCard id={id} name={name} />)}
   </div>
 </section>
 
