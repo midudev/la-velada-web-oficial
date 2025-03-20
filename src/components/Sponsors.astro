@@ -7,9 +7,13 @@ const secondRow = SPONSORS.slice(5)
 
 <section id="sponsors" class="mx-auto max-w-xl py-36">
   <h2 class="mb-4 text-4xl font-light text-center text-dark-magenta">
-    <strong class="font-normal">Patrocinadores</strong> del evento
+    <div class="block sm:inline">
+      <strong class="font-normal">Patrocinadores</strong>
+    </div>
+    <div class="block sm:inline">del evento</div>
   </h2>
-  <div class="flex justify-around gap-4 flex-wrap w-full">
+  <div class="flex flex-row md:flex-col justify-evenly w-full p-5">
+  <div class="flex flex-col md:flex-row justify-around gap-4 flex-wrap items-center">
     {
       firstRow.map(({ url, image, name, label }) => (
         <a
@@ -27,7 +31,7 @@ const secondRow = SPONSORS.slice(5)
       ))
     }
   </div>
-  <div class="flex justify-around gap-4 w-full flex-wrap">
+  <div class="flex flex-col md:flex-row justify-around gap-4 items-center flex-wrap">
     {
       secondRow.map(({ url, image, name, label }) => (
         <a
@@ -45,4 +49,5 @@ const secondRow = SPONSORS.slice(5)
       ))
     }
   </div>
+</div>
 </section>
