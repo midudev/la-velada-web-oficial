@@ -58,7 +58,7 @@ const secondRow = FIGHTERS.slice(6)
       class="pointer-events-none absolute inset-0 flex flex-col items-center"
     >
       <div
-        class="relative top-24 mx-auto h-20 flex w-full items-center justify-center"
+        class="relative top-96 mx-auto h-[4.5rem] flex w-full items-center justify-center z-1"
       >
         {
           FIGHTERS.map(({ id, name }) => (
@@ -163,6 +163,14 @@ const secondRow = FIGHTERS.slice(6)
         document
           .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
           ?.classList.add("hidden")
+
+        document
+          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+          ?.classList.remove("animate-zoom-in")
+
+        document
+          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+          ?.classList.remove("animate-slide-up-fade")
       }
 
       $landing?.classList.add("hidden")
@@ -175,6 +183,14 @@ const secondRow = FIGHTERS.slice(6)
       document
         .querySelector(`[data-id="hero-image-${id}"]`)
         ?.classList.remove("hidden")
+
+      document
+        .querySelector(`[data-id="hero-text-${id}"]`)
+        ?.classList.add("animate-zoom-in")
+
+      document
+        .querySelector(`[data-id="hero-image-${id}"]`)
+        ?.classList.add("animate-slide-up-fade")
 
       currentFighterId = id
     })
