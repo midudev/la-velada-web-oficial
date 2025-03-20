@@ -1,3 +1,13 @@
+---
+import { FIGHTERS } from "@/consts/fighters"
+import BoxerCard from "./BoxerCard.astro"
+
+const firstRow = FIGHTERS.slice(0, 6)
+const leftRow = firstRow.slice(0, 3)
+const rightRow = firstRow.slice(3)
+const secondRow = FIGHTERS.slice(6)
+---
+
 <section class="relative flex min-h-screen w-full">
   <div
     class="bg-[url('/images/hero.png')] bg-cover bg-center w-full mask-fade-bottom absolute inset-0"
@@ -9,10 +19,12 @@
       id="landing"
       class="absolute inset-0 flex flex-col items-center w-full py-32"
     >
-      <h3 class="font-light text-seashell leading-[100%] mt-4">
+      <h3
+        class="font-light text-theme-seashell leading-[100%] mt-4 animate-fade-in animate-delay-300"
+      >
         <strong>26</strong> DE <br /><strong>JULIO</strong>
       </h3>
-      <figure class="relative mt-8">
+      <figure class="relative mt-8 animate-fade-in">
         <img
           class="w-64 h-auto z-20 relative"
           src="/images/logo.png"
@@ -21,10 +33,14 @@
         />
         <div class="absolute bg-pink-400/80 blur-2xl z-0 size-64 top-0"></div>
       </figure>
-      <h3 class="font-light text-seashell leading-[100%] mt-4">
+      <h3
+        class="font-light text-theme-seashell leading-[100%] mt-4 animate-fade-in animate-delay-500"
+      >
         ESTADIO<br />LA CARTUJA,<br /><strong>SEVILLA</strong>
       </h3>
-      <h3 class="font-light text-raisin-black leading-[100%] mt-4">
+      <h3
+        class="font-light text-theme-raisin-black leading-[100%] mt-4 animate-fade-in animate-delay-700"
+      >
         <a
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
@@ -34,6 +50,23 @@
           TWITCH.TV<br /><strong>IBAI</strong>
         </a>
       </h3>
+    </div>
+
+    <div
+      class="relative flex flex-col items-center justify-end p-8 h-full w-full max-w-6xl gap-4"
+    >
+      <div class="flex flex-wrap justify-between w-full px-4">
+        <div class="flex flex-wrap justify-start gap-4">
+          {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+        </div>
+        <div class="flex flex-wrap justify-end gap-4">
+          {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+        </div>
+      </div>
+
+      <div class="flex flex-wrap justify-between gap-4">
+        {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+      </div>
     </div>
   </div>
 </section>
