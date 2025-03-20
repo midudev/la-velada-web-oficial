@@ -1,11 +1,14 @@
 ---
-import { SPONSORS } from "@/consts/sponsors";
+import { SPONSORS } from "@/consts/sponsors"
 
-const firstRow = SPONSORS.slice(0, 5);
-const secondRow = SPONSORS.slice(5);
+const firstRow = SPONSORS.slice(0, 5)
+const secondRow = SPONSORS.slice(5)
 ---
 
-<section id="sponsors">
+<section id="sponsors" class="mx-auto max-w-xl py-36">
+  <h2 class="mb-4 text-4xl font-light text-center text-dark-magenta">
+    <strong class="font-normal">Patrocinadores</strong> del evento
+  </h2>
   <div class="flex justify-around gap-4 flex-wrap w-full">
     {
       firstRow.map(({ url, image, name, label }) => (
@@ -15,7 +18,11 @@ const secondRow = SPONSORS.slice(5);
           aria-label={label ?? name}
           class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
         >
-          <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
+          <image.logo
+            width={image.width}
+            height={image.width}
+            class="h-14 w-auto"
+          />
         </a>
       ))
     }
@@ -29,7 +36,11 @@ const secondRow = SPONSORS.slice(5);
           aria-label={label ?? name}
           class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
         >
-          <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
+          <image.logo
+            width={image.width}
+            height={image.width}
+            class="h-14 w-auto"
+          />
         </a>
       ))
     }
