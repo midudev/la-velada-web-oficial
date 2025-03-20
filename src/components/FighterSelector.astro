@@ -10,7 +10,7 @@ const { id, name } = Astro.props;
     id='fighter-container'
     class='pointer-events-none absolute inset-0 flex-col items-center hidden peer-hover:flex'
   >
-    <div class='relative top-24 mx-auto h-20 flex w-full items-center justify-center'>
+    <div class='relative top-96 mx-auto h-[4.5rem] flex w-full items-center justify-center z-1 animate-zoom-in'>
       <img
         data-id={`hero-text-${id}`}
         src={`/images/fighters/text/${id}.png`}
@@ -22,7 +22,7 @@ const { id, name } = Astro.props;
     </div>
 
     <div
-      class='mask-fade-bottom relative bottom-0 mx-auto h-[80vh] flex w-full items-center justify-center'
+      class='mask-fade-bottom relative bottom-0 mx-auto h-[80vh] flex w-full items-center justify-center animate-slide-up-fade'
     >
       <img
         transition:name={`image-${id}`}
