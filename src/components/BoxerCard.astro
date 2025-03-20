@@ -3,22 +3,50 @@ const { id, name } = Astro.props
 ---
 
 <a
-  class="boxer-card inline-block transition hover:-translate-y-3 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded overflow-hidden"
+  class="clip p-[2px] boxer-card inline-block transition hover:-translate-y-3 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded overflow-hidden"
   href={`/luchador/${id}`}
   data-id={id}
 >
   <img
-    class="aspect-[900/1200] h-full w-full object-cover"
+    class="clip aspect-[900/1200]  object-cover  "
     src={`/images/fighters/cards/${id}.png`}
     alt={`Tarjeta del boxeador ${name}`}
   />
 
-  <div
-    class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-transparent to-transparent p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+   <div
+    class="absolute inset-0 pb-8 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90  via-transparent to-transparent p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
   >
     <h3 class="text-theme-tickle-me-pink text-sm">{name}</h3>
-  </div>
+  </div> 
 </a>
+
+<style>
+  .clip {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+  
+  .clip:hover {
+    animation: backgroundselect 1s infinite ;
+  
+  }
+  
+  .pulsing {
+    animation: backgroundselect 1s infinite ;
+  } 
+  
+  @keyframes backgroundselect {
+    0% {
+      background: transparent; /* Transparente */
+    }
+    50% {
+      background: rgba(255, 255, 255, 0.814); /* Transparente */
+    }
+    100% {
+      background:  transparent;
+    }
+  }
+  
+</style>
 
 <script>
   document.addEventListener("astro:page-load", () => {
