@@ -143,7 +143,7 @@ const CustomGlobe = ({ selectedFighter = "peereira7" }: CustomGlobeProps) => {
     <Globe
       ref={globeEl}
       animateIn={false}
-      globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+      globeImageUrl="/textures/globe/Blue-Marble-NASA.jpg"
       bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
       height={500}
       width={500}
