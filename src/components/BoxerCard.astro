@@ -1,5 +1,5 @@
 ---
-const { id, name } = Astro.props
+const { id, name } = Astro.props;
 ---
 
 <a
@@ -22,31 +22,61 @@ const { id, name } = Astro.props
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const boxerCards = document.querySelectorAll(".boxer-card")
-    let timeoutId: number | null = null
+    const boxerCards = document.querySelectorAll(".boxer-card");
+    let timeoutId = null;
+    const eventListeners = [];
 
     boxerCards.forEach((singleBoxerCard) => {
-      singleBoxerCard.addEventListener("mouseenter", () => {
+      let isClicked = false; //para evitar que se dispare el evento mouseleave si se hizo click
+
+      const mouseEnterHandler = () => {
         if (timeoutId) {
-          clearTimeout(timeoutId)
+          clearTimeout(timeoutId);
         }
-
-        const id = singleBoxerCard.getAttribute("data-id")
+        const id = singleBoxerCard.getAttribute("data-id");
         if (id) {
-          // Dispatch a custom event to notify a boxer card id is hovered
-          const event = new CustomEvent("boxer-card-hovered", {
-            detail: { id },
-          })
-          document.dispatchEvent(event)
+          document.dispatchEvent(new CustomEvent("boxer-card-hovered", { detail: { id } }));
         }
-      })
+      };
 
-      singleBoxerCard.addEventListener("mouseleave", () => {
+      const mouseLeaveHandler = () => {
+        if (isClicked) return;
         timeoutId = setTimeout(() => {
-          const event = new CustomEvent("boxer-card-exit")
-          document.dispatchEvent(event)
-        }, 500)
-      })
-    })
-  })
+          document.dispatchEvent(new CustomEvent("boxer-card-exit"));
+        }, 500);
+      };
+
+      const clickHandler = () => {
+        isClicked = true;
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+      };
+
+      singleBoxerCard.addEventListener("mouseenter", mouseEnterHandler);
+      singleBoxerCard.addEventListener("mouseleave", mouseLeaveHandler);
+      singleBoxerCard.addEventListener("click", clickHandler);
+
+      eventListeners.push({
+        element: singleBoxerCard,
+        events: [
+          { type: "mouseenter", handler: mouseEnterHandler },
+          { type: "mouseleave", handler: mouseLeaveHandler },
+          { type: "click", handler: clickHandler },
+        ],
+      });
+    });
+
+
+    //limpiar los eventos para evitar memory leak
+    const cleanupEventListeners = () => {
+      eventListeners.forEach(({ element, events }) => {
+        events.forEach(({ type, handler }) => {
+          element.removeEventListener(type, handler);
+        });
+      });
+    };
+
+    window.addEventListener("beforeunload", cleanupEventListeners);
+  });
 </script>
