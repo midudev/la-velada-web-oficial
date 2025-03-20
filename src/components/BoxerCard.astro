@@ -1,5 +1,5 @@
 ---
-const { id, name, class: className } = Astro.props;
+const { id, name, class: className } = Astro.props
 ---
 
 <a
@@ -10,15 +10,14 @@ const { id, name, class: className } = Astro.props;
   href={`/luchador/${id}`}
 >
   <img
-    class='aspect-[900/1200] h-full w-full object-cover'
+    class="aspect-[900/1200] h-full w-full object-cover"
     src={`/images/fighters/cards/${id}.png`}
     alt={`Tarjeta del boxeador ${name}`}
-    decoding='async'
   />
 
   <div
-    class='absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-transparent to-transparent p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300'
+    class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-transparent to-transparent p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
   >
-    <h3 class='text-theme-tickle-me-pink text-sm'>{name}</h3>
+    <h3 class="text-theme-tickle-me-pink text-sm">{name}</h3>
   </div>
 </a>
