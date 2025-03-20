@@ -1,37 +1,26 @@
 ---
 import { SPONSORS } from "@/consts/sponsors";
-
-const firstRow = SPONSORS.slice(0, 5);
-const secondRow = SPONSORS.slice(5);
 ---
 
-<section id="sponsors">
-  <div class="flex justify-around gap-4 flex-wrap w-full">
-    {
-      firstRow.map(({ url, image, name, label }) => (
-        <a
-          href={url}
+<section id="sponsors" class="py-16 px-4">
+  <h2 class="text-3xl font-bold text-center mb-12 text-[#2a1f26]">Patrocinadores Oficiales</h2>
+
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-center justify-items-center">
+      {
+        SPONSORS.map(({ url, image, name, label }) => (
+          <a href={url}
           target="_blank"
           aria-label={label ?? name}
-          class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
-        >
-          <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
-        </a>
-      ))
-    }
-  </div>
-  <div class="flex justify-around gap-4 w-full flex-wrap">
-    {
-      secondRow.map(({ url, image, name, label }) => (
-        <a
-          href={url}
-          target="_blank"
-          aria-label={label ?? name}
-          class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
-        >
-          <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
-        </a>
-      ))
-    }
+          class="group flex justify-center items-center transition-all duration-300 hover:scale-110 p-4"
+              >
+              <div class="relative h-20 w-full flex items-center justify-center">
+                <image.logo class="w-auto h-full max-h-8 object-contain filter" />
+                <div class="absolute inset-0 bg-pink-100 opacity-0 group-hover:opacity-10 rounded-lg transition-opacity"></div>
+              </div>
+          </a>
+        ))
+      }
+    </div>
   </div>
 </section>
