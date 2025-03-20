@@ -130,6 +130,22 @@ const secondRow = FIGHTERS.slice(6)
 
     let currentFighterId: string | null = null
 
+    document.addEventListener("boxer-card-exit", () => {
+      $landing?.classList.remove("hidden")
+
+      if (currentFighterId) {
+        document
+          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+          ?.classList.add("hidden")
+
+        document
+          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+          ?.classList.add("hidden")
+
+        currentFighterId = null
+      }
+    })
+
     document.addEventListener("boxer-card-hovered", (event: Event) => {
       const customEvent = event as CustomEvent<{ id: string }>
       const id = customEvent.detail.id
