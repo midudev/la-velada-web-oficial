@@ -10,6 +10,19 @@
   --color-bright-aqua:#0BCDC4;
   --color-bright-pink:#F19FCA;
   --color-dark-magenta:#872758;
+  --font-fallback: "Adjusted Arial Fallback", system-ui, -apple-system, blinkmacsystemfont, "Segoe UI",
+    "Noto Sans", helvetica, arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  --font-primary: "Anisette";
+}
+
+@font-face {
+  font-family: "Adjusted Arial Fallback";
+  src: local(Arial);
+  size-adjust: 112%;
+  ascent-override: 74%;
+  descent-override: normal;
+  line-gap-override: normal;
 }
 
 @font-face {
@@ -42,6 +55,6 @@
 }
 
 html {
-  font-family: "Anisette", sans-serif;
+  font-family: "Anisette", var(--font-fallback);
 }
 
