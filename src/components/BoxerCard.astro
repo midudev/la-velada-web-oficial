@@ -1,6 +1,7 @@
 ---
-const { id, name } = Astro.props
+const { id, name } = Astro.props;
 ---
+
 <a
   class="boxer-card inline-block transition hover:-translate-y-3 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded overflow-hidden"
   href={`/luchador/${id}`}
@@ -22,36 +23,26 @@ const { id, name } = Astro.props
 <script>
   document.addEventListener("astro:page-load", () => {
     const boxerCards = document.querySelectorAll(".boxer-card");
-    let timeoutId: number | null = null;
-
+    let timeoutId = null;
     const eventListeners = [];
 
     boxerCards.forEach((singleBoxerCard) => {
-      // Flag to track if the card is clicked
-      let isClicked = false;
+      let isClicked = false; //para evitar que se dispare el evento mouseleave si se hizo click
 
       const mouseEnterHandler = () => {
         if (timeoutId) {
           clearTimeout(timeoutId);
         }
-
         const id = singleBoxerCard.getAttribute("data-id");
         if (id) {
-          const event = new CustomEvent("boxer-card-hovered", {
-            detail: { id },
-          });
-          document.dispatchEvent(event);
+          document.dispatchEvent(new CustomEvent("boxer-card-hovered", { detail: { id } }));
         }
       };
 
       const mouseLeaveHandler = () => {
-        if (isClicked) {
-          return;
-        }
-
+        if (isClicked) return;
         timeoutId = setTimeout(() => {
-          const event = new CustomEvent("boxer-card-exit");
-          document.dispatchEvent(event);
+          document.dispatchEvent(new CustomEvent("boxer-card-exit"));
         }, 500);
       };
 
@@ -62,12 +53,10 @@ const { id, name } = Astro.props
         }
       };
 
-      // Attach event listeners
       singleBoxerCard.addEventListener("mouseenter", mouseEnterHandler);
       singleBoxerCard.addEventListener("mouseleave", mouseLeaveHandler);
       singleBoxerCard.addEventListener("click", clickHandler);
 
-      // Store references to the listeners for cleanup
       eventListeners.push({
         element: singleBoxerCard,
         events: [
@@ -78,7 +67,8 @@ const { id, name } = Astro.props
       });
     });
 
-    // Cleanup function for removing event listeners
+
+    //limpiar los eventos para evitar memory leak
     const cleanupEventListeners = () => {
       eventListeners.forEach(({ element, events }) => {
         events.forEach(({ type, handler }) => {
@@ -87,7 +77,6 @@ const { id, name } = Astro.props
       });
     };
 
-    // Call cleanup on page unload or when Astro component is destroyed
     window.addEventListener("beforeunload", cleanupEventListeners);
   });
 </script>
