@@ -118,6 +118,7 @@ const secondRow = FIGHTERS.slice(6)
     let currentFighterId: string | null = null
 
     document.addEventListener('boxer-card-exit', () => {
+      if (window.location.pathname !== "/") return;
       $landing?.classList.remove('hidden')
 
       if (currentFighterId) {
