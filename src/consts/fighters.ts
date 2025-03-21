@@ -1,60 +1,74 @@
-import type { Fighters } from "@/types/fighters";
+import type { Fighters } from '@/types/fighters'
 
 export const FIGHTERS: Fighters[] = [
   {
     id: 'peereira',
-    name: 'Peereira'
+    name: 'Peereira',
+    versus: 'rivaldios',
   },
   {
     id: 'perxitaa',
-    name: 'Perxitaa'
+    name: 'Perxitaa',
+    versus: 'gaspi',
   },
   {
     id: 'abby',
-    name: 'Abby'
+    name: 'Abby',
+    versus: 'roro',
   },
   {
     id: 'roro',
-    name: 'Roro'
+    name: 'Roro',
+    versus: 'abby',
   },
   {
     id: 'gaspi',
-    name: 'Gaspi'
+    name: 'Gaspi',
+    versus: 'perxitaa',
   },
   {
     id: 'rivaldios',
-    name: 'Rivaldios'
+    name: 'Rivaldios',
+    versus: 'peereira',
   },
   {
     id: 'andoni',
-    name: 'Andoni'
+    name: 'Andoni',
+    versus: 'carlos',
   },
   {
     id: 'viruzz',
-    name: 'Viruzz'
+    name: 'Viruzz',
+    versus: 'tomas',
   },
   {
     id: 'alana',
-    name: 'Alana'
+    name: 'Alana',
+    versus: 'arigeli',
   },
   {
     id: 'grefg',
-    name: 'Grefg'
+    name: 'Grefg',
+    versus: 'westcol',
   },
   {
     id: 'westcol',
-    name: 'Westcol'
+    name: 'Westcol',
+    versus: 'grefg',
   },
   {
     id: 'arigeli',
-    name: 'Arigeli'
+    name: 'Arigeli',
+    versus: 'alana',
   },
   {
     id: 'tomas',
-    name: 'Tomas'
+    name: 'Tomas',
+    versus: 'viruzz',
   },
   {
     id: 'carlos',
-    name: 'Carlos'
-  }
+    name: 'Carlos',
+    versus: 'andoni',
+  },
 ] as const
