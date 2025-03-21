@@ -77,19 +77,19 @@ const secondRow = FIGHTERS.slice(6)
       <div
         class="mask-fade-bottom relative bottom-0 mx-auto h-[80vh] flex w-full items-center justify-center"
       >
-        {
-          FIGHTERS.map(({ id, name }) => (
-            <img
-              transition:name={`image-${id}`}
-              data-id={`hero-image-${id}`}
-              src={`/images/fighters/big/${id}.png`}
-              alt={name}
-              decoding="async"
-              class="w-auto h-full absolute hidden"
-              fetchpriority="low"
-            />
-          ))
-        }
+      {
+        FIGHTERS.map(({ id, name }) => (
+          <img
+            transition:name={`image-${id}`}
+            data-id={`hero-image-${id}`}
+            src={`/images/fighters/big/${id}.png`}
+            alt={name}
+            decoding="async"
+            class="w-full h-full object-cover lg:object-contain absolute hidden"
+            fetchpriority="low"
+          />
+        ))
+      }
       </div>
     </div>
 
@@ -97,15 +97,15 @@ const secondRow = FIGHTERS.slice(6)
       class="absolute bottom-0 flex flex-col items-center p-8 w-full max-w-6xl gap-4"
     >
       <div class="flex flex-wrap justify-between w-full px-4">
-        <div class="flex flex-wrap justify-start gap-4">
+        <div class="flex flex-wrap justify-start gap-4 animate-fade-in-right animate-delay-500">
           {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
         </div>
-        <div class="flex flex-wrap justify-end gap-4">
+        <div class="flex flex-wrap justify-end gap-4 animate-fade-in-left animate-delay-500">
           {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
         </div>
       </div>
 
-      <div class="flex flex-wrap justify-between gap-4">
+      <div class="flex flex-wrap justify-between gap-4 animate-fade-in-up animate-delay-700">
         {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
       </div>
     </div>
