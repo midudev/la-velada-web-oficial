@@ -1,0 +1,288 @@
+---
+import { FIGHTERS } from '@/consts/fighters'
+import BoxerCard from '../components/BoxerCard.astro'
+
+const matchups = FIGHTERS.reduce((pairs, fighter, index) => {
+    if (pairs.some(pair => pair.some(f => f.id === fighter.id))) return pairs
+
+    const opponent = FIGHTERS.find(f => f.id === fighter.versus)
+    if (opponent) {
+        pairs.push([fighter, opponent])
+    }
+    return pairs
+}, [] as Array<[typeof FIGHTERS[0], typeof FIGHTERS[0]]>)
+---
+
+<main class="relative min-h-screen w-full overflow-hidden">
+    <div
+            class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.png')] bg-cover bg-center"
+    >
+    </div>
+
+    <header class="relative pt-6 sm:pt-8 md:pt-12 pb-4 sm:pb-6 md:pb-8 text-center">
+        <h1 class="text-theme-seashell text-3xl sm:text-4xl md:text-5xl font-bold mb-2 animate-title mt-6 sm:mt-8 md:mt-12">COMBATES</h1>
+        <div class="relative inline-block">
+            <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl animate-glow"></div>
+        </div>
+    </header>
+
+    <section class="relative z-10 w-full max-w-12xl mx-auto px-2 sm:px-4 py-4 sm:py-6 md:py-8">
+        <div class="flex flex-col gap-8 sm:gap-12 md:gap-16">
+            {matchups.map(([fighter1, fighter2], index) => (
+                    <div class="matchup-container opacity-0">
+                        <div class="relative flex flex-row items-center justify-center gap-2 sm:gap-4 md:gap-8">
+                            <div class="fighter-card-left w-full sm:w-4/12 flex justify-center items-center">
+                                <div class="w-28 sm:w-32 md:w-40 lg:w-48 xl:w-56 transform transition-all duration-500 hover:scale-110">
+                                    <BoxerCard id={fighter1.id} name={fighter1.name} />
+                                </div>
+                            </div>
+
+                            <div class="vs-badge relative z-20 flex items-center justify-center w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 border-2 sm:border-4 border-theme-seashell shadow-lg opacity-0 my-2 sm:my-0">
+                                <span class="text-theme-seashell text-xl sm:text-2xl md:text-3xl font-bold">VS</span>
+                                <div class="absolute -inset-3 sm:-inset-4 -z-10 bg-pink-500/50 blur-xl rounded-full"></div>
+                            </div>
+
+                            <div class="fighter-card-right w-full sm:w-4/12 flex justify-center items-center sm:ml-4 md:ml-8">
+                                <div class="w-28 sm:w-32 md:w-40 lg:w-48 xl:w-56 transform transition-all duration-500 hover:scale-110">
+                                    <BoxerCard id={fighter2.id} name={fighter2.name} />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="fighter-info-container relative mt-4 sm:mt-6 md:mt-8">
+                            <div id={`info-${fighter1.id}-${fighter2.id}`} class="text-center px-2 sm:px-0">
+                                <h3 class="text-theme-seashell text-xl sm:text-2xl font-bold ">
+                                    {fighter1.name} <span class="text-theme-tickle-me-pink">vs</span> {fighter2.name}
+                                </h3>
+                                <p class="text-theme-seashell/80 mt-2 text-sm sm:text-base animate-fade-in animate-delay-100">
+                                    ¡No te pierdas este increíble combate en La Velada del Año V!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+            ))}
+        </div>
+    </section>
+
+    <div
+            id="fighter-preview"
+            class="pointer-events-none absolute inset-0 flex flex-col items-center opacity-0 transition-opacity duration-500"
+    >
+        <div class="relative top-20 sm:top-28 md:top-40 z-1 mx-auto flex h-[3rem] sm:h-[4rem] md:h-[4.5rem] w-full items-center justify-center">
+            {
+                FIGHTERS.map(({ id, name }) => (
+                        <img
+                                data-id={`preview-text-${id}`}
+                                src={`/images/fighters/text/${id}.png`}
+                                alt={name}
+                                decoding="async"
+                                class="mask-fade-text absolute hidden h-full w-auto"
+                                fetchpriority="low"
+                        />
+                ))
+            }
+        </div>
+
+        <div
+                class="mask-fade-bottom relative bottom-0 mx-auto flex h-[60vh] sm:h-[70vh] md:h-[80vh] w-full items-center justify-center"
+        >
+            {
+                FIGHTERS.map(({ id, name }) => (
+                        <img
+                                transition:name={`image-${id}`}
+                                data-id={`hero-image-${id}`}
+                                src={`/images/fighters/big/${id}.png`}
+                                alt={name}
+                                decoding="async"
+                                class="absolute hidden h-full w-full object-contain sm:object-cover lg:object-contain"
+                                fetchpriority="low"
+                        />
+                ))
+            }
+        </div>
+    </div>
+</main>
+
+<style>
+    .mask-fade-text {
+        mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
+    }
+
+    @keyframes title-reveal {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes subtitle-reveal {
+        0% { opacity: 0; transform: translateY(-10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glow-pulse {
+        0% { opacity: 0.4; }
+        50% { opacity: 0.8; }
+        100% { opacity: 0.4; }
+    }
+
+    .animate-title {
+        animation: title-reveal 0.8s ease-out forwards;
+    }
+
+    .animate-subtitle {
+        animation: subtitle-reveal 0.8s ease-out 0.3s forwards;
+        opacity: 0;
+    }
+
+    .animate-glow {
+        animation: glow-pulse 3s infinite;
+    }
+
+    @keyframes card-left-enter {
+        0% { opacity: 0; transform: translateX(-50px); }
+        60% { opacity: 1; transform: translateX(10px); }
+        100% { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes card-right-enter {
+        0% { opacity: 0; transform: translateX(50px); }
+        60% { opacity: 1; transform: translateX(-10px); }
+        100% { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes vs-badge-enter {
+        0% { opacity: 0; transform: scale(0); }
+        60% { opacity: 1; transform: scale(1.2); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fade-in {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+        @keyframes card-left-enter {
+            0% { opacity: 0; transform: translateY(-30px); }
+            60% { opacity: 1; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes card-right-enter {
+            0% { opacity: 0; transform: translateY(30px); }
+            60% { opacity: 1; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-delay-100 {
+            animation-delay: 100ms;
+        }
+    }
+
+    @media (prefers-reduced-motion) {
+        .animate-title,
+        .animate-subtitle,
+        .animate-glow,
+        .fighter-card-left,
+        .fighter-card-right,
+        .vs-badge {
+            animation: fade-in 0.5s ease forwards !important;
+            transform: none !important;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('astro:page-load', () => {
+        let currentFighterId = null;
+        const $fighterPreview = document.querySelector('#fighter-preview');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const container = entry.target as HTMLElement;
+                    container.style.opacity = '1';
+
+                    const isMobile = window.innerWidth < 640;
+
+                    const leftCard = container.querySelector('.fighter-card-left') as HTMLElement;
+                    if (leftCard) {
+                        leftCard.style.animation = 'card-left-enter 0.8s ease-out forwards';
+                    }
+
+                    // Animate the right card after a delay
+                    const rightCard = container.querySelector('.fighter-card-right') as HTMLElement;
+                    if (rightCard) {
+                        setTimeout(() => {
+                            rightCard.style.animation = 'card-right-enter 0.8s ease-out forwards';
+                        }, isMobile ? 400 : 200);  // Longer delay on mobile
+                    }
+
+                    // Animate the VS badge last
+                    const vsBadge = container.querySelector('.vs-badge') as HTMLElement;
+                    if (vsBadge) {
+                        setTimeout(() => {
+                            vsBadge.style.animation = 'vs-badge-enter 0.6s ease-out forwards';
+                            vsBadge.style.opacity = '1';
+                        }, isMobile ? 800 : 500);  // Longer delay on mobile
+                    }
+
+                    // Unobserve after animation
+                    observer.unobserve(container);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.matchup-container').forEach((container) => {
+            observer.observe(container);
+        });
+
+        document.addEventListener('boxer-card-hovered', (event) => {
+            const customEvent = event as CustomEvent<{ id: string }>;
+            const id = customEvent.detail.id;
+
+            $fighterPreview?.classList.remove('opacity-0');
+            $fighterPreview?.classList.add('opacity-100');
+
+            if (currentFighterId) {
+                document.querySelector(`[data-id="preview-text-${currentFighterId}"]`)?.classList.add('hidden');
+                document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)?.classList.add('hidden');
+            }
+            document.querySelector(`[data-id="preview-text-${id}"]`)?.classList.remove('hidden');
+            document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.remove('hidden');
+
+            document.querySelector(`[data-id="preview-text-${id}"]`)?.classList.add('animate-zoom-in');
+            document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.add('animate-slide-up-fade');
+
+            currentFighterId = id;
+
+            const fighters = FIGHTERS.map(f => f.id);
+            for (const fighterId of fighters) {
+                const infoElement = document.getElementById(`info-${id}-${fighterId}`) ||
+                    document.getElementById(`info-${fighterId}-${id}`);
+
+                if (infoElement) {
+                    infoElement.classList.remove('hidden');
+                }
+            }
+        });
+
+        document.addEventListener('boxer-card-exit', () => {
+            setTimeout(() => {
+                $fighterPreview?.classList.remove('opacity-100');
+                $fighterPreview?.classList.add('opacity-0');
+
+                if (currentFighterId) {
+                    document.querySelector(`[data-id="preview-text-${currentFighterId}"]`)?.classList.add('hidden');
+                    document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)?.classList.add('hidden');
+
+                    document.querySelector(`[data-id="preview-text-${currentFighterId}"]`)?.classList.remove('animate-zoom-in');
+                    document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)?.classList.remove('animate-slide-up-fade');
+                    
+
+                    currentFighterId = null;
+                }
+            }, 200);
+        });
+    });
+</script>
