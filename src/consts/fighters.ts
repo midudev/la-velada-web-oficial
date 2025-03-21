@@ -1,74 +1,26 @@
-import type { Fighters } from '@/types/fighters'
+export const FIGHTERS = [
+  { id: 'peereira', name: 'Peereira7' },
+  { id: 'perxitaa', name: 'Perxitaa' },
+  { id: 'abby', name: 'Abby' },
+  { id: 'roro', name: 'Roro' },
+  { id: 'gaspi', name: 'Gaspi' },
+  { id: 'rivaldios', name: 'Rivaldios' },
+  { id: 'andoni', name: 'Andoni' },
+  { id: 'viruzz', name: 'ViruZz' },
+  { id: 'alana', name: 'Alana' },
+  { id: 'grefg', name: 'TheGrefg' },
+  { id: 'westcol', name: 'WestCOL' },
+  { id: 'arigeli', name: 'Arigeli' },
+  { id: 'tomas', name: 'Tomás Mazza' },
+  { id: 'carlos', name: 'Carlos Belcast' },
+];
 
-export const FIGHTERS: Fighters[] = [
-  {
-    id: 'peereira',
-    name: 'Peereira',
-    versus: 'rivaldios',
-  },
-  {
-    id: 'perxitaa',
-    name: 'Perxitaa',
-    versus: 'gaspi',
-  },
-  {
-    id: 'abby',
-    name: 'Abby',
-    versus: 'roro',
-  },
-  {
-    id: 'roro',
-    name: 'Roro',
-    versus: 'abby',
-  },
-  {
-    id: 'gaspi',
-    name: 'Gaspi',
-    versus: 'perxitaa',
-  },
-  {
-    id: 'rivaldios',
-    name: 'Rivaldios',
-    versus: 'peereira',
-  },
-  {
-    id: 'andoni',
-    name: 'Andoni',
-    versus: 'carlos',
-  },
-  {
-    id: 'viruzz',
-    name: 'Viruzz',
-    versus: 'tomas',
-  },
-  {
-    id: 'alana',
-    name: 'Alana',
-    versus: 'arigeli',
-  },
-  {
-    id: 'grefg',
-    name: 'Grefg',
-    versus: 'westcol',
-  },
-  {
-    id: 'westcol',
-    name: 'Westcol',
-    versus: 'grefg',
-  },
-  {
-    id: 'arigeli',
-    name: 'Arigeli',
-    versus: 'alana',
-  },
-  {
-    id: 'tomas',
-    name: 'Tomas',
-    versus: 'viruzz',
-  },
-  {
-    id: 'carlos',
-    name: 'Carlos',
-    versus: 'andoni',
-  },
-] as const
+export const MATCHUPS = [
+  { fighter1: 'peereira', fighter2: 'rivaldios' },
+  { fighter1: 'perxitaa', fighter2: 'gaspi' },
+  { fighter1: 'abby', fighter2: 'roro' },
+  { fighter1: 'andoni', fighter2: 'carlos' },
+  { fighter1: 'alana', fighter2: 'arigeli' },
+  { fighter1: 'viruzz', fighter2: 'tomas' },
+  { fighter1: 'grefg', fighter2: 'westcol' },
+];
