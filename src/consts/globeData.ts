@@ -169,281 +169,145 @@ const mexicoGeoJson = {
   ],
 };
 
+// Crear constantes para valores repetidos
+const DEFAULT_POINT = {
+  altitude: 0.25,
+  radius: 0.05,
+  color: "white",
+};
+
+const DEFAULT_LABEL_CONFIG = {
+  altitude: 0.25,
+  color: "white",
+  size: 5,
+};
+
+const DEFAULT_COLOR = "#f19fca";
+
+// Función ayudante para crear datos de peleadores con menos repetición
+function createFighterData(
+  name: string,
+  country: string,
+  city: string,
+  geoJson: any,
+  coordinates: { lat: number; lng: number },
+  cameraPosition: { lat: number; lng: number; altitude: number }
+): FighterData {
+  return {
+    name,
+    country,
+    city,
+    geoJson,
+    point: {
+      ...coordinates,
+      ...DEFAULT_POINT,
+    },
+    label: {
+      ...coordinates,
+      text: `${name}: ${city}, ${country}`,
+      ...DEFAULT_LABEL_CONFIG,
+    },
+    color: DEFAULT_COLOR,
+    cameraPosition,
+  };
+}
+
+// Ahora puedes definir peleadores de forma más concisa
 export const fightersData: FightersDataType = {
-  peereira7: {
-    name: "Peereira7",
-    country: "Espana",
-    city: "La Coruna",
-    geoJson: spainGeoJson,
-    point: {
-      lat: 43.3623,
-      lng: -8.4115,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: 43.3623,
-      lng: -8.4115,
-      altitude: 0.25,
-      text: "Peereira7: La Coruna, Espana",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: 40.4, lng: -3.7, altitude: 2.5 },
-  },
-  rivaldios: {
-    name: "Rivaldios",
-    country: "Mexico",
-    city: "Culiacan",
-    geoJson: mexicoGeoJson,
-    point: {
-      lat: 24.8091,
-      lng: -107.394,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: 24.8091,
-      lng: -107.394,
-      altitude: 0.25,
-      text: "Rivaldios: Culiacan, Mexico",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: 23.6345, lng: -102.5528, altitude: 2.5 },
-  },
-  perxitaa: {
-    name: "Perxitaa",
-    country: "Espana",
-    city: "Valencia",
-    geoJson: spainGeoJson,
-    point: {
-      lat: 39.4699,
-      lng: -0.3763,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: 39.4699,
-      lng: -0.3763,
-      altitude: 0.25,
-      text: "Perxitaa: Valencia, Espana",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: 40.4, lng: -3.7, altitude: 2.5 },
-  },
-  gaspi: {
-    name: "Gaspi",
-    country: "Argentina",
-    city: "Buenos Aires",
-    geoJson: argentinaGeoJson,
-    point: {
-      lat: -34.6037,
-      lng: -58.3816,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: -34.6037,
-      lng: -58.3816,
-      altitude: 0.25,
-      text: "Gaspi: Buenos Aires, Argentina",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: -38.4161, lng: -63.6167, altitude: 2.5 },
-  },
-  abby: {
-    name: "Abby",
-    country: "Espana",
-    city: "Palma de Mallorca",
-    geoJson: spainGeoJson,
-    point: {
-      lat: 39.5696,
-      lng: 2.6502,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: 39.5696,
-      lng: 2.6502,
-      altitude: 0.25,
-      text: "Abby: Palma de Mallorca, Espana",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: 40.4, lng: -3.7, altitude: 2.5 },
-  },
-  roro: {
-    name: "Roro",
-    country: "Espana",
-    city: "Madrid",
-    geoJson: spainGeoJson,
-    point: {
-      lat: 40.4168,
-      lng: -3.7038,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: 40.4168,
-      lng: -3.7038,
-      altitude: 0.25,
-      text: "Roro: Madrid, Espana",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: 40.4, lng: -3.7, altitude: 2.5 },
-  },
-  andoni: {
-    name: "Andoni",
-    country: "Espana",
-    city: "San Sebastian",
-    geoJson: spainGeoJson,
-    point: {
-      lat: 43.3183,
-      lng: -1.9812,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: 43.3183,
-      lng: -1.9812,
-      altitude: 0.25,
-      text: "Andoni: San Sebastian, Espana",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: 40.4, lng: -3.7, altitude: 2.5 },
-  },
-  carlosBelcast: {
-    name: "Carlos Belcast",
-    country: "Mexico",
-    city: "Monterrey",
-    geoJson: mexicoGeoJson,
-    point: {
-      lat: 25.6866,
-      lng: -100.3161,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: 25.6866,
-      lng: -100.3161,
-      altitude: 0.25,
-      text: "Carlos Belcast: Monterrey, Mexico",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: 23.6345, lng: -102.5528, altitude: 2.5 },
-  },
-  alana: {
-    name: "Alana",
-    country: "Mexico",
-    city: "Mexico City",
-    geoJson: mexicoGeoJson,
-    point: {
-      lat: 19.4326,
-      lng: -99.1332,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: 19.4326,
-      lng: -99.1332,
-      altitude: 0.25,
-      text: "Alana: Mexico City, Mexico",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: 23.6345, lng: -102.5528, altitude: 2.5 },
-  },
-  ariGeli: {
-    name: "Ari Geli",
-    country: "Espana",
-    city: "Barcelona",
-    geoJson: spainGeoJson,
-    point: {
-      lat: 41.3851,
-      lng: 2.1734,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: 41.3851,
-      lng: 2.1734,
-      altitude: 0.25,
-      text: "Ari Geli: Barcelona, Espana",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: 40.4, lng: -3.7, altitude: 2.5 },
-  },
-  viruzz: {
-    name: "Viruzz",
-    country: "Espana",
-    city: "Zaragoza",
-    geoJson: spainGeoJson,
-    point: {
-      lat: 41.6488,
-      lng: -0.8891,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: 41.6488,
-      lng: -0.8891,
-      altitude: 0.25,
-      text: "Viruzz: Zaragoza, Espana",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: 40.4, lng: -3.7, altitude: 2.5 },
-  },
-  tomasMazza: {
-    name: "Tomas Mazza",
-    country: "Argentina",
-    city: "Buenos Aires",
-    geoJson: argentinaGeoJson,
-    point: {
-      lat: -34.6037,
-      lng: -58.3816,
-      altitude: 0.25,
-      radius: 0.05,
-      color: "white",
-    },
-    label: {
-      lat: -34.6037,
-      lng: -58.3816,
-      altitude: 0.25,
-      text: "Tomas Mazza: Buenos Aires, Argentina",
-      color: "white",
-      size: 5,
-    },
-    color: "#f19fca",
-    cameraPosition: { lat: -38.4161, lng: -63.6167, altitude: 2.5 },
-  },
+  peereira7: createFighterData(
+    "Peereira7",
+    "Espana",
+    "La Coruna",
+    spainGeoJson,
+    { lat: 43.3623, lng: -8.4115 },
+    { lat: 40.4, lng: -3.7, altitude: 2.5 }
+  ),
+  rivaldios: createFighterData(
+    "Rivaldios",
+    "Mexico",
+    "Culiacan",
+    mexicoGeoJson,
+    { lat: 24.8091, lng: -107.394 },
+    { lat: 23.6345, lng: -102.5528, altitude: 2.5 }
+  ),
+  perxitaa: createFighterData(
+    "Perxitaa",
+    "Espana",
+    "Valencia",
+    spainGeoJson,
+    { lat: 39.4699, lng: -0.3763 },
+    { lat: 40.4, lng: -3.7, altitude: 2.5 }
+  ),
+  gaspi: createFighterData(
+    "Gaspi",
+    "Argentina",
+    "Buenos Aires",
+    argentinaGeoJson,
+    { lat: -34.6037, lng: -58.3816 },
+    { lat: -38.4161, lng: -63.6167, altitude: 2.5 }
+  ),
+  abby: createFighterData(
+    "Abby",
+    "Espana",
+    "Palma de Mallorca",
+    spainGeoJson,
+    { lat: 39.5696, lng: 2.6502 },
+    { lat: 40.4, lng: -3.7, altitude: 2.5 }
+  ),
+  roro: createFighterData(
+    "Roro",
+    "Espana",
+    "Madrid",
+    spainGeoJson,
+    { lat: 40.4168, lng: -3.7038 },
+    { lat: 40.4, lng: -3.7, altitude: 2.5 }
+  ),
+  andoni: createFighterData(
+    "Andoni",
+    "Espana",
+    "San Sebastian",
+    spainGeoJson,
+    { lat: 43.3183, lng: -1.9812 },
+    { lat: 40.4, lng: -3.7, altitude: 2.5 }
+  ),
+  carlosBelcast: createFighterData(
+    "Carlos Belcast",
+    "Mexico",
+    "Monterrey",
+    mexicoGeoJson,
+    { lat: 25.6866, lng: -100.3161 },
+    { lat: 23.6345, lng: -102.5528, altitude: 2.5 }
+  ),
+  alana: createFighterData(
+    "Alana",
+    "Mexico",
+    "Mexico City",
+    mexicoGeoJson,
+    { lat: 19.4326, lng: -99.1332 },
+    { lat: 23.6345, lng: -102.5528, altitude: 2.5 }
+  ),
+  ariGeli: createFighterData(
+    "Ari Geli",
+    "Espana",
+    "Barcelona",
+    spainGeoJson,
+    { lat: 41.3851, lng: 2.1734 },
+    { lat: 40.4, lng: -3.7, altitude: 2.5 }
+  ),
+  viruzz: createFighterData(
+    "Viruzz",
+    "Espana",
+    "Zaragoza",
+    spainGeoJson,
+    { lat: 41.6488, lng: -0.8891 },
+    { lat: 40.4, lng: -3.7, altitude: 2.5 }
+  ),
+  tomasMazza: createFighterData(
+    "Tomas Mazza",
+    "Argentina",
+    "Buenos Aires",
+    argentinaGeoJson,
+    { lat: -34.6037, lng: -58.3816 },
+    { lat: -38.4161, lng: -63.6167, altitude: 2.5 }
+  ),
 };

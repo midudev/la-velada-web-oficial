@@ -26,9 +26,8 @@ const CustomGlobe = ({ selectedFighter = "peereira7" }: CustomGlobeProps) => {
   const prepareData = useCallback(() => {
     if (!fighterData) return;
 
-    // Crear una copia profunda para no modificar los datos originales
-    const correctedData = JSON.parse(JSON.stringify(fighterData));
-    return correctedData;
+    // Esta copia profunda es innecesaria si no modificamos los datos
+    return fighterData;
   }, [fighterData]);
 
   // Datos corregidos
@@ -63,9 +62,11 @@ const CustomGlobe = ({ selectedFighter = "peereira7" }: CustomGlobeProps) => {
       fightersData[selectedFighter] || Object.values(fightersData)[0];
     setFighterData(fighter);
 
-    // Marcar las nubes para actualización
-    setCloudsNeedUpdate(true);
-  }, [selectedFighter]);
+    // Marcar las nubes para actualización solo si realmente cambiamos de peleador
+    if (fighter !== fighterData) {
+      setCloudsNeedUpdate(true);
+    }
+  }, [selectedFighter, fighterData]);
 
   // Manejar la posición de la cámara y las nubes
   useEffect(() => {
@@ -143,8 +144,8 @@ const CustomGlobe = ({ selectedFighter = "peereira7" }: CustomGlobeProps) => {
     <Globe
       ref={globeEl}
       animateIn={false}
-      globeImageUrl="/textures/globe/Blue-Marble-NASA.jpg"
-      bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+      globeImageUrl="//unpkg.com/three-globe@2.24.5/example/img/earth-blue-marble.jpg"
+      bumpImageUrl="//unpkg.com/three-globe@2.24.5/example/img/earth-topology.png"
       height={500}
       width={500}
       backgroundColor="rgba(0, 0, 0, 0)"
