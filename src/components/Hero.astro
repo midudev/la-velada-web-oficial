@@ -81,19 +81,19 @@ const secondRow = FIGHTERS.slice(6)
       <div
         class="mask-fade-bottom relative bottom-0 mx-auto h-[80vh] flex w-full items-center justify-center"
       >
-        {
-          FIGHTERS.map(({ id, name }) => (
-            <img
-              transition:name={`image-${id}`}
-              data-id={`hero-image-${id}`}
-              src={`/images/fighters/big/${id}.png`}
-              alt={name}
-              decoding="async"
-              class="w-auto h-full absolute hidden"
-              fetchpriority="low"
-            />
-          ))
-        }
+      {
+        FIGHTERS.map(({ id, name }) => (
+          <img
+            transition:name={`image-${id}`}
+            data-id={`hero-image-${id}`}
+            src={`/images/fighters/big/${id}.png`}
+            alt={name}
+            decoding="async"
+            class="w-full h-full object-cover lg:object-contain absolute hidden"
+            fetchpriority="low"
+          />
+        ))
+      }
       </div>
     </div>
 
