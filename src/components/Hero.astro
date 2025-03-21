@@ -119,22 +119,46 @@ const secondRow = FIGHTERS.slice(6)
 
     document.addEventListener('boxer-card-exit', () => {
       $landing?.classList.remove('hidden')
+      const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
 
+      const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
       if (currentFighterId) {
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
+        if (heroText && heroImage) {
+          heroText.classList.remove('animate-zoom-int')
+          heroImage.classList.remove('animate-slide-up-fade')
 
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add('hidden')
+          console.log('saliedo')
+          void (heroText as HTMLElement).offsetWidth
+          void (heroImage as HTMLElement).offsetWidth
 
-        currentFighterId = null
+          heroText.classList.add('animate-zoom-out')
+          heroImage.classList.add('animate-fade-out-down')
+          
+          console.log(heroImage)
+          setTimeout(() => {
+            document
+              .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+              ?.classList.add('hidden')
+            document
+              .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+              ?.classList.add('hidden')
+            currentFighterId = null
+          }, 500) // Un pequeño retraso (10ms) puede ser suficiente
+        }
       }
     })
 
     document.addEventListener('boxer-card-hovered', (event: Event) => {
       const customEvent = event as CustomEvent<{ id: string }>
       const id = customEvent.detail.id
+      console.log(document.querySelector(`[data-id="hero-text-${id}"]`))
+      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.remove('animate-zoom-out')
 
+      document
+        .querySelector(`[data-id="hero-image-${id}"]`)
+        ?.classList.remove('animate-fade-out-down')
+
+      console.log(document.querySelector(`[data-id="hero-text-${id}"]`))
       // si el luchador que entras es el mismo que ya se muestra
       // entonces no hacemos nada
       if (currentFighterId === id) return
@@ -167,7 +191,11 @@ const secondRow = FIGHTERS.slice(6)
 
       document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.add('animate-slide-up-fade')
 
+      console.log(`asignando ${id} a current ${currentFighterId}`)
+
       currentFighterId = id
+      console.log(`asignando ${id} a current ${currentFighterId}`)
     })
   })
 </script>
+
