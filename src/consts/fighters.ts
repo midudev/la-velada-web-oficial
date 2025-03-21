@@ -1,58 +1,58 @@
 export const FIGHTERS = [
   {
     id: 'peereira',
-    name: 'Peereira'
+    name: 'peereira'
   },
   {
     id: 'perxitaa',
-    name: 'Perxitaa'
+    name: 'perxitaa'
   },
   {
     id: 'abby',
-    name: 'Abby'
+    name: 'abby'
   },
   {
     id: 'roro',
-    name: 'Roro'
+    name: 'roro'
   },
   {
     id: 'gaspi',
-    name: 'Gaspi'
+    name: 'gaspi'
   },
   {
     id: 'rivaldios',
-    name: 'Rivaldios'
+    name: 'rivaldios'
   },
   {
     id: 'andoni',
-    name: 'Andoni'
+    name: 'andoni'
   },
   {
     id: 'viruzz',
-    name: 'Viruzz'
+    name: 'viruzz'
   },
   {
     id: 'alana',
-    name: 'Alana'
+    name: 'alana'
   },
   {
     id: 'grefg',
-    name: 'Grefg'
+    name: 'grefg'
   },
   {
     id: 'westcol',
-    name: 'Westcol'
+    name: 'westcol'
   },
   {
     id: 'arigeli',
-    name: 'Arigeli'
+    name: 'arigeli'
   },
   {
     id: 'tomas',
-    name: 'Tomas'
+    name: 'tomas'
   },
   {
     id: 'carlos',
-    name: 'Carlos'
+    name: 'carlos'
   }
 ]
