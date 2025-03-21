@@ -111,14 +111,15 @@ const bottomRightSection = bottomSection.slice(4)
         {bottomSection.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
       </div>
     </div>
-    
-      <div class="absolute left-0 flex flex-col gap-4">
+      <div class="sm:hidden">
+        <div class="absolute left-0 flex flex-col gap-4">
           {[...topLeftSection, ...bottomLeftSection].reverse().map(({ id, name }) => <BoxerCard id={id} name={name} />)}
-      </div>
-      
-      <div class="absolute right-0 flex flex-col gap-4">
+        </div>
+        
+        <div class="absolute right-0 flex flex-col gap-4">
           {[...bottomRightSection, ...topRightSection].map(({ id, name }) => <BoxerCard id={id} name={name} />)}
-  </div>
+        </div>
+        </div>
 </section>
 
 <style>
