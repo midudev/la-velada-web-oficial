@@ -1,28 +1,66 @@
 ---
 import { FIGHTERS } from "@/consts/fighters"
 import Layout from "@/layouts/Layout.astro"
+import LazyGlobeWrapper from "@/components/LazyGlobeWrapper"
 
 const { id } = Astro.params
+// Aseguramos que id sea string aunque TypeScript no lo sepa
+const fighterId = id as string
 
-const fighter = FIGHTERS.find((fighter) => fighter.id === id)
+const fighter = FIGHTERS.find((fighter) => fighter.id === fighterId)
 
 export const prerender = false
 ---
 
 <Layout>
-  <section class="relative flex min-h-screen w-full">
+  <section class="relative min-h-screen w-full">
+    <!-- Fondo -->
     <div
       class="bg-[url('/images/hero.png')] bg-cover bg-center w-full mask-fade-bottom absolute inset-0"
     >
     </div>
-    <img
-      transition:name={`image-${id}`}
-      data-id={`hero-image-${id}`}
-      src={`/images/fighters/big/${id}.png`}
-      alt={fighter?.name}
-      decoding="async"
-      class="w-auto h-full"
-      fetchpriority="low"
-    />
+    
+    <!-- Imagen del luchador - simplificado para mantener la transición original -->
+    <div class="relative w-full h-full flex items-center justify-center z-10">
+      <img
+        transition:name={`image-${fighterId}`}
+        data-id={`hero-image-${fighterId}`}
+        src={`/images/fighters/big/${fighterId}.png`}
+        alt={fighter?.name}
+        decoding="async"
+        class="w-auto h-full"
+        style="visibility: visible; opacity: 1;" 
+        fetchpriority="high"
+      />
+    </div>
+    
+    <!-- Globo terráqueo con posición absoluta -->
+    <div 
+      id="globe-container" 
+      class="absolute right-4 bottom-4 md:right-8 md:bottom-8 lg:right-12 lg:bottom-12 z-5 opacity-0 pointer-events-none"
+    >
+      <LazyGlobeWrapper client:only="react" selectedFighter={fighterId} />
+    </div>
   </section>
 </Layout>
+
+<script>
+  // Script simplificado para mostrar el globo después de que la transición termine
+  document.addEventListener('astro:page-load', () => {
+    // Asegurarse de que la imagen del luchador esté visible
+    const img = document.querySelector('[data-id^="hero-image-"]') as HTMLImageElement;
+    if (img) {
+      img.style.visibility = 'visible';
+      img.style.opacity = '1';
+    }
+    
+    // Mostrar el globo después de un retraso
+    setTimeout(() => {
+      const container = document.getElementById('globe-container');
+      if (container) {
+        container.style.opacity = '1';
+        container.classList.remove('pointer-events-none');
+      }
+    }, 800);
+  });
+</script>
