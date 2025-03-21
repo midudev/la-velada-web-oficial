@@ -1,28 +1,64 @@
 ---
 import { FIGHTERS } from "@/consts/fighters"
+import Instagram from "@/assets/svg/instagram.svg";
+import X from "@/assets/svg/x.svg";
 import Layout from "@/layouts/Layout.astro"
+
 
 const { id } = Astro.params
 
 const fighter = FIGHTERS.find((fighter) => fighter.id === id)
-
 export const prerender = false
 ---
 
 <Layout>
-  <section class="relative flex min-h-screen w-full">
+  <section class="relative flex min-h-screen w-full py-10">
     <div
-      class="bg-[url('/images/hero.png')] bg-cover bg-center w-full mask-fade-bottom absolute inset-0"
+        class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.png')] bg-cover bg-center"
     >
     </div>
-    <img
-      transition:name={`image-${id}`}
-      data-id={`hero-image-${id}`}
-      src={`/images/fighters/big/${id}.png`}
-      alt={fighter?.name}
-      decoding="async"
-      class="w-auto h-full z-10 mask-fade-bottom"
-      fetchpriority="low"
-    />
+
+    <!-- Content Section -->
+    <div class="container mx-auto px-6 relative z-10 flex flex-col lg:flex-row gap-10">
+      <!-- Left Column: Fighter Image -->
+      <div class="w-full lg:w-1/2 flex justify-center animate__animated animate__fadeIn">
+        <img
+            transition:name={`image-${id}`}
+            data-id={`hero-image-${id}`}
+            src={`/images/fighters/big/${id}.png`}
+            alt={fighter?.name}
+            decoding="async"
+            class="w-full h-auto max-w-lg rounded-xl shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
+            fetchpriority="low"
+        />
+      </div>
+
+      <div class="w-full lg:w-1/2 flex flex-col justify-center text-black space-y-6">
+        <h1 class="text-4xl font-semibold text-center lg:text-left animate__animated animate__fadeIn animate__delay-1s">{fighter?.name}</h1>
+        <p class="text-xl text-gray-800 text-center lg:text-left">Versus: {fighter?.versus}</p>
+
+        <div class="text-center lg:text-left space-y-4">
+          <p class="text-lg font-medium">Edad: {fighter?.age}</p>
+          <p class="text-lg font-medium">Nacionalidad: {fighter?.nationality}</p>
+          <p class="text-lg font-medium">Peso: {fighter?.weight}Kg</p>
+
+          <p class="text-lg text-black mt-4">{fighter?.bio}</p>
+        </div>
+
+        <div class="flex justify-center lg:justify-start gap-6 mt-6">
+          {fighter?.socialLinks?.instagram && (
+              <a href={fighter.socialLinks.instagram} target="_blank"
+                 class="text-3xl text-pink-500 hover:text-pink-700 transition duration-300 hover:scale-125">
+                <Instagram />
+              </a>
+          )}
+          {fighter?.socialLinks?.twitter && (
+              <a href={fighter.socialLinks.twitter} target="_blank" class="hover:scale-125 text-black transition flex items-center justify-center">
+                <X />
+              </a>
+          )}
+        </div>
+      </div>
+    </div>
   </section>
 </Layout>
