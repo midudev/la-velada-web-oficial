@@ -57,14 +57,21 @@ const secondRow = FIGHTERS.slice(6)
       <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
         {
           FIGHTERS.map(({ id, name }) => (
-            <img
-              data-id={`hero-text-${id}`}
-              src={`/images/fighters/text/${id}.png`}
-              alt={name}
-              decoding="async"
-              class="mask-fade-text absolute hidden h-full w-auto"
-              fetchpriority="low"
-            />
+            <div class="relative h-20 overflow-hidden">
+              <img
+                data-id={`hero-text-${id}`}
+                src={`/images/fighters/text/${id}.png`}
+                alt={name}
+                decoding="async"
+                class="mask-fade-text hidden h-full w-auto"
+                fetchpriority="low"
+              />
+              <div
+                id={`mask-fade-text-${id}`}
+                class="absolute inset-0 rotate-45 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full transition-transform duration-[2s] ease-in-out"
+              >
+              </div>
+            </div>
           ))
         }
       </div>
@@ -127,6 +134,14 @@ const secondRow = FIGHTERS.slice(6)
           .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
           ?.classList.add('hidden')
 
+        document
+          .querySelector(`#mask-fade-text-${currentFighterId}`)
+          ?.classList.remove('translate-x-full')
+        
+        document
+          .querySelector(`#mask-fade-text-${currentFighterId}`)
+          ?.classList.add('-translate-x-full')
+
         currentFighterId = null
       }
     })
@@ -161,9 +176,13 @@ const secondRow = FIGHTERS.slice(6)
       // mostramos el luchador que quiere ver el usuario
       document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.remove('hidden')
 
+      document.querySelector(`#mask-fade-text-${id}`)?.classList.remove('-translate-x-full')
+
       document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.remove('hidden')
 
       document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.add('animate-zoom-in')
+
+      document.querySelector(`#mask-fade-text-${id}`)?.classList.add('translate-x-full')
 
       document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.add('animate-slide-up-fade')
 
