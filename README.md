@@ -11,19 +11,18 @@
   <img width="300px" src="https://cdn.lavelada.dev/drawn-x-logo.webp" alt="Logo" width="800" />
 </a>
 
-## Web oficial de La Velada IV
+## Web oficial de La Velada V
 
-La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de contenido y otras celebridades sobre un ring.\
-[Diseño de Figma](https://www.figma.com/file/7uUHCJ7YhJEoB24EZ00lXC/240405-LVDA-IV?type=design&node-id=0-1&mode=design&t=CUK9cH8DXhKXx31U-0) · [Reportar error](https://github.com/midudev/la-velada-web-oficial/issues) · [Sugerir algo](https://github.com/midudev/la-velada-web-oficial/issues)
+La Velada V es una competición de boxeo que enfrenta a streamers, creadores de contenido y otras celebridades sobre un ring· [Reportar error](https://github.com/midudev/la-velada-web-oficial/issues) · [Sugerir algo](https://github.com/midudev/la-velada-web-oficial/issues)
 
 </div>
 
 <details>
 <summary>Tabla de contenidos</summary>
 
-- [Web oficial de La Velada IV](#web-oficial-de-la-velada-iv)
+- [Web oficial de La Velada V](#web-oficial-de-la-velada-v)
 - [Características principales](#características-principales)
-  - [Capturas de pantalla de la web de La Velada IV](#capturas-de-pantalla-de-la-web-de-la-velada-iv)
+  - [Capturas de pantalla de la web de La Velada V](#capturas-de-pantalla-de-la-web-de-la-velada-v)
 - [Para empezar](#para-empezar)
   - [Prerequisitos](#prerequisitos)
   - [Instalación](#instalación)
@@ -39,7 +38,7 @@ La Velada IV es una competición de boxeo que enfrenta a streamers, creadores de
 - **Compra de boletos**: Permite a los usuarios dirigirlos a la compra de boletos fácilmente.
 - **Redes sociales**: Conoce las redes oficiales donde podrás informarte sobre el evento.
 
-### Capturas de pantalla de la web de La Velada IV
+### Capturas de pantalla de la web de La Velada V
 
 ![Captura de pantalla en ordenador](https://github.com/midudev/la-velada-web-oficial/assets/1561955/b4080e89-d6e5-4fad-8303-b91e1142cf65)
 ![Captura de pantalla en móvil](https://github.com/midudev/la-velada-web-oficial/assets/1561955/ded00bc0-6b82-4644-a079-5b33902f7eff)
