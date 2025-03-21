@@ -1,4 +1,6 @@
-export const FIGHTERS = [
+import type { Fighters } from "@/types/fighters";
+
+export const FIGHTERS: Fighters[] = [
   {
     id: 'peereira',
     name: 'Peereira'
@@ -55,4 +57,4 @@ export const FIGHTERS = [
     id: 'carlos',
     name: 'Carlos'
   }
-]
+] as const
