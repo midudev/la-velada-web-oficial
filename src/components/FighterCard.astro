@@ -3,7 +3,7 @@ const { id, name } = Astro.props
 ---
 
 <a
-  class="boxer-card inline-block transition hover:-translate-y-3 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded overflow-hidden"
+  class="fighter-card inline-block transition hover:-translate-y-3 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded overflow-hidden"
   href={`/luchador/${id}`}
   data-id={id}
 >
@@ -22,28 +22,28 @@ const { id, name } = Astro.props
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const boxerCards = document.querySelectorAll(".boxer-card")
+    const fighterCards = document.querySelectorAll(".fighter-card")
     let timeoutId: number | null = null
 
-    boxerCards.forEach((singleBoxerCard) => {
-      singleBoxerCard.addEventListener("mouseenter", () => {
+    fighterCards.forEach((fighterCard) => {
+      fighterCard.addEventListener("mouseenter", () => {
         if (timeoutId) {
           clearTimeout(timeoutId)
         }
 
-        const id = singleBoxerCard.getAttribute("data-id")
+        const id = fighterCard.getAttribute("data-id")
         if (id) {
-          // Dispatch a custom event to notify a boxer card id is hovered
-          const event = new CustomEvent("boxer-card-hovered", {
+          // Dispatch a custom event to notify a fighter card id is hovered
+          const event = new CustomEvent("fighter-card-hovered", {
             detail: { id },
           })
           document.dispatchEvent(event)
         }
       })
 
-      singleBoxerCard.addEventListener("mouseleave", () => {
+      fighterCard.addEventListener("mouseleave", () => {
         timeoutId = setTimeout(() => {
-          const event = new CustomEvent("boxer-card-exit")
+          const event = new CustomEvent("fighter-card-exit")
           document.dispatchEvent(event)
         }, 500)
       })

@@ -134,7 +134,7 @@ const secondRow = FIGHTERS.slice(6)
 
     let currentFighterId: string | null = null
 
-    document.addEventListener("boxer-card-exit", () => {
+    document.addEventListener("fighter-card-exit", () => {
       $landing?.classList.remove("hidden")
 
       if (currentFighterId) {
@@ -150,7 +150,7 @@ const secondRow = FIGHTERS.slice(6)
       }
     })
 
-    document.addEventListener("boxer-card-hovered", (event: Event) => {
+    document.addEventListener("fighter-card-hovered", (event: Event) => {
       const customEvent = event as CustomEvent<{ id: string }>
       const id = customEvent.detail.id
 
