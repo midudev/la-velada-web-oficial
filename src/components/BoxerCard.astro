@@ -3,13 +3,13 @@ const { id, name } = Astro.props
 ---
 
 <a
-  class="boxer-card inline-block transition-all hover:rotate-1 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg overflow-hidden duration-300 hover:-translate-y-3 hover:scale-105 hover:shadow-lg hover:z-20 bg-theme-raisin-black border-theme-tickle-me-pink border-2"
+  class="boxer-card inline-block transition-all hover:rotate-1 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg overflow-hidden duration-300 hover:-translate-y-3 hover:scale-105 hover:shadow-lg hover:z-20 bg-linear-to-b from-theme-raisin-black to-black  border-theme-tickle-me-pink border-2"
   href={`/luchador/${id}`}
   data-id={id}
 >
   <div class="relative overflow-hidden">
     <img
-      class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+      class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 drop-shadow-[.5em_.5em_.1em_black]"
       src={`/images/fighters/cards/${id}.png`}
       alt={`Tarjeta del boxeador ${name}`}
     />
@@ -19,10 +19,6 @@ const { id, name } = Astro.props
     >
     </div>
 
-    <div
-      class="absolute inset-0 border-0 group-hover:border-2 border-theme-tickle-me-pink/70 rounded-lg transition-all duration-300 opacity-0 group-hover:opacity-100"
-    >
-    </div>
   </div>
 
   <div
