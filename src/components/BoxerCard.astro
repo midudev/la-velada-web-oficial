@@ -25,6 +25,7 @@ const { id, name } = Astro.props;
     const boxerCards = document.querySelectorAll(".boxer-card");
     let timeoutId: number | null = null;
 
+    // funcion de salida del hover
     function exitCardHover() {
       timeoutId = setTimeout(() => {
         const event = new CustomEvent("boxer-card-exit");
@@ -56,41 +57,49 @@ const { id, name } = Astro.props;
         exitCardHover();
       });
 
-      // Funcion para simular el hover en mobile
+      // Funcion para simular el hover en mobile: MobileHover
       function handleTouch(event: TouchEvent) {
+        // eliminamos el timeout en cada movimiento
         if (timeoutId) {
           clearTimeout(timeoutId);
         }
         const touch = event.touches[0];
 
         const element = document.elementFromPoint(touch.clientX, touch.clientY);
+        // el elemento detectado es el div dentro del a por lo que buscamos su a correspondiente
         const anchor = element?.closest("a");
 
         const anchorId = anchor?.getAttribute("data-id");
         if (!anchorId) {
+          // si no se detecta id entonce eliminar el MobileHover
           exitCardHover();
           return;
         }
 
         const customEvent = new CustomEvent("boxer-card-hovered", {
+          // usamos el id dentro del a
           detail: { id: anchorId },
         });
         document.dispatchEvent(customEvent);
         anchor?.focus();
       }
 
+      // iniciamos el touch del MobileHover
       singleBoxerCard.addEventListener("touchstart", function (event) {
         handleTouch(event as TouchEvent);
       });
 
+      // movimiento mientras se toca para el MobileHover
       singleBoxerCard.addEventListener("touchmove", function (event) {
         handleTouch(event as TouchEvent);
       });
 
+      // cancelar el MobileHover en caso de que se cancele el touch
       singleBoxerCard.addEventListener("touchcancel", function (event) {
         exitCardHover();
       });
 
+      // finalizar el MobileHover cuando se levanta el dedo
       singleBoxerCard.addEventListener("touchend", function (event) {
         exitCardHover();
       });
