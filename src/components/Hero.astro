@@ -1,6 +1,6 @@
 ---
 import { FIGHTERS } from "@/consts/fighters"
-import BoxerCard from "./BoxerCard.astro"
+import FighterCard from "./FighterCard.astro"
 
 const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
@@ -102,15 +102,15 @@ const secondRow = FIGHTERS.slice(6)
     >
       <div class="flex flex-wrap justify-between w-full px-4">
         <div class="flex flex-wrap justify-start gap-4">
-          {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+          {leftRow.map(({ id, name }) => <FighterCard id={id} name={name} />)}
         </div>
         <div class="flex flex-wrap justify-end gap-4">
-          {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+          {rightRow.map(({ id, name }) => <FighterCard id={id} name={name} />)}
         </div>
       </div>
 
       <div class="flex flex-wrap justify-between gap-4">
-        {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+        {secondRow.map(({ id, name }) => <FighterCard id={id} name={name} />)}
       </div>
     </div>
   </div>
