@@ -33,5 +33,13 @@ type fighterName =
 export interface Fighters {
   id: fighterId
   name: fighterName
-  versus: fighterId
+  versus: fighterId,
+  age: number,
+  weight: number,
+  nationality: string,
+  socialLinks: {
+    instagram: string,
+    twitter: string,
+  },
+  bio: string
 }
