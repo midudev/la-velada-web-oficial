@@ -8,13 +8,13 @@ const { id, name } = Astro.props
   data-id={id}
 >
   <img
-    class="clip aspect-[900/1200]  object-cover  "
+    class="clip aspect-[900/1200]  object-cover grayscale-25 group-hover:grayscale-0"
     src={`/images/fighters/cards/${id}.png`}
     alt={`Tarjeta del boxeador ${name}`}
   />
 
    <div
-    class="absolute inset-0 pb-8 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90  via-transparent to-transparent p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+    class="absolute inset-0 md:pb-8 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90  via-transparent to-transparent p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
   >
     <h3 class="text-theme-tickle-me-pink text-sm">{name}</h3>
   </div> 
@@ -26,7 +26,7 @@ const { id, name } = Astro.props
   }
   
   .clip:hover {
-    animation: backgroundselect 1s infinite ;
+    animation: backgroundselect 1s infinite both;
   
   }
   
@@ -39,7 +39,7 @@ const { id, name } = Astro.props
       background: transparent; /* Transparente */
     }
     50% {
-      background: rgba(255, 255, 255, 0.814); /* Transparente */
+      background: rgba(255, 255, 255, 0.797)
     }
     100% {
       background:  transparent;
