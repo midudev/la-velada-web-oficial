@@ -54,66 +54,77 @@ const { id, name } = Astro.props
 </style>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
-    const boxerCards = document.querySelectorAll(".boxer-card")
+  document.addEventListener('astro:page-load', () => {
+    const boxerCards = document.querySelectorAll('.boxer-card')
     let timeoutId: number | null = null
 
     const pairings: Record<number, number> = {
-      0: 5, 1: 4, 2: 3, 6: 13, 7: 12, 8: 11, 9: 10,
-      5: 0, 4: 1, 3: 2, 13: 6, 12: 7, 11: 8, 10: 9
-    };
-
+      0: 5,
+      1: 4,
+      2: 3,
+      6: 13,
+      7: 12,
+      8: 11,
+      9: 10,
+      5: 0,
+      4: 1,
+      3: 2,
+      13: 6,
+      12: 7,
+      11: 8,
+      10: 9,
+    }
 
     boxerCards.forEach((singleBoxerCard, index) => {
-      singleBoxerCard.addEventListener("mouseenter", () => {
+      singleBoxerCard.addEventListener('mouseenter', () => {
         if (timeoutId) {
           clearTimeout(timeoutId)
           timeoutId = null
         }
 
-        const id = singleBoxerCard.getAttribute("data-id")
+        const id = singleBoxerCard.getAttribute('data-id')
         if (id) {
           // Dispatch a custom event to notify a boxer card id is hovered
-          const event = new CustomEvent("boxer-card-hovered", {
+          const event = new CustomEvent('boxer-card-hovered', {
             detail: { id },
           })
           document.dispatchEvent(event)
         }
-      // Aplicar la clase 'grayscale-100' a todas las tarjetas
-    boxerCards.forEach((card) => card.classList.add("grayscale-100"));
+        // Aplicar la clase 'grayscale-100' a todas las tarjetas
+        boxerCards.forEach((card) => card.classList.add('grayscale-100'))
 
-    // Quitar la clase solo de la tarjeta sobre la que se está haciendo hover
-    singleBoxerCard.classList.remove("grayscale-100");
-    
+        // Quitar la clase solo de la tarjeta sobre la que se está haciendo hover
+        singleBoxerCard.classList.remove('grayscale-100')
+
         // Quitar la clase también de su par si existe
-    if (pairings[index] !== undefined) {
-      boxerCards[pairings[index]].classList.remove("grayscale-100");
-    }
+        if (pairings[index] !== undefined) {
+          boxerCards[pairings[index]].classList.remove('grayscale-100')
+        }
       })
 
-      singleBoxerCard.addEventListener("mouseleave", () => {
+      singleBoxerCard.addEventListener('mouseleave', () => {
         timeoutId = setTimeout(() => {
-          const event = new CustomEvent("boxer-card-exit")
+          const event = new CustomEvent('boxer-card-exit')
           document.dispatchEvent(event)
         }, 500)
 
-          // Restaurar la clase en todas las tarjetas cuando el mouse salga
-    boxerCards.forEach((card) => card.classList.remove("grayscale-100"));
+        // Restaurar la clase en todas las tarjetas cuando el mouse salga
+        boxerCards.forEach((card) => card.classList.remove('grayscale-100'))
       })
 
-      singleBoxerCard.addEventListener("focus", () => {
-        const id = singleBoxerCard.getAttribute("data-id")
+      singleBoxerCard.addEventListener('focus', () => {
+        const id = singleBoxerCard.getAttribute('data-id')
         if (id) {
-          const event = new CustomEvent("boxer-card-hovered", {
+          const event = new CustomEvent('boxer-card-hovered', {
             detail: { id },
           })
           document.dispatchEvent(event)
         }
       })
 
-      singleBoxerCard.addEventListener("blur", () => {
+      singleBoxerCard.addEventListener('blur', () => {
         timeoutId = setTimeout(() => {
-          const event = new CustomEvent("boxer-card-exit")
+          const event = new CustomEvent('boxer-card-exit')
           document.dispatchEvent(event)
         }, 500)
       })
