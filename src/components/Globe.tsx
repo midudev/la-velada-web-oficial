@@ -6,91 +6,112 @@ import { fightersData } from "../consts/globeData";
 // Constantes globales
 const CLOUDS_ALT = 0.004;
 const CLOUDS_ROTATION_SPEED = -0.006; // deg/frame
+const DEFAULT_SIZE = 250; // Tamaño predeterminado reducido
+
+// Mapeo interno de IDs (fighters.ts -> globeData.ts)
+const idMapping: Record<string, string> = {
+  peereira: "peereira7",
+  perxitaa: "perxitaa",
+  abby: "abby",
+  roro: "roro",
+  gaspi: "gaspi",
+  rivaldios: "rivaldios",
+  andoni: "andoni",
+  viruzz: "viruzz",
+  alana: "alana",
+  grefg: "peereira7",
+  westcol: "peereira7",
+  arigeli: "ariGeli",
+  tomas: "tomasMazza",
+  carlos: "carlosBelcast",
+};
+
+// Hook simplificado para tamaño de ventana
+function useWindowSize() {
+  const [size, setSize] = useState({
+    width: DEFAULT_SIZE,
+    height: DEFAULT_SIZE,
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleResize = () => {
+      setSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return size;
+}
 
 interface CustomGlobeProps {
   selectedFighter: string;
 }
 
-const CustomGlobe = ({ selectedFighter = "peereira7" }: CustomGlobeProps) => {
-  // Usar any para evitar problemas de tipado con el ref
+const CustomGlobe = ({ selectedFighter }: CustomGlobeProps) => {
+  // Convertir ID de fighters.ts a ID de globeData.ts
+  const globeDataId = idMapping[selectedFighter];
+  const globeData = fightersData[globeDataId];
+
+  // Ref para el globo
   const globeEl = useRef<any>(null);
-  const [fighterData, setFighterData] = useState(
-    fightersData[selectedFighter] || Object.values(fightersData)[0]
-  );
-  // Referencia para el objeto de nubes
+  // Ref para nubes
   const cloudsRef = useRef<THREE.Mesh | null>(null);
-  // Control para limpiar las nubes solo cuando sea necesario
-  const [cloudsNeedUpdate, setCloudsNeedUpdate] = useState(true);
+  // Un solo estado para el cliente
+  const [isReady, setIsReady] = useState(false);
 
-  // Preparar datos
-  const prepareData = useCallback(() => {
-    if (!fighterData) return;
+  // Obtener tamaño de la ventana
+  const { width } = useWindowSize();
 
-    // Esta copia profunda es innecesaria si no modificamos los datos
-    return fighterData;
-  }, [fighterData]);
+  // Tamaño del globo optimizado
+  const globeSize = isReady
+    ? width < 768
+      ? 180
+      : width < 1024
+      ? 200
+      : 220
+    : DEFAULT_SIZE;
 
-  // Datos corregidos
-  const correctedFighterData = prepareData();
+  // Efecto único para inicializar
+  useEffect(() => {
+    // Esperar a que el DOM esté listo para evitar problemas
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 100);
 
-  // Limpiar las nubes para mostrar evitar el errores al moverse de peleador a peleador
-  const cleanupClouds = useCallback(() => {
-    if (globeEl.current && globeEl.current.scene && cloudsRef.current) {
-      const scene = globeEl.current.scene();
-
-      if (scene && cloudsRef.current) {
-        scene.remove(cloudsRef.current);
-        if (cloudsRef.current.geometry) {
-          cloudsRef.current.geometry.dispose();
-        }
-        if (cloudsRef.current.material) {
-          if (Array.isArray(cloudsRef.current.material)) {
-            cloudsRef.current.material.forEach((m) => m.dispose());
-          } else {
-            cloudsRef.current.material.dispose();
-          }
-        }
-        cloudsRef.current = null;
-      }
-    }
+    return () => clearTimeout(timer);
   }, []);
 
-  // Actualizar los datos cuando cambia el peleador seleccionado
   useEffect(() => {
-    // Verificar si el peleador existe, si no usar el primero de la lista
-    const fighter =
-      fightersData[selectedFighter] || Object.values(fightersData)[0];
-    setFighterData(fighter);
+    if (!isReady || !globeEl.current) return;
 
-    // Marcar las nubes para actualización solo si realmente cambiamos de peleador
-    if (fighter !== fighterData) {
-      setCloudsNeedUpdate(true);
-    }
-  }, [selectedFighter, fighterData]);
-
-  // Manejar la posición de la cámara y las nubes
-  useEffect(() => {
     const globe = globeEl.current;
 
-    if (!globe || !correctedFighterData) return;
+    // Configurar controles de cámara
+    const controls = globe.controls();
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.35;
+    controls.enableZoom = false;
+    controls.enablePan = false;
+    controls.minDistance = 101;
+    controls.maxDistance = 500;
 
-    // Auto-rotate (mantener configuración cuando ya existe)
-    if (!globe.controls().autoRotate) {
-      globe.controls().autoRotate = true;
-      globe.controls().autoRotateSpeed = 0.35;
+    // Posicionar la cámara
+    if (globeData.cameraPosition) {
+      globe.pointOfView(globeData.cameraPosition, 500);
     }
 
-    // Posicionar la cámara para el peleador seleccionado sin reiniciar la rotación
-    if (correctedFighterData.cameraPosition) {
-      globe.pointOfView(correctedFighterData.cameraPosition, 1500); // 1500ms de animación más suave
-    }
+    // Crear nubes
+    const createClouds = () => {
+      if (cloudsRef.current) return;
 
-    // Actualizar las nubes solo si es necesario
-    if (cloudsNeedUpdate) {
-      // Primero limpiar las nubes existentes
-      cleanupClouds();
-
-      // Add clouds sphere
       const CLOUDS_IMG_URL = "/textures/globe/clouds.png";
 
       new THREE.TextureLoader().load(CLOUDS_IMG_URL, (cloudsTexture) => {
@@ -99,46 +120,60 @@ const CustomGlobe = ({ selectedFighter = "peereira7" }: CustomGlobeProps) => {
         const scene = globe.scene();
         if (!scene) return;
 
-        // Crear nuevas nubes
         cloudsRef.current = new THREE.Mesh(
           new THREE.SphereGeometry(
             globe.getGlobeRadius() * (1 + CLOUDS_ALT),
-            75,
-            75
+            60,
+            60
           ),
           new THREE.MeshPhongMaterial({
             map: cloudsTexture,
             transparent: true,
-            opacity: 0.8, // Ligera reducción de opacidad para mejorar visibilidad
+            opacity: 0.7,
           })
         );
 
         scene.add(cloudsRef.current);
-
-        // Ya no necesitamos actualizar las nubes
-        setCloudsNeedUpdate(false);
       });
-    }
+    };
 
-    // Función para rotar las nubes (independiente de la recreación)
-    function rotateClouds() {
+    // Crear nubes
+    createClouds();
+
+    // Rotar nubes
+    const rotateClouds = () => {
       if (cloudsRef.current && cloudsRef.current.rotation) {
         cloudsRef.current.rotation.y += (CLOUDS_ROTATION_SPEED * Math.PI) / 180;
       }
-      requestAnimationFrame(rotateClouds);
-    }
+      return requestAnimationFrame(rotateClouds);
+    };
 
-    // Siempre mantener la rotación de nubes activa
-    const rotationId = requestAnimationFrame(rotateClouds);
+    const rotationId = rotateClouds();
 
-    // Limpieza
+    // Limpieza al desmontar
     return () => {
       cancelAnimationFrame(rotationId);
-    };
-  }, [correctedFighterData, cloudsNeedUpdate, cleanupClouds]);
 
-  // Si no hay datos del peleador, no renderizar nada
-  if (!correctedFighterData) return null;
+      // Limpiar nubes
+      if (cloudsRef.current && globe.scene) {
+        const scene = globe.scene();
+        if (scene) {
+          scene.remove(cloudsRef.current);
+          if (cloudsRef.current.geometry) cloudsRef.current.geometry.dispose();
+          if (cloudsRef.current.material) {
+            if (Array.isArray(cloudsRef.current.material)) {
+              cloudsRef.current.material.forEach((m) => m.dispose());
+            } else {
+              cloudsRef.current.material.dispose();
+            }
+          }
+        }
+      }
+    };
+  }, [isReady, globeData]);
+
+  // Si no hay datos, no mostrar nada
+  if (!globeData) return null;
 
   return (
     <Globe
@@ -146,43 +181,39 @@ const CustomGlobe = ({ selectedFighter = "peereira7" }: CustomGlobeProps) => {
       animateIn={false}
       globeImageUrl="//unpkg.com/three-globe@2.24.5/example/img/earth-blue-marble.jpg"
       bumpImageUrl="//unpkg.com/three-globe@2.24.5/example/img/earth-topology.png"
-      height={500}
-      width={500}
+      height={globeSize}
+      width={globeSize}
       backgroundColor="rgba(0, 0, 0, 0)"
-      // Configuración de los puntos
-      pointsData={[correctedFighterData.point]}
+      pointsData={[globeData.point]}
       pointLat="lat"
       pointLng="lng"
       pointAltitude="altitude"
       pointRadius="radius"
       pointColor="color"
-      pointResolution={12}
+      pointResolution={10}
       pointsMerge={false}
-      // Configuración de los labels
-      labelsData={[correctedFighterData.label]}
+      labelsData={[globeData.label]}
       labelLat="lat"
       labelLng="lng"
       labelAltitude="altitude"
       labelText="text"
       labelColor="color"
       labelSize="size"
-      labelResolution={90} // Mayor resolución para mejor renderizado de texto
-      labelDotRadius={0.4} // Mejorar la visibilidad del punto
+      labelResolution={60}
+      labelDotRadius={0.3}
       labelIncludeDot={true}
-      hexPolygonsData={correctedFighterData.geoJson.features}
-      hexPolygonResolution={3}
+      hexPolygonsData={globeData.geoJson.features}
+      hexPolygonResolution={2}
       hexPolygonMargin={0.2}
       hexPolygonUseDots={false}
       hexPolygonAltitude={0.01}
       hexPolygonColor={(feature: any) => {
-        if (feature.properties.name === correctedFighterData.country) {
-          return correctedFighterData.color;
+        if (feature.properties.name === globeData.country) {
+          return globeData.color;
         }
-        return "rgba(200, 200, 200, 0.7)"; // Color por defecto
+        return "rgba(200, 200, 200, 0.6)";
       }}
-      hexPolygonLabel={(feature: any) => {
-        return feature.properties.name;
-      }}
+      hexPolygonLabel={(feature: any) => feature.properties.name}
       hexPolygonGeoJsonGeometry={(feature: any) => feature.geometry}
     />
   );
