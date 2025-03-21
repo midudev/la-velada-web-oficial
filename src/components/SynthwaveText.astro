@@ -1,19 +1,24 @@
 ---
 import type { HTMLTag, Polymorphic } from "astro/types";
 
-type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & { name: string }
+type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }>
 
-const { as: Element = 'h1', name } = Astro.props
+const { as: Element = 'h1' } = Astro.props
+
+// Get the rendered HTML content of the default slot
+const text = await Astro.slots.render('default')
+
+// Throw error if the slot contains HTML tags
+if (text.match(/(<([^>]+)>)/gi)) {
+  throw new Error('SynthwaveText component must contain text content.')
+}
 ---
 
 <Element
-  class="relative text-center text-6xl font-extrabold tracking-tighter uppercase"
-  style={{
-    letterSpacing: '2px',
-  }}
-  data-text={name}
+  class="relative text-center text-6xl font-extrabold uppercase tracking-normal"
+  data-text={text}
 >
-  {name}
+  {text}
 </Element>
 
 <style>
