@@ -1,9 +1,9 @@
 ---
-const { id, name } = Astro.props;
+const { id, name } = Astro.props
 ---
 
 <a
-  class="boxer-card inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg overflow-hidden duration-300 hover:-translate-y-3 hover:scale-105 hover:z-20 hover:shadow-[0px_4px_12px_var(--color-theme-turquoise)]"
+  class="boxer-card inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg overflow-hidden duration-300 hover:-translate-y-3 hover:scale-105 hover:shadow-lg hover:z-20"
   href={`/luchador/${id}`}
   data-id={id}
 >
@@ -15,24 +15,29 @@ const { id, name } = Astro.props;
     />
 
     <div
-      class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500 ease-in-out"
+      class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"
     >
     </div>
 
     <div
-      class="absolute inset-0 border-0 group-hover:border-1 border-pink-500 rounded-lg transition-all duration-300 opacity-0 group-hover:opacity-90"
+      class="absolute inset-0 border-0 group-hover:border-2 border-theme-tickle-me-pink/70 rounded-lg transition-all duration-300 opacity-0 group-hover:opacity-100"
     >
     </div>
   </div>
 
   <div
-    class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/50 via-pink-950/40 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+    class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
   >
     <h3
-      class="bg-gradient-to-t from-pink-700 via-pink-500 to-pink-200 text-sm font-bold bg-clip-text text-transparent tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+      class="text-theme-tickle-me-pink text-sm font-bold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
     >
       {name}
     </h3>
+  </div>
+
+  <div
+    class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-theme-tickle-me-pink rounded-t-md group-hover:w-2/3 transition-all duration-300"
+  >
   </div>
 </a>
 
@@ -50,80 +55,49 @@ const { id, name } = Astro.props;
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const boxerCards = document.querySelectorAll(".boxer-card");
-    let timeoutId = null;
-    const eventListeners = [];
+    const boxerCards = document.querySelectorAll(".boxer-card")
+    let timeoutId: number | null = null
 
     boxerCards.forEach((singleBoxerCard) => {
-      let isClicked = false; //para evitar que se dispare el evento mouseleave si se hizo click
-
-      const mouseEnterHandler = () => {
+      singleBoxerCard.addEventListener("mouseenter", () => {
         if (timeoutId) {
-          clearTimeout(timeoutId);
-          timeoutId = null;
+          clearTimeout(timeoutId)
+          timeoutId = null
         }
-        const id = singleBoxerCard.getAttribute("data-id");
+
+        const id = singleBoxerCard.getAttribute("data-id")
         if (id) {
-          document.dispatchEvent(
-            new CustomEvent("boxer-card-hovered", { detail: { id } })
-          );
+          // Dispatch a custom event to notify a boxer card id is hovered
+          const event = new CustomEvent("boxer-card-hovered", {
+            detail: { id },
+          })
+          document.dispatchEvent(event)
         }
-      };
+      })
 
-      const mouseLeaveHandler = () => {
-        if (isClicked) return;
+      singleBoxerCard.addEventListener("mouseleave", () => {
         timeoutId = setTimeout(() => {
-          document.dispatchEvent(new CustomEvent("boxer-card-exit"));
-        }, 500);
-      };
+          const event = new CustomEvent("boxer-card-exit")
+          document.dispatchEvent(event)
+        }, 500)
+      })
 
-      const clickHandler = () => {
-        isClicked = true;
-        if (timeoutId) {
-          clearTimeout(timeoutId);
+      singleBoxerCard.addEventListener("focus", () => {
+        const id = singleBoxerCard.getAttribute("data-id")
+        if (id) {
+          const event = new CustomEvent("boxer-card-hovered", {
+            detail: { id },
+          })
+          document.dispatchEvent(event)
         }
-      };
+      })
 
-      singleBoxerCard.addEventListener("mouseenter", mouseEnterHandler);
-      singleBoxerCard.addEventListener("mouseleave", mouseLeaveHandler);
-      singleBoxerCard.addEventListener("click", clickHandler);
-
-      eventListeners.push({
-        element: singleBoxerCard,
-        events: [
-          { type: "mouseenter", handler: mouseEnterHandler },
-          { type: "mouseleave", handler: mouseLeaveHandler },
-          { type: "click", handler: clickHandler },
-        ],
-      });
-    });
-
-    singleBoxerCard.addEventListener("focus", () => {
-      const id = singleBoxerCard.getAttribute("data-id");
-      if (id) {
-        const event = new CustomEvent("boxer-card-hovered", {
-          detail: { id },
-        });
-        document.dispatchEvent(event);
-      }
-    });
-
-    singleBoxerCard.addEventListener("blur", () => {
-      timeoutId = setTimeout(() => {
-        const event = new CustomEvent("boxer-card-exit");
-        document.dispatchEvent(event);
-      }, 500);
-    });
-
-    //limpiar los eventos para evitar memory leak
-    const cleanupEventListeners = () => {
-      eventListeners.forEach(({ element, events }) => {
-        events.forEach(({ type, handler }) => {
-          element.removeEventListener(type, handler);
-        });
-      });
-    };
-
-    window.addEventListener("beforeunload", cleanupEventListeners);
-  });
+      singleBoxerCard.addEventListener("blur", () => {
+        timeoutId = setTimeout(() => {
+          const event = new CustomEvent("boxer-card-exit")
+          document.dispatchEvent(event)
+        }, 500)
+      })
+    })
+  })
 </script>
