@@ -1,9 +1,9 @@
 ---
-const { id, name } = Astro.props
+const { id, name } = Astro.props;
 ---
 
 <a
-  class="boxer-card inline-block transition hover:-translate-y-3 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded overflow-hidden"
+  class="boxer-card inline-block transition focus:-translate-y-3 hover:-translate-y-3 w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded overflow-hidden"
   href={`/luchador/${id}`}
   data-id={id}
 >
@@ -14,7 +14,7 @@ const { id, name } = Astro.props
   />
 
   <div
-    class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-transparent to-transparent p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+    class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-transparent to-transparent p-1 opacity-0 group-focus:opacity-100 group-hover:opacity-100 transition-opacity duration-300"
   >
     <h3 class="text-theme-tickle-me-pink text-sm">{name}</h3>
   </div>
@@ -22,31 +22,78 @@ const { id, name } = Astro.props
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const boxerCards = document.querySelectorAll(".boxer-card")
-    let timeoutId: number | null = null
+    const boxerCards = document.querySelectorAll(".boxer-card");
+    let timeoutId: number | null = null;
 
+    function exitCardHover() {
+      timeoutId = setTimeout(() => {
+        const event = new CustomEvent("boxer-card-exit");
+        document.dispatchEvent(event);
+
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      }, 500);
+    }
     boxerCards.forEach((singleBoxerCard) => {
+      const id = singleBoxerCard.getAttribute("data-id");
+
       singleBoxerCard.addEventListener("mouseenter", () => {
         if (timeoutId) {
-          clearTimeout(timeoutId)
+          clearTimeout(timeoutId);
         }
 
-        const id = singleBoxerCard.getAttribute("data-id")
         if (id) {
           // Dispatch a custom event to notify a boxer card id is hovered
           const event = new CustomEvent("boxer-card-hovered", {
             detail: { id },
-          })
-          document.dispatchEvent(event)
+          });
+          document.dispatchEvent(event);
         }
-      })
+      });
 
       singleBoxerCard.addEventListener("mouseleave", () => {
-        timeoutId = setTimeout(() => {
-          const event = new CustomEvent("boxer-card-exit")
-          document.dispatchEvent(event)
-        }, 500)
-      })
-    })
-  })
+        exitCardHover();
+      });
+
+      // Funcion para simular el hover en mobile
+      function handleTouch(event: TouchEvent) {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        const touch = event.touches[0];
+
+        const element = document.elementFromPoint(touch.clientX, touch.clientY);
+        const anchor = element?.closest("a");
+
+        const anchorId = anchor?.getAttribute("data-id");
+        if (!anchorId) {
+          exitCardHover();
+          return;
+        }
+
+        const customEvent = new CustomEvent("boxer-card-hovered", {
+          detail: { id: anchorId },
+        });
+        document.dispatchEvent(customEvent);
+        anchor?.focus();
+      }
+
+      singleBoxerCard.addEventListener("touchstart", function (event) {
+        handleTouch(event as TouchEvent);
+      });
+
+      singleBoxerCard.addEventListener("touchmove", function (event) {
+        handleTouch(event as TouchEvent);
+      });
+
+      singleBoxerCard.addEventListener("touchcancel", function (event) {
+        exitCardHover();
+      });
+
+      singleBoxerCard.addEventListener("touchend", function (event) {
+        exitCardHover();
+      });
+    });
+  });
 </script>
