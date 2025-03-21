@@ -1,11 +1,12 @@
 ---
-import { FIGHTERS } from "@/consts/fighters"
-import BoxerCard from "./BoxerCard.astro"
+import { FIGHTERS, MATCHUPS } from "@/consts/fighters";
+import BoxerCard from "./BoxerCard.astro";
 
-const firstRow = FIGHTERS.slice(0, 6)
-const leftRow = firstRow.slice(0, 3)
-const rightRow = firstRow.slice(3)
-const secondRow = FIGHTERS.slice(6)
+const orderedFighters = [];
+MATCHUPS.forEach(matchup => {
+  orderedFighters.push(FIGHTERS.find(f => f.id === matchup.fighter1));
+  orderedFighters.push(FIGHTERS.find(f => f.id === matchup.fighter2));
+});
 ---
 
 <section class="relative flex min-h-screen w-full">
@@ -34,18 +35,14 @@ const secondRow = FIGHTERS.slice(6)
         />
         <div class="absolute bg-pink-400/80 blur-2xl z-0 size-64 top-0"></div>
       </figure>
-
-      <div class="relative">
       <h3
         class="font-light text-theme-seashell leading-[100%] mt-4 animate-fade-in animate-delay-500"
       >
         ESTADIO<br />LA CARTUJA,<br /><strong>SEVILLA</strong>
       </h3>
-      <div class="absolute bg-pink-400/80 blur-2xl z-0 w-full h-full -inset-2"></div>
       <h3
         class="font-light text-theme-raisin-black leading-[100%] mt-4 animate-fade-in animate-delay-700"
       >
-        </div>
         <a
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
@@ -55,6 +52,10 @@ const secondRow = FIGHTERS.slice(6)
           TWITCH.TV<br /><strong>IBAI</strong>
         </a>
       </h3>
+
+      <div class="mt-12 relative">
+        <div id="mystery-figure" class="mystery-figure">?</div>
+      </div>
     </div>
 
     <div
@@ -62,7 +63,7 @@ const secondRow = FIGHTERS.slice(6)
       class="pointer-events-none absolute inset-0 flex flex-col items-center"
     >
       <div
-        class="relative top-96 mx-auto h-[4.5rem] flex w-full items-center justify-center z-1"
+        class="relative top-24 mx-auto h-20 flex w-full items-center justify-center"
       >
         {
           FIGHTERS.map(({ id, name }) => (
@@ -97,20 +98,28 @@ const secondRow = FIGHTERS.slice(6)
       </div>
     </div>
 
-    <div
-      class="relative flex flex-col items-center justify-end p-8 h-full w-full max-w-6xl gap-4"
-    >
-      <div class="flex flex-wrap justify-between w-full px-4">
-        <div class="flex flex-wrap justify-start gap-4">
-          {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
-        </div>
-        <div class="flex flex-wrap justify-end gap-4">
-          {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
-        </div>
-      </div>
-
-      <div class="flex flex-wrap justify-between gap-4">
-        {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+    <div class="carousel-container">
+      <div id="carousel" class="carousel">
+        {
+          FIGHTERS.map(({ id, name }) => (
+            <a 
+              class="fighter-card" 
+              data-id={id}
+              href={`/luchador/${id}`}
+            >
+              <div class="card-inner">
+                <img 
+                  src={`/images/fighters/cards/${id}.png`} 
+                  alt={name} 
+                  class="fighter-img"
+                />
+                <div class="card-overlay">
+                  <h3 class="fighter-name">{name}</h3>
+                </div>
+              </div>
+            </a>
+          ))
+        }
       </div>
     </div>
   </div>
@@ -126,77 +135,271 @@ const secondRow = FIGHTERS.slice(6)
       transparent 100%
     );
   }
+
+  .mask-fade-bottom {
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+  }
+
+  .mystery-figure {
+    height: 8rem;
+    width: 8rem;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--theme-seashell);
+    filter: drop-shadow(0 0 20px rgba(255, 105, 180, 0.5));
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    z-index: 5;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .mystery-figure:hover {
+    background-color: rgba(255, 105, 180, 0.3);
+    transform: scale(1.05);
+  }
+
+  .carousel-container {
+    position: absolute;
+    bottom: 6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 90rem;
+    height: 12rem;
+    perspective: 1200px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .carousel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.7s ease;
+  }
+
+  .fighter-card {
+    position: absolute;
+    width: 7rem;
+    height: 10rem;
+    transform-origin: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    z-index: 1;
+    text-decoration: none;
+    backface-visibility: hidden;
+  }
+
+  .fighter-card:hover {
+    z-index: 100 !important;
+  }
+
+  .card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: linear-gradient(145deg, rgba(255,105,180,0.4) 0%, rgba(138,43,226,0.4) 100%);
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+  }
+
+  .fighter-card:hover .card-inner {
+    border-color: rgba(255, 105, 180, 0.8);
+    box-shadow: 0 15px 30px rgba(255,105,180,0.4);
+  }
+
+  .fighter-img {
+    aspect-ratio: 900/1200;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background: linear-gradient(to top, rgba(157, 23, 77, 0.9), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 0.5rem;
+  }
+
+  .fighter-card:hover .card-overlay {
+    opacity: 1;
+  }
+
+  .fighter-name {
+    color: var(--theme-tickle-me-pink, #FFB6C1);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    text-align: center;
+  }
+
+  .fighter-card:nth-child(odd) {
+    transform-origin: right center;
+  }
+
+  .fighter-card:nth-child(even) {
+    transform-origin: left center;
+  }
 </style>
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const $landing = document.querySelector("#landing")
+    const $landing = document.querySelector("#landing");
+    const $mysteryFigure = document.querySelector("#mystery-figure");
+    const $carousel = document.querySelector("#carousel");
+    const $carouselContainer = document.querySelector(".carousel-container");
+    const fighterCards = document.querySelectorAll(".fighter-card");
 
-    let currentFighterId: string | null = null
+    let currentFighterId = null;
+    let timeoutId = null;
+    let rotationAngle = 0;
+    let rotationInterval = null;
+    let activeCardIndex = 0;
+    let isPaused = false;
+    let hoveredCardId = null;
 
-    document.addEventListener("boxer-card-exit", () => {
-      $landing?.classList.remove("hidden")
+    const totalCards = fighterCards.length;
+    const cardAngle = 360 / totalCards;
+    const radius = 300;
+    const rotationTime = 3500;
 
-      if (currentFighterId) {
-        document
-          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.add("hidden")
+    function positionAllCards() {
+      fighterCards.forEach((card, index) => {
+        const angle = (index * cardAngle + rotationAngle) % 360;
+        const angleRad = angle * (Math.PI / 180);
+        const x = Math.sin(angleRad) * radius;
+        const z = Math.cos(angleRad) * radius - radius;
+        const frontness = Math.cos(angleRad);
+        const opacity = frontness > 0 ? 0.3 + frontness * 0.7 : 0;
+        const scale = 0.7 + frontness * 0.3;
 
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add("hidden")
+        card.style.transform = `translateX(${x}px) translateZ(${z}px) rotateY(${-angle}deg) scale(${scale})`;
+        card.style.opacity = opacity;
 
-        currentFighterId = null
+        if (Math.abs(angle - 180) < cardAngle / 2) {
+          activeCardIndex = index;
+          const id = card.getAttribute("data-id");
+          if (id && !isPaused && hoveredCardId === null) {
+            showFighter(id);
+          }
+        }
+        card.style.pointerEvents = "auto";
+      });
+    }
+
+    positionAllCards();
+
+    function rotateOneStep() {
+      if (isPaused) return;
+      rotationAngle = (rotationAngle + cardAngle) % 360;
+      $carousel.style.transition = "transform 0.7s ease";
+      positionAllCards();
+    }
+
+    rotationInterval = setInterval(rotateOneStep, rotationTime);
+
+    function resetView() {
+      $landing.classList.remove("hidden");
+      document
+        .querySelectorAll('[data-id^="hero-text-"], [data-id^="hero-image-"]')
+        .forEach((el) => {
+          el.classList.add("hidden");
+        });
+      currentFighterId = null;
+    }
+
+    function showFighter(id) {
+      if (currentFighterId === id) return;
+
+      document
+        .querySelectorAll('[data-id^="hero-text-"], [data-id^="hero-image-"]')
+        .forEach((el) => {
+          el.classList.add("hidden");
+        });
+
+      $landing.classList.add("hidden");
+
+      const textElement = document.querySelector(`[data-id="hero-text-${id}"]`);
+      const imageElement = document.querySelector(`[data-id="hero-image-${id}"]`);
+      if (textElement) textElement.classList.remove("hidden");
+      if (imageElement) imageElement.classList.remove("hidden");
+
+      currentFighterId = id;
+    }
+
+    $carouselContainer.addEventListener("mouseenter", () => {
+      isPaused = true;
+      if (timeoutId) clearTimeout(timeoutId);
+    });
+
+    $carouselContainer.addEventListener("mouseleave", () => {
+      isPaused = false;
+      timeoutId = setTimeout(() => {
+        if (hoveredCardId === null) {
+          resetView();
+        }
+      }, 500);
+    });
+
+    fighterCards.forEach((card) => {
+      card.addEventListener("mouseenter", (e) => {
+        e.preventDefault();
+        const id = card.getAttribute("data-id");
+        if (id) {
+          hoveredCardId = id;
+          showFighter(id);
+        }
+      });
+
+      card.addEventListener("mouseleave", () => {
+        hoveredCardId = null;
+        if (!isPaused) {
+          positionAllCards();
+        }
+      });
+
+      card.addEventListener("click", (e) => {
+        const id = card.getAttribute("data-id");
+        if (id) {
+          window.location.href = `/luchador/${id}`;
+        }
+      });
+    });
+
+    $mysteryFigure.addEventListener("click", resetView);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        rotationAngle = (rotationAngle - cardAngle + 360) % 360;
+        positionAllCards();
+      } else if (e.key === "ArrowRight") {
+        rotationAngle = (rotationAngle + cardAngle) % 360;
+        positionAllCards();
       }
-    })
-
-    document.addEventListener("boxer-card-hovered", (event: Event) => {
-      const customEvent = event as CustomEvent<{ id: string }>
-      const id = customEvent.detail.id
-
-      // si el luchador que entras es el mismo que ya se muestra
-      // entonces no hacemos nada
-      if (currentFighterId === id) return
-
-      // si ya estamos mostrando un luchador, tenemos que ocultarlo
-      if (currentFighterId) {
-        document
-          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.add("hidden")
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add("hidden")
-
-        document
-          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.remove("animate-zoom-in")
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.remove("animate-slide-up-fade")
-      }
-
-      $landing?.classList.add("hidden")
-
-      // mostramos el luchador que quiere ver el usuario
-      document
-        .querySelector(`[data-id="hero-text-${id}"]`)
-        ?.classList.remove("hidden")
-
-      document
-        .querySelector(`[data-id="hero-image-${id}"]`)
-        ?.classList.remove("hidden")
-
-      document
-        .querySelector(`[data-id="hero-text-${id}"]`)
-        ?.classList.add("animate-zoom-in")
-
-      document
-        .querySelector(`[data-id="hero-image-${id}"]`)
-        ?.classList.add("animate-slide-up-fade")
-
-      currentFighterId = id
-    })
-  })
+    });
+  });
 </script>
