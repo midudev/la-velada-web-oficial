@@ -1,6 +1,7 @@
 ---
 import { FIGHTERS } from "@/consts/fighters"
 import BoxerCard from "./BoxerCard.astro"
+import BoxerCardRow from "./BoxerCardRow.astro"
 
 const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
@@ -58,7 +59,6 @@ const secondRow = FIGHTERS.slice(6)
     </div>
 
     <div
-      id="fighter-container"
       class="pointer-events-none absolute inset-0 flex flex-col items-center"
     >
       <div
@@ -98,20 +98,21 @@ const secondRow = FIGHTERS.slice(6)
     </div>
 
     <div
-      class="relative flex flex-col items-center justify-end p-8 h-full w-full max-w-6xl gap-4"
+      class="relative flex-col items-center justify-end p-8 h-full w-full max-w-6xl gap-4 hidden lg:flex"
     >
       <div class="flex flex-wrap justify-between w-full px-4">
-        <div class="flex flex-wrap justify-start gap-4">
-          {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
-        </div>
-        <div class="flex flex-wrap justify-end gap-4">
-          {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
-        </div>
+        <BoxerCardRow row={leftRow} />
+        <BoxerCardRow row={rightRow} />
       </div>
+        <BoxerCardRow row={secondRow} />
+    </div>
 
-      <div class="flex flex-wrap justify-between gap-4">
-        {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
-      </div>
+    <div id="carousel-fighters" class="lg:hidden flex items-center gap-4 w-full h-40 overflow-x-auto scroll-smooth touch-auto fixed bottom-0 z-1 bg-dark-magenta mask-fade-boxer-carousel pt-4">
+      <a class=" bg-dark-magenta text-theme-tickle-me-pink fixed left-0 px-4 py-2 text-4xl" id="btn-scroll-left" href="">&#8249;</a>
+      {FIGHTERS.map(({ id }) => (
+        <BoxerCard id={id} anchorStyles="flex flex-col items-center w-auto shrink-0 h-full" imgStyles="aspect-[900/1200] h-full w-full object-contain" nameContainerStyles="" />
+      ))}
+      <a class=" bg-dark-magenta text-theme-tickle-me-pink fixed right-0 px-4 py-2 text-4xl" id="btn-scroll-right" href="">&#8250;</a>
     </div>
   </div>
 </section>
@@ -126,11 +127,24 @@ const secondRow = FIGHTERS.slice(6)
       transparent 100%
     );
   }
+
+  .mask-fade-boxer-carousel {
+    mask-image: linear-gradient(
+      to top,
+      transparent 0%,
+      black 0%,
+      black 70%,
+      transparent 100%
+    );
+  }
 </style>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
-    const $landing = document.querySelector("#landing")
+document.addEventListener("astro:page-load", () => {
+  const $landing = document.querySelector("#landing")
+  const $carouselFighters = document.querySelector('#carousel-fighters')
+  const $btnScrollLeft = document.querySelector("#btn-scroll-left")
+  const $btnScrollRight = document.querySelector("#btn-scroll-right")
 
     let currentFighterId: string | null = null
 
@@ -197,6 +211,16 @@ const secondRow = FIGHTERS.slice(6)
         ?.classList.add("animate-slide-up-fade")
 
       currentFighterId = id
+    })
+
+    $btnScrollRight?.addEventListener("click", (event) => {
+      event.preventDefault()
+      $carouselFighters?.scrollBy({ left: 400, behavior: "smooth" })
+    })
+
+    $btnScrollLeft?.addEventListener("click", (event) => {
+      event.preventDefault()
+      $carouselFighters?.scrollBy({ left: -400, behavior: "smooth" })
     })
   })
 </script>
