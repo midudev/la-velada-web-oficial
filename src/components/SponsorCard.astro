@@ -17,9 +17,43 @@ const {url, image, name, label} = Astro.props
     <a
       href={url}
       target="_blank"
+      data-name={name}
       aria-label={label ?? name}
-      class="size-20 h-28 w-full  bg-[length:200%_200%] transition text-dark-magenta flex justify-center items-center bg-gradient-to-br from-theme-tickle-me-pink via-theme-french-mauve to-theme-turquoise rounded-2xl shadow-md shadow-theme-french-mauve hover:shadow-theme-french-mauve hover:animate-gradient-hover animate-gradient-unhover group"
+      class="relative size-20 h-28 w-full transition flex justify-center items-center rounded-2xl shadow-md shadow-theme-french-mauve group sponsor-link"
+       style="--bg-position-x: 75%; --bg-position-y: 75%;"
     >
-      <image.logo width={image.width} height={image.width} class="h-20 group-hover:scale-125 transition w-auto" />
+    <div class="absolute inset-0 rounded-2xl bg-radial-[at_25%_25%] from-theme-tickle-me-pink from-0% via-theme-french-mauve via-50% to-theme-turquoise to-100% bg-[length:200%_200%] bg-no-repeat transition-all duration-300" style="background-position: var(--bg-position-x) var(--bg-position-y);"></div>
+      <image.logo width={image.width} height={image.width} class="h-20 group-hover:scale-125 transition w-auto z-10" />
     </a>
 </div>
+
+<script> 
+
+  document.addEventListener("astro:page-load", () => {
+  const sponsorLinks : NodeListOf<HTMLAnchorElement> = document.querySelectorAll('.sponsor-link');
+  
+  sponsorLinks.forEach(sponsor => {
+    sponsor.addEventListener('mousemove', (event) => {
+      const name = sponsor.getAttribute('data-name');
+      const { clientX: x, clientY: y } = event as MouseEvent;
+      const rect = sponsor.getBoundingClientRect();
+      const rx = x - rect.left;
+      const ry = y - rect.top;
+
+      const xPercent = Math.floor((rx / rect.width) * 100);
+      const yPercent = Math.floor((ry / rect.height) * 100);
+
+      sponsor.style.setProperty('--bg-position-x', `${xPercent}%`);
+      sponsor.style.setProperty('--bg-position-y', `${yPercent}%`);
+
+      console.log(xPercent, yPercent)
+    
+    });
+    
+    sponsor.addEventListener('mouseleave', () => {
+      sponsor.style.setProperty('--bg-position-x', '75%');
+      sponsor.style.setProperty('--bg-position-y', '75%');
+    });
+  });
+});
+</script>
