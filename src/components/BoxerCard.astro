@@ -1,4 +1,6 @@
 ---
+import GlowingEffect from './core/GlowingEffect.astro'
+
 const { id, name } = Astro.props
 ---
 
@@ -7,6 +9,14 @@ const { id, name } = Astro.props
   href={`/luchador/${id}`}
   data-id={id}
 >
+  <GlowingEffect
+    spread={40}
+    proximity={64}
+    inactiveZone={0.01}
+    borderWidth={2}
+    color="var(--color-theme-seashell)"
+  />
+
   <div class="relative overflow-hidden rounded-lg">
     <img
       class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"

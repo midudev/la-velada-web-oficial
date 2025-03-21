@@ -1,0 +1,202 @@
+---
+export interface Props {
+  blur?: number
+  inactiveZone?: number
+  proximity?: number
+  spread?: number
+  color?: string
+  className?: string
+  movementDuration?: number
+  borderWidth?: number
+}
+
+let {
+  blur = 0,
+  proximity = 64,
+  inactiveZone = 0.01,
+  spread = 40,
+  color = 'white',
+  className = '',
+  movementDuration = 2,
+  borderWidth = 1,
+} = Astro.props
+
+const getGradient = (color: string) => {
+  return `repeating-conic-gradient(
+      from 236.84deg at 50% 50%,
+      ${color},
+      ${color} 25%
+    )`
+}
+---
+
+<glowing-effect
+  data-proximity={proximity}
+  data-inactive-zone={inactiveZone}
+  data-movement-duration={movementDuration}
+  data-border-width={borderWidth}
+  style={{
+    '--blur': `${blur}px`,
+    '--spread': spread,
+    '--start': '0',
+    '--active': '0',
+    '--glowingeffect-border-width': `${borderWidth}px`,
+    '--gradient': getGradient(color),
+  }}
+  class:list={[
+    'pointer-events-none absolute inset-0 rounded-[inherit] opacity-100 transition-opacity',
+    blur > 0 && 'blur-[var(--blur)]',
+    className,
+  ]}
+>
+  <div
+    class:list={[
+      'glow',
+      'rounded-[inherit]',
+      'after:absolute after:inset-[calc(-1*var(--glowingeffect-border-width))] after:rounded-[inherit] after:content-[""]',
+      'after:[border:var(--glowingeffect-border-width)_solid_transparent]',
+      'after:[background-attachment:fixed] after:[background:var(--gradient)]',
+      'after:opacity-[var(--active)] after:transition-opacity after:duration-300',
+      'after:[mask-clip:padding-box,border-box]',
+      'after:[mask-composite:intersect]',
+      'after:[mask-image:linear-gradient(#0000,#0000),conic-gradient(from_calc((var(--start)-var(--spread))*1deg),#00000000_0deg,#fff,#00000000_calc(var(--spread)*2deg))]',
+    ]}
+  >
+  </div>
+</glowing-effect>
+
+<script>
+  import { animate } from 'motion'
+  import { trimSlashes } from 'node_modules/astro/dist/core/path'
+
+  class GlowingEffect extends HTMLElement {
+    inactiveZone = 0.7
+    proximity = 0
+    movementDuration = 2
+    borderWidth = 1
+    container = null
+    lastPosition = { x: 0, y: 0 }
+    animationFrame = 0
+
+    constructor() {
+      super()
+
+      const {
+        proximity = 0,
+        inactiveZone = 0.7,
+        movementDuration = 2,
+        borderWidth = 1,
+      } = this.dataset
+
+      this.proximity = Number(proximity)
+      this.inactiveZone = Number(inactiveZone)
+      this.movementDuration = Number(movementDuration)
+      this.borderWidth = Number(borderWidth)
+
+      this.handleMove = this.handleMove.bind(this)
+      this.handleScroll = this.handleScroll.bind(this)
+      this.handlePointerMove = this.handlePointerMove.bind(this)
+      this.handleResize = this.handleResize.bind(this)
+      this.resizeBorderRadius = this.resizeBorderRadius.bind(this)
+
+      this.resizeBorderRadius()
+    }
+
+    /**
+     * Resize the border radius of the glowing effect to match the parent element
+     * border radius and the border width of the glowing effect.
+     */
+    resizeBorderRadius() {
+      if (!this.parentElement) return
+
+      const parentBorderRadius = window.getComputedStyle(this.parentElement).borderRadius
+      const values = parentBorderRadius.split(' ').map((value) => {
+        return Number(value.replace('px', '')) + this.borderWidth
+      })
+      this.style.borderRadius = values.join('px ') + 'px'
+    }
+
+    handleMove(e) {
+      if (this.animationFrame) {
+        cancelAnimationFrame(this.animationFrame)
+      }
+
+      this.animationFrame = requestAnimationFrame(() => {
+        const element = this
+        if (!element) return
+
+        const { left, top, width, height } = element.getBoundingClientRect()
+        const mouseX = e?.x ?? this.lastPosition.x
+        const mouseY = e?.y ?? this.lastPosition.y
+
+        if (e) {
+          this.lastPosition = { x: mouseX, y: mouseY }
+        }
+
+        const center = [left + width * 0.5, top + height * 0.5]
+        const distanceFromCenter = Math.hypot(mouseX - center[0], mouseY - center[1])
+        const inactiveRadius = 0.5 * Math.min(width, height) * this.inactiveZone
+
+        if (distanceFromCenter < inactiveRadius) {
+          element.style.setProperty('--active', '0')
+          return
+        }
+
+        const isActive =
+          mouseX > left - this.proximity &&
+          mouseX < left + width + this.proximity &&
+          mouseY > top - this.proximity &&
+          mouseY < top + height + this.proximity
+
+        element.style.setProperty('--active', isActive ? '1' : '0')
+
+        if (!isActive) return
+
+        const currentAngle = parseFloat(element.style.getPropertyValue('--start')) || 0
+        let targetAngle = (180 * Math.atan2(mouseY - center[1], mouseX - center[0])) / Math.PI + 90
+
+        const angleDiff = ((targetAngle - currentAngle + 180) % 360) - 180
+        const newAngle = currentAngle + angleDiff
+
+        animate(currentAngle, newAngle, {
+          duration: this.movementDuration,
+          ease: [0.16, 1, 0.3, 1],
+          onUpdate: (value) => {
+            element.style.setProperty('--start', String(value))
+          },
+        })
+      })
+    }
+
+    handleScroll() {
+      this.handleMove()
+    }
+
+    handlePointerMove(e) {
+      this.handleMove(e)
+    }
+
+    handleResize(e) {
+      this.resizeBorderRadius()
+    }
+
+    connectedCallback() {
+      window.addEventListener('resize', this.handleResize, { passive: true })
+      window.addEventListener('scroll', this.handleScroll, { passive: true })
+      document.body.addEventListener('pointermove', this.handlePointerMove, {
+        passive: true,
+      })
+    }
+
+    disconnectedCallback() {
+      if (this.animationFrame) {
+        cancelAnimationFrame(this.animationFrame)
+      }
+      window.removeEventListener('resize', this.handleResize)
+      window.removeEventListener('scroll', this.handleScroll)
+      document.body.removeEventListener('pointermove', this.handlePointerMove)
+    }
+  }
+
+  customElements.define('glowing-effect', GlowingEffect)
+</script>
