@@ -10,7 +10,7 @@ const { id, name } = Astro.props
   <div class="relative overflow-hidden">
     <img
       class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-      src={`/images/fighters/cards/no-bg/${id}.png`}
+      src={`/images/fighters/cards/${id}.png`}
       alt={`Tarjeta del boxeador ${name}`}
     />
 
@@ -89,7 +89,19 @@ const { id, name } = Astro.props
     if (pairings[index] !== undefined) {
       boxerCards[pairings[index]].classList.remove("grayscale-100");
     }
-      })
+
+    // Cambio de imagen a la versión sin fondo
+    const imageElement = singleBoxerCard.querySelector("img")
+      if (imageElement) {
+        // Guarda el src original si aún no se ha guardado
+        if (!(singleBoxerCard as HTMLElement).dataset.originalSrc) {
+          const srcValue = imageElement.getAttribute("src") || "";
+          (singleBoxerCard as HTMLElement).dataset.originalSrc = srcValue;
+        }
+        imageElement.setAttribute("src", `/images/fighters/cards/no-bg/${id}.png`)
+      }
+      
+    })
 
       singleBoxerCard.addEventListener("mouseleave", () => {
         timeoutId = setTimeout(() => {
@@ -99,7 +111,15 @@ const { id, name } = Astro.props
 
           // Restaurar la clase en todas las tarjetas cuando el mouse salga
     boxerCards.forEach((card) => card.classList.remove("grayscale-100"));
-      })
+
+    // Revertir la imagen a la versión original
+    const imageElement = singleBoxerCard.querySelector("img")
+      if (imageElement && (singleBoxerCard as HTMLElement).dataset.originalSrc) {
+        const srcValue = (singleBoxerCard as HTMLElement).dataset.originalSrc;
+        imageElement.setAttribute("src", srcValue!);
+      }
+
+    })
 
       singleBoxerCard.addEventListener("focus", () => {
         const id = singleBoxerCard.getAttribute("data-id")
