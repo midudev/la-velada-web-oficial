@@ -118,38 +118,55 @@ const secondRow = FIGHTERS.slice(6)
 
     let currentFighterId: string | null = null
 
+    // Función para detectar si se está en el layout del luchador
+    const isFighterLayout = () =>
+      window.location.pathname.includes('/luchador/')
+
     document.addEventListener('boxer-card-exit', () => {
-      $landing?.classList.remove('hidden');
+      // Si se está en el layout del luchador, no se ocultan los elementos
+      if (isFighterLayout()) {
+        return
+      }
+
+      $landing?.classList.remove('hidden')
 
       if (currentFighterId) {
-        const textEl = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`);
-        const imageEl = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`);
+        const textEl = document.querySelector(
+          `[data-id="hero-text-${currentFighterId}"]`
+        )
+        const imageEl = document.querySelector(
+          `[data-id="hero-image-${currentFighterId}"]`
+        )
 
         // Quitar la animación de entrada, si está activa, y agregar la de salida
         if (textEl) {
-          textEl.classList.remove('animate-zoom-in');
-          textEl.classList.add('animate-zoom-out');
+          textEl.classList.remove('animate-zoom-in')
+          textEl.classList.add('animate-zoom-out')
         }
 
         if (imageEl) {
-          imageEl.classList.remove('animate-slide-up-fade');
-          imageEl.classList.add('animate-slide-down-fade');
+          imageEl.classList.remove('animate-slide-up-fade')
+          imageEl.classList.add('animate-slide-down-fade')
         }
 
         // Después de la animación, se ocultan los elementos y se remueven las clases de animación
         setTimeout(() => {
-          textEl?.classList.add('hidden');
-          imageEl?.classList.add('hidden');
-          textEl?.classList.remove('animate-zoom-out');
-          imageEl?.classList.remove('animate-slide-down-fade');
-        }, 500);
+          textEl?.classList.add('hidden')
+          imageEl?.classList.add('hidden')
+          textEl?.classList.remove('animate-zoom-out')
+          imageEl?.classList.remove('animate-slide-down-fade')
+        }, 500)
 
-        currentFighterId = null;
+        currentFighterId = null
       }
-    });
-
+    })
 
     document.addEventListener('boxer-card-hovered', (event: Event) => {
+      // Si se está en el layout del luchador, no se ejecuta este evento
+      if (isFighterLayout()) {
+        return
+      }
+
       const customEvent = event as CustomEvent<{ id: string }>
       const id = customEvent.detail.id
 
@@ -159,7 +176,9 @@ const secondRow = FIGHTERS.slice(6)
 
       // si ya estamos mostrando un luchador, tenemos que ocultarlo
       if (currentFighterId) {
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
+        document
+          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+          ?.classList.add('hidden')
 
         document
           .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
