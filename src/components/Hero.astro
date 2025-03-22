@@ -1,11 +1,12 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
 import BoxerCard from './BoxerCard.astro'
-
+import {type ICustomEvent} from '../interfaces/custon-event'
 const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
 const rightRow = firstRow.slice(3)
 const secondRow = FIGHTERS.slice(6)
+
 ---
 
 <section class="relative flex min-h-screen w-full">
@@ -15,9 +16,9 @@ const secondRow = FIGHTERS.slice(6)
   </div>
 
   <div class="relative flex w-full flex-col items-center p-8 text-center">
-    <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
+    <div id="landing" class="absolute opacity-100 top-0 flex w-full flex-col items-center py-16">
       <h3
-        class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 leading-[100%] font-light"
+        class="text-theme-seashell animate-fade-in mt-4 leading-[100%] font-light"
       >
         <strong>26</strong> DE <br /><strong>JULIO</strong>
       </h3>
@@ -43,7 +44,7 @@ const secondRow = FIGHTERS.slice(6)
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
           target="_blank"
-          class="animate-fade-in animate-delay-700 z-50 mt-4 inline-block leading-[100%] font-light transition hover:scale-125"
+          class="animate-fade-in z-50 mt-4 inline-block leading-[100%] font-light transition hover:scale-125"
         >
           TWITCH.TV<br /><strong>IBAI</strong>
         </a>
@@ -62,7 +63,7 @@ const secondRow = FIGHTERS.slice(6)
               src={`/images/fighters/text/${id}.png`}
               alt={name}
               decoding="async"
-              class="mask-fade-text absolute hidden h-full w-auto"
+              class="mask-fade-text absolute opacity-0 h-full w-auto"
               fetchpriority="low"
             />
           ))
@@ -80,7 +81,7 @@ const secondRow = FIGHTERS.slice(6)
               src={`/images/fighters/big/${id}.webp`}
               alt={name}
               decoding="async"
-              class="absolute hidden h-full w-full object-cover lg:object-contain"
+              class="absolute opacity-0 h-full w-full object-cover lg:object-contain"
               fetchpriority="low"
             />
           ))
@@ -98,7 +99,7 @@ const secondRow = FIGHTERS.slice(6)
         </div>
       </div>
 
-      <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-between gap-4">
+      <div class="animate-fade-in-up flex flex-wrap justify-between gap-4">
         {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
       </div>
     </div>
@@ -112,62 +113,44 @@ const secondRow = FIGHTERS.slice(6)
 </style>
 
 <script>
+import type { ICustomEvent } from "@/interfaces/custon-event"
+
   document.addEventListener('astro:page-load', () => {
+
     const $landing = document.querySelector('#landing')
+    let fighter: HTMLElement | null = null;
+    let name_fighter: HTMLElement | null = null;
+    document.addEventListener('boxer-card-hovered',(event)=>{
+      const {detail} = event as ICustomEvent;
 
-    let currentFighterId: string | null = null
+      fighter = document.querySelector(`[data-id="hero-image-${detail.id}"]`) as HTMLElement;
+      name_fighter = document.querySelector(`[data-id="hero-text-${detail.id}"]`) as HTMLElement;
+      fighter.classList.remove('animacion-out')
+      fighter.classList.add('animacion-in')
+      name_fighter.classList.remove('animacion-out')
+      name_fighter.classList.add('animacion-in')
+      $landing?.childNodes.forEach((c)=>{
+          if(c.childNodes.length <= 0) return;
+          const child = c as unknown as HTMLElement;
+          child.classList.remove('animate-fade-in');
+          child.classList.add('animate-fade-out');
+        })
 
-    document.addEventListener('boxer-card-exit', () => {
-      $landing?.classList.remove('hidden')
-
-      if (currentFighterId) {
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add('hidden')
-
-        currentFighterId = null
-      }
     })
 
-    document.addEventListener('boxer-card-hovered', (event: Event) => {
-      const customEvent = event as CustomEvent<{ id: string }>
-      const id = customEvent.detail.id
-
-      // si el luchador que entras es el mismo que ya se muestra
-      // entonces no hacemos nada
-      if (currentFighterId === id) return
-
-      // si ya estamos mostrando un luchador, tenemos que ocultarlo
-      if (currentFighterId) {
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add('hidden')
-
-        document
-          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.remove('animate-zoom-in')
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.remove('animate-slide-up-fade')
+    document.addEventListener('boxer-card-exit',()=>{
+      if(fighter) {
+        fighter?.classList.add('animacion-out');
+        fighter.classList.remove('animacion-in')
+        name_fighter?.classList.add('animacion-out')
+        name_fighter?.classList.remove('animacion-in')
       }
-
-      $landing?.classList.add('hidden')
-
-      // mostramos el luchador que quiere ver el usuario
-      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.remove('hidden')
-
-      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.remove('hidden')
-
-      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.add('animate-zoom-in')
-
-      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.add('animate-slide-up-fade')
-
-      currentFighterId = id
+       $landing?.childNodes.forEach((c)=>{
+          if(c.childNodes.length <= 0) return;
+          const child = c as unknown as HTMLElement;
+          child.classList.remove('animate-fade-out');
+          child.classList.add('animate-fade-in');
+        })
     })
   })
 </script>
