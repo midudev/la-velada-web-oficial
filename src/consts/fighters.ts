@@ -4,71 +4,71 @@ export const FIGHTERS: Fighters[] = [
   {
     id: 'peereira',
     name: 'Peereira',
-    rival: 'rivaldios',
+    versus: 'rivaldios',
   },
   {
     id: 'perxitaa',
     name: 'Perxitaa',
-    rival: 'gaspi',
+    versus: 'gaspi',
   },
   {
     id: 'abby',
     name: 'Abby',
-    rival: 'roro',
+    versus: 'roro',
   },
   {
     id: 'roro',
     name: 'Roro',
-    rival: 'abby',
+    versus: 'abby',
   },
   {
     id: 'gaspi',
     name: 'Gaspi',
-    rival: 'perxitaa',
+    versus: 'perxitaa',
   },
   {
     id: 'rivaldios',
     name: 'Rivaldios',
-    rival: 'peereira',
+    versus: 'peereira',
   },
   {
     id: 'andoni',
     name: 'Andoni',
-    rival: 'carlos',
+    versus: 'carlos',
   },
   {
     id: 'viruzz',
     name: 'Viruzz',
-    rival: 'tomas',
+    versus: 'tomas',
   },
   {
     id: 'alana',
     name: 'Alana',
-    rival: 'arigeli',
+    versus: 'arigeli',
   },
   {
     id: 'grefg',
     name: 'Grefg',
-    rival: 'westcol',
+    versus: 'westcol',
   },
   {
     id: 'westcol',
     name: 'Westcol',
-    rival: 'grefg',
+    versus: 'grefg',
   },
   {
     id: 'arigeli',
     name: 'Arigeli',
-    rival: 'alana',
+    versus: 'alana',
   },
   {
     id: 'tomas',
     name: 'Tomas',
-    rival: 'viruzz',
+    versus: 'viruzz',
   },
   {
     id: 'carlos',
     name: 'Carlos',
-    rival: 'andoni',
+    versus: 'andoni',
   }
 ]
