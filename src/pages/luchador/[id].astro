@@ -1,6 +1,7 @@
 ---
 import { FIGHTERS } from "@/consts/fighters"
 import Layout from "@/layouts/Layout.astro"
+import ArrowBack from "@/assets/svg/arrowBack.svg"
 
 const { id } = Astro.params
 
@@ -15,13 +16,16 @@ export const prerender = false
       class="bg-[url('/images/hero.png')] bg-cover bg-center w-full mask-fade-bottom absolute inset-0"
     >
     </div>
+    <a href="/" class="bg-theme-tickle-me-pink absolute p-2 rounded-md left-16 top-20 z-20">
+      <ArrowBack />
+    </a>
     <img
       transition:name={`image-${id}`}
       data-id={`hero-image-${id}`}
-      src={`/images/fighters/big/${id}.png`}
+      src={`/images/fighters/big/${id}.webp`}
       alt={fighter?.name}
       decoding="async"
-      class="w-auto h-full z-10 mask-fade-bottom"
+      class="w-auto h-screen z-10 mask-fade-bottom"
       fetchpriority="low"
     />
   </section>
