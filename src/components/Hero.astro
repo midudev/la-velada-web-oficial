@@ -80,7 +80,7 @@ const secondRow = FIGHTERS.slice(6)
               src={`/images/fighters/big/${id}.webp`}
               alt={name}
               decoding="async"
-              class="absolute hidden h-full w-full object-cover lg:object-contain"
+              class="hidden h-full w-full object-cover lg:object-contain"
               fetchpriority="low"
             />
           ))
@@ -122,11 +122,13 @@ const secondRow = FIGHTERS.slice(6)
 
       if (currentFighterId) {
         document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
-
-        document
+        
+        const currentPath = window.location.pathname;
+        if(!currentPath.includes("luchador")){
+          document
           .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
           ?.classList.add('hidden')
-
+        }
         currentFighterId = null
       }
     })
