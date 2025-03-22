@@ -1,6 +1,6 @@
 ---
-import { FIGHTERS } from "@/consts/fighters"
-import BoxerCard from "./BoxerCard.astro"
+import { FIGHTERS } from '@/consts/fighters'
+import BoxerCard from './BoxerCard.astro'
 
 const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
@@ -10,60 +10,51 @@ const secondRow = FIGHTERS.slice(6)
 
 <section class="relative flex min-h-screen w-full group pointer-events-none">
   <div
-    class="bg-[url('/images/hero.png')] bg-cover bg-center w-full mask-fade-bottom absolute inset-0"
+    class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.png')] bg-cover bg-center"
   >
   </div>
 
-  <div class="relative flex flex-col items-center p-8 w-full text-center">
-    <div
-      id="landing"
-      class="absolute inset-0 flex flex-col items-center w-full py-32 group-hover:opacity-0 transition-opacity duration-300"
-    >
+  <div class="relative flex w-full flex-col items-center p-8 text-center">
+    <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16 group-hover:opacity-0 transition-opacity duration-300">
       <h3
-        class="font-light text-theme-seashell leading-[100%] mt-4 animate-fade-in animate-delay-300"
+        class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 leading-[100%] font-light"
       >
         <strong>26</strong> DE <br /><strong>JULIO</strong>
       </h3>
-      <figure class="relative mt-8 animate-fade-in">
+      <figure class="animate-fade-in relative mt-8">
         <img
-          class="w-64 h-auto z-20 relative"
+          class="relative z-20 h-auto w-64"
           src="/images/logo.png"
           fetchpriority="high"
           alt="La Velada del Año V"
           decoding="async"
         />
-        <div class="absolute bg-pink-400/80 blur-2xl z-0 size-64 top-0"></div>
+        <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
       </figure>
 
-      <div class="relative">
-      <h3
-        class="font-light text-theme-seashell leading-[100%] mt-4 animate-fade-in animate-delay-500"
-      >
-        ESTADIO<br />LA CARTUJA,<br /><strong>SEVILLA</strong>
-      </h3>
-      <div class="absolute bg-pink-400/80 blur-2xl z-0 w-full h-full -inset-2"></div>
-      <h3
-        class="font-light text-theme-raisin-black leading-[100%] mt-4 animate-fade-in animate-delay-700"
-      >
-        </div>
+      <div class="relative z-50">
+        <h3
+          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-[100%] font-light"
+        >
+          ESTADIO<br />LA CARTUJA,<br /><strong>SEVILLA</strong>
+        </h3>
+        <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
         <a
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
           target="_blank"
-          class="inline-block transition hover:scale-125"
+          class="animate-fade-in animate-delay-700 z-50 mt-4 inline-block leading-[100%] font-light transition hover:scale-125"
         >
           TWITCH.TV<br /><strong>IBAI</strong>
         </a>
-      </h3>
+      </div>
     </div>
 
     <div
       id="fighter-container"
       class="pointer-events-none absolute inset-0 flex flex-col items-center"
     >
-      <div
-        class="relative top-96 mx-auto h-[4.5rem] flex w-full items-center justify-center z-1"
-      >
+      <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
         {
           FIGHTERS.map(({ id, name }) => (
             <img
@@ -79,17 +70,17 @@ const secondRow = FIGHTERS.slice(6)
       </div>
 
       <div
-        class="mask-fade-bottom relative bottom-0 mx-auto h-[80vh] flex w-full items-center justify-center"
+        class="mask-fade-bottom relative bottom-0 mx-auto flex h-[80vh] w-full items-center justify-center"
       >
         {
           FIGHTERS.map(({ id, name }) => (
             <img
               transition:name={`image-${id}`}
               data-id={`hero-image-${id}`}
-              src={`/images/fighters/big/${id}.png`}
+              src={`/images/fighters/big/${id}.webp`}
               alt={name}
               decoding="async"
-              class="w-auto h-full absolute opacity-0 transition-opacity duration-300"
+              class="absolute h-full w-full object-cover lg:object-contain opacity-0 transition-opacity duration-300"
               fetchpriority="low"
             />
           ))
@@ -97,19 +88,17 @@ const secondRow = FIGHTERS.slice(6)
       </div>
     </div>
 
-    <div
-      class="relative flex flex-col items-center justify-end p-8 h-full w-full max-w-6xl gap-4"
-    >
-      <div class="flex flex-wrap justify-between w-full px-4">
-        <div class="flex flex-wrap justify-start gap-4">
+    <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8">
+      <div class="flex w-full flex-wrap justify-between px-4">
+        <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start gap-4">
           {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
         </div>
-        <div class="flex flex-wrap justify-end gap-4">
+        <div class="animate-fade-in-left animate-delay-500 flex flex-wrap justify-end gap-4">
           {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
         </div>
       </div>
 
-      <div class="flex flex-wrap justify-between gap-4">
+      <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-between gap-4">
         {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
       </div>
     </div>
@@ -118,17 +107,11 @@ const secondRow = FIGHTERS.slice(6)
 
 <style>
   .mask-fade-text {
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 5%,
-      black 6%,
-      black 95%,
-      transparent 100%
-    );
+    mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
   }
 </style>
 
-<!-- /* Estilos para detectar hover en boxerCard y mostrar la imagen correspondiente */ -->
+<!-- Estilos para detectar hover en boxerCard y mostrar la imagen correspondiente -->
 <style is:inline set:html={FIGHTERS.map(({id}) => `
   section:has(.boxer-card[data-id="${id}"]:hover) [data-id="hero-text-${id}"],
   section:has(.boxer-card[data-id="${id}"]:hover) [data-id="hero-image-${id}"] {
