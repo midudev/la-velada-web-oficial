@@ -70,5 +70,5 @@ export const FIGHTERS: Fighters[] = [
     id: 'carlos',
     name: 'Carlos',
     versus: 'andoni',
-  },
-] as const
+  }
+]

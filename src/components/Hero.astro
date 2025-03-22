@@ -91,15 +91,15 @@ const secondRow = FIGHTERS.slice(6)
     <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8">
       <div class="flex w-full flex-wrap justify-between px-4">
         <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start gap-4">
-          {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+          {leftRow.map(({ id, name, rival }) => <BoxerCard id={id} name={name} rival={rival} />)}
         </div>
         <div class="animate-fade-in-left animate-delay-500 flex flex-wrap justify-end gap-4">
-          {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+          {rightRow.map(({ id, name, rival }) => <BoxerCard id={id} name={name} rival={rival} />)}
         </div>
       </div>
 
       <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-between gap-4">
-        {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+        {secondRow.map(({ id, name, rival }) => <BoxerCard id={id} name={name} rival={rival} />)}
       </div>
     </div>
   </div>
