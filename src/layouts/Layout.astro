@@ -1,5 +1,5 @@
 ---
-import { ClientRouter } from "astro:transitions"
+import { ClientRouter, fade } from "astro:transitions"
 
 import "@/styles/global.css"
 
@@ -43,7 +43,7 @@ import Footer from "@/components/Footer.astro"
       name="twitter:description"
       content="Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos"
     />
-    <ClientRouter />
+    <ClientRouter fallback="animate" transition:animate="slide" />
   </head>
   <body>
     <Header />
