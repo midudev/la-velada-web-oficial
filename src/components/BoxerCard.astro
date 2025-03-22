@@ -92,10 +92,10 @@ const { id, name } = Astro.props
       })
 
       singleBoxerCard.addEventListener("mouseleave", () => {
-        timeoutId = setTimeout(() => {
+        // timeoutId = setTimeout(() => {
           const event = new CustomEvent("boxer-card-exit")
           document.dispatchEvent(event)
-        }, 500)
+        // }, 500)
 
           // Restaurar la clase en todas las tarjetas cuando el mouse salga
     boxerCards.forEach((card) => card.classList.remove("grayscale-100"));
