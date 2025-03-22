@@ -1,0 +1,41 @@
+---
+import { FIGHTERS } from '@/consts/fighters';
+
+let votos = {};
+
+const handleVoto = (id) => {
+  votos[id] = (votos[id] || 0) + 1;
+};
+---
+
+<div style="padding: 60px 20px;">
+  <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.5rem; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); color: white;">Vota por tu luchador favorito</h2>
+  <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 40px;">
+    {FIGHTERS.map(({ id, name }) => (
+      <div onclick={() => handleVoto(id)} style="cursor: pointer; text-align: center;">
+        <img src={`/images/fighters/cards/${id}.png`} alt={name} style="width: 120px; height: 120px; border-radius: 50%;" />
+        <p style="margin-top: 15px; font-size: 1.3rem; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); color: white;">{name}</p>
+      </div>
+    ))}
+  </div>
+  <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.5rem; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); color: white;">Resultados de las votaciones</h2>
+  <table style="width: 80%; margin: 0 auto; border-collapse: collapse; background-color: rgba(255, 255, 255, 0.9); border-radius: 15px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);">
+    <thead>
+      <tr>
+        <th style="padding: 20px; font-size: 1.4rem; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); color: #555;">Luchador</th>
+        <th style="padding: 20px; font-size: 1.4rem; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); color: #555;">Votos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {FIGHTERS.map(({ id, name }) => (
+        <tr>
+          <td style="display: flex; align-items: center; gap: 15px; padding: 20px; font-size: 1.2rem; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); color: #444;">
+            <img src={`/images/fighters/cards/${id}.png`} alt={name} style="width: 60px; height: 60px; border-radius: 50%;" />
+            <span>{name}</span>
+          </td>
+          <td style="text-align: center; padding: 20px; font-size: 1.2rem; font-weight: bold; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); color: #444;">{votos[id] || 0}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
