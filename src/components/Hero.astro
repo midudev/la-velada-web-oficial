@@ -108,6 +108,7 @@ const secondRow = FIGHTERS.slice(6)
 <style>
   .mask-fade-text {
     mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
   }
 </style>
 
@@ -118,18 +119,35 @@ const secondRow = FIGHTERS.slice(6)
     let currentFighterId: string | null = null
 
     document.addEventListener('boxer-card-exit', () => {
-      $landing?.classList.remove('hidden')
+      $landing?.classList.remove('hidden');
 
       if (currentFighterId) {
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
+        const textEl = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`);
+        const imageEl = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`);
 
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add('hidden')
+        // Quitar la animación de entrada, si está activa, y agregar la de salida
+        if (textEl) {
+          textEl.classList.remove('animate-zoom-in');
+          textEl.classList.add('animate-zoom-out');
+        }
 
-        currentFighterId = null
+        if (imageEl) {
+          imageEl.classList.remove('animate-slide-up-fade');
+          imageEl.classList.add('animate-slide-down-fade');
+        }
+
+        // Después de la animación, se ocultan los elementos y se remueven las clases de animación
+        setTimeout(() => {
+          textEl?.classList.add('hidden');
+          imageEl?.classList.add('hidden');
+          textEl?.classList.remove('animate-zoom-out');
+          imageEl?.classList.remove('animate-slide-down-fade');
+        }, 500);
+
+        currentFighterId = null;
       }
-    })
+    });
+
 
     document.addEventListener('boxer-card-hovered', (event: Event) => {
       const customEvent = event as CustomEvent<{ id: string }>

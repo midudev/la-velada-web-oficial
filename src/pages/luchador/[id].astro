@@ -18,11 +18,13 @@ export const prerender = false
     <img
       transition:name={`image-${id}`}
       data-id={`hero-image-${id}`}
+      data-fighter-id={id}
       src={`/images/fighters/big/${id}.png`}
       alt={fighter?.name}
       decoding="async"
-      class="w-auto h-full z-10 mask-fade-bottom"
+      class="w-auto h-full max-h-screen z-10 mask-fade-bottom"
       fetchpriority="low"
+      onerror="this.onerror = null; this.src = '/images/fighters/big/' + this.dataset.fighterId + '.webp';"
     />
   </section>
 </Layout>
