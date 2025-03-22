@@ -88,7 +88,10 @@ const secondRow = FIGHTERS.slice(6)
       </div>
     </div>
 
-    <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8">
+    <div
+      id="fighters-selector"
+      class="relative flex hidden h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8"
+    >
       <div class="flex w-full flex-wrap justify-between px-4">
         <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start gap-4">
           {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
@@ -114,6 +117,10 @@ const secondRow = FIGHTERS.slice(6)
 <script>
   document.addEventListener('astro:page-load', () => {
     const $landing = document.querySelector('#landing')
+    const $fightersSelector = document.querySelector('#fighters-selector')
+
+    // mostrar la lista de boxeadores recién cuando se renderizó la página
+    $fightersSelector?.classList.remove('hidden')
 
     let currentFighterId: string | null = null
 
