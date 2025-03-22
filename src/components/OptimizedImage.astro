@@ -1,0 +1,64 @@
+---
+import { getImage, Image } from 'astro:assets'
+import type { GetImageResult, ImageMetadata } from 'astro'
+import blurPlaceholders from '../blur-placeholders.json'
+
+interface Props {
+  src: ImageMetadata | string | keyof typeof blurPlaceholders
+  alt: string
+  class?: string
+  width?: number
+  height?: number
+}
+
+const { src, alt, class: className, width, height } = Astro.props
+
+// Generate the main image
+const mainImage = await getImage({
+  src,
+  width: width,
+  height: height,
+  format: 'webp',
+})
+
+// Get the pre-generated blur placeholder or generate one on demand
+let blurredPlaceholder: GetImageResult | { src: string }
+
+// If src is ImageMetadata (imported image), get its src property to match against blur placeholders
+const imagePath = typeof src === 'object' && 'src' in src ? src.src : (src as string)
+const blurKey = Object.keys(blurPlaceholders).find((key) => imagePath.includes(key))
+
+if (blurKey) {
+  blurredPlaceholder = { src: blurPlaceholders[blurKey as keyof typeof blurPlaceholders] }
+} else {
+  blurredPlaceholder = await getImage({
+    src,
+    width: 1,
+    format: 'webp',
+  })
+}
+---
+
+<div class:list={['relative overflow-hidden', className]}>
+  {/* Blurred placeholder */}
+  <Image
+    src={blurredPlaceholder.src}
+    alt={alt}
+    width={10}
+    height={10}
+    class="absolute inset-0 h-full w-full scale-110 transform blur-xl"
+    aria-hidden="true"
+    style="opacity: 1; transition: opacity 0.4s ease-in-out;"
+  />
+
+  {/* Main image */}
+  <Image
+    src={mainImage.src}
+    width={mainImage.attributes.width}
+    height={mainImage.attributes.height}
+    alt={alt}
+    class="relative h-full w-full object-cover"
+    style="opacity: 0; transition: opacity 0.4s ease-in-out;"
+    onload="this.style.opacity = 1; this.previousElementSibling.style.opacity = 0;"
+  />
+</div>
