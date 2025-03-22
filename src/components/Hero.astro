@@ -8,14 +8,14 @@ const rightRow = firstRow.slice(3)
 const secondRow = FIGHTERS.slice(6)
 ---
 
-<section class="relative flex min-h-screen w-full">
+<section class="relative flex min-h-screen w-full group pointer-events-none">
   <div
     class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.png')] bg-cover bg-center"
   >
   </div>
 
   <div class="relative flex w-full flex-col items-center p-8 text-center">
-    <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
+    <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16 group-hover:opacity-0 transition-opacity duration-300">
       <h3
         class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 leading-[100%] font-light"
       >
@@ -62,7 +62,7 @@ const secondRow = FIGHTERS.slice(6)
               src={`/images/fighters/text/${id}.png`}
               alt={name}
               decoding="async"
-              class="mask-fade-text absolute hidden h-full w-auto"
+              class="w-auto h-full absolute opacity-0 mask-fade-text transition-opacity duration-300"
               fetchpriority="low"
             />
           ))
@@ -80,7 +80,7 @@ const secondRow = FIGHTERS.slice(6)
               src={`/images/fighters/big/${id}.webp`}
               alt={name}
               decoding="async"
-              class="absolute hidden h-full w-full object-cover lg:object-contain"
+              class="absolute h-full w-full object-cover lg:object-contain opacity-0 transition-opacity duration-300"
               fetchpriority="low"
             />
           ))
@@ -111,63 +111,12 @@ const secondRow = FIGHTERS.slice(6)
   }
 </style>
 
-<script>
-  document.addEventListener('astro:page-load', () => {
-    const $landing = document.querySelector('#landing')
+<!-- Estilos para detectar hover en boxerCard y mostrar la imagen correspondiente -->
+<style is:inline set:html={FIGHTERS.map(({id}) => `
+  section:has(.boxer-card[data-id="${id}"]:hover) [data-id="hero-text-${id}"],
+  section:has(.boxer-card[data-id="${id}"]:hover) [data-id="hero-image-${id}"] {
+    opacity: 1;
+  }
+`).join('\n')}>
+</style>
 
-    let currentFighterId: string | null = null
-
-    document.addEventListener('boxer-card-exit', () => {
-      $landing?.classList.remove('hidden')
-
-      if (currentFighterId) {
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add('hidden')
-
-        currentFighterId = null
-      }
-    })
-
-    document.addEventListener('boxer-card-hovered', (event: Event) => {
-      const customEvent = event as CustomEvent<{ id: string }>
-      const id = customEvent.detail.id
-
-      // si el luchador que entras es el mismo que ya se muestra
-      // entonces no hacemos nada
-      if (currentFighterId === id) return
-
-      // si ya estamos mostrando un luchador, tenemos que ocultarlo
-      if (currentFighterId) {
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add('hidden')
-
-        document
-          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.remove('animate-zoom-in')
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.remove('animate-slide-up-fade')
-      }
-
-      $landing?.classList.add('hidden')
-
-      // mostramos el luchador que quiere ver el usuario
-      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.remove('hidden')
-
-      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.remove('hidden')
-
-      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.add('animate-zoom-in')
-
-      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.add('animate-slide-up-fade')
-
-      currentFighterId = id
-    })
-  })
-</script>
