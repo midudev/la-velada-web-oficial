@@ -121,11 +121,12 @@ const secondRow = FIGHTERS.slice(6)
       $landing?.classList.remove('hidden')
 
       if (currentFighterId) {
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
+        // Uso de animación para ocultar a los peleadores
+        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add("animate-zoom-out")
 
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add('hidden')
+        document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)?.classList.remove('animate-slide-up-fade')
+
+        document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)?.classList.add('animate-fade-out-down')
 
         currentFighterId = null
       }
@@ -159,6 +160,14 @@ const secondRow = FIGHTERS.slice(6)
       $landing?.classList.add('hidden')
 
       // mostramos el luchador que quiere ver el usuario
+      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.add('hidden')
+
+      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.remove("animate-zoom-out")
+
+      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.add('hidden')
+
+      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.remove('animate-fade-out-down')
+
       document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.remove('hidden')
 
       document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.remove('hidden')
