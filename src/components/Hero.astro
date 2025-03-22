@@ -80,7 +80,7 @@ const secondRow = FIGHTERS.slice(6)
               src={`/images/fighters/big/${id}.webp`}
               alt={name}
               decoding="async"
-              class="absolute hidden h-full w-full object-cover lg:object-contain"
+              class="absolute hidden h-full w-full object-cover lg:object-contain fighter-hero-preview"
               fetchpriority="low"
             />
           ))
@@ -124,7 +124,7 @@ const secondRow = FIGHTERS.slice(6)
         document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
 
         document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+          .querySelector(`.fighter-hero-preview[data-id="hero-image-${currentFighterId}"]`)
           ?.classList.add('hidden')
 
         currentFighterId = null
