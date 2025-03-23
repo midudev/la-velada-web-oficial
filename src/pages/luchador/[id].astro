@@ -1,6 +1,7 @@
 ---
 import { FIGHTERS } from "@/consts/fighters"
 import Layout from "@/layouts/Layout.astro"
+import {fixedTitle} from "@/consts/pageTitles"
 
 const { id } = Astro.params
 
@@ -9,7 +10,7 @@ const fighter = FIGHTERS.find((fighter) => fighter.id === id)
 export const prerender = false
 ---
 
-<Layout>
+<Layout title={`${fighter?.name} | ${fixedTitle}`}>
   <section class="relative flex min-h-screen w-full">
     <div
       class="bg-[url('/images/hero.png')] bg-cover bg-center w-full mask-fade-bottom absolute inset-0"
@@ -17,8 +18,8 @@ export const prerender = false
     </div>
     <img
       transition:name={`image-${id}`}
-      data-id={`hero-image-${id}`}
-      src={`/images/fighters/big/${id}.png`}
+      data-id={`hero-image-transitioned-${id}`}
+      src={`/images/fighters/big/${id}.webp`}
       alt={fighter?.name}
       decoding="async"
       class="w-auto h-full z-10 mask-fade-bottom"
