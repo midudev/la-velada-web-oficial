@@ -1,145 +1,32 @@
 ---
-import type { Fighters } from '@/types/fighters'
-
-const { id, name, class: className } = Astro.props
-
-const boxerCardVariants: Record<Fighters['id'], string[]> = {
-  peereira: [
-    // Opponent styles
-    'group-has-[a[data-id=rivaldios]:hover]/hero:grayscale-0 group-has-[a[data-id=rivaldios]:focus]/hero:grayscale-0 group-has-[a[data-id=rivaldios]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=peereira]:hover]/hero:grayscale-0 group-has-[a[data-id=peereira]:focus]/hero:grayscale-0 group-has-[a[data-id=peereira]:focus-visible]/hero:grayscale-0',
-  ],
-  rivaldios: [
-    // Opponent styles
-    'group-has-[a[data-id=peereira]:hover]/hero:grayscale-0 group-has-[a[data-id=peereira]:focus]/hero:grayscale-0 group-has-[a[data-id=peereira]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=rivaldios]:hover]/hero:grayscale-0 group-has-[a[data-id=rivaldios]:focus]/hero:grayscale-0 group-has-[a[data-id=rivaldios]:focus-visible]/hero:grayscale-0',
-  ],
-  perxitaa: [
-    // Opponent styles
-    'group-has-[a[data-id=gaspi]:hover]/hero:grayscale-0 group-has-[a[data-id=gaspi]:focus]/hero:grayscale-0 group-has-[a[data-id=gaspi]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=perxitaa]:hover]/hero:grayscale-0 group-has-[a[data-id=perxitaa]:focus]/hero:grayscale-0 group-has-[a[data-id=perxitaa]:focus-visible]/hero:grayscale-0',
-  ],
-  gaspi: [
-    // Opponent styles
-    'group-has-[a[data-id=perxitaa]:hover]/hero:grayscale-0 group-has-[a[data-id=perxitaa]:focus]/hero:grayscale-0 group-has-[a[data-id=perxitaa]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=gaspi]:hover]/hero:grayscale-0 group-has-[a[data-id=gaspi]:focus]/hero:grayscale-0 group-has-[a[data-id=gaspi]:focus-visible]/hero:grayscale-0',
-  ],
-  abby: [
-    // Opponent styles
-    'group-has-[a[data-id=roro]:hover]/hero:grayscale-0 group-has-[a[data-id=roro]:focus]/hero:grayscale-0 group-has-[a[data-id=roro]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=abby]:hover]/hero:grayscale-0 group-has-[a[data-id=abby]:focus]/hero:grayscale-0 group-has-[a[data-id=abby]:focus-visible]/hero:grayscale-0',
-  ],
-  roro: [
-    // Opponent styles
-    'group-has-[a[data-id=abby]:hover]/hero:grayscale-0 group-has-[a[data-id=abby]:focus]/hero:grayscale-0 group-has-[a[data-id=abby]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=roro]:hover]/hero:grayscale-0 group-has-[a[data-id=roro]:focus]/hero:grayscale-0 group-has-[a[data-id=roro]:focus-visible]/hero:grayscale-0',
-  ],
-  andoni: [
-    // Opponent styles
-    'group-has-[a[data-id=carlos]:hover]/hero:grayscale-0 group-has-[a[data-id=carlos]:focus]/hero:grayscale-0 group-has-[a[data-id=carlos]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=andoni]:hover]/hero:grayscale-0 group-has-[a[data-id=andoni]:focus]/hero:grayscale-0 group-has-[a[data-id=andoni]:focus-visible]/hero:grayscale-0',
-  ],
-  carlos: [
-    // Opponent styles
-    'group-has-[a[data-id=andoni]:hover]/hero:grayscale-0 group-has-[a[data-id=andoni]:focus]/hero:grayscale-0 group-has-[a[data-id=andoni]:focus-visible]/hero:grayscale-0',
-  ],
-  viruzz: [
-    // Opponent styles
-    'group-has-[a[data-id=tomas]:hover]/hero:grayscale-0 group-has-[a[data-id=tomas]:focus]/hero:grayscale-0 group-has-[a[data-id=tomas]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=viruzz]:hover]/hero:grayscale-0 group-has-[a[data-id=viruzz]:focus]/hero:grayscale-0 group-has-[a[data-id=viruzz]:focus-visible]/hero:grayscale-0',
-  ],
-  tomas: [
-    // Opponent styles
-    'group-has-[a[data-id=viruzz]:hover]/hero:grayscale-0 group-has-[a[data-id=viruzz]:focus]/hero:grayscale-0 group-has-[a[data-id=viruzz]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=tomas]:hover]/hero:grayscale-0 group-has-[a[data-id=tomas]:focus]/hero:grayscale-0 group-has-[a[data-id=tomas]:focus-visible]/hero:grayscale-0',
-  ],
-  alana: [
-    // Opponent styles
-    'group-has-[a[data-id=arigeli]:hover]/hero:grayscale-0 group-has-[a[data-id=arigeli]:focus]/hero:grayscale-0 group-has-[a[data-id=arigeli]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=alana]:hover]/hero:grayscale-0 group-has-[a[data-id=alana]:focus]/hero:grayscale-0 group-has-[a[data-id=alana]:focus-visible]/hero:grayscale-0',
-  ],
-  arigeli: [
-    // Opponent styles
-    'group-has-[a[data-id=alana]:hover]/hero:grayscale-0 group-has-[a[data-id=alana]:focus]/hero:grayscale-0 group-has-[a[data-id=alana]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=arigeli]:hover]/hero:grayscale-0 group-has-[a[data-id=arigeli]:focus]/hero:grayscale-0 group-has-[a[data-id=arigeli]:focus-visible]/hero:grayscale-0',
-  ],
-  grefg: [
-    // Opponent styles
-    'group-has-[a[data-id=westcol]:hover]/hero:grayscale-0 group-has-[a[data-id=westcol]:focus]/hero:grayscale-0 group-has-[a[data-id=westcol]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=grefg]:hover]/hero:grayscale-0 group-has-[a[data-id=grefg]:focus]/hero:grayscale-0 group-has-[a[data-id=grefg]:focus-visible]/hero:grayscale-0',
-  ],
-  westcol: [
-    // Opponent styles
-    'group-has-[a[data-id=grefg]:hover]/hero:grayscale-0 group-has-[a[data-id=grefg]:focus]/hero:grayscale-0 group-has-[a[data-id=grefg]:focus-visible]/hero:grayscale-0',
-    // Current fighter styles
-    'group-has-[a[data-id=westcol]:hover]/hero:grayscale-0 group-has-[a[data-id=westcol]:focus]/hero:grayscale-0 group-has-[a[data-id=westcol]:focus-visible]/hero:grayscale-0',
-  ],
-}
+const { id, name } = Astro.props
 ---
 
 <a
-  class:list={[
-    'boxer-card group/boxer-card relative inline-block w-10 overflow-hidden rounded-lg transition-all duration-300 hover:-translate-y-3 hover:scale-105 hover:shadow-lg sm:w-14 md:w-16 lg:w-24 xl:w-26 z-10',
-    // Events
-    'hover:-translate-y-3 hover:scale-105 hover:shadow-lg focus:-translate-y-3 focus:scale-105 focus:shadow-lg focus-visible:-translate-y-3 focus-visible:scale-105 focus-visible:shadow-lg',
-    // Not opponent styles
-    'group-has-[a[data-fighter-card]:hover]/hero:grayscale-100 group-has-[a[data-fighter-card]:focus]/hero:grayscale-100 group-has-[a[data-fighter-card]:focus-visible]/hero:grayscale-100',
-    // Pairings
-    boxerCardVariants[id as keyof typeof boxerCardVariants],
-    className,
-  ]}
-  data-fighter-card
-  data-id={id}
+  class="boxer-card inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg overflow-hidden duration-300 hover:-translate-y-3 hover:scale-105 hover:shadow-lg hover:z-20"
   href={`/luchador/${id}`}
+  data-id={id}
 >
   <div class="relative overflow-hidden">
     <img
-      class:list={[
-        'aspect-[900/1200] h-full w-full object-cover transition-transform duration-500',
-        // Events
-        'group-hover/boxer-card:scale-110 group-focus/boxer-card:scale-110 group-focus-visible/boxer-card:scale-110',
-      ]}
+      class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
       src={`/images/fighters/cards/${id}.png`}
       alt={`Tarjeta del boxeador ${name}`}
     />
 
     <div
-      class:list={[
-        'absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out',
-        // Events
-        'group-hover/boxer-card:translate-x-full group-focus/boxer-card:translate-x-full group-focus-visible/boxer-card:translate-x-full',
-      ]}
+      class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"
     >
     </div>
 
     <div
-      class:list={[
-        'border-theme-tickle-me-pink/70 absolute inset-0 rounded-lg border-0 opacity-0 transition-all duration-300',
-        // Events
-        'group-hover/boxer-card:border-2 group-hover/boxer-card:opacity-100 group-focus/boxer-card:border-2 group-focus/boxer-card:opacity-100 group-focus-visible/boxer-card:border-2 group-focus-visible/boxer-card:opacity-100',
-      ]}
+      class="absolute inset-0 border-0 group-hover:border-2 border-theme-tickle-me-pink/70 rounded-lg transition-all duration-300 opacity-0 group-hover:opacity-100"
     >
     </div>
   </div>
 
   <div
-    class:list={[
-      'absolute inset-0 flex translate-y-2 flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300',
-      // Events
-      'group-hover/boxer-card:translate-y-0 group-hover/boxer-card:opacity-100 group-focus/boxer-card:translate-y-0 group-focus/boxer-card:opacity-100 group-focus-visible/boxer-card:translate-y-0 group-focus-visible/boxer-card:opacity-100',
-    ]}
+    class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
   >
     <h3
       class="text-theme-tickle-me-pink text-sm font-bold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
@@ -149,7 +36,87 @@ const boxerCardVariants: Record<Fighters['id'], string[]> = {
   </div>
 
   <div
-    class="bg-theme-tickle-me-pink absolute -bottom-1 left-1/2 h-1 w-0 -translate-x-1/2 transform rounded-t-md transition-all duration-300 group-hover:w-2/3"
+    class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-theme-tickle-me-pink rounded-t-md group-hover:w-2/3 transition-all duration-300"
   >
   </div>
 </a>
+
+<style>
+  @media (prefers-reduced-motion) {
+    .boxer-card,
+    .boxer-card:hover,
+    .boxer-card img,
+    .boxer-card div {
+      transition: opacity 0.3s ease !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const boxerCards = document.querySelectorAll(".boxer-card")
+    let timeoutId: number | null = null
+
+    const pairings: Record<number, number> = {
+      0: 5, 1: 4, 2: 3, 6: 13, 7: 12, 8: 11, 9: 10,
+      5: 0, 4: 1, 3: 2, 13: 6, 12: 7, 11: 8, 10: 9
+    };
+
+
+    boxerCards.forEach((singleBoxerCard, index) => {
+      singleBoxerCard.addEventListener("mouseenter", () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+          timeoutId = null
+        }
+
+        const id = singleBoxerCard.getAttribute("data-id")
+        if (id) {
+          // Dispatch a custom event to notify a boxer card id is hovered
+          const event = new CustomEvent("boxer-card-hovered", {
+            detail: { id },
+          })
+          document.dispatchEvent(event)
+        }
+      // Aplicar la clase 'grayscale-100' a todas las tarjetas
+    boxerCards.forEach((card) => card.classList.add("grayscale-100"));
+
+    // Quitar la clase solo de la tarjeta sobre la que se está haciendo hover
+    singleBoxerCard.classList.remove("grayscale-100");
+    
+        // Quitar la clase también de su par si existe
+    if (pairings[index] !== undefined) {
+      boxerCards[pairings[index]].classList.remove("grayscale-100");
+    }
+      })
+
+      singleBoxerCard.addEventListener("mouseleave", () => {
+        timeoutId = setTimeout(() => {
+          const event = new CustomEvent("boxer-card-exit")
+          document.dispatchEvent(event)
+        }, 500)
+
+          // Restaurar la clase en todas las tarjetas cuando el mouse salga
+    boxerCards.forEach((card) => card.classList.remove("grayscale-100"));
+      })
+
+      singleBoxerCard.addEventListener("focus", () => {
+        const id = singleBoxerCard.getAttribute("data-id")
+        if (id) {
+          const event = new CustomEvent("boxer-card-hovered", {
+            detail: { id },
+          })
+          document.dispatchEvent(event)
+        }
+      })
+
+      singleBoxerCard.addEventListener("blur", () => {
+        timeoutId = setTimeout(() => {
+          const event = new CustomEvent("boxer-card-exit")
+          document.dispatchEvent(event)
+        }, 500)
+      })
+    })
+  })
+</script>
