@@ -17,9 +17,9 @@ export const FIGHTERS: Fighters[] = [
     versus: 'roro',
   },
   {
-    id: 'roro',
-    name: 'Roro',
-    versus: 'abby',
+    id: 'rivaldios',
+    name: 'Rivaldios',
+    versus: 'peereira',
   },
   {
     id: 'gaspi',
@@ -27,10 +27,10 @@ export const FIGHTERS: Fighters[] = [
     versus: 'perxitaa',
   },
   {
-    id: 'rivaldios',
-    name: 'Rivaldios',
-    versus: 'peereira',
-  },
+    id: 'roro',
+    name: 'Roro',
+    versus: 'abby',
+  },  
   {
     id: 'andoni',
     name: 'Andoni',
@@ -52,14 +52,9 @@ export const FIGHTERS: Fighters[] = [
     versus: 'westcol',
   },
   {
-    id: 'westcol',
-    name: 'Westcol',
-    versus: 'grefg',
-  },
-  {
-    id: 'arigeli',
-    name: 'Arigeli',
-    versus: 'alana',
+    id: 'carlos',
+    name: 'Carlos',
+    versus: 'andoni',
   },
   {
     id: 'tomas',
@@ -67,8 +62,13 @@ export const FIGHTERS: Fighters[] = [
     versus: 'viruzz',
   },
   {
-    id: 'carlos',
-    name: 'Carlos',
-    versus: 'andoni',
+    id: 'arigeli',
+    name: 'Arigeli',
+    versus: 'alana',
+  },
+  {
+    id: 'westcol',
+    name: 'Westcol',
+    versus: 'grefg',
   },
 ] as const
