@@ -1,4 +1,4 @@
-type fighterId =
+export type fighterId =
   | 'peereira'
   | 'perxitaa'
   | 'abby'
