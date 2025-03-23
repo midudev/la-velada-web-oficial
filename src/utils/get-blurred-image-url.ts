@@ -1,7 +1,12 @@
 import blurPlaceholders from '@/blur-placeholders.json'
 import { getOptimizedImageUrl } from '@/utils/get-optimized-image-url'
-import type { UnresolvedImageTransform } from 'astro'
-export async function getBlurredImageUrl(imageObjectOrUrl: UnresolvedImageTransform['src']): Promise<ImageMetadata | string> {
+import type { ImageMetadata, UnresolvedImageTransform } from 'astro'
+import type { LocalImageProps, RemoteImageProps } from 'astro:assets'
+
+type ImageObjectOrUrl = Awaited<LocalImageProps['src']> | Awaited<RemoteImageProps['src']>
+type ImagePromise = Promise<LocalImageProps['src'] | RemoteImageProps['src']>
+
+export async function getBlurredImageUrl(imageObjectOrUrl: ImageObjectOrUrl): ImagePromise {
     const imageUrl = typeof imageObjectOrUrl === 'string' ? imageObjectOrUrl : (imageObjectOrUrl as ImageMetadata).src
 
     const blurKey = Object.keys(blurPlaceholders).find((key) => imageUrl.includes(key))
