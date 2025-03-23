@@ -27,7 +27,7 @@ type fighterName =
   | 'Grefg'
   | 'Westcol'
   | 'Arigeli'
-  | 'Tomas'
+  | 'Tomás'
   | 'Carlos'
 
 export interface Fighters {
