@@ -1,3 +1,8 @@
+---
+// Detectar si estamos en la página principal
+const isHomePage = Astro.url.pathname === "/" || Astro.url.pathname === "";
+---
+
 <header class="fixed top-0 w-full z-50 text-white mx-auto">
   <nav class="flex items-center px-6 py-4 text-sm font-light justify-between max-w-6xl mx-auto">
     <div class="hidden md:flex flex-row gap-8 justify-start flex-1">
@@ -9,15 +14,19 @@
       </a>
     </div>
     <div class="flex-1 flex justify-center relative">
+      {!isHomePage && (
         <a href="/" class="absolute -top-2">
-        <img
-          class="z-20 h-auto w-16"
-          src="/images/logo.webp"
-          fetchpriority="high"
-          alt="La Velada del Año V"
-          decoding="async"
-        />
-      </a>
+          <img
+            class="z-20 h-auto w-16"
+            src="/images/logo.webp"
+            alt="La Velada del Año V"
+            decoding="async"
+            width="64"
+            height="64"
+            loading="lazy"
+          />
+        </a>
+      )}
     </div>
     <div class="hidden md:flex flex-col items-end flex-1">
       <span class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative">
@@ -53,17 +62,3 @@
     }
   }
 </style>
-
-<script>
-  document.addEventListener('astro:page-load', () => {
-    const logo = document.querySelector('a[href="/"]');
-
-    if (logo) {
-      if (window.location.pathname === "/") {
-        logo.classList.add("hidden");
-      } else {
-        logo.classList.remove("hidden");
-      }
-    }
-  });
-</script>
