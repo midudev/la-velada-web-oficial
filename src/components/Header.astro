@@ -2,7 +2,7 @@
   <nav
     class="flex items-center px-6 py-4 text-sm font-light justify-between max-w-6xl mx-auto"
   >
-    <div class="hidden md:flex flex-row gap-8 justify-start">
+    <div class="hidden md:flex flex-row gap-8 justify-start flex-1">
       <a
         href="/la-porra"
         class="inline-block text-theme-seashell hover:underline"
@@ -14,7 +14,17 @@
         >VER <strong>COMBATES</strong></a
       >
     </div>
-    <div class="hidden md:flex flex-col items-end">
+    <a href="/" class="flex-shrink-0 mx-4">
+      <img
+        id="menuLogo"
+        class="z-20 h-auto w-12"
+        src="/images/logo.png"
+        fetchpriority="high"
+        alt="La Velada del Año V"
+        decoding="async"
+      />
+    </a>
+    <div class="hidden md:flex flex-col items-end flex-1">
       <span
         class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative"
         >COMPRA LAS <strong>ENTRADAS</strong>
@@ -50,3 +60,9 @@
     }
   }
 </style>
+
+<script>
+  if (window.location.pathname === "/") {
+    document.querySelector('#menuLogo')?.classList.add('hidden');
+  }
+</script>
