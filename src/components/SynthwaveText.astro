@@ -1,15 +1,17 @@
 ---
-import type { HTMLTag, Polymorphic } from 'astro/types'
+import type { HTMLAttributes, HTMLTag, Polymorphic } from 'astro/types'
 import type { ErrorWithMetadata } from 'node_modules/astro/dist/core/errors'
 
-type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }>
+type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & HTMLAttributes<Tag>
 
-const { as: Element = 'h1' } = Astro.props
+const { as: Element = 'h1', class: className, ...rest } = Astro.props
 
 // Throw an error if the component is used without a default slot
 if (!Astro.slots.has('default')) {
-  const noSlotError = new Error("SynthwaveText component must have a text content.") as ErrorWithMetadata
-  noSlotError.name = "SynthwaveTextError"
+  const noSlotError = new Error(
+    'SynthwaveText component must have a text content.'
+  ) as ErrorWithMetadata
+  noSlotError.name = 'SynthwaveTextError'
   noSlotError.hint = `See the examples below: \n✅ Valid \n  <SynthwaveText as="h1">peereira7</SynthwaveText> \n❌ Invalid \n  <SynthwaveText as="h1" />`
   throw noSlotError
 }
@@ -20,14 +22,15 @@ const text = await Astro.slots.render('default')
 // Throw error if the slot contains HTML tags
 if (!text || text.match(/(<([^>]+)>)/gi)) {
   const invalidTextError = new Error("SynthwaveText's content must be text.") as ErrorWithMetadata
-  invalidTextError.name = "SynthwaveTextError"
+  invalidTextError.name = 'SynthwaveTextError'
   invalidTextError.hint = `If you want to use HTML tags, use the \`as\` prop to specify the element type. \nSee the examples below: \n✅ Valid \n  \`<SynthwaveText as="span">peereira7</SynthwaveText>\`\n❌ Invalid \n  \`<SynthwaveText><span>peereira7</span></SynthwaveText>\``
   throw invalidTextError
 }
 ---
 
 <Element
-  class="relative text-center text-6xl font-extrabold tracking-normal uppercase"
+  class:list={['relative text-center text-6xl font-extrabold tracking-normal uppercase', className]}
+  {...rest}
   data-text={text}
 >
   {text}
