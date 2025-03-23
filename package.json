@@ -7,8 +7,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "predev": "node scripts/generate-blur-placeholders.mjs",
-    "prebuild": "node scripts/generate-blur-placeholders.mjs"
+    "generate:blur-images": "node scripts/generate-blur-placeholders.mjs",
+    "predev": "pnpm generate:blur-images",
+    "prebuild": "pnpm generate:blur-images"
   },
   "dependencies": {
     "@astrojs/vercel": "8.1.2",
