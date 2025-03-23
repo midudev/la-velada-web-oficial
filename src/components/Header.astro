@@ -14,9 +14,8 @@
         >VER <strong>COMBATES</strong></a
       >
     </div>
-    <a href="/" class="flex-shrink-0 mx-4">
+    <a href="/" class="flex-shrink-0 mx-4 hidden" >
       <img
-        id="menuLogo"
         class="z-20 h-auto w-12"
         src="/images/logo.png"
         fetchpriority="high"
@@ -62,7 +61,15 @@
 </style>
 
 <script>
-  if (window.location.pathname === "/") {
-    document.querySelector('#menuLogo')?.classList.add('hidden');
-  }
+  document.addEventListener('astro:page-load', () => {
+    const logo = document.querySelector('a[href="/"]');
+
+    if (logo) {
+      if (window.location.pathname === "/") {
+        logo.classList.add("hidden");
+      } else {
+        logo.classList.remove("hidden");
+      }
+    }
+  });
 </script>
