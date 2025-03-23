@@ -1,6 +1,6 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
-import FighterSelector from './FighterSelector.astro'
+import BoxerCard from './BoxerCard.astro'
 
 const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
@@ -14,15 +14,8 @@ const secondRow = FIGHTERS.slice(6)
   >
   </div>
 
-  <div class="group/hero relative flex w-full flex-col items-center p-8 text-center">
-    <div
-      id="landing"
-      class:list={[
-        'absolute top-0 flex w-full flex-col items-center py-16',
-        // Hide when hover/focus/focus-visible over a fighter card
-        'group-has-[a[data-fighter-card]:hover]/hero:hidden group-has-[a[data-fighter-card]:focus]/hero:hidden group-has-[a[data-fighter-card]:focus-visible]/hero:hidden',
-      ]}
-    >
+  <div class="relative flex w-full flex-col items-center p-8 text-center">
+    <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
       <h3
         class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 leading-[100%] font-light"
       >
@@ -57,18 +50,56 @@ const secondRow = FIGHTERS.slice(6)
       </div>
     </div>
 
+    <div
+      id="fighter-container"
+      class="pointer-events-none absolute inset-0 flex flex-col items-center"
+    >
+      <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
+        {
+          FIGHTERS.map(({ id, name }) => (
+            <img
+              data-id={`hero-text-${id}`}
+              src={`/images/fighters/text/${id}.png`}
+              alt={name}
+              decoding="async"
+              class="mask-fade-text absolute hidden h-full w-auto"
+              fetchpriority="low"
+            />
+          ))
+        }
+      </div>
+
+      <div
+        class="mask-fade-bottom relative bottom-0 mx-auto flex h-[80vh] w-full items-center justify-center"
+      >
+        {
+          FIGHTERS.map(({ id, name }) => (
+            <img
+              transition:name={`image-${id}`}
+              data-id={`hero-image-${id}`}
+              src={`/images/fighters/big/${id}.webp`}
+              alt={name}
+              decoding="async"
+              class="absolute hidden h-full w-full object-cover lg:object-contain"
+              fetchpriority="low"
+            />
+          ))
+        }
+      </div>
+    </div>
+
     <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8">
       <div class="flex w-full flex-wrap justify-between px-4">
-        <div class="flex flex-wrap justify-start gap-4">
-          {leftRow.map(({ id, name }) => <FighterSelector id={id} name={name} boxerCardClass='animate-fade-in-right animate-delay-500' />)}
+        <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start gap-4">
+          {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
         </div>
-        <div class="flex flex-wrap justify-end gap-4">
-          {rightRow.map(({ id, name }) => <FighterSelector id={id} name={name} boxerCardClass='animate-fade-in-left animate-delay-500' />)}
+        <div class="animate-fade-in-left animate-delay-500 flex flex-wrap justify-end gap-4">
+          {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
         </div>
       </div>
 
-      <div class="flex flex-wrap justify-between gap-4">
-        {secondRow.map(({ id, name }) => <FighterSelector id={id} name={name} boxerCardClass='animate-fade-in-up animate-delay-700' />)}
+      <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-between gap-4">
+        {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
       </div>
     </div>
   </div>
@@ -79,3 +110,64 @@ const secondRow = FIGHTERS.slice(6)
     mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
   }
 </style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const $landing = document.querySelector('#landing')
+
+    let currentFighterId: string | null = null
+
+    document.addEventListener('boxer-card-exit', () => {
+      $landing?.classList.remove('hidden')
+
+      if (currentFighterId) {
+        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
+
+        document
+          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+          ?.classList.add('hidden')
+
+        currentFighterId = null
+      }
+    })
+
+    document.addEventListener('boxer-card-hovered', (event: Event) => {
+      const customEvent = event as CustomEvent<{ id: string }>
+      const id = customEvent.detail.id
+
+      // si el luchador que entras es el mismo que ya se muestra
+      // entonces no hacemos nada
+      if (currentFighterId === id) return
+
+      // si ya estamos mostrando un luchador, tenemos que ocultarlo
+      if (currentFighterId) {
+        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
+
+        document
+          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+          ?.classList.add('hidden')
+
+        document
+          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+          ?.classList.remove('animate-zoom-in')
+
+        document
+          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+          ?.classList.remove('animate-slide-up-fade')
+      }
+
+      $landing?.classList.add('hidden')
+
+      // mostramos el luchador que quiere ver el usuario
+      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.remove('hidden')
+
+      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.remove('hidden')
+
+      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.add('animate-zoom-in')
+
+      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.add('animate-slide-up-fade')
+
+      currentFighterId = id
+    })
+  })
+</script>
