@@ -1,5 +1,8 @@
 import type { ImageMetadata, UnresolvedImageTransform } from "astro"
+import type { LocalImageProps, RemoteImageProps } from "astro:assets"
 import { getImage } from "astro:assets"
+
+type ImagePromise = Promise<LocalImageProps['src'] | RemoteImageProps['src']>
 
 async function getExternalImageUrl(options: UnresolvedImageTransform): Promise<ImageMetadata | string> {
   const externalImage = await getImage({
@@ -29,7 +32,7 @@ async function getLocalImageUrl(imageUrl: string): Promise<ImageMetadata | strin
   return imageObject.default
 }
 
-export async function getOptimizedImageUrl(options: UnresolvedImageTransform): Promise<ImageMetadata | string> {
+export async function getOptimizedImageUrl(options: UnresolvedImageTransform): ImagePromise {
   const { src: imageObjectOrUrl } = options
 
   // Return the image if it's an object
