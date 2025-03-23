@@ -156,11 +156,11 @@ const { id, name } = Astro.props
         // Remover la clase selected de todas las tarjetas
         boxerCards.forEach(card => card.classList.remove('selected'));
         
-        // Añadir la clase selected solo a la tarjeta clickeada y su pareja
+        // Añadir la clase selected SOLO a la tarjeta clickeada (removemos la parte de la pareja)
         singleBoxerCard.classList.add('selected');
-        if (pairings[index] !== undefined) {
-          boxerCards[pairings[index]].classList.add('selected');
-        }
+
+        // Crear partículas solo en la tarjeta clickeada
+        createParticles(singleBoxerCard as HTMLElement);
 
         // Navegar a la página del boxeador después de un pequeño delay
         const href = singleBoxerCard.getAttribute('href');
