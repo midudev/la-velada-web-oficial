@@ -3,10 +3,11 @@ import { getBlurredImageUrl } from '@/utils/get-blurred-image-url'
 import { getOptimizedImageUrl } from '@/utils/get-optimized-image-url'
 import type { GetImageResult, ImageMetadata } from 'astro'
 import { Image } from 'astro:assets'
-import blurPlaceholders from '../blur-placeholders.json'
 
-interface Props {
-  src: ImageMetadata | string | keyof typeof blurPlaceholders
+type ImageSource = string | ImageMetadata | Promise<{ default: ImageMetadata }>
+
+type Props = {
+  src: ImageSource
   alt: string
   class?: string
   width?: number
@@ -17,14 +18,14 @@ const { src, alt, class: className, width, height } = Astro.props
 
 const imageObject = await getOptimizedImageUrl({ src, width, height })
 
-const blurredPlaceholder = await getBlurredImageUrl(imageObject as string)
+const blurredPlaceholder = await getBlurredImageUrl(imageObject)
 ---
 
 <div class:list={['relative overflow-hidden', className]}>
   {/* Blurred placeholder */}
   <Image
-    src={blurredPlaceholder}
-    alt={alt}
+    src={blurredPlaceholder as GetImageResult['src']}
+    alt={`${alt} - Blurred placeholder`}
     inferSize
     class="absolute inset-0 h-full w-full scale-110 transform blur-xl"
     aria-hidden="true"
@@ -33,7 +34,7 @@ const blurredPlaceholder = await getBlurredImageUrl(imageObject as string)
 
   {/* Main image */}
   <Image
-    src={imageObject as ImageMetadata}
+    src={imageObject as GetImageResult['src']}
     alt={alt}
     inferSize
     class="relative h-full w-full object-cover"
