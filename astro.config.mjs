@@ -10,14 +10,14 @@ export default defineConfig({
   output: 'server',
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
   },
 
   experimental: {
     svg: {
       mode: 'sprite',
-    }
+    },
   },
 
-  adapter: vercel()
+  adapter: vercel(),
 });
