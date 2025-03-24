@@ -1,30 +1,61 @@
 <header class="fixed top-0 w-full z-50 text-white mx-auto">
   <nav
-    class="flex items-center px-6 py-4 text-sm font-light justify-between max-w-6xl mx-auto"
+      class="flex items-center px-6 py-4 text-sm font-light justify-between max-w-6xl mx-auto"
   >
+    <div class="md:hidden">
+      <button id="mobile-menu-button" class="text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
     <div class="hidden md:flex flex-row gap-8 justify-start">
       <a
-        href="/la-porra"
-        class="inline-block text-theme-seashell hover:underline"
-        >HAZ TU <strong>PORRA</strong></a
+          href="/la-porra"
+          class="inline-block text-theme-seashell hover:underline"
+      >HAZ TU <strong>PORRA</strong></a
       >
       <a
-        href="/combates"
-        class="inline-block text-theme-seashell hover:underline"
-        >VER <strong>COMBATES</strong></a
+          href="/combates"
+          class="inline-block text-theme-seashell hover:underline"
+      >VER <strong>COMBATES</strong></a
       >
     </div>
     <div class="hidden md:flex flex-col items-end">
       <span
-        class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative"
-        >COMPRA LAS <strong>ENTRADAS</strong>
+          class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative"
+      >COMPRA LAS <strong>ENTRADAS</strong>
         <span
-          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center"
-          >PRÓXIMAMENTE</span
+            class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center"
+        >PRÓXIMAMENTE</span
         >
       </span>
     </div>
   </nav>
+
+  <div id="mobile-menu" class="hidden px-6 py-3 md:hidden">
+    <div class="flex flex-col space-y-3">
+      <a
+          href="/la-porra"
+          class="text-xs text-theme-seashell hover:underline"
+      >HAZ TU <strong>PORRA</strong></a
+      >
+      <a
+          href="/combates"
+          class="text-xs text-theme-seashell hover:underline"
+      >VER <strong>COMBATES</strong></a
+      >
+      <span
+          class="text-xs text-theme-seashell opacity-90 cursor-not-allowed relative pb-4"
+      >COMPRA LAS <strong>ENTRADAS</strong>
+        <span
+            class="absolute top-5 inset-0 text-[8px] text-yellow-500"
+        >PRÓXIMAMENTE</span
+        >
+      </span>
+    </div>
+  </div>
 </header>
 
 <style>
@@ -50,3 +81,14 @@
     }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuButton.addEventListener('click', function() {
+      mobileMenu.classList.toggle('hidden');
+    });
+  });
+</script>
