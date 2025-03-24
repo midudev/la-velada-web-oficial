@@ -1,0 +1,221 @@
+---
+import { Image } from "astro:assets";
+import { COMBATS } from "@/consts/combats";
+import Layout from "@/layouts/Layout.astro";
+
+const getCombatById = (id: string) => {
+    return COMBATS.find((combat) => combat.id === id);
+}
+
+const getBoxerNames = (boxerIds: string[]) => {
+    return boxerIds.map((boxerId) => `Boxeador ${boxerId}`);
+}
+
+const createImgRoute = (combateNumber: number, slug: string) => {
+    return `/images/fighters/big/${slug}.png`;
+}
+
+export const getStaticPaths = () => {
+    return COMBATS.map((combat) => ({
+        params: { id: combat.id },
+    }));
+}
+
+const { id } = Astro.params;
+const combatData = getCombatById(id);
+const boxerNames = combatData ? getBoxerNames(combatData.boxers) : [];
+
+if (!combatData) {
+    return {
+        status: 404,
+    }
+}
+
+const { boxers } = combatData;
+const [slug1, slug2] = boxers;
+const [image1, image2] = [
+    { alt: slug1.replaceAll("-", " "), src: createImgRoute(combatData.number, slug1.toLowerCase()) },
+    { alt: slug2.replaceAll("-", " "), src: createImgRoute(combatData.number, slug2.toLowerCase()) },
+];
+
+const formattedBoxerNames = boxerNames.join(" vs ");
+
+export const prerender = true;
+---
+
+<Layout
+
+<div class="map-container">
+    <img src="/images/world_map_vector_Spain.png" alt="World Map" class="world-map">
+	<img src="/images/stadio.jpg" alt="Stadio" class="stadio hidden">
+    <div class="plane"></div>
+  </div>
+
+<main class="flex min-h-screen flex-col items-center justify-center">
+    <img
+        src={image1.src}
+        alt={image1.alt}
+        class="absolute left-0 bottom-0 max-w-[50vw] max-h-[75vh] w-auto h-auto"
+        style="object-fit: cover; object-position: center bottom; mask-image: linear-gradient(black 90%, transparent 100%);"
+    />
+	<img
+                                    src="/images/vsStreetFighter.png"
+                                    alt="VS"
+                                    class="absolute inset-0 m-auto h-40 z-20"
+									style="width: calc(10vw + 100px); height: auto; max-width: 100%;">
+</img>
+    <img
+        src={image2.src}
+        alt={image2.alt}
+        class="absolute right-0 bottom-0 max-w-[50vw] max-h-[75vh] w-auto h-auto"
+        style="object-fit: cover; object-position: center bottom; mask-image: linear-gradient(black 90%, transparent 100%);"
+    />
+</main>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const plane = document.querySelector('.plane');
+		const map = document.querySelector('.world-map');
+		const stadio = document.querySelector('.stadio');
+
+		plane.addEventListener('animationend', () => {
+			map.style.display = 'none';
+			plane.style.display = 'none';
+			stadio.style.display = 'block';
+		});
+	});
+</script>
+</Layout>
+<style>
+	.map-container {
+	 position: relative;
+	 width: 100%;
+	 height: 10vh;
+	 background-size: contain;
+	 background-repeat: no-repeat;
+	 background-position: center;
+	 overflow: hidden;
+   }
+   .world-map {
+	width: 100%;
+	height: 80vh;
+    object-fit: contain;
+  }
+  
+  .stadio {
+        display: none; 
+    }
+   .plane {
+	 position: absolute;
+	 width: 100px;
+	 height: 100px;
+	 background: url('/images/airplane.png') no-repeat center center;
+	 background-size: contain;
+	 animation: flyToDestination 1.5s ease-in-out forwards;
+	 opacity: 1;
+   }
+ 
+   @keyframes flyToDestination {
+	 from {
+	   top: 60vh;
+	   left: -10vw;
+	   transform: rotate(10deg) scale(1);
+	 }
+	 to {
+	   top: 20vh; 
+	   left: 41vw;  
+	   transform: rotate(-5deg) scale(1.2);
+	 }
+   }
+   @media (max-width: 1800px) {
+  @keyframes flyToDestination {
+    from {
+      top: 70vh;
+      left: -15vw;
+    }
+    to {
+      top: 24vh;
+      left: 38vw;
+    }
+  }
+}
+@media (max-width: 1500px) {
+  @keyframes flyToDestination {
+    from {
+      top: 70vh;
+      left: -15vw;
+    }
+    to {
+      top: 27vh;
+      left: 38vw;
+    }
+  }
+}
+@media (max-width: 1024px) {
+  .plane {
+    width: 50px;
+    height: 50px;
+  }
+  @keyframes flyToDestination {
+    from {
+      top: 70vh;
+      left: -15vw;
+    }
+    to {
+      top: 31vh;
+      left: 39vw;
+    }
+  }
+}
+
+   @media (max-width: 768px) {
+	 .plane {
+	   width: 50px;
+	   height: 50px;
+	 }
+	 @keyframes flyToDestination {
+	   from {
+		 top: 75vh;
+		 left: -15vw;
+	   }
+	   to {
+		 top: 33vh;
+		 left: 38vw;
+	   }
+	 }
+   }
+ 
+   @media (max-width: 480px) {
+	 .plane {
+	   width: 40px;
+	   height: 40px;
+	 }
+	 @keyframes flyToDestination {
+	   from {
+		 top: 80vh;
+		 left: -20vw;
+	   }
+	   to {
+		 top:31vh;
+		 left: 37vw;
+	   }
+	 }
+   }
+
+@media (max-width: 320px) {
+  .plane {
+    width: 25px;
+    height: 25px;
+  }
+  @keyframes flyToDestination {
+    from {
+      top: 85vh;
+      left: -30vw;
+    }
+    to {
+      top: 34vh;
+      left: 40vw;
+    }
+  }
+}
+ </style>

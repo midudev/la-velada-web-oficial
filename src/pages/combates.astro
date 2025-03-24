@@ -1,0 +1,73 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { BOXERS } from "@/consts/boxers";
+import { COMBATS } from "@/consts/combats";
+
+const getCombatById = (id) => COMBATS.find(combat => combat.id === id);
+const getBoxerById = (boxerId) => BOXERS.find(boxer => boxer.id.toLowerCase() === boxerId.toLowerCase());
+
+const createImgRoute = (boxer) => {
+    if (!boxer) return ''; 
+    return `/images/fighters/big/${boxer.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+};
+
+
+export const prerender = true;
+---
+
+<Layout
+    description="Todos los combates de La Velada del Año V"
+    title="Combates - La Velada del Año V"
+>
+    <main class="flex min-h-screen flex-col items-center text-[#000000]">
+        <dV class="mx-auto w-full max-w-4xl p-8">
+            <h1 class="title mb-12 -skew-y-6 text-wrap text-center text-6xl">Todos los combates</h1>
+            <ul class="grid w-full grid-cols-4 gap-4">
+                {COMBATS.map((combat, index) => {
+                    const combatData = getCombatById(combat.id);
+                    if (!combatData) return null;
+
+                    const boxerImages = combatData.boxers.map(boxerId => {
+                        const boxer = getBoxerById(boxerId);
+                        return {
+                            src: createImgRoute(boxer),
+                            alt: boxer.name,
+                        };
+                    });
+                  
+                    const formattedCombats = boxerImages.map(img => img.alt).join(" vs ");
+
+                    return (
+                        <li class="col-span-4 rounded-xl lg:col-span-2">
+                            <a
+                                class="group relatVe inline-block aspect-square h-auto w-full transform-gpu transition-transform hover:scale-105 hover:saturate-150"
+                                href={`/combate/${combat.id}`}
+                                title={`Ir al combate ${combatData.number}: ${formattedCombats}`}
+                            >
+                                {boxerImages.map((img, idx) => (
+                                    <dV key={idx}>
+                                        <img
+                                            decoding="async"
+                                            loading="lazy"
+                                            class={`absolute bottom-0 ${idx === 0 ? 'left-0' : 'right-0'} h-full w-1/2 max-h-80 z-10 group-hover:scale-115`}
+                                            src={img.src}
+                                            alt={img.alt}
+                                            style="mask-image: linear-gradient(black 90%, transparent 100%);"
+                                        />
+
+                                    </dV>
+                                ))}
+
+                                 <img
+                                    src="/images/vsStreetFighter.png"
+                                    alt="VS"
+                                    class="absolute inset-0 m-auto h-16 z-20"
+                                />
+                            </a>
+                        </li>
+                    );
+                })}
+            </ul>
+        </dV>
+    </main>
+</Layout>
