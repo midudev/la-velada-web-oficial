@@ -1,0 +1,81 @@
+---
+import { FIGHTERS } from '@/consts/fighters'
+import FighterSelector from './FighterSelector.astro'
+
+const firstRow = FIGHTERS.slice(0, 6)
+const leftRow = firstRow.slice(0, 3)
+const rightRow = firstRow.slice(3)
+const secondRow = FIGHTERS.slice(6)
+---
+
+<section class="relative flex min-h-screen w-full">
+  <div
+    class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.png')] bg-cover bg-center"
+  >
+  </div>
+
+  <div class="group/hero relative flex w-full flex-col items-center p-8 text-center">
+    <div
+      id="landing"
+      class:list={[
+        'absolute top-0 flex w-full flex-col items-center py-16',
+        // Hide when hover/focus/focus-visible over a fighter card
+        'group-has-[a[data-fighter-card]:hover]/hero:hidden group-has-[a[data-fighter-card]:focus]/hero:hidden group-has-[a[data-fighter-card]:focus-visible]/hero:hidden',
+      ]}
+    >
+      <h3
+        class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 leading-[100%] font-light"
+      >
+        <strong>26</strong> DE <br /><strong>JULIO</strong>
+      </h3>
+      <figure class="animate-fade-in relative mt-8">
+        <img
+          class="relative z-20 h-auto w-64"
+          src="/images/logo.png"
+          fetchpriority="high"
+          alt="La Velada del Año V"
+          decoding="async"
+        />
+        <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
+      </figure>
+
+      <div class="relative z-50">
+        <h3
+          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-[100%] font-light"
+        >
+          ESTADIO<br />LA CARTUJA,<br /><strong>SEVILLA</strong>
+        </h3>
+        <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
+        <a
+          href="https://twitch.tv/ibai"
+          rel="noopener noreferrer"
+          target="_blank"
+          class="animate-fade-in animate-delay-700 z-50 mt-4 inline-block leading-[100%] font-light transition hover:scale-125"
+        >
+          TWITCH.TV<br /><strong>IBAI</strong>
+        </a>
+      </div>
+    </div>
+
+    <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8">
+      <div class="flex w-full flex-wrap justify-between px-4">
+        <div class="flex flex-wrap justify-start gap-4">
+          {leftRow.map(({ id, name }) => <FighterSelector id={id} name={name} boxerCardClass='animate-fade-in-right animate-delay-500' />)}
+        </div>
+        <div class="flex flex-wrap justify-end gap-4">
+          {rightRow.map(({ id, name }) => <FighterSelector id={id} name={name} boxerCardClass='animate-fade-in-left animate-delay-500' />)}
+        </div>
+      </div>
+
+      <div class="flex flex-wrap justify-between gap-4">
+        {secondRow.map(({ id, name }) => <FighterSelector id={id} name={name} boxerCardClass='animate-fade-in-up animate-delay-700' />)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mask-fade-text {
+    mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
+  }
+</style>
