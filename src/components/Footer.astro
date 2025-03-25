@@ -1,7 +1,5 @@
 ---
-import X from "@/assets/svg/x.svg";
-import Instagram from "@/assets/svg/instagram.svg";
-import GitHub from "@/assets/svg/github.svg";
+import { SOCIAL } from "@/consts/social";
 ---
 
 <footer class="relative w-full h-[400px] pb-32">
@@ -19,32 +17,19 @@ import GitHub from "@/assets/svg/github.svg";
     </div>
 
     <div class="flex flex-row gap-x-2 items-center justify-center mt-4">
-      <a
-        class="hover:scale-125 transition flex items-center justify-center"
-        aria-label="Visitar perfil de InfoLaVelada en X"
-        href="https://x.com/infolavelada"
-        target="_blank"
-      >
-        <X />
-      </a>
 
-      <a
-        class="hover:scale-125 transition flex items-center justify-center"
-        aria-label="Visitar perfil de InfoLaVelada en Instagram"
-        href="https://instagram.com/infoLaVelada"
-        target="_blank"
-      >
-        <Instagram />
-      </a>
-
-      <a
-        class="hover:scale-125 transition flex items-center justify-center"
-        aria-label="Visitar repositorio de la Velada Oficial en GitHub"
-        href="https://github.com/midudev/la-velada-web-oficial"
-        target="_blank"
-      >
-        <GitHub />
-      </a>
+      {
+        SOCIAL.map(({ url, image, name, label }) => (
+          <a
+            href={url}
+            target="_blank"
+            aria-label={label ?? name}
+            class="hover:scale-125 transition flex items-center justify-center"
+          >
+            <image.logo />
+          </a>
+        ))
+      }
     </div>
   </div>
 </footer>
