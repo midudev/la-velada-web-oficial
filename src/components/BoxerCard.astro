@@ -2,121 +2,373 @@
 const { id, name } = Astro.props
 ---
 
-<a
-  class="boxer-card inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg overflow-hidden duration-300 hover:-translate-y-3 hover:scale-105 hover:shadow-lg hover:z-20"
-  href={`/luchador/${id}`}
-  data-id={id}
->
-  <div class="relative overflow-hidden">
-    <img
-      class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-      src={`/images/fighters/cards/${id}.png`}
-      alt={`Tarjeta del boxeador ${name}`}
-    />
-
-    <div
-      class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"
-    >
-    </div>
-
-    <div
-      class="absolute inset-0 border-0 group-hover:border-2 border-theme-tickle-me-pink/70 rounded-lg transition-all duration-300 opacity-0 group-hover:opacity-100"
-    >
-    </div>
+<div class="card-container inline-block w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 relative">
+  <!-- Marco brillante que quedará en su lugar -->
+  <div class="card-placeholder absolute inset-0 rounded-lg hidden">
+    <div class="placeholder-frame absolute inset-0 rounded-lg border-4 border-theme-tickle-me-pink opacity-0"></div>
+    <div class="placeholder-glow absolute inset-0 rounded-lg opacity-0"></div>
   </div>
-
-  <div
-    class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+  
+  <a
+    class="boxer-card inline-block w-full group relative perspective-1000"
+    href={`/luchador/${id}`}
+    data-id={id}
   >
-    <h3
-      class="text-theme-tickle-me-pink text-sm font-bold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
-    >
-      {name}
-    </h3>
-  </div>
-
-  <div
-    class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-1 bg-theme-tickle-me-pink rounded-t-md group-hover:w-2/3 transition-all duration-300"
-  >
-  </div>
-</a>
+    <div class="card-inner relative w-full aspect-[900/1200] transition-transform duration-[2000ms] transform-style-3d">
+      <!-- Cara frontal -->
+      <div class="card-front absolute inset-0 backface-hidden">
+        <img
+          class="w-full h-full object-cover rounded-lg"
+          src={`/images/fighters/cards/${id}.png`}
+          alt={`Tarjeta del boxeador ${name}`}
+        />
+      </div>
+      
+      <!-- Cara trasera -->
+      <div class="card-back absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-pink-900 to-pink-950 rounded-lg">
+        <div class="flex items-center justify-center h-full">
+          <h3 class="text-theme-tickle-me-pink text-sm font-bold">{name}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="shine-wrapper absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="shine-rays absolute inset-0 opacity-0"></div>
+      <div class="shine-center absolute inset-0 opacity-0"></div>
+    </div>
+  </a>
+</div>
 
 <style>
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+  
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  
+  .boxer-card:hover .card-inner {
+    animation: spin 1s ease-in-out forwards;
+    animation-delay: 0s;
+  }
+
+  .boxer-card.opponent .card-inner {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .shine {
+    background: linear-gradient(
+      45deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.8) 50%,
+      transparent 100%
+    );
+  }
+
+  .shine-rays {
+    background: radial-gradient(
+      circle at center,
+      transparent 0%,
+      rgba(255, 215, 0, 0.3) 20%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 215, 0, 0.3) 80%,
+      transparent 100%
+    );
+  }
+
+  .shine-center {
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.8) 20%,
+      transparent 70%
+    );
+  }
+
+  .boxer-card:hover .shine-rays {
+    animation: shineRays 1s ease-out forwards;
+    animation-delay: 0s;
+  }
+
+  .boxer-card:hover .shine-center {
+    animation: shineCenter 1s ease-out forwards;
+    animation-delay: 0s;
+  }
+
+  /* Estilos para el marco que quedará en el lugar */
+  .placeholder-frame {
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.7);
+  }
+
+  .placeholder-glow {
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 105, 180, 0.6) 0%,
+      rgba(255, 105, 180, 0.3) 30%,
+      rgba(255, 105, 180, 0.1) 70%,
+      transparent 100%
+    );
+  }
+
+  .card-placeholder.active .placeholder-frame,
+  .card-placeholder.active .placeholder-glow {
+    animation: glowFrame 2s ease-in-out infinite;
+  }
+
+  .boxer-card {
+    transition: all 0.5s ease-in-out;
+  }
+
+  .boxer-card.paired {
+    margin: 1rem;
+    opacity: 1;
+    transform: none;
+  }
+
+  .boxer-card.paired.hovered {
+    transform: scale(1.5);
+    z-index: 50;
+  }
+
+  .boxer-card.paired.opponent {
+    transform: scale(1);
+    z-index: 40;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotateY(0deg);
+    }
+    100% {
+      transform: rotateY(2520deg); /* 7 vueltas = 7 * 360 = 2520 grados */
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes shineRays {
+    0% {
+      opacity: 0;
+      transform: scale(0.1) rotate(0deg);
+    }
+    40% {
+      opacity: 1;
+      transform: scale(2) rotate(180deg);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2.5) rotate(360deg);
+    }
+  }
+
+  @keyframes shineCenter {
+    0% {
+      opacity: 0;
+      transform: scale(0.1);
+    }
+    40% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+
+  @keyframes glowFrame {
+    0% {
+      opacity: 0.3;
+      box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    }
+    50% {
+      opacity: 1;
+      box-shadow: 0 0 25px rgba(255, 105, 180, 0.9);
+    }
+    100% {
+      opacity: 0.3;
+      box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    }
+  }
+
+  .grayscale-100 {
+    opacity: 0.5;
+    filter: brightness(0.8);
+  }
+
   @media (prefers-reduced-motion) {
-    .boxer-card,
-    .boxer-card:hover,
-    .boxer-card img,
-    .boxer-card div {
-      transition: opacity 0.3s ease !important;
-      transform: none !important;
+    .boxer-card:hover .card-inner,
+    .boxer-card:hover .shine-rays,
+    .boxer-card:hover .shine-center,
+    .card-placeholder.active .placeholder-frame,
+    .card-placeholder.active .placeholder-glow,
+    .boxer-card.opponent .card-inner {
+      animation: none;
     }
   }
 </style>
 
 <script>
   document.addEventListener("astro:page-load", () => {
+    const cardContainers = document.querySelectorAll(".card-container")
     const boxerCards = document.querySelectorAll(".boxer-card")
+    const placeholders = document.querySelectorAll(".card-placeholder")
     let timeoutId: number | null = null
+    let activeCard: Element | null = null
+    let activeOpponent: Element | null = null
+    let activePlaceholder: Element | null = null
 
-    const pairings: Record<number, number> = {
-      0: 5, 1: 4, 2: 3, 6: 13, 7: 12, 8: 11, 9: 10,
-      5: 0, 4: 1, 3: 2, 13: 6, 12: 7, 11: 8, 10: 9
+    // Definimos las parejas en orden
+    const matchPairs = [
+      [0, 5],   // Abby vs Roro
+      [1, 4],   // Perxitaa vs Gaspi
+      [2, 3],   // Pereira7 vs Rivaldios
+      [6, 13],  // Aldoni vs Carlos Belcast
+      [7, 12],  // Viruzz vs Tomas Mazza
+      [8, 11],  // Alana vs Ari Geli
+      [9, 10]   // TheGreft vs Wescol
+    ];
+
+    const getPairIndex = (index: number): number => {
+      for (let i = 0; i < matchPairs.length; i++) {
+        if (matchPairs[i].includes(index)) {
+          return i;
+        }
+      }
+      return -1;
     };
 
+    const getOpponentIndex = (index: number): number => {
+      const pairIndex = getPairIndex(index);
+      if (pairIndex === -1) return -1;
+      
+      return matchPairs[pairIndex][0] === index ? matchPairs[pairIndex][1] : matchPairs[pairIndex][0];
+    };
 
-    boxerCards.forEach((singleBoxerCard, index) => {
-      singleBoxerCard.addEventListener("mouseenter", () => {
+    const showCard = (cardIndex: number) => {
+      if (activeCard) {
+        // Resetear la carta activa anterior
+        activeCard.classList.remove('hovered');
+      }
+      
+      if (activeOpponent) {
+        // Resetear el oponente anterior
+        activeOpponent.classList.remove('opponent');
+      }
+      
+      if (activePlaceholder) {
+        // Ocultar el placeholder anterior
+        activePlaceholder.classList.remove('active');
+        activePlaceholder.classList.add('hidden');
+      }
+      
+      // Activar nueva carta y su placeholder
+      const card = boxerCards[cardIndex];
+      const opponentIndex = getOpponentIndex(cardIndex);
+      const opponent = opponentIndex !== -1 ? boxerCards[opponentIndex] : null;
+      const placeholder = placeholders[cardIndex];
+      
+      card.classList.add('paired', 'hovered');
+      placeholder.classList.remove('hidden');
+      placeholder.classList.add('active');
+      
+      if (opponent) {
+        opponent.classList.add('paired', 'opponent');
+      }
+      
+      activeCard = card;
+      activeOpponent = opponent;
+      activePlaceholder = placeholder;
+      
+      // Aplicar efecto de opacidad a las demás cartas
+      boxerCards.forEach((otherCard, i) => {
+        if (i !== cardIndex && i !== opponentIndex) {
+          otherCard.classList.add('grayscale-100');
+        } else {
+          otherCard.classList.remove('grayscale-100');
+        }
+      });
+      
+      // Disparar evento personalizado
+      const id = card.getAttribute("data-id");
+      if (id) {
+        const event = new CustomEvent("boxer-card-hovered", {
+          detail: { id },
+        });
+        document.dispatchEvent(event);
+      }
+    };
+
+    const resetCards = () => {
+      if (activeCard) {
+        activeCard.classList.remove('paired', 'hovered');
+      }
+      
+      if (activeOpponent) {
+        activeOpponent.classList.remove('paired', 'opponent');
+      }
+      
+      if (activePlaceholder) {
+        activePlaceholder.classList.add('hidden');
+        activePlaceholder.classList.remove('active');
+      }
+      
+      boxerCards.forEach(card => {
+        card.classList.remove('grayscale-100');
+      });
+      
+      activeCard = null;
+      activeOpponent = null;
+      activePlaceholder = null;
+      
+      const event = new CustomEvent("boxer-card-exit");
+      document.dispatchEvent(event);
+    };
+
+    boxerCards.forEach((card, index) => {
+      card.addEventListener("mouseenter", () => {
         if (timeoutId) {
-          clearTimeout(timeoutId)
-          timeoutId = null
+          clearTimeout(timeoutId);
+          timeoutId = null;
         }
-
-        const id = singleBoxerCard.getAttribute("data-id")
-        if (id) {
-          // Dispatch a custom event to notify a boxer card id is hovered
-          const event = new CustomEvent("boxer-card-hovered", {
-            detail: { id },
-          })
-          document.dispatchEvent(event)
-        }
-      // Aplicar la clase 'grayscale-100' a todas las tarjetas
-    boxerCards.forEach((card) => card.classList.add("grayscale-100"));
-
-    // Quitar la clase solo de la tarjeta sobre la que se está haciendo hover
-    singleBoxerCard.classList.remove("grayscale-100");
-    
-        // Quitar la clase también de su par si existe
-    if (pairings[index] !== undefined) {
-      boxerCards[pairings[index]].classList.remove("grayscale-100");
-    }
-      })
-
-      singleBoxerCard.addEventListener("mouseleave", () => {
+        
+        showCard(index);
+      });
+      
+      card.addEventListener("mouseleave", () => {
         timeoutId = setTimeout(() => {
-          const event = new CustomEvent("boxer-card-exit")
-          document.dispatchEvent(event)
-        }, 500)
-
-          // Restaurar la clase en todas las tarjetas cuando el mouse salga
-    boxerCards.forEach((card) => card.classList.remove("grayscale-100"));
-      })
-
-      singleBoxerCard.addEventListener("focus", () => {
-        const id = singleBoxerCard.getAttribute("data-id")
-        if (id) {
-          const event = new CustomEvent("boxer-card-hovered", {
-            detail: { id },
-          })
-          document.dispatchEvent(event)
-        }
-      })
-
-      singleBoxerCard.addEventListener("blur", () => {
+          resetCards();
+        }, 500);
+      });
+      
+      card.addEventListener("focus", () => {
+        showCard(index);
+      });
+      
+      card.addEventListener("blur", () => {
         timeoutId = setTimeout(() => {
-          const event = new CustomEvent("boxer-card-exit")
-          document.dispatchEvent(event)
-        }, 500)
-      })
-    })
-  })
+          resetCards();
+        }, 500);
+      });
+    });
+  });
 </script>
