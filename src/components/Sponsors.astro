@@ -1,12 +1,19 @@
 ---
-import { SPONSORS } from "@/consts/sponsors";
+import { SPONSORS } from "@/consts/sponsors"
 
-const firstRow = SPONSORS.slice(0, 5);
-const secondRow = SPONSORS.slice(5);
+const firstRow = SPONSORS.slice(0, 5)
+const secondRow = SPONSORS.slice(5)
 ---
 
-<section id="sponsors">
-  <div class="flex justify-around gap-4 flex-wrap w-full">
+<section id="sponsors" class="mx-auto max-w-xl py-36">
+  <h2 class="mb-4 text-4xl font-light text-center text-dark-magenta">
+    <div class="block sm:inline">
+      <strong class="font-normal">Patrocinadores</strong>
+    </div>
+    <div class="block sm:inline">del evento</div>
+  </h2>
+  <div class="w-full flex justify-center items-center flex-col-reverse gap-8 md:flex-col md:gap-5 py-5">
+    <div class="w-1/2 flex flex-wrap justify-evenly gap-8 max-w-md md:flex-row md:w-[100%] md:justify-around md:gap-5">
     {
       firstRow.map(({ url, image, name, label }) => (
         <a
@@ -15,12 +22,16 @@ const secondRow = SPONSORS.slice(5);
           aria-label={label ?? name}
           class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
         >
-          <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
+          <image.logo
+            width={image.width}
+            height={image.width}
+            class="h-14 w-auto"
+          />
         </a>
       ))
     }
   </div>
-  <div class="flex justify-around gap-4 w-full flex-wrap">
+  <div class="w-1/2 flex flex-wrap justify-evenly gap-8 max-w-md md:flex-row md:w-[100%] md:justify-around md:gap-5">
     {
       secondRow.map(({ url, image, name, label }) => (
         <a
@@ -29,9 +40,14 @@ const secondRow = SPONSORS.slice(5);
           aria-label={label ?? name}
           class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
         >
-          <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
+          <image.logo
+            width={image.width}
+            height={image.width}
+            class="h-14 w-auto"
+          />
         </a>
       ))
     }
   </div>
+</div>
 </section>
