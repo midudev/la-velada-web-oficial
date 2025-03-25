@@ -1,7 +1,7 @@
 ---
-import { ClientRouter } from "astro:transitions"
+import { ClientRouter } from 'astro:transitions'
 
-import "@/styles/global.css"
+import '@/styles/global.css'
 
 import Header from "@/components/Header.astro"
 import Footer from "@/components/Footer.astro"
@@ -25,6 +25,43 @@ const { title = fixedTitle } = Astro.props
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <link
+      rel="preload"
+      href="/images/hero.avif"
+      as="image"
+      type="image/avif"
+      crossorigin="anonymous"
+    />
+
+    <!-- Preload de las fuentes para que no se vea el cambio de fuente al cargar la pagina -->
+    <link
+      rel="preload"
+      href="/fonts/anisette-medium.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/fonts/anisette-light.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/fonts/anisette-bold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/fonts/anisette-black.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
     <meta
       name="description"
       content="Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos"
