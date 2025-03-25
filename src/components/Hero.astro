@@ -80,7 +80,7 @@ const secondRow = FIGHTERS.slice(6)
               src={`/images/fighters/big/${id}.webp`}
               alt={name}
               decoding="async"
-              class="absolute hidden h-full w-auto object-cover lg:object-contain opacity-0 transition-opacity duration-300"
+              class="absolute h-full w-auto object-cover lg:object-contain opacity-0 transition-opacity duration-300"
               fetchpriority="low"
             />
           ))
@@ -118,10 +118,14 @@ const secondRow = FIGHTERS.slice(6)
     opacity: 1;
   }
   section:has(.boxer-card[data-id="${id}"]:hover) .boxer-card[data-id="${versus}"] {
-    scale: 105% 105%;
-    --tw-translate-y: calc(var(--spacing) * -3) /* -0.75rem = -12px */;
+    scale: 110% 110%;
+    --tw-translate-y: calc(var(--spacing) * -1);
     translate: var(--tw-translate-x) var(--tw-translate-y);
     filter: grayscale(0%);
+
+    & div {
+      opacity: 1;
+    }
   }
 `).join('\n')}>
 </style>
