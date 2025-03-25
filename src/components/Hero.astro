@@ -10,7 +10,7 @@ const secondRow = FIGHTERS.slice(6)
 
 <section class="relative flex min-h-screen w-full">
   <div
-    class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.png')] bg-cover bg-center"
+    class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
   >
   </div>
 
@@ -34,18 +34,18 @@ const secondRow = FIGHTERS.slice(6)
 
       <div class="relative z-50">
         <h3
-          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-[100%] font-light"
+          class="text-theme-seashell uppercase animate-fade-in animate-delay-500 z-0 mt-4 leading-[100%] font-light"
         >
-          ESTADIO<br />LA CARTUJA,<br /><strong>SEVILLA</strong>
+          Estadio<br />La Cartuja,<br /><strong>Sevilla</strong>
         </h3>
         <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
         <a
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
           target="_blank"
-          class="animate-fade-in animate-delay-700 z-50 mt-4 inline-block leading-[100%] font-light transition hover:scale-125"
+          class="animate-fade-in animate-delay-700 z-50 uppercase mt-4 inline-block leading-[100%] font-light transition hover:scale-125"
         >
-          TWITCH.TV<br /><strong>IBAI</strong>
+          twitch.tv<br /><strong>Ibai</strong>
         </a>
       </div>
     </div>
@@ -80,7 +80,7 @@ const secondRow = FIGHTERS.slice(6)
               src={`/images/fighters/big/${id}.webp`}
               alt={name}
               decoding="async"
-              class="absolute hidden h-full w-full object-cover lg:object-contain"
+              class="absolute hidden h-full w-auto object-cover lg:object-contain"
               fetchpriority="low"
             />
           ))
@@ -120,14 +120,23 @@ const secondRow = FIGHTERS.slice(6)
     document.addEventListener('boxer-card-exit', () => {
       $landing?.classList.remove('hidden')
 
-      if (currentFighterId) {
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
+      if (!currentFighterId) return
 
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add('hidden')
+      const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+      const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
 
-        currentFighterId = null
+      if (heroText && heroImage) {
+        heroText.classList.remove('animate-zoom-int')
+        heroImage.classList.remove('animate-slide-up-fade')
+
+        heroText.classList.add('animate-zoom-out')
+        heroImage.classList.add('animate-fade-out-down')
+
+        setTimeout(() => {
+          heroText.classList.add('hidden')
+          heroImage.classList.add('hidden')
+          currentFighterId = null
+        }, 500)
       }
     })
 
@@ -135,37 +144,40 @@ const secondRow = FIGHTERS.slice(6)
       const customEvent = event as CustomEvent<{ id: string }>
       const id = customEvent.detail.id
 
+      const heroText = document.querySelector(`[data-id="hero-text-${id}"]`)
+      const heroImage = document.querySelector(`[data-id="hero-image-${id}"]`)
+
+      if (heroText && heroImage) {
+        heroText.classList.remove('animate-zoom-out')
+        heroImage.classList.remove('animate-fade-out-down')
+      }
+
       // si el luchador que entras es el mismo que ya se muestra
       // entonces no hacemos nada
       if (currentFighterId === id) return
 
       // si ya estamos mostrando un luchador, tenemos que ocultarlo
       if (currentFighterId) {
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
+        const currentHeroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+        const currentHeroImage = document.querySelector(
+          `[data-id="hero-image-${currentFighterId}"]`
+        )
 
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add('hidden')
-
-        document
-          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.remove('animate-zoom-in')
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.remove('animate-slide-up-fade')
+        if (currentHeroText && currentHeroImage) {
+          currentHeroText.classList.add('hidden')
+          currentHeroImage.classList.add('hidden')
+          currentHeroText.classList.remove('animate-zoom-in')
+          currentHeroImage.classList.remove('animate-slide-up-fade')
+        }
       }
 
       $landing?.classList.add('hidden')
 
       // mostramos el luchador que quiere ver el usuario
-      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.remove('hidden')
-
-      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.remove('hidden')
-
-      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.add('animate-zoom-in')
-
-      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.add('animate-slide-up-fade')
+      heroText?.classList.remove('hidden')
+      heroText?.classList.add('animate-zoom-in')
+      heroImage?.classList.remove('hidden')
+      heroImage?.classList.add('animate-slide-up-fade')
 
       currentFighterId = id
     })
