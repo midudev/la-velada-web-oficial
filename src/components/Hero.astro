@@ -8,7 +8,7 @@ const rightRow = firstRow.slice(3)
 const secondRow = FIGHTERS.slice(6)
 ---
 
-<section class="relative flex min-h-screen w-full group pointer-events-none">
+<section class="relative flex min-h-screen w-full group pointer-events-none group/fight">
   <div
     class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.png')] bg-cover bg-center"
   >
@@ -112,10 +112,16 @@ const secondRow = FIGHTERS.slice(6)
 </style>
 
 <!-- Estilos para detectar hover en boxerCard y mostrar la imagen correspondiente -->
-<style is:inline set:html={FIGHTERS.map(({id}) => `
+<style is:inline set:html={FIGHTERS.map(({id, versus}) => `
   section:has(.boxer-card[data-id="${id}"]:hover) [data-id="hero-text-${id}"],
   section:has(.boxer-card[data-id="${id}"]:hover) [data-id="hero-image-${id}"] {
     opacity: 1;
+  }
+  section:has(.boxer-card[data-id="${id}"]:hover) .boxer-card[data-id="${versus}"] {
+    scale: 105% 105%;
+    --tw-translate-y: calc(var(--spacing) * -3) /* -0.75rem = -12px */;
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+    filter: grayscale(0%);
   }
 `).join('\n')}>
 </style>
