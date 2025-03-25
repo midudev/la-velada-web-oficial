@@ -1,5 +1,11 @@
 ---
 const { id, name, class: extraClass } = Astro.props;
+        
+interface Props {
+  id: string
+  name: string
+  class : string
+}
 ---
 
 <a
@@ -29,7 +35,7 @@ const { id, name, class: extraClass } = Astro.props;
     class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
   >
     <h3
-      class="text-theme-tickle-me-pink text-sm font-bold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+      class="text-theme-tickle-me-pink text-sm font-bold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] uppercase"
     >
       {name}
     </h3>
