@@ -117,10 +117,16 @@ const secondRow = FIGHTERS.slice(6)
 
     let currentFighterId: string | null = null
 
-    document.addEventListener('boxer-card-exit', () => {
+    const handleBoxerCardExit = (event: Event) => {
+      const customEvent = event as CustomEvent<{
+        clickedFighterAttr: string
+      }>
+
+      const clickedFighterAttr = customEvent.detail.clickedFighterAttr
+
       $landing?.classList.remove('hidden')
 
-      if (currentFighterId) {
+      if (currentFighterId && clickedFighterAttr === 'false') {
         document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden')
 
         document
@@ -129,10 +135,12 @@ const secondRow = FIGHTERS.slice(6)
 
         currentFighterId = null
       }
-    })
+    }
 
-    document.addEventListener('boxer-card-hovered', (event: Event) => {
-      const customEvent = event as CustomEvent<{ id: string }>
+    const handleBoxerCardHovered = (event: Event) => {
+      const customEvent = event as CustomEvent<{
+        id: string
+      }>
       const id = customEvent.detail.id
 
       // si el luchador que entras es el mismo que ya se muestra
@@ -168,6 +176,14 @@ const secondRow = FIGHTERS.slice(6)
       document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.add('animate-slide-up-fade')
 
       currentFighterId = id
+    }
+
+    document.addEventListener('boxer-card-hovered', handleBoxerCardHovered)
+    document.addEventListener('boxer-card-exit', handleBoxerCardExit)
+
+    // Limpiar evento antes de cargar una nueva página
+    document.addEventListener('astro:before-swap', () => {
+      document.removeEventListener('boxer-card-exit', handleBoxerCardExit)
     })
   })
 </script>
