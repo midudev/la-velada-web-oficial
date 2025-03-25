@@ -1,6 +1,13 @@
-<header class="fixed top-0 w-full z-50 text-white mx-auto">
+---
+const { pathname } = Astro.url;
+---
+
+<header class="fixed flex items-center top-0 h-16 w-full z-50 text-white mx-auto">
   <nav
-    class="flex items-center px-6 py-4 text-sm font-light justify-between max-w-6xl mx-auto"
+    class:list={[
+      pathname === "/" ? "grid-cols-2" : "grid-cols-3",
+      "grid items-center px-6 text-sm font-light justify-between max-w-6xl w-full mx-auto"
+    ]}
   >
     <div class="hidden md:flex flex-row gap-8 justify-start">
       <a
@@ -14,6 +21,21 @@
         >VER <strong>COMBATES</strong></a
       >
     </div>
+    {
+      pathname !== "/" && (
+        <a
+        href="/"
+        class="mx-auto hover:scale-105 cursor-pointer transition duration-500">
+          <img
+            class="w-14 h-auto"
+            src="/images/logo.png"
+            fetchpriority="high"
+            alt="La Velada del Año V"
+            decoding="async"
+          />
+        </a>
+      )
+    }
     <div class="hidden md:flex flex-col items-end">
       <span
         class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative"
