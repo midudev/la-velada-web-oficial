@@ -1,0 +1,28 @@
+---
+import { FIGHTERS } from "@/consts/fighters"
+import Layout from "@/layouts/Layout.astro"
+
+const { id } = Astro.params
+
+const fighter = FIGHTERS.find((fighter) => fighter.id === id)
+
+export const prerender = false
+---
+
+<Layout>
+  <section class="relative flex min-h-screen w-full">
+    <div
+      class="bg-[url('/images/hero.png')] bg-cover bg-center w-full mask-fade-bottom absolute inset-0"
+    >
+    </div>
+    <img
+      transition:name={`image-${id}`}
+      data-id={`hero-image-${id}`}
+      src={`/images/fighters/big/${id}.png`}
+      alt={fighter?.name}
+      decoding="async"
+      class="w-auto h-full z-10 mask-fade-bottom"
+      fetchpriority="low"
+    />
+  </section>
+</Layout>
