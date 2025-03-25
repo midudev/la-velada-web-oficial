@@ -1,4 +1,12 @@
-import type { Fighters } from '@/types/fighters'
+import type { Fighters } from '@/types/fighters';
+
+import dayjs from 'dayjs';
+
+//Soporte idioma [es]
+import 'dayjs/locale/es';
+dayjs.locale('es');
+
+export const FORMAT_DATE = 'DD/MM/YYYY';
 
 export const FIGHTERS: Fighters[] = [
   {
@@ -7,7 +15,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Peereira',
     realName: 'Pablo Pereira Ramos',
     gender: 'masculino',
-    birthDate: new Date(1998, 11, 21),
+    birthDate: dayjs('21/12/1998', FORMAT_DATE).toDate(),
     height: 1.63,
     age: 26,
     weight: 63,
@@ -28,7 +36,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Perxitaa',
     realName: 'Jaume Cremades Gradoli',
     gender: 'masculino',
-    birthDate: new Date(1991, 6, 9),
+    birthDate: dayjs('09/07/1991', FORMAT_DATE).toDate(),
     height: 1.86,
     age: 33,
     city: 'Catarroja, Valencia',
@@ -49,7 +57,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Abby',
     realName: 'Abril Gené Capriles',
     gender: 'femenino',
-    birthDate: new Date(2000, 11, 28),
+    birthDate: dayjs('28/12/2000', FORMAT_DATE).toDate(),
     height: 1.72,
     age: 24,
     weight: 62,
@@ -69,7 +77,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Roro',
     realName: 'Rocío López Bueno',
     gender: 'femenino',
-    birthDate: new Date(2002, 2, 1),
+    birthDate: dayjs('01/03/2002', FORMAT_DATE).toDate(),
     height: 1.49,
     age: 23,
     weight: 47,
@@ -89,7 +97,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Gaspi',
     realName: 'Gaspar Prim Díaz',
     gender: 'masculino',
-    birthDate: new Date(2002, 11, 28),
+    birthDate: dayjs('28/12/2002', FORMAT_DATE).toDate(),
     height: 1.83,
     age: 22,
     weight: 112,
@@ -109,7 +117,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Rivaldios',
     realName: 'Rivaldo Reatiga Ojeda',
     gender: 'masculino',
-    birthDate: new Date(2001, 1, 6),
+    birthDate: dayjs('06/02/2001', FORMAT_DATE).toDate(),
     height: 1.7,
     age: 24,
     weight: 69,
@@ -128,7 +136,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Andoni',
     realName: 'Andoni Talledo Gutiérrez',
     gender: 'masculino',
-    birthDate: new Date(2003, 0, 3),
+    birthDate: dayjs('03/01/2003', FORMAT_DATE).toDate(),
     height: 1.87,
     age: 22,
     weight: 115,
@@ -148,7 +156,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Viruzz',
     realName: 'Víctor Mélida Cambra',
     gender: 'masculino',
-    birthDate: new Date(1992, 4, 1),
+    birthDate: dayjs('01/05/1992', FORMAT_DATE).toDate(),
     height: 1.82,
     age: 32,
     weight: 87,
@@ -171,7 +179,7 @@ export const FIGHTERS: Fighters[] = [
     fightName: 'Alana La Rana',
     realName: 'Alana Scarlett Flores Fuentes',
     gender: 'femenino',
-    birthDate: new Date(2000, 11, 15),
+    birthDate: dayjs('15/12/2000', FORMAT_DATE).toDate(),
     height: 1.57,
     age: 24,
     weight: 51,
@@ -194,7 +202,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Grefg',
     realName: 'David Cánovas Martínez',
     gender: 'masculino',
-    birthDate: new Date(1997, 3, 24),
+    birthDate: dayjs('24/04/1997', FORMAT_DATE).toDate(),
     height: 1.79,
     age: 27,
     weight: 74,
@@ -216,7 +224,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Westcol',
     realName: 'Luis Fernando Villa Álvarez',
     gender: 'masculino',
-    birthDate: new Date(2001, 1, 2),
+    birthDate: dayjs('02/02/2001', FORMAT_DATE).toDate(),
     height: 1.65,
     age: 24,
     weight: 63,
@@ -236,7 +244,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Arigeli',
     realName: 'Ariadna Geli Pérez',
     gender: 'femenino',
-    birthDate: new Date(2002, 9, 11),
+    birthDate: dayjs('11/10/2002', FORMAT_DATE).toDate(),
     height: 1.58,
     age: 22,
     weight: 53,
@@ -256,7 +264,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Tomas',
     realName: 'Tomás Francisco Pérez Mazza',
     gender: 'masculino',
-    birthDate: new Date(2000, 3, 16),
+    birthDate: dayjs('16/04/2000', FORMAT_DATE).toDate(),
     height: 1.76,
     age: 25,
     weight: 80,
@@ -275,7 +283,7 @@ export const FIGHTERS: Fighters[] = [
     name: 'Carlos',
     realName: 'Carlos Belcast',
     gender: 'masculino',
-    birthDate: new Date(1998, 9, 5),
+    birthDate: dayjs('05/10/1998', FORMAT_DATE).toDate(),
     height: 1.77,
     age: 26,
     weight: 85,
@@ -288,3 +296,4 @@ export const FIGHTERS: Fighters[] = [
     clips: [],
   },
 ] as const
+
