@@ -1,1 +1,52 @@
-<header></header>
+<header class="fixed top-0 w-full z-50 text-white mx-auto">
+  <nav
+    class="flex items-center px-6 py-4 text-sm font-light justify-between max-w-6xl mx-auto"
+  >
+    <div class="hidden md:flex flex-row gap-8 justify-start">
+      <a
+        href="/la-porra"
+        class="inline-block text-theme-seashell hover:underline"
+        >HAZ TU <strong>PORRA</strong></a
+      >
+      <a
+        href="/combates"
+        class="inline-block text-theme-seashell hover:underline"
+        >VER <strong>COMBATES</strong></a
+      >
+    </div>
+    <div class="hidden md:flex flex-col items-end">
+      <span
+        class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative"
+        >COMPRA LAS <strong>ENTRADAS</strong>
+        <span
+          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center"
+          >PRÓXIMAMENTE</span
+        >
+      </span>
+    </div>
+  </nav>
+</header>
+
+<style>
+  header {
+    background: transparent;
+    animation: header-blur-scroll 0.3s linear both;
+    animation-timeline: scroll();
+    animation-range: 0 250px;
+    border-bottom: 1px solid transparent;
+  }
+
+  @keyframes header-blur-scroll {
+    0% {
+      backdrop-filter: blur(0px);
+      background: transparent;
+    }
+
+    100% {
+      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.5);
+      padding-bottom: var(--spacing-6);
+      border-bottom-color: black;
+    }
+  }
+</style>
