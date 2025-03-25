@@ -12,12 +12,12 @@ const { pathname } = Astro.url;
     <div class="hidden md:flex flex-row gap-8 justify-start">
       <a
         href="/la-porra"
-        class="inline-block text-theme-seashell hover:underline"
+        class="inline-block text-theme-seashell"
         >HAZ TU <strong>PORRA</strong></a
       >
       <a
         href="/combates"
-        class="inline-block text-theme-seashell hover:underline"
+        class="inline-block text-theme-seashell"
         >VER <strong>COMBATES</strong></a
       >
     </div>
@@ -56,6 +56,34 @@ const { pathname } = Astro.url;
     animation-timeline: scroll();
     animation-range: 0 250px;
     border-bottom: 1px solid transparent;
+  }
+
+  header {
+    background: transparent;
+    animation: header-blur-scroll 0.3s linear both;
+    animation-timeline: scroll();
+    animation-range: 0 250px;
+    border-bottom: 1px solid transparent;
+  }
+
+  nav a {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #fff;
+    transition: width 0.3s ease;
+  }
+
+  nav a:hover::after {
+    width: 100%;
   }
 
   @keyframes header-blur-scroll {
