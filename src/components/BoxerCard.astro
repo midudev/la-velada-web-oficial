@@ -1,14 +1,15 @@
 ---
+const { id, name, class: extraClass } = Astro.props;
+        
 interface Props {
   id: string
   name: string
+  class : string
 }
-
-const { id, name } = Astro.props 
 ---
 
 <a
-  class="boxer-card inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg overflow-hidden duration-300 hover:-translate-y-1 hover:scale-110 hover:shadow-lg hover:z-20"
+  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg overflow-hidden duration-300 hover:-translate-y-1 hover:scale-110 hover:shadow-lg hover:z-20`}
   href={`/luchador/${id}`}
   data-id={id}
 >
@@ -47,6 +48,14 @@ const { id, name } = Astro.props
 </a>
 
 <style>
+  .boxer-left {
+    clip-path: polygon(0% 0%, 95% 0%, 100% 100%, 5% 100%);
+  }
+
+  .boxer-right {
+    clip-path: polygon(5% 0%,100% 0%,95% 100%,0% 100%)
+  }
+  
   @media (prefers-reduced-motion) {
     .boxer-card,
     .boxer-card:hover,
@@ -60,8 +69,8 @@ const { id, name } = Astro.props
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const boxerCards = document.querySelectorAll(".boxer-card")
-    let timeoutId: number | null = null
+    const boxerCards = document.querySelectorAll(".boxer-card");
+    let timeoutId: number | null = null;
 
     const pairings: Record<number, number> = {
       0: 5, 1: 4, 2: 3, 6: 13, 7: 12, 8: 11, 9: 10,
@@ -76,13 +85,13 @@ const { id, name } = Astro.props
           timeoutId = null
         }
 
-        const id = singleBoxerCard.getAttribute("data-id")
+        const id = singleBoxerCard.getAttribute("data-id");
         if (id) {
           // Dispatch a custom event to notify a boxer card id is hovered
           const event = new CustomEvent("boxer-card-hovered", {
             detail: { id },
-          })
-          document.dispatchEvent(event)
+          });
+          document.dispatchEvent(event);
         }
       // Aplicar la clase 'grayscale-100' a todas las tarjetas
     boxerCards.forEach((card) => card.classList.add("grayscale-100"));
