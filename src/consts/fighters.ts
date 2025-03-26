@@ -253,7 +253,7 @@ export const FIGHTERS: Fighters[] = [
   {
     // https://www.biografia.de/tomas-mazza/
     id: 'tomas',
-    name: 'Tomas',
+    name: 'Tomás',
     realName: 'Tomás Francisco Pérez Mazza',
     gender: 'masculino',
     birthDate: new Date(2000, 3, 16),
