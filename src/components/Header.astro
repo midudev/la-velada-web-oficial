@@ -2,14 +2,24 @@
 const { pathname } = Astro.url;
 ---
 
-<header class="fixed flex items-center top-0 h-16 w-full z-50 text-white mx-auto">
+<div class="fixed md:hidden top-4 right-4 z-[100]">
+  <button id="menuButton" aria-expanded="false" aria-controls="menuMobileContent" class="hamburgerButton group relative flex h-[20px] flex-col items-center justify-between lg:hidden w-6 cursor-pointer" aria-label="Abrir menú de navegación">
+    <span class="group-[.open]:translate-y-2 group-[.open]:rotate-45 h-[2px] w-6 bg-gray-300 transition ease transform duration-300"></span>
+    <span class="group-[.open]:opacity-0 h-[2px] w-6 bg-gray-300 transition ease transform duration-300"></span>
+    <span class="group-[.open]:opacity-0 h-[2px] w-6 bg-gray-300 transition ease transform duration-300"></span>
+    <span class="group-[.open]:-translate-y-[0.6rem] group-[.open]:-rotate-45 h-[2px] w-6 bg-gray-300 transition ease transform duration-300"></span>
+  </button>
+</div>
+<header class="fixed top-0 w-full z-[99] text-white mx-auto">
+  <div class="flex md:hidden justify-between px-6 py-4">
+    <img src="/favicon.svg" alt="logo" class="size-5">
+  </div>
+  <div id="overlay-menu" class="fixed h-screen inset-0 bg-theme-raisin-black/50 hidden md:hidden"></div>
   <nav
-    class:list={[
-      pathname === "/" ? "grid-cols-2" : "grid-cols-3",
-      "grid items-center px-6 text-sm font-light justify-between max-w-6xl w-full mx-auto"
-    ]}
+    id="navContent"
+    class="fixed hidden h-screen space-y-2 md:space-y-0 md:h-fit md:relative md:bg-transparent top-0 right-0 bg-theme-french-mauve/90 backdrop-blur-2xl md:backdrop-blur-none md:flex items-center px-6 pt-14 md:py-4 text-sm font-light justify-between max-w-6xl mx-auto"
   >
-    <div class="hidden md:flex flex-row gap-8 justify-start">
+    <div class="flex flex-col order-1 md:flex-row md:gap-8 justify-start space-y-2 md:space-y-0">
       <a
         href="/la-porra"
         class="inline-block text-theme-seashell hover:underline"
@@ -21,11 +31,21 @@ const { pathname } = Astro.url;
         >VER <strong>COMBATES</strong></a
       >
     </div>
+    <div class="md:flex flex-col items-end order-3">
+      <span
+        class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative"
+        >COMPRA LAS <strong>ENTRADAS</strong>
+        <span
+          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center"
+          >PRÓXIMAMENTE</span
+        >
+      </span>
+    </div>
     {
       pathname !== "/" && (
         <a
         href="/"
-        class="mx-auto hover:scale-105 cursor-pointer transition duration-500">
+        class="mx-auto md:order-2 hover:scale-105 cursor-pointer transition duration-500">
           <img
             class="w-14 h-auto"
             src="/images/logo.png"
@@ -36,16 +56,6 @@ const { pathname } = Astro.url;
         </a>
       )
     }
-    <div class="hidden md:flex flex-col items-end">
-      <span
-        class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative"
-        >COMPRA LAS <strong>ENTRADAS</strong>
-        <span
-          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center"
-          >PRÓXIMAMENTE</span
-        >
-      </span>
-    </div>
   </nav>
 </header>
 
@@ -72,3 +82,28 @@ const { pathname } = Astro.url;
     }
   }
 </style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    function toggleMenu(
+      menuBtn: Element | null,
+      navContent: Element | null,
+      overlayMenu: Element | null,
+    ) {
+      menuBtn?.classList.toggle('open')
+      navContent?.classList.toggle('hidden')
+      overlayMenu?.classList.toggle('hidden')
+    }
+
+    const navContent = document.querySelector('#navContent');
+    const menuButton = document.querySelector('#menuButton');
+    const overlayMenu = document.querySelector('#overlay-menu');
+
+    menuButton?.addEventListener('click', () =>
+      toggleMenu(menuButton, navContent, overlayMenu)
+    )
+    overlayMenu?.addEventListener('click', () =>
+      toggleMenu(menuButton, navContent, overlayMenu)
+    )
+  })
+</script>
