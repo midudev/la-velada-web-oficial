@@ -46,15 +46,26 @@ import { combates } from '@/consts/pageTitles'
               title={`Ir al combate ${number} de ${title}`}
             >
               <div class="group animate-fade-in animate-delay-200 relative flex h-[40vh] w-full sm:h-[50vh]">
-                {fighters.map((fighter, index) => (
-                  <img
-                    src={`/images/fighters/big/${fighter}.webp`}
-                    class={`z-20 ml-5 h-full w-1/2 object-contain ${index === 0 ? 'ml-5 lg:ml-10' : '-ml-40 lg:-ml-20'} mask-fade-bottom size-96 transition-transform duration-300 group-hover:scale-110`}
-                    alt={`Imagen de ${fighter}`}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                ))}
+{fighters.map((fighter, index) => {
+  const isGaspi = fighter === 'gaspi'
+  const positionClass = index === 0 ? 'ml-5 lg:ml-10' : '-ml-40 lg:-ml-20'
+
+  return (
+    <img
+      src={`/images/fighters/big/${fighter}.webp`}
+      class={`z-20 h-full w-1/2 object-contain ${positionClass} size-96 transition-transform duration-300 group-hover:scale-110 ${isGaspi ? 'scale-135 translate-y-20 group-hover:scale-145' : 'mask-fade-bottom'}`}
+      style={isGaspi ? `
+        object-position: center bottom;
+        mask-image: linear-gradient(to bottom, black 45%, rgba(0,0,0,0.4) 60%, transparent 75%);
+        -webkit-mask-image: linear-gradient(to bottom, black 45%, rgba(0,0,0,0.4) 60%, transparent 75%);
+      ` : ''}
+      alt={`Imagen de ${fighter}`}
+      loading="lazy"
+      decoding="async"
+    />
+  )
+})}
+
 
                 <div class="absolute bottom-0 z-30 flex h-auto w-full -skew-4 flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
                   <img

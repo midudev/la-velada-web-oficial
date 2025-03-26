@@ -82,15 +82,25 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
         </div>
 
         <!-- Imagen del luchador 2 -->
-        <div class="flex justify-center relative">
+        <div class="flex justify-center relative overflow-hidden h-[30rem] ">
           <img
-            src={`/images/fighters/big/${fighter2?.id}.webp`}
-            alt={`Imagen de ${fighter2?.name}`}
-            class="h-[30rem] w-full object-cover drop-shadow-lg mask-fade-bottom"
-          />
-          
+          src={`/images/fighters/big/${fighter2?.id}.webp`}
+          alt={`Imagen de ${fighter2?.name}`}
+          class={`w-full object-cover ${fighter2?.id === 'gaspi' 
+            ? 'scale-125 translate-y-20' 
+            : 'drop-shadow-lg mask-fade-bottom'}`}
+          style={fighter2?.id === 'gaspi' 
+            ? `
+              object-position: center bottom;
+              mask-image: linear-gradient(to bottom, black 45%, rgba(0,0,0,0.4) 60%, transparent 75%);
+              -webkit-mask-image: linear-gradient(to bottom, black 45%, rgba(0,0,0,0.4) 60%, transparent 75%);
+            ` 
+            : ''}
+        />
+        
+        
         </div>
-
+          
       </div>
     </div>
   </section>
