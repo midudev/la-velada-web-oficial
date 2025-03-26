@@ -1,24 +1,15 @@
 ---
-import { FIGHTERS } from "@/consts/fighters"
-import Layout from "@/layouts/Layout.astro"
-import {fixedTitle} from "@/consts/pageTitles"
+import { FIGHTERS } from '@/consts/fighters'
+import Layout from '@/layouts/Layout.astro'
+import { fixedTitle } from '@/consts/pageTitles'
 
 const { id } = Astro.params
 
-let fighter
+const fighter = FIGHTERS.find((fighter) => fighter.id === id)
+// Si no hay luchador emitir error para redirigir a 404
+if (!fighter) return Astro.redirect('/404')
 
-try {
-  fighter = FIGHTERS.find((fighter) => fighter.id === id)
-
-  // Si no hay luchador emitir error para redirigir a 404
-  if (!fighter) {
-    throw new Error('Fighter not found')
-  }
-} catch (error) {
-  // redirigir a 404
-  return Astro.redirect('/404')
-}
-
+// hay que cambiar esto y hacer el getStaticParams
 export const prerender = false
 ---
 
@@ -51,40 +42,5 @@ export const prerender = false
         />
       </div>
     </div>
-
   </section>
 </Layout>
-
-<!-- ---
-import { FIGHTERS } from '@/consts/fighters'
-import Layout from '@/layouts/Layout.astro'
-
-const { id } = Astro.params
-
-let fighter
-
-try {
-  fighter = FIGHTERS.find((fighter) => fighter.id === id)
-
-  // Si no hay luchador emitir error para redirigir a 404
-  if (!fighter) {
-    throw new Error('Fighter not found')
-  }
-} catch (error) {
-  // redirigir a 404
-  return Astro.redirect('/404')
-}
-
-export const prerender = false
----
-
-<Layout>
-  <section class="relative flex min-h-screen w-full">
-    <div
-      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
-    >
-    </div>
-
-    </div>
-  </section>
-</Layout> -->
