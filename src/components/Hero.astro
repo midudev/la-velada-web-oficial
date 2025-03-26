@@ -19,9 +19,9 @@ const rightSecondRow = secondRow.slice(4, 8)
   <div class="relative flex w-full flex-col items-center p-8 text-center">
     <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
       <h3
-        class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 leading-[100%] font-light"
+        class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 leading-[100%] font-medium tracking"
       >
-        <strong>26</strong> DE <br /><strong>JULIO</strong>
+        26 DE <br />JULIO
       </h3>
       <figure class="animate-fade-in relative">
         <img
@@ -36,18 +36,18 @@ const rightSecondRow = secondRow.slice(4, 8)
 
       <div class="relative z-50">
         <h3
-          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-[100%] font-light uppercase"
+          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-relaxed tracking-wider font-medium uppercase"
         >
-          Estadio<br />La Cartuja,<br /><strong>Sevilla</strong>
+          Estadio<br />La Cartuja,<br />Sevilla
         </h3>
         <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
         <a
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
           target="_blank"
-          class="animate-fade-in animate-delay-700 z-50 mt-4 inline-block leading-[100%] font-light uppercase transition hover:scale-125"
+          class="animate-fade-in animate-delay-700 z-50 mt-4 inline-block leading-relaxed tracking-wider font-medium uppercase transition hover:scale-125"
         >
-          twitch.tv<br /><strong>Ibai</strong>
+          twitch.tv<br />Ibai
         </a>
       </div>
     </div>
@@ -131,7 +131,7 @@ const rightSecondRow = secondRow.slice(4, 8)
     const $landing = document.querySelector('#landing')
 
     let currentFighterId: string | null = null
-    let hideFighterTimer = 0
+    let hideFighterTimer: number | ReturnType<typeof setTimeout> = 0
 
     document.addEventListener('boxer-card-exit', () => {
       $landing?.classList.remove('hidden')
