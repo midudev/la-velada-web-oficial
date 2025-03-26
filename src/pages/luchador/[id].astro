@@ -1,21 +1,21 @@
 ---
-import { FIGHTERS } from "@/consts/fighters"
-import Layout from "@/layouts/Layout.astro"
+import { FIGHTERS } from '@/consts/fighters'
+import Layout from '@/layouts/Layout.astro'
 
 const { id } = Astro.params
 
-let fighter;
+let fighter
 
 try {
-  fighter = FIGHTERS.find((fighter) => fighter.id === id);
+  fighter = FIGHTERS.find((fighter) => fighter.id === id)
 
   // Si no hay luchador emitir error para redirigir a 404
   if (!fighter) {
-    throw new Error("Fighter not found");
+    throw new Error('Fighter not found')
   }
 } catch (error) {
   // redirigir a 404
-  return Astro.redirect("/404");
+  return Astro.redirect('/404')
 }
 
 export const prerender = false
@@ -24,7 +24,7 @@ export const prerender = false
 <Layout>
   <section class="relative flex min-h-screen w-full">
     <div
-      class="bg-[url('/images/hero.png')] bg-cover bg-center w-full mask-fade-bottom absolute inset-0"
+      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
     >
     </div>
     <img
@@ -33,7 +33,7 @@ export const prerender = false
       src={`/images/fighters/big/${id}.webp`}
       alt={fighter?.name}
       decoding="async"
-      class="w-auto h-full z-10 mask-fade-bottom"
+      class="mask-fade-bottom z-10 h-full w-auto"
       fetchpriority="low"
     />
   </section>
