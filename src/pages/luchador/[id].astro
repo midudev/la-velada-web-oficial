@@ -25,9 +25,8 @@ export const prerender = false
         <img
           src={`/images/fighters/text/${id}.png`}
           alt={fighter?.name}
-          decoding="async"
           class="mask-fade-text h-full w-auto"
-          fetchpriority="low"
+          transition:name={`text-${id}`}
         />
       </div>
       <div
@@ -36,9 +35,8 @@ export const prerender = false
         <img
           src={`/images/fighters/big/${id}.webp`}
           alt={fighter?.name}
-          decoding="async"
           class="absolute h-full w-full object-cover lg:object-contain"
-          fetchpriority="low"
+          transition:name={`image-${id}`}
         />
       </div>
     </div>
