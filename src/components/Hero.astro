@@ -6,11 +6,13 @@ const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
 const rightRow = firstRow.slice(3)
 const secondRow = FIGHTERS.slice(6)
+const leftSecondRow = secondRow.slice(0, 4)
+const rightSecondRow = secondRow.slice(4, 8)
 ---
 
 <section class="relative flex min-h-screen w-full">
   <div
-    class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.png')] bg-cover bg-center"
+    class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
   >
   </div>
 
@@ -34,18 +36,18 @@ const secondRow = FIGHTERS.slice(6)
 
       <div class="relative z-50">
         <h3
-          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-[100%] font-light"
+          class="text-theme-seashell uppercase animate-fade-in animate-delay-500 z-0 mt-4 leading-[100%] font-light"
         >
-          ESTADIO<br />LA CARTUJA,<br /><strong>SEVILLA</strong>
+          Estadio<br />La Cartuja,<br /><strong>Sevilla</strong>
         </h3>
         <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
         <a
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
           target="_blank"
-          class="animate-fade-in animate-delay-700 z-50 mt-4 inline-block leading-[100%] font-light transition hover:scale-125"
+          class="animate-fade-in animate-delay-700 z-50 uppercase mt-4 inline-block leading-[100%] font-light transition hover:scale-125"
         >
-          TWITCH.TV<br /><strong>IBAI</strong>
+          twitch.tv<br /><strong>Ibai</strong>
         </a>
       </div>
     </div>
@@ -88,18 +90,25 @@ const secondRow = FIGHTERS.slice(6)
       </div>
     </div>
 
-    <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8">
-      <div class="flex w-full flex-wrap justify-between px-4">
+    <div
+      class="relative flex flex-col items-center justify-end p-8 h-full w-full max-w-6xl gap-4"
+    >
+      <div class="flex flex-wrap justify-between w-full px-4">
         <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start gap-4">
-          {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+          {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} class="boxer-left" />)}
         </div>
-        <div class="animate-fade-in-left animate-delay-500 flex flex-wrap justify-end gap-4">
-          {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+        <div class="animate-fade-in-left flex flex-wrap justify-end gap-4">
+          {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} class="boxer-right" />)}
         </div>
       </div>
 
-      <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-between gap-4">
-        {secondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+      <div class="flex flex-wrap justify-between gap-4">
+        <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-start gap-4">
+          {leftSecondRow.map(({ id, name }) => <BoxerCard id={id} name={name} class="boxer-left" />)}
+        </div>
+        <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-end gap-4">
+          {rightSecondRow.map(({ id, name }) => <BoxerCard id={id} name={name} class="boxer-right" />)}
+        </div>
       </div>
     </div>
   </div>
