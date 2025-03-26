@@ -131,12 +131,13 @@ const rightSecondRow = secondRow.slice(4, 8)
     const $landing = document.querySelector('#landing')
 
     let currentFighterId: string | null = null
+    let hideFighterTimer = 0
 
     document.addEventListener('boxer-card-exit', () => {
       $landing?.classList.remove('hidden')
 
       if (!currentFighterId) return
-
+      
       const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
       const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
 
@@ -147,7 +148,7 @@ const rightSecondRow = secondRow.slice(4, 8)
         heroText.classList.add('animate-zoom-out')
         heroImage.classList.add('animate-fade-out-down')
 
-        setTimeout(() => {
+        hideFighterTimer = setTimeout(() => {
           heroText.classList.add('hidden')
           heroImage.classList.add('hidden')
           currentFighterId = null
@@ -156,6 +157,15 @@ const rightSecondRow = secondRow.slice(4, 8)
     })
 
     document.addEventListener('boxer-card-hovered', (event: Event) => {
+      if(currentFighterId){
+        clearTimeout(hideFighterTimer)
+        const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+        const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+        heroText?.classList.add('hidden')
+        heroImage?.classList.add('hidden')
+        currentFighterId = null
+      }
+
       const customEvent = event as CustomEvent<{ id: string }>
       const id = customEvent.detail.id
 
@@ -175,7 +185,7 @@ const rightSecondRow = secondRow.slice(4, 8)
       if (currentFighterId) {
         const currentHeroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
         const currentHeroImage = document.querySelector(
-          `[data-id="hero-image-${currentFighterId}"]`
+          `[data-id="hero-image-${currentFighterId}"]`,
         )
 
         if (currentHeroText && currentHeroImage) {
