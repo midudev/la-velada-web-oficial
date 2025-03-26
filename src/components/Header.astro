@@ -10,22 +10,22 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname);
   <nav
     class:list={[
       shouldShowLogo ? "grid-cols-3" : "grid-cols-2",
-      "grid items-center px-6 text-sm font-light justify-between max-w-6xl w-full mx-auto"
+      "grid items-center px-6 text-sm font-light justify-between max-w-6xl w-full mx-auto",
     ]}
   >
     <div class="hidden md:flex flex-row gap-8 justify-start">
       <a
         href="/la-porra"
-        class="inline-block text-theme-seashell hover:underline"
+        class="inline-block text-theme-seashell relative after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full"
         >HAZ TU <strong>PORRA</strong></a
       >
       <a
         href="/combates"
-        class="inline-block text-theme-seashell hover:underline"
+        class="inline-block text-theme-seashell relative after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full"
         >VER <strong>COMBATES</strong></a
       >
     </div>
-    
+
     {shouldShowLogo && (
       <a
         href="/"
@@ -39,7 +39,7 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname);
         />
       </a>
     )}
-    
+
     <div class="hidden md:flex flex-col items-end">
       <span
         class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative"
