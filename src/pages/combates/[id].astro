@@ -1,8 +1,9 @@
 ---
-import Layout from '@/layouts/Layout.astro'
 import { COMBATS } from '@/consts/combats'
-import { FIGHTERS } from '@/consts/fighters'
 import { countries } from '@/consts/countries'
+import { FIGHTERS } from '@/consts/fighters'
+import { fixedTitle } from '@/consts/pageTitles'
+import Layout from '@/layouts/Layout.astro'
 
 const { id } = Astro.params
 const combat = COMBATS.find((c) => c.id === id)
@@ -13,7 +14,7 @@ const fighter1Country = countries.find(c => c.id === fighter1?.country)
 const fighter2Country = countries.find(c => c.id === fighter2?.country)
 ---
 
-<Layout>
+<Layout title={`Combate de ${fighter1?.name} vs ${fighter2?.name} - ${fixedTitle}`}>
   <section class="relative flex min-h-screen w-full items-center justify-center p-6 text-white">
     <div class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"></div>
     <div class="z-10 flex w-full max-w-5xl flex-col items-center">
@@ -24,22 +25,22 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
           <img
             src={`/images/fighters/big/${fighter1?.id}.webp`}
             alt={`Imagen de ${fighter1?.name}`}
-            class="h-[30rem] w-full object-cover drop-shadow-lg mask-fade-bottom"
+            class="h-[30rem] w-full object-contain object-center-center drop-shadow-lg mask-fade-bottom animate-slide-in-left delay-200"
           />
         </div>
 
         <!-- Información central -->
-        <div class="flex flex-col items-center text-center bg-text bg-pink-400/80 p-3 rounded-4xl">
+        <div class="flex flex-col items-center text-center bg-text bg-[#7936566b]/60 py-6 px-8 rounded-3xl shadow-2xl shadow-black/50">
             <h2 class="flex flex-col items-center text-center text-2xl font-bold">
-                <span class="block">{fighter1?.name}</span>
+                <span class="block animate-fade-in-up delay-300">{fighter1?.name}</span>
                 <img
                   src="/images/versus.png"
-                  class="h-8 w-auto"
+                  class="h-8 w-auto infinite animate-flip-in-y ease-in-out delay-600"
                   loading="lazy"
                   decoding="async"
                   alt="Versus"
                 />
-                <span class="block">{fighter2?.name}</span>
+                <span class="block animate-fade-in-down delay-800">{fighter2?.name}</span>
               </h2>
           <div class="mt-6 grid grid-cols-3 gap-4 text-sm font-semibold">
             
@@ -49,7 +50,7 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
               <p>{fighter1?.height} mts</p>
               <p>{fighter1?.weight} kg</p>
               <p>{fighter1Country?.name}</p>
-              <div class="flex items-center gap-2 bg-gray-300 bg-opacity-50 p-1 rounded-lg">
+              <div class="flex items-center gap-2 shadow-lime-200 shadow-xs p-1.5 rounded-lg">
                 <img
                 src={fighter1Country?.image.src}
                   alt={`Bandera de ${fighter1Country?.name ?? 'Desconocido'}`}
@@ -70,11 +71,11 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
               <p>{fighter2?.height} mts</p>
               <p>{fighter2?.weight} kg</p>
               <p>{fighter2Country?.name}</p>
-              <div class="flex items-center gap-2 bg-gray-300 bg-opacity-50 p-1 rounded-lg">
+              <div class="flex items-center gap-2 shadow-lime-200 shadow-xs p-1.5 rounded-lg">
                 <img
                 src={fighter2Country?.image.src}
                   alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
-                  class="h-auto w-25"
+                  class="object-cover object-center-center h-auto w-25"
                 />
               </div>
             </div>
@@ -86,7 +87,7 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
           <img
             src={`/images/fighters/big/${fighter2?.id}.webp`}
             alt={`Imagen de ${fighter2?.name}`}
-            class="h-[30rem] w-full object-cover drop-shadow-lg mask-fade-bottom"
+            class="animate-slide-in-right delay-200 h-[30rem] w-full object-contain object-center-center drop-shadow-lg mask-fade-bottom"
           />
           
         </div>
