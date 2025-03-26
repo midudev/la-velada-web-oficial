@@ -1,17 +1,39 @@
 ---
+import Sponsors from '@/components/Sponsors.astro'
 import Layout from '@/layouts/Layout.astro'
 ---
 
 <Layout>
   <section class="relative flex min-h-screen w-full items-center justify-center">
     <div
-      class="mask-fade-bottom absolute inset-0 flex w-full items-center justify-center bg-[url('/images/hero.avif')] bg-cover bg-center"
+    class="mask-fade-bottom absolute inset-0 flex w-full items-center justify-center bg-[url('/images/hero.avif')] bg-cover bg-center"
     >
-      <div class="mb-80 flex w-full flex-col items-center p-8 text-center">
-        <p class="text-4xl">404</p>
-        <p>La página no se encuentra</p>
-        <p class="mt-5"><a href="/" class="text-theme-turquoise">Volver al inicio</a></p>
+      <div class="mb-80 flex w-full flex-col items-center p-8 mt-64 text-center text-white">
+        <figure class="animate-fade-in relative mt-8 mb-8">
+          <img
+            class="relative z-20 h-auto w-64"
+            src="/images/logo.png"
+            fetchpriority="high"
+            alt="La Velada del Año V"
+            decoding="async"
+          />
+          <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
+        </figure>
+        <h1 
+          tabindex="0" 
+          class="text-5xl font-bold lowercase mb-5 text-theme-turquoise/80 animate-fade-in animate-delay-200">
+          Error 404
+        </h1> 
+        <h2 class="uppercase mb-3 font-bold animate-fade-in animate-delay-400">Página no encontrada</h2>
+        <p class="font-normal w-xs animate-fade-in animate-delay-400">¡Hola! Lo sentimos, pero no pudimos encontrar lo que buscabas. Verifica que la dirección URL sea correcta.</p>
+        <a 
+          href="/" 
+          name="Hover" 
+          class="bg-theme-turquoise/40 hover:bg-theme-tickle-me-pink/40 p-[10px] text-white mt-5 ml-auto mr-auto border-2 border-theme-turquoise/95 hover:border-theme-tickle-me-pink/95 shadow-md shadow-theme-turquoise/95 hover:shadow-theme-tickle-me-pink/95 rounded-lg hover:scale-110 transition duration-400 ease-in-out delay-150 hover:-translate-y-1 animate-slide-up-fade animate-delay-400">
+          Ir Al Inicio
+        </a>
       </div>
     </div>
   </section>
+  <Sponsors />
 </Layout>
