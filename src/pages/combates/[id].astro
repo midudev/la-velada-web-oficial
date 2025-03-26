@@ -1,5 +1,98 @@
 ---
 import Layout from '@/layouts/Layout.astro'
+import { COMBATS } from '@/consts/combats'
+import { FIGHTERS } from '@/consts/fighters'
+import { countries } from '@/consts/countries'
+
+const { id } = Astro.params
+const combat = COMBATS.find((c) => c.id === id)
+const fighter1 = FIGHTERS.find((f) => f.id === combat?.fighters[0])
+const fighter2 = FIGHTERS.find((f) => f.id === combat?.fighters[1])
+
+const fighter1Country = countries.find(c => c.id === fighter1?.country)
+const fighter2Country = countries.find(c => c.id === fighter2?.country)
 ---
 
-<Layout> Estamos trabajando en ellou </Layout>
+<Layout>
+  <section class="relative flex min-h-screen w-full items-center justify-center p-6 text-white">
+    <div class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"></div>
+    <div class="z-10 flex w-full max-w-5xl flex-col items-center">
+      <div class="grid w-full grid-cols-3 items-center gap-6">
+        
+        <!-- Imagen del luchador 1 -->
+        <div class="flex justify-center relative">
+          <img
+            src={`/images/fighters/big/${fighter1?.id}.webp`}
+            alt={`Imagen de ${fighter1?.name}`}
+            class="h-[30rem] w-full object-cover drop-shadow-lg"
+          />
+        </div>
+
+        <!-- Información central -->
+        <div class="flex flex-col items-center text-center">
+          <h2 class="flex items-center gap-4 text-center text-3xl font-bold">
+            {fighter1?.name}
+            <img
+              src="/images/versus.png"
+              class="h-8 w-auto"
+              loading="lazy"
+              decoding="async"
+              alt="Versus"
+            />
+            {fighter2?.name}
+          </h2>
+
+          <div class="mt-6 grid grid-cols-3 gap-4 text-lg font-semibold">
+            
+            <div class="space-y-2 text-right">
+              <p>{fighter1?.age} años</p>
+              <p>{fighter1?.gender}</p>
+              <p>{fighter1?.height} mts</p>
+              <p>{fighter1?.weight} kg</p>
+              <p>{fighter1Country?.name}</p>
+              <div class="flex items-center gap-2 bg-black bg-opacity-50 p-1 rounded-lg">
+                <img
+                src={fighter1Country?.image.src}
+                  alt={`Bandera de ${fighter1Country?.name ?? 'Desconocido'}`}
+                  class="h-auto w-25"
+                />
+              </div>
+            </div>
+            <div class="space-y-2 text-red-500">
+              <p>EDAD</p>
+              <p>GÉNERO</p>
+              <p>ALTURA</p>
+              <p>PESO</p>
+              <p>PAÍS</p>
+            </div>
+            <div class="space-y-2 text-left">
+              <p>{fighter2?.age} años</p>
+              <p>{fighter2?.gender}</p>
+              <p>{fighter2?.height} mts</p>
+              <p>{fighter2?.weight} kg</p>
+              <p>{fighter2Country?.name}</p>
+              <div class="flex items-center gap-2 bg-black bg-opacity-50 p-1 rounded-lg">
+                <img
+                src={fighter2Country?.image.src}
+                  alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
+                  class="h-auto w-25"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Imagen del luchador 2 -->
+        <div class="flex justify-center relative">
+          <img
+            src={`/images/fighters/big/${fighter2?.id}.webp`}
+            alt={`Imagen de ${fighter2?.name}`}
+            class="h-[30rem] w-full object-cover drop-shadow-lg"
+          />
+          
+        </div>
+
+      </div>
+    </div>
+  </section>
+</Layout>
