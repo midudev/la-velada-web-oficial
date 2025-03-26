@@ -1,6 +1,7 @@
 ---
-import { FIGHTERS } from '@/consts/fighters'
-import Layout from '@/layouts/Layout.astro'
+import { FIGHTERS } from "@/consts/fighters"
+import Layout from "@/layouts/Layout.astro"
+import {fixedTitle} from "@/consts/pageTitles"
 
 const { id } = Astro.params
 
@@ -21,7 +22,7 @@ try {
 export const prerender = false
 ---
 
-<Layout>
+<Layout title={`${fighter?.name} | ${fixedTitle}`}>
   <section class="relative flex min-h-screen w-full">
     <div
       class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
@@ -50,6 +51,7 @@ export const prerender = false
         />
       </div>
     </div>
+
   </section>
 </Layout>
 
