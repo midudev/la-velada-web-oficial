@@ -1,10 +1,22 @@
 ---
-import { FIGHTERS } from "@/consts/fighters"
-import Layout from "@/layouts/Layout.astro"
+import { FIGHTERS } from '@/consts/fighters'
+import Layout from '@/layouts/Layout.astro'
 
 const { id } = Astro.params
 
-const fighter = FIGHTERS.find((fighter) => fighter.id === id)
+let fighter
+
+try {
+  fighter = FIGHTERS.find((fighter) => fighter.id === id)
+
+  // Si no hay luchador emitir error para redirigir a 404
+  if (!fighter) {
+    throw new Error('Fighter not found')
+  }
+} catch (error) {
+  // redirigir a 404
+  return Astro.redirect('/404')
+}
 
 export const prerender = false
 ---
@@ -12,17 +24,64 @@ export const prerender = false
 <Layout>
   <section class="relative flex min-h-screen w-full">
     <div
-      class="bg-[url('/images/hero.png')] bg-cover bg-center w-full mask-fade-bottom absolute inset-0"
+      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
     >
     </div>
-    <img
-      transition:name={`image-${id}`}
-      data-id={`hero-image-${id}`}
-      src={`/images/fighters/big/${id}.png`}
-      alt={fighter?.name}
-      decoding="async"
-      class="w-auto h-full z-10 mask-fade-bottom"
-      fetchpriority="low"
-    />
+    
+    <div class="pointer-events-none absolute inset-0 flex flex-col items-center">
+      <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
+        <img
+        src={`/images/fighters/text/${id}.png`}
+        alt={fighter?.name}
+        decoding="async"
+        class="mask-fade-text h-full w-auto "
+        fetchpriority="low"
+      />
+    </div>
+    <div class="mask-fade-bottom relative bottom-0 mx-auto flex h-[80vh] w-full items-center justify-center">
+      <img
+        src={`/images/fighters/big/${id}.webp`}
+        alt={fighter?.name}
+        decoding="async"
+        class="absolute h-full w-full object-cover lg:object-contain animate-slide-up-fade"
+        fetchpriority="low"
+      />
+  </div>
+    </div>
+
   </section>
 </Layout>
+
+<!-- ---
+import { FIGHTERS } from '@/consts/fighters'
+import Layout from '@/layouts/Layout.astro'
+
+const { id } = Astro.params
+
+let fighter
+
+try {
+  fighter = FIGHTERS.find((fighter) => fighter.id === id)
+
+  // Si no hay luchador emitir error para redirigir a 404
+  if (!fighter) {
+    throw new Error('Fighter not found')
+  }
+} catch (error) {
+  // redirigir a 404
+  return Astro.redirect('/404')
+}
+
+export const prerender = false
+---
+
+<Layout>
+  <section class="relative flex min-h-screen w-full">
+    <div
+      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
+    >
+    </div>
+
+    </div>
+  </section>
+</Layout> -->
