@@ -46,8 +46,12 @@ interface Clips {
 export interface Fighters {
   id: fighterId
   name: fighterName
+  fightName?: string
+  city?: string
   realName: string
   gender: 'masculino' | 'femenino' | 'otro'
+  targetWeight?: number
+  targetGloves?: string
   birthDate: Date
   height: number
   age: number
