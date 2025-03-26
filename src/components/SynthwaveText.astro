@@ -1,0 +1,100 @@
+---
+import type { HTMLAttributes, HTMLTag, Polymorphic } from 'astro/types'
+import type { ErrorWithMetadata } from 'node_modules/astro/dist/core/errors'
+
+type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & HTMLAttributes<Tag>
+
+const { as: Element = 'h1', class: className, ...rest } = Astro.props
+
+// Throw an error if the component is used without a default slot
+if (!Astro.slots.has('default')) {
+  const noSlotError = new Error(
+    'SynthwaveText component must have a text content.'
+  ) as ErrorWithMetadata
+  noSlotError.name = 'SynthwaveTextError'
+  noSlotError.hint = `See the examples below: \n✅ Valid \n  <SynthwaveText as="h1">peereira7</SynthwaveText> \n❌ Invalid \n  <SynthwaveText as="h1" />`
+  throw noSlotError
+}
+
+// Get the rendered HTML content of the default slot
+const text = await Astro.slots.render('default')
+
+// Throw error if the slot contains HTML tags
+if (!text || text.match(/(<([^>]+)>)/gi)) {
+  const invalidTextError = new Error("SynthwaveText's content must be text.") as ErrorWithMetadata
+  invalidTextError.name = 'SynthwaveTextError'
+  invalidTextError.hint = `If you want to use HTML tags, use the \`as\` prop to specify the element type. \nSee the examples below: \n✅ Valid \n  \`<SynthwaveText as="span">peereira7</SynthwaveText>\`\n❌ Invalid \n  \`<SynthwaveText><span>peereira7</span></SynthwaveText>\``
+  throw invalidTextError
+}
+---
+
+<Element
+  class:list={['relative text-center text-6xl font-extrabold tracking-normal uppercase', className]}
+  {...rest}
+  data-text={text}
+>
+  {text}
+</Element>
+
+<style>
+  *::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    color: transparent;
+    background: linear-gradient(
+      to bottom,
+      #dfbfcf 0%,
+      #e1aad6 20%,
+      #f786c4 40%,
+      #f942a7 60%,
+      #ff33a4 80%,
+      #e90f7c 90%,
+      #eb0f75 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 2px #ff3399) drop-shadow(0 0 5px #ff3399);
+    -webkit-text-fill-color: inherit;
+  }
+
+  *::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    text-shadow:
+      0 0 0px #ffffff00,
+      0 0 0px #ffffff00,
+      0 0 20px #ff339900,
+      0 0 10px #ff339900,
+      0 0 10px #ff339900,
+      0 1px 0 #c7158500,
+      0 2px 0 #c7158500,
+      0 3px 0 #c7158500,
+      0 4px 0 #c7158500,
+      0 5px 0 #c7158500,
+      0 4px 0 #fa95ac,
+      0 7px 0 #ffa4b8,
+      0 8px 0 #80006000,
+      0 9px 0 #80006000,
+      0 0px 0 #80006000,
+      0 11px 0 #852c61,
+      0 12px 0 #b14496,
+      0 13px 0 #b93aa1,
+      0 14px 0 #bb3fa2,
+      0 15px 0 #b44c9a,
+      0 16px 0 #ae3192,
+      0 17px 0 #b04999,
+      0 18px 0 #8a2574,
+      0 19px 10px rgb(109 32 81);
+    -webkit-background-clip: text;
+  }
+</style>
