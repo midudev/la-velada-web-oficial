@@ -12,7 +12,7 @@ const rightSecondRow = secondRow.slice(4, 8)
 
 <section class="relative flex min-h-screen w-full">
   <div
-    class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
+    class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center duration-75"
   >
   </div>
 
@@ -137,7 +137,7 @@ const rightSecondRow = secondRow.slice(4, 8)
       $landing?.classList.remove('hidden')
 
       if (!currentFighterId) return
-      
+
       const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
       const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
 
@@ -157,7 +157,7 @@ const rightSecondRow = secondRow.slice(4, 8)
     })
 
     document.addEventListener('boxer-card-hovered', (event: Event) => {
-      if(currentFighterId){
+      if (currentFighterId) {
         clearTimeout(hideFighterTimer)
         const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
         const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
@@ -185,7 +185,7 @@ const rightSecondRow = secondRow.slice(4, 8)
       if (currentFighterId) {
         const currentHeroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
         const currentHeroImage = document.querySelector(
-          `[data-id="hero-image-${currentFighterId}"]`,
+          `[data-id="hero-image-${currentFighterId}"]`
         )
 
         if (currentHeroText && currentHeroImage) {
