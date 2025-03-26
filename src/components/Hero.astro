@@ -12,7 +12,7 @@ const rightSecondRow = secondRow.slice(4)
 
 <section class="relative flex min-h-screen w-full">
   <div
-    class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
+    class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center duration-75"
   >
   </div>
 
@@ -23,9 +23,9 @@ const rightSecondRow = secondRow.slice(4)
       >
         <strong>26</strong> DE <br /><strong>JULIO</strong>
       </h3>
-      <figure class="animate-fade-in relative mt-4 sm:mt-8">
+      <figure class="animate-fade-in relative">
         <img
-          class="relative z-20 h-auto w-48 sm:w-56 md:w-64"
+          class="relative z-20 h-auto w-64 sm:w-72 md:w-80 lg:w-96"
           src="/images/logo.png"
           fetchpriority="high"
           alt="La Velada del Año V"
@@ -36,7 +36,7 @@ const rightSecondRow = secondRow.slice(4)
 
       <div class="relative z-50">
         <h3
-          class="text-theme-seashell uppercase animate-fade-in animate-delay-500 z-0 mt-4 leading-[100%] font-light"
+          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-[100%] font-light uppercase"
         >
           Estadio<br />La Cartuja,<br /><strong>Sevilla</strong>
         </h3>
@@ -45,7 +45,7 @@ const rightSecondRow = secondRow.slice(4)
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
           target="_blank"
-          class="animate-fade-in animate-delay-700 z-50 uppercase mt-4 inline-block leading-[100%] font-light transition hover:scale-125"
+          class="animate-fade-in animate-delay-700 z-50 mt-4 inline-block leading-[100%] font-light uppercase transition hover:scale-125"
         >
           twitch.tv<br /><strong>Ibai</strong>
         </a>
@@ -60,8 +60,9 @@ const rightSecondRow = secondRow.slice(4)
         {
           FIGHTERS.map(({ id, name }) => (
             <img
+              transition:name={`text-${id}`}
               data-id={`hero-text-${id}`}
-              src={`/images/fighters/text/${id}.png`}
+              src={`/images/fighters/text/${id}.webp`}
               alt={name}
               decoding="async"
               class="mask-fade-text absolute hidden h-full w-auto"
@@ -90,36 +91,49 @@ const rightSecondRow = secondRow.slice(4)
       </div>
     </div>
 
-    <div class="relative flex min-h-[800px] h-full w-full max-w-6xl flex-col items-center justify-end gap-4 py-8">
-      <div class="flex justify-between gap-4 w-full">
-        <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start gap-4 w-1/2 sm:w-full">
+    <div
+      class="relative flex h-full min-h-[800px] w-full max-w-6xl flex-col items-center justify-end gap-4 py-8"
+    >
+      <div class="flex w-full justify-between gap-4">
+        <div
+          class="animate-fade-in-right animate-delay-500 flex w-1/2 flex-wrap justify-start gap-4 sm:w-full"
+        >
           {
             leftRow.map(({ id, name }) => (
               <div class="first:mr-[50%] sm:first:mr-0">
-                <BoxerCard id={id} name={name} />
+                <BoxerCard id={id} name={name} class="boxer-left" />
               </div>
             ))
           }
         </div>
-        <div class="animate-fade-in-left animate-delay-500 flex flex-wrap flex-row-reverse justify-start gap-4 w-1/2 sm:w-full">
+        <div
+          class="animate-fade-in-left animate-delay-500 flex w-1/2 flex-row-reverse flex-wrap justify-start gap-4 sm:w-full"
+        >
           {
             rightRow.map(({ id, name }) => (
               <div class="first:ml-[50%] sm:first:ml-0">
-                <BoxerCard id={id} name={name} />
+                <BoxerCard id={id} name={name} class="boxer-right" />
               </div>
             ))
           }
         </div>
       </div>
-
       <div class="flex justify-between gap-4">
         <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-end gap-4">
-          {leftSecondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+          {
+            leftSecondRow.map(({ id, name }) => (
+              <BoxerCard id={id} name={name} class="boxer-left" />
+            ))
+          }
         </div>
         <div
           class="animate-fade-in-up animate-delay-700 flex flex-row-reverse flex-wrap justify-end gap-4"
         >
-          {rightSecondRow.map(({ id, name }) => <BoxerCard id={id} name={name} />)}
+          {
+            rightSecondRow.map(({ id, name }) => (
+              <BoxerCard id={id} name={name} class="boxer-right" />
+            ))
+          }
         </div>
       </div>
     </div>
@@ -137,6 +151,7 @@ const rightSecondRow = secondRow.slice(4)
     const $landing = document.querySelector('#landing')
 
     let currentFighterId: string | null = null
+    let hideFighterTimer = 0
 
     document.addEventListener('boxer-card-exit', () => {
       $landing?.classList.remove('hidden')
@@ -153,7 +168,7 @@ const rightSecondRow = secondRow.slice(4)
         heroText.classList.add('animate-zoom-out')
         heroImage.classList.add('animate-fade-out-down')
 
-        setTimeout(() => {
+        hideFighterTimer = setTimeout(() => {
           heroText.classList.add('hidden')
           heroImage.classList.add('hidden')
           currentFighterId = null
@@ -162,6 +177,15 @@ const rightSecondRow = secondRow.slice(4)
     })
 
     document.addEventListener('boxer-card-hovered', (event: Event) => {
+      if (currentFighterId) {
+        clearTimeout(hideFighterTimer)
+        const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+        const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+        heroText?.classList.add('hidden')
+        heroImage?.classList.add('hidden')
+        currentFighterId = null
+      }
+
       const customEvent = event as CustomEvent<{ id: string }>
       const id = customEvent.detail.id
 

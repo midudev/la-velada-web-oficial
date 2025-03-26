@@ -1,40 +1,44 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
 import Layout from '@/layouts/Layout.astro'
+import { fixedTitle } from '@/consts/pageTitles'
 
 const { id } = Astro.params
 
-let fighter
+const fighter = FIGHTERS.find((fighter) => fighter.id === id)
+// Si no hay luchador emitir error para redirigir a 404
+if (!fighter) return Astro.redirect('/404')
 
-try {
-  fighter = FIGHTERS.find((fighter) => fighter.id === id)
-
-  // Si no hay luchador emitir error para redirigir a 404
-  if (!fighter) {
-    throw new Error('Fighter not found')
-  }
-} catch (error) {
-  // redirigir a 404
-  return Astro.redirect('/404')
-}
-
+// hay que cambiar esto y hacer el getStaticParams
 export const prerender = false
 ---
 
-<Layout>
+<Layout title={`${fighter?.name} | ${fixedTitle}`}>
   <section class="relative flex min-h-screen w-full">
     <div
       class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
     >
     </div>
-    <img
-      transition:name={`image-${id}`}
-      data-id={`hero-image-${id}`}
-      src={`/images/fighters/big/${id}.webp`}
-      alt={fighter?.name}
-      decoding="async"
-      class="mask-fade-bottom z-10 h-full w-auto"
-      fetchpriority="low"
-    />
+
+    <div class="pointer-events-none absolute inset-0 flex flex-col items-center">
+      <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
+        <img
+          src={`/images/fighters/text/${id}.png`}
+          alt={fighter?.name}
+          class="mask-fade-text h-full w-auto"
+          transition:name={`text-${id}`}
+        />
+      </div>
+      <div
+        class="mask-fade-bottom relative bottom-0 mx-auto flex h-[80vh] w-full items-center justify-center"
+      >
+        <img
+          src={`/images/fighters/big/${id}.webp`}
+          alt={fighter?.name}
+          class="absolute h-full w-full object-cover lg:object-contain"
+          transition:name={`image-${id}`}
+        />
+      </div>
+    </div>
   </section>
 </Layout>
