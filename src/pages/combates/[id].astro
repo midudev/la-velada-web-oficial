@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro'
 import { COMBATS } from '@/consts/combats'
 import { FIGHTERS } from '@/consts/fighters'
 import { countries } from '@/consts/countries'
+import { combate } from '@/consts/pageTitles'
 
 const { id } = Astro.params
 const combat = COMBATS.find((c) => c.id === id)
@@ -13,7 +14,7 @@ const fighter1Country = countries.find(c => c.id === fighter1?.country)
 const fighter2Country = countries.find(c => c.id === fighter2?.country)
 ---
 
-<Layout>
+<Layout title={combate(fighter1?.name, fighter2?.name)}> 
   <section class="relative flex min-h-screen w-full items-center justify-center p-6 text-white">
     <div class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"></div>
     <div class="z-10 flex w-full max-w-5xl flex-col items-center">
