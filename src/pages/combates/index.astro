@@ -1,10 +1,10 @@
 ---
 import Layout from '@/layouts/Layout.astro'
-import Sponsors from '@/components/Sponsors.astro'
 import { COMBATS } from '@/consts/combats'
+import { combates } from '@/consts/pageTitles'
 ---
 
-<Layout>
+<Layout title={combates}>
   <section class="min-h-screen w-full">
     <div
       class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
@@ -42,7 +42,7 @@ import { COMBATS } from '@/consts/combats'
           COMBATS.map(({ id, number, fighters, title }) => (
             <a
               class="inline-block"
-              href={`combate/${id}`}
+              href={`combates/${id}`}
               title={`Ir al combate ${number} de ${title}`}
             >
               <div class="group animate-fade-in animate-delay-200 relative flex h-[40vh] w-full sm:h-[50vh]">
@@ -88,5 +88,4 @@ import { COMBATS } from '@/consts/combats'
       </div>
     </div>
   </section>
-  <Sponsors />
 </Layout>

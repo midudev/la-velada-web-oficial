@@ -1,14 +1,18 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import tailwindcss from '@tailwindcss/vite';
-import vercel from '@astrojs/vercel';
-import sitemap from '@astrojs/sitemap';
+import { defineConfig } from 'astro/config'
+import tailwindcss from '@tailwindcss/vite'
+import vercel from '@astrojs/vercel'
+import sitemap from '@astrojs/sitemap'
 
 export default defineConfig({
   output: 'server',
 
   vite: {
     plugins: [tailwindcss()],
+  },
+
+  build: {
+    inlineStylesheets: 'always',
   },
 
   experimental: {
@@ -21,5 +25,5 @@ export default defineConfig({
 
   integrations: [sitemap()],
 
-  site: 'https://www.infolavelada.com/'
+  site: 'https://www.infolavelada.com/',
 })
