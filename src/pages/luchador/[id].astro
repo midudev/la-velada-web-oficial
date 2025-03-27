@@ -2,6 +2,7 @@
 import { FIGHTERS } from '@/consts/fighters'
 import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
+import { countries } from '@/consts/countries'
 
 const { id } = Astro.params
 
@@ -11,100 +12,99 @@ if (!fighter) return Astro.redirect('/404')
 const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   year: 'numeric',
   month: 'long',
-  day: 'numeric'
+  day: 'numeric',
 })
-
-const opponent = FIGHTERS.find(f => f.id === fighter.versus)
+const fighterCountry = countries.find((c) => c.id === fighter.country)
+const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 ---
 
 <Layout title={`${fighter.name} | ${fixedTitle}`}>
   <section class="relative flex min-h-screen w-full">
     <div
-        class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-50"
+      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-50"
     >
     </div>
 
-    <div class="relative z-10 flex w-full flex-col items-center px-4 pt-24 lg:flex-row lg:items-start lg:pt-32">
-      <div class="relative mt-8 flex h-[60vh] w-full items-center justify-center lg:mt-0 lg:h-[80vh] lg:w-1/2">
-        <img
-            src={`/images/fighters/big/${id}.webp`}
-            alt={fighter.name}
-            class="h-full w-full object-contain transition-all duration-700 hover:scale-105 animate-fade-in"
-            transition:name={`image-${id}`}
-        />
-      </div>
-      <div class="w-full max-w-xl text-white lg:w-1/2">
-        <div
-            class="mb-8 flex items-center space-x-4 animate-fade-in"
-            transition:name={`name-${id}`}
-        >
+    <div
+      class="relative z-10 flex w-full flex-col items-center px-4 pt-24 lg:flex-row lg:items-start lg:pt-32"
+    >
+      <div class="z-10 flex w-full justify-center gap-20 items-stretch">
+        <!-- Imagen del luchador -->
+        <div class="relative h-[80vh] w-auto overflow-hidden clip-shape1 bg-gradient-to-b from-pink-900/30 to-fuchsia-400 group border-theme-tickle-me-pink/70 rounded-2xl border-0 transition-all duration-300 hover:border-2 flex items-center">
           <img
+            src={`/images/fighters/big/${fighter?.id}.webp`}
+            alt={`Imagen de ${fighter?.name}`}
+            class="mask-fade-bottom h-full w-auto object-cover drop-shadow-lg"
+          />
+          <div class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full"></div>
+        </div>
+      
+        <!-- Contenedor de estadísticas -->
+        <div class="w-full max-w-xl text-white lg:w-1/2 flex flex-col justify-center h-[80vh]">
+          <div class="animate-fade-in mb-8 flex flex-col space-y-2" transition:name={`name-${id}`}>
+            <img
               src={`/images/fighters/text/${id}.png`}
               alt={fighter.name}
-              class="h-16 w-auto animate-scale-in"
+              class="animate-scale-in h-16 w-auto"
               transition:name={`text-${id}`}
-          />
-          <div class="text-2xl font-bold animate-slide-in-right">{fighter.realName}</div>
-        </div>
-
-        <div class="space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm animate-fade-up">
-          <!-- Stats Grid -->
-          <div class="grid grid-cols-2 gap-4">
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Edad</div>
-              <div class="text-lg">{fighter.age} años</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Altura</div>
-              <div class="text-lg">{fighter.height}m</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Peso</div>
-              <div class="text-lg">{fighter.weight}kg</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Ciudad</div>
-              <div class="text-lg">{fighter.city}</div>
-            </div>
+            />
           </div>
-
-          <!-- Birth Date -->
-          <div class="animate-fade-in">
-            <div class="text-sm text-gray-400">Fecha de nacimiento</div>
-            <div class="text-lg">{birthDate}</div>
-          </div>
-
-          <div class="flex flex-wrap gap-3 space-x-2">
-            {
-              (fighter.socials || [])?.map(({ url, image, name, label }) => (
-                  <a
-                      href={url}
-                      target="_blank"
-                      aria-label={label ?? name}
-                      class="hover:scale-125 transition flex items-center justify-center"
-                  >
-                    <image.logo />
-                  </a>
-              ))
-            }
-          </div>
-
-          {opponent && (
-              <div class="flex items-center space-x-4 animate-pulse">
+      
+          <div class="animate-fade-up space-y-6 rounded-xl p-6 backdrop-blur-sm clip-shape1 bg-gradient-to-b from-pink-900/30 to-fuchsia-400 flex flex-col justify-center h-full">
+             <div class="animate-slide-in-right text-2xl font-bold">{fighter.realName}</div>
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+              <div class="stat-item">
+                <div class="text-sm text-gray-300">Edad</div>
+                <div class="text-lg">{fighter.age} años</div>
+              </div>
+              <div class="stat-item">
+                <div class="text-sm text-gray-300">Altura</div>
+                <div class="text-lg">{fighter.height} mts</div>
+              </div>
+              <div class="stat-item">
+                <div class="text-sm text-gray-300">Peso</div>
+                <div class="text-lg">{fighter.weight} kg</div>
+              </div>
+              <div class="stat-item">
+                <div class="text-sm text-gray-300">País</div>
+                <div class="text-lg flex items-center gap-2">
+                  <img
+                    src={fighterCountry?.image.src}
+                    alt={`Bandera de ${fighterCountry?.name ?? 'Desconocido'}`}
+                    class="h-auto w-25 rounded-lg"
+                  />
+                </div>
+              </div>
+              <div class="stat-item">
+                <div class="text-sm text-gray-300">Ciudad</div>
+                <div class="text-lg">{fighter.city}</div>
+              </div>
+            </div>
+      
+            <!-- Fecha de nacimiento -->
+            <div class="animate-fade-in">
+              <div class="text-sm text-gray-300">Fecha de nacimiento</div>
+              <div class="text-lg">{birthDate}</div>
+            </div>
+      
+            {opponent && (
+              <div class="flex animate-pulse items-center space-x-4">
                 <div class="text-xl font-bold">VS</div>
                 <a
-                    href={`/luchador/${opponent.id}`}
-                    class="group transform rounded-lg bg-white/10 px-4 py-2 transition-all hover:scale-105 hover:bg-white/20"
+                  href={`/luchador/${opponent.id}`}
+                  class="group transform rounded-lg bg-white/10 px-4 py-2 transition-all hover:scale-105 hover:bg-white/20"
                 >
-                <span class="inline-block transition-transform group-hover:translate-x-1">
-                  {opponent.name}
-                </span>
+                  <span class="inline-block transition-transform group-hover:translate-x-1">
+                    {opponent.name}
+                  </span>
                 </a>
               </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      
   </section>
 </Layout>
 
@@ -114,10 +114,21 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
     opacity: 0;
   }
 
-  .stat-item:nth-child(1) { animation-delay: 0.1s; }
-  .stat-item:nth-child(2) { animation-delay: 0.2s; }
-  .stat-item:nth-child(3) { animation-delay: 0.3s; }
-  .stat-item:nth-child(4) { animation-delay: 0.4s; }
+  .stat-item:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .stat-item:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .stat-item:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .stat-item:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+  .stat-item:nth-child(5) {
+    animation-delay: 0.5s;
+  }
 
   @keyframes fadeIn {
     from {
