@@ -10,22 +10,22 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname);
   <nav
     class:list={[
       shouldShowLogo ? "grid-cols-3" : "grid-cols-2",
-      "grid items-center px-6 text-sm font-light justify-between max-w-6xl w-full mx-auto"
+      "grid items-center px-6 text-sm font-medium justify-between max-w-6xl w-full mx-auto",
     ]}
   >
     <div class="hidden md:flex flex-row gap-8 justify-start">
       <a
         href="/la-porra"
-        class="inline-block text-theme-seashell hover:underline"
-        >HAZ TU <strong>PORRA</strong></a
+        class="inline-block text-theme-seashell hover:underline tracking-wider py-1 leading-relaxed"
+        >HAZ TU PORRA</a
       >
       <a
         href="/combates"
-        class="inline-block text-theme-seashell hover:underline"
-        >VER <strong>COMBATES</strong></a
+        class="inline-block text-theme-seashell hover:underline tracking-wider py-1 leading-relaxed"
+        >VER COMBATES</a
       >
     </div>
-    
+
     {shouldShowLogo && (
       <a
         href="/"
@@ -39,13 +39,13 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname);
         />
       </a>
     )}
-    
+
     <div class="hidden md:flex flex-col items-end">
       <span
-        class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative"
-        >COMPRA LAS <strong>ENTRADAS</strong>
+        class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative tracking-wider py-1 leading-relaxed"
+        >COMPRA LAS ENTRADAS
         <span
-          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center"
+          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center tracking-wide leading-normal"
           >PRÓXIMAMENTE</span
         >
       </span>
