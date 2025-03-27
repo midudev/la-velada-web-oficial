@@ -13,85 +13,127 @@ const fighter1Country = countries.find(c => c.id === fighter1?.country)
 const fighter2Country = countries.find(c => c.id === fighter2?.country)
 ---
 
-<Layout>
-  <section class="relative flex min-h-screen w-full items-center justify-center p-6 text-white">
+<Layout title={`${fighter1?.name} vs ${fighter2?.name}`}>
+  <section class="relative flex h-screen w-full items-center">
     <div class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"></div>
-    <div class="z-10 flex w-full max-w-5xl flex-col items-center">
-      <div class="grid w-full grid-cols-3 items-center gap-6">
-        
-        <!-- Imagen del luchador 1 -->
-        <div class="flex justify-center relative">
-          <img
-            src={`/images/fighters/big/${fighter1?.id}.webp`}
-            alt={`Imagen de ${fighter1?.name}`}
-            class="h-[30rem] w-full object-cover drop-shadow-lg mask-fade-bottom"
-          />
-        </div>
+    
+    <div class="z-10 flex w-full justify-center gap-36 items-center">
+      <!-- Imagen del luchador 1 -->
+      <div class="relative h-[75vh] max-w-[25rem] overflow-hidden clip-shape1 bg-gradient-to-b from-pink-900/30 to-fuchsia-300 group  border-theme-tickle-me-pink/70 rounded-2xl border-0 transition-all duration-300 hover:border-2">
+        <img
+          src={`/images/fighters/big/${fighter1?.id}.webp`}
+          alt={`Imagen de ${fighter1?.name}`}
+          class="mask-fade-bottom w-full h-full object-cover drop-shadow-lg"
+        />
+        <div class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full"></div>
+      </div>
 
-        <!-- Información central -->
-        <div class="flex flex-col items-center text-center bg-text bg-pink-400/80 p-3 rounded-4xl">
-            <h2 class="flex flex-col items-center text-center text-2xl font-bold">
-                <span class="block">{fighter1?.name}</span>
-                <img
-                  src="/images/versus.png"
-                  class="h-8 w-auto"
-                  loading="lazy"
-                  decoding="async"
-                  alt="Versus"
-                />
-                <span class="block">{fighter2?.name}</span>
-              </h2>
-          <div class="mt-6 grid grid-cols-3 gap-4 text-sm font-semibold">
-            
-            <div class="space-y-2 text-right">
-              <p>{fighter1?.age} años</p>
-              <p>{fighter1?.gender}</p>
-              <p>{fighter1?.height} mts</p>
-              <p>{fighter1?.weight} kg</p>
-              <p>{fighter1Country?.name}</p>
-              <div class="flex items-center gap-2 bg-gray-300 bg-opacity-50 p-1 rounded-lg">
-                <img
-                src={fighter1Country?.image.src}
-                  alt={`Bandera de ${fighter1Country?.name ?? 'Desconocido'}`}
-                  class="h-auto w-25 "
-                />
-              </div>
-            </div>
-            <div class="space-y-2 text-theme-raisin-black">
-              <p>EDAD</p>
-              <p>GÉNERO</p>
-              <p>ALTURA</p>
-              <p>PESO</p>
-              <p>PAÍS</p>
-            </div>
-            <div class="space-y-2 text-left">
-              <p>{fighter2?.age} años</p>
-              <p>{fighter2?.gender}</p>
-              <p>{fighter2?.height} mts</p>
-              <p>{fighter2?.weight} kg</p>
-              <p>{fighter2Country?.name}</p>
-              <div class="flex items-center gap-2 bg-gray-300 bg-opacity-50 p-1 rounded-lg">
-                <img
-                src={fighter2Country?.image.src}
-                  alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
-                  class="h-auto w-25"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- Imagen del luchador 2 -->
+      <div class="relative h-[75vh] max-w-[25rem] overflow-hidden clip-shape2 bg-gradient-to-b from-pink-900/30 to-indigo-300  group border-theme-tickle-me-pink/70 rounded-2xl border-0 transition-all duration-300 hover:border-2">
+        <img
+          src={`/images/fighters/big/${fighter2?.id}.webp`}
+          alt={`Imagen de ${fighter2?.name}`}
+          class="mask-fade-bottom w-full h-full object-cover drop-shadow-lg"
+        />
+        <div class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full"></div>
+      </div>
 
-        <!-- Imagen del luchador 2 -->
-        <div class="flex justify-center relative">
-          <img
-            src={`/images/fighters/big/${fighter2?.id}.webp`}
-            alt={`Imagen de ${fighter2?.name}`}
-            class="h-[30rem] w-full object-cover drop-shadow-lg mask-fade-bottom"
-          />
-          
-        </div>
-
+      <!-- Nombres luchadores versus -->
+      <div class="absolute bottom-50 z-10 gap-1.5 flex -skew-4 flex-col items-center justify-center">
+        <img
+          src={`/images/fighters/text/${fighter1?.id}.png`}
+          loading="lazy"
+          decoding="async"
+          class="w-[28rem] min-h-[2.5rem] relative "
+          alt=""
+        />
+        <img
+          src="/images/versus.png"
+          class="h-auto w-28"
+          loading="lazy"
+          decoding="async"
+          alt=""
+        />
+        <img
+        src={`/images/fighters/text/${fighter2?.id}.png`}
+          loading="lazy"
+          decoding="async"
+          class="w-[28rem] min-h-[2.5rem] relative"
+          alt=""
+        />
       </div>
     </div>
   </section>
+
+  <!-- Información luchadores -->
+  <section class="w-full flex justify-center my-30 text-white">
+    <div class="flex flex-col items-end gap-5 bg-gradient-to-b to-pink-900/30 rounded-2xl px-40 py-14">
+      <div class="w-full flex justify-between items-center gap-30">
+        <img
+        src={`/images/fighters/cards/${fighter1?.id}.webp`}
+          loading="lazy"
+          decoding="async"
+          class="w-32 rounded-lg"
+          alt=""
+        />
+        <img
+          src="/images/versus.png"
+          class="w-30"
+          loading="lazy"
+          decoding="async"
+          alt=""
+        />
+        <img
+          src={`/images/fighters/cards/${fighter2?.id}.webp`}
+          loading="lazy"
+          decoding="async"
+          class="w-32 rounded-lg"
+          alt=""
+        />
+      </div>
+      <div class="w-full flex justify-between items-center">
+        <div class="space-y-2 text-start text-xl">
+          <p>{fighter1?.age} años</p>
+          <p>{fighter1?.gender}</p>
+          <p>{fighter1?.height} mts</p>
+          <p>{fighter1?.weight} kg</p>
+          <p>{fighter1Country?.name}</p>
+        </div>
+        <div class="space-y-2 text-theme-raisin-black text-center text-xl">
+          <p>EDAD</p>
+          <p>GÉNERO</p>
+          <p>ALTURA</p>
+          <p>PESO</p>
+          <p>PAÍS</p>
+        </div>
+        <div class="space-y-2 text-end text-xl">
+          <p>{fighter2?.age} años</p>
+          <p>{fighter2?.gender}</p>
+          <p>{fighter2?.height} mts</p>
+          <p>{fighter2?.weight} kg</p>
+          <p>{fighter2Country?.name}</p>
+        </div>
+      </div>
+      <div class="w-full flex justify-between items-center">
+        <img
+          src={fighter1Country?.image.src}
+          alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
+          class="h-auto w-25"
+        />
+        <img
+          src={fighter2Country?.image.src}
+          alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
+          class="h-auto w-25"
+        />
+      </div>
+  </section>
 </Layout>
+
+<style>
+  .clip-shape1 {
+    clip-path: polygon(0% 0%, 85% 0%, 100% 100%, 15% 100%);
+  }
+  .clip-shape2 {
+    clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+  }
+</style>
