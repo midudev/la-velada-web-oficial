@@ -16,6 +16,21 @@
   --color-theme-turquoise:oklch(82.97% 0.148864 181.7442);
 }
 
+@layer {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--color-theme-tickle-me-pink);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-theme-seashell);
+    border-radius: 5px;
+  }
+}
+
 @font-face {
   font-family: "Adjusted Arial Fallback";
   src: local(Arial);
@@ -34,28 +49,16 @@
 
 @font-face {
   font-family: "Anisette";
-  src: url("/fonts/anisette-light.woff2") format("woff2");
-  font-weight: 300;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Anisette";
   src: url("/fonts/anisette-bold.woff2") format("woff2");
   font-weight: 600;
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Anisette";
-  src: url("/fonts/anisette-black.woff2") format("woff2");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
 html {
   font-family: "Anisette", var(--font-fallback);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 @utility mask-fade-bottom {

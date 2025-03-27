@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro'
 import { COMBATS } from '@/consts/combats'
 import { FIGHTERS } from '@/consts/fighters'
 import { countries } from '@/consts/countries'
+import { combate } from '@/consts/pageTitles'
 
 const { id } = Astro.params
 const combat = COMBATS.find((c) => c.id === id)
@@ -13,7 +14,7 @@ const fighter1Country = countries.find(c => c.id === fighter1?.country)
 const fighter2Country = countries.find(c => c.id === fighter2?.country)
 ---
 
-<Layout>
+<Layout title={combate(fighter1?.name, fighter2?.name)}> 
   <section class="relative flex min-h-screen w-full items-center justify-center p-6 text-white">
     <div class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"></div>
     <div class="z-10 flex w-full max-w-5xl flex-col items-center">
@@ -30,7 +31,7 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
 
         <!-- Información central -->
         <div class="flex flex-col items-center text-center bg-text bg-pink-400/80 p-3 rounded-4xl">
-            <h2 class="flex flex-col items-center text-center text-2xl font-bold">
+            <h2 class="flex flex-col items-center text-center text-2xl font-medium">
                 <span class="block">{fighter1?.name}</span>
                 <img
                   src="/images/versus.png"
@@ -41,7 +42,7 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
                 />
                 <span class="block">{fighter2?.name}</span>
               </h2>
-          <div class="mt-6 grid grid-cols-3 gap-4 text-sm font-semibold">
+          <div class="mt-6 grid grid-cols-3 gap-4 text-sm font-medium">
             
             <div class="space-y-2 text-right">
               <p>{fighter1?.age} años</p>
