@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro'
 import { COMBATS } from '@/consts/combats'
 import { FIGHTERS } from '@/consts/fighters'
 import { countries } from '@/consts/countries'
+import { combate } from '@/consts/pageTitles'
 
 const { id } = Astro.params
 const combat = COMBATS.find((c) => c.id === id)
@@ -13,7 +14,7 @@ const fighter1Country = countries.find(c => c.id === fighter1?.country)
 const fighter2Country = countries.find(c => c.id === fighter2?.country)
 ---
 
-<Layout title={`${fighter1?.name} vs ${fighter2?.name}`}>
+<Layout title={combate(fighter1?.name, fighter2?.name)}> 
   <section class="relative flex h-screen w-full items-center">
     <div class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"></div>
     
@@ -55,7 +56,7 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
           alt=""
         />
         <img
-        src={`/images/fighters/text/${fighter2?.id}.png`}
+          src={`/images/fighters/text/${fighter2?.id}.png`}
           loading="lazy"
           decoding="async"
           class="w-[28rem] min-h-[2.5rem] relative"
@@ -70,7 +71,7 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
     <div class="flex flex-col items-end gap-5 bg-gradient-to-b to-pink-900/30 rounded-2xl px-40 py-14">
       <div class="w-full flex justify-between items-center gap-30">
         <img
-        src={`/images/fighters/cards/${fighter1?.id}.webp`}
+          src={`/images/fighters/cards/${fighter1?.id}.webp`}
           loading="lazy"
           decoding="async"
           class="w-32 rounded-lg"
@@ -117,7 +118,7 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
       <div class="w-full flex justify-between items-center">
         <img
           src={fighter1Country?.image.src}
-          alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
+          alt={`Bandera de ${fighter1Country?.name ?? 'Desconocido'}`}
           class="h-auto w-25"
         />
         <img
@@ -126,6 +127,7 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
           class="h-auto w-25"
         />
       </div>
+    </div>
   </section>
 </Layout>
 
