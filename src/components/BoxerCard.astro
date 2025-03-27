@@ -9,11 +9,11 @@ interface Props {
 ---
 
 <a
-  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg overflow-hidden duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
+  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
   href={`/luchador/${id}`}
   data-id={id}
 >
-  <div class="relative overflow-hidden">
+  <div class="relative overflow-hidden rounded-lg">
     <img
       class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
       src={`/images/fighters/cards/${id}.webp`}
@@ -32,11 +32,9 @@ interface Props {
   </div>
 
   <div
-    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
   >
-    <h3
-      class="text-theme-tickle-me-pink text-xs text-center font-semibold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] transform-[scale(0.9)] uppercase"
-    >
+    <h3 class="text-theme-tickle-me-pink text-xs text-center font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] transform-[scale(0.9)]">
       {name}
     </h3>
   </div>
@@ -49,11 +47,13 @@ interface Props {
 
 <style>
   .boxer-left {
-    clip-path: polygon(0% 0%, 95% 0%, 100% 100%, 5% 100%);
+    /* clip-path: polygon(0% 0%, 95% 0%, 100% 100%, 5% 100%); */
+    transform: skew(2deg);
   }
 
   .boxer-right {
-    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+    /* clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%); */
+    transform: skew(-2deg);
   }
 
   @media (prefers-reduced-motion) {
