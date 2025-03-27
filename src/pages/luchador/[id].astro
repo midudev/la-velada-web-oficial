@@ -41,7 +41,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
       
         <!-- Contenedor de estadísticas -->
         <div class="w-full max-w-xl text-white lg:w-1/2 flex flex-col justify-center h-[80vh]">
-          <div class="animate-fade-in mb-8 flex flex-col space-y-2" transition:name={`name-${id}`}>
+          <div class="animate-fade-in mb-6 flex flex-col space-y-2" transition:name={`name-${id}`}>
             <img
               src={`/images/fighters/text/${id}.png`}
               alt={fighter.name}
@@ -72,7 +72,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
                   <img
                     src={fighterCountry?.image.src}
                     alt={`Bandera de ${fighterCountry?.name ?? 'Desconocido'}`}
-                    class="h-auto w-25 rounded-lg"
+                    class="h-auto w-24 rounded-lg"
                   />
                 </div>
               </div>
@@ -87,15 +87,29 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
               <div class="text-sm text-gray-300">Fecha de nacimiento</div>
               <div class="text-lg">{birthDate}</div>
             </div>
-      
+            <div class="flex flex-wrap gap-3 space-x-2">
+              {
+                (fighter.socials || [])?.map(({ url, image, name, label }) => (
+                    <a
+                        href={url}
+                        target="_blank"
+                        aria-label={label ?? name}
+                        class="hover:scale-125 h-8 w-auto transition flex items-center justify-center"
+                    >
+                      <image.logo />
+                    </a>
+                ))
+              }
+            </div>
+  
             {opponent && (
-              <div class="flex animate-pulse items-center space-x-4">
+              <div class="flex items-center space-x-4">
                 <div class="text-xl font-bold">VS</div>
                 <a
                   href={`/luchador/${opponent.id}`}
-                  class="group transform rounded-lg bg-white/10 px-4 py-2 transition-all hover:scale-105 hover:bg-white/20"
+                  class="group transform rounded-lg bg-gradient-to-r from-slate-300 to-slate-500 px-4 py-2 transition-all hover:scale-105 hover:bg-slate-500"
                 >
-                  <span class="inline-block transition-transform group-hover:translate-x-1">
+                  <span class="inline-block transition-transform group-hover:translate-x-1 ">
                     {opponent.name}
                   </span>
                 </a>
