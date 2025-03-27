@@ -94,25 +94,25 @@ const rightSecondRow = secondRow.slice(4, 8)
     <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8">
       <div class="flex w-full flex-wrap justify-between px-4">
         <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start gap-4">
-          {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} class="boxer-left" />)}
+          {leftRow.map(({ id, name, versus }) => <BoxerCard id={id} name={name} class="boxer-left" versus={versus}/>)}
         </div>
         <div class="animate-fade-in-left animate-delay-500 flex flex-wrap justify-end gap-4">
-          {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} class="boxer-right" />)}
+          {rightRow.map(({ id, name, versus }) => <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />)}
         </div>
       </div>
 
       <div class="flex flex-wrap justify-between gap-4">
         <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-start gap-4">
           {
-            leftSecondRow.map(({ id, name }) => (
-              <BoxerCard id={id} name={name} class="boxer-left" />
+            leftSecondRow.map(({ id, name, versus }) => (
+              <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
             ))
           }
         </div>
         <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-end gap-4">
           {
-            rightSecondRow.map(({ id, name }) => (
-              <BoxerCard id={id} name={name} class="boxer-right" />
+            rightSecondRow.map(({ id, name, versus }) => (
+              <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
             ))
           }
         </div>
