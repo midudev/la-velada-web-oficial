@@ -5,10 +5,7 @@ const { id, name, boxerCardClass } = Astro.props;
 ---
 
 <div>
-  <BoxerCard id={id} name={name} class:list={[
-    'peer',
-    boxerCardClass,
-  ]} />
+  <BoxerCard id={id} name={name} class={`peer ${boxerCardClass}`} />
   <div
     id='fighter-container'
     class='pointer-events-none absolute inset-0 flex-col items-center hidden peer-hover:flex peer-focus:flex peer-focus-visible:flex'
