@@ -132,7 +132,7 @@ const rightSecondRow = secondRow.slice(4, 8)
     const $landing = document.querySelector('#landing')
 
     let currentFighterId: string | null = null
-    let hideFighterTimer: number | ReturnType<typeof setTimeout> = 0
+    let hideFighterTimer: ReturnType<typeof setTimeout>;
 
     document.addEventListener('boxer-card-exit', () => {
       $landing?.classList.remove('hidden')
