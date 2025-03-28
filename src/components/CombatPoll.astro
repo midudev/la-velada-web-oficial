@@ -1,11 +1,11 @@
 ---
 interface Props {
-  combatId: string;
-  leftFighter: string;
-  rightFighter: string;
-  title: string;
+  combatId: string
+  leftFighter: string
+  rightFighter: string
+  title: string
 }
-const { title, leftFighter, rightFighter } = Astro.props as Props;
+const { title, leftFighter, rightFighter } = Astro.props as Props
 ---
 
 <section class="flex flex-col items-center justify-center gap-4">
@@ -20,6 +20,10 @@ const { title, leftFighter, rightFighter } = Astro.props as Props;
         src={`/images/fighters/cards/${leftFighter}.webp`}
         alt={`Tarjeta del boxeador ${leftFighter}`}
       />
+      <div
+        class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-theme-tickle-me-pink/70 via-theme-tickle-me-pink/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+      >
+      </div>
     </button>
     <div class="relative col-span-2">
       {/* TODO: detect who has more votes to show */}
@@ -27,7 +31,7 @@ const { title, leftFighter, rightFighter } = Astro.props as Props;
         src={`/images/fighters/big/${leftFighter}.webp`}
         alt={leftFighter}
         decoding="async"
-        class="h-[450px] w-auto object-cover lg:object-contain mx-auto"
+        class="mx-auto h-[450px] w-auto object-cover lg:object-contain"
         fetchpriority="low"
       />
       <div class="absolute top-50 left-0 h-10 w-full rounded-full">
@@ -63,6 +67,10 @@ const { title, leftFighter, rightFighter } = Astro.props as Props;
         src={`/images/fighters/cards/${rightFighter}.webp`}
         alt={`Tarjeta del boxeador ${rightFighter}`}
       />
+      <div
+        class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-theme-turquoise/70 via-theme-turquoise/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+      >
+      </div>
     </button>
   </div>
 </section>
