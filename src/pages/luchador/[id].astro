@@ -1,5 +1,7 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
+import { COMBATS } from '@/consts/combats'
+import { countries } from '@/consts/countries'
 import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
 
@@ -11,100 +13,216 @@ if (!fighter) return Astro.redirect('/404')
 const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   year: 'numeric',
   month: 'long',
-  day: 'numeric'
+  day: 'numeric',
 })
-
+//Buscamos el oponente
 const opponent = FIGHTERS.find(f => f.id === fighter.versus)
----
+// Buscar el combate correspondiente
+const combat = opponent ? COMBATS.find(
+  (c) => c.fighters.includes(fighter.id) && c.fighters.includes(opponent.id),
+) : null;
+const combatId = combat?.id;
 
+// Obtener el país del luchador y del oponente
+const fighterCountry = countries.find(c => c.id === fighter?.country);
+const opponentCountry = countries.find(c => c.id === opponent?.country);
+
+// Obtenemos el nivel y porcentaje de experiencia según la edad del luchador.
+const level = Math.floor(fighter.age / 9);
+const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
+---
 <Layout title={`${fighter.name} | ${fixedTitle}`}>
   <section class="relative flex min-h-screen w-full">
-    <div
-        class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-50"
-    >
-    </div>
-
-    <div class="relative z-10 flex w-full flex-col items-center px-4 pt-24 lg:flex-row lg:items-start lg:pt-32">
-      <div class="relative mt-8 flex h-[60vh] w-full items-center justify-center lg:mt-0 lg:h-[80vh] lg:w-1/2">
+    <div class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-40"></div>
+    
+    <div class="relative z-10 flex w-full flex-col items-center justify-center gap-8 px-4 pt-24 lg:flex-row lg:items-start lg:pt-32">
+      <!-- Imagen grande con hover -->
+      <div class="relative flex flex-col w-full lg:w-1/2 items-center gap-8 group">
         <img
-            src={`/images/fighters/big/${id}.webp`}
-            alt={fighter.name}
-            class="h-full w-full object-contain transition-all duration-700 hover:scale-105 animate-fade-in"
-            transition:name={`image-${id}`}
+          src={`/images/fighters/big/${id}.webp`}
+          alt={fighter.name}
+          class="h-full w-full object-contain transition-all duration-700 hover:brightness-130 animate-fade-in border-4 border-theme-turquoise rounded-lg hover:shadow-2xl hover:shadow-theme-turquoise"
         />
-      </div>
-      <div class="w-full max-w-xl text-white lg:w-1/2">
-        <div
-            class="mb-8 flex items-center space-x-4 animate-fade-in"
-            transition:name={`name-${id}`}
-        >
-          <img
-              src={`/images/fighters/text/${id}.png`}
-              alt={fighter.name}
-              class="h-16 w-auto animate-scale-in"
-              transition:name={`text-${id}`}
-          />
-          <div class="text-2xl font-bold animate-slide-in-right">{fighter.realName}</div>
+        <!-- Redes sociales al hacer hover -->
+        <div class="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ">
+          {
+            (fighter.socials || [])?.map(({ url, image, name, label }) => (
+              <a
+                href={url}
+                target="_blank"
+                aria-label={label ?? name}
+                class="hover:scale-125 transition flex items-center justify-center"
+              >
+                <image.logo class="text-black"/>
+              </a>
+            ))
+          }
         </div>
-
-        <div class="space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm animate-fade-up">
-          <!-- Stats Grid -->
-          <div class="grid grid-cols-2 gap-4">
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Edad</div>
-              <div class="text-lg">{fighter.age} años</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Altura</div>
-              <div class="text-lg">{fighter.height}m</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Peso</div>
-              <div class="text-lg">{fighter.weight}kg</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Ciudad</div>
-              <div class="text-lg">{fighter.city}</div>
-            </div>
-          </div>
-
-          <!-- Birth Date -->
-          <div class="animate-fade-in">
-            <div class="text-sm text-gray-400">Fecha de nacimiento</div>
-            <div class="text-lg">{birthDate}</div>
-          </div>
-
-          <div class="flex flex-wrap gap-3 space-x-2">
-            {
-              (fighter.socials || [])?.map(({ url, image, name, label }) => (
-                  <a
-                      href={url}
-                      target="_blank"
-                      aria-label={label ?? name}
-                      class="hover:scale-125 transition flex items-center justify-center"
-                  >
-                    <image.logo />
-                  </a>
-              ))
-            }
-          </div>
-
-          {opponent && (
-              <div class="flex items-center space-x-4 animate-pulse">
-                <div class="text-xl font-bold">VS</div>
-                <a
-                    href={`/luchador/${opponent.id}`}
-                    class="group transform rounded-lg bg-white/10 px-4 py-2 transition-all hover:scale-105 hover:bg-white/20"
-                >
-                <span class="inline-block transition-transform group-hover:translate-x-1">
-                  {opponent.name}
-                </span>
+        <!-- Cuadro del rival -->
+        {opponent && (
+          <div class="relative w-full p-6 bg-gradient-to-r from-theme-tickle-me-pink to-theme-turquoise rounded-lg shadow-2xl text-white text-center group transition-all duration-500 hover:brightness-110 hover:shadow-2xl border-4 border-theme-turquoise rounded-lg hover:shadow-theme-turquoise">
+            <!-- Contenedor horizontal -->
+            <div class="flex items-center justify-center gap-8">
+              <!-- Luchador -->
+              <div>
+                <div class="text-2xl font-bold">{fighter.name}</div>
+                <div class="flex justify-center gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  {
+                    (fighter.socials || [])?.map(({ url, image, name, label }) => (
+                      <a
+                        href={url}
+                        target="_blank"
+                        aria-label={label ?? name}
+                        class="hover:scale-125 transition flex items-center justify-center"
+                      >
+                        <image.logo class="w-6 h-6 text-white" />
+                      </a>
+                    ))
+                  }
+                </div>
+                <!-- Bandera del luchador -->
+                {fighterCountry && (
+                  <div class="flex items-center justify-center gap-2 mt-2">
+                    <img
+                      src={fighterCountry.image.src}
+                      alt={`Bandera de ${fighterCountry.name}`}
+                      class="h-6 w-auto rounded"
+                    />
+                    <span>{fighterCountry.name}</span>
+                  </div>
+                )}
+              </div>
+        
+              <!-- VS -->
+              <div class="text-3xl font-bold">
+                <a href={`/combates/${combatId}`} class="hover:underline">
+                  VS
                 </a>
               </div>
-          )}
+        
+              <!-- Rival -->
+              <div>
+                <a
+                  href={`/luchador/${opponent.id}`}
+                  class="group transform transition-all hover:brightness-125 hover:shadow-2xl"
+                >
+                  <div class="text-2xl font-bold">{opponent.name}</div>
+                  <div class="flex justify-center gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    {
+                      (opponent.socials || [])?.map(({ url, image, name, label }) => (
+                        <a
+                          href={url}
+                          target="_blank"
+                          aria-label={label ?? name}
+                          class="hover:scale-125 transition flex items-center justify-center"
+                        >
+                          <image.logo class="w-6 h-6 text-white" />
+                        </a>
+                      ))
+                    }
+                  </div>
+                  <!-- Bandera del rival -->
+                  {opponentCountry && (
+                    <div class="flex items-center justify-center gap-2 mt-2">
+                      <img
+                        src={opponentCountry.image.src}
+                        alt={`Bandera de ${opponentCountry.name}`}
+                        class="h-6 w-auto rounded"
+                      />
+                      <span>{opponentCountry.name}</span>
+                    </div>
+                  )}
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      <!-- Información del luchador -->
+      <div class="relative w-full max-w-xl text-white lg:w-1/2 p-6 bg-black/50 rounded-lg animate-fade-in backdrop-blur-md border-2 border-theme-turquoise group transition-all duration-500 hover:brightness-125 hover:shadow-2xl border-4 border-theme-turquoise hover:shadow-theme-turquoise">
+        <!-- Nombre del luchador y nombre real -->
+        <div class="mb-8 flex flex-col items-center">
+          <img
+            src={`/images/fighters/text/${id}.png`}
+            alt={fighter.name}
+            class="h-16 w-auto animate-scale-in mb-2"
+          />
+          <div class="text-2xl font-bold animate-slide-in-right text-center">{fighter.realName}</div>
         </div>
+        
+        <!-- Bandera del luchador -->
+        {fighterCountry && (
+          <div class="flex items-center justify-center gap-2 mt-2">
+            <img
+              src={fighterCountry.image.src}
+              alt={`Bandera de ${fighterCountry.name}`}
+              class="h-6 w-auto rounded"
+            />
+            <span>{fighterCountry.name}</span>
+          </div>
+        )}
+        
+        <!-- Hoja de personaje -->
+        <div class="flex justify-center relative mb-6">
+
+          <img
+            src={`/images/fighters/cards/${id}.webp`}
+            alt={`${fighter.name} card`}
+            class="w-50 rounded-lg shadow-lg mb-6 animate-fade-in justify-center items-center"
+          />
+        </div>
+        <div class="absolute top-25 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          {
+            (fighter.socials || [])?.map(({ url, image, name, label }) => (
+              <a
+                href={url}
+                target="_blank"
+                aria-label={label ?? name}
+                class="hover:scale-125 transition flex items-center justify-center"
+              >
+                <image.logo class="text-white" />
+              </a>
+            ))
+          }
+        </div>
+        <!-- Estadísticas -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="stat-item"><span class="text-sm text-gray-400">Edad</span> <span class="text-lg">{fighter.age} años</span></div>
+          <div class="stat-item"><span class="text-sm text-gray-400">Altura</span> <span class="text-lg">{fighter.height}m</span></div>
+          <div class="stat-item"><span class="text-sm text-gray-400">Peso</span> <span class="text-lg">{fighter.weight}kg</span></div>
+          <div class="stat-item"><span class="text-sm text-gray-400">Ciudad</span> <span class="text-lg">{fighter.city}</span></div>
+        </div>
+        
+        <div class="mt-4">
+          <div class="text-sm text-gray-400">Fecha de nacimiento</div>
+          <div class="text-lg">{birthDate}</div>
+        </div>
+        
+        <!-- Nivel y experiencia -->
+        <div class="mt-6">
+          <div class="text-sm text-gray-400">Nivel</div>
+          <div class="text-lg font-bold">{level}</div>
+          <div class="w-full bg-gray-700 h-4 rounded-lg overflow-hidden mt-1">
+            <div class="h-full bg-theme-tickle-me-pink" style={{ width: `${expPercentage}%` }}></div>
+          </div>
+          <div class="text-sm text-gray-400 mt-1">Exp: {expPercentage}%</div>
+        </div>
+        
+        <!-- Atributos y habilidades (placeholder) -->
+        <div class="mt-6">
+          <div class="text-lg font-bold">Atributos</div>
+          <div class="text-sm text-gray-400">(Próximamente...)</div>
+        </div>
+        
+        <div class="mt-4">
+          <div class="text-lg font-bold">Habilidades</div>
+          <div class="text-sm text-gray-400">(Próximamente...)</div>
+        </div>
+        
       </div>
     </div>
+    
   </section>
 </Layout>
 
@@ -129,4 +247,6 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
       transform: translateY(0);
     }
   }
+
+
 </style>
