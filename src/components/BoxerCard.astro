@@ -103,7 +103,7 @@ interface Props {
 
 <script>
   document.addEventListener('astro:page-load', () => {
-    const boxerCards = document.querySelectorAll('.boxer-card')
+    const boxerCards: NodeListOf<HTMLElement> = document.querySelectorAll('.boxer-card')
     let timeoutId: number | null = null
 
     const pairings: Record<number, number> = {
@@ -123,6 +123,49 @@ interface Props {
       10: 9,
     }
 
+    document.addEventListener('carrusel-scrolling', (event) => {
+      const centerPosition = (event as CustomEvent).detail
+      let closestIndex = -1;
+      let minDistance = Infinity;
+
+      boxerCards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        if(!rect.left) return;
+
+        const distance = Math.abs(rect.left - centerPosition);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestIndex = index;
+        }
+      });
+      
+      if(closestIndex<0) return;
+
+      // TODO ESTO SERIA BUENO PONERLO EN UNA FUNCIÓN PARA NO REPETIR CODIGO:
+      if (timeoutId) {
+          clearTimeout(timeoutId)
+          timeoutId = null
+        }
+
+        const id = boxerCards[closestIndex].getAttribute('data-id')
+        if (id) {
+          // Dispatch a custom event to notify a boxer card id is hovered
+          const event = new CustomEvent('boxer-card-hovered', {
+            detail: { id },
+          })
+          document.dispatchEvent(event)
+        }
+        // Aplicar la clase 'grayscale-100' a todas las tarjetas
+        boxerCards.forEach((card) => card.classList.add('grayscale-100'))
+
+        // Quitar la clase solo de la tarjeta sobre la que se está haciendo hover
+        boxerCards[closestIndex].classList.remove('grayscale-100')
+
+        // Quitar la clase también de su par si existe
+        // if (pairings[index] !== undefined) {
+        //   boxerCards[pairings[index]].classList.remove('grayscale-100')
+        // }
+    })
     boxerCards.forEach((singleBoxerCard, index) => {
       singleBoxerCard.addEventListener('mouseenter', () => {
         if (timeoutId) {

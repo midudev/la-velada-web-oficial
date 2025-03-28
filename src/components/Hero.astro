@@ -91,8 +91,8 @@ const rightSecondRow = secondRow.slice(4, 8)
       </div>
     </div>
 
-    <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8">
-      <div class="flex w-full flex-wrap justify-between px-4">
+    <div class="relative h-auto w-full mt-auto max-w-6xl md:p-8 xs:p-0">
+      <div class="hidden md:flex w-full flex-wrap justify-between px-4">
         <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start gap-4">
           {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} class="boxer-left" />)}
         </div>
@@ -100,8 +100,8 @@ const rightSecondRow = secondRow.slice(4, 8)
           {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} class="boxer-right" />)}
         </div>
       </div>
-
-      <div class="flex flex-wrap justify-between gap-4">
+      
+      <div class="hidden md:flex flex-wrap justify-between gap-4">
         <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-start gap-4">
           {
             leftSecondRow.map(({ id, name }) => (
@@ -117,18 +117,47 @@ const rightSecondRow = secondRow.slice(4, 8)
           }
         </div>
       </div>
+
+      {/* Vista móvil: fila horizontal desplazable */}
+      <div id="carrusel" class="flex px-24 gap-4 overflow-x-auto whitespace-nowrap snap-x snap-mandatory p-4 md:hidden scroll-smooth">
+        {[...leftRow, ...rightRow, ...leftSecondRow, ...rightSecondRow].map(({ id, name }) => (
+          <BoxerCard
+            id={id}
+            name={name}
+            class="min-w-[120px] snap-center animate-fade-in-up animate-delay-500"
+          />
+        ))}
+      </div>
     </div>
-  </div>
 </section>
 
 <style>
   .mask-fade-text {
     mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
   }
+  #carrusel::-webkit-scrollbar{
+    display: none
+  }
 </style>
 
 <script>
   document.addEventListener('astro:page-load', () => {
+    var timerCarrusel: NodeJS.Timeout;
+
+    const carrusel = document.querySelector('#carrusel')
+    if(carrusel){
+      carrusel.addEventListener('scroll',(e) => {
+        if(timerCarrusel) clearTimeout(timerCarrusel)
+        timerCarrusel = setTimeout(() => {
+          const event = new CustomEvent('carrusel-scrolling', {
+            // detail: Math.abs(carrusel.getBoundingClientRect().left) / carrusel.scrollWidth
+            detail: carrusel.getBoundingClientRect().left + carrusel.scrollWidth / 16
+          })
+          document.dispatchEvent(event)
+        }, 300)
+      })
+    }
+
     const $landing = document.querySelector('#landing')
 
     let currentFighterId: string | null = null
