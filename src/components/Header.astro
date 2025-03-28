@@ -4,6 +4,9 @@ const { pathname } = Astro.url;
 // Lista de rutas donde NO debe aparecer el logo
 const hideLogoRoutes = ["/"];
 const shouldShowLogo = !hideLogoRoutes.includes(pathname);
+
+// Comprueba si la ruta actual está activa
+const isActive = (path: string) => pathname === path;
 ---
 
 <header class="fixed flex items-center top-0 h-16 w-full z-50 text-white mx-auto">
@@ -14,16 +17,54 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname);
     ]}
   >
     <div class="hidden md:flex flex-row gap-8 justify-start">
+      {/* Enlace con animación de subrayado dividido en dos colores */}
       <a
         href="/la-porra"
-        class="inline-block text-theme-seashell hover:underline tracking-wider py-1 leading-relaxed"
-        >HAZ TU PORRA</a
+        class="group relative inline-block tracking-wider py-1 leading-relaxed"
       >
+        <span class="text-theme-seashell">HAZ TU PORRA</span>
+        {/* Contenedor del subrayado con overflow hidden para la animación */}
+        <div class="relative mt-1 h-[2px] w-full overflow-hidden">
+          {/* Línea rosa que se anima desde la izquierda */}
+          <div 
+            class:list={[
+              "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-250 ease-out",
+              isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
+            ]}
+          ></div>
+          {/* Línea turquesa que se anima desde la derecha */}
+          <div 
+            class:list={[
+              "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-250 ease-out",
+              isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
+            ]}
+          ></div>
+        </div>
+      </a>
+      {/* Segundo enlace con la misma animación */}
       <a
         href="/combates"
-        class="inline-block text-theme-seashell hover:underline tracking-wider py-1 leading-relaxed"
-        >VER COMBATES</a
+        class="group relative inline-block tracking-wider py-1 leading-relaxed"
       >
+        <span class="text-theme-seashell">VER COMBATES</span>
+        {/* Contenedor del subrayado con overflow hidden para la animación */}
+        <div class="relative mt-1 h-[2px] w-full overflow-hidden">
+          {/* Línea rosa que se anima desde la izquierda */}
+          <div 
+            class:list={[
+              "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out",
+              isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
+            ]}
+          ></div>
+          {/* Línea turquesa que se anima desde la derecha */}
+          <div 
+            class:list={[
+              "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out",
+              isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
+            ]}
+          ></div>
+        </div>
+      </a>
     </div>
 
     {shouldShowLogo && (
