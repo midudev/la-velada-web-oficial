@@ -11,19 +11,18 @@ import { combates } from '@/consts/pageTitles'
     >
     </div>
 
-    <div class="flex w-full flex-col items-center text-center">
-      <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-30">
-        <h3
-          class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 -skew-3 text-6xl leading-[100%] font-medium [text-shadow:_5px_5px_10px_rgb(0_0_0_/_40%)]"
+    <div>
+      <div id="landing" class="mt-40 mb-32 text-center">
+        <h1
+          class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 -skew-3 text-4xl leading-[100%] font-medium [text-shadow:_5px_5px_10px_rgb(0_0_0_/_40%)] md:text-6xl"
         >
-          <strong>LISTA DE LOS</strong>
-          <br /><strong>COMBATES</strong>
-        </h3>
+          <strong>LISTA DE LOS<br />COMBATES</strong>
+        </h1>
       </div>
 
       <div
         id="combats-container"
-        class="relative top-96 mx-auto mt-10 mb-72 grid max-w-7xl grid-cols-1 gap-4 p-6 md:grid-cols-2 md:gap-8"
+        class="mx-auto mb-32 grid max-w-7xl grid-cols-1 gap-16 md:grid-cols-2 md:gap-40"
       >
         {
           COMBATS.map(({ id, number, fighters, title }) => (
@@ -32,15 +31,17 @@ import { combates } from '@/consts/pageTitles'
               href={`combates/${id}`}
               title={`Ir al combate ${number} de ${title}`}
             >
-              <div class="group animate-fade-in animate-delay-200 relative flex h-[40vh] w-full sm:h-[50vh]">
+              <div class="group animate-fade-in animate-delay-200 relative flex h-[40vh] w-full gap-4 sm:h-[50vh]">
                 {fighters.map((fighter, index) => (
-                  <img
-                    src={`/images/fighters/big/${fighter}.webp`}
-                    class={`z-20 ml-5 h-full w-1/2 object-contain ${index === 0 ? 'ml-5 lg:ml-10' : '-ml-40 lg:-ml-20'} mask-fade-bottom size-96 transition-transform duration-300 group-hover:scale-110`}
-                    alt={`Imagen de ${fighter}`}
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <div class="w-1/2 transition-transform duration-300 group-hover:scale-105">
+                    <img
+                      src={`/images/fighters/big/${fighter}.webp`}
+                      class={`${index === 0 ? 'animate-fade-in-right' : 'animate-fade-in-left'} animate-duration-slower animate-delay-900 h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover object-top`}
+                      alt={`Imagen de ${fighter}`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
                 ))}
 
                 <div class="absolute bottom-0 z-30 flex h-auto w-full -skew-4 flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
@@ -48,12 +49,12 @@ import { combates } from '@/consts/pageTitles'
                     src={`/images/fighters/text/${fighters[0]}.png`}
                     loading="lazy"
                     decoding="async"
-                    class="w-3/4"
+                    class="animate-fade-in-down animate-duration-slower animate-delay-1000 w-3/4"
                     alt=""
                   />
                   <img
                     src="/images/versus.png"
-                    class="h-auto w-24"
+                    class="animate-fade-in animate-duration-slower animate-delay-1000 my-4 h-auto w-16"
                     loading="lazy"
                     decoding="async"
                     alt=""
@@ -62,12 +63,10 @@ import { combates } from '@/consts/pageTitles'
                     src={`/images/fighters/text/${fighters[1]}.png`}
                     loading="lazy"
                     decoding="async"
-                    class="w-3/4"
+                    class="animate-fade-in-up animate-duration-slower animate-delay-1000 w-3/4"
                     alt=""
                   />
                 </div>
-
-                <div class="absolute bottom-0 z-10 h-2/3 w-full bg-gradient-to-b from-pink-900/30 from-60% to-transparent transition-colors duration-300 group-hover:from-pink-900/20" />
               </div>
             </a>
           ))
