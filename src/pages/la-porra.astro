@@ -2,6 +2,8 @@
 import Layout from '@/layouts/Layout.astro'
 import { porra } from '@/consts/pageTitles'
 import BackgroundLayout from '@/layouts/BackgroundLayout.astro'
+import { COMBATS } from '@/consts/combats'
+import CombatPoll from '@/components/CombatPoll.astro'
 ---
 
 <Layout title={porra}>
@@ -15,5 +17,17 @@ import BackgroundLayout from '@/layouts/BackgroundLayout.astro'
         PARTICIPA EN LA PORRA
       </h2>
     </header>
+    <div class="mx-auto mt-40 w-full max-w-4xl">
+      {
+        COMBATS.map(({ id, fighters, title }) => (
+          <CombatPoll
+            combatId={id}
+            leftFighter={fighters[0]}
+            rightFighter={fighters[1]}
+            title={title}
+          />
+        ))
+      }
+    </div>
   </BackgroundLayout>
 </Layout>
