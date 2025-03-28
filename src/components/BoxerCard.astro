@@ -17,7 +17,7 @@ interface Props {
 >
   <div class="relative overflow-hidden rounded-lg">
     <img
-      class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+      class="aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 via-40 to-transparent object-cover transition-transform duration-500 group-hover:scale-110"
       src={`/images/fighters/cards/${id}.webp`}
       alt={`Tarjeta del boxeador ${name}`}
     />
@@ -106,7 +106,7 @@ interface Props {
 <script>
   document.addEventListener('astro:page-load', () => {
     const boxerCards = document.querySelectorAll('.boxer-card')
-    let timeoutId: number | null = null
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     boxerCards.forEach((singleBoxerCard, index) => {
       singleBoxerCard.addEventListener('mouseenter', () => {
@@ -124,15 +124,15 @@ interface Props {
           document.dispatchEvent(event)
         }
         // Aplicar la clase 'grayscale-100' a todas las tarjetas
-        boxerCards.forEach((card) => card.classList.add('grayscale-100'))
+        boxerCards.forEach((card) => card.classList.add('grayscale-100', 'opacity-40'))
 
         // Quitar la clase solo de la tarjeta sobre la que se está haciendo hover
-        singleBoxerCard.classList.remove('grayscale-100')
+        singleBoxerCard.classList.remove('grayscale-100', 'opacity-40')
 
         // Quitar la clase también de su par si existe
         const versus = singleBoxerCard.getAttribute('data-versus')
         if (versus) {
-          document.querySelector(`[data-id=${versus}]`)?.classList.remove('grayscale-100')
+          document.querySelector(`[data-id=${versus}]`)?.classList.remove('grayscale-100', 'opacity-40')
         }
       })
 
@@ -143,7 +143,7 @@ interface Props {
         }, 500)
 
         // Restaurar la clase en todas las tarjetas cuando el mouse salga
-        boxerCards.forEach((card) => card.classList.remove('grayscale-100'))
+        boxerCards.forEach((card) => card.classList.remove('grayscale-100', 'opacity-40'))
       })
 
       singleBoxerCard.addEventListener('focus', () => {
