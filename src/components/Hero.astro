@@ -91,25 +91,25 @@ const rightSecondRow = secondRow.slice(4, 8)
       </div>
     </div>
 
-    <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8">
+    <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end p-8">
       <div class="flex w-full flex-wrap justify-between px-4">
-        <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start gap-4">
+        <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start">
           {leftRow.map(({ id, name }) => <BoxerCard id={id} name={name} class="boxer-left" />)}
         </div>
-        <div class="animate-fade-in-left animate-delay-500 flex flex-wrap justify-end gap-4">
+        <div class="animate-fade-in-left animate-delay-500 flex flex-wrap justify-end">
           {rightRow.map(({ id, name }) => <BoxerCard id={id} name={name} class="boxer-right" />)}
         </div>
       </div>
 
-      <div class="flex flex-wrap justify-between gap-4">
-        <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-start gap-4">
+      <div class="flex flex-wrap justify-between">
+        <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-start">
           {
             leftSecondRow.map(({ id, name }) => (
               <BoxerCard id={id} name={name} class="boxer-left" />
             ))
           }
         </div>
-        <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-end gap-4">
+        <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-end">
           {
             rightSecondRow.map(({ id, name }) => (
               <BoxerCard id={id} name={name} class="boxer-right" />
@@ -132,7 +132,6 @@ const rightSecondRow = secondRow.slice(4, 8)
     const $landing = document.querySelector('#landing')
 
     let currentFighterId: string | null = null
-    let hideFighterTimer: number | ReturnType<typeof setTimeout> = 0
 
     document.addEventListener('boxer-card-exit', () => {
       $landing?.classList.remove('hidden')
@@ -149,17 +148,14 @@ const rightSecondRow = secondRow.slice(4, 8)
         heroText.classList.add('animate-zoom-out')
         heroImage.classList.add('animate-fade-out-down')
 
-        hideFighterTimer = setTimeout(() => {
-          heroText.classList.add('hidden')
-          heroImage.classList.add('hidden')
-          currentFighterId = null
-        }, 500)
+        heroText.classList.add('hidden')
+        heroImage.classList.add('hidden')
+        currentFighterId = null
       }
     })
 
     document.addEventListener('boxer-card-hovered', (event: Event) => {
       if (currentFighterId) {
-        clearTimeout(hideFighterTimer)
         const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
         const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
         heroText?.classList.add('hidden')
