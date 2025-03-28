@@ -1,0 +1,45 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'a'> {
+  variant?: 'primary' | 'secondary';
+  size?: 'sm' | 'md' | 'lg';
+  fullWidth?: boolean;
+}
+
+const {
+  variant = 'primary', 
+  size = 'md', 
+  fullWidth = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const baseClasses = 'border-2 rounded-lg hover:scale-110 transition duration-400 ease-in-out delay-150';
+
+const variantClasses = {
+  primary: 'bg-theme-turquoise/40 hover:bg-theme-tickle-me-pink/40 backdrop-blur-md text-white border-theme-turquoise/95 hover:border-theme-tickle-me-pink/95 shadow-md shadow-theme-turquoise/95 hover:shadow-theme-tickle-me-pink/95',
+  secondary: 'bg-theme-tickle-me-pink/40 hover:bg-theme-turquoise/40 backdrop-blur-md text-white border-theme-tickle-me-pink/95 hover:border-theme-turquoise/95 shadow-md shadow-theme-tickle-me-pink/95 hover:shadow-theme-turquoise/95'
+};
+
+const sizeClasses = {
+  sm: 'px-2 py-1 text-sm',
+  md: 'px-4 py-2 text-base',
+  lg: 'px-6 py-3 text-lg'
+};
+
+const classes = [
+  baseClasses,
+  variantClasses[variant],
+  sizeClasses[size],
+  fullWidth ? 'w-full' : '',
+  className
+].filter(Boolean).join(' ').trim();
+---
+
+<a
+    class={classes}
+    {...rest}
+>
+  <slot />
+</a>
