@@ -2,7 +2,6 @@
 import Layout from '@/layouts/Layout.astro'
 import { COMBATS } from '@/consts/combats'
 import { combates } from '@/consts/pageTitles'
-import Image from 'astro/components/Image.astro'
 ---
 
 <Layout title={combates}>
@@ -26,10 +25,11 @@ import Image from 'astro/components/Image.astro'
         </figure>
 
         <div>
-          <h3 class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 -skew-3 text-6xl leading-[100%] font-light">
-            <strong class="[text-shadow:_5px_5px_10px_rgb(0_0_0_/_40%)]">LISTA DE LOS</strong>
-            <br />
-            <strong class="bg-gradient-to-b from-[#ecd0e8] to-pink-500/90 bg-clip-text text-transparent drop-shadow-[5px_5px_10px_rgba(0,0,0,0.4)]">COMBATES</strong>
+          <h3
+            class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 -skew-3 text-6xl leading-[100%] font-light [text-shadow:_5px_5px_10px_rgb(0_0_0_/_40%)]"
+          >
+            <strong>LISTA DE LOS</strong>
+            <br /><strong>COMBATES</strong>
           </h3>
         </div>
       </div>
@@ -47,44 +47,36 @@ import Image from 'astro/components/Image.astro'
             >
               <div class="group animate-fade-in animate-delay-200 relative flex h-[40vh] w-full sm:h-[50vh]">
                 {fighters.map((fighter, index) => (
-                  <Image
+                  <img
                     src={`/images/fighters/big/${fighter}.webp`}
                     class={`z-20 ml-5 h-full w-1/2 object-contain ${index === 0 ? 'ml-5 lg:ml-10' : '-ml-40 lg:-ml-20'} mask-fade-bottom size-96 transition-transform duration-300 group-hover:scale-110`}
                     alt={`Imagen de ${fighter}`}
                     loading="lazy"
                     decoding="async"
-                    width="96"
-                    height="96"
                   />
                 ))}
 
                 <div class="absolute bottom-0 z-30 flex h-auto w-full -skew-4 flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
-                  <Image
+                  <img
                     src={`/images/fighters/text/${fighters[0]}.png`}
                     loading="lazy"
                     decoding="async"
                     class="w-3/4"
                     alt=""
-                    width="96"
-                    height="96"
                   />
-                  <Image
+                  <img
                     src="/images/versus.png"
                     class="h-auto w-24"
                     loading="lazy"
                     decoding="async"
                     alt=""
-                    width="96"
-                    height="96"
                   />
-                  <Image
+                  <img
                     src={`/images/fighters/text/${fighters[1]}.png`}
                     loading="lazy"
                     decoding="async"
                     class="w-3/4"
                     alt=""
-                    width="96"
-                    height="96"
                   />
                 </div>
 
