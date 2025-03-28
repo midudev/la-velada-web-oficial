@@ -104,7 +104,7 @@ interface Props {
 <script>
   document.addEventListener('astro:page-load', () => {
     const boxerCards = document.querySelectorAll('.boxer-card')
-    let timeoutId: number | null = null
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     const pairings: Record<number, number> = {
       0: 5,
