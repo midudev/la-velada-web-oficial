@@ -1,0 +1,68 @@
+---
+interface Props {
+  combatId: string;
+  leftFighter: string;
+  rightFighter: string;
+  title: string;
+}
+const { title, leftFighter, rightFighter } = Astro.props as Props;
+---
+
+<section class="flex flex-col items-center justify-center gap-4">
+  <h3 class="text-center text-xl font-bold text-white">{title}</h3>
+  <div class="grid grid-cols-4 gap-4">
+    <button
+      class={`group relative inline-block rounded-lg transition-all duration-300 hover:z-20 hover:scale-110 hover:shadow-lg cursor-pointer`}
+      data-id={leftFighter}
+    >
+      <img
+        class="via-40 aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover transition-transform duration-500"
+        src={`/images/fighters/cards/${leftFighter}.webp`}
+        alt={`Tarjeta del boxeador ${leftFighter}`}
+      />
+    </button>
+    <div class="relative col-span-2">
+      {/* TODO: detect who has more votes to show */}
+      <img
+        src={`/images/fighters/big/${leftFighter}.webp`}
+        alt={leftFighter}
+        decoding="async"
+        class="h-full w-auto object-cover lg:object-contain"
+        fetchpriority="low"
+      />
+      <div class="absolute top-50 left-0 h-10 w-full rounded-full">
+        <div class="flex h-full">
+          <div
+            id={`progress-${leftFighter}`}
+            class="bg-theme-tickle-me-pink shadow-theme-tickle-me-pink/80 h-full rounded-l-full shadow-lg"
+            style="width: 50%"
+          >
+          </div>
+          <div
+            id={`progress-${rightFighter}`}
+            class="bg-theme-turquoise shadow-theme-turquoise h-full rounded-r-full shadow-lg"
+            style="width: 50%"
+          >
+          </div>
+        </div>
+        <div
+          class="text-theme-raisin-black absolute top-0 left-0 flex h-full w-full items-center justify-center text-xl font-bold"
+        >
+          <span id={`votes-${leftFighter}`}>50%</span>
+          <span class="text-theme-tickle-me-pink mx-1 h-full">|</span>
+          <span id={`votes-${rightFighter}`}>50%</span>
+        </div>
+      </div>
+    </div>
+    <button
+      class={`group relative inline-block rounded-lg transition-all duration-300 hover:z-20 hover:scale-110 hover:shadow-lg cursor-pointer`}
+      data-id={rightFighter}
+    >
+      <img
+        class="via-40 aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover transition-transform duration-500"
+        src={`/images/fighters/cards/${rightFighter}.webp`}
+        alt={`Tarjeta del boxeador ${rightFighter}`}
+      />
+    </button>
+  </div>
+</section>
