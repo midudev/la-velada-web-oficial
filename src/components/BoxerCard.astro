@@ -15,7 +15,7 @@ interface Props {
 >
   <div class="relative overflow-hidden rounded-lg">
     <img
-      class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+      class="aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 via-40 to-transparent object-cover transition-transform duration-500 group-hover:scale-110"
       src={`/images/fighters/cards/${id}.webp`}
       alt={`Tarjeta del boxeador ${name}`}
     />
@@ -104,7 +104,7 @@ interface Props {
 <script>
   document.addEventListener('astro:page-load', () => {
     const boxerCards = document.querySelectorAll('.boxer-card')
-    let timeoutId: number | null = null
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     const pairings: Record<number, number> = {
       0: 5,
@@ -179,7 +179,7 @@ interface Props {
           const event = new CustomEvent('boxer-card-exit')
           document.dispatchEvent(event)
         }, 500)
-
+        
         // Restaurar la clase en todas las tarjetas cuando el mouse salga y eliminar el elemento de 'RIVAL'
         boxerCards.forEach((card) => {
           const child = card.querySelector('#parent-id-vs')
