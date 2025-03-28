@@ -123,6 +123,27 @@ interface Props {
       10: 9,
     }
 
+    const createVsElement = () => {
+      const spanVS = document.createElement('span')
+      spanVS.textContent = 'RIVAL'
+      spanVS.classList.add('flex', 'justify-center', 'animate-zoom-in', 'animate-duration-normal','font-semibold', 'text-xs')
+
+      const divVS = document.createElement('div')
+      divVS.setAttribute('id', 'parent-id-vs')
+      divVS.classList.add(
+        'absolute',
+        'bottom-0',
+        'py-2',
+        'text-theme-seashell',
+        'w-full',
+        'rounded-b-lg',
+        'vs-boxer-gradient'
+      )
+
+      divVS.appendChild(spanVS)
+      return divVS
+    }
+
     boxerCards.forEach((singleBoxerCard, index) => {
       singleBoxerCard.addEventListener('mouseenter', () => {
         if (timeoutId) {
@@ -139,14 +160,17 @@ interface Props {
           document.dispatchEvent(event)
         }
         // Aplicar la clase 'grayscale-100' a todas las tarjetas
-        boxerCards.forEach((card) => card.classList.add('grayscale-100'))
+        boxerCards.forEach((card) => card.classList.add('grayscale-100', 'opacity-50'))
 
         // Quitar la clase solo de la tarjeta sobre la que se está haciendo hover
-        singleBoxerCard.classList.remove('grayscale-100')
+        singleBoxerCard.classList.remove('grayscale-100', 'opacity-50')
 
-        // Quitar la clase también de su par si existe
+        // Quitar la clase también de su par si existe y añadir el elemento de 'RIVAL'
         if (pairings[index] !== undefined) {
-          boxerCards[pairings[index]].classList.remove('grayscale-100')
+          const card = boxerCards[pairings[index]]
+          card.appendChild(createVsElement())
+          card.classList.remove('grayscale-100', 'opacity-50')
+          card.classList.add('scale-110', 'saturate-200')
         }
       })
 
@@ -156,8 +180,12 @@ interface Props {
           document.dispatchEvent(event)
         }, 500)
 
-        // Restaurar la clase en todas las tarjetas cuando el mouse salga
-        boxerCards.forEach((card) => card.classList.remove('grayscale-100'))
+        // Restaurar la clase en todas las tarjetas cuando el mouse salga y eliminar el elemento de 'RIVAL'
+        boxerCards.forEach((card) => {
+          const child = card.querySelector('#parent-id-vs')
+          if (child) child.remove()
+          card.classList.remove('grayscale-100', 'saturate-200', 'scale-110', 'opacity-50')
+        })
       })
 
       singleBoxerCard.addEventListener('focus', () => {
