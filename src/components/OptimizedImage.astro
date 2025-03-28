@@ -1,0 +1,47 @@
+---
+import { getBlurredImageUrl } from '@/utils/get-blurred-image-url'
+import { getOptimizedImageUrl } from '@/utils/get-optimized-image-url'
+import type { GetImageResult, ImageMetadata } from 'astro'
+import type { HTMLAttributes } from 'astro/types'
+import { Image } from 'astro:assets'
+
+type ImageSource = string | ImageMetadata | Promise<{ default: ImageMetadata }>
+
+type Props = HTMLAttributes<'img'> & {
+  src: ImageSource
+  alt: string
+  containerClassName?: string
+  class?: string
+  width?: number
+  height?: number
+}
+
+const { src, alt, containerClassName, class: imageClassName, width, height, ...rest } = Astro.props
+
+const imageObject = await getOptimizedImageUrl({ src, width, height })
+
+const blurredPlaceholder = await getBlurredImageUrl(imageObject)
+---
+
+<div class:list={['relative overflow-hidden', containerClassName]}>
+  {/* Blurred placeholder */}
+  <Image
+    src={blurredPlaceholder as GetImageResult['src']}
+    alt={`${alt} - Blurred placeholder`}
+    inferSize
+    class:list={['absolute inset-0 h-full w-full scale-110 transform blur-sm']}
+    aria-hidden="true"
+    style="opacity: 1; transition: opacity 0.4s ease-in-out;"
+  />
+
+  {/* Main image */}
+  <Image
+    src={imageObject as GetImageResult['src']}
+    alt={alt}
+    inferSize
+    {...rest}
+    class:list={['relative h-full w-full object-cover', imageClassName]}
+    style="opacity: 0; transition: opacity 0.4s ease-in-out;"
+    onload="this.style.opacity = 1; this.previousElementSibling.style.opacity = 0;"
+  />
+</div>
