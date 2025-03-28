@@ -9,41 +9,43 @@ interface Props {
 ---
 
 <a
-  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
+  class={`boxer-card group p-2`}
   href={`/luchador/${id}`}
   data-id={id}
 >
-  <div class="relative overflow-hidden rounded-lg">
-    <img
-      class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-      src={`/images/fighters/cards/${id}.webp`}
-      alt={`Tarjeta del boxeador ${name}`}
-    />
-
+  <div class={`boxer-card__content ${extraClass} inline-block w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 relative duration-300 hover:scale-110 hover:shadow-lg hover:z-20 transition-all rounded-lg`}>
+    <div class="relative overflow-hidden rounded-lg">
+      <img
+        class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+        src={`/images/fighters/cards/${id}.webp`}
+        alt={`Tarjeta del boxeador ${name}`}
+      />
+  
+      <div
+        class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full"
+      >
+      </div>
+  
+      <div
+        class="border-theme-tickle-me-pink/70 absolute inset-0 rounded-lg border-0 opacity-0 transition-all duration-300 group-hover:border-2 group-hover:opacity-100"
+      >
+      </div>
+    </div>
+  
     <div
-      class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full"
+      class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+    >
+      <h3
+        class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+      >
+        {name}
+      </h3>
+    </div>
+  
+    <div
+      class="bg-theme-tickle-me-pink absolute -bottom-1 left-1/2 h-1 w-0 -translate-x-1/2 transform rounded-t-md transition-all duration-300 group-hover:w-2/3"
     >
     </div>
-
-    <div
-      class="border-theme-tickle-me-pink/70 absolute inset-0 rounded-lg border-0 opacity-0 transition-all duration-300 group-hover:border-2 group-hover:opacity-100"
-    >
-    </div>
-  </div>
-
-  <div
-    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
-  >
-    <h3
-      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
-    >
-      {name}
-    </h3>
-  </div>
-
-  <div
-    class="bg-theme-tickle-me-pink absolute -bottom-1 left-1/2 h-1 w-0 -translate-x-1/2 transform rounded-t-md transition-all duration-300 group-hover:w-2/3"
-  >
   </div>
 </a>
 
@@ -59,8 +61,8 @@ interface Props {
   }
 
   @media (prefers-reduced-motion) {
-    .boxer-card,
-    .boxer-card:hover,
+    .boxer-card__content,
+    .boxer-card__content:hover,
     .boxer-card img,
     .boxer-card div {
       transition: opacity 0.3s ease !important;
@@ -89,12 +91,12 @@ interface Props {
     }
   }
 
-  .boxer-card.selected {
+  .boxer-card__content.selected {
     animation: selectedPulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
   }
 
   @media (prefers-reduced-motion) {
-    .boxer-card.selected {
+    .boxer-card__content.selected {
       animation: none;
       box-shadow: inset 0 0 0 2px rgba(255, 20, 147, 1);
     }
@@ -104,7 +106,6 @@ interface Props {
 <script>
   document.addEventListener('astro:page-load', () => {
     const boxerCards = document.querySelectorAll('.boxer-card')
-    let timeoutId: number | null = null
 
     const pairings: Record<number, number> = {
       0: 5,
@@ -125,10 +126,6 @@ interface Props {
 
     boxerCards.forEach((singleBoxerCard, index) => {
       singleBoxerCard.addEventListener('mouseenter', () => {
-        if (timeoutId) {
-          clearTimeout(timeoutId)
-          timeoutId = null
-        }
 
         const id = singleBoxerCard.getAttribute('data-id')
         if (id) {
@@ -151,10 +148,8 @@ interface Props {
       })
 
       singleBoxerCard.addEventListener('mouseleave', () => {
-        timeoutId = setTimeout(() => {
-          const event = new CustomEvent('boxer-card-exit')
-          document.dispatchEvent(event)
-        }, 500)
+        const event = new CustomEvent('boxer-card-exit')
+        document.dispatchEvent(event)
 
         // Restaurar la clase en todas las tarjetas cuando el mouse salga
         boxerCards.forEach((card) => card.classList.remove('grayscale-100'))
@@ -171,10 +166,8 @@ interface Props {
       })
 
       singleBoxerCard.addEventListener('blur', () => {
-        timeoutId = setTimeout(() => {
-          const event = new CustomEvent('boxer-card-exit')
-          document.dispatchEvent(event)
-        }, 500)
+        const event = new CustomEvent('boxer-card-exit')
+        document.dispatchEvent(event)
       })
 
       singleBoxerCard.addEventListener("click", (e) => {
