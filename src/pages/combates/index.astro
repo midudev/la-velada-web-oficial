@@ -2,10 +2,18 @@
 import Layout from '@/layouts/Layout.astro'
 import { COMBATS } from '@/consts/combats'
 import { combates } from '@/consts/pageTitles'
+
+const getPinkStyles = () => {
+  return 'group-hover:border-2 group-hover:border-pink-400 group-hover:from-pink-400 group-hover:to-gray-50/40'
+}
+
+const getCyanStyles = () => {
+  return 'group-hover:border-2 group-hover:border-(--color-theme-turquoise) group-hover:from-(--color-theme-turquoise) group-hover:to-gray-50/40'
+}
 ---
 
 <Layout title={combates}>
-  <section class="min-h-screen w-full">
+  <section class="min-h-screen w-full bg-linear-to-b from-[#d17297] from-10% to-[#f19fca] to-90%">
     <div
       class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
     >
@@ -22,7 +30,7 @@ import { combates } from '@/consts/pageTitles'
 
       <div
         id="combats-container"
-        class="mx-auto mb-32 grid max-w-7xl grid-cols-1 gap-2 px-4 md:grid-cols-2 md:gap-16 md:gap-40 md:px-0"
+        class="relative z-10 mx-auto mb-32 grid max-w-7xl grid-cols-1 gap-2 px-4 md:grid-cols-2 md:gap-16 md:gap-40 md:px-0"
       >
         {
           COMBATS.map(({ id, number, fighters, title }) => (
@@ -36,7 +44,7 @@ import { combates } from '@/consts/pageTitles'
                   <div class="w-1/2 transition-transform duration-300 group-hover:scale-105">
                     <img
                       src={`/images/fighters/big/${fighter}.webp`}
-                      class={`${index === 0 ? 'animate-fade-in-right' : 'animate-fade-in-left'} animate-duration-slower animate-delay-900 h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover object-top`}
+                      class={`${index === 0 ? 'animate-fade-in-right' : 'animate-fade-in-left'} animate-duration-slower animate-delay-900 size-full border-transparent bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover object-top grayscale-100 transition-colors duration-300 ease-in-out group-hover:grayscale-0 ${index === 0 ? getPinkStyles() : getCyanStyles()}`}
                       alt={`Imagen de ${fighter}`}
                       loading="lazy"
                       decoding="async"
@@ -75,13 +83,13 @@ import { combates } from '@/consts/pageTitles'
     </div>
 
     <!-- Nubes del fondo -->
-    <img src={'/images/clouds/cloud_1.webp'} class="absolute -start-20 top-[55vw] -z-1" />
-    <img src={'/images/clouds/cloud_1.webp'} class="absolute end-10 top-[60vw] -z-1" />
+    <img src={'/images/clouds/cloud_1.webp'} class="absolute -start-20 top-[120vh] z-0" />
+    <img src={'/images/clouds/cloud_1.webp'} class="absolute end-10 top-[105vh] z-0" />
 
-    <img src={'/images/clouds/cloud_2.webp'} class="absolute -end-80 top-[85vw] -z-1" />
-    <img src={'/images/clouds/cloud_3.webp'} class="absolute top-[98vw] -z-1" />
+    <img src={'/images/clouds/cloud_2.webp'} class="absolute -end-80 top-[190vh] z-0" />
+    <img src={'/images/clouds/cloud_3.webp'} class="absolute top-[180vh] z-0" />
 
-    <img src={'/images/clouds/cloud_2.webp'} class="absolute -start-20 top-[120vw] -z-1" />
-    <img src={'/images/clouds/cloud_1.webp'} class="absolute end-20 top-[120vw] -z-1" />
+    <img src={'/images/clouds/cloud_2.webp'} class="absolute -start-20 top-[250vh] z-0" />
+    <img src={'/images/clouds/cloud_1.webp'} class="absolute end-20 top-[240vh] z-0" />
   </section>
 </Layout>
