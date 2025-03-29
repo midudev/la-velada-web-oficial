@@ -14,7 +14,7 @@ import { combates } from '@/consts/pageTitles'
     <div>
       <div id="landing" class="mt-40 mb-32 text-center">
         <h1
-          class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 -skew-3 text-4xl leading-[100%] font-medium [text-shadow:_5px_5px_10px_rgb(0_0_0_/_40%)] md:text-6xl"
+          class="text-theme-seashell animate-fade-in animate-delay-300 mx-auto mt-4 max-w-screen -skew-3 text-4xl leading-[100%] font-medium [text-shadow:_5px_5px_10px_rgb(0_0_0_/_40%)] md:max-w-2/3 md:text-6xl"
         >
           <strong>LISTA DE LOS<br />COMBATES</strong>
         </h1>
@@ -22,16 +22,16 @@ import { combates } from '@/consts/pageTitles'
 
       <div
         id="combats-container"
-        class="mx-auto mb-32 grid max-w-7xl grid-cols-1 gap-16 md:grid-cols-2 md:gap-40"
+        class="mx-auto mb-32 grid max-w-7xl grid-cols-1 gap-2 px-4 md:grid-cols-2 md:gap-16 md:gap-40 md:px-0"
       >
         {
           COMBATS.map(({ id, number, fighters, title }) => (
             <a
-              class="inline-block"
+              class={`inline-block ${number === 7 ? 'col-span-full mx-auto' : ''}`}
               href={`combates/${id}`}
               title={`Ir al combate ${number} de ${title}`}
             >
-              <div class="group animate-fade-in animate-delay-200 relative flex h-[40vh] w-full gap-4 sm:h-[50vh]">
+              <div class="group animate-fade-in animate-delay-200 relative mb-20 flex h-[40vh] w-full gap-4 sm:h-[50vh] md:mb-0">
                 {fighters.map((fighter, index) => (
                   <div class="w-1/2 transition-transform duration-300 group-hover:scale-105">
                     <img
@@ -73,5 +73,15 @@ import { combates } from '@/consts/pageTitles'
         }
       </div>
     </div>
+
+    <!-- Nubes del fondo -->
+    <img src={'/images/clouds/cloud_1.webp'} class="absolute -start-20 top-[55vw] -z-1" />
+    <img src={'/images/clouds/cloud_1.webp'} class="absolute end-10 top-[60vw] -z-1" />
+
+    <img src={'/images/clouds/cloud_2.webp'} class="absolute -end-80 top-[85vw] -z-1" />
+    <img src={'/images/clouds/cloud_3.webp'} class="absolute top-[98vw] -z-1" />
+
+    <img src={'/images/clouds/cloud_2.webp'} class="absolute -start-20 top-[120vw] -z-1" />
+    <img src={'/images/clouds/cloud_1.webp'} class="absolute end-20 top-[120vw] -z-1" />
   </section>
 </Layout>
