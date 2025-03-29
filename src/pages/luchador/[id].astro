@@ -35,7 +35,7 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
       </div>
       <div class="w-full max-w-xl text-white lg:w-1/2">
         <div
-            class="mb-8 flex items-center space-x-4 animate-fade-in"
+            class="mb-8 flex flex-col items-center space-x-4 animate-fade-in"
             transition:name={`name-${id}`}
         >
           <img
@@ -44,7 +44,7 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
               class="h-16 w-auto animate-scale-in"
               transition:name={`text-${id}`}
           />
-          <div class="text-2xl font-bold animate-slide-in-right">{fighter.realName}</div>
+          <div class="text-xl font-bold mt-4 animate-slide-in-right">{fighter.realName.toUpperCase()}</div>
         </div>
 
         <div class="space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm animate-fade-up">
