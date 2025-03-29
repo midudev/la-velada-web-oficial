@@ -54,4 +54,8 @@ export interface Fighters {
   versus: fighterId
   socials: Social[]
   clips: Clips[]
+  workout?: {
+    videoID: string
+    thumbnail: string
+  }
 }
