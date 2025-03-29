@@ -2,30 +2,27 @@
 import { FIGHTERS, MATCHUPS } from '@/consts/fighters'
 import BoxerCard from './BoxerCard.astro'
 
-const firstRow = FIGHTERS.slice(0, 6)
-const leftRow = firstRow.slice(0, 3)
-const rightRow = firstRow.slice(3)
+const firstRow = FIGHTERS.slice(0, 6);
+const leftRow = firstRow.slice(0, 3);
+const rightRow = firstRow.slice(3);
 
-const secondRow = FIGHTERS.slice(6)
-<<<<<<< HEAD
-
+const secondRow = FIGHTERS.slice(6);
 const visibleFighters = FIGHTERS;
 
-const opponentMap = new Map()
+const opponentMap = new Map();
 MATCHUPS.forEach(matchup => {
-  opponentMap.set(matchup.fighter1, matchup.fighter2)
-  opponentMap.set(matchup.fighter2, matchup.fighter1)
-})
-=======
-const leftSecondRow = secondRow.slice(0, 4)
-const rightSecondRow = secondRow.slice(4, 8)
+  opponentMap.set(matchup.fighter1, matchup.fighter2);
+  opponentMap.set(matchup.fighter2, matchup.fighter1);
+});
 
-const animationDelay = [500, 700, 800]
-const reverseDelay = [...animationDelay].reverse()
+const leftSecondRow = secondRow.slice(0, 4);
+const rightSecondRow = secondRow.slice(4, 8);
 
-const animationDelaySecondRow = [...animationDelay, 900]
-const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
->>>>>>> upstream/main
+const animationDelay = [500, 700, 800];
+const reverseDelay = [...animationDelay].reverse();
+
+const animationDelaySecondRow = [...animationDelay, 900];
+const reverseDelaySecondRow = [...animationDelaySecondRow].reverse();
 ---
 
 <section class="relative flex min-h-screen w-full">
@@ -103,7 +100,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
               src={`/images/fighters/big/${id}.webp`}
               alt={name}
               decoding="async"
-              class="absolute hidden h-full w-auto object-cover lg:object-contain"
+              class="absolute hidden h-full w-full max-w-[90vw] object-contain lg:max-w-[80vw]"
               fetchpriority="low"
             />
           ))
@@ -111,95 +108,68 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       </div>
     </div>
 
-<<<<<<< HEAD
-    <div class="mobile-fighters md:hidden fixed bottom-0 left-0 right-0 w-full pb-8 pt-4 bg-gradient-to-t from-black/80 to-transparent">
+    <div class="mobile-fighters md:hidden fixed bottom-0 left-0 right-0 w-full pb-8 pt-4 bg-gradient-to-t from-black/80 to-transparent z-50">
       <div class="mobile-carousel-container">
         <div class="mobile-carousel" id="mobile-carousel">
           {visibleFighters.map(({ id, name }) => (
             <a class="mobile-fighter-card" data-id={id} href={`/luchador/${id}`}>
               <div class="mobile-card-inner">
-                <img src={`/images/fighters/cards/${id}.png`} alt={name} class="mobile-fighter-img" />
+                <img 
+                  src={`/images/fighters/cards/${id}.webp`} 
+                  alt={name} 
+                  class="mobile-fighter-img"
+                  loading="lazy"
+                />
                 <div class="mobile-card-overlay">
                   <h3 class="mobile-fighter-name">{name}</h3>
                 </div>
               </div>
             </a>
           ))}
-=======
-    <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
-      <div class="flex w-full flex-wrap justify-between px-4">
-        <div class="flex flex-wrap justify-start gap-4">
-          {
-            leftRow.map(({ id, name }, index) => (
-              <div
-                class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}
-              >
-                <BoxerCard id={id} name={name} class="boxer-left" />
-              </div>
-            ))
-          }
-        </div>
-
-        <div class="flex flex-wrap justify-end gap-4">
-          {
-            rightRow.map(({ id, name }, index) => (
-              <div
-                class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}
-              >
-                <BoxerCard id={id} name={name} class="boxer-right" />
-              </div>
-            ))
-          }
->>>>>>> upstream/main
         </div>
       </div>
     </div>
 
-<<<<<<< HEAD
-    <div class="desktop-fighters hidden md:flex relative h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8">
+    <div class="desktop-fighters hidden md:flex relative h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
       <div class="flex w-full flex-wrap justify-between px-4">
-        <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start gap-4">
-          {leftRow.map(({ id, name }) => (
+        <div class="flex flex-wrap justify-start gap-4">
+          {leftRow.map(({ id, name }, index) => (
             <div class="boxer-card-wrapper" data-fighter-id={id} data-opponent-id={opponentMap.get(id)}>
-              <BoxerCard id={id} name={name} />
+              <div class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}>
+                <BoxerCard id={id} name={name} class="boxer-left" />
+              </div>
             </div>
           ))}
         </div>
-        <div class="animate-fade-in-left animate-delay-500 flex flex-wrap justify-end gap-4">
-          {rightRow.map(({ id, name }) => (
+        <div class="flex flex-wrap justify-end gap-4">
+          {rightRow.map(({ id, name }, index) => (
             <div class="boxer-card-wrapper" data-fighter-id={id} data-opponent-id={opponentMap.get(id)}>
-              <BoxerCard id={id} name={name} />
+              <div class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}>
+                <BoxerCard id={id} name={name} class="boxer-right" />
+              </div>
             </div>
           ))}
         </div>
       </div>
-      <div class="animate-fade-in-up animate-delay-700 flex flex-wrap justify-between gap-4 px-4">
-        {secondRow.map(({ id, name }) => (
-          <div class="boxer-card-wrapper" data-fighter-id={id} data-opponent-id={opponentMap.get(id)}>
-            <BoxerCard id={id} name={name} />
-          </div>
-        ))}
-=======
       <div class="flex flex-wrap justify-between gap-4">
         <div class="flex flex-wrap justify-start gap-4">
-          {
-            leftSecondRow.map(({ id, name }, index) => (
+          {leftSecondRow.map(({ id, name }, index) => (
+            <div class="boxer-card-wrapper" data-fighter-id={id} data-opponent-id={opponentMap.get(id)}>
               <div class={`animate-fade-in-up animate-delay-${animationDelaySecondRow[index]}`}>
                 <BoxerCard id={id} name={name} class="boxer-left" />
               </div>
-            ))
-          }
+            </div>
+          ))}
         </div>
         <div class="flex flex-wrap justify-end gap-4">
-          {
-            rightSecondRow.map(({ id, name }, index) => (
+          {rightSecondRow.map(({ id, name }, index) => (
+            <div class="boxer-card-wrapper" data-fighter-id={id} data-opponent-id={opponentMap.get(id)}>
               <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>
                 <BoxerCard id={id} name={name} class="boxer-right" />
               </div>
-            ))
-          }
+            </div>
+          ))}
         </div>
->>>>>>> upstream/main
       </div>
     </div>
   </div>
@@ -219,12 +189,13 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
-    height: 14rem;
-    perspective: 2000px;
+    height: 12rem;
+    perspective: 1000px;
     z-index: 10;
     display: flex;
     justify-content: center;
     overflow: hidden;
+    padding: 0 2rem;
   }
   .mobile-carousel {
     position: relative;
@@ -234,19 +205,21 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    padding: 0 3rem;
   }
   .mobile-fighter-card {
     position: absolute;
-    width: 7rem;
-    height: 10rem;
+    width: 6.5rem;
+    height: 9rem;
     transform-origin: center;
-    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
     cursor: pointer;
     z-index: 1;
     text-decoration: none;
     backface-visibility: hidden;
     transform-style: preserve-3d;
+    margin: 0 1rem;
   }
   .mobile-card-inner {
     width: 100%;
@@ -254,16 +227,16 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     position: relative;
     border-radius: 0.75rem;
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    border: 2px solid rgba(255, 105, 180, 0.5);
-    background: linear-gradient(145deg, rgba(255,105,180,0.4) 0%, rgba(0,255,255,0.4) 100%);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border: 2px solid rgba(255, 105, 180, 0.3);
+    background: linear-gradient(145deg, rgba(255,105,180,0.2) 0%, rgba(0,255,255,0.2) 100%);
     transition: all 0.3s ease;
     transform-style: preserve-3d;
   }
   .mobile-fighter-card.active .mobile-card-inner {
     border: 2px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 0 20px rgba(255,105,180,0.7);
-    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255,105,180,0.5);
+    transform: scale(1.1);
   }
   .mobile-fighter-img {
     aspect-ratio: 900/1200;
@@ -274,7 +247,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     transition: transform 0.3s ease-in-out;
   }
   .mobile-fighter-card.active .mobile-fighter-img {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
   .mobile-card-overlay {
     position: absolute;
@@ -283,7 +256,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    background: linear-gradient(to top, rgba(157, 23, 77, 0.9), transparent);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
     opacity: 0;
     transition: opacity 0.3s ease;
     padding: 0.5rem;
@@ -292,10 +265,10 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     opacity: 1;
   }
   .mobile-fighter-name {
-    color: #FFB6C1;
-    font-size: 0.9rem;
+    color: #fff;
+    font-size: 0.8rem;
     font-weight: 700;
-    text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     text-align: center;
   }
 
@@ -305,9 +278,9 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     bottom: -1rem;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, rgba(255,105,180,0.7), transparent);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(255,105,180,0.5), transparent);
     border-radius: 2px;
     animation: pulse 2s infinite;
   }
@@ -339,12 +312,22 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 </style>
 
 <script>
+  interface Props {
+    id: string;
+    name: string;
+    class: string;
+  }
+
+  interface Fighter {
+    id: string;
+    name: string;
+  }
+
   document.addEventListener('astro:page-load', () => {
     const $landing = document.querySelector('#landing');
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-<<<<<<< HEAD
-    let currentFighterId = null;
+    let currentFighterId: string | null = null;
 
     function resetView() {
       $landing?.classList.remove('hidden');
@@ -360,21 +343,36 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       currentFighterId = null;
     }
 
-    function showFighter(id) {
+    function showFighter(id: string) {
       if (currentFighterId === id) return;
 
       if (currentFighterId) {
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.add('hidden');
-        document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)?.classList.add('hidden');
-        document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)?.classList.remove('animate-zoom-in');
-        document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)?.classList.remove('animate-slide-up-fade');
+        const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`);
+        const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`);
+
+        if (heroText && heroImage) {
+          heroText.classList.remove('animate-zoom-in');
+          heroImage.classList.remove('animate-slide-up-fade');
+          heroText.classList.add('animate-zoom-out');
+          heroImage.classList.add('animate-fade-out-down');
+
+          setTimeout(() => {
+            heroText.classList.add('hidden');
+            heroImage.classList.add('hidden');
+          }, 500);
+        }
       }
 
       $landing?.classList.add('hidden');
-      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.remove('hidden');
-      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.remove('hidden');
-      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.add('animate-zoom-in');
-      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.add('animate-slide-up-fade');
+      const newHeroText = document.querySelector(`[data-id="hero-text-${id}"]`);
+      const newHeroImage = document.querySelector(`[data-id="hero-image-${id}"]`);
+
+      if (newHeroText && newHeroImage) {
+        newHeroText.classList.remove('hidden');
+        newHeroText.classList.add('animate-zoom-in');
+        newHeroImage.classList.remove('hidden');
+        newHeroImage.classList.add('animate-slide-up-fade');
+      }
 
       if (!isMobile) {
         document.querySelectorAll('.boxer-card-wrapper').forEach(wrapper => {
@@ -401,125 +399,56 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       currentFighterId = id;
     }
 
-    document.addEventListener('boxer-card-hovered', (event) => {
-      const customEvent = event;
-      const id = customEvent.detail.id;
+    document.addEventListener('boxer-card-hovered', ((event: CustomEvent<{ id: string }>) => {
+      if (currentFighterId) {
+        const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`);
+        const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`);
+        heroText?.classList.add('hidden');
+        heroImage?.classList.add('hidden');
+        currentFighterId = null;
+      }
+
+      const id = event.detail.id;
       showFighter(id);
-    });
-=======
-    let currentFighterId: string | null = null
-    let hideFighterTimer: ReturnType<typeof setTimeout>;
->>>>>>> upstream/main
+    }) as EventListener);
 
     document.addEventListener('boxer-card-exit', () => {
       resetView();
     });
 
-<<<<<<< HEAD
     if (isMobile) {
       const $carousel = document.querySelector('#mobile-carousel');
       const $carouselContainer = document.querySelector('.mobile-carousel-container');
       const fighterCards = Array.from(document.querySelectorAll('.mobile-fighter-card'));
-
-      let currentFighterId = null;
-      let autoRotateInterval = null;
+      
+      let currentFighterId: string | null = null;
       let isDragging = false;
       let startX = 0;
       let currentX = 0;
       let rotationAngle = 0;
       let lastTouchTime = 0;
       let touchVelocity = 0;
-      let lastUpdateTime = 0;
+      let inertia = 0;
       
       const totalCards = fighterCards.length;
       const cardAngle = 360 / totalCards;
-      const radius = 300;
-      const visibleCardCount = 7;
+      const radius = 250;
+      const visibleCardCount = 5;
 
-      fighterCards.forEach(card => {
-        card.style.visibility = 'visible';
-        card.style.opacity = '0';
-      });
-
-      function normalizeAngle(angle) {
+      function normalizeAngle(angle: number): number {
         return ((angle % 360) + 360) % 360;
-=======
-      if (!currentFighterId) return
-
-      const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-      const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-
-      if (heroText && heroImage) {
-        heroText.classList.remove('animate-zoom-int')
-        heroImage.classList.remove('animate-slide-up-fade')
-
-        heroText.classList.add('animate-zoom-out')
-        heroImage.classList.add('animate-fade-out-down')
-
-        hideFighterTimer = setTimeout(() => {
-          heroText.classList.add('hidden')
-          heroImage.classList.add('hidden')
-          currentFighterId = null
-        }, 500)
-      }
-    })
-
-    document.addEventListener('boxer-card-hovered', (event: Event) => {
-      if (currentFighterId) {
-        clearTimeout(hideFighterTimer)
-        const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-        const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-        heroText?.classList.add('hidden')
-        heroImage?.classList.add('hidden')
-        currentFighterId = null
       }
 
-      const customEvent = event as CustomEvent<{ id: string }>
-      const id = customEvent.detail.id
-
-      const heroText = document.querySelector(`[data-id="hero-text-${id}"]`)
-      const heroImage = document.querySelector(`[data-id="hero-image-${id}"]`)
-
-      if (heroText && heroImage) {
-        heroText.classList.remove('animate-zoom-out')
-        heroImage.classList.remove('animate-fade-out-down')
-      }
-
-      // si el luchador que entras es el mismo que ya se muestra
-      // entonces no hacemos nada
-      if (currentFighterId === id) return
-
-      // si ya estamos mostrando un luchador, tenemos que ocultarlo
-      if (currentFighterId) {
-        const currentHeroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-        const currentHeroImage = document.querySelector(
-          `[data-id="hero-image-${currentFighterId}"]`
-        )
-
-        if (currentHeroText && currentHeroImage) {
-          currentHeroText.classList.add('hidden')
-          currentHeroImage.classList.add('hidden')
-          currentHeroText.classList.remove('animate-zoom-in')
-          currentHeroImage.classList.remove('animate-slide-up-fade')
-        }
->>>>>>> upstream/main
-      }
-
-      function getCardIndexAtAngle(angle) {
+      function getCardIndexAtAngle(angle: number): number {
         angle = normalizeAngle(angle);
         return Math.round(angle / cardAngle) % totalCards;
       }
 
-<<<<<<< HEAD
       function positionAllCards(smooth = true) {
         const normalizedRotation = normalizeAngle(rotationAngle);
         const centralAngle = normalizedRotation;
         const halfVisible = (visibleCardCount / 2) * cardAngle;
         
-        const now = performance.now();
-        if (smooth && now - lastUpdateTime < 16) return;
-        lastUpdateTime = now;
-
         fighterCards.forEach((card, index) => {
           const cardOffset = index * cardAngle;
           let relativeAngle = normalizeAngle(cardOffset - centralAngle);
@@ -527,33 +456,25 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
           
           const isVisible = Math.abs(relativeAngle) <= halfVisible;
           if (!isVisible) {
-            card.style.opacity = '0';
-            card.style.visibility = 'hidden';
-            card.style.pointerEvents = 'none';
+            (card as HTMLElement).style.opacity = '0';
+            (card as HTMLElement).style.visibility = 'hidden';
+            (card as HTMLElement).style.pointerEvents = 'none';
             return;
           }
           
-          card.style.visibility = 'visible';
-          card.style.pointerEvents = 'auto';
+          (card as HTMLElement).style.visibility = 'visible';
+          (card as HTMLElement).style.pointerEvents = 'auto';
           
           const angleRad = relativeAngle * (Math.PI / 180);
           const x = Math.sin(angleRad) * radius;
-          const y = Math.abs(relativeAngle) > 90 ? Math.abs(relativeAngle - 180) * 0.1 - 10 : 0;
           const z = Math.cos(angleRad) * radius - radius;
           const frontness = Math.cos(angleRad);
           
-          let opacity;
-          if (frontness > 0.7) {
-            opacity = 1;
-          } else if (frontness > 0) {
-            opacity = 0.4 + frontness * 0.6;
-          } else {
-            opacity = Math.max(0, 0.2 + frontness * 0.2);
-          }
+          const opacity = frontness > 0.5 ? 1 : Math.max(0, 0.3 + frontness * 0.7);
+          const scale = 0.8 + frontness * 0.2;
           
-          const scale = 0.6 + frontness * 0.3;
-          card.style.transform = `translateX(${x}px) translateY(${y}px) translateZ(${z}px) rotateY(${-relativeAngle}deg) scale(${scale})`;
-          card.style.opacity = opacity;
+          (card as HTMLElement).style.transform = `translateX(${x}px) translateZ(${z}px) rotateY(${-relativeAngle * 0.8}deg) scale(${scale})`;
+          (card as HTMLElement).style.opacity = opacity.toString();
           
           if (Math.abs(relativeAngle) < cardAngle / 2) {
             card.classList.add('active');
@@ -568,148 +489,123 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         });
       }
 
-      positionAllCards(false);
-
-      function startAutoRotate() {
-        if (autoRotateInterval) clearInterval(autoRotateInterval);
-        autoRotateInterval = setInterval(() => {
-          if (!isDragging) {
-            rotationAngle += 0.15;
-            requestAnimationFrame(() => positionAllCards());
-          }
-        }, 16);
-      }
-=======
-      // mostramos el luchador que quiere ver el usuario
-      heroText?.classList.remove('hidden')
-      heroText?.classList.add('animate-zoom-in')
-      heroImage?.classList.remove('hidden')
-      heroImage?.classList.add('animate-slide-up-fade')
->>>>>>> upstream/main
-
-      setTimeout(startAutoRotate, 2000);
-
-      $carouselContainer.addEventListener('touchstart', (e) => {
-        if (autoRotateInterval) clearInterval(autoRotateInterval);
-        isDragging = true;
-        startX = e.touches[0].clientX;
-        currentX = startX;
-        lastTouchTime = Date.now();
-        touchVelocity = 0;
-        e.preventDefault();
-      }, { passive: false });
-
-      $carouselContainer.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
+      function snapToNearestCard() {
+        const currentIndex = getCardIndexAtAngle(rotationAngle);
+        const targetAngle = currentIndex * cardAngle;
+        let angleDiff = normalizeAngle(targetAngle) - normalizeAngle(rotationAngle);
+        if (angleDiff > 180) angleDiff -= 360;
+        if (angleDiff < -180) angleDiff += 360;
         
-        const currentTouch = e.touches[0].clientX;
-        const diffX = currentTouch - currentX;
-        const now = Date.now();
-        const dt = now - lastTouchTime;
+        const startAngle = rotationAngle;
+        const startTime = performance.now();
+        const duration = 300;
         
-        if (dt > 0) {
-          touchVelocity = touchVelocity * 0.7 + (diffX / dt * 13) * 0.3;
-        }
-        
-        const sensitivity = 40 + Math.abs(diffX) * 0.1;
-        rotationAngle += (diffX / sensitivity);
-        currentX = currentTouch;
-        lastTouchTime = now;
-        
-        requestAnimationFrame(() => positionAllCards());
-        e.preventDefault();
-      }, { passive: false });
-
-      $carouselContainer.addEventListener('touchend', () => {
-        isDragging = false;
-        
-        let inertia = touchVelocity;
-        let lastFrame = performance.now();
-        
-        function applyInertia(timestamp) {
-          const deltaTime = timestamp - lastFrame;
-          lastFrame = timestamp;
-          
-          const timeScale = deltaTime / 16;
-          
-          if (Math.abs(inertia) > 0.1) {
-            rotationAngle += inertia * timeScale;
-            const friction = 0.92 + Math.min(0.05, Math.abs(inertia) * 0.001);
-            inertia *= Math.pow(friction, timeScale);
+        function animateSnap(timestamp: number) {
+          const elapsed = timestamp - startTime;
+          if (elapsed < duration) {
+            const progress = 1 - Math.pow(1 - elapsed / duration, 3);
+            rotationAngle = startAngle + (angleDiff * progress);
             positionAllCards();
-            requestAnimationFrame(applyInertia);
+            requestAnimationFrame(animateSnap);
           } else {
-            const currentIndex = getCardIndexAtAngle(rotationAngle);
-            const targetAngle = currentIndex * cardAngle;
-            let angleDiff = normalizeAngle(targetAngle) - normalizeAngle(rotationAngle);
-            if (angleDiff > 180) angleDiff -= 360;
-            if (angleDiff < -180) angleDiff += 360;
-            
-            if (Math.abs(angleDiff) < cardAngle * 0.4) {
-              const startAngle = rotationAngle;
-              const startTime = performance.now();
-              const snapDuration = 300;
-              
-              function animateSnap(time) {
-                const elapsed = time - startTime;
-                if (elapsed < snapDuration) {
-                  const progress = 1 - Math.pow(1 - elapsed / snapDuration, 2);
-                  rotationAngle = startAngle + (angleDiff * progress);
-                  positionAllCards();
-                  requestAnimationFrame(animateSnap);
-                } else {
-                  rotationAngle = startAngle + angleDiff;
-                  positionAllCards();
-                  startAutoRotate();
-                }
-              }
-              requestAnimationFrame(animateSnap);
-            } else {
-              startAutoRotate();
-            }
+            rotationAngle = startAngle + angleDiff;
+            positionAllCards();
           }
         }
-        requestAnimationFrame(applyInertia);
-      });
+        requestAnimationFrame(animateSnap);
+      }
+
+      if ($carouselContainer) {
+        $carouselContainer.addEventListener('touchstart', ((e: TouchEvent) => {
+          isDragging = true;
+          startX = e.touches[0].clientX;
+          currentX = startX;
+          lastTouchTime = Date.now();
+          touchVelocity = 0;
+          e.preventDefault();
+        }) as EventListener, { passive: false });
+
+        $carouselContainer.addEventListener('touchmove', ((e: TouchEvent) => {
+          if (!isDragging) return;
+          
+          const currentTouch = e.touches[0].clientX;
+          const diffX = currentTouch - currentX;
+          const now = Date.now();
+          const dt = now - lastTouchTime;
+          
+          if (dt > 0) {
+            touchVelocity = (diffX / dt) * 10;
+          }
+          
+          rotationAngle += (diffX / 30);
+          currentX = currentTouch;
+          lastTouchTime = now;
+          
+          requestAnimationFrame(() => positionAllCards());
+          e.preventDefault();
+        }) as EventListener, { passive: false });
+
+        $carouselContainer.addEventListener('touchend', () => {
+          isDragging = false;
+          if (Math.abs(touchVelocity) < 1) {
+            snapToNearestCard();
+          } else {
+            inertia = touchVelocity;
+            let lastTimestamp = performance.now();
+            
+            function applyInertia(timestamp: number) {
+              const deltaTime = timestamp - lastTimestamp;
+              lastTimestamp = timestamp;
+              
+              if (Math.abs(inertia) > 0.1) {
+                rotationAngle += inertia * (deltaTime / 16);
+                inertia *= 0.95;
+                positionAllCards();
+                requestAnimationFrame(applyInertia);
+              } else {
+                snapToNearestCard();
+              }
+            }
+            requestAnimationFrame(applyInertia);
+          }
+        });
+      }
 
       fighterCards.forEach((card) => {
         card.addEventListener('click', (e) => {
           const id = card.getAttribute('data-id');
-          if (id) {
-            if (card.classList.contains('active')) {
-              window.location.href = `/luchador/${id}`;
-            } else {
-              const cardIndex = fighterCards.indexOf(card);
-              const targetAngle = cardIndex * cardAngle;
-              let currentNormalizedAngle = normalizeAngle(rotationAngle);
-              let targetNormalizedAngle = normalizeAngle(targetAngle);
-              let angleDiff = targetNormalizedAngle - currentNormalizedAngle;
-              if (angleDiff > 180) angleDiff -= 360;
-              if (angleDiff < -180) angleDiff += 360;
-              clearInterval(autoRotateInterval);
-              const startAngle = rotationAngle;
-              const startTime = performance.now();
-              const duration = 500 + Math.min(500, Math.abs(angleDiff) * 1.2);
-              
-              function animateRotation(timestamp) {
-                const elapsed = timestamp - startTime;
-                if (elapsed < duration) {
-                  const progress = 1 - Math.pow(1 - elapsed / duration, 3);
-                  rotationAngle = startAngle + (angleDiff * progress);
-                  positionAllCards();
-                  requestAnimationFrame(animateRotation);
-                } else {
-                  rotationAngle = startAngle + angleDiff;
-                  positionAllCards();
-                  startAutoRotate();
-                }
+          if (id && card.classList.contains('active')) {
+            window.location.href = `/luchador/${id}`;
+          } else {
+            const cardIndex = fighterCards.indexOf(card);
+            const targetAngle = cardIndex * cardAngle;
+            let angleDiff = normalizeAngle(targetAngle) - normalizeAngle(rotationAngle);
+            if (angleDiff > 180) angleDiff -= 360;
+            if (angleDiff < -180) angleDiff += 360;
+            
+            const startAngle = rotationAngle;
+            const startTime = performance.now();
+            const duration = 300 + Math.min(300, Math.abs(angleDiff));
+            
+            function animateRotation(timestamp: number) {
+              const elapsed = timestamp - startTime;
+              if (elapsed < duration) {
+                const progress = 1 - Math.pow(1 - elapsed / duration, 3);
+                rotationAngle = startAngle + (angleDiff * progress);
+                positionAllCards();
+                requestAnimationFrame(animateRotation);
+              } else {
+                rotationAngle = startAngle + angleDiff;
+                positionAllCards();
               }
-              requestAnimationFrame(animateRotation);
-              e.preventDefault();
             }
+            requestAnimationFrame(animateRotation);
+            e.preventDefault();
           }
         });
       });
+
+      positionAllCards(false);
     }
   });
 </script>
