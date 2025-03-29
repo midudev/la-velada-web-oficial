@@ -44,7 +44,7 @@ const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
           class="h-full w-full object-contain transition-all duration-700 hover:brightness-130 animate-fade-in border-4 border-theme-turquoise rounded-lg hover:shadow-2xl hover:shadow-theme-turquoise"
         />
         <!-- Redes sociales al hacer hover -->
-        <div class="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ">
+        <div class="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
           {
             (fighter.socials || [])?.map(({ url, image, name, label }) => (
               <a
@@ -53,7 +53,7 @@ const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
                 aria-label={label ?? name}
                 class="hover:scale-125 transition flex items-center justify-center"
               >
-                <image.logo class="text-black"/>
+                <image.logo class="text-black" />
               </a>
             ))
           }
@@ -140,7 +140,7 @@ const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
       </div>
       
       <!-- Información del luchador -->
-      <div class="relative w-full max-w-xl text-white lg:w-1/2 p-6 bg-black/50 rounded-lg animate-fade-in backdrop-blur-md border-2 border-theme-turquoise group transition-all duration-500 hover:brightness-125 hover:shadow-2xl border-4 border-theme-turquoise hover:shadow-theme-turquoise">
+      <div class="relative w-full max-w-xl text-white lg:w-1/2 p-6 bg-black/50 rounded-lg animate-fade-in backdrop-blur-md border-2 border-theme-turquoise transition-all duration-500 hover:brightness-125 hover:shadow-2xl border-4 border-theme-turquoise hover:shadow-theme-turquoise">
         <!-- Nombre del luchador y nombre real -->
         <div class="mb-8 flex flex-col items-center">
           <img
@@ -172,20 +172,23 @@ const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
             class="w-50 rounded-lg shadow-lg mb-6 animate-fade-in justify-center items-center"
           />
         </div>
-        <div class="absolute top-25 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        
+        <!-- Redes sociales -->
+        <div class="absolute top-25 right-4 flex flex-col gap-2 group transition-opacity duration-500">
           {
             (fighter.socials || [])?.map(({ url, image, name, label }) => (
               <a
                 href={url}
                 target="_blank"
                 aria-label={label ?? name}
-                class="hover:scale-125 transition flex items-center justify-center"
+                class="opacity-0 group-hover:opacity-100 hover:scale-125 transition flex items-center justify-center"
               >
                 <image.logo class="text-white" />
               </a>
             ))
           }
         </div>
+        
         <!-- Estadísticas -->
         <div class="grid grid-cols-2 gap-4">
           <div class="stat-item"><span class="text-sm text-gray-400">Edad</span> <span class="text-lg">{fighter.age} años</span></div>
@@ -200,29 +203,62 @@ const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
         </div>
         
         <!-- Nivel y experiencia -->
-        <div class="mt-6">
+        <div class="mt-6 relative">
           <div class="text-sm text-gray-400">Nivel</div>
-          <div class="text-lg font-bold">{level}</div>
+          <div class="flex items-center gap-2 relative group">
+            <!-- Nivel con subrayado -->
+            <span class="text-lg font-bold underline decoration-dotted decoration-theme-turquoise cursor-pointer">
+              {level}
+            </span>
+            <!-- Ícono de información -->
+            <span class="text-theme-turquoise cursor-pointer group-hover:text-white transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 10-1.5 0v.5a.75.75 0 001.5 0v-.5zm-.75 2.5a.75.75 0 00-.75.75v4a.75.75 0 001.5 0v-4a.75.75 0 00-.75-.75z" clip-rule="evenodd" />
+              </svg>
+            </span>
+            <!-- Tooltip -->
+            <div class="absolute left-1/2 -translate-x-1/2 mt-2 w-max bg-black text-white text-xs rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 shadow-lg">
+              Fórmula: Math.floor(edad / 9)
+            </div>
+          </div>
           <div class="w-full bg-gray-700 h-4 rounded-lg overflow-hidden mt-1">
             <div class="h-full bg-theme-tickle-me-pink" style={{ width: `${expPercentage}%` }}></div>
           </div>
           <div class="text-sm text-gray-400 mt-1">Exp: {expPercentage}%</div>
         </div>
         
-        <!-- Atributos y habilidades (placeholder) -->
+        <!-- Atributos y habilidades -->
         <div class="mt-6">
           <div class="text-lg font-bold">Atributos</div>
-          <div class="text-sm text-gray-400">(Próximamente...)</div>
+          <div class="grid grid-cols-2 gap-4 mt-2">
+            {Object.entries(fighter.attributes).map(([name, level]) => (
+              <div class="flex flex-col">
+                <span class="text-sm text-gray-400 capitalize">{name}</span>
+                <div class="w-full bg-gray-700 h-4 rounded-lg overflow-hidden">
+                  <div class="h-full bg-theme-turquoise" style={{ width: `${level * 10}%` }}></div>
+                </div>
+                <span class="text-sm text-gray-400 mt-1">Nivel: {level}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        
-        <div class="mt-4">
+                
+        <div class="mt-6">
           <div class="text-lg font-bold">Habilidades</div>
-          <div class="text-sm text-gray-400">(Próximamente...)</div>
+          <div class="grid grid-cols-2 gap-4 mt-2">
+            {Object.entries(fighter.skills).map(([name, level]) => (
+              <div class="flex flex-col">
+                <span class="text-sm text-gray-400 capitalize">{name.replace('_', ' ')}</span>
+                <div class="w-full bg-gray-700 h-4 rounded-lg overflow-hidden">
+                  <div class="h-full bg-theme-tickle-me-pink" style={{ width: `${level * 10}%` }}></div>
+                </div>
+                <span class="text-sm text-gray-400 mt-1">Nivel: {level}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        
       </div>
     </div>
-    
   </section>
 </Layout>
 

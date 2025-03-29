@@ -12,4 +12,5 @@ export interface Social {
     width: number;
     height: number;
   };
+  followers: number;
 }

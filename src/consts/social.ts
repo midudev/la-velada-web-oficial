@@ -15,6 +15,7 @@ export const SOCIAL: Social[] = [
       width: 200,
       height: 200,
     },
+    followers: 0
   },
 
   {
@@ -27,6 +28,7 @@ export const SOCIAL: Social[] = [
       width: 200,
       height: 200,
     },
+    followers: 0
   },
 
   {
@@ -39,5 +41,6 @@ export const SOCIAL: Social[] = [
       width: 200,
       height: 200,
     },
+    followers: 0
   },
 ];

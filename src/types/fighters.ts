@@ -54,4 +54,13 @@ export interface Fighters {
   versus: fighterId
   socials: Social[]
   clips: Clips[]
+  attributes:{
+    charisma: number
+  }
+  skills:{
+    reflexes: number
+    punching_power: number
+    speed: number
+    stamina: number
+  }
 }
