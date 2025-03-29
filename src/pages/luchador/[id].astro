@@ -2,6 +2,7 @@
 import { FIGHTERS } from '@/consts/fighters'
 import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
+import { COMBATS } from '@/consts/combats'
 
 const { id } = Astro.params
 
@@ -13,6 +14,10 @@ const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   month: 'long',
   day: 'numeric'
 })
+
+const relatedCombat = COMBATS.find(
+  (combat) => combat.fighters.includes(fighter.id),
+)
 
 const opponent = FIGHTERS.find(f => f.id === fighter.versus)
 ---
@@ -90,6 +95,7 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
           </div>
 
           {opponent && (
+            <div class="flex flex-col items-center justify-between mt-6 space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:justify-between">
               <div class="flex items-center space-x-4 animate-pulse">
                 <div class="text-xl font-bold">VS</div>
                 <a
@@ -101,6 +107,19 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
                 </span>
                 </a>
               </div>
+              <div class="flex items-center space-x-4 animate-pulse">
+                <a
+                   href={`/combates/${relatedCombat?.id}`}
+                    class="inline-block transform rounded-lg bg-white/10 px-4 py-2 transition-all hover:scale-105 hover:bg-white/20"
+                    aria-label="Ver combate"
+                >
+                  <span class="inline-block transition-transform group-hover:translate-x-1">
+                    ver combate
+                  </span>
+                </a>
+              </div>
+
+            </div>
           )}
         </div>
       </div>
