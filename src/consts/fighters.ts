@@ -199,6 +199,10 @@ export const FIGHTERS: Fighters[] = [
 
     ],
     clips: [],
+    workout: {
+      videoID: 'HBTuF3KONZc',
+      thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/roro/
