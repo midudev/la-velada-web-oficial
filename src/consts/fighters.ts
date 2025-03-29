@@ -547,6 +547,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'TmC9TuD8NoQ',
+      thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp'
+    }
   },
   {
     // https://laletrade.com/biografias/youtuber/espanol/22589-thegrefg
