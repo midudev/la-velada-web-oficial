@@ -611,6 +611,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: '_Rh-VjB3ATk',
+      thumbnail: '/images/fighters/workoutThumbnails/grefg-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/westcol/
@@ -711,6 +715,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'rugHsv9JCSU',
+      thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/tomas-mazza/
