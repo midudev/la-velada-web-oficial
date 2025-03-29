@@ -149,6 +149,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'dj-4LLi5cck',
+      thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp'
+    }
   },
   {
     id: 'abby',
@@ -403,6 +407,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'QDy_MM6y-7U',
+      thumbnail: '/images/fighters/workoutThumbnails/andoni-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/viruzz/
