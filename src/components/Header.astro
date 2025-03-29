@@ -7,9 +7,14 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname);
 
 // Comprueba si la ruta actual está activa
 const isActive = (path: string) => pathname === path;
+
+const menuItems = [
+  { title: 'HAZ TU PORRA', slug: '/la-porra' },
+  { title: 'VER COMBATES', slug: '/combates' },
+] as const
 ---
 
-<header class="fixed flex items-center top-0 h-16 w-full z-50 text-white mx-auto">
+<header class="fixed flex items-center top-0 h-16 w-full z-60 text-white mx-auto">
   <nav
     class:list={[
       shouldShowLogo ? "grid-cols-3" : "grid-cols-2",
@@ -18,81 +23,101 @@ const isActive = (path: string) => pathname === path;
   >
     <div class="hidden md:flex flex-row gap-8 justify-start">
       {/* Enlace con animación de subrayado dividido en dos colores */}
-      <a
-        href="/la-porra"
-        class="group relative inline-block tracking-wider py-1 leading-relaxed"
-      >
-        <span class="text-theme-seashell">HAZ TU PORRA</span>
-        {/* Contenedor del subrayado con overflow hidden para la animación */}
-        <div class="relative mt-1 h-[2px] w-full overflow-hidden">
-          {/* Línea rosa que se anima desde la izquierda */}
-          <div 
-            class:list={[
-              "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-250 ease-out",
-              isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-          {/* Línea turquesa que se anima desde la derecha */}
-          <div 
-            class:list={[
-              "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-250 ease-out",
-              isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-        </div>
-      </a>
-      {/* Segundo enlace con la misma animación */}
-      <a
-        href="/combates"
-        class="group relative inline-block tracking-wider py-1 leading-relaxed"
-      >
-        <span class="text-theme-seashell">VER COMBATES</span>
-        {/* Contenedor del subrayado con overflow hidden para la animación */}
-        <div class="relative mt-1 h-[2px] w-full overflow-hidden">
-          {/* Línea rosa que se anima desde la izquierda */}
-          <div 
-            class:list={[
-              "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out",
-              isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-          {/* Línea turquesa que se anima desde la derecha */}
-          <div 
-            class:list={[
-              "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out",
-              isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-        </div>
-      </a>
+      {
+        menuItems.map(({ title, slug }) => (
+          <a href={slug} class="group relative inline-block py-1 leading-relaxed tracking-wider">
+            <span class="text-theme-seashell">{title}</span>
+            {/* Contenedor del subrayado con overflow hidden para la animación */}
+            <div class="relative mt-1 h-[2px] w-full overflow-hidden">
+              {/* Línea rosa que se anima desde la izquierda */}
+              <div
+                class:list={[
+                  'absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-250 ease-out',
+                  isActive('/la-porra') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+                ]}
+              />
+              {/* Línea turquesa que se anima desde la derecha */}
+              <div
+                class:list={[
+                  'absolute right-0 bottom-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-250 ease-out',
+                  isActive('/la-porra') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+                ]}
+              />
+            </div>
+          </a>
+        ))
+      }
+    </div>
+    <div class="p-1 md:hidden">
+      <button class="burger" id="mobile-menu-button" aria-label="Abrir menú">
+        <span class="burger-icon"></span>
+      </button>
     </div>
 
-    {shouldShowLogo && (
-      <a
-        href="/"
-        class="mx-auto hover:scale-105 cursor-pointer transition duration-500 relative top-6">
-        <img
-          class="w-20 h-auto"
-          src="/images/logo.png"
-          fetchpriority="high"
-          alt="La Velada del Año V"
-          decoding="async"
-        />
-      </a>
-    )}
-
-    <div class="hidden md:flex flex-col items-end">
+    <div class="flex flex-col items-end">
       <span
-        class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative tracking-wider py-1 leading-relaxed"
+        class="text-theme-seashell relative inline-block cursor-not-allowed py-1 leading-relaxed tracking-wider opacity-90"
         >COMPRA LAS ENTRADAS
         <span
-          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center tracking-wide leading-normal"
+          class="absolute inset-0 top-4 mt-1 text-center text-[10px] leading-normal tracking-wide text-yellow-500"
           >PRÓXIMAMENTE</span
         >
       </span>
     </div>
   </nav>
 </header>
+<div id="mobile-menu">
+  <a
+    href={'/'}
+    style="--delay: 0.3s"
+    class="group relative inline-block py-1 leading-relaxed tracking-wider"
+  >
+    <span class="text-theme-seashell">INICIO</span>
+    {/* Contenedor del subrayado con overflow hidden para la animación */}
+    <div class="relative mt-1 h-[2px] w-full overflow-hidden">
+      {/* Línea rosa que se anima desde la izquierda */}
+      <div
+        class:list={[
+          'absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-250 ease-out',
+          isActive('/') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+        ]}
+      >
+      </div>
+      {/* Línea turquesa que se anima desde la derecha */}
+      <div
+        class:list={[
+          'absolute right-0 bottom-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-250 ease-out',
+          isActive('/') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+        ]}
+      >
+      </div>
+    </div>
+  </a>
+  {
+    menuItems.map(({ title, slug }, index) => (
+      <a href={slug} style={`--delay: ${0.3 + (index + 1) * 0.1}s `}>
+        <span class="text-theme-seashell">{title}</span>
+        {/* Contenedor del subrayado con overflow hidden para la animación */}
+        <div class="relative mt-1 h-[2px] w-full overflow-hidden">
+          {/* Línea rosa que se anima desde la izquierda */}
+          <div
+            class:list={[
+              'absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-250 ease-out',
+              isActive(slug) ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+            ]}
+          />
+          {/* Línea turquesa que se anima desde la derecha */}
+          <div
+            class:list={[
+              'absolute right-0 bottom-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-250 ease-out',
+              isActive(slug) ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+            ]}
+          />
+        </div>
+      </a>
+    ))
+  }
+</div>
 
 <style>
   header {
@@ -116,4 +141,124 @@ const isActive = (path: string) => pathname === path;
       border-bottom-color: black;
     }
   }
-</style>
+
+    #mobile-menu {
+      background-color: var(--color-primary);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      inset: 0;
+      z-index: 55;
+      width: 0%;
+      display: flex;
+      transition: width 0.3s ease-in-out;
+    }
+    #mobile-menu[open] {
+      width: 100%;
+      }
+    #mobile-menu a {
+        opacity: 0;
+        visibility: hidden;
+      }
+      #mobile-menu[open] a {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.3 ease-in-out;
+      transition-delay: var(--delay);
+    }
+
+    .burger {
+      height: 40px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+    .burger-icon {
+      position: relative;
+      width: 32px;
+    }
+
+    .burger-icon::before,
+    .burger-icon::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 16px;
+    }
+
+    .burger-icon,
+    .burger-icon::before,
+    .burger-icon::after {
+      display: block;
+      border-radius: 2px;
+      height: 2px;
+      background-color: white;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .burger-icon::before {
+      top: -8px;
+      left: 0;
+    }
+
+    .burger-icon::after {
+      top: 8px;
+      left: 16px;
+    }
+
+    .burger[open] .burger-icon {
+      transform: rotate(-45deg);
+    }
+    .burger[open] .burger-icon::before {
+      transform: rotate(90deg) translate(16px, -9px);
+    }
+
+    .burger[open] .burger-icon::after {
+      transform: rotate(90deg) translate(-16px, 7px);
+    }
+  </style>
+
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      const bodyElement = document.querySelector('body')
+      const mobileMenuButton = document.getElementById('mobile-menu-button')
+      const mobileMenu = document.getElementById('mobile-menu')
+      let scrollPosition = 0
+      const header = document.querySelector('header')
+      let timeoutId: number
+
+      const resetBodyStyles = () => {
+        bodyElement?.style.removeProperty('overflow')
+        bodyElement?.style.removeProperty('position')
+        bodyElement?.style.removeProperty('top')
+        bodyElement?.style.removeProperty('width')
+      }
+
+      const applyBodyStyles = () => {
+        if (bodyElement) {
+          bodyElement.style.overflow = 'hidden'
+          bodyElement.style.position = 'fixed'
+          bodyElement.style.top = `-${scrollPosition}px`
+          bodyElement.style.width = '100%'
+        }
+      }
+
+      mobileMenuButton?.addEventListener('click', () => {
+        if (mobileMenu?.hasAttribute('open')) {
+          clearTimeout(timeoutId)
+          resetBodyStyles()
+          window.scrollTo(0, scrollPosition)
+          header?.style.removeProperty('animation')
+          mobileMenuButton?.setAttribute('aria-label', 'Abrir menú')
+        } else {
+          scrollPosition = window.pageYOffset
+          timeoutId = window.setTimeout(applyBodyStyles, 300)
+          header?.style.setProperty('animation', 'unset')
+          mobileMenuButton?.setAttribute('aria-label', 'Cerrar menú')
+        }
+        mobileMenu?.toggleAttribute('open')
+        mobileMenuButton?.toggleAttribute('open')
+      })
+    })
+  </script>
