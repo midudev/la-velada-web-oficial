@@ -5,7 +5,9 @@ import BoxerCard from './BoxerCard.astro'
 const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
 const rightRow = firstRow.slice(3)
+
 const secondRow = FIGHTERS.slice(6)
+<<<<<<< HEAD
 
 const visibleFighters = FIGHTERS;
 
@@ -14,24 +16,36 @@ MATCHUPS.forEach(matchup => {
   opponentMap.set(matchup.fighter1, matchup.fighter2)
   opponentMap.set(matchup.fighter2, matchup.fighter1)
 })
+=======
+const leftSecondRow = secondRow.slice(0, 4)
+const rightSecondRow = secondRow.slice(4, 8)
+
+const animationDelay = [500, 700, 800]
+const reverseDelay = [...animationDelay].reverse()
+
+const animationDelaySecondRow = [...animationDelay, 900]
+const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
+>>>>>>> upstream/main
 ---
 
 <section class="relative flex min-h-screen w-full">
   <div
-    class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.png')] bg-cover bg-center"
+    class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center duration-75"
   >
   </div>
+
+  <div class="mask-fade-bottom absolute inset-0 w-full bg-black opacity-10"></div>
 
   <div class="relative flex w-full flex-col items-center p-8 text-center">
     <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
       <h3
-        class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 leading-[100%] font-light"
+        class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 leading-[100%] font-medium"
       >
-        <strong>26</strong> DE <br /><strong>JULIO</strong>
+        26 DE <br />JULIO
       </h3>
-      <figure class="animate-fade-in relative mt-8">
+      <figure class="animate-fade-in relative">
         <img
-          class="relative z-20 h-auto w-64"
+          class="relative z-20 h-auto w-64 sm:w-72 md:w-80 lg:w-96"
           src="/images/logo.png"
           fetchpriority="high"
           alt="La Velada del Año V"
@@ -42,18 +56,18 @@ MATCHUPS.forEach(matchup => {
 
       <div class="relative z-50">
         <h3
-          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-[100%] font-light"
+          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-relaxed font-medium tracking-wider uppercase"
         >
-          ESTADIO<br />LA CARTUJA,<br /><strong>SEVILLA</strong>
+          Estadio<br />La Cartuja,<br />Sevilla
         </h3>
         <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
         <a
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
           target="_blank"
-          class="animate-fade-in animate-delay-700 z-50 mt-4 inline-block leading-[100%] font-light transition hover:scale-125"
+          class="animate-fade-in animate-delay-700 z-50 mt-4 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-125"
         >
-          TWITCH.TV<br /><strong>IBAI</strong>
+          twitch.tv<br />Ibai
         </a>
       </div>
     </div>
@@ -66,8 +80,9 @@ MATCHUPS.forEach(matchup => {
         {
           FIGHTERS.map(({ id, name }) => (
             <img
+              transition:name={`text-${id}`}
               data-id={`hero-text-${id}`}
-              src={`/images/fighters/text/${id}.png`}
+              src={`/images/fighters/text/${id}.webp`}
               alt={name}
               decoding="async"
               class="mask-fade-text absolute hidden h-full w-auto"
@@ -85,10 +100,10 @@ MATCHUPS.forEach(matchup => {
             <img
               transition:name={`image-${id}`}
               data-id={`hero-image-${id}`}
-              src={`/images/fighters/big/${id}.png`}
+              src={`/images/fighters/big/${id}.webp`}
               alt={name}
               decoding="async"
-              class="absolute hidden h-full w-full object-cover lg:object-contain"
+              class="absolute hidden h-full w-auto object-cover lg:object-contain"
               fetchpriority="low"
             />
           ))
@@ -96,6 +111,7 @@ MATCHUPS.forEach(matchup => {
       </div>
     </div>
 
+<<<<<<< HEAD
     <div class="mobile-fighters md:hidden fixed bottom-0 left-0 right-0 w-full pb-8 pt-4 bg-gradient-to-t from-black/80 to-transparent">
       <div class="mobile-carousel-container">
         <div class="mobile-carousel" id="mobile-carousel">
@@ -109,10 +125,37 @@ MATCHUPS.forEach(matchup => {
               </div>
             </a>
           ))}
+=======
+    <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
+      <div class="flex w-full flex-wrap justify-between px-4">
+        <div class="flex flex-wrap justify-start gap-4">
+          {
+            leftRow.map(({ id, name }, index) => (
+              <div
+                class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}
+              >
+                <BoxerCard id={id} name={name} class="boxer-left" />
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="flex flex-wrap justify-end gap-4">
+          {
+            rightRow.map(({ id, name }, index) => (
+              <div
+                class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}
+              >
+                <BoxerCard id={id} name={name} class="boxer-right" />
+              </div>
+            ))
+          }
+>>>>>>> upstream/main
         </div>
       </div>
     </div>
 
+<<<<<<< HEAD
     <div class="desktop-fighters hidden md:flex relative h-full w-full max-w-6xl flex-col items-center justify-end gap-4 p-8">
       <div class="flex w-full flex-wrap justify-between px-4">
         <div class="animate-fade-in-right animate-delay-500 flex flex-wrap justify-start gap-4">
@@ -136,6 +179,27 @@ MATCHUPS.forEach(matchup => {
             <BoxerCard id={id} name={name} />
           </div>
         ))}
+=======
+      <div class="flex flex-wrap justify-between gap-4">
+        <div class="flex flex-wrap justify-start gap-4">
+          {
+            leftSecondRow.map(({ id, name }, index) => (
+              <div class={`animate-fade-in-up animate-delay-${animationDelaySecondRow[index]}`}>
+                <BoxerCard id={id} name={name} class="boxer-left" />
+              </div>
+            ))
+          }
+        </div>
+        <div class="flex flex-wrap justify-end gap-4">
+          {
+            rightSecondRow.map(({ id, name }, index) => (
+              <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>
+                <BoxerCard id={id} name={name} class="boxer-right" />
+              </div>
+            ))
+          }
+        </div>
+>>>>>>> upstream/main
       </div>
     </div>
   </div>
@@ -279,6 +343,7 @@ MATCHUPS.forEach(matchup => {
     const $landing = document.querySelector('#landing');
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
+<<<<<<< HEAD
     let currentFighterId = null;
 
     function resetView() {
@@ -341,11 +406,16 @@ MATCHUPS.forEach(matchup => {
       const id = customEvent.detail.id;
       showFighter(id);
     });
+=======
+    let currentFighterId: string | null = null
+    let hideFighterTimer: ReturnType<typeof setTimeout>;
+>>>>>>> upstream/main
 
     document.addEventListener('boxer-card-exit', () => {
       resetView();
     });
 
+<<<<<<< HEAD
     if (isMobile) {
       const $carousel = document.querySelector('#mobile-carousel');
       const $carouselContainer = document.querySelector('.mobile-carousel-container');
@@ -373,6 +443,66 @@ MATCHUPS.forEach(matchup => {
 
       function normalizeAngle(angle) {
         return ((angle % 360) + 360) % 360;
+=======
+      if (!currentFighterId) return
+
+      const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+      const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+
+      if (heroText && heroImage) {
+        heroText.classList.remove('animate-zoom-int')
+        heroImage.classList.remove('animate-slide-up-fade')
+
+        heroText.classList.add('animate-zoom-out')
+        heroImage.classList.add('animate-fade-out-down')
+
+        hideFighterTimer = setTimeout(() => {
+          heroText.classList.add('hidden')
+          heroImage.classList.add('hidden')
+          currentFighterId = null
+        }, 500)
+      }
+    })
+
+    document.addEventListener('boxer-card-hovered', (event: Event) => {
+      if (currentFighterId) {
+        clearTimeout(hideFighterTimer)
+        const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+        const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+        heroText?.classList.add('hidden')
+        heroImage?.classList.add('hidden')
+        currentFighterId = null
+      }
+
+      const customEvent = event as CustomEvent<{ id: string }>
+      const id = customEvent.detail.id
+
+      const heroText = document.querySelector(`[data-id="hero-text-${id}"]`)
+      const heroImage = document.querySelector(`[data-id="hero-image-${id}"]`)
+
+      if (heroText && heroImage) {
+        heroText.classList.remove('animate-zoom-out')
+        heroImage.classList.remove('animate-fade-out-down')
+      }
+
+      // si el luchador que entras es el mismo que ya se muestra
+      // entonces no hacemos nada
+      if (currentFighterId === id) return
+
+      // si ya estamos mostrando un luchador, tenemos que ocultarlo
+      if (currentFighterId) {
+        const currentHeroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+        const currentHeroImage = document.querySelector(
+          `[data-id="hero-image-${currentFighterId}"]`
+        )
+
+        if (currentHeroText && currentHeroImage) {
+          currentHeroText.classList.add('hidden')
+          currentHeroImage.classList.add('hidden')
+          currentHeroText.classList.remove('animate-zoom-in')
+          currentHeroImage.classList.remove('animate-slide-up-fade')
+        }
+>>>>>>> upstream/main
       }
 
       function getCardIndexAtAngle(angle) {
@@ -380,6 +510,7 @@ MATCHUPS.forEach(matchup => {
         return Math.round(angle / cardAngle) % totalCards;
       }
 
+<<<<<<< HEAD
       function positionAllCards(smooth = true) {
         const normalizedRotation = normalizeAngle(rotationAngle);
         const centralAngle = normalizedRotation;
@@ -448,6 +579,13 @@ MATCHUPS.forEach(matchup => {
           }
         }, 16);
       }
+=======
+      // mostramos el luchador que quiere ver el usuario
+      heroText?.classList.remove('hidden')
+      heroText?.classList.add('animate-zoom-in')
+      heroImage?.classList.remove('hidden')
+      heroImage?.classList.add('animate-slide-up-fade')
+>>>>>>> upstream/main
 
       setTimeout(startAutoRotate, 2000);
 

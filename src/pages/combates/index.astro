@@ -1,0 +1,78 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { COMBATS } from '@/consts/combats'
+import { combates } from '@/consts/pageTitles'
+---
+
+<Layout title={combates}>
+  <section class="min-h-screen w-full">
+    <div
+      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
+    >
+    </div>
+
+    <div class="flex w-full flex-col items-center text-center">
+      <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-30">
+        <h3
+          class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 -skew-3 text-6xl leading-[100%] font-medium [text-shadow:_5px_5px_10px_rgb(0_0_0_/_40%)]"
+        >
+          <strong>LISTA DE LOS</strong>
+          <br /><strong>COMBATES</strong>
+        </h3>
+      </div>
+
+      <div
+        id="combats-container"
+        class="relative top-96 mx-auto mt-10 mb-72 grid max-w-7xl grid-cols-1 gap-4 p-6 md:grid-cols-2 md:gap-8"
+      >
+        {
+          COMBATS.map(({ id, number, fighters, title }) => (
+            <a
+              class="inline-block"
+              href={`combates/${id}`}
+              title={`Ir al combate ${number} de ${title}`}
+            >
+              <div class="group animate-fade-in animate-delay-200 relative flex h-[40vh] w-full sm:h-[50vh]">
+                {fighters.map((fighter, index) => (
+                  <img
+                    src={`/images/fighters/big/${fighter}.webp`}
+                    class={`z-20 ml-5 h-full w-1/2 object-contain ${index === 0 ? 'ml-5 lg:ml-10' : '-ml-40 lg:-ml-20'} mask-fade-bottom size-96 transition-transform duration-300 group-hover:scale-110`}
+                    alt={`Imagen de ${fighter}`}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ))}
+
+                <div class="absolute bottom-0 z-30 flex h-auto w-full -skew-4 flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
+                  <img
+                    src={`/images/fighters/text/${fighters[0]}.png`}
+                    loading="lazy"
+                    decoding="async"
+                    class="w-3/4"
+                    alt=""
+                  />
+                  <img
+                    src="/images/versus.png"
+                    class="h-auto w-24"
+                    loading="lazy"
+                    decoding="async"
+                    alt=""
+                  />
+                  <img
+                    src={`/images/fighters/text/${fighters[1]}.png`}
+                    loading="lazy"
+                    decoding="async"
+                    class="w-3/4"
+                    alt=""
+                  />
+                </div>
+
+                <div class="absolute bottom-0 z-10 h-2/3 w-full bg-gradient-to-b from-pink-900/30 from-60% to-transparent transition-colors duration-300 group-hover:from-pink-900/20" />
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
