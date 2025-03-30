@@ -1,0 +1,20 @@
+---
+interface Props {
+  src: string
+  alt: string
+  class?: string
+}
+
+const { src, alt, class: className = '' } = Astro.props
+
+const basePath = src.substring(0, src.lastIndexOf('.'))
+const webpSrc = `${basePath}.webp`
+---
+
+<picture>
+  <source srcset={src} type="image/avif" />
+
+  <source srcset={webpSrc} type="image/webp" />
+
+  <img src={src} alt={alt} class={className} />
+</picture>

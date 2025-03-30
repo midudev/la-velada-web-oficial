@@ -1,4 +1,6 @@
 ---
+import ImageSupport from '@/components/ImageSupport.astro'
+
 const { id, name, class: extraClass } = Astro.props
 
 interface Props {
@@ -13,10 +15,10 @@ interface Props {
   href={`/luchador/${id}`}
   data-id={id}
 >
-  <div class="relative overflow-hidden rounded-lg bg-pink-950/50">
-    <img
+  <div class="relative overflow-hidden rounded-lg">
+    <ImageSupport
       class="aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 via-40 to-transparent object-cover transition-transform duration-500 group-hover:scale-110"
-      src={`/images/fighters/cards/${id}.webp`}
+      src={`/images/fighters/cards/${id}.avif`}
       alt={`Tarjeta del boxeador ${name}`}
     />
 

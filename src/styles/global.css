@@ -77,3 +77,13 @@ html {
 @utility mask-fade-bottom {
   mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
+
+.hero-support {
+  background-image: url('/images/hero.avif');
+}
+
+@supports (--css: variables) {
+  .hero-support {
+    background-image: url('/images/hero.webp');
+  }
+}
