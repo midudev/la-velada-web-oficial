@@ -4,16 +4,16 @@ import { COMBATS } from '@/consts/combats'
 import { combates } from '@/consts/pageTitles'
 
 const getPinkStyles = () => {
-  return 'group-hover:border-2 group-hover:border-pink-400 group-hover:from-pink-400 group-hover:to-gray-50/40'
+  return 'group-hover:via-theme-tickle-me-pink group-hover:via-30% group-hover:from-theme-tickle-me-pink  group-hover:to-gray-50/40'
 }
 
 const getCyanStyles = () => {
-  return 'group-hover:border-2 group-hover:border-(--color-theme-turquoise) group-hover:from-(--color-theme-turquoise) group-hover:to-gray-50/40'
+  return 'group-hover:from-theme-turquoise group-hover:via-theme-turquoise group-hover:to-gray-50/40'
 }
 ---
 
 <Layout title={combates}>
-  <section class="min-h-screen w-full bg-linear-to-b from-[#d17297] from-10% to-[#f19fca] to-90%">
+  <section class="min-h-screen w-full bg-linear-to-b from-[#D58291] from-10% to-[#f19fca] to-90%">
     <div
       class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
     >
@@ -44,7 +44,7 @@ const getCyanStyles = () => {
                   <div class="w-1/2 transition-transform duration-300 group-hover:scale-105">
                     <img
                       src={`/images/fighters/big/${fighter}.webp`}
-                      class={`${index === 0 ? 'animate-fade-in-right' : 'animate-fade-in-left'} animate-duration-slower animate-delay-900 size-full border-transparent bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover object-top grayscale-100 transition-colors duration-300 ease-in-out group-hover:grayscale-0 ${index === 0 ? getPinkStyles() : getCyanStyles()}`}
+                      class={`${index === 0 ? 'animate-fade-in-right' : 'animate-fade-in-left'} animate-duration-slower animate-delay-900 size-full border-transparent bg-gradient-to-t from-gray-50/60 via-gray-50/30 to-transparent object-cover object-top grayscale-100 transition-colors duration-300 ease-in-out group-hover:grayscale-0 ${index === 0 ? getPinkStyles() : getCyanStyles()} group-hover:border-theme-seashell group-hover:border-2`}
                       alt={`Imagen de ${fighter}`}
                       loading="lazy"
                       decoding="async"
@@ -57,22 +57,22 @@ const getCyanStyles = () => {
                     src={`/images/fighters/text/${fighters[0]}.png`}
                     loading="lazy"
                     decoding="async"
-                    class="animate-fade-in-down animate-duration-slower animate-delay-1000 w-3/4"
-                    alt=""
+                    class="animate-fade-in-down animate-duration-slower animate-delay-900 w-3/4 -translate-x-40 transition-all group-hover:translate-x-0"
+                    alt={`Nombre de ${fighters[0]} representada en intensos tonos rosa y púrpura.`}
                   />
                   <img
                     src="/images/versus.png"
-                    class="animate-fade-in animate-duration-slower animate-delay-1000 my-4 h-auto w-16"
+                    class="my-4 h-auto w-16 opacity-0 transition-all group-hover:opacity-100"
                     loading="lazy"
                     decoding="async"
-                    alt=""
+                    alt='La palabra "versus" representada en intensos tonos rosa y púrpura.'
                   />
                   <img
                     src={`/images/fighters/text/${fighters[1]}.png`}
                     loading="lazy"
                     decoding="async"
-                    class="animate-fade-in-up animate-duration-slower animate-delay-1000 w-3/4"
-                    alt=""
+                    class="animate-fade-in-up animate-duration-slower animate-delay-900 w-3/4 translate-x-40 transition-all group-hover:translate-x-0"
+                    alt={`Nombre de ${fighters[1]} representada en intensos tonos rosa y púrpura.`}
                   />
                 </div>
               </div>
@@ -83,8 +83,11 @@ const getCyanStyles = () => {
     </div>
 
     <!-- Nubes del fondo -->
+    <img src={'/images/clouds/cloud_1.webp'} class="absolute -start-40 top-[70vh] z-0" />
+    <img src={'/images/clouds/cloud_2.webp'} class="absolute -end-20 top-[75vh] z-0" />
+
     <img src={'/images/clouds/cloud_1.webp'} class="absolute -start-20 top-[120vh] z-0" />
-    <img src={'/images/clouds/cloud_1.webp'} class="absolute end-10 top-[105vh] z-0" />
+    <img src={'/images/clouds/cloud_1.webp'} class="absolute end-10 top-[130vh] z-0" />
 
     <img src={'/images/clouds/cloud_2.webp'} class="absolute -end-80 top-[190vh] z-0" />
     <img src={'/images/clouds/cloud_3.webp'} class="absolute top-[180vh] z-0" />
