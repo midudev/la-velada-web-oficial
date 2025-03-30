@@ -177,18 +177,8 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
       const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
       const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+      const heroMaskFadeText = document.querySelector(`#mask-fade-text-${currentFighterId}`)
 
-// <<<<<<< HEAD
-        document
-          .querySelector(`#mask-fade-text-${currentFighterId}`)
-          ?.classList.remove('translate-x-full')
-
-        document
-          .querySelector(`#mask-fade-text-${currentFighterId}`)
-          ?.classList.add('-translate-x-full')
-
-        currentFighterId = null
-// =======
       if (heroText && heroImage) {
         heroText.classList.remove('animate-zoom-int')
         heroImage.classList.remove('animate-slide-up-fade')
@@ -196,22 +186,27 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         heroText.classList.add('animate-zoom-out')
         heroImage.classList.add('animate-fade-out-down')
 
+        heroMaskFadeText?.classList.remove('translate-x-full')
+        heroMaskFadeText?.classList.add('-translate-x-full')
+
         hideFighterTimer = setTimeout(() => {
           heroText.classList.add('hidden')
           heroImage.classList.add('hidden')
           currentFighterId = null
         }, 500)
-// >>>>>>> 3ec5c7e90c90c06accf7eb5f8b17328b48996816
       }
     })
 
     document.addEventListener('boxer-card-hovered', (event: Event) => {
-      if (currentFighterId) {
+      if (currentFighterId) { // si ya hay un luchador visible, lo ocultamos
         clearTimeout(hideFighterTimer)
         const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
         const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+        const heroMaskFadeText = document.querySelector(`#mask-fade-text-${currentFighterId}`)
         heroText?.classList.add('hidden')
         heroImage?.classList.add('hidden')
+        heroMaskFadeText?.classList.remove('translate-x-full')
+        heroMaskFadeText?.classList.add('-translate-x-full')
         currentFighterId = null
       }
 
@@ -220,6 +215,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
       const heroText = document.querySelector(`[data-id="hero-text-${id}"]`)
       const heroImage = document.querySelector(`[data-id="hero-image-${id}"]`)
+      const heroMaskFadeText = document.querySelector(`#mask-fade-text-${id}`)
 
       if (heroText && heroImage) {
         heroText.classList.remove('animate-zoom-out')
@@ -233,61 +229,30 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       // si ya estamos mostrando un luchador, tenemos que ocultarlo
       if (currentFighterId) {
         const currentHeroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
+        const currentHeroMaskFadeText = document.querySelector(`#mask-fade-text-${currentFighterId}`)
         const currentHeroImage = document.querySelector(
           `[data-id="hero-image-${currentFighterId}"]`
         )
 
-// <<<<<<< HEAD
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.add('hidden')
-
-        document
-          .querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-          ?.classList.remove('animate-zoom-in')
-
-        document
-          .querySelector(`[data-id="hero-image-${currentFighterId}"]`)
-          ?.classList.remove('animate-slide-up-fade')
-
-        document
-          .querySelector(`#mask-fade-text-${currentFighterId}`)
-          ?.classList.remove('translate-x-full')
-
-        document
-          .querySelector(`#mask-fade-text-${currentFighterId}`)
-          ?.classList.add('-translate-x-full')
-// =======
-        if (currentHeroText && currentHeroImage) {
+        if (currentHeroText && currentHeroMaskFadeText && currentHeroImage) {
           currentHeroText.classList.add('hidden')
           currentHeroImage.classList.add('hidden')
           currentHeroText.classList.remove('animate-zoom-in')
           currentHeroImage.classList.remove('animate-slide-up-fade')
+          currentHeroMaskFadeText?.classList.remove('translate-x-full')
+          currentHeroMaskFadeText?.classList.add('-translate-x-full')
         }
-// >>>>>>> 3ec5c7e90c90c06accf7eb5f8b17328b48996816
       }
 
       $landing?.classList.add('hidden')
 
       // mostramos el luchador que quiere ver el usuario
-// <<<<<<< HEAD
-      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.remove('hidden')
-
-      document.querySelector(`#mask-fade-text-${id}`)?.classList.remove('-translate-x-full')
-
-      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.remove('hidden')
-
-      document.querySelector(`[data-id="hero-text-${id}"]`)?.classList.add('animate-zoom-in')
-
-      document.querySelector(`#mask-fade-text-${id}`)?.classList.add('translate-x-full')
-
-      document.querySelector(`[data-id="hero-image-${id}"]`)?.classList.add('animate-slide-up-fade')
-// =======
       heroText?.classList.remove('hidden')
       heroText?.classList.add('animate-zoom-in')
       heroImage?.classList.remove('hidden')
       heroImage?.classList.add('animate-slide-up-fade')
-// >>>>>>> 3ec5c7e90c90c06accf7eb5f8b17328b48996816
+      heroMaskFadeText?.classList.remove('-translate-x-full')
+      heroMaskFadeText?.classList.add('translate-x-full')
 
       currentFighterId = id
     })
