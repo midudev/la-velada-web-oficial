@@ -1,0 +1,165 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { COMBATS } from '@/consts/combats'
+import { FIGHTERS } from '@/consts/fighters'
+import { countries } from '@/consts/countries'
+import { combate } from '@/consts/pageTitles'
+
+const { id } = Astro.params
+const combat = COMBATS.find((c) => c.id === id)
+const fighter1 = FIGHTERS.find((f) => f.id === combat?.fighters[0])
+const fighter2 = FIGHTERS.find((f) => f.id === combat?.fighters[1])
+
+const fighter1Country = countries.find(c => c.id === fighter1?.country)
+const fighter2Country = countries.find(c => c.id === fighter2?.country)
+---
+
+<Layout title={combate(fighter1?.name, fighter2?.name)}> 
+  <div class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"></div>
+
+  <section class="relative min-h-screen max-w-6xl mx-auto p-6 mt-24">
+    <!-- Cartelera -->
+    <div class="relative h-full w-full  p-2 flex">
+      <!-- Primer Combatiente -->
+      <div class="relative w-1/2 h-auto bg-gradient-to-b from-black/50 to-pink-900/50 custom-clip  animate-crash overflow-hidden hover:scale-105 transition-transform duration-200 rotate-180 ">
+        <h3 class="absolute right-0 end-0 text-2xl md:text-6xl z-10 rotate-180 font-medium leading-[100%] text-theme-seashell  vertical-text animate-slide-in-bottom animate-delay-800">{fighter1?.name.toLocaleLowerCase()}</h3>
+        <a href={`/luchador/${fighter1?.id}`}>
+          <img
+              src={`/images/fighters/big/${fighter1?.id}.webp`}
+              alt={`Imagen de ${fighter1?.name}`}
+              decoding="async"
+              loading="eager"
+              class="object-cover  mask-fade-bottom rotate-180"
+            />
+            <!-- <img
+              src={fighter1Country?.image.src}
+              alt={`Bandera de ${fighter1Country?.name ?? 'Desconocido'}`}
+              class="absolute top-8 md:top-20 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-auto w-16 md:w-52 rotate-180 inline-flex"
+            /> -->
+        </a>
+      </div>
+
+      <!-- Versus Letra o Imagen -->
+      <img src="/images/versus.png" class="size-24 md:size-50 z-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-slide-out-bottom delay-1000" alt="Imagen de Versus">
+      
+      <!-- Segundo Combatiente -->
+      <div class="relative w-1/2 h-auto bg-gradient-to-b from-black/50  to-pink-900/50 custom-clip animate-crash overflow-hidden hover:scale-105 transition-transform duration-200">
+        <!-- Esquina Derecha -->
+        <h3 class="absolute right-0 end-0 text-2xl md:text-6xl z-10 font-medium leading-[100%] text-theme-seashell  vertical-text animate-slide-in-top animate-delay-800">{fighter2?.name.toLocaleLowerCase()}</h3>
+        <a href={`/luchador/${fighter2?.id}`}>
+          <img
+            src={`/images/fighters/big/${fighter2?.id}.webp`}
+            alt={`Imagen de ${fighter2?.name}`}
+            decoding="async"
+            loading="eager"
+            class="object-cover mask-fade-bottom"
+          />
+        </a>
+      </div>
+    </div>
+
+    <!-- Informacion -->
+    <div class="flex flex-col p-3 gap-8 mt-16 ">
+      
+      <!-- Caracteristicas -->
+      <div class="bg-black/60 -skew-1" >
+        <h2 class="text-md md:text-2xl font-bold my-4 uppercase text-theme-seashell text-center"> 
+          Características
+        </h2>
+        <p class="text-md md:text-2xl font-semibold text-theme-turquoise mx-auto mt-4 text-wrap text-center"> 
+          datos relevantes de los boxeadores
+        </p>
+
+        <div class="my-8  grid grid-cols-3 gap-4">
+            
+          <div class="space-y-2 text-right text-theme-seashell font-bold text-sm md:text-2xl">
+            <p>{fighter1?.age} años</p>
+            <p>{fighter1?.gender}</p>
+            <p>{fighter1?.height} mts</p>
+            <p>{fighter1?.weight} kg</p>
+            <p>{fighter1Country?.name.toLocaleLowerCase()}</p>
+            <img
+              src={fighter1Country?.image.src}
+              alt={`Bandera de ${fighter1Country?.name ?? 'Desconocido'}`}
+              class="h-auto w-16 md:w-25 inline-flex"
+            />
+          </div>
+          <div class="space-y-2 text-center text-theme-seashell font-bold text-sm md:text-2xl">
+            <p>EDAD</p>
+            <p>GÉNERO</p>
+            <p>ALTURA</p>
+            <p>PESO</p>
+            <p>PAÍS</p>
+          </div>
+          <div class="space-y-2 text-left text-theme-seashell font-bold text-sm md:text-2xl">
+            <p>{fighter2?.age} años</p>
+            <p>{fighter2?.gender}</p>
+            <p>{fighter2?.height} mts</p>
+            <p>{fighter2?.weight} kg</p>
+            <p>{fighter2Country?.name.toLocaleLowerCase()}</p>
+            <img
+              src={fighter2Country?.image.src}
+              alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
+              class="h-auto w-16 md:w-25 inline-flex"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-black/70 ">
+        <!-- Pronostico -->
+          <h2 class="text-md md:text-2xl font-bold my-4 uppercase text-theme-seashell text-center"> 
+            pronóstico
+          </h2>
+          <p class="text-md md:text-2xl font-semibold text-theme-turquoise mx-auto mt-4 text-wrap text-center"> 
+            estadísticas del combate por votaciones.
+          </p>
+          <div class="grid">
+            
+            <span class="text-center text-3xl md:text-6xl text-white my-10">próximamente..</span>
+          </div>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+ .custom-clip {
+  clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
+ }
+
+ .vertical-text {
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+ }
+
+ .animate-crash{
+  animation: crash 1s linear forwards;
+ }
+
+ @keyframes crash {
+  0% {
+    transform: translateX(100px);
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0); /* Sin sombra */
+    opacity: 0;
+  }
+  40% {
+    transform: translateX(-10px);
+    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Sombra visible más intensa */
+    opacity: 1;
+  }
+  60% {
+    transform: translateX(50px);
+    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
+  }
+  80% {
+    transform: translateX(0);
+    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
+  }
+  100% {
+    transform: translateX(-10px); 
+    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
+  }
+}
+</style>
