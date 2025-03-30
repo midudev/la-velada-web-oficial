@@ -9,7 +9,7 @@ interface Props {
 ---
 
 <a
-  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
+  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20 overflow-hidden`}
   href={`/luchador/${id}`}
   data-id={id}
 >
@@ -216,11 +216,11 @@ interface Props {
         // Animación
         particle.animate([
           { opacity: 1, transform: 'scale(1)' },
-          { opacity: 0, transform: 'scale(0)' }
-        ], {
+          { opacity: 0, transform: 'scale(0)' },
+      ], {
           duration: 1000,
-          fill: 'forwards'
-        }).onfinish = () => particle.remove();
+          fill: 'forwards',
+      }).onfinish = () => particle.remove();
       }
     }
 
