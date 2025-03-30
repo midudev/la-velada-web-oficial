@@ -6,7 +6,7 @@ import CocaCola from "@/assets/sponsors/CocaCola.svg";
 import Grefusa from "@/assets/sponsors/Grefusa.svg";
 import Infojobs from "@/assets/sponsors/Infojobs.svg";
 import Mahou from "@/assets/sponsors/Mahou.svg";
-import Maxibon from "@/assets/sponsors/Maxibon.svg";
+import Froneri from "@/assets/sponsors/Froneri.svg";
 import Nothing from "@/assets/sponsors/Nothing.svg";
 import Revolut from "@/assets/sponsors/Revolut.svg";
 import Spotify from "@/assets/sponsors/Spotify.svg";
@@ -124,12 +124,12 @@ export const SPONSORS: Sponsors[] = [
     },
   },
   {
-    id: "maxibon",
-    name: "Maxibon",
+    id: "froneri",
+    name: "Froneri",
     url: "https://www.froneri.es/",
     label: "Ir a la página web de Maxibon",
     image: {
-      logo: Maxibon,
+      logo: Froneri,
       width: 200,
       height: 200,
     },
