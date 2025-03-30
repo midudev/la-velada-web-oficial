@@ -1,0 +1,38 @@
+---
+import BoxerCard from "./BoxerCard.astro";
+
+const { id, name, boxerCardClass } = Astro.props;
+---
+
+<div>
+  <BoxerCard id={id} name={name} class={`peer ${boxerCardClass}`} />
+  <div
+    id='fighter-container'
+    class='pointer-events-none absolute inset-0 flex-col items-center hidden peer-hover:flex peer-focus:flex peer-focus-visible:flex'
+  >
+    <div class='relative top-96 mx-auto h-[4.5rem] flex w-full items-center justify-center z-1 animate-zoom-in'>
+      <img
+        data-id={`hero-text-${id}`}
+        src={`/images/fighters/text/${id}.png`}
+        alt={name}
+        decoding='async'
+        class='w-auto h-full absolute mask-fade-text'
+        fetchpriority='low'
+      />
+    </div>
+
+    <div
+      class='mask-fade-bottom relative bottom-0 mx-auto h-[80vh] flex w-full items-center justify-center animate-slide-up-fade'
+    >
+      <img
+        transition:name={`image-${id}`}
+        data-id={`hero-image-${id}`}
+        src={`/images/fighters/big/${id}.webp`}
+        alt={name}
+        decoding='async'
+        class='w-auto h-full absolute'
+        fetchpriority='low'
+      />
+    </div>
+  </div>
+</div>

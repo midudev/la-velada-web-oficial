@@ -16,6 +16,34 @@
   --color-theme-turquoise:oklch(82.97% 0.148864 181.7442);
 }
 
+@layer base {
+  /* Webkit Browsers (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-theme-raisin-black);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-theme-french-mauve);
+    border-radius: 5px;
+    border: 2px solid oklch(67.65% 0.1539 329.18 / 0.4); 
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-theme-tickle-me-pink); /* Efecto hover */
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-color: var(--color-theme-french-mauve) var(--color-theme-raisin-black);
+    scrollbar-width: thin;
+    border-radius: 5px; 
+  }
+}
+
 @font-face {
   font-family: "Adjusted Arial Fallback";
   src: local(Arial);
@@ -34,28 +62,16 @@
 
 @font-face {
   font-family: "Anisette";
-  src: url("/fonts/anisette-light.woff2") format("woff2");
-  font-weight: 300;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Anisette";
   src: url("/fonts/anisette-bold.woff2") format("woff2");
   font-weight: 600;
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Anisette";
-  src: url("/fonts/anisette-black.woff2") format("woff2");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
 html {
   font-family: "Anisette", var(--font-fallback);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 @utility mask-fade-bottom {
