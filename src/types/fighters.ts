@@ -54,4 +54,5 @@ export interface Fighters {
   versus: fighterId
   socials: Social[]
   clips: Clips[]
+  description: string
 }

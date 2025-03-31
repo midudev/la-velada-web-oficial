@@ -19,6 +19,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'A Coruña',
     versus: 'rivaldios',
+    description: "Streamer y creador de contenido conocido por su participación en eventos de gaming y su presencia en plataformas como Twitch.",
     socials: [
       {
         id: 'x',
@@ -91,6 +92,7 @@ export const FIGHTERS: Fighters[] = [
     weight: 102,
     country: 'es',
     versus: 'gaspi',
+    description: "Youtuber español con una larga trayectoria en la creación de contenido relacionado con videojuegos y entretenimiento digital.",
     socials: [
       {
         id: 'x',
@@ -162,6 +164,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'Barcelona',
     versus: 'roro',
+    description: "Creadora de contenido destacada en plataformas digitales, conocida por su enfoque en temas de estilo de vida y cultura pop.",
     socials: [
       {
         'id': 'instagram',
@@ -213,6 +216,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'Madrid',
     versus: 'abby',
+    description: "Influencer culinaria que ha ganado popularidad en TikTok e Instagram por sus recetas y contenido relacionado con la cocina.",
     socials: [
       {
         id: 'instagram',
@@ -263,6 +267,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'ar',
     city: 'Buenos Aires',
     versus: 'perxitaa',
+    description: "Streamer y figura pública en el ámbito del gaming, conocido por su humor y colaboraciones con otros creadores.",
     socials: [
       {
         id: 'instagram',
@@ -314,6 +319,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'mx',
     city: 'Culiacán',
     versus: 'peereira',
+    description: "Creador de contenido emergente, reconocido por su estilo carismático y participación en comunidades en línea",
     socials: [
       {
         id: 'instagram',
@@ -363,6 +369,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'Bilbao',
     versus: 'carlos',
+    description: "Conocido como Andoni Fitness, es un influencer enfocado en el mundo del fitness y la vida saludable, compartiendo rutinas de ejercicio y consejos nutricionales.",
     socials: [
       {
         id: 'instagram',
@@ -413,6 +420,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'Andorra La Vella',
     versus: 'tomas',
+    description: "Youtuber y streamer español con experiencia en eventos de boxeo anteriores, buscando consolidar su reputación en el ring.",
     socials: [
       {
         id: 'instagram',
@@ -473,6 +481,7 @@ export const FIGHTERS: Fighters[] = [
     clips: [],
   },
   {
+    // DIOS QUE BUENA ESTAAAAAAAAAAAAA
     // https://www.biografia.de/alana-flores/
     id: 'alana',
     name: 'Alana',
@@ -488,6 +497,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'mx',
     city: 'Nuevo León',
     versus: 'arigeli',
+    description: "Participante que retorna a la Velada tras una actuación destacada en ediciones anteriores, conocida por su disciplina y dedicación en el entrenamiento.",
     socials: [
       {
         id: 'instagram',
@@ -549,6 +559,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'Alhama de Murcia',
     versus: 'westcol',
+    description: "David Cánovas Martínez, nacido en 1997 en Alhama de Murcia, es un influyente creador de contenido español con más de 19 millones de suscriptores en YouTube y una fuerte presencia en Twitch.",
     socials: [
       {
         id: 'instagram',
@@ -621,6 +632,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'co',
     city: 'Medellín',
     versus: 'grefg',
+    description: "Streamer colombiano conocido por su contenido variado y su creciente popularidad en plataformas digitales.",
     socials: [
       {
         id: 'instagram',
@@ -671,6 +683,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'Barcelona',
     versus: 'alana',
+    description: "Influencer y creadora de contenido que aborda temas de estilo de vida, moda y bienestar en sus plataformas digitales.",
     socials: [
       {
         id: 'instagram',
@@ -721,6 +734,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'ar',
     city: 'Buenos Aires',
     versus: 'viruzz',
+    description: "Creador de contenido y personalidad pública, conocido por su participación en diversos proyectos digitales y eventos en vivo.",
     socials: [
       {
         id: 'instagram',
@@ -761,6 +775,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'mx',
     city: 'Monterrey',
     versus: 'andoni',
+    description: "Creador de contenido y entrenador personal, reconocido por su enfoque en el desarrollo físico y bienestar.​",
     socials: [
       {
         id: 'instagram',
