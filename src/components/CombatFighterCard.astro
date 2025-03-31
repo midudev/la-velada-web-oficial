@@ -1,0 +1,79 @@
+---
+const { fighter, isFirst } = Astro.props
+---
+<div class=`relative  w-1/2 h-auto bg-gradient-to-b from-black/50  to-pink-900/50 custom-clip animate-crash overflow-hidden hover:scale-[1.02] transition-transform duration-200 ${isFirst ? 'rotate-180': ''}`>
+        
+  <h3 class=`absolute right-0 end-0 text-2xl md:text-6xl z-20 font-medium leading-[100%] text-theme-seashell vertical-text ${isFirst ? 'animate-slide-in-bottom':'animate-slide-in-top'} animate-delay-1000 transition-all delay-300 ${isFirst ? 'rotate-180': ''}`>
+    {fighter?.name.toLocaleLowerCase()}
+  </h3>
+
+  <a class="flex justify-center items-center" href={`/luchador/${fighter?.id}`}>
+    <img
+      src={`/images/fighters/big/${fighter?.id}.webp`}
+      alt={`Imagen de ${fighter?.name}`}
+      decoding="async"
+      loading="eager"
+      class=`h-[85vh] w-auto object-cover  mask-fade-bottom z-10 ${isFirst ? 'rotate-180': ''}`
+    />
+  </a>
+  <!-- shimmer -->
+  <div class="absolute inset-0 z-0 animate-shimmer"></div>
+
+</div> 
+
+<style>
+  .custom-clip {
+    clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+
+  .vertical-text {
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+  }
+
+  .animate-crash{
+    animation: crash 1s linear forwards;
+  }
+
+  @keyframes crash {
+  0% {
+    transform: translateX(100px);
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0); /* Sin sombra */
+    opacity: 0;
+  }
+  40% {
+    transform: translateX(-10px);
+    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Sombra visible más intensa */
+    opacity: 1;
+  }
+  60% {
+    transform: translateX(50px);
+    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
+  }
+  80% {
+    transform: translateX(0);
+    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
+  }
+  100% {
+    transform: translateX(-10px); 
+    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
+  }
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.25) 50%, transparent 60%);
+    background-size: 200% 100%;
+    animation: shimmer 10s linear infinite ;
+    animation-delay: 1s;
+    
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% -200%;
+    }
+    100% {
+      background-position: 200% 200%;
+    }
+  }
+</style>

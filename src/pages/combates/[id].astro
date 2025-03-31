@@ -4,6 +4,7 @@ import { COMBATS } from '@/consts/combats'
 import { FIGHTERS } from '@/consts/fighters'
 import { countries } from '@/consts/countries'
 import { combate } from '@/consts/pageTitles'
+import CombatFighterCard from '@/components/CombatFighterCard.astro'
 
 const { id } = Astro.params
 const combat = COMBATS.find((c) => c.id === id)
@@ -21,42 +22,14 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
     <!-- Cartelera -->
     <div class="relative h-full w-full  p-2 flex">
       <!-- Primer Combatiente -->
-      <div class="relative w-1/2 h-auto bg-gradient-to-b from-black/50 to-pink-900/50 custom-clip  animate-crash overflow-hidden hover:scale-[1.02] transition-transform duration-200 rotate-180 ">
-        
-        <h3 class="absolute right-0 end-0 text-2xl md:text-6xl z-20 rotate-180 font-medium leading-[100%] text-theme-seashell  vertical-text animate-slide-in-bottom animate-delay-1000 transition-all delay-300">
-          {fighter1?.name.toLocaleLowerCase()}
-        </h3>
-
-        <a class="flex justify-center items-center" href={`/luchador/${fighter1?.id}`}>
-          <img
-              src={`/images/fighters/big/${fighter1?.id}.webp`}
-              alt={`Imagen de ${fighter1?.name}`}
-              decoding="async"
-              loading="eager"
-              class="h-[85vh] w-auto object-cover mask-fade-bottom rotate-180 z-10"
-            />
-        </a>
-        <div class="absolute inset-0 z-0 animate-shimmer"></div>
-      </div>
+      <CombatFighterCard fighter={fighter1} isFirst={true}/> 
 
       <!-- Versus Letra o Imagen -->
       <img src="/images/versus.png" class="size-28 md:size-56 z-30 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-slide-out-bottom  transition-all delay-200" alt="Imagen de Versus">
+      <!--<h3 class="text-9xl  font-bold text-theme-seashell z-30 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-slide-out-bottom  transition-all delay-200 ">vs</h3>-->
       
       <!-- Segundo Combatiente -->
-      <div class="relative  w-1/2 h-auto bg-gradient-to-b from-black/50  to-pink-900/50 custom-clip animate-crash overflow-hidden hover:scale-[1.02] transition-transform duration-200">
-        <!-- Esquina Derecha -->
-        <h3 class="absolute right-0 end-0 text-2xl md:text-6xl z-20 font-medium leading-[100%] text-theme-seashell  vertical-text animate-slide-in-top animate-delay-1000 transition-all delay-300">{fighter2?.name.toLocaleLowerCase()}</h3>
-        <a class="flex justify-center items-center" href={`/luchador/${fighter2?.id}`}>
-          <img
-            src={`/images/fighters/big/${fighter2?.id}.webp`}
-            alt={`Imagen de ${fighter2?.name}`}
-            decoding="async"
-            loading="eager"
-            class="h-[85vh] w-auto object-cover  mask-fade-bottom z-10"
-          />
-        </a>
-        <div class="absolute inset-0 z-0 animate-shimmer"></div>
-      </div>
+      <CombatFighterCard fighter={fighter2} isFirst={false}/>   
     </div>
 
     <!-- Informacion -->
@@ -129,60 +102,3 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
   </section>
 
 </Layout>
-
-<style>
-  .custom-clip {
-    clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
-  }
-
-  .vertical-text {
-    writing-mode: vertical-lr;
-    text-orientation: upright;
-  }
-
-  .animate-crash{
-    animation: crash 1s linear forwards;
-  }
-
-  @keyframes crash {
-  0% {
-    transform: translateX(100px);
-    box-shadow: 0 0 0 rgba(255, 255, 255, 0); /* Sin sombra */
-    opacity: 0;
-  }
-  40% {
-    transform: translateX(-10px);
-    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Sombra visible más intensa */
-    opacity: 1;
-  }
-  60% {
-    transform: translateX(50px);
-    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
-  }
-  80% {
-    transform: translateX(0);
-    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
-  }
-  100% {
-    transform: translateX(-10px); 
-    box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
-  }
-  }
-
-  .animate-shimmer {
-    background: linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.25) 50%, transparent 60%);
-    background-size: 200% 100%;
-    animation: shimmer 10s linear infinite ;
-    animation-delay: 1s;
-    
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -200% -200%;
-    }
-    100% {
-      background-position: 200% 200%;
-    }
-  }
-</style>
