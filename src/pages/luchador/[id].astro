@@ -27,13 +27,22 @@ const combatId = combat?.id;
 const fighterCountry = countries.find(c => c.id === fighter?.country);
 const opponentCountry = countries.find(c => c.id === opponent?.country);
 
-// Obtenemos el nivel y porcentaje de experiencia según la edad del luchador.
+// Obtenemos Datos gamificados y calculamos las barras de experiencia
+// Función para calcular el carisma
+function calculateCharisma(socials: { followers?: number }[]) {
+  const totalFollowers = socials.reduce((sum, social) => sum + (social.followers || 0), 0);
+  return Math.floor(totalFollowers / 999999); // Redondear hacia abajo
+}
 const level = Math.floor(fighter.age / 9);
 const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
+// Calcular el carisma del luchador
+fighter.attributes = fighter.attributes.map(attr =>
+  attr.name === 'carisma' ? { ...attr, value: calculateCharisma(fighter.socials) } : attr,
+);
 ---
 <Layout title={`${fighter.name} | ${fixedTitle}`}>
   <section class="relative flex min-h-screen w-full">
-    <div class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-40"></div>
+    <div class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-40 lg:bg-fixed"></div>
     
     <div class="relative z-10 flex w-full flex-col items-center justify-center gap-8 px-4 pt-24 lg:flex-row lg:items-start lg:pt-32">
       <!-- Imagen grande con hover -->
@@ -142,18 +151,18 @@ const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
       <!-- Información del luchador -->
       <div class="relative w-full max-w-xl text-white lg:w-1/2 p-6 bg-black/50 rounded-lg animate-fade-in backdrop-blur-md border-2 border-theme-turquoise transition-all duration-500 hover:brightness-125 hover:shadow-2xl border-4 border-theme-turquoise hover:shadow-theme-turquoise">
         <!-- Nombre del luchador y nombre real -->
-        <div class="mb-8 flex flex-col items-center">
+        <div class="mt-4 mb-8 flex flex-col items-center">
           <img
             src={`/images/fighters/text/${id}.png`}
             alt={fighter.name}
-            class="h-16 w-auto animate-scale-in mb-2"
+            class="h-16 w-auto animate-scale-in mb-5"
           />
-          <div class="text-2xl font-bold animate-slide-in-right text-center">{fighter.realName}</div>
+          <div class="mt-4 text-2xl font-bold animate-slide-in-right text-center">{fighter.realName}</div>
         </div>
         
         <!-- Bandera del luchador -->
         {fighterCountry && (
-          <div class="flex items-center justify-center gap-2 mt-2">
+          <div class="flex items-center justify-center gap-2 mt-2 mb-4">
             <img
               src={fighterCountry.image.src}
               alt={`Bandera de ${fighterCountry.name}`}
@@ -190,11 +199,11 @@ const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
         </div>
         
         <!-- Estadísticas -->
-        <div class="grid grid-cols-2 gap-4">
-          <div class="stat-item"><span class="text-sm text-gray-400">Edad</span> <span class="text-lg">{fighter.age} años</span></div>
-          <div class="stat-item"><span class="text-sm text-gray-400">Altura</span> <span class="text-lg">{fighter.height}m</span></div>
-          <div class="stat-item"><span class="text-sm text-gray-400">Peso</span> <span class="text-lg">{fighter.weight}kg</span></div>
-          <div class="stat-item"><span class="text-sm text-gray-400">Ciudad</span> <span class="text-lg">{fighter.city}</span></div>
+        <div class="grid grid-cols-2 gap-4 ">
+          <div class="stat-item"><span class="text-sm text-gray-400">Edad</span><br> <span class="text-lg">{fighter.age} años</span></div>
+          <div class="stat-item"><span class="text-sm text-gray-400">Altura</span><br> <span class="text-lg">{fighter.height}m</span></div>
+          <div class="stat-item"><span class="text-sm text-gray-400">Peso</span><br> <span class="text-lg">{fighter.weight}kg</span></div>
+          <div class="stat-item"><span class="text-sm text-gray-400">Ciudad</span><br> <span class="text-lg">{fighter.city}</span></div>
         </div>
         
         <div class="mt-4">
@@ -206,8 +215,8 @@ const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
         <div class="mt-6 relative">
           <div class="text-sm text-gray-400">Nivel</div>
           <div class="flex items-center gap-2 relative group">
-            <!-- Nivel con subrayado -->
-            <span class="text-lg font-bold underline decoration-dotted decoration-theme-turquoise cursor-pointer">
+            <!-- Nivel-->
+            <span class="text-lg font-bold decoration-dotted decoration-theme-turquoise cursor-pointer">
               {level}
             </span>
             <!-- Ícono de información -->
@@ -217,8 +226,15 @@ const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
               </svg>
             </span>
             <!-- Tooltip -->
-            <div class="absolute left-1/2 -translate-x-1/2 mt-2 w-max bg-black text-white text-xs rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 shadow-lg">
-              Fórmula: Math.floor(edad / 9)
+            <div class="absolute left-1/2 -translate-x-1/2 mt-2 w-max bg-black text-white text-xs rounded-lg p-2 opacity-0 group-hover:opacity-100 delay-666 transition-opacity duration-300 z-10 shadow-lg">
+                El nivel del luchador se calcula de acuerdo a su edad.<br>
+                <b>Fórmula:</b> 
+                <ul class="list-disc pl-5">
+                  <li><b>Nivel:</b> Se calcula dividiendo la edad del luchador entre 9 y redondeando hacia abajo.<br>
+                  </li>
+                  <li><b>Experiencia:</b> Es el resto de la división en %<br>
+                  </li>
+                </ul>
             </div>
           </div>
           <div class="w-full bg-gray-700 h-4 rounded-lg overflow-hidden mt-1">
@@ -228,61 +244,112 @@ const expPercentage = Math.round((fighter.age % 9) * (100 / 9));
         </div>
         
         <!-- Atributos y habilidades -->
-        <div class="mt-6">
-          <div class="text-lg font-bold">Atributos</div>
-          <div class="grid grid-cols-2 gap-4 mt-2">
-            {Object.entries(fighter.attributes).map(([name, level]) => (
-              <div class="flex flex-col">
-                <span class="text-sm text-gray-400 capitalize">{name}</span>
-                <div class="w-full bg-gray-700 h-4 rounded-lg overflow-hidden">
-                  <div class="h-full bg-theme-turquoise" style={{ width: `${level * 10}%` }}></div>
-                </div>
-                <span class="text-sm text-gray-400 mt-1">Nivel: {level}</span>
-              </div>
-            ))}
-          </div>
+<!-- Atributos -->
+<div class="mt-6">
+  <div class="text-lg font-bold">Atributos</div>
+  <div class="grid grid-cols-3 gap-4 mt-2">
+    {fighter.attributes.map(attr => (
+      <div class="flex flex-col items-center">
+        <!-- Nombre e ícono de información -->
+        <div class="relative group flex items-center gap-2 mb-2">
+          <span class="text-md text-gray-400 capitalize cursor-pointer">
+            {attr.name}
+          </span>
+          {attr.description && (
+            <span class="text-theme-turquoise cursor-pointer group-hover:text-white transition">
+              <!-- Ícono de información -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 10-1.5 0v.5a.75.75 0 001.5 0v-.5zm-.75 2.5a.75.75 0 00-.75.75v4a.75.75 0 001.5 0v-4a.75.75 0 00-.75-.75z" clip-rule="evenodd" />
+              </svg>
+            </span>
+          )}
+          {attr.description && (
+            <div class="absolute left-1/2 -translate-x-1/2 mt-2 w-max bg-black text-white text-xs rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-666 z-10 shadow-lg"
+            set:html={attr.description}>
+            </div>
+          )}
         </div>
-                
-        <div class="mt-6">
-          <div class="text-lg font-bold">Habilidades</div>
-          <div class="grid grid-cols-2 gap-4 mt-2">
-            {Object.entries(fighter.skills).map(([name, level]) => (
-              <div class="flex flex-col">
-                <span class="text-sm text-gray-400 capitalize">{name.replace('_', ' ')}</span>
-                <div class="w-full bg-gray-700 h-4 rounded-lg overflow-hidden">
-                  <div class="h-full bg-theme-tickle-me-pink" style={{ width: `${level * 10}%` }}></div>
-                </div>
-                <span class="text-sm text-gray-400 mt-1">Nivel: {level}</span>
-              </div>
-            ))}
-          </div>
+        <!-- Cuadro grande con el valor -->
+        <div class="w-20 h-20 bg-theme-turquoise text-white text-3xl font-bold flex items-center justify-center rounded-lg shadow-lg animate-glow">
+          {attr.value}
         </div>
       </div>
+    ))}
+  </div>
+</div>
+
+<!-- Habilidades -->
+<div class="mt-6">
+  <div class="text-lg font-bold">Habilidades</div>
+  <div class="grid grid-cols-2 gap-4 mt-2">
+    {fighter.skills.map(skill => (
+      <div class="flex flex-col items-center">
+        <!-- Nombre e ícono de información -->
+        <div class="relative group flex items-center gap-2 mb-2">
+          <span class="text-sm text-gray-400 capitalize cursor-pointer">
+            {skill.name}
+          </span>
+          {skill.description && (
+            <span class="text-theme-turquoise cursor-pointer group-hover:text-white transition">
+              <!-- Ícono de información -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 10-1.5 0v.5a.75.75 0 001.5 0v-.5zm-.75 2.5a.75.75 0 00-.75.75v4a.75.75 0 001.5 0v-4a.75.75 0 00-.75-.75z" clip-rule="evenodd" />
+              </svg>
+            </span>
+          )}
+          {skill.description && (
+            <div class="absolute left-1/2 -translate-x-1/2 mt-2 w-max bg-black text-white text-xs rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-666 z-10 shadow-lg"
+            set:html={skill.description}>
+            </div>
+          )}
+        </div>
+        <!-- Cuadro grande con el valor -->
+        <div class="w-24 h-24 bg-theme-tickle-me-pink text-white text-4xl font-bold flex items-center justify-center rounded-lg shadow-lg animate-glow">
+          {skill.level}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
     </div>
+    <style>
+      .stat-item {
+        animation: fadeIn 0.5s ease-out forwards;
+        opacity: 0;
+      }
+    
+      .stat-item:nth-child(1) { animation-delay: 0.1s; }
+      .stat-item:nth-child(2) { animation-delay: 0.2s; }
+      .stat-item:nth-child(3) { animation-delay: 0.3s; }
+      .stat-item:nth-child(4) { animation-delay: 0.4s; }
+    
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes glow {
+  0% {
+    box-shadow: 0 0 0px rgba(185, 212, 247, 0.5);
+    
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(109, 227, 248, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 0px rgba(185, 212, 247, 0.5);
+  }
+}
+.animate-glow {
+  animation: glow 2s infinite;
+}
+    </style>
   </section>
+  
 </Layout>
 
-<style>
-  .stat-item {
-    animation: fadeIn 0.5s ease-out forwards;
-    opacity: 0;
-  }
-
-  .stat-item:nth-child(1) { animation-delay: 0.1s; }
-  .stat-item:nth-child(2) { animation-delay: 0.2s; }
-  .stat-item:nth-child(3) { animation-delay: 0.3s; }
-  .stat-item:nth-child(4) { animation-delay: 0.4s; }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-
-</style>

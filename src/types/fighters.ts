@@ -1,4 +1,6 @@
 import type { Social } from "@/types/social";
+import type { Attribute } from "@/types/g_attribute";
+import type { Skill } from "@/types/g_skill";
 
 type fighterId =
   | 'peereira'
@@ -54,13 +56,6 @@ export interface Fighters {
   versus: fighterId
   socials: Social[]
   clips: Clips[]
-  attributes:{
-    charisma: number
-  }
-  skills:{
-    reflexes: number
-    punching_power: number
-    speed: number
-    stamina: number
-  }
+  attributes: Attribute[]
+  skills:Skill[]
 }

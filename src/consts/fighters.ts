@@ -1,4 +1,5 @@
 import type { Fighters } from '@/types/fighters'
+import { BASE_ATTRIBUTES, BASE_SKILLS } from '@/consts/gamified_data';
 import X from "@/assets/svg/x.svg";
 import Instagram from "@/assets/svg/instagram.svg";
 import Youtube from "@/assets/svg/youtube.svg";
@@ -30,7 +31,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 310094
       },
       {
         id: 'instagram',
@@ -42,7 +43,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 220053
       },
       {
         id: 'youtube',
@@ -54,7 +55,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 434000
       },
       {
         id: 'tiktok',
@@ -66,7 +67,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 584500
       },
       {
         id: 'twitch',
@@ -78,19 +79,12 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 1300000
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 2,
-      punching_power: 5,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     // https://laletrade.com/biografias/twitch/18087-perxitaa
@@ -116,7 +110,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 124
       },
       {
         id: 'instagram',
@@ -128,7 +122,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 1100000
       },
       {
         id: 'youtube',
@@ -152,7 +146,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 2530000
       },
       {
         id: 'twitch',
@@ -164,19 +158,12 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 2500000
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     id: 'abby',
@@ -201,7 +188,7 @@ export const FIGHTERS: Fighters[] = [
           'width': 200,
           'height': 200
         },
-        followers: 0
+        followers: 332507
       },
       {
         'id': 'twitch',
@@ -213,7 +200,7 @@ export const FIGHTERS: Fighters[] = [
           'width': 200,
           'height': 200
         },
-        followers: 0
+        followers: 625412
       },
       {
         'id': 'youtube',
@@ -225,19 +212,12 @@ export const FIGHTERS: Fighters[] = [
           'width': 200,
           'height': 200
         },
-        followers: 0
+        followers: 175000
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     // https://www.biografia.de/roro/
@@ -263,7 +243,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 3302261
       },
       {
         id: 'tiktok',
@@ -275,7 +255,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 8100000
       },
       {
         id: 'youtube',
@@ -287,19 +267,12 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 91400
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     // https://www.biografia.de/gaspi/
@@ -325,7 +298,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 1736569
       },
       {
         id: 'x',
@@ -337,7 +310,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 570273
       },
       {
         id: 'youtube',
@@ -349,19 +322,12 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 2400000
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     // https://www.biografia.de/rivaldios/
@@ -387,7 +353,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 1500586
       },
       {
         id: 'tiktok',
@@ -399,7 +365,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 5100000
       },
       {
         id: 'youtube',
@@ -411,20 +377,14 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 46300
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
+  //Andoni 
   {
     id: 'andoni',
     name: 'Andoni',
@@ -448,7 +408,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 2961838
       },
       {
         id: 'tiktok',
@@ -460,7 +420,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 4800000
       },
       {
         id: 'youtube',
@@ -472,19 +432,12 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 941000
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     // https://www.biografia.de/viruzz/
@@ -510,7 +463,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 1781888
       },
       {
         id: 'tiktok',
@@ -522,7 +475,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 1600000
       },
       {
         id: 'twitch',
@@ -534,7 +487,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 435315
       },
       {
         id: 'x',
@@ -546,7 +499,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 1148557
       },
       {
         id: 'youtube',
@@ -558,19 +511,12 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 6130000
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     // https://www.biografia.de/alana-flores/
@@ -599,7 +545,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 4738281
       },
       {
         id: 'twitch',
@@ -611,7 +557,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 921469
       },
       {
         id: 'x',
@@ -623,7 +569,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 999668
       },
       {
         id: 'youtube',
@@ -635,19 +581,12 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 570000
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     // https://laletrade.com/biografias/youtuber/espanol/22589-thegrefg
@@ -673,7 +612,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 7481870
       },
       {
         id: 'tiktok',
@@ -685,7 +624,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 9100000
       },
       {
         id: 'twitch',
@@ -697,7 +636,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 12200000
       },
       {
         id: 'x',
@@ -709,7 +648,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 8402494
       },
       {
         id: 'youtube',
@@ -721,19 +660,12 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 19000000
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     // https://www.biografia.de/westcol/
@@ -759,7 +691,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 4300072
       },
       {
         id: 'x',
@@ -771,7 +703,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 412389
       },
       {
         id: 'youtube',
@@ -783,19 +715,12 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 1320000
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     // https://www.biografia.de/ari-geli/
@@ -821,7 +746,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 1219939
       },
       {
         id: 'tiktok',
@@ -833,7 +758,7 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 3400000
       },
       {
         id: 'youtube',
@@ -845,19 +770,12 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 465000
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     // https://www.biografia.de/tomas-mazza/
@@ -876,14 +794,14 @@ export const FIGHTERS: Fighters[] = [
       {
         id: 'instagram',
         name: 'Instagram',
-        url: 'https://www.instagram.com/tomasmazza/',
+        url: 'https://www.instagram.com/mazzatomas/',
         label: 'Visitar perfil de Tomás en Instagram',
         image: {
           logo: Instagram,
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 2999414
       },
       {
         id: 'youtube',
@@ -895,19 +813,12 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 853000
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
   {
     // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
@@ -933,18 +844,11 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         },
-        followers: 0
+        followers: 5139556
       }
     ],
     clips: [],
-    attributes: {
-      charisma: 0
-    },
-    skills: {
-      reflexes: 0,
-      punching_power: 0,
-      speed: 0,
-      stamina: 0
-    }
+    attributes: BASE_ATTRIBUTES,
+    skills: BASE_SKILLS,
   },
 ] as const
