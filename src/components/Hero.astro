@@ -149,7 +149,8 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       </div>
 
       {/* Vista móvil: fila horizontal desplazable */}
-      <div id="carrusel" class="flex px-24 gap-4 overflow-x-auto whitespace-nowrap snap-x snap-mandatory p-4 md:hidden scroll-smooth">
+      <div id="carrusel" class="flex gap-4 overflow-x-auto whitespace-nowrap snap-x snap-mandatory p-4 md:hidden scroll-smooth">
+        <span class="mr-[50%]"></span>
         {[...leftRow, ...rightRow, ...leftSecondRow, ...rightSecondRow].map(({ id, name }) => (
           <BoxerCard
             id={id}
@@ -157,6 +158,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
             class="min-w-[120px] snap-center animate-fade-in-up animate-delay-500"
           />
         ))}
+        <span class="ml-[50%]"></span>
       </div>
     </div>
 </section>
@@ -180,8 +182,6 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         if(timerCarrusel) clearTimeout(timerCarrusel)
         timerCarrusel = setTimeout(() => {
           const event = new CustomEvent('carrusel-scrolling', {
-            // detail: Math.abs(carrusel.getBoundingClientRect().left) / carrusel.scrollWidth
-            detail: carrusel.getBoundingClientRect().left + carrusel.scrollWidth / 16
           })
           document.dispatchEvent(event)
         }, 300)

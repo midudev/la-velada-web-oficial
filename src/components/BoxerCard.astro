@@ -124,7 +124,7 @@ interface Props {
     }
 
     document.addEventListener('carrusel-scrolling', (event) => {
-      const centerPosition = (event as CustomEvent).detail
+      const centerPosition = window.innerWidth / 2
       let closestIndex = -1;
       let minDistance = Infinity;
 
@@ -132,7 +132,7 @@ interface Props {
         const rect = card.getBoundingClientRect();
         if(!rect.left) return;
 
-        const distance = Math.abs(rect.left - centerPosition);
+        const distance = Math.abs(rect.left + card.offsetWidth / 2 - centerPosition);
         if (distance < minDistance) {
             minDistance = distance;
             closestIndex = index;
