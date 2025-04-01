@@ -149,6 +149,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'dj-4LLi5cck',
+      thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp'
+    }
   },
   {
     id: 'abby',
@@ -199,6 +203,10 @@ export const FIGHTERS: Fighters[] = [
 
     ],
     clips: [],
+    workout: {
+      videoID: 'HBTuF3KONZc',
+      thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/roro/
@@ -399,6 +407,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'QDy_MM6y-7U',
+      thumbnail: '/images/fighters/workoutThumbnails/andoni-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/viruzz/
@@ -535,6 +547,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'TmC9TuD8NoQ',
+      thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp'
+    }
   },
   {
     // https://laletrade.com/biografias/youtuber/espanol/22589-thegrefg
@@ -607,6 +623,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: '_Rh-VjB3ATk',
+      thumbnail: '/images/fighters/workoutThumbnails/grefg-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/westcol/
@@ -707,6 +727,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'rugHsv9JCSU',
+      thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/tomas-mazza/
