@@ -1,21 +1,29 @@
 ---
+import type { Fighters } from '@/types/fighters'
 const { fighter, isFirst } = Astro.props
+
+interface Props {
+  fighter ?: Fighters,
+  isFirst : boolean
+}
 ---
+
 <div class=`relative  w-1/2 h-auto bg-gradient-to-b from-black/50  to-pink-900/50 custom-clip animate-crash overflow-hidden hover:scale-[1.02] transition-transform duration-200 ${isFirst ? 'rotate-180': ''}`>
         
   <h3 class=`absolute right-0 end-0 text-2xl md:text-6xl z-20 font-medium leading-[100%] text-theme-seashell vertical-text ${isFirst ? 'animate-slide-in-bottom':'animate-slide-in-top'} animate-delay-1000 transition-all delay-300 ${isFirst ? 'rotate-180': ''}`>
     {fighter?.name.toLocaleLowerCase()}
   </h3>
 
-  <a class="flex justify-center items-center" href={`/luchador/${fighter?.id}`}>
+  { fighter && <a class="flex justify-center items-center" href={`/luchador/${fighter.id}`}>
     <img
-      src={`/images/fighters/big/${fighter?.id}.webp`}
-      alt={`Imagen de ${fighter?.name}`}
+      src={`/images/fighters/big/${fighter.id}.webp`}
+      alt={`Imagen de ${fighter.name}`}
       decoding="async"
       loading="eager"
-      class=`h-[85vh] w-auto object-cover  mask-fade-bottom z-10 ${isFirst ? 'rotate-180': ''}`
+      class={`h-[85vh] w-auto object-cover  mask-fade-bottom z-10 ${isFirst ? 'rotate-180': ''}`}
     />
-  </a>
+    </a>
+  }
   <!-- shimmer -->
   <div class="absolute inset-0 z-0 animate-shimmer"></div>
 
@@ -64,7 +72,7 @@ const { fighter, isFirst } = Astro.props
     background: linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.25) 50%, transparent 60%);
     background-size: 200% 100%;
     animation: shimmer 10s linear infinite ;
-    animation-delay: 1s;
+    animation-delay: 0.5s;
     
   }
 
