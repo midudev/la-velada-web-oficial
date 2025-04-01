@@ -183,17 +183,17 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
   import { $ } from '@/lib/dom-selector'
 
   document.addEventListener('astro:page-load', () => {
-    var timerCarrusel: NodeJS.Timeout;
+    // var timerCarrusel: NodeJS.Timeout; // Se puede añadir o quitar el timer segun guste
 
     const carrusel = document.querySelector('#carrusel')
     if(carrusel){
       carrusel.addEventListener('scroll',(e) => {
-        if(timerCarrusel) clearTimeout(timerCarrusel)
-        timerCarrusel = setTimeout(() => {
+        // if(timerCarrusel) clearTimeout(timerCarrusel)
+        // timerCarrusel = setTimeout(() => {
           const event = new CustomEvent('carrusel-scrolling', {
           })
           document.dispatchEvent(event)
-        }, 300)
+        // }, 150)
       })
     }
 
