@@ -3,6 +3,7 @@ import { FIGHTERS } from '@/consts/fighters'
 import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
 import { COMBATS } from '@/consts/combats'
+import BoxerWorkout from '@/components/BoxerWorkout.astro'
 
 const { id } = Astro.params
 
@@ -29,7 +30,7 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
     >
     </div>
 
-    <div class="relative z-10 flex w-full flex-col items-center px-4 pt-24 lg:flex-row lg:items-start lg:pt-32">
+    <div class="mr-7 relative z-10 flex w-full flex-col items-center justify-center px-4 pt-24 lg:flex-row lg:items-start lg:pt-32">
       <div class="relative mt-8 flex h-[60vh] w-full items-center justify-center lg:mt-0 lg:h-[80vh] lg:w-1/2">
         <img
             src={`/images/fighters/big/${id}.webp`}
@@ -38,9 +39,9 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
             transition:name={`image-${id}`}
         />
       </div>
-      <div class="w-full max-w-xl text-white lg:w-1/2">
+      <div class="ml-7 mt-5 w-full max-w-xl text-white lg:w-1/2">
         <div
-            class="mb-8 flex items-center space-x-4 animate-fade-in"
+            class="mb-8 flex flex-col items-center space-x-4 animate-fade-in"
             transition:name={`name-${id}`}
         >
           <img
@@ -49,12 +50,12 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
               class="h-16 w-auto animate-scale-in"
               transition:name={`text-${id}`}
           />
-          <div class="text-2xl font-bold animate-slide-in-right">{fighter.realName}</div>
+          <div class=" text-center text-2xl font-bold animate-slide-in-right">{fighter.realName}</div>
         </div>
 
         <div class="space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm animate-fade-up">
           <!-- Stats Grid -->
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-2 gap-4 text-center pt-7 pr-6">
             <div class="stat-item">
               <div class="text-sm text-gray-400">Edad</div>
               <div class="text-lg">{fighter.age} años</div>
@@ -74,12 +75,12 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
           </div>
 
           <!-- Birth Date -->
-          <div class="animate-fade-in">
+          <div class="animate-fade-in text-center">
             <div class="text-sm text-gray-400">Fecha de nacimiento</div>
             <div class="text-lg">{birthDate}</div>
           </div>
 
-          <div class="flex flex-wrap gap-3 space-x-2">
+          <div class="flex flex-wrap gap-3 space-x-2 justify-center">
             {
               (fighter.socials || [])?.map(({ url, image, name, label }) => (
                   <a
@@ -93,9 +94,10 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
               ))
             }
           </div>
-
+        </div>
+        <div class="mt-7 space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm animate-fade-up">
           {opponent && (
-            <div class="flex flex-col items-center justify-between mt-6 space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:justify-between">
+            <div class="flex flex-col items-center justify-between space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:justify-between">
               <div class="flex items-center space-x-4 animate-pulse">
                 <div class="text-xl font-bold">VS</div>
                 <a
@@ -118,13 +120,15 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
                   </span>
                 </a>
               </div>
-
             </div>
           )}
         </div>
       </div>
     </div>
   </section>
+  {
+    fighter.workout && <BoxerWorkout workout={fighter.workout} />
+  }
 </Layout>
 
 <style>
