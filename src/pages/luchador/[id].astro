@@ -11,96 +11,113 @@ if (!fighter) return Astro.redirect('/404')
 const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   year: 'numeric',
   month: 'long',
-  day: 'numeric'
+  day: 'numeric',
 })
 
-const opponent = FIGHTERS.find(f => f.id === fighter.versus)
+const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 ---
 
 <Layout title={`${fighter.name} | ${fixedTitle}`}>
-  <section class="relative flex min-h-screen w-full">
-    <div
-        class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-50"
-    >
+  <section class="relative min-h-screen w-full bg-minimal-gradient mask-fade-bottom">
+    <div class="mask-fade-bottom absolute inset-0 w-full">
+      <div class="absolute inset-0 bg-[url('/images/hero.avif')] bg-cover bg-fixed bg-center opacity-20"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-theme-raisin-black via-theme-raisin-black]/80 to-theme-raisin-black]"></div>
+      <div class="absolute inset-0 bg-[url('/images/noise.png')] opacity-2"></div>
     </div>
 
-    <div class="relative z-10 flex w-full flex-col items-center px-4 pt-24 lg:flex-row lg:items-start lg:pt-32">
-      <div class="relative mt-8 flex h-[60vh] w-full items-center justify-center lg:mt-0 lg:h-[80vh] lg:w-1/2">
+    <div
+      class="relative z-10 flex w-full flex-col items-center px-4 pt-24 lg:flex-row lg:items-start lg:pt-32"
+    >
+      <div
+        class="relative mt-8 flex h-[60vh] w-full items-center justify-center lg:mt-0 lg:h-[80vh] lg:w-1/2"
+      >
         <img
-            src={`/images/fighters/big/${id}.webp`}
-            alt={fighter.name}
-            class="h-full w-full object-contain transition-all duration-700 hover:scale-105 animate-fade-in"
-            transition:name={`image-${id}`}
+          src={`/images/fighters/big/${id}.webp`}
+          alt={fighter.name}
+          class="animate-fade-in h-full w-full object-contain mask-fade-bottom transition-all duration-700 hover:scale-105"
+          transition:name={`image-${id}`}
         />
       </div>
-      <div class="w-full max-w-xl text-white lg:w-1/2">
+      <div class="w-full max-w-2xl text-white lg:w-3/4 my-24">
         <div
-            class="mb-8 flex items-center space-x-4 animate-fade-in"
-            transition:name={`name-${id}`}
+          class="animate-fade-in flex flex-col items-center space-x-4"
+          transition:name={`name-${id}`}
         >
           <img
-              src={`/images/fighters/text/${id}.png`}
-              alt={fighter.name}
-              class="h-16 w-auto animate-scale-in"
-              transition:name={`text-${id}`}
+            src={`/images/fighters/text/${id}.png`}
+            alt={fighter.name.toUpperCase()}
+            class="animate-scale-in h-16 w-auto"
+            transition:name={`text-${id}`}
           />
-          <div class="text-2xl font-bold animate-slide-in-right">{fighter.realName}</div>
+          <div
+            class="animate-slide-in-right mt-4 text-center text-2xl font-bold drop-shadow-[0px_1px_5px_rgba(0,0,0,0.8)]"
+          >
+            {fighter.realName.toUpperCase()}
+          </div>
         </div>
 
-        <div class="space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm animate-fade-up">
-          <!-- Stats Grid -->
-          <div class="grid grid-cols-2 gap-4">
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Edad</div>
-              <div class="text-lg">{fighter.age} años</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Altura</div>
-              <div class="text-lg">{fighter.height}m</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Peso</div>
-              <div class="text-lg">{fighter.weight}kg</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Ciudad</div>
-              <div class="text-lg">{fighter.city}</div>
-            </div>
+        <div class="flex flex-col items-center relative rounded-xl">
+          <div class="grid grid-cols-4 py-6 gap-4">
+            {[
+              { label: 'EDAD', value: `${fighter.age} AÑOS`, color: 'var(--color-theme-french-mauve)' },
+              { label: 'ALTURA', value: `${fighter.height}M`, color: 'var(--color-theme-tickle-me-pink)' },
+              { label: 'PESO', value: `${fighter.weight}KG`, color: 'var(--color-theme-turquoise)' },
+              { label: 'CIUDAD', value: fighter.city, color: 'var(--color-theme-seashell)' },
+            ].map(({ label, value, color }) => (
+              <div class="stat-card relative overflow-hidden rounded-lg bg-black/10 p-4 transition-all duration-300">
+                <div class="absolute left-0 top-0 h-full w-1" style={`background-color: ${color}30`}></div>
+                
+                <div class="relative flex items-start justify-between">
+                  <div class="flex flex-col space-y-2">
+                    <span class="text-sm font-bold tracking-wider text-theme-french-mauve">{label}</span>
+                    <span class="text-lg font-bold text-color-theme-seashell]">{value}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
-          <!-- Birth Date -->
-          <div class="animate-fade-in">
-            <div class="text-sm text-gray-400">Fecha de nacimiento</div>
-            <div class="text-lg">{birthDate}</div>
+          <div class="inline-flex flex-col items-center rounded-lg border-2 border-theme-french-mauve bg-black/10 px-6 py-3">
+            <span class="text-lg font-medium text-[--color-theme-french-mauve]">FECHA DE NACIMIENTO</span>
+            <span class="text-xl font-bold text-[--color-theme-seashell]">{birthDate.toUpperCase()}</span>
           </div>
 
-          <div class="flex flex-wrap gap-3 space-x-2">
-            {
-              (fighter.socials || [])?.map(({ url, image, name, label }) => (
-                  <a
-                      href={url}
-                      target="_blank"
-                      aria-label={label ?? name}
-                      class="hover:scale-125 transition flex items-center justify-center"
-                  >
-                    <image.logo />
-                  </a>
-              ))
-            }
+          <div class="flex my-3 p-2 rounded-2xl bg-white/20 gap-4">
+            {(fighter.socials || []).map(({ url, image, name }) => (
+              <a
+                href={url}
+                target="_blank"
+                aria-label={name}
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-[--color-theme-raisin-black] transition-transform hover:scale-110"
+              >
+                <image.logo />
+              </a>
+            ))}
           </div>
-
+        </div>
+        <div class="relative my-6 w-full">
+          <div class="absolute inset-0 flex items-center">
+            <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-[--color-theme-french-mauve]/30 to-transparent"></div>
+          </div>
+        </div>
+        <div>
           {opponent && (
-              <div class="flex items-center space-x-4 animate-pulse">
-                <div class="text-xl font-bold">VS</div>
+            <div class="mt-8">
+              <div class="flex items-center space-x-4">
+                <hr class="flex-1 border-t border-[--color-theme-french-mauve]/20" />
+                <span class="text-2xl font-bold text-[--color-theme-tickle-me-pink]">VS</span>
+                <hr class="flex-1 border-t border-[--color-theme-french-mauve]/20" />
+              </div>
+              <div class="mt-4 flex justify-center">
                 <a
-                    href={`/luchador/${opponent.id}`}
-                    class="group transform rounded-lg bg-white/10 px-4 py-2 transition-all hover:scale-105 hover:bg-white/20"
+                  href={`/luchador/${opponent.id}`}
+                  class="group inline-flex items-center space-x-2 rounded-lg bg-[--color-theme-raisin-black] px-4 py-2 transition-all duration-300 hover:bg-[--color-theme-french-mauve]/20"
                 >
-                <span class="inline-block transition-transform group-hover:translate-x-1">
-                  {opponent.name}
-                </span>
+                  <span class="text-xl font-bold text-[--color-theme-tickle-me-pink]">{opponent.name.toUpperCase()}</span>
+                  <span class="transform transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </a>
               </div>
+            </div>
           )}
         </div>
       </div>
@@ -114,10 +131,18 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
     opacity: 0;
   }
 
-  .stat-item:nth-child(1) { animation-delay: 0.1s; }
-  .stat-item:nth-child(2) { animation-delay: 0.2s; }
-  .stat-item:nth-child(3) { animation-delay: 0.3s; }
-  .stat-item:nth-child(4) { animation-delay: 0.4s; }
+  .stat-item:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .stat-item:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .stat-item:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .stat-item:nth-child(4) {
+    animation-delay: 0.4s;
+  }
 
   @keyframes fadeIn {
     from {
@@ -128,5 +153,67 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  @keyframes fadeInMinimal {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .stat-card {
+    border: 1px solid var(--color-theme-french-mauve);
+    border-left-width: 3px;
+    transition: all 0.3s ease;
+    animation: fadeInMinimal 0.5s ease-out forwards;
+    opacity: 0;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-color: var(--color-theme-tickle-me-pink);
+  }
+
+  .stat-card:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .stat-card:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .stat-card:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .stat-card:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+
+  .bg-minimal-gradient {
+    background: linear-gradient(
+      to bottom,
+      var(--color-theme-raisin-black),
+      var(--color-theme-french-mauve)
+    );
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .section-scroll {
+    scroll-margin-top: 2rem;
+  }
+
+  .hover-glow {
+    transition: box-shadow 0.3s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 15px rgba(var(--color-theme-french-mauve-rgb), 0.3);
   }
 </style>
