@@ -1,4 +1,4 @@
-import type { Social } from "@/types/social";
+import type { Social } from '@/types/social'
 
 type fighterId =
   | 'peereira'
@@ -54,4 +54,8 @@ export interface Fighters {
   versus: fighterId
   socials: Social[]
   clips: Clips[]
+  workout?: {
+    videoID: string
+    thumbnail: string
+  }
 }
