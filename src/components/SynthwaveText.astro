@@ -9,7 +9,7 @@ const { as: Element = 'h1', class: className, ...rest } = Astro.props
 // Throw an error if the component is used without a default slot
 if (!Astro.slots.has('default')) {
   const noSlotError = new Error(
-    'SynthwaveText component must have a text content.'
+    'SynthwaveText component must have a text content.',
   ) as ErrorWithMetadata
   noSlotError.name = 'SynthwaveTextError'
   noSlotError.hint = `See the examples below: \n✅ Valid \n  <SynthwaveText as="h1">peereira7</SynthwaveText> \n❌ Invalid \n  <SynthwaveText as="h1" />`
