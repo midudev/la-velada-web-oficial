@@ -1,99 +1,133 @@
 ---
-const { pathname } = Astro.url;
+const { pathname } = Astro.url
 
 // Lista de rutas donde NO debe aparecer el logo
-const hideLogoRoutes = ["/"];
-const shouldShowLogo = !hideLogoRoutes.includes(pathname);
+const hideLogoRoutes = ['/']
+const shouldShowLogo = !hideLogoRoutes.includes(pathname)
 
 // Comprueba si la ruta actual está activa
-const isActive = (path: string) => pathname === path;
+const isActive = (path: string) => pathname === path
 ---
 
-<header class="fixed flex items-center top-0 h-20 w-full z-50 text-white mx-auto">
-  <nav
-    class:list={[
-      shouldShowLogo ? "grid-cols-3" : "grid-cols-2",
-      "grid items-center px-6 text-sm font-medium justify-between max-w-6xl w-full mx-auto",
-    ]}
+<div class="fixed top-8 right-8 z-[100] md:hidden">
+  <button
+    id="menuButton"
+    aria-expanded="false"
+    aria-controls="menuMobileContent"
+    class="hamburgerButton group relative flex h-[20px] w-6 cursor-pointer flex-col items-center justify-between lg:hidden"
+    aria-label="Abrir menú de navegación"
   >
-    <div class="hidden md:flex flex-row gap-8 justify-start">
-      {/* Enlace con animación de subrayado dividido en dos colores */}
-      <a
-        href="/la-porra"
-        class="group relative inline-block tracking-wider py-1 leading-relaxed"
-      >
-        <span class="text-theme-seashell">HAZ TU PORRA</span>
-        {/* Contenedor del subrayado con overflow hidden para la animación */}
-        <div class="relative mt-1 h-[2px] w-full overflow-hidden">
-          {/* Línea rosa que se anima desde la izquierda */}
-          <div 
-            class:list={[
-              "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-250 ease-out",
-              isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-          {/* Línea turquesa que se anima desde la derecha */}
-          <div 
-            class:list={[
-              "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-250 ease-out",
-              isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-        </div>
-      </a>
-      {/* Segundo enlace con la misma animación */}
-      <a
-        href="/combates"
-        class="group relative inline-block tracking-wider py-1 leading-relaxed"
-      >
-        <span class="text-theme-seashell">VER COMBATES</span>
-        {/* Contenedor del subrayado con overflow hidden para la animación */}
-        <div class="relative mt-1 h-[2px] w-full overflow-hidden">
-          {/* Línea rosa que se anima desde la izquierda */}
-          <div 
-            class:list={[
-              "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out",
-              isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-          {/* Línea turquesa que se anima desde la derecha */}
-          <div 
-            class:list={[
-              "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out",
-              isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-        </div>
-      </a>
-    </div>
+    <span
+      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:translate-y-2 group-[.open]:rotate-45"
+    ></span>
+    <span
+      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:opacity-0"
+    ></span>
+    <span
+      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:opacity-0"
+    ></span>
+    <span
+      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:-translate-y-[0.6rem] group-[.open]:-rotate-45"
+    ></span>
+  </button>
+</div>
 
-    {shouldShowLogo && (
-      <a
-        href="/"
-        class="mx-auto hover:scale-110 cursor-pointer duration-500 relative">
-        <img
-          class="w-10 h-auto"
-          src="/favicon.svg"
-          fetchpriority="high"
-          alt="La Velada del Año V"
-          decoding="async"
-        />
-      </a>
-    )}
+<header class="fixed top-0 z-50 mx-auto flex h-20 w-full items-center text-white">
+  <div class="flex justify-between px-6 py-4 md:w-full">
+    <a href="/" class="cursor-pointer transition duration-500 hover:scale-105 md:hidden">
+      <img src="/favicon.svg" alt="logo" class="h-auto w-7" />
+    </a>
 
-    <div class="hidden md:flex flex-col items-end">
-      <span
-        class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative tracking-wider py-1 leading-relaxed"
-        >COMPRA LAS ENTRADAS
-        <span
-          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center tracking-wide leading-normal"
-          >PRÓXIMAMENTE</span
+    <div id="overlay-menu" class="bg-theme-raisin-black/50 fixed inset-0 hidden h-screen"></div>
+    <nav
+      id="navContent"
+      class="bg-theme-french-mauve/90 fixed top-0 right-0 mx-auto hidden h-screen max-w-6xl items-center justify-between space-y-2 px-6 pt-14 text-sm font-light backdrop-blur-2xl md:relative md:flex md:h-fit md:w-full md:space-y-0 md:bg-transparent md:py-4 md:backdrop-blur-none"
+    >
+      <div class="flex flex-col justify-start space-y-2 md:flex-row md:gap-8 md:space-y-0">
+        {/* Enlace con animación de subrayado dividido en dos colores */}
+        <a
+          href="/la-porra"
+          class="group relative inline-block w-fit py-1 leading-relaxed tracking-wider"
         >
-      </span>
-    </div>
-  </nav>
-</header>
+          <span class="text-theme-seashell">HAZ TU PORRA</span>
+          {/* Contenedor del subrayado con overflow hidden para la animación */}
+          <div class="relative mt-1 h-[2px] w-full overflow-hidden">
+            {/* Línea rosa que se anima desde la izquierda */}
+            <div
+              class:list={[
+                'absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-250 ease-out',
+                isActive('/la-porra') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+              ]}
+            >
+            </div>
+            {/* Línea turquesa que se anima desde la derecha */}
+            <div
+              class:list={[
+                'absolute right-0 bottom-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-250 ease-out',
+                isActive('/la-porra') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+              ]}
+            >
+            </div>
+          </div>
+        </a>
+        {/* Segundo enlace con la misma animación */}
+        <a
+          href="/combates"
+          class="group relative inline-block w-fit py-1 leading-relaxed tracking-wider"
+        >
+          <span class="text-theme-seashell">VER COMBATES</span>
+          {/* Contenedor del subrayado con overflow hidden para la animación */}
+          <div class="relative mt-1 h-[2px] w-full overflow-hidden">
+            {/* Línea rosa que se anima desde la izquierda */}
+            <div
+              class:list={[
+                'absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out',
+                isActive('/combates') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+              ]}
+            >
+            </div>
+            {/* Línea turquesa que se anima desde la derecha */}
+            <div
+              class:list={[
+                'absolute right-0 bottom-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out',
+                isActive('/combates') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+              ]}
+            >
+            </div>
+          </div>
+        </a>
+      </div>
 
+      {
+        shouldShowLogo && (
+          <a
+            href="/"
+            class="relative mx-auto hidden cursor-pointer duration-500 hover:scale-110 md:inline-block"
+          >
+            <img
+              class="h-auto w-10"
+              src="/favicon.svg"
+              fetchpriority="high"
+              alt="La Velada del Año V"
+              decoding="async"
+            />
+          </a>
+        )
+      }
+
+      <div class="flex-col items-end">
+        <span
+          class="text-theme-seashell relative inline-block cursor-not-allowed py-1 leading-relaxed tracking-wider opacity-90"
+          >COMPRA LAS ENTRADAS
+          <span
+            class="absolute inset-0 top-4 mt-1 text-center text-[10px] leading-normal tracking-wide text-yellow-500"
+            >PRÓXIMAMENTE</span
+          >
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
 <style>
   header {
     background: transparent;
@@ -117,3 +151,24 @@ const isActive = (path: string) => pathname === path;
     }
   }
 </style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    function toggleMenu(
+      menuBtn: Element | null,
+      navContent: Element | null,
+      overlayMenu: Element | null
+    ) {
+      menuBtn?.classList.toggle('open')
+      navContent?.classList.toggle('hidden')
+      overlayMenu?.classList.toggle('hidden')
+    }
+
+    const navContent = document.querySelector('#navContent')
+    const menuButton = document.querySelector('#menuButton')
+    const overlayMenu = document.querySelector('#overlay-menu')
+
+    menuButton?.addEventListener('click', () => toggleMenu(menuButton, navContent, overlayMenu))
+    overlayMenu?.addEventListener('click', () => toggleMenu(menuButton, navContent, overlayMenu))
+  })
+</script>
