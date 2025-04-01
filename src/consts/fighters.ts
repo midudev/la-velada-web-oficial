@@ -801,3 +801,8 @@ export const FIGHTERS: Fighters[] = [
     clips: [],
   },
 ] as const
+
+export const MATCHUPS = FIGHTERS.map(fighter => ({
+  fighter1: fighter.id,
+  fighter2: fighter.versus
+}));
