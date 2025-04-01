@@ -2,6 +2,7 @@
 import { FIGHTERS } from '@/consts/fighters'
 import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
+import BoxerWorkout from '@/components/BoxerWorkout.astro'
 
 const { id } = Astro.params
 
@@ -106,6 +107,9 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
       </div>
     </div>
   </section>
+  {
+    fighter.workout && <BoxerWorkout workout={fighter.workout} />
+  }
 </Layout>
 
 <style>
