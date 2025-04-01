@@ -1,0 +1,25 @@
+---
+import LiteYouTube from './LiteYouTube.astro'
+interface Props {
+  workout?: {
+    videoID: string
+    thumbnail: string
+  }
+}
+const { workout = undefined } = Astro.props
+const hasWorkout = workout !== undefined
+---
+
+{
+  hasWorkout && (
+    <section class="mx-auto my-36 max-w-6xl px-2 lg:px-10">
+      <div class="text-dark-magenta text-center">
+        <h3 class="text-4xl font-light">Entrenamiento</h3>
+        <p class="mt-5 text-2xl">Preparación para el combate</p>
+      </div>
+      <div class="mt-10 pt-12">
+        <LiteYouTube videoId={workout.videoID} backgroundImage={workout.thumbnail} />
+      </div>
+    </section>
+  )
+}
