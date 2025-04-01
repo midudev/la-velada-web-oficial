@@ -180,6 +180,9 @@ interface Props {
       singleBoxerCard.addEventListener("click", (e) => {
         e.preventDefault();
         
+        // Para ver adecuadamente la animación el scroll debe estar en cero
+        window.scrollTo(0,0)
+
         // Remover la clase selected de todas las tarjetas
         boxerCards.forEach(card => card.classList.remove('selected'));
         
