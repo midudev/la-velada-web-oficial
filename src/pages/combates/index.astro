@@ -1,10 +1,10 @@
 ---
 import Layout from '@/layouts/Layout.astro'
-import Sponsors from '@/components/Sponsors.astro'
 import { COMBATS } from '@/consts/combats'
+import { combates } from '@/consts/pageTitles'
 ---
 
-<Layout>
+<Layout title={combates}>
   <section class="min-h-screen w-full">
     <div
       class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
@@ -12,26 +12,13 @@ import { COMBATS } from '@/consts/combats'
     </div>
 
     <div class="flex w-full flex-col items-center text-center">
-      <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
-        <figure class="animate-fade-in relative -mt-10">
-          <img
-            class="relative z-20 h-auto w-48"
-            src="/images/logo.png"
-            fetchpriority="high"
-            alt="La Velada del Año V"
-            decoding="async"
-          />
-          <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
-        </figure>
-
-        <div>
-          <h3
-            class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 -skew-3 text-6xl leading-[100%] font-light"
-          >
-            <strong>lista de los</strong>
-            <br /><strong>combates</strong>
-          </h3>
-        </div>
+      <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-30">
+        <h3
+          class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 -skew-3 text-6xl leading-[100%] font-medium [text-shadow:_5px_5px_10px_rgb(0_0_0_/_40%)]"
+        >
+          <strong>LISTA DE LOS</strong>
+          <br /><strong>COMBATES</strong>
+        </h3>
       </div>
 
       <div
@@ -42,7 +29,7 @@ import { COMBATS } from '@/consts/combats'
           COMBATS.map(({ id, number, fighters, title }) => (
             <a
               class="inline-block"
-              href={`combate/${id}`}
+              href={`combates/${id}`}
               title={`Ir al combate ${number} de ${title}`}
             >
               <div class="group animate-fade-in animate-delay-200 relative flex h-[40vh] w-full sm:h-[50vh]">
@@ -88,5 +75,4 @@ import { COMBATS } from '@/consts/combats'
       </div>
     </div>
   </section>
-  <Sponsors />
 </Layout>

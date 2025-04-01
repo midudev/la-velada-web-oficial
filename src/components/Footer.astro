@@ -1,30 +1,27 @@
 ---
-import { SOCIAL } from "@/consts/social";
+import { SOCIAL } from '@/consts/social'
 ---
 
-<footer class="relative w-full h-[400px] pb-32">
+<footer class="relative min-h-[400px] w-full pb-32 2xl:mt-24 2xl:pb-96">
   <div
-    class="absolute inset-0 bg-cover bg-bottom bg-[url('/images/footer.webp')]
-    [mask-image:linear-gradient(transparent,black_50%)]"
+    class="absolute inset-0 bg-[url('/images/footer.webp')] bg-cover bg-bottom [mask-image:linear-gradient(transparent,black_50%)]"
   >
   </div>
 
-  <div
-    class="relative h-full flex flex-col justify-center items-center text-[#2a1f26]"
-  >
+  <div class="relative flex h-full flex-col items-center justify-center text-[#2a1f26]">
     <div class="footer-content">
-      <p class="text-center">© 2025 La Velada del Año. Todos los derechos reservados.</p>
+      <p class="text-center lowercase">© 2025 La Velada del Año. Todos los derechos reservados.</p>
     </div>
 
-    <div class="flex flex-row gap-x-2 items-center justify-center mt-4">
-
+    <div class="mt-4 flex flex-row items-center justify-center gap-x-2">
       {
         SOCIAL.map(({ url, image, name, label }) => (
           <a
             href={url}
             target="_blank"
+            rel="noopener noreferrer"
             aria-label={label ?? name}
-            class="hover:scale-125 transition flex items-center justify-center"
+            class="flex items-center justify-center transition hover:scale-125"
           >
             <image.logo />
           </a>
