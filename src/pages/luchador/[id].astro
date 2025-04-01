@@ -70,57 +70,57 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
         />
       </div>
 
-      <div class="mt-5 ml-7 w-full max-w-xl text-white lg:w-1/2">
-        <div class="space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm">
-          <div class="mb-8 flex flex-col items-center space-x-4">
-            <h1 class="animate-fade-in-up inline-block text-center text-2xl font-bold">
-              {fighter.realName}
-            </h1>
-          </div>
+      <div class="item mt-5 ml-7 flex w-full max-w-xl flex-col gap-6 lg:w-1/2">
+        <div class="text-white">
+          <div class="space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm">
+            <div class="mb-8 flex flex-col items-center space-x-4">
+              <h1 class="animate-fade-in-up inline-block text-center text-2xl font-bold">
+                {fighter.realName}
+              </h1>
+            </div>
 
-          <div class="grid grid-cols-2 gap-4 pt-7 pr-6 text-center">
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Edad</div>
-              <div class="text-lg">{fighter.age} años</div>
+            <div class="grid grid-cols-2 gap-4 pt-7 pr-6 text-center">
+              <div class="stat-item">
+                <div class="text-sm text-gray-400">Edad</div>
+                <div class="text-lg">{fighter.age} años</div>
+              </div>
+              <div class="stat-item">
+                <div class="text-sm text-gray-400">Altura</div>
+                <div class="text-lg">{fighter.height}m</div>
+              </div>
+              <div class="stat-item">
+                <div class="text-sm text-gray-400">Peso</div>
+                <div class="text-lg">{fighter.weight}kg</div>
+              </div>
+              <div class="stat-item">
+                <div class="text-sm text-gray-400">Ciudad</div>
+                <div class="text-lg">{fighter.city}</div>
+              </div>
             </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Altura</div>
-              <div class="text-lg">{fighter.height}m</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Peso</div>
-              <div class="text-lg">{fighter.weight}kg</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Ciudad</div>
-              <div class="text-lg">{fighter.city}</div>
-            </div>
-          </div>
 
-          <!-- Birth Date -->
-          <div class="animate-fade-in text-center">
-            <div class="text-sm text-gray-400">Fecha de nacimiento</div>
-            <div class="text-lg">{birthDate}</div>
+            <!-- Birth Date -->
+            <div class="animate-fade-in text-center">
+              <div class="text-sm text-gray-400">Fecha de nacimiento</div>
+              <div class="text-lg">{birthDate}</div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <section>
-    <div class="flex flex-wrap justify-center gap-3 space-x-2">
-      {
-        (fighter.socials || [])?.map(({ url, image, name, label }) => (
-          <a
-            href={url}
-            target="_blank"
-            aria-label={label ?? name}
-            class="flex items-center justify-center transition hover:scale-125"
-          >
-            <image.logo />
-          </a>
-        ))
-      }
+        <div class="flex flex-wrap justify-center gap-3 space-x-2">
+          {
+            (fighter.socials || [])?.map(({ url, image, name, label }) => (
+              <a
+                href={url}
+                target="_blank"
+                aria-label={label ?? name}
+                class="flex items-center justify-center transition hover:scale-125"
+              >
+                <image.logo />
+              </a>
+            ))
+          }
+        </div>
+      </div>
     </div>
   </section>
 
