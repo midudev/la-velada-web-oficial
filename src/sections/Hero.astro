@@ -1,6 +1,6 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
-import BoxerCard from './BoxerCard.astro'
+import BoxerCard from '@/components/BoxerCard.astro'
 
 const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
@@ -165,8 +165,10 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 </style>
 
 <script>
+  import { $ } from '@/lib/dom-selector'
+
   document.addEventListener('astro:page-load', () => {
-    const $landing = document.querySelector('#landing')
+    const $landing = $('#landing')
 
     let currentFighterId: string | null = null
     let hideFighterTimer: ReturnType<typeof setTimeout>
@@ -176,8 +178,8 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
       if (!currentFighterId) return
 
-      const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-      const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+      const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+      const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
 
       if (heroText && heroImage) {
         heroText.classList.remove('animate-zoom-int')
@@ -197,8 +199,10 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     document.addEventListener('boxer-card-hovered', (event: Event) => {
       if (currentFighterId) {
         clearTimeout(hideFighterTimer)
-        const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-        const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+
+        const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+        const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+
         heroText?.classList.add('hidden')
         heroImage?.classList.add('hidden')
         currentFighterId = null
@@ -207,8 +211,8 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       const customEvent = event as CustomEvent<{ id: string }>
       const id = customEvent.detail.id
 
-      const heroText = document.querySelector(`[data-id="hero-text-${id}"]`)
-      const heroImage = document.querySelector(`[data-id="hero-image-${id}"]`)
+      const heroText = $(`[data-id="hero-text-${id}"]`)
+      const heroImage = $(`[data-id="hero-image-${id}"]`)
 
       if (heroText && heroImage) {
         heroText.classList.remove('animate-zoom-out')
@@ -221,14 +225,13 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
       // si ya estamos mostrando un luchador, tenemos que ocultarlo
       if (currentFighterId) {
-        const currentHeroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-        const currentHeroImage = document.querySelector(
-          `[data-id="hero-image-${currentFighterId}"]`,
-        )
+        const currentHeroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+        const currentHeroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
 
         if (currentHeroText && currentHeroImage) {
           currentHeroText.classList.add('hidden')
           currentHeroImage.classList.add('hidden')
+
           currentHeroText.classList.remove('animate-zoom-in')
           currentHeroImage.classList.remove('animate-slide-up-fade')
         }
