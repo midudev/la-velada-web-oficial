@@ -9,13 +9,13 @@ interface Props {
 ---
 
 <a
-  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg overflow-hidden duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
+  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
   href={`/luchador/${id}`}
   data-id={id}
 >
-  <div class="relative overflow-hidden">
+  <div class="relative overflow-hidden rounded-lg">
     <img
-      class="aspect-[900/1200] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+      class="aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 via-40 to-transparent object-cover transition-transform duration-500 group-hover:scale-110"
       src={`/images/fighters/cards/${id}.webp`}
       alt={`Tarjeta del boxeador ${name}`}
     />
@@ -32,10 +32,10 @@ interface Props {
   </div>
 
   <div
-    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
   >
     <h3
-      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] uppercase"
+      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
     >
       {name}
     </h3>
@@ -49,11 +49,13 @@ interface Props {
 
 <style>
   .boxer-left {
-    clip-path: polygon(0% 0%, 95% 0%, 100% 100%, 5% 100%);
+    /* clip-path: polygon(0% 0%, 95% 0%, 100% 100%, 5% 100%); */
+    transform: skew(2deg);
   }
 
   .boxer-right {
-    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+    /* clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%); */
+    transform: skew(-2deg);
   }
 
   @media (prefers-reduced-motion) {
@@ -102,7 +104,7 @@ interface Props {
 <script>
   document.addEventListener('astro:page-load', () => {
     const boxerCards = document.querySelectorAll('.boxer-card')
-    let timeoutId: number | null = null
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     const pairings: Record<number, number> = {
       0: 5,
@@ -137,14 +139,14 @@ interface Props {
           document.dispatchEvent(event)
         }
         // Aplicar la clase 'grayscale-100' a todas las tarjetas
-        boxerCards.forEach((card) => card.classList.add('grayscale-100'))
+        boxerCards.forEach((card) => card.classList.add('grayscale-100', 'opacity-40'))
 
         // Quitar la clase solo de la tarjeta sobre la que se está haciendo hover
-        singleBoxerCard.classList.remove('grayscale-100')
+        singleBoxerCard.classList.remove('grayscale-100', 'opacity-40')
 
         // Quitar la clase también de su par si existe
         if (pairings[index] !== undefined) {
-          boxerCards[pairings[index]].classList.remove('grayscale-100')
+          boxerCards[pairings[index]].classList.remove('grayscale-100', 'opacity-40')
         }
       })
 
@@ -155,7 +157,7 @@ interface Props {
         }, 500)
 
         // Restaurar la clase en todas las tarjetas cuando el mouse salga
-        boxerCards.forEach((card) => card.classList.remove('grayscale-100'))
+        boxerCards.forEach((card) => card.classList.remove('grayscale-100', 'opacity-40'))
       })
 
       singleBoxerCard.addEventListener('focus', () => {
