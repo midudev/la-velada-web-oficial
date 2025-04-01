@@ -1,0 +1,105 @@
+---
+interface Props {
+  wrapperClassName: string
+  dateType: string
+  attribute: Record<string, string>
+  max: number
+  className?: string
+  height: string
+  withBackground?: boolean
+}
+
+const {
+  dateType,
+  attribute,
+  className,
+  height,
+  max,
+  wrapperClassName,
+  withBackground = false,
+} = Astro.props
+const maximumSplit = Astro.props.max.toString().split('')
+
+// + 1 porque hay que tener en cuenta el 0
+const maxFirst = Number.parseInt(maximumSplit[0]) + 1
+const maxSecond = 9
+const maxThird = 9
+// + 1 porque hay que tener en cuenta el 0 para las transiciones
+const firstDigitHeight = (1 / (maxFirst + 1)) * 100
+const secondDigitHeight = (1 / (maxSecond + 1)) * 100
+const thirdDigitHeight = (1 / (maxThird + 1)) * 100
+---
+
+<div class:list=`relative flex flex-col items-center justify-center text-center`>
+  <div
+    class:list={[
+      'relative flex -skew-x-6 flex-col gap-2 overflow-hidden rounded font-sans',
+      withBackground ? 'text-navy bg-theme-raisin-black shadow-md backdrop-grayscale' : '',
+      wrapperClassName,
+    ]}
+    {...attribute}
+  >
+    <div class="flex p-1 pb-0 md:p-2 md:pb-0">
+      <div class:list={`float-left block ${height} overflow-hidden`} data-first-group>
+        <div class="transform-gpu" data-wrapper>
+          {
+            Array.from({ length: maxFirst + 1 }, () => 0).map((_, index) => (
+              <div data-num={index} style={`height: ${firstDigitHeight}%`}>
+                <span
+                  class:list={`tabular-nums ${className} block h-fit overflow-hidden select-none`}
+                >
+                  {index}
+                </span>
+              </div>
+            ))
+          }
+          <div style={{ height: `${firstDigitHeight}%` }} data-num-x0>
+            <span class:list={`tabular-nums ${className}`}>0</span>
+          </div>
+        </div>
+      </div>
+      <div class:list={`float-left block ${height} w-auto overflow-hidden`} data-second-group>
+        <div class="transform-gpu" data-wrapper>
+          {
+            Array.from({ length: maxSecond + 1 }, () => 0).map((_, index) => (
+              <div data-num={index} style={`height: ${secondDigitHeight}%`}>
+                <span
+                  class:list={`tabular-nums ${className} block h-fit overflow-hidden select-none`}
+                >
+                  {index}
+                </span>
+              </div>
+            ))
+          }
+          <div style={{ height: `${secondDigitHeight}%` }} data-num-x0>
+            <span class:list={`tabular-nums ${className}`}>0</span>
+          </div>
+        </div>
+      </div>
+      {
+        max > 99 && (
+          <div class:list={`float-left block ${height} w-auto overflow-hidden`} data-third-group>
+            <div class="transform-gpu" data-wrapper>
+              {Array.from({ length: maxThird + 1 }, () => 0).map((_, index) => (
+                <div data-num={index} style={`height: ${thirdDigitHeight}%`}>
+                  <span
+                    class:list={`tabular-nums ${className} block h-fit overflow-hidden select-none`}
+                  >
+                    {index}
+                  </span>
+                </div>
+              ))}
+              <div style={{ height: `${thirdDigitHeight}%` }} data-num-x0>
+                <span class:list={`tabular-nums ${className}`}>0</span>
+              </div>
+            </div>
+          </div>
+        )
+      }
+    </div>
+    <span
+      class="text-navy px-1 pb-1 text-center text-[0.6rem] font-medium tracking-wider sm:text-xs md:pb-2 md:text-sm"
+      >{dateType}</span
+    >
+  </div>
+</div>
