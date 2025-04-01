@@ -43,7 +43,12 @@ const isActive = (path: string) => pathname === path
       id="navContent"
       class="bg-theme-french-mauve/90 fixed top-0 right-0 mx-auto hidden h-screen max-w-6xl items-center justify-between space-y-2 px-6 pt-14 text-sm font-light backdrop-blur-2xl md:relative md:flex md:h-fit md:w-full md:space-y-0 md:bg-transparent md:py-4 md:backdrop-blur-none"
     >
-      <div class="flex flex-col justify-start space-y-2 md:flex-row md:gap-8 md:space-y-0">
+      <div
+        class:list={[
+          'flex flex-col justify-start space-y-2 md:flex-row md:gap-8 md:space-y-0',
+          shouldShowLogo ? 'md:w-1/3' : 'md:flex-grow',
+        ]}
+      >
         {/* Enlace con animación de subrayado dividido en dos colores */}
         <a
           href="/la-porra"
@@ -102,10 +107,10 @@ const isActive = (path: string) => pathname === path
         shouldShowLogo && (
           <a
             href="/"
-            class="relative mx-auto hidden cursor-pointer duration-500 hover:scale-110 md:inline-block"
+            class="relative mx-auto hidden w-1/3 cursor-pointer duration-500 hover:scale-110 md:inline-block"
           >
             <img
-              class="h-auto w-10"
+              class="mx-auto h-auto w-10"
               src="/favicon.svg"
               fetchpriority="high"
               alt="La Velada del Año V"
@@ -115,7 +120,12 @@ const isActive = (path: string) => pathname === path
         )
       }
 
-      <div class="flex-col items-end">
+      <div
+        class:list={[
+          'flex-col items-end md:text-right',
+          shouldShowLogo ? 'md:w-1/3' : 'md:flex-grow',
+        ]}
+      >
         <span
           class="text-theme-seashell relative inline-block cursor-not-allowed py-1 leading-relaxed tracking-wider opacity-90"
           >COMPRA LAS ENTRADAS
@@ -127,48 +137,49 @@ const isActive = (path: string) => pathname === path
       </div>
     </nav>
   </div>
-</header>
-<style>
-  header {
-    background: transparent;
-    animation: header-blur-scroll 0.3s linear both;
-    animation-timeline: scroll();
-    animation-range: 0 250px;
-    border-bottom: 1px solid transparent;
-  }
 
-  @keyframes header-blur-scroll {
-    0% {
-      backdrop-filter: blur(0px);
+  <style>
+    header {
       background: transparent;
+      animation: header-blur-scroll 0.3s linear both;
+      animation-timeline: scroll();
+      animation-range: 0 250px;
+      border-bottom: 1px solid transparent;
     }
 
-    100% {
-      backdrop-filter: blur(10px);
-      background: rgba(0, 0, 0, 0.5);
-      padding-bottom: var(--spacing-6);
-      border-bottom-color: black;
+    @keyframes header-blur-scroll {
+      0% {
+        backdrop-filter: blur(0px);
+        background: transparent;
+      }
+
+      100% {
+        backdrop-filter: blur(10px);
+        background: rgba(0, 0, 0, 0.5);
+        padding-bottom: var(--spacing-6);
+        border-bottom-color: black;
+      }
     }
-  }
-</style>
+  </style>
 
-<script>
-  document.addEventListener('astro:page-load', () => {
-    function toggleMenu(
-      menuBtn: Element | null,
-      navContent: Element | null,
-      overlayMenu: Element | null
-    ) {
-      menuBtn?.classList.toggle('open')
-      navContent?.classList.toggle('hidden')
-      overlayMenu?.classList.toggle('hidden')
-    }
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      function toggleMenu(
+        menuBtn: Element | null,
+        navContent: Element | null,
+        overlayMenu: Element | null
+      ) {
+        menuBtn?.classList.toggle('open')
+        navContent?.classList.toggle('hidden')
+        overlayMenu?.classList.toggle('hidden')
+      }
 
-    const navContent = document.querySelector('#navContent')
-    const menuButton = document.querySelector('#menuButton')
-    const overlayMenu = document.querySelector('#overlay-menu')
+      const navContent = document.querySelector('#navContent')
+      const menuButton = document.querySelector('#menuButton')
+      const overlayMenu = document.querySelector('#overlay-menu')
 
-    menuButton?.addEventListener('click', () => toggleMenu(menuButton, navContent, overlayMenu))
-    overlayMenu?.addEventListener('click', () => toggleMenu(menuButton, navContent, overlayMenu))
-  })
-</script>
+      menuButton?.addEventListener('click', () => toggleMenu(menuButton, navContent, overlayMenu))
+      overlayMenu?.addEventListener('click', () => toggleMenu(menuButton, navContent, overlayMenu))
+    })
+  </script>
+</header>
