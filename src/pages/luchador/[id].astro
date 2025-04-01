@@ -30,7 +30,7 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
         <img
             src={`/images/fighters/big/${id}.webp`}
             alt={fighter.name}
-            class="h-full w-full object-contain transition-all duration-700 hover:scale-105 animate-fade-in"
+            class="h-full w-full object-contain transition-all duration-700 hover:scale-105 animate-fade-in mask-image-fade-bottom"
             transition:name={`image-${id}`}
         />
       </div>
@@ -123,6 +123,11 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
   .stat-item:nth-child(2) { animation-delay: 0.2s; }
   .stat-item:nth-child(3) { animation-delay: 0.3s; }
   .stat-item:nth-child(4) { animation-delay: 0.4s; }
+
+  .mask-image-fade-bottom {
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  }
 
   @keyframes fadeIn {
     from {
