@@ -21,13 +21,15 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
       <!-- Primer Combatiente -->
       <div class="relative w-1/2 h-auto bg-gradient-to-b from-black/50 to-pink-900/50 custom-clip  animate-crash overflow-hidden hover:scale-105 transition-transform duration-200 rotate-180 ">
         <h3 class="absolute right-0 end-0 text-2xl md:text-6xl z-10 rotate-180 font-medium leading-[100%] text-theme-seashell  vertical-text animate-slide-in-bottom animate-delay-800">{fighter1?.name.toLocaleLowerCase()}</h3>
-        <a href={`/luchador/${fighter1?.id}`}>
+        <a
+        class="w-full h-full flex items-center justify-center pb-8" 
+        href={`/luchador/${fighter1?.id}`}>
           <img
               src={`/images/fighters/big/${fighter1?.id}.webp`}
               alt={`Imagen de ${fighter1?.name}`}
               decoding="async"
               loading="eager"
-              class="object-cover  mask-fade-bottom rotate-180"
+              class="max-h-[600px] mask-fade-bottom rotate-180"
             />
             <!-- <img
               src={fighter1Country?.image.src}
@@ -44,13 +46,15 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
       <div class="relative w-1/2 h-auto bg-gradient-to-b from-black/50  to-pink-900/50 custom-clip animate-crash overflow-hidden hover:scale-105 transition-transform duration-200">
         <!-- Esquina Derecha -->
         <h3 class="absolute right-0 end-0 text-2xl md:text-6xl z-10 font-medium leading-[100%] text-theme-seashell  vertical-text animate-slide-in-top animate-delay-800">{fighter2?.name.toLocaleLowerCase()}</h3>
-        <a href={`/luchador/${fighter2?.id}`}>
+        <a
+        class="w-full h-full flex items-center justify-center mt-8"
+        href={`/luchador/${fighter2?.id}`}>
           <img
             src={`/images/fighters/big/${fighter2?.id}.webp`}
             alt={`Imagen de ${fighter2?.name}`}
             decoding="async"
             loading="eager"
-            class="object-cover mask-fade-bottom"
+            class="max-h-[600px] object-cover mask-fade-bottom"
           />
         </a>
       </div>
