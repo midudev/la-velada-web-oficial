@@ -830,6 +830,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: '_XWxZUwzhXk',
+      thumbnail: '/images/fighters/workoutThumbnails/westcol-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/ari-geli/
