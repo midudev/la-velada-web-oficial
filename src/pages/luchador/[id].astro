@@ -110,14 +110,15 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
   <section>
     <div class="flex flex-wrap justify-center gap-3 space-x-2">
       {
-        (fighter.socials || [])?.map(({ url, image, name, label }) => (
+        (fighter.socials || [])?.map(({ url, image, name, label, followers }) => (
           <a
             href={url}
             target="_blank"
             aria-label={label ?? name}
-            class="flex items-center justify-center transition hover:scale-125"
+            class="hover:to-theme-turquoise/70 hover:from-theme-tickle-me-pink/70 from-theme-turquoise/70 to-theme-tickle-me-pink/70 flex w-20 flex-col items-center justify-center bg-gradient-to-b transition duration-500 hover:scale-125"
           >
             <image.logo />
+            <span class="text-white lowercase">{followers}</span>
           </a>
         ))
       }
