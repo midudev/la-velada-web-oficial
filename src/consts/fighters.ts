@@ -96,6 +96,10 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I'
         },
     ],
+    workout: {
+      videoID: 'msvzME2RPu0',
+      thumbnail: '/images/fighters/workoutThumbnails/peereira-thumbnail.webp'
+    }
   },
   {
     // https://laletrade.com/biografias/twitch/18087-perxitaa
