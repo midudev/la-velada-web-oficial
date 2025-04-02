@@ -4,6 +4,7 @@ import Instagram from "@/assets/svg/instagram.svg";
 import Youtube from "@/assets/svg/youtube.svg";
 import TikTok from "@/assets/svg/tiktok.svg";
 import Twitch from "@/assets/svg/twitch.svg";
+import Kick from "@/assets/svg/kick.svg";
 
 export const FIGHTERS: Fighters[] = [
   {
@@ -100,8 +101,9 @@ export const FIGHTERS: Fighters[] = [
       {
         id: 'x',
         name: 'X',
-        url: 'https://x.com/srperxitaa',
+        url: 'https://x.com/Perxitaa',
         label: 'Visitar perfil de Perxitaa en X',
+        followers: '2.1M',
         image: {
           logo: X,
           width: 200,
@@ -177,39 +179,63 @@ export const FIGHTERS: Fighters[] = [
     versus: 'roro',
     socials: [
       {
-        'id': 'instagram',
-        'name': 'Instagram',
-        'url': 'https://www.instagram.com/abbyimu/',
-        'label': 'Visitar perfil de Abby en Instagram',
-        'followers': '332k',
-        'image': {
-          'logo': Instagram,
-          'width': 200,
-          'height': 200
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/abbyiimu',
+        label: 'Visitar perfil de Abby en X',
+        followers: '620.8k',
+        image: {
+          logo: X,
+          width: 200,
+          height: 200
         }
       },
       {
-        'id': 'twitch',
-        'name': 'Twitch',
-        'url': 'https://www.twitch.tv/abby_',
-        'label': 'Visitar perfil de Abby en Twitch',
-        'followers': '626k',
-        'image': {
-          'logo': Twitch,
-          'width': 200,
-          'height': 200
+        id: 'instagram',
+        name: 'Instagram',
+        url: 'https://www.instagram.com/abbyimu/',
+        label: 'Visitar perfil de Abby en Instagram',
+        followers: '332k',
+        image: {
+          logo: Instagram,
+          width: 200,
+          height: 200
         }
       },
       {
-        'id': 'youtube',
-        'name': 'Youtube',
-        'url': 'https://www.youtube.com/@abbyimu',
-        'label': 'Visitar canal de Abby en Youtube',
-        'followers': '175k',
-        'image': {
-          'logo': Youtube,
-          'width': 200,
-          'height': 200
+        id: 'tiktok',
+        name: 'TikTok',
+        url: 'https://www.tiktok.com/@abbyimu',
+        label: 'Visitar perfil de Abby en TikTok',
+        followers: '794.9k',
+        image: {
+          logo: TikTok,
+          width: 200,
+          height: 200
+        }
+      },
+      {
+        id: 'twitch',
+        name: 'Twitch',
+        url: 'https://www.twitch.tv/abby_',
+        label: 'Visitar perfil de Abby en Twitch',
+        followers: '626k',
+        image: {
+          logo: Twitch,
+          width: 200,
+          height: 200
+        }
+      },
+      {
+        id: 'youtube',
+        name: 'Youtube',
+        url: 'https://www.youtube.com/@abbyimu',
+        label: 'Visitar canal de Abby en Youtube',
+        followers: '175k',
+        image: {
+          logo: Youtube,
+          width: 200,
+          height: 200
         }
       }
 
@@ -307,6 +333,18 @@ export const FIGHTERS: Fighters[] = [
         followers: '570.4k',
         image: {
           logo: X,
+          width: 200,
+          height: 200,
+        }
+      },
+      {
+        id: 'tiktok',
+        name: 'TikTok',
+        url: 'https://www.tiktok.com/@gaspipdd',
+        label: 'Visitar perfil de Gaspi en TikTok',
+        followers: '1.5M',
+        image: {
+          logo: TikTok,
           width: 200,
           height: 200,
         }
@@ -567,6 +605,18 @@ export const FIGHTERS: Fighters[] = [
         }
       },
       {
+        id: 'tiktok',
+        name: 'TikTok',
+        url: 'https://www.tiktok.com/@alanafloresf',
+        label: 'Visitar perfil de Alana en TikTok',
+        followers: '6.5M',
+        image: {
+          logo: TikTok,
+          width: 200,
+          height: 200,
+        }
+      },
+      {
         id: 'youtube',
         name: 'Youtube',
         url: 'https://www.youtube.com/@alanafloresf',
@@ -715,6 +765,30 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         }
+      },
+      {
+        id: 'tiktok',
+        name: 'TikTok',
+        url: 'https://www.tiktok.com/@westcol',
+        label: 'Visitar perfil de Westcol en TikTok',
+        followers: '993.4k',
+        image: {
+          logo: TikTok,
+          width: 200,
+          height: 200,
+        }
+      },
+      {
+        id: 'kick',
+        name: 'Kick',
+        url: 'https://www.kick.com/westcol',
+        label: 'Visitar perfil de Westcol en Kick',
+        followers: '1.9M',
+        image: {
+          logo: Kick,
+          width: 200,
+          height: 200,
+        }
       }
     ],
     clips: [],
@@ -733,6 +807,18 @@ export const FIGHTERS: Fighters[] = [
     city: 'Barcelona',
     versus: 'alana',
     socials: [
+      {
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/ariigelii',
+        label: 'Visitar perfil de Arigeli en X',
+        followers: '28k',
+        image: {
+          logo: X,
+          width: 200,
+          height: 200,
+        }
+      },
       {
         id: 'instagram',
         name: 'Instagram',
@@ -768,6 +854,18 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         }
+      },
+      {
+        id: 'twitch',
+        name: 'Twitch',
+        url: 'https://www.twitch.tv/arigeli_',
+        label: 'Visitar perfil de Arigeli en Twitch',
+        followers: '32.5k',
+        image: {
+          logo: Twitch,
+          width: 200,
+          height: 200,
+        }
       }
     ],
     clips: [],
@@ -791,9 +889,21 @@ export const FIGHTERS: Fighters[] = [
     versus: 'viruzz',
     socials: [
       {
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/MazzaTomas',
+        label: 'Visitar perfil de Tomás en X',
+        followers: '259.9k',
+        image: {
+          logo: X,
+          width: 200,
+          height: 200,
+        }
+      },
+      {
         id: 'instagram',
         name: 'Instagram',
-        url: 'https://www.instagram.com/tomasmazza/',
+        url: 'https://www.instagram.com/mazzatomas',
         label: 'Visitar perfil de Tomás en Instagram',
         followers: '2.9M',
         image: {
@@ -813,8 +923,31 @@ export const FIGHTERS: Fighters[] = [
           width: 200,
           height: 200,
         }
+      },
+      {
+        id: 'tiktok',
+        name: 'TikTok',
+        url: 'https://www.tiktok.com/@mazzatomas',
+        label: 'Visitar perfil de Tomás en TikTok',
+        followers: '2.5M',
+        image: {
+          logo: TikTok,
+          width: 200,
+          height: 200,
+        }
+      },
+      {
+        id: 'twitch',
+        name: 'Twitch',
+        url: 'https://www.twitch.tv/mazzatomas',
+        label: 'Visitar perfil de Tomás en Twitch',
+        followers: '629k',
+        image: {
+          logo: Twitch,
+          width: 200,
+          height: 200,
+        }
       }
-
     ],
     clips: [],
   },
@@ -833,6 +966,18 @@ export const FIGHTERS: Fighters[] = [
     versus: 'andoni',
     socials: [
       {
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/CarlosBelcast',
+        label: 'Visitar perfil de Carlos en X',
+        followers: '22.1k',
+        image: {
+          logo: X,
+          width: 200,
+          height: 200,
+        }
+      },
+      {
         id: 'instagram',
         name: 'Instagram',
         url: 'https://www.instagram.com/carlosbelcast/',
@@ -840,6 +985,42 @@ export const FIGHTERS: Fighters[] = [
         followers: '5.1M',
         image: {
           logo: Instagram,
+          width: 200,
+          height: 200,
+        }
+      },
+      {
+        id: 'tiktok',
+        name: 'TikTok',
+        url: 'https://www.tiktok.com/@carlosbelcast',
+        label: 'Visitar perfil de Carlos en TikTok',
+        followers: '6.5M',
+        image: {
+          logo: TikTok,
+          width: 200,
+          height: 200,
+        }
+      },
+      {
+        id: 'youtube',
+        name: 'Youtube',
+        url: 'https://www.youtube.com/@carlosbelcast',
+        label: 'Visitar canal de Carlos en Youtube',
+        followers: '1.42M',
+        image: {
+          logo: Youtube,
+          width: 200,
+          height: 200,
+        }
+      },
+      {
+        id: 'twitch',
+        name: 'Twitch',
+        url: 'https://www.twitch.tv/carlosbelcastt',
+        label: 'Visitar perfil de Carlos en Twitch',
+        followers: '50.3k',
+        image: {
+          logo: Twitch,
           width: 200,
           height: 200,
         }
