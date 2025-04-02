@@ -6,12 +6,16 @@ interface Props {
 }
 
 const { videoId, title, backgroundImage } = Astro.props
+
+const validBackgroundImage = backgroundImage && backgroundImage.trim() !== '' 
+  ? backgroundImage 
+  : undefined
 ---
 
 <lite-youtube
   class="rounded-lg drop-shadow-[0_0_20px_var(--color-theme-turquoise)]"
   videoid={videoId}
-  style={`background-image: url('${backgroundImage}')`}
+  style={validBackgroundImage ? `background-image: url('${validBackgroundImage}')` : undefined}
   tabindex="0"
   aria-label="button"
 >
