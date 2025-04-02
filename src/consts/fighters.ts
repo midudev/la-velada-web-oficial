@@ -447,6 +447,10 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=JZx9yIQa0lXP9BTh&amp;clip=Ugkxjn97-DOruGG1ClS3KgmuiNEMXRf5a4aj&amp;clipt=EJytRBjj4EQ'
       },
     ],
+    workout: {
+      videoID: 'bNwgdNDz4d4',
+      thumbnail: '/images/fighters/workoutThumbnails/rivaldios-thumbnail.webp',
+    }
   },
   {
     id: 'andoni',
