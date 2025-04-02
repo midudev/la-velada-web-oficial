@@ -172,26 +172,6 @@ interface Props {
         }, 500)
       })
 
-      singleBoxerCard.addEventListener('click', (e) => {
-        e.preventDefault()
-
-        // Remover la clase selected de todas las tarjetas
-        boxerCards.forEach((card) => card.classList.remove('selected'))
-
-        // Añadir la clase selected SOLO a la tarjeta clickeada (removemos la parte de la pareja)
-        singleBoxerCard.classList.add('selected')
-
-        // Crear partículas solo en la tarjeta clickeada
-        createParticles(singleBoxerCard as HTMLElement)
-
-        // Navegar a la página del boxeador después de un pequeño delay
-        const href = singleBoxerCard.getAttribute('href')
-        if (href) {
-          setTimeout(() => {
-            window.location.href = href
-          }, 600)
-        }
-      })
     })
 
     function createParticles(element: HTMLElement) {
