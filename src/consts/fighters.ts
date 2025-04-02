@@ -1073,5 +1073,9 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'R3nXNgSLnYA',
+      thumbnail: '/images/fighters/workoutThumbnails/carlos-thumbnail.webp',
+    }
   },
 ] as const
