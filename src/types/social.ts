@@ -7,6 +7,7 @@ export interface Social {
   name: SocialName;
   url: string;
   label: string;
+  followers?: string;
   image: {
     logo: any;
     width: number;
