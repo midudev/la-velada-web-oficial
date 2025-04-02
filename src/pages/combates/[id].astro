@@ -27,6 +27,7 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
         class="w-full h-full flex items-center justify-center pb-8" 
         href={`/luchador/${fighter1?.id}`}>
           <img
+              transition:name={`image-${fighter1?.id}`}
               src={`/images/fighters/big/${fighter1?.id}.webp`}
               alt={`Imagen de ${fighter1?.name}`}
               decoding="async"
@@ -42,8 +43,13 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
       </div>
 
       <!-- Versus Letra o Imagen -->
-      <img src="/images/versus.png" class="size-24 md:size-50 z-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-slide-out-bottom delay-1000" alt="Imagen de Versus">
-      
+      <img
+        transition:name={`image-${fighter1?.id}-vs-${fighter2?.id}`}
+        src="/images/versus.webp"
+        class="animate-slide-out-bottom absolute top-1/2 left-1/2 z-20 size-24 -translate-x-1/2 -translate-y-1/2 transform delay-1000 md:size-50"
+        alt="Imagen de Versus"
+      />
+
       <!-- Segundo Combatiente -->
       <div class="relative w-1/2 h-auto bg-gradient-to-b from-black/50  to-pink-900/50 custom-clip animate-crash overflow-hidden hover:scale-105 transition-transform duration-200">
         <!-- Esquina Derecha -->
@@ -52,6 +58,7 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
         class="w-full h-full flex items-center justify-center mt-8"
         href={`/luchador/${fighter2?.id}`}>
           <img
+            transition:name={`image-${fighter2?.id}`}
             src={`/images/fighters/big/${fighter2?.id}.webp`}
             alt={`Imagen de ${fighter2?.name}`}
             decoding="async"
