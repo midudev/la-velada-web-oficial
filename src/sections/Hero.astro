@@ -19,57 +19,93 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
 <section class="relative flex min-h-screen w-full">
   <div
-    class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center duration-75"
+  class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center duration-75"
   >
+</div>
+
+<div class="mask-fade-bottom absolute inset-0 w-full bg-black opacity-10"></div>
+
+<div class="relative flex w-full flex-col items-center p-8 text-center">
+  <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
+    <h3
+    class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 leading-[100%] font-medium"
+    >
+    26 DE <br />JULIO
+  </h3>
+  <figure class="animate-fade-in relative">
+    <img
+    class="relative z-20 h-auto w-64 sm:w-72 md:w-80 lg:w-96"
+    src="/images/logo.png"
+    fetchpriority="high"
+    alt="La Velada del Año V"
+    decoding="async"
+    />
+    <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
+  </figure>
+  
+  <div class="relative z-10">
+    <h3
+    class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-relaxed font-medium tracking-wider uppercase"
+    >
+    <a
+    href="https://maps.app.goo.gl/RVUArf48FwuvqJjD6"
+    rel="noopener noreferrer"
+    target="_blank"
+    class="animate-fade-in animate-dalay-700 z-50 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-115"
+    >
+    Estadio<br />La Cartuja,<br />Sevilla
+  </a>
+</h3>
+<div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
+<a
+href="https://twitch.tv/ibai"
+rel="noopener noreferrer"
+target="_blank"
+class="animate-fade-in animate-delay-700 z-10 mt-4 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-125"
+>
+twitch.tv<br />Ibai
+</a>
+</div>
+<!--slider-->
+<div class="flex h-60 w-full border-b-black border-2 justify-center overflow-hidden">
+  <!-- Left Slider -->
+  <div id="leftSlider" class="w-1/2 h-full flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory">
+    {[...leftRow].reverse().map(({ id, name, versus }) => (
+      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+        <BoxerCard id={id} name={name} class="boxer-left w-full h-full" versus={versus} />
+      </div>
+    ))}
+    {[...leftSecondRow].reverse().map(({ id, name, versus }) => (
+      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+        <BoxerCard id={id} name={name} class="boxer-left w-full h-full" versus={versus} />
+      </div>
+    ))}
   </div>
 
-  <div class="mask-fade-bottom absolute inset-0 w-full bg-black opacity-10"></div>
+  <!-- Center -->
+  <div class="border-4 border-amber-700 flex items-center justify-center">
+    <img src="/images/versus.png" alt="Versus" class="h-12 w-auto">
+  </div>
 
-  <div class="relative flex w-full flex-col items-center p-8 text-center">
-    <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
-      <h3
-        class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 leading-[100%] font-medium"
-      >
-        26 DE <br />JULIO
-      </h3>
-      <figure class="animate-fade-in relative">
-        <img
-          class="relative z-20 h-auto w-64 sm:w-72 md:w-80 lg:w-96"
-          src="/images/logo.png"
-          fetchpriority="high"
-          alt="La Velada del Año V"
-          decoding="async"
-        />
-        <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
-      </figure>
-
-      <div class="relative z-10">
-        <h3
-          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-relaxed font-medium tracking-wider uppercase"
-        >
-          <a
-            href="https://maps.app.goo.gl/RVUArf48FwuvqJjD6"
-            rel="noopener noreferrer"
-            target="_blank"
-            class="animate-fade-in animate-dalay-700 z-50 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-115"
-          >
-            Estadio<br />La Cartuja,<br />Sevilla
-          </a>
-        </h3>
-        <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
-        <a
-          href="https://twitch.tv/ibai"
-          rel="noopener noreferrer"
-          target="_blank"
-          class="animate-fade-in animate-delay-700 z-10 mt-4 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-125"
-        >
-          twitch.tv<br />Ibai
-        </a>
+  <!-- Right Slider -->
+  <div id="rightSlider" class="w-1/2 h-full flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory">
+    {rightRow.map(({ id, name, versus }) => (
+      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+        <BoxerCard id={id} name={name} class="boxer-right w-full h-full" versus={versus} />
       </div>
-    </div>
+    ))}
+    {rightSecondRow.map(({ id, name, versus }) => (
+      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+        <BoxerCard id={id} name={name} class="boxer-right w-full h-full" versus={versus} />
+      </div>
+    ))}
+  </div>
+</div>
+<!--slider-->
+</div>
 
-    <div
-      id="fighter-container"
+<div
+id="fighter-container"
       class="pointer-events-none absolute inset-0 flex flex-col items-center"
     >
       <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
@@ -107,7 +143,8 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       </div>
     </div>
 
-    <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
+    
+    <div class="hidden relative md:flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
       <div class="flex w-full flex-wrap justify-between px-4">
         <div class="flex flex-wrap justify-start gap-4">
           {
@@ -247,5 +284,20 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
       currentFighterId = id
     })
+
+    const leftSlider = document.getElementById('leftSlider');
+    const rightSlider = document.getElementById('rightSlider');
+
+    if (leftSlider && rightSlider) {
+      // Sincronizar el desplazamiento de leftSlider con rightSlider
+      leftSlider.addEventListener('scroll', () => {
+        rightSlider.scrollLeft = leftSlider.scrollLeft;
+      });
+
+      // Sincronizar el desplazamiento de rightSlider con leftSlider
+      rightSlider.addEventListener('scroll', () => {
+        leftSlider.scrollLeft = rightSlider.scrollLeft;
+      });
+    }
   })
 </script>
