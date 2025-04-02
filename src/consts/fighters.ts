@@ -976,6 +976,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'FBjMQogPr-U',
+      thumbnail: '/images/fighters/workoutThumbnails/tomas-thumbnail.webp',
+    }
   },
   {
     // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
