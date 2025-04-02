@@ -226,15 +226,12 @@ id="fighter-container"
 </style>
 
 <script>
-  import { $ } from '@/lib/dom-selector'
-  
   document.addEventListener('astro:page-load', () => {
     const leftSlider = document.getElementById('leftSlider');
     const rightSlider = document.getElementById('rightSlider');
     const prevButton = document.getElementById('prevButton');
     const nextButton = document.getElementById('nextButton');
 
-    // Verificar que los elementos existen
     if (!leftSlider || !rightSlider || !prevButton || !nextButton) {
       console.error('No se encontraron los sliders o botones en el DOM.');
       return;
@@ -246,32 +243,29 @@ id="fighter-container"
       const scrollSliders = (direction: 'next' | 'prev') => {
         const scrollAmount = direction === 'next' ? cardWidth : -cardWidth;
 
-        // Verificar si el slider izquierdo puede desplazarse
         const leftSliderCanScroll =
           (direction === 'next' && leftSlider.scrollLeft + leftSlider.offsetWidth < leftSlider.scrollWidth) ||
           (direction === 'prev' && leftSlider.scrollLeft > 0);
 
-        // Verificar si el slider derecho puede desplazarse
+  
         const rightSliderCanScroll =
           (direction === 'next' && rightSlider.scrollLeft > 0) ||
           (direction === 'prev' && rightSlider.scrollLeft + rightSlider.offsetWidth < rightSlider.scrollWidth);
 
-        // Desplazar el slider izquierdo si puede moverse
         if (leftSliderCanScroll) {
           leftSlider.scrollBy({
             left: scrollAmount,
             behavior: 'smooth',
           });
           rightSlider.scrollBy({
-            left: scrollAmount, // Invertir la dirección
+            left: scrollAmount, 
             behavior: 'smooth',
           });
         }
 
-        // Desplazar el slider derecho si puede moverse
         if (rightSliderCanScroll) {
           rightSlider.scrollBy({
-            left: -scrollAmount, // Invertir la dirección
+            left: -scrollAmount, 
             behavior: 'smooth',
           });
           leftSlider.scrollBy({
@@ -280,11 +274,7 @@ id="fighter-container"
           });
         }
       };
-
-      // Botón "Anterior"
       prevButton.addEventListener('click', () => scrollSliders('prev'));
-
-      // Botón "Siguiente"
       nextButton.addEventListener('click', () => scrollSliders('next'));
     } else {
       console.error('No se pudo calcular el ancho de las tarjetas.');
