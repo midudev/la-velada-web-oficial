@@ -14,7 +14,7 @@ import { combates } from '@/consts/pageTitles'
     <div class="flex w-full flex-col items-center text-center">
       <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-30">
         <h3
-          class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 -skew-3 text-6xl leading-[100%] font-medium [text-shadow:_5px_5px_10px_rgb(0_0_0_/_50%)] tracking-wider brightness-125 transition-all duration-300"
+          class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 -skew-3 text-6xl leading-[100%] font-medium tracking-wider brightness-125 transition-all duration-300 [text-shadow:_5px_5px_10px_rgb(0_0_0_/_50%)]"
         >
           <strong>LISTA DE LOS</strong>
           <br /><strong>COMBATES</strong>
@@ -23,12 +23,12 @@ import { combates } from '@/consts/pageTitles'
 
       <div
         id="combats-container"
-        class="relative top-96 mx-auto mt-10 mb-72 grid max-w-7xl grid-cols-1 gap-4 p-6 md:grid-cols-2 md:gap-8"
+        class="relative top-96 mx-auto mt-10 mb-72 flex max-w-7xl flex-wrap justify-center gap-4 p-6 md:gap-8"
       >
         {
           COMBATS.map(({ id, number, fighters, title }) => (
             <a
-              class="inline-block"
+              class="flex-[0_1_calc(100%)] md:flex-[0_1_calc(50%-1rem)]"
               href={`combates/${id}`}
               title={`Ir al combate ${number} de ${title}`}
             >
