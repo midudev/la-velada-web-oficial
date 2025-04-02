@@ -580,6 +580,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'Uy48X5YxujI',
+      thumbnail: '/images/fighters/workoutThumbnails/viruzz-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/alana-flores/
