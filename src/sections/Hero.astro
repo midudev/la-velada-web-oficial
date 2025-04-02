@@ -227,88 +227,8 @@ id="fighter-container"
 
 <script>
   import { $ } from '@/lib/dom-selector'
-
+  
   document.addEventListener('astro:page-load', () => {
-    const $landing = $('#landing')
-
-    let currentFighterId: string | null = null
-    let hideFighterTimer: ReturnType<typeof setTimeout>
-
-    document.addEventListener('boxer-card-exit', () => {
-      $landing?.classList.remove('hidden')
-
-      if (!currentFighterId) return
-
-      const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
-      const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
-
-      if (heroText && heroImage) {
-        heroText.classList.remove('animate-zoom-int')
-        heroImage.classList.remove('animate-slide-up-fade')
-
-        heroText.classList.add('animate-zoom-out')
-        heroImage.classList.add('animate-fade-out-down')
-
-        hideFighterTimer = setTimeout(() => {
-          heroText.classList.add('hidden')
-          heroImage.classList.add('hidden')
-          currentFighterId = null
-        }, 500)
-      }
-    })
-
-    document.addEventListener('boxer-card-hovered', (event: Event) => {
-      if (currentFighterId) {
-        clearTimeout(hideFighterTimer)
-
-        const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
-        const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
-
-        heroText?.classList.add('hidden')
-        heroImage?.classList.add('hidden')
-        currentFighterId = null
-      }
-
-      const customEvent = event as CustomEvent<{ id: string }>
-      const id = customEvent.detail.id
-
-      const heroText = $(`[data-id="hero-text-${id}"]`)
-      const heroImage = $(`[data-id="hero-image-${id}"]`)
-
-      if (heroText && heroImage) {
-        heroText.classList.remove('animate-zoom-out')
-        heroImage.classList.remove('animate-fade-out-down')
-      }
-
-      // si el luchador que entras es el mismo que ya se muestra
-      // entonces no hacemos nada
-      if (currentFighterId === id) return
-
-      // si ya estamos mostrando un luchador, tenemos que ocultarlo
-      if (currentFighterId) {
-        const currentHeroText = $(`[data-id="hero-text-${currentFighterId}"]`)
-        const currentHeroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
-
-        if (currentHeroText && currentHeroImage) {
-          currentHeroText.classList.add('hidden')
-          currentHeroImage.classList.add('hidden')
-
-          currentHeroText.classList.remove('animate-zoom-in')
-          currentHeroImage.classList.remove('animate-slide-up-fade')
-        }
-      }
-
-      $landing?.classList.add('hidden')
-
-      // mostramos el luchador que quiere ver el usuario
-      heroText?.classList.remove('hidden')
-      heroText?.classList.add('animate-zoom-in')
-      heroImage?.classList.remove('hidden')
-      heroImage?.classList.add('animate-slide-up-fade')
-
-      currentFighterId = id
-    })
-
     const leftSlider = document.getElementById('leftSlider');
     const rightSlider = document.getElementById('rightSlider');
     const prevButton = document.getElementById('prevButton');
