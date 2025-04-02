@@ -29,14 +29,9 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 
       {
         opponent && (
-          <div class="flex w-full items-center justify-center">
+          <div class="flex w-full items-center gap-4 justify-center">
             <img src="/images/versus.png" alt="Versus" class="h-12 w-auto" />
-            <a
-              href={`/luchador/${opponent.id}`}
-              class="group transform rounded-lg bg-white/10 px-4 py-2 transition-all hover:scale-105 hover:bg-white/20"
-            >
-              <BoxerCard id={opponent.id} name={opponent.name} class="group-hover:scale-110" />
-            </a>
+            <BoxerCard id={opponent.id} name={opponent.name} class="group-hover:scale-110" />
           </div>
         )
       }
@@ -95,7 +90,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
           </div>
 
           <!-- Birth Date -->
-          <div class="animate-fade-in text-center">
+          <div class="animate-fade-in-up animate-delay-400 text-center">
             <div class="text-sm text-gray-400">Fecha de nacimiento</div>
             <div class="text-lg">{birthDate}</div>
           </div>
@@ -107,14 +102,15 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
   <section>
     <div class="flex flex-wrap justify-center gap-3 space-x-2">
       {
-        (fighter.socials || [])?.map(({ url, image, name, label }) => (
+        (fighter.socials || [])?.map(({ url, image, name, label, followers }) => (
           <a
             href={url}
             target="_blank"
             aria-label={label ?? name}
-            class="flex items-center justify-center transition hover:scale-125"
+            class="hover:to-theme-turquoise/70 hover:from-theme-tickle-me-pink/70 from-theme-turquoise/70 to-theme-tickle-me-pink/70 flex w-20 flex-col items-center justify-center bg-gradient-to-b transition duration-500 hover:scale-125"
           >
             <image.logo />
+            <span class="text-white lowercase">{followers}</span>
           </a>
         ))
       }
