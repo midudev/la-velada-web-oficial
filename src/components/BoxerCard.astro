@@ -4,7 +4,7 @@ const { id, name, versus, class: extraClass } = Astro.props
 interface Props {
   id: string
   name: string
-  versus: string
+  versus?: string
   class: string
 }
 ---
@@ -141,7 +141,9 @@ interface Props {
         // Quitar la clase también de su par si existe
         const versus = singleBoxerCard.getAttribute('data-versus')
         if (versus) {
-          document.querySelector(`[data-id=${versus}]`)?.classList.remove('grayscale-100', 'opacity-40')
+          document
+            .querySelector(`[data-id=${versus}]`)
+            ?.classList.remove('grayscale-100', 'opacity-40')
         }
       })
 
