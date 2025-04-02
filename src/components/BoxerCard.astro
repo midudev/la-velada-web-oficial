@@ -243,7 +243,6 @@ interface Props {
     
     // Solo manejar error - no hacer nada si carga correctamente
     spriteSheet.onerror = () => {
-      // Usar selector específico para mejor rendimiento
       document.querySelectorAll<HTMLElement>(CONFIG.selectors.sprite).forEach(sprite => {
         const id = sprite.dataset.fighter;
         if (!id) return;
@@ -261,14 +260,12 @@ interface Props {
     spriteSheet.src = CONFIG.paths.spriteSheet;
   }
 
-  // Actualizar estilos de tarjetas (función optimizada)
+  // Actualizar estilos de tarjetas en batch
   function updateCardStyles(cards: HTMLElement[], currentId: FighterId | null, opponentId?: FighterId): void {
-    // Batch actualizaciones
     window.requestAnimationFrame(() => {
       cards.forEach(card => {
         const cardId = card.dataset.id;
         const isRelevant = !currentId || cardId === currentId || cardId === opponentId;
-        // Toggle optimizado
         card.classList.toggle(CONFIG.classes.grayscale, !isRelevant);
         card.classList.toggle(CONFIG.classes.opacity, !isRelevant);
       });
@@ -279,23 +276,20 @@ interface Props {
   document.addEventListener('astro:page-load', () => {
     initSpriteFallback();
     
-    // Una sola consulta DOM para todas las tarjetas
     const allCards = Array.from(document.querySelectorAll<HTMLElement>(CONFIG.selectors.card));
-    
-    // Manejadores de eventos optimizados
+
     allCards.forEach(card => {
       const id = card.dataset.id as FighterId;
       if (!id) return;
-      
-      const opponentId = versusMap.get(id);
-      
-      // Handlers optimizados con opciones passive donde sea posible
+            
       const handleEnter = () => {
         state.hoverTimeoutId && clearTimeout(state.hoverTimeoutId);
         state.hoverTimeoutId = null;
-        
-        // Dispatch event solo si necesario
-        document.dispatchEvent(new CustomEvent('boxer-card-hovered', { detail: { id } }));
+
+        // versusMap
+        const opponentId = versusMap.get(id);
+                
+        document.dispatchEvent(new CustomEvent('boxer-card-hovered', { detail: { id, versus: opponentId } }));
         updateCardStyles(allCards, id, opponentId);
         createParticles(card);
       };
