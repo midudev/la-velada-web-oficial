@@ -67,9 +67,21 @@ twitch.tv<br />Ibai
 </a>
 </div>
 <!--slider-->
-<div class="flex h-60 w-full border-b-black border-2 justify-center overflow-hidden">
+<div class="md:hidden">
+<div class="flex h-60 w-full justify-center overflow-hidden relative">
+  <!-- Botón Anterior -->
+  <button
+    id="prevButton"
+    class="absolute left-0 z-10 h-full px-4 bg-black/20 text-white hover:bg-black/70"
+  >
+    &#8249;
+  </button>
+
   <!-- Left Slider -->
-  <div id="leftSlider" class="w-1/2 h-full flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory">
+  <div
+    id="leftSlider"
+    class="w-1/2 h-full flex gap-4 overflow-hidden snap-x snap-mandatory"
+  >
     {[...leftRow].reverse().map(({ id, name, versus }) => (
       <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
         <BoxerCard id={id} name={name} class="boxer-left w-full h-full" versus={versus} />
@@ -83,12 +95,15 @@ twitch.tv<br />Ibai
   </div>
 
   <!-- Center -->
-  <div class="border-4 border-amber-700 flex items-center justify-center">
+  <div class="flex items-center justify-center">
     <img src="/images/versus.png" alt="Versus" class="h-12 w-auto">
   </div>
 
   <!-- Right Slider -->
-  <div id="rightSlider" class="w-1/2 h-full flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory">
+  <div
+    id="rightSlider"
+    class="w-1/2 h-full flex gap-4 overflow-hidden snap-x snap-mandatory"
+  >
     {rightRow.map(({ id, name, versus }) => (
       <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
         <BoxerCard id={id} name={name} class="boxer-right w-full h-full" versus={versus} />
@@ -100,6 +115,14 @@ twitch.tv<br />Ibai
       </div>
     ))}
   </div>
+
+  <!-- Botón Siguiente -->
+  <button
+    id="nextButton"
+    class="absolute right-0 z-10 h-full px-4 bg-black/20 text-white hover:bg-black/70"
+  >
+    &#8250;
+  </button>
 </div>
 <!--slider-->
 </div>
@@ -191,6 +214,7 @@ id="fighter-container"
           }
         </div>
       </div>
+    </div>
     </div>
   </div>
 </section>
@@ -287,17 +311,63 @@ id="fighter-container"
 
     const leftSlider = document.getElementById('leftSlider');
     const rightSlider = document.getElementById('rightSlider');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
 
-    if (leftSlider && rightSlider) {
-      // Sincronizar el desplazamiento de leftSlider con rightSlider
-      leftSlider.addEventListener('scroll', () => {
-        rightSlider.scrollLeft = leftSlider.scrollLeft;
-      });
+    // Verificar que los elementos existen
+    if (!leftSlider || !rightSlider || !prevButton || !nextButton) {
+      console.error('No se encontraron los sliders o botones en el DOM.');
+      return;
+    }
 
-      // Sincronizar el desplazamiento de rightSlider con leftSlider
-      rightSlider.addEventListener('scroll', () => {
-        leftSlider.scrollLeft = rightSlider.scrollLeft;
-      });
+    const cardWidth = (leftSlider.querySelector('.snap-center') as HTMLElement)?.offsetWidth || 0;
+
+    if (cardWidth > 0) {
+      const scrollSliders = (direction: 'next' | 'prev') => {
+        const scrollAmount = direction === 'next' ? cardWidth : -cardWidth;
+
+        // Verificar si el slider izquierdo puede desplazarse
+        const leftSliderCanScroll =
+          (direction === 'next' && leftSlider.scrollLeft + leftSlider.offsetWidth < leftSlider.scrollWidth) ||
+          (direction === 'prev' && leftSlider.scrollLeft > 0);
+
+        // Verificar si el slider derecho puede desplazarse
+        const rightSliderCanScroll =
+          (direction === 'next' && rightSlider.scrollLeft > 0) ||
+          (direction === 'prev' && rightSlider.scrollLeft + rightSlider.offsetWidth < rightSlider.scrollWidth);
+
+        // Desplazar el slider izquierdo si puede moverse
+        if (leftSliderCanScroll) {
+          leftSlider.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth',
+          });
+          rightSlider.scrollBy({
+            left: scrollAmount, // Invertir la dirección
+            behavior: 'smooth',
+          });
+        }
+
+        // Desplazar el slider derecho si puede moverse
+        if (rightSliderCanScroll) {
+          rightSlider.scrollBy({
+            left: -scrollAmount, // Invertir la dirección
+            behavior: 'smooth',
+          });
+          leftSlider.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth',
+          });
+        }
+      };
+
+      // Botón "Anterior"
+      prevButton.addEventListener('click', () => scrollSliders('prev'));
+
+      // Botón "Siguiente"
+      nextButton.addEventListener('click', () => scrollSliders('next'));
+    } else {
+      console.error('No se pudo calcular el ancho de las tarjetas.');
     }
   })
 </script>
