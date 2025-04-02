@@ -1,52 +1,50 @@
 ---
-import { SPONSORS } from "@/consts/sponsors"
+import { SPONSORS } from '@/consts/sponsors'
+import SectionTitle from './SectionTitle.astro'
 
 const firstRow = SPONSORS.slice(0, 5)
 const secondRow = SPONSORS.slice(5)
 ---
 
 <section id="sponsors" class="mx-auto max-w-xl py-36">
-  <h2 class="mb-4 text-4xl font-light text-center text-dark-magenta lowercase">
-    <div class="block sm:inline">
-      <strong class="font-bold">Patrocinadores DEL EVENTO</strong>
+  <SectionTitle title="Patrocinadores DEL EVENTO" />
+
+  <div
+    class="flex w-full flex-col-reverse items-center justify-center gap-8 py-5 md:flex-col md:gap-5"
+  >
+    <div
+      class="flex w-1/2 max-w-md flex-wrap justify-evenly gap-8 md:w-[100%] md:flex-row md:justify-around md:gap-5"
+    >
+      {
+        firstRow.map(({ url, image, name, label }) => (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label ?? name}
+            class="text-dark-magenta flex size-14 items-center justify-center transition hover:scale-125"
+          >
+            <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
+          </a>
+        ))
+      }
     </div>
-  </h2>
-  <div class="w-full flex justify-center items-center flex-col-reverse gap-8 md:flex-col md:gap-5 py-5">
-    <div class="w-1/2 flex flex-wrap justify-evenly gap-8 max-w-md md:flex-row md:w-[100%] md:justify-around md:gap-5">
-    {
-      firstRow.map(({ url, image, name, label }) => (
-        <a
-          href={url}
-          target="_blank"
-          aria-label={label ?? name}
-          class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
-        >
-          <image.logo
-            width={image.width}
-            height={image.width}
-            class="h-14 w-auto"
-          />
-        </a>
-      ))
-    }
+    <div
+      class="flex w-1/2 max-w-md flex-wrap justify-evenly gap-8 md:w-[100%] md:flex-row md:justify-around md:gap-5"
+    >
+      {
+        secondRow.map(({ url, image, name, label }) => (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label ?? name}
+            class="text-dark-magenta flex size-14 items-center justify-center transition hover:scale-125"
+          >
+            <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
+          </a>
+        ))
+      }
+    </div>
   </div>
-  <div class="w-1/2 flex flex-wrap justify-evenly gap-8 max-w-md md:flex-row md:w-[100%] md:justify-around md:gap-5">
-    {
-      secondRow.map(({ url, image, name, label }) => (
-        <a
-          href={url}
-          target="_blank"
-          aria-label={label ?? name}
-          class="size-14 hover:scale-125 transition text-dark-magenta flex justify-center items-center"
-        >
-          <image.logo
-            width={image.width}
-            height={image.width}
-            class="h-14 w-auto"
-          />
-        </a>
-      ))
-    }
-  </div>
-</div>
 </section>

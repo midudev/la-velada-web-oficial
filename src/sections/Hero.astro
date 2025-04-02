@@ -1,6 +1,6 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
-import BoxerCard from './BoxerCard.astro'
+import BoxerCard from '@/components/BoxerCard.astro'
 
 const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
@@ -43,15 +43,16 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
       </figure>
 
-      <div class="relative z-50">
+      <div class="relative z-10">
         <h3
           class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-relaxed font-medium tracking-wider uppercase"
         >
           <a
-          href="https://maps.app.goo.gl/RVUArf48FwuvqJjD6"
-          rel="noopener noreferrer"
-          target="_blank"
-          class="animate-fade-in animate-dalay-700 z-50 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-115">
+            href="https://maps.app.goo.gl/RVUArf48FwuvqJjD6"
+            rel="noopener noreferrer"
+            target="_blank"
+            class="animate-fade-in animate-dalay-700 z-50 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-115"
+          >
             Estadio<br />La Cartuja,<br />Sevilla
           </a>
         </h3>
@@ -60,7 +61,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
           target="_blank"
-          class="animate-fade-in animate-delay-700 z-50 mt-4 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-125"
+          class="animate-fade-in animate-delay-700 z-10 mt-4 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-125"
         >
           twitch.tv<br />Ibai
         </a>
@@ -110,11 +111,11 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       <div class="flex w-full flex-wrap justify-between px-4">
         <div class="flex flex-wrap justify-start gap-4">
           {
-            leftRow.map(({ id, name }, index) => (
+            leftRow.map(({ id, name, versus }, index) => (
               <div
                 class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}
               >
-                <BoxerCard id={id} name={name} class="boxer-left" />
+                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
               </div>
             ))
           }
@@ -122,11 +123,11 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
         <div class="flex flex-wrap justify-end gap-4">
           {
-            rightRow.map(({ id, name }, index) => (
+            rightRow.map(({ id, name, versus }, index) => (
               <div
                 class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}
               >
-                <BoxerCard id={id} name={name} class="boxer-right" />
+                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
               </div>
             ))
           }
@@ -136,18 +137,18 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       <div class="flex flex-wrap justify-between gap-4">
         <div class="flex flex-wrap justify-start gap-4">
           {
-            leftSecondRow.map(({ id, name }, index) => (
+            leftSecondRow.map(({ id, name, versus }, index) => (
               <div class={`animate-fade-in-up animate-delay-${animationDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-left" />
+                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
               </div>
             ))
           }
         </div>
         <div class="flex flex-wrap justify-end gap-4">
           {
-            rightSecondRow.map(({ id, name }, index) => (
+            rightSecondRow.map(({ id, name, versus }, index) => (
               <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-right" />
+                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
               </div>
             ))
           }
@@ -164,19 +165,21 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 </style>
 
 <script>
+  import { $ } from '@/lib/dom-selector'
+
   document.addEventListener('astro:page-load', () => {
-    const $landing = document.querySelector('#landing')
+    const $landing = $('#landing')
 
     let currentFighterId: string | null = null
-    let hideFighterTimer: ReturnType<typeof setTimeout>;
+    let hideFighterTimer: ReturnType<typeof setTimeout>
 
     document.addEventListener('boxer-card-exit', () => {
       $landing?.classList.remove('hidden')
 
       if (!currentFighterId) return
 
-      const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-      const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+      const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+      const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
 
       if (heroText && heroImage) {
         heroText.classList.remove('animate-zoom-int')
@@ -196,8 +199,10 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     document.addEventListener('boxer-card-hovered', (event: Event) => {
       if (currentFighterId) {
         clearTimeout(hideFighterTimer)
-        const heroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-        const heroImage = document.querySelector(`[data-id="hero-image-${currentFighterId}"]`)
+
+        const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+        const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+
         heroText?.classList.add('hidden')
         heroImage?.classList.add('hidden')
         currentFighterId = null
@@ -206,8 +211,8 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       const customEvent = event as CustomEvent<{ id: string }>
       const id = customEvent.detail.id
 
-      const heroText = document.querySelector(`[data-id="hero-text-${id}"]`)
-      const heroImage = document.querySelector(`[data-id="hero-image-${id}"]`)
+      const heroText = $(`[data-id="hero-text-${id}"]`)
+      const heroImage = $(`[data-id="hero-image-${id}"]`)
 
       if (heroText && heroImage) {
         heroText.classList.remove('animate-zoom-out')
@@ -220,14 +225,13 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
       // si ya estamos mostrando un luchador, tenemos que ocultarlo
       if (currentFighterId) {
-        const currentHeroText = document.querySelector(`[data-id="hero-text-${currentFighterId}"]`)
-        const currentHeroImage = document.querySelector(
-          `[data-id="hero-image-${currentFighterId}"]`
-        )
+        const currentHeroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+        const currentHeroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
 
         if (currentHeroText && currentHeroImage) {
           currentHeroText.classList.add('hidden')
           currentHeroImage.classList.add('hidden')
+
           currentHeroText.classList.remove('animate-zoom-in')
           currentHeroImage.classList.remove('animate-slide-up-fade')
         }
