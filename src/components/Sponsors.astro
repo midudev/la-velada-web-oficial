@@ -1,50 +1,124 @@
 ---
 import { SPONSORS } from '@/consts/sponsors'
 import SectionTitle from './SectionTitle.astro'
-
 const firstRow = SPONSORS.slice(0, 5)
 const secondRow = SPONSORS.slice(5)
 ---
 
-<section id="sponsors" class="mx-auto max-w-xl py-36">
+<section id="sponsors" class="mx-auto w-full max-w-[700px] py-36">
   <SectionTitle title="Patrocinadores DEL EVENTO" />
 
-  <div
-    class="flex w-full flex-col-reverse items-center justify-center gap-8 py-5 md:flex-col md:gap-5"
-  >
+  <div class="mt-10 flex w-full flex-col-reverse gap-2 md:gap-5">
     <div
-      class="flex w-1/2 max-w-md flex-wrap justify-evenly gap-8 md:w-[100%] md:flex-row md:justify-around md:gap-5"
+      class="sponsors_slider grid max-h-fit min-h-[100px] w-full grid-cols-2 items-center justify-items-center md:grid-cols-5"
     >
       {
-        firstRow.map(({ url, image, name, label }) => (
+        firstRow.map(({ url, image, name, label }, index) => (
           <a
             href={url}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label ?? name}
-            class="text-dark-magenta flex size-14 items-center justify-center transition hover:scale-125"
+            class={`sponsor first-row text-dark-magenta flex size-20 items-center justify-center transition hover:scale-125`}
+            style={`--item:${index + 1}`}
+            data-direction-slider="right"
           >
-            <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
+            <image.logo width={image.width} height={image.height} class="h-auto w-auto" />
           </a>
         ))
       }
     </div>
     <div
-      class="flex w-1/2 max-w-md flex-wrap justify-evenly gap-8 md:w-[100%] md:flex-row md:justify-around md:gap-5"
+      class="sponsors_slider grid max-h-fit min-h-[100px] w-full grid-cols-2 items-center justify-items-center md:grid-cols-6"
     >
       {
-        secondRow.map(({ url, image, name, label }) => (
+        secondRow.map(({ url, image, name, label }, index) => (
           <a
             href={url}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label ?? name}
-            class="text-dark-magenta flex size-14 items-center justify-center transition hover:scale-125"
+            class={`sponsor second-row text-dark-magenta flex size-20 items-center justify-center transition hover:scale-125`}
+            style={`--item:${index + 1}`}
+            data-direction-slider="left"
           >
-            <image.logo width={image.width} height={image.width} class="h-14 w-auto" />
+            <image.logo width={image.width} height={image.height} class="h-auto w-auto" />
           </a>
         ))
       }
     </div>
   </div>
 </section>
+<style>
+  .sponsors_slider {
+    --animation-duration-sponsors: 20s;
+    --items-first-row: 5;
+    --items-second-row: 6;
+    --items-size: 80px;
+    position: relative;
+    overflow: hidden;
+    mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+  }
+  /* animation-delay: calc( (DuracionAni / CantidadElem) * (CantidadElem - PosElem) * -1)*/
+  .sponsor {
+    position: absolute;
+    animation-duration: var(--animation-duration-sponsors);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    &.first-row {
+      animation-delay: calc(
+        var(--animation-duration-sponsors) / var(--items-first-row) *
+          (var(--items-first-row) - var(--item)) * -1
+      );
+      &[data-direction-slider='left'] {
+        left: max(calc(var(--items-size) * var(--items-first-row)), 100%);
+        animation-name: scrollLeft;
+      }
+      &[data-direction-slider='right'] {
+        right: max(
+          calc(var(--items-size) * var(--items-first-row)),
+          calc(100% + var(--items-size))
+        );
+        animation-name: scrollRight;
+      }
+    }
+    &.second-row {
+      animation-delay: calc(
+        var(--animation-duration-sponsors) / var(--items-second-row) *
+          (var(--items-second-row) - var(--item)) * -1
+      );
+      &[data-direction-slider='left'] {
+        left: max(calc(var(--items-size) * var(--items-second-row)), 100%);
+        animation-name: scrollLeft;
+      }
+      &[data-direction-slider='right'] {
+        right: max(
+          calc(var(--items-size) * var(--items-second-row)),
+          calc(100% + var(--items-size))
+        );
+        animation-name: scrollRight;
+      }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sponsors_slider {
+      mask: none;
+      overflow: auto;
+      position: static;
+    }
+    .sponsor {
+      animation: none;
+      position: static;
+    }
+  }
+  @keyframes scrollLeft {
+    to {
+      left: -100%;
+    }
+  }
+  @keyframes scrollRight {
+    to {
+      right: -100%;
+    }
+  }
+</style>
