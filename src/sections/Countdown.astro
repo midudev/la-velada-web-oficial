@@ -62,9 +62,8 @@ const { timestamp } = Astro.props
 </section>
 
 <script>
-  import createCountdown from '@/lib/countdown'
+  import createCountdown, { type TimeParts } from '@/lib/countdown'
   import { $ } from '@/lib/dom-selector'
-  import { type TimeParts } from '@/lib/countdown'
 
   function initCountdown() {
     const $countdown = $('[data-date]')
@@ -186,7 +185,7 @@ const { timestamp } = Astro.props
     }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('astro:page-load', () => {
     const countdown = initCountdown()
     countdown && countdown.start()
   })
