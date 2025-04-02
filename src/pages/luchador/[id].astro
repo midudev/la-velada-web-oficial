@@ -4,6 +4,7 @@ import BoxerClip from '@/components/BoxerClip.astro'
 import BoxerWorkout from '@/components/BoxerWorkout.astro'
 import { FIGHTERS } from '@/consts/fighters'
 import { fixedTitle } from '@/consts/pageTitles'
+import Layout from '@/layouts/Layout.astro'
 
 const { id } = Astro.params
 
@@ -30,7 +31,12 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
         opponent && (
           <div class="flex w-full items-center justify-center gap-4">
             <img src="/images/versus.png" alt="Versus" class="h-12 w-auto" />
-            <BoxerCard id={opponent.id} name={opponent.name} class="group-hover:scale-110" />
+            <BoxerCard
+              id={opponent.id}
+              versus={fighter.id}
+              name={opponent.name}
+              class="group-hover:scale-110"
+            />
           </div>
         )
       }
@@ -95,7 +101,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
           </div>
 
           <!-- Birth Date -->
-          <div class="animate-fade-in-up animate-delay-400 text-center">
+          <div class="animate-fade-in-up p-4 text-center">
             <div class="text-sm text-gray-400">Fecha de nacimiento</div>
             <div class="text-lg">{birthDate}</div>
           </div>
