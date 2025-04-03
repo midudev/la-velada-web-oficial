@@ -64,11 +64,13 @@ const fighter2Country = countries.find(c => c.id === fighter2?.country)
 
     <div class="grid grid-cols-2 items-center justify-items-center gap-4 py-4">
       <img
+        transition:name={`text-${fighter1?.id}`}
         src={`/images/fighters/text/${fighter1?.id}.webp`}
         alt={`${fighter2Country?.name ?? 'Desconocido'}`}
         class="h-auto max-h-12 w-auto max-w-[70%]"
       />
       <img
+        transition:name={`text-${fighter2?.id}`}
         src={`/images/fighters/text/${fighter2?.id}.webp`}
         alt={`${fighter2Country?.name ?? 'Desconocido'}`}
         class="h-auto max-h-12 w-auto max-w-[70%]"
