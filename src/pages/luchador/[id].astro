@@ -2,7 +2,9 @@
 import { FIGHTERS } from '@/consts/fighters'
 import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
+import BoxerWorkout from '@/components/BoxerWorkout.astro'
 import BoxerCard from '@/components/BoxerCard.astro'
+import BoxerClip from '@/components/BoxerClip.astro'
 import LiteYouTube from '@/components/LiteYouTube.astro'
 import { COMBATS } from '@/consts/combats'
 
@@ -111,20 +113,19 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
         </div>
       </div>
     </div>
-  </section>
-
-  <section>
-    <div class="flex flex-wrap justify-center gap-3 space-x-2">
+    
+    <!-- Redes sociales de luchador -->
+    <div class="relative xl:bg-gradient-to-t from-[#f19fca] from-30% to-theme-tickle-me-pink/0 py-5 flex flex-wrap justify-center gap-3 text-white lowercase">
       {
         (fighter.socials || [])?.map(({ url, image, name, label, followers }) => (
           <a
             href={url}
             target="_blank"
             aria-label={label ?? name}
-            class="hover:to-theme-turquoise/70 hover:from-theme-tickle-me-pink/70 from-theme-turquoise/70 to-theme-tickle-me-pink/70 flex w-20 flex-col items-center justify-center bg-gradient-to-b transition duration-500 hover:scale-125"
+            class="w-20 bg-gradient-to-b hover:to-theme-turquoise/70 hover:from-theme-tickle-me-pink/70 from-theme-raisin-black/50 to-theme-raisin-black/0 backdrop-blur-sm flex xl:-translate-y-16 py-3 px-2 flex-col items-center justify-center transition duration-500 hover:scale-125"
           >
             <image.logo />
-            <span class="text-white lowercase">{followers}</span>
+            <span>{followers}</span>
           </a>
         ))
       }
