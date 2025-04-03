@@ -8,7 +8,7 @@ export const COMBATS: Combat[] = [
     title: "Peereira7 vs Rivaldios",
     video: "",
     faceOff: {
-      videoID: '',
+      videoID: 'OjOItlQQHNM',
       thumbnail: '/images/fighters/faceOffThumbnails/peereira-vs-rivaldios-thumbnail.webp'
     }
   },
@@ -19,7 +19,7 @@ export const COMBATS: Combat[] = [
     title: "Perxitaa vs Gaspi",
     video:"",
     faceOff: {
-      videoID: '',
+      videoID: 'aOKOUIx8mPU',
       thumbnail: '/images/fighters/faceOffThumbnails/perxitaa-vs-gaspi-thumbnail.webp'
     }
   },
@@ -30,7 +30,7 @@ export const COMBATS: Combat[] = [
     title: "Abby vs Roro",
     video: "",
     faceOff: {
-      videoID: '',
+      videoID: '_A0QFge7TlI',
       thumbnail: '/images/fighters/faceOffThumbnails/abby-vs-roro-thumbnail.webp'
     }
   },
@@ -41,7 +41,7 @@ export const COMBATS: Combat[] = [
     title: "Andoni vs Carlos Belcast",
     video: "",
     faceOff: {
-      videoID: '',
+      videoID: 'NbaFxQiuFek',
       thumbnail: '/images/fighters/faceOffThumbnails/andoni-vs-carlos-thumbnail.webp'
     }
   },
@@ -63,7 +63,7 @@ export const COMBATS: Combat[] = [
     title: "Viruzz vs Tomas Mazza",
     video: "",
     faceOff: {
-      videoID: '',
+      videoID: 'yhs5HYCLftg',
       thumbnail: '/images/fighters/faceOffThumbnails/viruzz-vs-tomas-thumbnail.webp'
     }
   },
@@ -74,7 +74,7 @@ export const COMBATS: Combat[] = [
     title: "The Grefg vs Westcol",
     video: "",
     faceOff: {
-      videoID: '',
+      videoID: 'cfpvro5tD7g',
       thumbnail: '/images/fighters/faceOffThumbnails/grefg-vs-westcol-thumbnail.webp'
     }
   }
