@@ -2,10 +2,9 @@
 import { FIGHTERS } from '@/consts/fighters'
 import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
-import BoxerWorkout from '@/components/BoxerWorkout.astro'
 import BoxerCard from '@/components/BoxerCard.astro'
-import BoxerClip from '@/components/BoxerClip.astro'
 import LiteYouTube from '@/components/LiteYouTube.astro'
+import { COMBATS } from '@/consts/combats'
 
 const { id } = Astro.params
 
@@ -18,6 +17,7 @@ const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   day: 'numeric',
 })
 
+const { faceOff } = COMBATS.find(combat => combat.fighters.includes(fighter.id))!;
 const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 ---
 
@@ -131,8 +131,15 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
     </div>
   </section>
 
-  <section>
-    {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
+  <!-- Video de cara a cara -->
+  <section class="max-w-6xl mx-auto my-36 px-2 lg:px-10">
+    <div class="text-dark-magenta text-center">
+      <h3 class="text-4xl font-light uppercase mb-5">Cara a cara</h3>
+      <p class="text-2xl lowercase">Revive el momento del cara a cara antes del gran combate. ¿Quién dominará el ring?</p>
+    </div>
+    <div class="mt-10 pt-12">
+      <LiteYouTube videoId={faceOff.videoID} backgroundImage={faceOff.thumbnail} />
+    </div>
   </section>
 </Layout>
 

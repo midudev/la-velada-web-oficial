@@ -4,4 +4,8 @@ export interface Combat {
 	fighters: string[] // id de fighters
 	title: string
   video: string
+  faceOff: {
+    videoID: string
+    thumbnail: string
+  }
 }
