@@ -102,7 +102,12 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
         <!-- Oponente -->
         <div class="xl:animate-fade-in-left animate-delay-100 col-span-4 md:col-span-7 xl:col-span-4 row-span-2 md:row-span-1 relative pt-20 md:pt-0 xl:pt-20 flex flex-1 items-center justify-end md:justify-center xl:justify-start gap-4 text-white text-center">
           <img src="/images/versus.png" alt="Versus" class="w-auto h-10 md:order-last xl:order-first object-contain" />
-          <BoxerCard id={opponent!.id} name={opponent!.name} class="min-w-20 group-hover:scale-110" />
+          <BoxerCard 
+            id={opponent!.id} 
+            name={opponent!.name}
+            versus={fighter.versus}
+            class="min-w-20 group-hover:scale-110"
+          />
         </div>
       </div>
     </div>
