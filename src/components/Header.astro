@@ -1,92 +1,48 @@
 ---
-const { pathname } = Astro.url;
+import NavLink from './NavLink.astro'
+import { links } from '../consts/links'
+
+const { pathname } = Astro.url
 
 // Lista de rutas donde NO debe aparecer el logo
-const hideLogoRoutes = ["/"];
-const shouldShowLogo = !hideLogoRoutes.includes(pathname);
-
-// Comprueba si la ruta actual está activa
-const isActive = (path: string) => pathname === path;
+const hideLogoRoutes = ['/']
+const shouldShowLogo = !hideLogoRoutes.includes(pathname)
 ---
 
-<header class="fixed flex items-center top-0 h-20 w-full z-50 text-white mx-auto">
+<header
+  class="fixed top-0 z-50 mx-auto flex h-20 w-full items-center rounded-t-none rounded-b-md text-white"
+>
   <nav
     class:list={[
-      shouldShowLogo ? "grid-cols-3" : "grid-cols-2",
-      "grid items-center px-6 text-sm font-medium justify-between max-w-6xl w-full mx-auto",
+      shouldShowLogo ? 'grid-cols-3' : 'grid-cols-2',
+      'mx-auto grid w-full max-w-6xl items-center justify-between px-6 text-sm font-medium',
     ]}
   >
-    <div class="hidden md:flex flex-row gap-8 justify-start">
+    <div class="hidden flex-row justify-start gap-8 md:flex">
       {/* Enlace con animación de subrayado dividido en dos colores */}
-      <a
-        href="/la-porra"
-        class="group relative inline-block tracking-wider py-1 leading-relaxed"
-      >
-        <span class="text-theme-seashell">HAZ TU PORRA</span>
-        {/* Contenedor del subrayado con overflow hidden para la animación */}
-        <div class="relative mt-1 h-[2px] w-full overflow-hidden">
-          {/* Línea rosa que se anima desde la izquierda */}
-          <div 
-            class:list={[
-              "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-250 ease-out",
-              isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-          {/* Línea turquesa que se anima desde la derecha */}
-          <div 
-            class:list={[
-              "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-250 ease-out",
-              isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-        </div>
-      </a>
-      {/* Segundo enlace con la misma animación */}
-      <a
-        href="/combates"
-        class="group relative inline-block tracking-wider py-1 leading-relaxed"
-      >
-        <span class="text-theme-seashell">VER COMBATES</span>
-        {/* Contenedor del subrayado con overflow hidden para la animación */}
-        <div class="relative mt-1 h-[2px] w-full overflow-hidden">
-          {/* Línea rosa que se anima desde la izquierda */}
-          <div 
-            class:list={[
-              "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out",
-              isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-          {/* Línea turquesa que se anima desde la derecha */}
-          <div 
-            class:list={[
-              "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out",
-              isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
-            ]}
-          ></div>
-        </div>
-      </a>
+      {links.map((link) => <NavLink href={link.href} text={link.text} />)}
     </div>
 
-    {shouldShowLogo && (
-      <a
-        href="/"
-        class="mx-auto hover:scale-110 cursor-pointer duration-500 relative">
-        <img
-          class="w-10 h-auto"
-          src="/favicon.svg"
-          fetchpriority="high"
-          alt="La Velada del Año V"
-          decoding="async"
-        />
-      </a>
-    )}
+    {
+      shouldShowLogo && (
+        <a href="/" class="relative mx-auto cursor-pointer duration-500 hover:scale-110">
+          <img
+            class="h-auto w-10"
+            src="/favicon.svg"
+            fetchpriority="high"
+            alt="La Velada del Año V"
+            decoding="async"
+          />
+        </a>
+      )
+    }
 
-    <div class="hidden md:flex flex-col items-end">
+    <div class="hidden flex-col items-end md:flex">
       <span
-        class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative tracking-wider py-1 leading-relaxed"
+        class="text-theme-seashell relative inline-block cursor-not-allowed py-1 leading-relaxed tracking-wider opacity-90"
         >COMPRA LAS ENTRADAS
         <span
-          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center tracking-wide leading-normal"
+          class="absolute inset-0 top-4 mt-1 text-center text-[10px] leading-normal tracking-wide text-yellow-500"
           >PRÓXIMAMENTE</span
         >
       </span>
@@ -100,7 +56,6 @@ const isActive = (path: string) => pathname === path;
     animation: header-blur-scroll 0.3s linear both;
     animation-timeline: scroll();
     animation-range: 0 250px;
-    border-bottom: 1px solid transparent;
   }
 
   @keyframes header-blur-scroll {
@@ -113,7 +68,6 @@ const isActive = (path: string) => pathname === path;
       backdrop-filter: blur(10px);
       background: rgba(0, 0, 0, 0.5);
       padding-bottom: var(--spacing-6);
-      border-bottom-color: black;
     }
   }
 </style>
