@@ -8,7 +8,7 @@
 [![Issues][issues-shield]][issues-url]
 
 <a href="https://github.com/midudev/la-velada-web-oficial">
-  <img width="300px" src="https://cdn.lavelada.dev/drawn-x-logo.webp" alt="Logo" width="800" />
+  <img width="300px" src="" alt="Logo" width="800" />
 </a>
 
 ## Web oficial de La Velada V
@@ -40,8 +40,7 @@ La Velada V es una competición de boxeo que enfrenta a streamers, creadores de 
 
 ### Capturas de pantalla de la web de La Velada V
 
-![Captura de pantalla en ordenador](https://github.com/midudev/la-velada-web-oficial/assets/1561955/b4080e89-d6e5-4fad-8303-b91e1142cf65)
-![Captura de pantalla en móvil](https://github.com/midudev/la-velada-web-oficial/assets/1561955/ded00bc0-6b82-4644-a079-5b33902f7eff)
+![Captura de pantalla]()
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
