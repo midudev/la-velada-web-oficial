@@ -2,9 +2,7 @@
 import { FIGHTERS } from '@/consts/fighters'
 import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
-import BoxerWorkout from '@/components/BoxerWorkout.astro'
 import BoxerCard from '@/components/BoxerCard.astro'
-import BoxerClip from '@/components/BoxerClip.astro'
 import LiteYouTube from '@/components/LiteYouTube.astro'
 import { COMBATS } from '@/consts/combats'
 
@@ -48,9 +46,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
           
           <div class="animate-fade-in-up animate-delay-100 text-white text-center md:text-left bg-theme-raisin-black/50 hover:bg-theme-raisin-black/80 backdrop-blur-sm p-4 transition duration-300 cursor-default">
             <h3 class="text-xl font-semibold mb-3">Sobre {fighter.name}</h3>
-            <p>
-              Boxeador español conocido por su estilo agresivo y determinación. Con una técnica refinada y gran velocidad, se ha convertido en uno de los favoritos de La Velada del Año.
-            </p>
+            <p>{fighter.description}</p>
           </div>
 
           <!-- <BoxerClip clips={fighter.clips} /> 🚩 Midu te quiero, pongamos esto en otra ubicación -->
