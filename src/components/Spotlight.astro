@@ -16,119 +16,135 @@ const {
   smallWidth = 240,
   duration = 7,
   xOffset = 100,
+
+  fixed = false,
 } = Astro.props
 ---
 
-<div class="overflow-hidde absolute inset-0 z-100 h-full w-full">
+<div
+  class={`appear pointer-events-none absolute inset-0 z-10 h-full w-full ${fixed ? 'fixed' : ''}`}
+>
   <div
-    data-initial={JSON.stringify({
-      opacity: 0,
-    })}
+    style={`--x-offset: ${xOffset}px; --duration: ${duration}s; --direction: reverse;`}
     data-animate={JSON.stringify({
-      opacity: 1,
+      x: [0, xOffset, 0],
     })}
     data-transition={JSON.stringify({
-      duration: 1.5,
+      duration,
+      repeat: Infinity,
+      repeatType: 'reverse',
+      ease: 'easeInOut',
     })}
-    class="pointer-events-none absolute inset-0 h-full w-full"
+    class="move-x pointer-events-none absolute top-0 left-0 z-40 h-screen w-screen"
   >
     <div
-      data-animate={JSON.stringify({
-        x: [0, xOffset, 0],
-      })}
-      data-transition={JSON.stringify({
-        duration,
-        repeat: Infinity,
-        repeatType: 'reverse',
-        ease: 'easeInOut',
-      })}
-      class="pointer-events-none absolute top-0 left-0 z-40 h-screen w-screen"
+      style={{
+        transform: `translateY(${translateY}px) rotate(-45deg)`,
+        background: gradientFirst,
+        width: `${width}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 left-0`}
     >
-      <div
-        style={{
-          transform: `translateY(${translateY}px) rotate(-45deg)`,
-          background: gradientFirst,
-          width: `${width}px`,
-          height: `${height}px`,
-        }}
-        class={`absolute top-0 left-0`}
-      >
-      </div>
-
-      <div
-        style={{
-          transform: 'rotate(-45deg) translate(5%, -50%)',
-          background: gradientSecond,
-          width: `${smallWidth}px`,
-          height: `${height}px`,
-        }}
-        class={`absolute top-0 left-0 origin-top-left`}
-      >
-      </div>
-
-      <div
-        style={{
-          transform: 'rotate(-45deg) translate(-180%, -70%)',
-          background: gradientThird,
-          width: `${smallWidth}px`,
-          height: `${height}px`,
-        }}
-        class={`absolute top-0 left-0 origin-top-left`}
-      >
-      </div>
     </div>
 
     <div
-      data-animate={JSON.stringify({
-        x: [0, -xOffset, 0],
-      })}
-      data-transition={JSON.stringify({
-        duration,
-        repeat: Infinity,
-        repeatType: 'reverse',
-        ease: 'easeInOut',
-      })}
-      class="pointer-events-none absolute top-0 right-0 z-40 h-screen w-screen"
+      style={{
+        transform: 'rotate(-45deg) translate(5%, -50%)',
+        background: gradientSecond,
+        width: `${smallWidth}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 left-0 origin-top-left`}
     >
-      <div
-        style={{
-          transform: `translateY(${translateY}px) rotate(45deg)`,
-          background: gradientFirst,
-          width: `${width}px`,
-          height: `${height}px`,
-        }}
-        class={`absolute top-0 right-0`}
-      >
-      </div>
+    </div>
 
-      <div
-        style={{
-          transform: 'rotate(45deg) translate(-5%, -50%)',
-          background: gradientSecond,
-          width: `${smallWidth}px`,
-          height: `${height}px`,
-        }}
-        class={`absolute top-0 right-0 origin-top-right`}
-      >
-      </div>
+    <div
+      style={{
+        transform: 'rotate(-45deg) translate(-180%, -70%)',
+        background: gradientThird,
+        width: `${smallWidth}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 left-0 origin-top-left`}
+    >
+    </div>
+  </div>
 
-      <div
-        style={{
-          transform: 'rotate(45deg) translate(180%, -70%)',
-          background: gradientThird,
-          width: `${smallWidth}px`,
-          height: `${height}px`,
-        }}
-        class={`absolute top-0 right-0 origin-top-right`}
-      >
-      </div>
+  <div
+    style={`--x-offset: ${-xOffset}px; --duration: ${duration}s; --direction: reverse;`}
+    class="move-x pointer-events-none absolute top-0 right-0 z-40 h-screen w-screen"
+  >
+    <div
+      style={{
+        transform: `translateY(${translateY}px) rotate(45deg)`,
+        background: gradientFirst,
+        width: `${width}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 right-0`}
+    >
+    </div>
+
+    <div
+      style={{
+        transform: 'rotate(45deg) translate(-5%, -50%)',
+        background: gradientSecond,
+        width: `${smallWidth}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 right-0 origin-top-right`}
+    >
+    </div>
+
+    <div
+      style={{
+        transform: 'rotate(45deg) translate(180%, -70%)',
+        background: gradientThird,
+        width: `${smallWidth}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 right-0 origin-top-right`}
+    >
     </div>
   </div>
 </div>
 
 <!-- <div class="absolute inset-0 z-50 h-full w-full overflow-hidden bg-black"></div> -->
 
-<script>
+<style>
+  .appear {
+    opacity: 0;
+    animation: appearAnimation 2s ease-in-out forwards;
+  }
+
+  @keyframes appearAnimation {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .move-x {
+    animation: moveXAnimation var(--duration) ease-in-out var(--direction) infinite;
+  }
+
+  @keyframes moveXAnimation {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(var(--x-offset));
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+</style>
+
+<!-- <script>
   import { animate } from 'motion'
 
   const elements = document.querySelectorAll('[data-animate]')
@@ -155,4 +171,4 @@ const {
       animate(el, animateProps, transitionProps)
     }
   })
-</script>
+</script> -->
