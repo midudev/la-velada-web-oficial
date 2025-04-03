@@ -108,7 +108,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     </div>
 
     <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
-      <div class="flex w-full flex-wrap justify-between px-4">
+      <div class="hidden w-full flex-wrap justify-between px-4 md:flex">
         <div class="flex flex-wrap justify-start gap-4">
           {
             leftRow.map(({ id, name, versus }, index) => (
@@ -134,7 +134,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         </div>
       </div>
 
-      <div class="flex flex-wrap justify-between gap-4">
+      <div class="hidden flex-wrap justify-between gap-4 md:flex">
         <div class="flex flex-wrap justify-start gap-4">
           {
             leftSecondRow.map(({ id, name, versus }, index) => (
@@ -154,6 +154,25 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
           }
         </div>
       </div>
+
+      <!-- carrusel para modo responsivo -->
+      <div class="w-full md:hidden">
+        <div class="carousel-container">
+          <div class="carousel-fade-left"></div>
+          <div class="carousel-scroll">
+            <div class="carousel-track" id="mobile-fighters-carousel">
+              {
+                [...FIGHTERS].map(({ id, name, versus }) => (
+                  <div class="carousel-item">
+                    <BoxerCard id={id} name={name} class="boxer-card-carousel" versus={versus} />
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+          <div class="carousel-fade-right"></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -162,6 +181,59 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
   .mask-fade-text {
     mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
   }
+
+  .carousel-container {
+    position: relative;
+    width: 100%;
+    padding: 1rem 0;
+    margin-top: 1rem;
+  }
+
+  .carousel-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; 
+    padding: 0.5rem 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .carousel-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel-track {
+    display: flex;
+    gap: 1rem;
+    padding: 0 3rem;
+    width: max-content;
+  }
+
+  .carousel-item {
+    flex-shrink: 0;
+  }
+
+  .carousel-fade-left,
+  .carousel-fade-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3rem;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .carousel-fade-left {
+    left: 0;
+    background: linear-gradient(to right, rgba(255, 105, 180, 0.3), transparent);
+  }
+
+  .carousel-fade-right {
+    right: 0;
+    background: linear-gradient(to left, rgba(255, 105, 180, 0.3), transparent);
+  }
 </style>
 
 <script>
@@ -169,6 +241,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
   document.addEventListener('astro:page-load', () => {
     const $landing = $('#landing')
+    
 
     let currentFighterId: string | null = null
     let hideFighterTimer: ReturnType<typeof setTimeout>
