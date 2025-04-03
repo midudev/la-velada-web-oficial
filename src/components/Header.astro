@@ -2,37 +2,78 @@
 const { pathname } = Astro.url;
 
 // Lista de rutas donde NO debe aparecer el logo
-const hideLogoRoutes = ["/", "/combates"];
+const hideLogoRoutes = ["/"];
 const shouldShowLogo = !hideLogoRoutes.includes(pathname);
+
+// Comprueba si la ruta actual está activa
+const isActive = (path: string) => pathname === path;
 ---
 
-<header class="fixed flex items-center top-0 h-16 w-full z-50 text-white mx-auto">
+<header class="fixed flex items-center top-0 h-20 w-full z-50 text-white mx-auto">
   <nav
     class:list={[
       shouldShowLogo ? "grid-cols-3" : "grid-cols-2",
-      "grid items-center px-6 text-sm font-light justify-between max-w-6xl w-full mx-auto",
+      "grid items-center px-6 text-sm font-medium justify-between max-w-6xl w-full mx-auto",
     ]}
   >
     <div class="hidden md:flex flex-row gap-8 justify-start">
+      {/* Enlace con animación de subrayado dividido en dos colores */}
       <a
         href="/la-porra"
-        class="inline-block text-theme-seashell relative after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full"
-        >HAZ TU <strong>PORRA</strong></a
+        class="group relative inline-block tracking-wider py-1 leading-relaxed"
       >
+        <span class="text-theme-seashell">HAZ TU PORRA</span>
+        {/* Contenedor del subrayado con overflow hidden para la animación */}
+        <div class="relative mt-1 h-[2px] w-full overflow-hidden">
+          {/* Línea rosa que se anima desde la izquierda */}
+          <div 
+            class:list={[
+              "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-250 ease-out",
+              isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
+            ]}
+          ></div>
+          {/* Línea turquesa que se anima desde la derecha */}
+          <div 
+            class:list={[
+              "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-250 ease-out",
+              isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
+            ]}
+          ></div>
+        </div>
+      </a>
+      {/* Segundo enlace con la misma animación */}
       <a
         href="/combates"
-        class="inline-block text-theme-seashell relative after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full"
-        >VER <strong>COMBATES</strong></a
+        class="group relative inline-block tracking-wider py-1 leading-relaxed"
       >
+        <span class="text-theme-seashell">VER COMBATES</span>
+        {/* Contenedor del subrayado con overflow hidden para la animación */}
+        <div class="relative mt-1 h-[2px] w-full overflow-hidden">
+          {/* Línea rosa que se anima desde la izquierda */}
+          <div 
+            class:list={[
+              "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out",
+              isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
+            ]}
+          ></div>
+          {/* Línea turquesa que se anima desde la derecha */}
+          <div 
+            class:list={[
+              "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out",
+              isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
+            ]}
+          ></div>
+        </div>
+      </a>
     </div>
 
     {shouldShowLogo && (
       <a
         href="/"
-        class="mx-auto hover:scale-105 cursor-pointer transition duration-500 relative top-6">
+        class="mx-auto hover:scale-110 cursor-pointer duration-500 relative">
         <img
-          class="w-20 h-auto"
-          src="/images/logo.png"
+          class="w-10 h-auto"
+          src="/favicon.svg"
           fetchpriority="high"
           alt="La Velada del Año V"
           decoding="async"
@@ -42,10 +83,10 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname);
 
     <div class="hidden md:flex flex-col items-end">
       <span
-        class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative"
-        >COMPRA LAS <strong>ENTRADAS</strong>
+        class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative tracking-wider py-1 leading-relaxed"
+        >COMPRA LAS ENTRADAS
         <span
-          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center"
+          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center tracking-wide leading-normal"
           >PRÓXIMAMENTE</span
         >
       </span>
