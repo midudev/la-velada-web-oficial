@@ -43,6 +43,7 @@ export interface Fighters {
   fightName?: string
   city?: string
   realName: string
+  description: string
   gender: 'masculino' | 'femenino' | 'otro'
   targetWeight?: number
   targetGloves?: string
