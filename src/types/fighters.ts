@@ -52,6 +52,7 @@ export interface Fighters {
   weight: number
   country: string
   versus: fighterId
+  mirrorImage?: boolean
   socials: Social[]
   clips: Clips[]
   workout?: {

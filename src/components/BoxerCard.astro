@@ -1,11 +1,12 @@
 ---
-const { id, name, versus, class: extraClass } = Astro.props
+const { id, name, versus, class: extraClass, imgClass: imgExtraClass } = Astro.props
 
 interface Props {
   id: string
   name: string
   versus: string
   class: string
+  imgClass?:string
 }
 ---
 
@@ -17,7 +18,7 @@ interface Props {
 >
   <div class="relative overflow-hidden rounded-lg">
     <img
-      class="via-40 aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover transition-transform duration-500 group-hover:scale-110"
+      class={`via-40 aspect-[900/1200] h-full w-full ${imgExtraClass} bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover transition-transform duration-500 group-hover:scale-110`}
       src={`/images/fighters/cards/${id}.webp`}
       alt={`Tarjeta del boxeador ${name}`}
     />
