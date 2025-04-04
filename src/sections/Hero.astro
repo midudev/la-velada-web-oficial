@@ -72,7 +72,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       id="fighter-container"
       class="pointer-events-none absolute inset-0 flex flex-col items-center"
     >
-      <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
+      <div class="relative top-96 z-10 mx-auto flex h-[4.5rem] w-full items-center justify-center">
         {
           FIGHTERS.map(({ id, name }) => (
             <img
@@ -154,6 +154,11 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
           }
         </div>
       </div>
+      
+      <a class="absolute hidden md:hidden btn-details animate-fade-in-up animate-delay-200 font-extrabold w-20 h-10 rounded-xl border-2 border-rose-700 shadow-lg flex items-center justify-center">
+        Details
+      </a>
+      
     </div>
   </div>
 </section>
@@ -161,6 +166,30 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 <style>
   .mask-fade-text {
     mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
+  }
+  
+  @keyframes selectedPulse {
+    0% {
+      box-shadow:
+        0 0 0 0 rgba(255, 20, 147, 0.7),
+        inset 0 0 0 2px rgba(255, 20, 147, 1);
+    }
+    
+    70% {
+      box-shadow:
+        0 0 0 15px rgba(255, 20, 147, 0),
+        inset 0 0 0 2px rgba(255, 20, 147, 1);
+    }
+    
+    100% {
+      box-shadow:
+        0 0 0 0 rgba(255, 20, 147, 0),
+        inset 0 0 0 2px rgba(255, 20, 147, 1);
+    }
+  }
+  
+  .btn-details {
+    animation: selectedPulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
   }
 </style>
 
@@ -172,6 +201,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
     let currentFighterId: string | null = null
     let hideFighterTimer: ReturnType<typeof setTimeout>
+    let hideBtnFighterTimer: ReturnType<typeof setTimeout>
 
     document.addEventListener('boxer-card-exit', () => {
       $landing?.classList.remove('hidden')
@@ -194,11 +224,26 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
           currentFighterId = null
         }, 500)
       }
+      
+ 
+      hideBtnFighterTimer = setTimeout(() => {
+        const btnDetails = $(`.btn-details`)
+        btnDetails.classList.add('hidden')
+        currentFighterId = null
+      }, 500)
     })
-
+    
+    function activeBtnInfoFighter (id)  {
+      const btnDetails = $(`.btn-details`)
+ 
+      btnDetails.setAttribute("href",`/luchador/${event.detail.id}`)
+      btnDetails?.classList.remove('hidden')
+    }
+   
     document.addEventListener('boxer-card-hovered', (event: Event) => {
       if (currentFighterId) {
         clearTimeout(hideFighterTimer)
+      //  clearTimeout(hideBtnFighterTimer)
 
         const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
         const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
@@ -207,6 +252,8 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         heroImage?.classList.add('hidden')
         currentFighterId = null
       }
+
+      activeBtnInfoFighter(event.detail.id)
 
       const customEvent = event as CustomEvent<{ id: string }>
       const id = customEvent.detail.id

@@ -86,15 +86,15 @@ export const FIGHTERS: Fighters[] = [
       {
         text: 'En seis meses va a caer, lo voy a noquear 100% y le voy a arrancar la p*** cabeza.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=GIR26FtonnzIbZZL&amp;clip=UgkxLQNqwPqlJLU97lVJkD2lEWrJXswPfHOU&amp;clipt=ENGYChjaywo'
-        },
+      },
       {
         text: 'Vengo aquí para ser el mejor boxeador posible, estoy con el mejor equipo posible y lo único que te pido es que entrenes lo suficientemente bien para que toda esta gente vea el show que se merece.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=OQAXdqDuQ33flPQg&amp;clip=UgkxtAMxt3Q-BIOC7G6PqfRTs8qkUZgaXwWP&amp;clipt=ENS2KBjkiik'
-        },
+      },
       {
         text: 'Entreno literalmente para noquearlo, no vengo a otra cosa.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I'
-        },
+      },
     ],
   },
   {
@@ -432,10 +432,10 @@ export const FIGHTERS: Fighters[] = [
     clips: [
       {
         text: 'Pereira, ponte trucha, amigo. Te voy a enseñar que la cuna del boxeo está en México.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=2yNcYbYAnGXc4jRD&amp;clip=UgkxuVSmgfc49HRArsmT522Vf42fmDo_W1WA&amp;clipt=EKOABBj8rgQ'  
+        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=2yNcYbYAnGXc4jRD&amp;clip=UgkxuVSmgfc49HRArsmT522Vf42fmDo_W1WA&amp;clipt=EKOABBj8rgQ'
       },
       {
-        text:'Voy a llegar al punto en que este v**** me va a tener miedo después de la pelea.',
+        text: 'Voy a llegar al punto en que este v**** me va a tener miedo después de la pelea.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=qXDaC9BtQVT2Lw3r&amp;clip=Ugkxyvlpe6cGZqC2A2tU6B_-kgYlAqHuWn90&amp;clipt=EJC-LxiY5S8'
       },
       {
@@ -743,83 +743,6 @@ export const FIGHTERS: Fighters[] = [
     }
   },
   {
-    // https://www.biografia.de/westcol/
-    id: 'westcol',
-    name: 'Westcol',
-    realName: 'Luis Fernando Villa Álvarez',
-    gender: 'masculino',
-    birthDate: new Date(2001, 1, 2),
-    height: 1.65,
-    age: 24,
-    weight: 63,
-    country: 'co',
-    city: 'Medellín',
-    versus: 'grefg',
-    socials: [
-      {
-        id: 'instagram',
-        name: 'Instagram',
-        url: 'https://www.instagram.com/westcol/',
-        label: 'Visitar perfil de Westcol en Instagram',
-        followers: '4.3M',
-        image: {
-          logo: Instagram,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/WestCOL',
-        label: 'Visitar perfil de Westcol en X',
-        followers: '413.3k',
-        image: {
-          logo: X,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'youtube',
-        name: 'Youtube',
-        url: 'https://www.youtube.com/channel/UCEg_iK8FKwZfpRMn4-AnnnQ',
-        label: 'Visitar canal de Westcol en Youtube',
-        followers: '1.32M',
-        image: {
-          logo: Youtube,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'tiktok',
-        name: 'TikTok',
-        url: 'https://www.tiktok.com/@westcol',
-        label: 'Visitar perfil de Westcol en TikTok',
-        followers: '993.4k',
-        image: {
-          logo: TikTok,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'kick',
-        name: 'Kick',
-        url: 'https://www.kick.com/westcol',
-        label: 'Visitar perfil de Westcol en Kick',
-        followers: '1.9M',
-        image: {
-          logo: Kick,
-          width: 200,
-          height: 200,
-        }
-      }
-    ],
-    clips: [],
-  },
-  {
     // https://www.biografia.de/ari-geli/
     id: 'arigeli',
     name: 'Arigeli',
@@ -878,180 +801,4 @@ export const FIGHTERS: Fighters[] = [
         image: {
           logo: Youtube,
           width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'twitch',
-        name: 'Twitch',
-        url: 'https://www.twitch.tv/arigeli_',
-        label: 'Visitar perfil de Arigeli en Twitch',
-        followers: '32.5k',
-        image: {
-          logo: Twitch,
-          width: 200,
-          height: 200,
-        }
-      }
-    ],
-    clips: [],
-    workout: {
-      videoID: 'rugHsv9JCSU',
-      thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp'
-    }
-  },
-  {
-    // https://www.biografia.de/tomas-mazza/
-    id: 'tomas',
-    name: 'Tomás',
-    realName: 'Tomás Francisco Pérez Mazza',
-    gender: 'masculino',
-    birthDate: new Date(2000, 3, 16),
-    height: 1.76,
-    age: 25,
-    weight: 80,
-    country: 'ar',
-    city: 'Buenos Aires',
-    versus: 'viruzz',
-    socials: [
-      {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/MazzaTomas',
-        label: 'Visitar perfil de Tomás en X',
-        followers: '259.9k',
-        image: {
-          logo: X,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'instagram',
-        name: 'Instagram',
-        url: 'https://www.instagram.com/mazzatomas',
-        label: 'Visitar perfil de Tomás en Instagram',
-        followers: '2.9M',
-        image: {
-          logo: Instagram,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'youtube',
-        name: 'Youtube',
-        url: 'https://www.youtube.com/@tomasmazza',
-        label: 'Visitar canal de Tomás en Youtube',
-        followers: '855k',
-        image: {
-          logo: Youtube,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'tiktok',
-        name: 'TikTok',
-        url: 'https://www.tiktok.com/@mazzatomas',
-        label: 'Visitar perfil de Tomás en TikTok',
-        followers: '2.5M',
-        image: {
-          logo: TikTok,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'twitch',
-        name: 'Twitch',
-        url: 'https://www.twitch.tv/mazzatomas',
-        label: 'Visitar perfil de Tomás en Twitch',
-        followers: '629k',
-        image: {
-          logo: Twitch,
-          width: 200,
-          height: 200,
-        }
-      }
-    ],
-    clips: [],
-  },
-  {
-    // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
-    id: 'carlos',
-    name: 'Carlos',
-    realName: 'Carlos Belcast',
-    gender: 'masculino',
-    birthDate: new Date(1998, 9, 5),
-    height: 1.77,
-    age: 26,
-    weight: 85,
-    country: 'mx',
-    city: 'Monterrey',
-    versus: 'andoni',
-    socials: [
-      {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/CarlosBelcast',
-        label: 'Visitar perfil de Carlos en X',
-        followers: '22.1k',
-        image: {
-          logo: X,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'instagram',
-        name: 'Instagram',
-        url: 'https://www.instagram.com/carlosbelcast/',
-        label: 'Visitar perfil de Carlos en Instagram',
-        followers: '5.1M',
-        image: {
-          logo: Instagram,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'tiktok',
-        name: 'TikTok',
-        url: 'https://www.tiktok.com/@carlosbelcast',
-        label: 'Visitar perfil de Carlos en TikTok',
-        followers: '6.5M',
-        image: {
-          logo: TikTok,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'youtube',
-        name: 'Youtube',
-        url: 'https://www.youtube.com/@carlosbelcast',
-        label: 'Visitar canal de Carlos en Youtube',
-        followers: '1.42M',
-        image: {
-          logo: Youtube,
-          width: 200,
-          height: 200,
-        }
-      },
-      {
-        id: 'twitch',
-        name: 'Twitch',
-        url: 'https://www.twitch.tv/carlosbelcastt',
-        label: 'Visitar perfil de Carlos en Twitch',
-        followers: '50.3k',
-        image: {
-          logo: Twitch,
-          width: 200,
-          height: 200,
-        }
-      }
-    ],
-    clips: [],
-  },
-] as const
+  

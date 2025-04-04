@@ -37,7 +37,7 @@ interface Props {
     class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
   >
     <h3
-      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+      class="text-theme-tickle-me-pink text-white text-xs font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
     >
       {name}
     </h3>
@@ -116,7 +116,37 @@ interface Props {
   document.addEventListener('astro:page-load', () => {
     const boxerCards = document.querySelectorAll('.boxer-card')
     let timeoutId: ReturnType<typeof setTimeout> | null = null
+    let hideBtnFighterTimer: ReturnType<typeof setTimeout>
+    
+    function removeHrefInMovil() {
+      boxerCards.forEach((singleBoxerCard, index) => {
+        const hasHref = singleBoxerCard.hasAttribute('href');
 
+        if (hasHref && window.innerWidth < 768) {
+          singleBoxerCard.removeAttribute('href')
+
+          if (singleBoxerCard.href) {
+            singleBoxerCard.removeAttribute('href');
+          } 
+        }
+
+        if (!hasHref) { 
+          const id = singleBoxerCard.getAttribute('data-id')
+          singleBoxerCard.setAttribute("href",`/luchador/${id}`)
+        }
+      })
+    }
+
+    function isDiviceMovil() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    if (isDiviceMovil()) {
+      removeHrefInMovil();
+    }
+
+    window.addEventListener('resize', removeHrefInMovil);
+    
     boxerCards.forEach((singleBoxerCard, index) => {
       singleBoxerCard.addEventListener('mouseenter', () => {
         if (timeoutId) {
