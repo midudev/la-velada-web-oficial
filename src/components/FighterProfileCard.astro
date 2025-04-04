@@ -11,34 +11,34 @@ const generateRandomBars = () => {
 
 const bars = generateRandomBars();
 ---
-<article class="w-full hover:scale-105 transition-all duration-600 max-w-lg min-w-[300px] border-2 border-white/40 bg-pink-600/40 rounded-xl overflow-hidden ">
+<article class="w-full hover:scale-105 transition-all duration-600 max-w-[450px] min-w-[300px] border-2 border-white/40 bg-pink-600/40 rounded-xl overflow-hidden ">
   <!-- Contenedor principal -->
   <main class="grid grid-flow-row sm:grid-flow-col w-full grid-cols-2">
     <!-- Informacion General -->
     <section class="col-span-2 order-2 sm:order-1 ">
-      <div class="grid grid-cols-2 gap-2 text-white font-normal text-left animate-fade-in-up animate-delay-200">
-        <!-- Nombre -->
-        <section class="col-span-2 mb-3 mt-0 sm:mt-6">
-          <div class="bg-pink-200/60 text-dark-magenta px-2 pt-1 text-center">
-            <h1 class="m-0 animate-fade-in-up text-2xl font-bold">
-              {fighter.realName}
-            </h1>
-          </div>
-        </section>
-        <!-- Otros datos del luchador -->
-        <section class="ml-3 flex flex-col">
+      <!-- Nombre -->
+      <section class="col-span-2 mt-0 sm:mt-6">
+        <div class="bg-pink-200/60 animate-fade-in-up animate-delay-200 text-dark-magenta px-2 pt-1 text-center">
+          <h1 class="m-0  text-2xl font-bold">
+            {fighter.realName}
+          </h1>
+        </div>
+      </section>
+      <!-- Otros datos del luchador -->
+      <div class="grid grid-cols-2 gap-4 px-4 py-4 text-white font-normal text-left animate-fade-in-up animate-delay-200">
+        <section class=" flex flex-col">
           <span class="text-sm text-dark-magenta">Edad</span>
           <strong class="text-lg">{fighter.age} años</strong>
         </section>
-        <section class="mb-3 flex flex-col">
+        <section class="flex flex-col">
           <span class="text-sm text-dark-magenta">Peso</span>
           <strong class="text-lg">{fighter.weight}kg</strong>
         </section>
-        <section class="ml-3 flex flex-col">
+        <section class=" flex flex-col">
           <span class="text-sm text-dark-magenta">Nacimiento</span>
           <strong class="text-lg">{birthDate}</strong>
         </section>
-        <section class="mb-3 flex flex-col">
+        <section class=" flex flex-col">
           <span class="text-sm text-dark-magenta">Altura</span>
           <strong class="text-lg">{fighter.height}m</strong>
         </section>
