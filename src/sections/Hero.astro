@@ -8,7 +8,14 @@ const rightRow = firstRow.slice(3)
 
 const secondRow = FIGHTERS.slice(6)
 const leftSecondRow = secondRow.slice(0, 4)
-const rightSecondRow = secondRow.slice(4, 8)
+let rightSecondRow = secondRow.slice(4, 8)
+
+const userAgent = Astro.request.headers.get('user-agent');
+const isAndroid = userAgent?.toLowerCase().includes('android');
+
+if (!isAndroid) {
+  rightSecondRow = [...secondRow.slice(7,8 ),...secondRow.slice(4, 7)]
+}
 
 const animationDelay = [500, 700, 800]
 const reverseDelay = [...animationDelay].reverse()
@@ -195,7 +202,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
 <script>
   import { $ } from '@/lib/dom-selector'
-
+  
   document.addEventListener('astro:page-load', () => {
     const $landing = $('#landing')
 
