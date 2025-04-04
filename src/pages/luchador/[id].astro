@@ -5,6 +5,7 @@ import { fixedTitle } from '@/consts/pageTitles'
 import BoxerWorkout from '@/components/BoxerWorkout.astro'
 import BoxerCard from '@/components/BoxerCard.astro'
 import BoxerClip from '@/components/BoxerClip.astro'
+import FighterProfileCard from '@/components/FighterProfileCard.astro'
 
 const { id } = Astro.params
 
@@ -13,7 +14,7 @@ if (!fighter) return Astro.redirect('/404')
 
 const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   year: 'numeric',
-  month: 'long',
+  month: 'short',
   day: 'numeric',
 })
 
@@ -27,14 +28,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
     >
     <BoxerClip clips={fighter.clips} />
 
-      {
-        opponent && (
-          <div class="flex w-full items-center gap-4 justify-center">
-            <img src="/images/versus.png" alt="Versus" class="h-12 w-auto" />
-            <BoxerCard id={opponent.id} name={opponent.name} class="group-hover:scale-110" />
-          </div>
-        )
-      }
+
     </div>
 
     <div
@@ -62,39 +56,19 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
         />
       </div>
 
-      <div class="mt-5 ml-7 w-full max-w-xl text-white lg:w-1/2">
-        <div class="space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm">
-          <div class="mb-8 flex flex-col items-center space-x-4">
-            <h1 class="animate-fade-in-up inline-block text-center text-2xl font-bold">
-              {fighter.realName}
-            </h1>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4 pt-7 pr-6 text-center">
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Edad</div>
-              <div class="text-lg">{fighter.age} años</div>
+      <div class="mt-5 ml-7 w-full max-w-xl text-white lg:w-1/2 space-y-4">
+        <FighterProfileCard
+          fighter={fighter}
+          birthDate={birthDate}
+        />
+        {
+          opponent && (
+            <div class="flex w-full items-center gap-4 justify-center">
+              <img src="/images/versus.png" alt="Versus" class="h-12 w-auto" />
+              <BoxerCard id={opponent.id} name={opponent.name} class="group-hover:scale-110" />
             </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Altura</div>
-              <div class="text-lg">{fighter.height}m</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Peso</div>
-              <div class="text-lg">{fighter.weight}kg</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Ciudad</div>
-              <div class="text-lg">{fighter.city}</div>
-            </div>
-          </div>
-
-          <!-- Birth Date -->
-          <div class="animate-fade-in-up animate-delay-400 text-center">
-            <div class="text-sm text-gray-400">Fecha de nacimiento</div>
-            <div class="text-lg">{birthDate}</div>
-          </div>
-        </div>
+          )
+        }
       </div>
     </div>
   </section>

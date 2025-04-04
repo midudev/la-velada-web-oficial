@@ -1,0 +1,81 @@
+---
+import Logo from '../assets/svg/logo.svg';
+const { fighter, birthDate } = Astro.props;
+const generateRandomBars = () => {
+  const bars = [];
+  for (let i = 0; i < 20; i++) {
+    bars.push(Math.floor(Math.random() * (2 - 1 + 1)) + 2); // Random width between 4px and 20px
+  }
+  return bars;
+};
+
+const bars = generateRandomBars();
+---
+<article class="w-full hover:scale-105 transition-all duration-600 max-w-lg min-w-[300px] border-2 border-white/40 bg-pink-600/40 rounded-xl overflow-hidden ">
+  <!-- Contenedor principal -->
+  <main class="grid grid-flow-row sm:grid-flow-col w-full grid-cols-2">
+    <!-- Informacion General -->
+    <section class="col-span-2 order-2 sm:order-1 ">
+      <div class="grid grid-cols-2 gap-2 text-white font-normal text-left animate-fade-in-up animate-delay-200">
+        <!-- Nombre -->
+        <section class="col-span-2 mb-3 mt-0 sm:mt-6">
+          <div class="bg-pink-200/60 text-dark-magenta px-2 pt-1 text-center">
+            <h1 class="m-0 animate-fade-in-up text-2xl font-bold">
+              {fighter.realName}
+            </h1>
+          </div>
+        </section>
+        <!-- Otros datos del luchador -->
+        <section class="ml-3 flex flex-col">
+          <span class="text-sm text-dark-magenta">Edad</span>
+          <strong class="text-lg">{fighter.age} años</strong>
+        </section>
+        <section class="mb-3 flex flex-col">
+          <span class="text-sm text-dark-magenta">Peso</span>
+          <strong class="text-lg">{fighter.weight}kg</strong>
+        </section>
+        <section class="ml-3 flex flex-col">
+          <span class="text-sm text-dark-magenta">Nacimiento</span>
+          <strong class="text-lg">{birthDate}</strong>
+        </section>
+        <section class="mb-3 flex flex-col">
+          <span class="text-sm text-dark-magenta">Altura</span>
+          <strong class="text-lg">{fighter.height}m</strong>
+        </section>
+      </div>
+    </section>
+    <!-- Imagen del luchador -->
+    <section class="order-1 sm:order-2 col-span-2  flex justify-center item-center  animate-fade-in-up animate-delay-200">
+      <figure class=" w-full max-w-[140px] ">
+        <img
+          class="overflow-hidden rounded-bl-none sm:rounded-bl-lg bg-gray-400 aspect-[140/186.33] w-full object-cover"
+          src={`/images/fighters/cards/${fighter.id}.webp`}
+          alt={`Tarjeta del boxeador ${fighter.name}`}
+        />
+      </figure>
+    </section>
+  </main>
+  <!-- Información adicional y código de barras -->
+  <footer class="mb-3 pl-4 py-3 flex justify-between  items-center bg-dark-magenta">
+    <section class="flex space-x-2 items-center animate-fade-in-up animate-delay-200">
+      <figure>
+        <img
+          class="w-8 h-auto block"
+          src={`/images/flags/${fighter.country}.webp`}
+          alt=`Pais ${fighter.country}`
+          decoding="async"
+        />
+      </figure>
+      <strong class="text-lg text-white">{fighter.city}</strong>
+    </section>
+
+    <section class="flex items-center justify-center space-x-2 animate-fade-in-up animate-delay-200">
+      <Logo class="w-8 h-8 text-yellow-200" />
+      <div class="flex items-end bg-white pl-0.5 py-0.5">
+        {bars.map(width => (
+          <span class="bg-black h-[25px] mr-0.5" style={`width: ${width}px;`}></span>
+        ))}
+      </div>
+    </section>
+  </footer>
+</article>
