@@ -22,30 +22,20 @@ interface Props {
       alt={`Tarjeta del boxeador ${name}`}
     />
 
-    <div
-      class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full"
-    >
+    <div class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full">
     </div>
 
-    <div
-      class="border-theme-tickle-me-pink/70 absolute inset-0 rounded-lg border-0 opacity-0 transition-all duration-300 group-hover:border-2 group-hover:opacity-100"
-    >
+    <div class="border-theme-tickle-me-pink/70 absolute inset-0 rounded-lg border-0 opacity-0 transition-all duration-300 group-hover:border-2 group-hover:opacity-100" >
     </div>
   </div>
 
-  <div
-    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
-  >
-    <h3
-      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
-    >
+  <div class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"  >
+    <h3 class="text-theme-tickle-me-pink text-white text-xs font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]" >
       {name}
     </h3>
   </div>
 
-  <div
-    class="bg-theme-tickle-me-pink absolute -bottom-1 left-1/2 h-1 w-0 -translate-x-1/2 transform rounded-t-md transition-all duration-300 group-hover:w-2/3"
-  >
+  <div class="bg-theme-tickle-me-pink absolute -bottom-1 left-1/2 h-1 w-0 -translate-x-1/2 transform rounded-t-md transition-all duration-300 group-hover:w-2/3" >
   </div>
 </a>
 
@@ -113,11 +103,43 @@ interface Props {
 </style>
 
 <script>
+   //import { $ } from '@/lib/dom-selector'
+   
   document.addEventListener('astro:page-load', () => {
     const boxerCards = document.querySelectorAll('.boxer-card')
     let timeoutId: ReturnType<typeof setTimeout> | null = null
 
+    function removeHrefInMovil() {
+        boxerCards.forEach((singleBoxerCard, index) => {
+          const hasHref = singleBoxerCard.hasAttribute('href');
+          
+          if (hasHref && window.innerWidth < 768) {
+            singleBoxerCard.removeAttribute('href')
+            
+            if (singleBoxerCard.href) {
+              singleBoxerCard.removeAttribute('href');
+            } 
+          }
+          
+          if (!hasHref) { 
+            const id = singleBoxerCard.getAttribute('data-id')
+            singleBoxerCard.setAttribute("href",`/luchador/${id}`)
+          }
+        })
+      }
+      
+    function isDiviceMovil() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+    
+    if (isDiviceMovil()) {
+      removeHrefInMovil();
+    }
+   
+    window.addEventListener('resize', removeHrefInMovil);
+      
     boxerCards.forEach((singleBoxerCard, index) => {
+        
       singleBoxerCard.addEventListener('mouseenter', () => {
         if (timeoutId) {
           clearTimeout(timeoutId)
