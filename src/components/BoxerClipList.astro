@@ -9,12 +9,12 @@ interface Clip {
   url: string;
 }
 
-interface FighterClipProps {
+interface BoxerClipProps {
   clips?: Clip[];
   externalPlayer?: boolean;
 }
 
-const { clips = [], externalPlayer  } = Astro.props as FighterClipProps;
+const { clips = [], externalPlayer  } = Astro.props as BoxerClipProps;
 
 // Función para extraer el id del clip del video de una URL de YouTube
 const  extractVideoClipId = (url: string, type:string = "clip_id") => {
