@@ -19,57 +19,116 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
 <section class="relative flex min-h-screen w-full">
   <div
-    class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center duration-75"
+  class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center duration-75"
   >
+</div>
+
+<div class="mask-fade-bottom absolute inset-0 w-full bg-black opacity-10"></div>
+
+<div class="relative flex w-full flex-col items-center p-8 text-center">
+  <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
+    <h3
+    class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 leading-[100%] font-medium"
+    >
+    26 DE <br />JULIO
+  </h3>
+  <figure class="animate-fade-in relative">
+    <img
+    class="relative z-20 h-auto w-64 sm:w-72 md:w-80 lg:w-96"
+    src="/images/logo.png"
+    fetchpriority="high"
+    alt="La Velada del Año V"
+    decoding="async"
+    />
+    <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
+  </figure>
+  
+  <div class="relative z-10">
+    <h3
+    class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-relaxed font-medium tracking-wider uppercase"
+    >
+    <a
+    href="https://maps.app.goo.gl/RVUArf48FwuvqJjD6"
+    rel="noopener noreferrer"
+    target="_blank"
+    class="animate-fade-in animate-dalay-700 z-50 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-115"
+    >
+    Estadio<br />La Cartuja,<br />Sevilla
+  </a>
+</h3>
+<div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
+<a
+href="https://twitch.tv/ibai"
+rel="noopener noreferrer"
+target="_blank"
+class="animate-fade-in animate-delay-700 z-10 mt-4 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-125"
+>
+twitch.tv<br />Ibai
+</a>
+</div>
+<!--slider-->
+<div class="md:hidden">
+<div class="flex h-60 w-full justify-center overflow-hidden relative">
+  <!-- Botón Anterior -->
+  <button
+    id="prevButton"
+    class="absolute left-0 z-10 h-full px-4 bg-black/20 text-white hover:bg-black/70"
+  >
+    &#8249;
+  </button>
+
+  <!-- Left Slider -->
+  <div
+    id="leftSlider"
+    class="w-1/2 h-full flex gap-4 overflow-hidden snap-x snap-mandatory"
+  >
+    {[...leftRow].reverse().map(({ id, name, versus }) => (
+      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+        <BoxerCard id={id} name={name} class="boxer-left w-full h-full" versus={versus} />
+      </div>
+    ))}
+    {[...leftSecondRow].reverse().map(({ id, name, versus }) => (
+      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+        <BoxerCard id={id} name={name} class="boxer-left w-full h-full" versus={versus} />
+      </div>
+    ))}
   </div>
 
-  <div class="mask-fade-bottom absolute inset-0 w-full bg-black opacity-10"></div>
+  <!-- Center -->
+  <div class="flex items-center justify-center">
+    <img src="/images/versus.png" alt="Versus" class="h-12 w-auto">
+  </div>
 
-  <div class="relative flex w-full flex-col items-center p-8 text-center">
-    <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
-      <h3
-        class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 leading-[100%] font-medium"
-      >
-        26 DE <br />JULIO
-      </h3>
-      <figure class="animate-fade-in relative">
-        <img
-          class="relative z-20 h-auto w-64 sm:w-72 md:w-80 lg:w-96"
-          src="/images/logo.png"
-          fetchpriority="high"
-          alt="La Velada del Año V"
-          decoding="async"
-        />
-        <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
-      </figure>
-
-      <div class="relative z-10">
-        <h3
-          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-relaxed font-medium tracking-wider uppercase"
-        >
-          <a
-            href="https://maps.app.goo.gl/RVUArf48FwuvqJjD6"
-            rel="noopener noreferrer"
-            target="_blank"
-            class="animate-fade-in animate-dalay-700 z-50 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-115"
-          >
-            Estadio<br />La Cartuja,<br />Sevilla
-          </a>
-        </h3>
-        <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
-        <a
-          href="https://twitch.tv/ibai"
-          rel="noopener noreferrer"
-          target="_blank"
-          class="animate-fade-in animate-delay-700 z-10 mt-4 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-125"
-        >
-          twitch.tv<br />Ibai
-        </a>
+  <!-- Right Slider -->
+  <div
+    id="rightSlider"
+    class="w-1/2 h-full flex gap-4 overflow-hidden snap-x snap-mandatory"
+  >
+    {rightRow.map(({ id, name, versus }) => (
+      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+        <BoxerCard id={id} name={name} class="boxer-right w-full h-full" versus={versus} />
       </div>
-    </div>
+    ))}
+    {rightSecondRow.map(({ id, name, versus }) => (
+      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+        <BoxerCard id={id} name={name} class="boxer-right w-full h-full" versus={versus} />
+      </div>
+    ))}
+  </div>
 
-    <div
-      id="fighter-container"
+  <!-- Botón Siguiente -->
+  <button
+    id="nextButton"
+    class="absolute right-0 z-10 h-full px-4 bg-black/20 text-white hover:bg-black/70"
+  >
+    &#8250;
+  </button>
+</div>
+<!--slider-->
+</div>
+
+<div
+id="fighter-container"
       class="pointer-events-none absolute inset-0 flex flex-col items-center"
     >
       <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
@@ -107,7 +166,8 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       </div>
     </div>
 
-    <div class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
+    
+    <div class="hidden relative md:flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
       <div class="flex w-full flex-wrap justify-between px-4">
         <div class="flex flex-wrap justify-start gap-4">
           {
@@ -155,6 +215,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         </div>
       </div>
     </div>
+    </div>
   </div>
 </section>
 
@@ -165,87 +226,58 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 </style>
 
 <script>
-  import { $ } from '@/lib/dom-selector'
-
   document.addEventListener('astro:page-load', () => {
-    const $landing = $('#landing')
+    const leftSlider = document.getElementById('leftSlider');
+    const rightSlider = document.getElementById('rightSlider');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
 
-    let currentFighterId: string | null = null
-    let hideFighterTimer: ReturnType<typeof setTimeout>
+    if (!leftSlider || !rightSlider || !prevButton || !nextButton) {
+      console.error('No se encontraron los sliders o botones en el DOM.');
+      return;
+    }
 
-    document.addEventListener('boxer-card-exit', () => {
-      $landing?.classList.remove('hidden')
+    const cardWidth = (leftSlider.querySelector('.snap-center') as HTMLElement)?.offsetWidth || 0;
 
-      if (!currentFighterId) return
+    if (cardWidth > 0) {
+      const scrollSliders = (direction: 'next' | 'prev') => {
+        const scrollAmount = direction === 'next' ? cardWidth : -cardWidth;
 
-      const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
-      const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+        const leftSliderCanScroll =
+          (direction === 'next' && leftSlider.scrollLeft + leftSlider.offsetWidth < leftSlider.scrollWidth) ||
+          (direction === 'prev' && leftSlider.scrollLeft > 0);
 
-      if (heroText && heroImage) {
-        heroText.classList.remove('animate-zoom-int')
-        heroImage.classList.remove('animate-slide-up-fade')
+  
+        const rightSliderCanScroll =
+          (direction === 'next' && rightSlider.scrollLeft > 0) ||
+          (direction === 'prev' && rightSlider.scrollLeft + rightSlider.offsetWidth < rightSlider.scrollWidth);
 
-        heroText.classList.add('animate-zoom-out')
-        heroImage.classList.add('animate-fade-out-down')
-
-        hideFighterTimer = setTimeout(() => {
-          heroText.classList.add('hidden')
-          heroImage.classList.add('hidden')
-          currentFighterId = null
-        }, 500)
-      }
-    })
-
-    document.addEventListener('boxer-card-hovered', (event: Event) => {
-      if (currentFighterId) {
-        clearTimeout(hideFighterTimer)
-
-        const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
-        const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
-
-        heroText?.classList.add('hidden')
-        heroImage?.classList.add('hidden')
-        currentFighterId = null
-      }
-
-      const customEvent = event as CustomEvent<{ id: string }>
-      const id = customEvent.detail.id
-
-      const heroText = $(`[data-id="hero-text-${id}"]`)
-      const heroImage = $(`[data-id="hero-image-${id}"]`)
-
-      if (heroText && heroImage) {
-        heroText.classList.remove('animate-zoom-out')
-        heroImage.classList.remove('animate-fade-out-down')
-      }
-
-      // si el luchador que entras es el mismo que ya se muestra
-      // entonces no hacemos nada
-      if (currentFighterId === id) return
-
-      // si ya estamos mostrando un luchador, tenemos que ocultarlo
-      if (currentFighterId) {
-        const currentHeroText = $(`[data-id="hero-text-${currentFighterId}"]`)
-        const currentHeroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
-
-        if (currentHeroText && currentHeroImage) {
-          currentHeroText.classList.add('hidden')
-          currentHeroImage.classList.add('hidden')
-
-          currentHeroText.classList.remove('animate-zoom-in')
-          currentHeroImage.classList.remove('animate-slide-up-fade')
+        if (leftSliderCanScroll) {
+          leftSlider.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth',
+          });
+          rightSlider.scrollBy({
+            left: scrollAmount, 
+            behavior: 'smooth',
+          });
         }
-      }
 
-      $landing?.classList.add('hidden')
-
-      // mostramos el luchador que quiere ver el usuario
-      heroText?.classList.remove('hidden')
-      heroText?.classList.add('animate-zoom-in')
-      heroImage?.classList.remove('hidden')
-      heroImage?.classList.add('animate-slide-up-fade')
-
-      currentFighterId = id
-    })
+        if (rightSliderCanScroll) {
+          rightSlider.scrollBy({
+            left: -scrollAmount, 
+            behavior: 'smooth',
+          });
+          leftSlider.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth',
+          });
+        }
+      };
+      prevButton.addEventListener('click', () => scrollSliders('prev'));
+      nextButton.addEventListener('click', () => scrollSliders('next'));
+    } else {
+      console.error('No se pudo calcular el ancho de las tarjetas.');
+    }
   })
 </script>

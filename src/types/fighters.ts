@@ -58,4 +58,31 @@ export interface Fighters {
     videoID: string
     thumbnail: string
   }
+  qualities?:{
+    defense:{
+      description: string,
+      percentage: number,
+      type: 'defensivo' | 'ofensivo' | 'defensivo-ofensivo',
+    }
+    mobility:{
+      description: string,
+      percentage: number,
+      type: 'defensivo' | 'ofensivo' | 'defensivo-ofensivo',
+    }
+    technique:{
+      description: string,
+      percentage: number,
+      type: 'defensivo' | 'ofensivo' | 'defensivo-ofensivo',
+    }
+    resistance:{
+      description: string,
+      percentage: number,
+      type: 'defensivo' | 'ofensivo' | 'defensivo-ofensivo',
+    }
+    strategy:{
+      description: string,
+      percentage: number,
+      type: 'defensivo' | 'ofensivo' | 'defensivo-ofensivo',
+    }
+  }
 }
