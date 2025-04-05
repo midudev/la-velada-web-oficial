@@ -831,6 +831,7 @@ export const FIGHTERS: Fighters[] = [
     age: 22,
     weight: 53,
     country: 'es',
+    gallery: true,
     city: 'Barcelona',
     versus: 'alana',
     socials: [
