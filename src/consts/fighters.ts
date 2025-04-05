@@ -172,7 +172,22 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Me es indiferente, me adaptaré a lo que toque, competiremos y ganaremos. Es que no veo otro escenario.',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=ao2b-RL5rdAkoTXY&amp;clip=Ugkx5nWUXM5WtVO9Bf3Nf3hJ1BkQP_ZY6TO9&amp;clipt=ELTuGxinpBw'
+      },
+      {
+        text: '¿Va a ser una pelea de boxeo o una pelea de sumo?',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=k_vt7-vi3PoyKjnp&amp;clip=UgkxWCffIotsU0x8oWW2HPc8sqFlY5EKtZ2r&amp;clipt=EJiLDRigsg0'
+      },
+      {
+        text: 'Llevas el mismo traje hace 4 dias.',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=5vHVGPD2lSLWPKGE&amp;clip=UgkxZ65f4VwWoQJLjI0oTYCpoiIxt5klwwY-&amp;clipt=EPzFCRiE7Qk'
+      },
+
+
+    ],
     workout: {
       videoID: 'dj-4LLi5cck',
       thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp'
@@ -253,7 +268,12 @@ export const FIGHTERS: Fighters[] = [
       }
 
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Esto es algo que tenía que pasar... A ver, Roro, si estás preparada.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=KH5GLwytjfIaqnuC&amp;clip=UgkxtRthPKbk_vfmyz7EmhYbhskD5mDJcXCd&amp;clipt=EO2_BRjNpgY'
+      },
+    ],
     workout: {
       videoID: 'HBTuF3KONZc',
       thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp'
@@ -310,7 +330,12 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Confío en mí; estoy lista.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=3YC34708Wn8ThWVG&amp;clip=UgkxdN0LKsJBhRFzg7codYDoWTEG9MC6dh0U&amp;clipt=EIL7AhiKogM'
+      }
+    ],
   },
   {
     // https://www.biografia.de/gaspi/
@@ -376,7 +401,20 @@ export const FIGHTERS: Fighters[] = [
       }
 
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Perxitaa, mira que la vida real no es como el Minecraft… pasan cosas afuera.',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=xe0_jPqJ7lBEMNDx&amp;clip=UgkxVZqXUgbXM15VuQBnVAg38-8W2PnL8oqT&amp;clipt=EJDeAxiYhQQ&autoplay=1'
+      },
+      {
+        text: 'Te vi haciendo videitos. ¿Vas a pelear con el joystick o con el teclado y el mouse?',
+        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=up7KtwZu2l3qEfmY&amp;clip=Ugkxf1_rx09dGrsr69Wdu2-Bi1wq8BvACp2f&amp;clipt=EPLYDBjYjA0'
+      },
+      {
+        text: 'Me dijiste que era contra el Rubius. ¿Quién es ese?',
+        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=wsz9otQaciQnFKsV&amp;clip=UgkxGw6p-ksOymoiuVHBCw5Mx5UUmZqrAiY8&amp;clipt=EJycBxjRwwc'
+      }
+    ],
   },
   {
     // https://www.biografia.de/rivaldios/
@@ -655,7 +693,12 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Llevas un año pidiendo probar mis guantes; por fin, te voy a dar el gusto.',
+        url: 'https://www.youtube.com/embed/qdS_XOZ5kyU?si=ma0Sdomx1JJOyld1&amp;clip=Ugkxd-wfH9H1C-ZaiGBlFn3hZeAk9qQWK48w&amp;clipt=EKjUAhiw-wI'
+      },
+    ],
     workout: {
       videoID: 'TmC9TuD8NoQ',
       thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp'
@@ -736,7 +779,12 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Siempre gano; y si no, es porque no ha acabado.',
+        url: 'https://www.youtube.com/embed/cfpvro5tD7g?si=rjaM5jJdImEtefJ6&amp;clip=UgkxuoAS_mblPPU-wtj4bH3GiLXmVRBAow2b&amp;clipt=EImsAhjj2gI'
+      },
+    ],
     workout: {
       videoID: '_Rh-VjB3ATk',
       thumbnail: '/images/fighters/workoutThumbnails/grefg-thumbnail.webp'
@@ -817,7 +865,12 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Vamos a ver si le dan las hue***.',
+        url: 'https://www.youtube.com/embed/cfpvro5tD7g?si=ZcMgqxaAfHxRQb96&amp;clip=UgkxQ5sj8mAkLsReNNl3UPmr5g6CkSbZyERl&amp;clipt=EKjXAhiw_gI'
+      }
+    ],
   },
   {
     // https://www.biografia.de/ari-geli/
@@ -894,7 +947,12 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Disfruta del titulo mientras puedas, por que este año es mio.',
+        url: 'https://www.youtube.com/embed/qdS_XOZ5kyU?si=D8fgVfCSRy_SwZHv&amp;clip=UgkxEmtFin7L3_YLiJW_OyRkmeZtFj53PnkT&amp;clipt=EPWwAhj91wI'
+      },
+    ],
     workout: {
       videoID: 'rugHsv9JCSU',
       thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp'

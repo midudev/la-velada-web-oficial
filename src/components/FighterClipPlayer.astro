@@ -1,0 +1,16 @@
+---
+import LiteYouTube from './LiteYouTube.astro'
+const { videoId, clipId, text } = Astro.props
+---
+<li class="p-2 bg-pink-200/80 rounded-lg shadow-md">
+  <div class="overflow-hidden rounded-lg">
+    <LiteYouTube
+      videoId={`${clipId}`}
+      backgroundImage={`https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`}
+      title={text}
+    />
+  </div>
+  <div class="pt-2 px-2 text-dark-magenta text-sm lowercase text-left break-words text-wrap">
+    <p>{text}</p>
+  </div>
+</li>
