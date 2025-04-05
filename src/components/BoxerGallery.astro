@@ -42,13 +42,13 @@ const IMAGES_TO_LOAD = 5
     }
     <dialog
       id="lightbox"
-      class="w-full h-full bg-transparent backdrop:bg-black/70 mt-20"
+      class="w-full h-full bg-transparent backdrop:bg-black/90 mt-20"
     >
-      <div class="mx-auto flex h-[80%] w-[80%] items-center justify-center">
+      <div class="mx-auto flex h-[80%] w-[80%] items-center justify-center animate-zoom-in">
         <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
         <button
           type="button"
-          class="hover:text-theme-tickle-me-pink z-10 rounded bg-black/60 p-4 text-theme-turquoise transition hover:scale-110 right-8 top-8 absolute"
+          class="hover:text-theme-tickle-me-pink z-10 rounded bg-black/60 p-4 text-theme-turquoise transition hover:scale-110 right-8 top-8 absolute cursor-pointer"
         >
           <svg class="size-5" aria-hidden="true" fill="none" viewBox="0 0 14 14">
             <path
@@ -61,7 +61,7 @@ const IMAGES_TO_LOAD = 5
         </button>
         <button
           data-btn-prev
-          class="group z-10 transition hover:scale-125 motion-reduce:transition-none text-theme-turquoise motion-reduce:hover:scale-100 hover:text-theme-tickle-me-pink absolute left-[10px] md:left-0 md:relative"
+          class="group z-10 transition hover:scale-125 motion-reduce:transition-none text-theme-turquoise motion-reduce:hover:scale-100 hover:text-theme-tickle-me-pink absolute left-[10px] md:left-0 md:relative cursor-pointer"
           id="btn-prev"
         >
           <svg class="size-16" width="80" height="80" fill="none"
@@ -80,7 +80,7 @@ const IMAGES_TO_LOAD = 5
         />
         <button
           data-btn-next
-          class="group z-10 transition hover:scale-125 motion-reduce:transition-none text-theme-turquoise motion-reduce:hover:scale-100 hover:text-theme-tickle-me-pink absolute right-[10px] md:right-0 md:relative"
+          class="group z-10 transition hover:scale-125 motion-reduce:transition-none text-theme-turquoise motion-reduce:hover:scale-100 hover:text-theme-tickle-me-pink absolute right-[10px] md:right-0 md:relative cursor-pointer"
           id="btn-next"
         >
           <svg
@@ -115,11 +115,21 @@ const IMAGES_TO_LOAD = 5
     const updateImg = (link: HTMLElement) => {
       const img = $lightbox?.querySelector('.boxer-gallery-img') as HTMLImageElement
       const newImg = link.querySelector('img') as HTMLImageElement
-      if (img && newImg) img.src = newImg.src
+      if (img && newImg) {
+        resetMainImageAnimation(img)
+        img.src = newImg.src
+        img.classList.add('animate-fade-in')
+      }
     }
 
     const close = () => {
       $lightbox.close()
+    }
+
+    const resetMainImageAnimation = (mainImage: HTMLImageElement) => {
+      mainImage.style.animation = 'none'
+      mainImage.offsetWidth // trigger reflow
+      mainImage.style.animation = ''
     }
 
     const showPrevImage = () => {
