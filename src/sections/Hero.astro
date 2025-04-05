@@ -111,11 +111,11 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       <div class="flex w-full flex-wrap justify-between px-4">
         <div class="flex flex-wrap justify-start gap-4">
           {
-            leftRow.map(({ id, name }, index) => (
+            leftRow.map(({ id, name, versus }, index) => (
               <div
                 class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}
               >
-                <BoxerCard id={id} name={name} class="boxer-left" />
+                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
               </div>
             ))
           }
@@ -123,11 +123,11 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
         <div class="flex flex-wrap justify-end gap-4">
           {
-            rightRow.map(({ id, name }, index) => (
+            rightRow.map(({ id, name, versus }, index) => (
               <div
                 class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}
               >
-                <BoxerCard id={id} name={name} class="boxer-right" />
+                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
               </div>
             ))
           }
@@ -137,18 +137,18 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       <div class="flex flex-wrap justify-between gap-4">
         <div class="flex flex-wrap justify-start gap-4">
           {
-            leftSecondRow.map(({ id, name }, index) => (
+            leftSecondRow.map(({ id, name, versus }, index) => (
               <div class={`animate-fade-in-up animate-delay-${animationDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-left" />
+                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
               </div>
             ))
           }
         </div>
         <div class="flex flex-wrap justify-end gap-4">
           {
-            rightSecondRow.map(({ id, name }, index) => (
+            rightSecondRow.map(({ id, name, versus }, index) => (
               <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-right" />
+                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
               </div>
             ))
           }
