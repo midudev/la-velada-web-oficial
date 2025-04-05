@@ -96,6 +96,7 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I'
         },
     ],
+    
   },
   {
     // https://laletrade.com/biografias/twitch/18087-perxitaa
@@ -659,6 +660,33 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: 'TmC9TuD8NoQ',
       thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp'
+    },
+    qualities: {
+      defense: {
+        description: 'guardia izquierda,Buena defensa ,golpes efectivos ,mano dominante.',
+        percentage: 0.5,
+        type: 'defensivo-ofensivo'
+      },
+      mobility: {
+        description: 'Su estilo incluye una buena movilidad, lo que le permite esquivar golpes y posicionarse estratégicamente para atacar. Esto es crucial en el boxeo, ya que le ayuda a evitar ser golpeada mientras busca oportunidades para contraatacar.',
+        percentage: 0.7,
+        type: 'defensivo-ofensivo'
+      },
+      technique: {
+        description: 'Alana ha trabajado en su técnica de golpeo, lo que le permite lanzar combinaciones rápidas y precisas. Esto es fundamental para acumular puntos y causar daño a sus oponentes.',
+        percentage: 0.8,
+        type: 'ofensivo'
+      },
+      resistance: {
+        description: 'Su entrenamiento le ha proporcionado una gran resistencia, lo que le permite mantener un alto nivel de energía durante las peleas, especialmente en combates largos.',
+        percentage: 0.9,
+        type: 'defensivo'
+      },
+      strategy: {
+        description: 'Alana es conocida por su capacidad para adaptarse a sus oponentes. Esto significa que puede cambiar su enfoque y estrategia en función de cómo se desarrolla la pelea.',
+        percentage: 0.6,
+        type: 'defensivo-ofensivo'
+      }
     }
   },
   {
