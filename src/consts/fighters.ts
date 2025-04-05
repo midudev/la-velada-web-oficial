@@ -591,6 +591,7 @@ export const FIGHTERS: Fighters[] = [
     targetWeight: 52,
     targetGloves: '12oz',
     country: 'mx',
+    gallery: true,
     city: 'Nuevo León',
     versus: 'arigeli',
     socials: [
