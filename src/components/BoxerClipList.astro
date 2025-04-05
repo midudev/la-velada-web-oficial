@@ -1,6 +1,6 @@
 ---
-import FighterClipCard from './FighterClipCard.astro';
-import FighterClipPlayer from './FighterClipPlayer.astro';
+import BoxerClipCard from './BoxerClipCard.astro';
+import BoxerClipPlayer from './BoxerClipPlayer.astro';
 import Youtube from '@/assets/svg/youtube.svg';
 import CloseIcon from '@/assets/svg/close.svg';
 
@@ -36,7 +36,7 @@ const extractVideoIdFromClips = (clips: Clip[]) => {
 <!-- Start ListClips -->
 <ul class="px-1 py-1">
   {clips.map((clip, i) => (
-    <FighterClipCard externalPlayer={externalPlayer} index={i} text={clip.text} url={clip.url} />
+    <BoxerClipCard externalPlayer={externalPlayer} index={i} text={clip.text} url={clip.url} />
   ))}
 </ul>
 <!-- End ListClips -->
@@ -65,7 +65,7 @@ const extractVideoIdFromClips = (clips: Clip[]) => {
     <div class="py-4 overflow-y-auto p-4">
       <ul class="grid gap-4">
         {clips.map((clip, i) => (
-          <FighterClipPlayer
+          <BoxerClipPlayer
             videoId={extractVideoClipId(clip.url, "video_id")}
             clipId={extractVideoClipId(clip.url, "clip_id")}
             text={clip.text}
