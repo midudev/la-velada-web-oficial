@@ -1,0 +1,83 @@
+---
+---
+
+<dialog class="clip-dialog items-center justify-center bg-transparent px-4 text-2xl text-white sm:px-0">
+    <div class="relative block w-[80vw] max-w-[1000px] bg-transparent">
+      <iframe
+        class="yt-iframe block aspect-video h-full w-full overflow-hidden rounded bg-transparent"
+        src=""
+        title="Clip"
+        allow="autoplay"
+      >
+      </iframe>
+      <button
+        type="button"
+        class="close-dialog absolute top-4 right-4 rounded bg-black/60 p-4 transition hover:scale-110 hover:bg-accent hover:text-black"
+      >
+        ✖
+      </button>
+    </div>
+  </dialog>
+  
+  <style>
+    .clip-dialog {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+    }
+  
+    .clip-dialog .relative {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-height: 80vh;
+      max-width: 80vw;
+      position: relative;
+    }
+  
+    .yt-iframe {
+      max-height: 100%;
+      max-width: 100%;
+    }
+  
+    .close-dialog {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+  
+    .clip-dialog[open] .close-dialog {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const modal = document.querySelector(".clip-dialog");
+      const closeButton = document.querySelector(".close-dialog");
+      const iframe = document.querySelector(".yt-iframe");
+  
+      if (!modal || !(modal instanceof HTMLDialogElement) || !iframe) return;
+  
+      closeButton?.addEventListener("click", () => {
+        modal.close();
+        iframe.setAttribute("src", "");
+      });
+  
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          modal.close();
+          iframe.setAttribute("src", "");
+        }
+      });
+    });
+  </script>

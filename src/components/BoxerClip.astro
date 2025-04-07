@@ -1,29 +1,56 @@
 ---
-interface Clip {
-  text: string
-  url: string
+import ClipModal from './ClipModal.astro'
+
+interface Props {
+  clips?: Array<{
+    text: string
+    url: string
+  }>
 }
 
-interface BoxerClipProps {
-  clips?: Clip[]
-}
-
-const { clips = [] } = Astro.props as BoxerClipProps
+const { clips = [] } = Astro.props
+const hasClips = clips.length > 0
 ---
 
-<ul class="text-theme-raisin-black flex w-full flex-col gap-4 text-4xl">
-  {
-    clips.map((clip) => (
-      <li>
-        <a
-          href={clip.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="bg-theme-raisin-black/40 hover:bg-theme-raisin-black/60 flex items-center justify-between space-y-6 rounded-xl p-4 text-white backdrop-blur-sm transition"
+{hasClips && (
+  <section class="z-20 mx-auto mt-2 max-w-96 overflow-x-hidden py-5 md:mt-0 md:overflow-x-visible">
+    <ClipModal client:load/>
+    <div class="flex select-none flex-row flex-nowrap items-center transition duration-700 md:max-w-none md:!translate-x-0 md:flex-wrap md:place-content-center md:gap-4">
+      {clips.map(({ text, url }) => (
+        <button
+          data-url={url}
+          class="clip-container group flex min-w-full flex-col justify-between hover:saturate-150 md:min-w-0 cursor-pointer md:block"
+          data-clip-item
         >
-          {clip.text}
-        </a>
-      </li>
-    ))
-  }
-</ul>
+          <h3 class="text-white text-center text-lg font-bold group-hover:scale-110 transition">{text.toLowerCase()}</h3>
+          <footer class="flex items-end justify-center pt-2 text-center">
+            <p class="text-gray-400 text-sm opacity-0 transition group-hover:text-white group-hover:opacity-100">Ver clip</p>
+          </footer>
+        </button>
+      ))}
+    </div>
+  </section>
+)}
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const clipContainers = document.querySelectorAll("[data-clip-item]");
+    const modal = document.querySelector(".clip-dialog");
+    const iframe = modal?.querySelector(".yt-iframe");
+
+    if (!modal || !(modal instanceof HTMLDialogElement) || !iframe) return;
+
+    clipContainers.forEach((el) => {
+      el.addEventListener("click", (event) => {
+        const target = event.currentTarget;
+        if (!(target instanceof HTMLElement)) return;
+
+        const url = target.dataset.url;
+        if (!url) return;
+
+        iframe.setAttribute("src", `${url}&autoplay=1`);
+        modal.showModal();
+      });
+    });
+  });
+</script>
