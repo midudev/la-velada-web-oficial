@@ -7,6 +7,7 @@ import Layout from '@/layouts/Layout.astro'
 
 const { id } = Astro.params
 const combat = COMBATS.find((c) => c.id === id)
+if (!combat) return Astro.redirect('/404')
 const fighter1 = FIGHTERS.find((f) => f.id === combat?.fighters[0])
 const fighter2 = FIGHTERS.find((f) => f.id === combat?.fighters[1])
 
