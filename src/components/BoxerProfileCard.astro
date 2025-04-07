@@ -11,15 +11,15 @@ const generateRandomBars = () => {
 
 const bars = generateRandomBars();
 ---
-<article class="w-full hover:scale-105 transition-all duration-600 max-w-[450px] min-w-[300px] border-2 border-white/40 bg-pink-600/40 rounded-xl overflow-hidden ">
+<article class="w-full hover:scale-105 transition-all duration-600 max-w-[450px] lg:min-w-[300px] border-2 border-white/40 bg-pink-600/40 rounded-xl overflow-hidden ">
   <!-- Contenedor principal -->
-  <main class="grid grid-flow-row sm:grid-flow-col w-full grid-cols-2">
+  <main class="grid grid-flow-row sm:grid-flow-col w-full grid-cols-2 lowercase">
     <!-- Informacion General -->
     <section class="col-span-2 order-2 sm:order-1 ">
       <!-- Nombre -->
       <section class="col-span-2 mt-0 sm:mt-6">
         <div class="bg-pink-200/60 animate-fade-in-up animate-delay-200 text-dark-magenta px-2 pt-1 text-center">
-          <h1 class="m-0  text-2xl font-bold">
+          <h1 class="m-0 text-xl font-bold">
             {fighter.realName}
           </h1>
         </div>
@@ -28,25 +28,25 @@ const bars = generateRandomBars();
       <div class="grid grid-cols-2 gap-4 px-4 py-4 text-white font-normal text-left animate-fade-in-up animate-delay-200">
         <section class=" flex flex-col">
           <span class="text-sm text-dark-magenta">Edad</span>
-          <strong class="text-lg">{fighter.age} años</strong>
+          <strong class="text-md">{fighter.age} años</strong>
         </section>
         <section class="flex flex-col">
           <span class="text-sm text-dark-magenta">Peso</span>
-          <strong class="text-lg">{fighter.weight}kg</strong>
+          <strong class="text-md">{fighter.weight}kg</strong>
         </section>
         <section class=" flex flex-col">
           <span class="text-sm text-dark-magenta">Nacimiento</span>
-          <strong class="text-lg">{birthDate}</strong>
+          <strong class="text-md">{birthDate}</strong>
         </section>
         <section class=" flex flex-col">
           <span class="text-sm text-dark-magenta">Altura</span>
-          <strong class="text-lg">{fighter.height}m</strong>
+          <strong class="text-md">{fighter.height}m</strong>
         </section>
       </div>
     </section>
     <!-- Imagen del luchador -->
     <section class="order-1 sm:order-2 col-span-2  flex justify-center item-center  animate-fade-in-up animate-delay-200">
-      <figure class=" w-full max-w-[140px] ">
+      <figure class="w-full max-w-[140px] ">
         <img
           class="overflow-hidden rounded-bl-none sm:rounded-bl-lg bg-gray-400 aspect-[140/186.33] w-full object-cover"
           src={`/images/fighters/cards/${fighter.id}.webp`}
@@ -66,7 +66,7 @@ const bars = generateRandomBars();
           decoding="async"
         />
       </figure>
-      <strong class="text-lg text-white">{fighter.city}</strong>
+      <strong class="lowercase text-md text-white">{fighter.city}</strong>
     </section>
 
     <section class="flex items-center justify-center space-x-2 animate-fade-in-up animate-delay-200">

@@ -2,6 +2,7 @@
 import Youtube from '@/assets/svg/youtube.svg'
 const { index, text, url, externalPlayer }  = Astro.props
 const delay = index * 400;
+const { id } = Astro.params;
 ---
 
 <li
@@ -20,7 +21,7 @@ const delay = index * 400;
     </a>
   )}
   {!externalPlayer && (
-    <button class="clips-drawer-open flex bg-pink-200/60 rounded-2xl rounded-br-none lowercase flex-col cursor-pointer pt-6 px-3 items-start relative z-0 hover:scale-105 animate-fade-in duration-600 justify-start space-x-2 text-left break-words text-wrap text-lg font-normal relative before:content-['“'] before:z-1 before:text-pink-500 before:text-8xl before:absolute before:-top-5 before:left-6 ">
+    <label for="clip-drawer-toggle" class=" flex bg-pink-200/60 rounded-2xl rounded-br-none lowercase flex-col cursor-pointer pt-6 px-3 items-start relative z-0 hover:scale-105 animate-fade-in duration-600 justify-start space-x-2 text-left break-words text-wrap text-lg font-normal relative before:content-['“'] before:z-1 before:text-pink-500 before:text-8xl before:absolute before:-top-5 before:left-6 ">
       <span class="text-dark-magenta">{text}</span>
       <span class="relative w-full mt-2 flex items-center justify-end text-sm text-red-600 before:content-[''] before:absolute before:top-0 before:right-0 before:w-[60px] before:h-[2px] before:bg-pink-500 before:rounded-full">
         <Youtube class="w-4  inline-flex mr-2" />
@@ -28,7 +29,7 @@ const delay = index * 400;
           Ver clips del combate
         </span>
       </span>
-    </button>
+    </label>
   )}
 </li>
 
