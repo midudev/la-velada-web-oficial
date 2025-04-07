@@ -178,20 +178,16 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=ao2b-RL5rdAkoTXY&amp;clip=Ugkx5nWUXM5WtVO9Bf3Nf3hJ1BkQP_ZY6TO9&amp;clipt=ELTuGxinpBw'
       },
       {
+        text: 'Creo que este es un reto, porque lo veo grande, lo veo que va a pegar fuerte. Voy a tener que pegar el doble de fuerte.',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=Fjv_96aIwtSIFxsD&amp;clip=UgkxjZakldIAOdYJdcaksZax_wQZIrZ7nq9m&amp;clipt=EKzsGhijmhs'
+      },
+      {
         text: '¿Va a ser una pelea de boxeo o una pelea de sumo?',
         url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=k_vt7-vi3PoyKjnp&amp;clip=UgkxWCffIotsU0x8oWW2HPc8sqFlY5EKtZ2r&amp;clipt=EJiLDRigsg0'
       },
       {
         text: 'Llevas el mismo traje hace 4 dias.',
         url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=5vHVGPD2lSLWPKGE&amp;clip=UgkxZ65f4VwWoQJLjI0oTYCpoiIxt5klwwY-&amp;clipt=EPzFCRiE7Qk'
-      },
-      {
-        text: 'Creo que este es un reto, porque lo veo grande, lo veo que va a pegar fuerte. Voy a tener que pegar el doble de fuerte.',
-        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=Fjv_96aIwtSIFxsD&amp;clip=UgkxjZakldIAOdYJdcaksZax_wQZIrZ7nq9m&amp;clipt=EKzsGhijmhs'
-      },
-      {
-        text: 'Desde enero que sabíamos un poco este combate, él te dijo que estaba en 97 kg y hace dos semanas de repente está en más de 110 kg… ¿has engordado 13 kg comiendo milanesas o qué?',
-        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=3DCwGxERlUEThCQY&amp;clip=Ugkx4pxhh96miU6xU2FIvzTWD-NrwY7TgDJS&amp;clipt=EJ37DRjP4g4'
       },
     ],
     workout: {
