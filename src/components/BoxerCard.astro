@@ -37,7 +37,7 @@ interface Props {
     class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-data-[hover]:translate-y-0 group-data-[hover]:opacity-100"
   >
     <h3
-      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
     >
       {name}
     </h3>
@@ -152,6 +152,7 @@ interface Props {
       // Quitar la clase solo de la tarjeta sobre la que se está haciendo hover
       boxerCards[closestIndex].classList.remove('grayscale-100', 'opacity-40')
       boxerCards[closestIndex].setAttribute('data-hover','true')
+      createParticles(boxerCards[closestIndex])
     })
     boxerCards.forEach((singleBoxerCard, index) => {
       singleBoxerCard.addEventListener('mouseenter', () => {
@@ -177,7 +178,9 @@ interface Props {
         // Quitar la clase también de su par si existe
         const versus = singleBoxerCard.getAttribute('data-versus')
         if (versus) {
-          document.querySelector(`[data-id=${versus}]`)?.classList.remove('grayscale-100', 'opacity-40')
+          document
+            .querySelector(`[data-id=${versus}]`)
+            ?.classList.remove('grayscale-100', 'opacity-40')
         }
       })
 
@@ -208,26 +211,6 @@ interface Props {
         }, 500)
       })
 
-      singleBoxerCard.addEventListener('click', (e) => {
-        e.preventDefault()
-
-        // Remover la clase selected de todas las tarjetas
-        boxerCards.forEach((card) => card.classList.remove('selected'))
-
-        // Añadir la clase selected SOLO a la tarjeta clickeada (removemos la parte de la pareja)
-        singleBoxerCard.classList.add('selected')
-
-        // Crear partículas solo en la tarjeta clickeada
-        createParticles(singleBoxerCard as HTMLElement)
-
-        // Navegar a la página del boxeador después de un pequeño delay
-        const href = singleBoxerCard.getAttribute('href')
-        if (href) {
-          setTimeout(() => {
-            window.location.href = href
-          }, 600)
-        }
-      })
     })
 
     function createParticles(element: HTMLElement) {
