@@ -75,15 +75,20 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
         {
           FIGHTERS.map(({ id, name }) => (
-            <img
-              transition:name={`text-${id}`}
-              data-id={`hero-text-${id}`}
-              src={`/images/fighters/text/${id}.webp`}
-              alt={name}
-              decoding="async"
-              class="mask-fade-text absolute hidden h-full w-auto"
-              fetchpriority="low"
-            />
+            <div class="relative h-20 overflow-hidden">
+              <img
+                data-id={`hero-text-${id}`}
+                src={`/images/fighters/text/${id}.webp`}
+                alt={name}
+                decoding="async"
+                class="mask-fade-text hidden h-full w-auto"
+                fetchpriority="low"
+              />
+              <div
+                id={`mask-fade-text-${id}`}
+                class="absolute inset-0 -translate-x-full rotate-45 bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-[2s] ease-in-out"
+              ></div>
+            </div>
           ))
         }
       </div>
@@ -111,11 +116,11 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       <div class="flex w-full flex-wrap justify-between px-4">
         <div class="flex flex-wrap justify-start gap-4">
           {
-            leftRow.map(({ id, name }, index) => (
+            leftRow.map(({ id, name, versus }, index) => (
               <div
                 class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}
               >
-                <BoxerCard id={id} name={name} class="boxer-left" />
+                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
               </div>
             ))
           }
@@ -123,11 +128,11 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
         <div class="flex flex-wrap justify-end gap-4">
           {
-            rightRow.map(({ id, name }, index) => (
+            rightRow.map(({ id, name, versus }, index) => (
               <div
                 class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}
               >
-                <BoxerCard id={id} name={name} class="boxer-right" />
+                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
               </div>
             ))
           }
@@ -137,18 +142,18 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       <div class="flex flex-wrap justify-between gap-4">
         <div class="flex flex-wrap justify-start gap-4">
           {
-            leftSecondRow.map(({ id, name }, index) => (
+            leftSecondRow.map(({ id, name, versus }, index) => (
               <div class={`animate-fade-in-up animate-delay-${animationDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-left" />
+                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
               </div>
             ))
           }
         </div>
         <div class="flex flex-wrap justify-end gap-4">
           {
-            rightSecondRow.map(({ id, name }, index) => (
+            rightSecondRow.map(({ id, name, versus }, index) => (
               <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-right" />
+                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
               </div>
             ))
           }
@@ -180,6 +185,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
       const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
       const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+      const heroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
 
       if (heroText && heroImage) {
         heroText.classList.remove('animate-zoom-int')
@@ -187,6 +193,9 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
         heroText.classList.add('animate-zoom-out')
         heroImage.classList.add('animate-fade-out-down')
+
+        heroMaskFadeText?.classList.remove('translate-x-full')
+        heroMaskFadeText?.classList.add('-translate-x-full')
 
         hideFighterTimer = setTimeout(() => {
           heroText.classList.add('hidden')
@@ -198,13 +207,17 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
     document.addEventListener('boxer-card-hovered', (event: Event) => {
       if (currentFighterId) {
+        // si ya hay un luchador visible, lo ocultamos
         clearTimeout(hideFighterTimer)
 
         const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
         const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+        const heroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
 
         heroText?.classList.add('hidden')
         heroImage?.classList.add('hidden')
+        heroMaskFadeText?.classList.remove('translate-x-full')
+        heroMaskFadeText?.classList.add('-translate-x-full')
         currentFighterId = null
       }
 
@@ -213,6 +226,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
       const heroText = $(`[data-id="hero-text-${id}"]`)
       const heroImage = $(`[data-id="hero-image-${id}"]`)
+      const heroMaskFadeText = $(`#mask-fade-text-${id}`)
 
       if (heroText && heroImage) {
         heroText.classList.remove('animate-zoom-out')
@@ -227,13 +241,16 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       if (currentFighterId) {
         const currentHeroText = $(`[data-id="hero-text-${currentFighterId}"]`)
         const currentHeroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+        const currentHeroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
 
-        if (currentHeroText && currentHeroImage) {
+        if (currentHeroText && currentHeroMaskFadeText && currentHeroImage) {
           currentHeroText.classList.add('hidden')
           currentHeroImage.classList.add('hidden')
 
           currentHeroText.classList.remove('animate-zoom-in')
           currentHeroImage.classList.remove('animate-slide-up-fade')
+          currentHeroMaskFadeText?.classList.remove('translate-x-full')
+          currentHeroMaskFadeText?.classList.add('-translate-x-full')
         }
       }
 
@@ -244,6 +261,8 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       heroText?.classList.add('animate-zoom-in')
       heroImage?.classList.remove('hidden')
       heroImage?.classList.add('animate-slide-up-fade')
+      heroMaskFadeText?.classList.remove('-translate-x-full')
+      heroMaskFadeText?.classList.add('translate-x-full')
 
       currentFighterId = id
     })
