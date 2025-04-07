@@ -2,7 +2,6 @@
 import { FIGHTERS } from '@/consts/fighters'
 import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
-import BackgroundLayout from '@/layouts/BackgroundLayout.astro'
 import BoxerWorkout from '@/components/BoxerWorkout.astro'
 import BoxerCard from '@/components/BoxerCard.astro'
 import BoxerClip from '@/components/BoxerClip.astro'
@@ -26,19 +25,19 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
   <div class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center "> </div>
   
   <!-- Seccion de Informacion principal -->
-  <section class="mt-14 md:mt-28 mb-[75vh] relative lowercase max-w-7xl mx-auto flex flex-col md:flex-row h-[80vh] p-4 md:p-2">
+  <section class="mt-14 md:mt-28 mb-auto relative lowercase max-w-7xl mx-auto flex flex-col md:flex-row md:h-[80vh] p-4 md:p-2">
     
     <!-- Clips -->
-    <article class="bg-black/60 order-2 md:order-1 md:w-1/3 h-full flex items-center p-4 rounded-none">
+    <article class="slide slide-left order-2 md:order-1  opacity-0 md:w-1/3 h-full flex items-center p-4 rounded-none">
       <BoxerClip clips={fighter.clips} />
     </article>
 
     <!-- Fighter -->
-    <section class=" relative bg-black/60 order-1 md:order-2 md:w-1/3 rounded-none">
+    <section class=" relative  fadeBackground order-1 md:order-2 md:w-1/3 rounded-none">
       <img
         src={`/images/fighters/big/${id}.webp`}
         alt={fighter.name}
-        class=" h-full w-full object-contain mask-image-fade-bottom md:scale-110 animate-fade-in transition-all animate-duration-300 "
+        class=" h-full w-full object-contain mask-image-fade-bottom md:scale-110 hover:scale-125 animate-fade-in transition-all animate-duration-300 "
         transition:name={`image-${id}`}
       />
       <img
@@ -50,43 +49,62 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
     </section>
   
     <!-- Información -->
-    <article class="bg-black/60 order-3 md:w-1/3 h-full rounded-none flex flex-col items-center justify-center p-4 ">
+    <article class="slide slide-right opacity-0 order-3 md:w-1/3 h-full rounded-none flex flex-col items-center justify-center p-4 ">
       <!-- Info Fighter -->
       <section>
-          
-        <h1 class="animate-fade-in-up text-theme-turquoise text-center text-3xl font-bold">
-          {fighter.realName}
-        </h1>
-
-        <div class="grid grid-cols-2 gap-4 pt-7 pr-6 text-center animate-fade-in-up animate-delay-300">
-          <div class="stat-item">
-            <div class="text-sm text-gray-400">Edad</div>
-            <div class="text-lg">{fighter.age} años</div>
-          </div>
-          <div class="stat-item">
-            <div class="text-sm text-gray-400">Altura</div>
-            <div class="text-lg">{fighter.height}m</div>
-          </div>
-          <div class="stat-item">
-            <div class="text-sm text-gray-400">Peso</div>
-            <div class="text-lg">{fighter.weight}kg</div>
-          </div>
-          <div class="stat-item">
-            <div class="text-sm text-gray-400">Ciudad</div>
-            <div class="text-lg">{fighter.city}</div>
-          </div>
+        <div class="relative flex group w-full overflow-hidden animate-fade-in-down animate-delay-1000">
+          <h2 class="animate-fade-in-up z-10 text-theme-turquoise text-center md:text-2xl xl:text-3xl font-bold w-full">
+            {fighter.realName}
+          </h2>
+          <!-- transision de sombra -->
+          <div class=" absolute  h-full w-full bg-theme-seashell/20 -skew-3 -translate-x-full group-hover:translate-x-full transition-transform duration-500 ease-in-out"></div>
+          <div class=" absolute  h-full w-full bg-theme-seashell/10 -skew-3 -translate-x-full group-hover:translate-x-full transition-transform duration-800 ease-in-out"></div>
         </div>
 
-          <!-- Birth Date -->
-          <div class="animate-fade-in-up animate-delay-500 text-center">
-            <div class="text-sm text-gray-400">Fecha de nacimiento</div>
-            <div class="text-lg">{birthDate}</div>
-          </div>
+        <div class="grid grid-cols-2 gap-4 md:mt-2 xl:mt-7  text-center animate-fade-in-up animate-delay-1000">
+          <dl class="">
+            <dt class="xl:text-lg text-theme-seashell/85">Edad</dt>
+            <dd class="xl:text-xl font-bold text-theme-turquoise">{fighter.age} años</dd>
+          </dl>
+          <dl class="">
+            <dt class="xl:text-lg text-theme-seashell/85">Altura</dt>
+            <dd class="xl:text-xl font-bold text-theme-turquoise">{fighter.height}m</dd>
+          </dl>
+          <dl class="">
+            <dt class="xl:text-lg text-theme-seashell/85">Peso</dt>
+            <dd class="xl:text-xl font-bold text-theme-turquoise">{fighter.weight}kg</dd>
+          </dl>
+          <dl class="">
+            <dt class="xl:text-lg text-theme-seashell/85">Ciudad</dt>
+            <dd class="xl:text-xl font-bold text-theme-turquoise">{fighter.city}</dd>
+          </dl>
+        </div>
+
+        <!-- Birth Date -->
+        <dl class="animate-fade-in-up animate-delay-1000 text-center mt-5">
+          <dt class="xl:text-xl text-theme-seashell/85">Fecha de nacimiento</dt>
+          <dd class="xl:text-2xl font-bold text-theme-turquoise">{birthDate}</dd>
+        </dl>
       </section>
 
       <!-- Versus Fighter -->
-      <section>
-      </section>  
+      <section class="mt-5 w-full animate-fade-in-up animate-delay-1000">
+        <div class="flex items-center w-full px-8 ">
+          <span class="flex-grow border-t-2 border-theme-turquoise"></span>
+          <span class="px-4 text-lg text-theme-seashell whitespace-nowrap">contrincante</span>
+          <span class="flex-grow border-t-2 border-theme-turquoise"></span>
+        </div>
+
+        <div class="flex items-center justify-center gap-4 mt-2 min-h-20">
+<!--           <img src="/images/versus.webp" class="size-20" alt="">
+ -->          {
+             opponent && (    
+              <BoxerCard id={opponent.id} name={opponent.name} versus={fighter.name} class="group-hover:scale-110" />             
+            )
+          }
+        </div>
+      </section> 
+
     </article>
 
   </section>
@@ -109,51 +127,44 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
     -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 90%);
   }
 
-  .animate-widest {
-    animation: widest 0.4s ease-out forwards;
+  .fadeBackground {
+    animation: fadeToBlack 0.5s forwards;
     animation-delay: 0.5s;
   }
-
-  @keyframes widest {
+  @keyframes fadeToBlack {
     0% {
-      width: 0%;
-      opacity: 0;
-    }
-    5% {
-      width: 5%;
-      opacity: 0.5;
+      background: transparent;
     }
     100% {
-      width: 100%;
+      background: rgba(0, 0, 0, 0.7);
+    }
+  }
+  
+
+  .slide {
+    animation: slide 1s forwards;
+    animation-delay: 0.7s;
+  }
+
+  .slide-left {
+    --slide-start: 100%;
+  }
+
+  .slide-right {
+    --slide-start: -100%;
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(var(--slide-start, 100%));
+      opacity: 0;
+    }
+  
+    100% {
+      transform: translateX(0);
       opacity: 1;
+      background: rgba(0, 0, 0, 0.7);
     }
   }
 
-  @keyframes fade-in-scale {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-fighter {
-  animation: fade-in-scale 0.5s ease-out forwards;
-}
-
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.animate-info {
-  animation: fade-in 0.5s ease-out 1.2s forwards;
-}
 </style>
