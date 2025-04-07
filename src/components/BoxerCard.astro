@@ -1,9 +1,10 @@
 ---
-const { id, name, class: extraClass } = Astro.props
+const { id, name, versus, class: extraClass } = Astro.props
 
 interface Props {
   id: string
   name: string
+  versus: string
   class: string
 }
 ---
@@ -12,6 +13,7 @@ interface Props {
   class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
   href={`/luchador/${id}`}
   data-id={id}
+  data-versus={versus}
 >
   <div class="relative overflow-hidden rounded-lg">
     <img
@@ -35,7 +37,7 @@ interface Props {
     class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
   >
     <h3
-      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
     >
       {name}
     </h3>
@@ -115,23 +117,6 @@ interface Props {
     const boxerCards = document.querySelectorAll('.boxer-card')
     let timeoutId: ReturnType<typeof setTimeout> | null = null
 
-    const pairings: Record<number, number> = {
-      0: 5,
-      1: 4,
-      2: 3,
-      6: 13,
-      7: 12,
-      8: 11,
-      9: 10,
-      5: 0,
-      4: 1,
-      3: 2,
-      13: 6,
-      12: 7,
-      11: 8,
-      10: 9,
-    }
-
     boxerCards.forEach((singleBoxerCard, index) => {
       singleBoxerCard.addEventListener('mouseenter', () => {
         if (timeoutId) {
@@ -154,8 +139,11 @@ interface Props {
         singleBoxerCard.classList.remove('grayscale-100', 'opacity-40')
 
         // Quitar la clase también de su par si existe
-        if (pairings[index] !== undefined) {
-          boxerCards[pairings[index]].classList.remove('grayscale-100', 'opacity-40')
+        const versus = singleBoxerCard.getAttribute('data-versus')
+        if (versus) {
+          document
+            .querySelector(`[data-id=${versus}]`)
+            ?.classList.remove('grayscale-100', 'opacity-40')
         }
       })
 
