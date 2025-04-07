@@ -172,7 +172,20 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Desde enero que sabíamos un poco este combate, él te dijo que estaba en 97 kg y hace dos semanas de repente está en más de 110 kg… ¿has engordado 13 kg comiendo milanesas o qué?',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=3DCwGxERlUEThCQY&amp;clip=Ugkx4pxhh96miU6xU2FIvzTWD-NrwY7TgDJS&amp;clipt=EJ37DRjP4g4'
+      },
+      {
+        text: 'Me adaptaré a lo que toque, y competiremos y ganaremos es que no veo otro escenario.',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=gKZv1B2DsmgCy2dN&amp;clip=Ugkx8MmsBvRU5jgvdNojFXMddZJHdQToRgIs&amp;clipt=EMz_GxjUphw'
+      },
+      {
+        text: 'Creo que este es un reto, porque lo veo grande, lo veo que va a pegar fuerte. Voy a tener que pegar el doble de fuerte.',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=Fjv_96aIwtSIFxsD&amp;clip=UgkxjZakldIAOdYJdcaksZax_wQZIrZ7nq9m&amp;clipt=EKzsGhijmhs'
+      },
+    ],
     workout: {
       videoID: 'dj-4LLi5cck',
       thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp'
@@ -376,7 +389,20 @@ export const FIGHTERS: Fighters[] = [
       }
 
     ],
-    clips: [],
+    clips: [
+      {
+        text: ' Perxitaa mira que la vida real no es como el Minecraft eh pasan cosas afuera.',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=XhOhC8uGnhbZ8H9Y&amp;clip=UgkxEkMjWgVC_QfuZjl64rRXVLnHZZU10Foz&amp;clipt=EOS3AxjDhwQ'
+      },
+      {
+        text: 'Pero me dijiste que era contra el Rubius... y este quién es?',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=bmAowuiQ_sCtrg5V&amp;clip=UgkxSpy5Kp7t1pM7D7_v81BxCg5WgC7HfcLy&amp;clipt=EJbZCxjTiQw'
+      },
+      {
+        text: 'Vos vas a pelear con joystick o con teclado y mouse?',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=h_OzWGLkQBkG0lCe&amp;clip=UgkxDjYGqa4M1OXs4H0UZyUTj1PJ6QVGwymy&amp;clipt=ENzkDBjkiw0'
+      },
+    ],
   },
   {
     // https://www.biografia.de/rivaldios/
