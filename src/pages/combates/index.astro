@@ -23,12 +23,12 @@ import { combates } from '@/consts/pageTitles'
 
       <div
         id="combats-container"
-        class="relative top-96 mx-auto mt-10 mb-72 grid max-w-7xl grid-cols-1 gap-4 p-6 md:grid-cols-2 md:gap-8"
+        class="relative top-96 mx-auto max-w-7xl p-6 mt-10 mb-72 flex flex-wrap justify-center gap-4 md:gap-8"
       >
         {
           COMBATS.map(({ id, number, fighters, title }) => (
             <a
-              class="inline-block"
+              class="inline-block w-full md:w-[calc(50%-1rem)]"
               href={`combates/${id}`}
               title={`Ir al combate ${number} de ${title}`}
             >
