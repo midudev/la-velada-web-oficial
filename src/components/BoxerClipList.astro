@@ -1,0 +1,115 @@
+---
+import BoxerClipCard from './BoxerClipCard.astro';
+import BoxerClipPlayer from './BoxerClipPlayer.astro';
+import Youtube from '@/assets/svg/youtube.svg';
+import CloseIcon from '@/assets/svg/close.svg';
+
+interface Clip {
+  text: string;
+  url: string;
+}
+
+interface BoxerClipProps {
+  clips?: Clip[];
+  externalPlayer?: boolean;
+}
+
+const { clips = [], externalPlayer  } = Astro.props as BoxerClipProps;
+
+// Función para extraer el id del clip del video de una URL de YouTube
+const  extractVideoClipId = (url: string, type:string = "clip_id") => {
+  let match = null;
+  if (type === "clip_id") {
+    match = url.match(/\/embed\/(.+)/);
+  }else{
+    match = url.match(/\/embed\/([^?]+)/);
+  }
+  return match ? match[1] : null;
+}
+
+const extractVideoIdFromClips = (clips: Clip[]) => {
+  const [clip] = clips
+  if (!clip) return null;
+  return extractVideoClipId(clip.url, "video_id");
+}
+---
+<!-- Start ListClips -->
+<ul class="px-1 py-1">
+  {clips.map((clip, i) => (
+    <BoxerClipCard externalPlayer={externalPlayer} index={i} text={clip.text} url={clip.url} />
+  ))}
+</ul>
+<!-- End ListClips -->
+
+<!-- Start Drawer -->
+{!externalPlayer && (
+  <div
+    id="clips-drawer"
+    class="translate-x-full text-left fixed bg-pink-200/60 rounded-t-none rounded-b-none top-0 right-0 h-screen overflow-y-auto transition-transform w-full sm:max-w-sm backdrop-blur-sm"
+  >
+    <div class="sticky top-0 z-40 backdrop-blur-sm bg-pink-200/60 rounded-t-none rounded-b-none p-4">
+      <h5 id="drawer-disabled-backdrop-label" class="text-base font-semibold text-dark-magenta uppercase">
+        Clips del combate
+      </h5>
+      <button
+        type="button"
+        id="clips-drawer-close"
+        data-drawer-hide="drawer-disabled-backdrop"
+        aria-controls="drawer-disabled-backdrop"
+        class="text-gray-400 bg-dark-magenta cursor-pointer hover:scale-105 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center"
+      >
+        <CloseIcon />
+        <span class="sr-only">Cerrar menú</span>
+      </button>
+    </div>
+    <div class="py-4 overflow-y-auto p-4">
+      <ul class="grid gap-4">
+        {clips.map((clip, i) => (
+          <BoxerClipPlayer
+            videoId={extractVideoClipId(clip.url, "video_id")}
+            clipId={extractVideoClipId(clip.url, "clip_id")}
+            text={clip.text}
+          />
+        ))}
+      </ul>
+      {clips.length > 0 && (
+        <a
+          class="mt-4 text-white bg-red-700 lowercase text-sm flex items-center justify-center rounded-lg hover:bg-red-600"
+          href={`https://www.youtube.com/watch?v=${extractVideoIdFromClips(clips)}`}
+          target="_blank"
+        >
+          <Youtube class="w-4 inline-flex mr-2" />
+          <span class="text-sm">Ver video completo</span>
+        </a>
+      )}
+    </div>
+  </div>
+  )}
+<!-- End Drawer -->
+
+<script>
+  // Selecciona el botón de cierre y el contenedor del drawer
+  const closeButton = document.querySelector('#clips-drawer-close');
+  const drawer = document.querySelector('#clips-drawer');
+  const openButtons = document.querySelectorAll('.clips-drawer-open');
+
+  // Añade el event listener al botón de cierre si existe
+  closeButton?.addEventListener('click', () => {
+    drawer?.classList.add('translate-x-full');
+
+    // Detener videos en iframes cuando se cierra el drawer
+    const iframes = document.querySelectorAll('iframe');
+    iframes.forEach((iframe) => {
+      const src = iframe.src;
+      iframe.src = '';
+      iframe.src = src.replace('autoplay=1', 'autoplay=0');
+    });
+  });
+
+  // Añade event listeners a cada botón de apertura si existen
+  openButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      drawer?.classList.remove('translate-x-full');
+    });
+  });
+</script>
