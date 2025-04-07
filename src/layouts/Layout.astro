@@ -3,10 +3,12 @@ import { ClientRouter } from 'astro:transitions'
 
 import '@/styles/global.css'
 
+import Background from '@/components/Background.astro'
 import Header from '@/components/Header.astro'
 import Footer from '@/components/Footer.astro'
 import Sponsors from '@/components/Sponsors.astro'
 import { fixedTitle } from '@/consts/pageTitles'
+
 interface Props {
   title: string
 }
@@ -90,6 +92,7 @@ const { title = fixedTitle } = Astro.props
   </head>
   <body>
     <Header />
+    <Background />
     <main>
       <slot />
     </main>
@@ -99,7 +102,6 @@ const { title = fixedTitle } = Astro.props
 </html>
 
 <style>
-  html,
   body {
     margin: 0;
     width: 100%;
