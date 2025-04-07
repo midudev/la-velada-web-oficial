@@ -30,7 +30,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
       {
         opponent && (
           <div class="flex w-full items-center justify-center gap-4">
-            <img src="/images/versus.png" alt="Versus" class="h-12 w-auto" />
+            <img alt={`Enfrentamiento entre ${fighter.name} y ${opponent?.name ?? 'su oponente'}`} src="/images/versus.png" alt="Versus" class="h-12 w-auto" />
             <BoxerCard
               id={opponent.id}
               versus={fighter.id}
@@ -55,15 +55,16 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
       >
         <img
           src={`/images/fighters/big/${id}.webp`}
-          alt={fighter.name}
+          alt={`Retrato de ${fighter.name}, participante de La Velada V`}
           class="animate-fade-in mask-image-fade-bottom h-full w-full object-contain transition-all duration-700 hover:scale-105"
           transition:name={`image-${id}`}
         />
         <img
           src={`/images/fighters/text/${id}.png`}
-          alt={fighter.name}
+          alt={`Nombre de ${fighter.name} en texto decorativo`}
           class="animate-scale-in absolute bottom-24 h-16 w-auto"
           transition:name={`text-${id}`}
+          loading="lazy"
         />
       </div>
 
@@ -114,7 +115,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
             aria-label={label ?? name}
             class="hover:to-theme-turquoise/70 hover:from-theme-tickle-me-pink/70 from-theme-turquoise/70 to-theme-tickle-me-pink/70 flex w-20 flex-col items-center justify-center bg-gradient-to-b transition duration-500 hover:scale-125"
           >
-            <image.logo />
+            <image.logo aria-hidden="true" />
             <span class="text-white">{followers}</span>
           </a>
         ))
