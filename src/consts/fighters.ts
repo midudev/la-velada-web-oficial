@@ -266,7 +266,20 @@ export const FIGHTERS: Fighters[] = [
       }
 
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Esto es algo que tenía que pasar... y va a ser probablemente de los mejores combates.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=HG64tnO6hDel8lXQ&amp;clip=UgkxSOk1mzhgmxzHw0Dqei3PuLTveHNE9LJS&amp;clipt=EIa8BRispAY'
+      },
+      {
+        text: 'No sé cómo ha aceptado esta pelea, la verdad.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=vZ8QPx7N3N3b8pPG&amp;clip=UgkxneRcG-WbxSh6Vsz4bAXq_sNFOJlXNP6z&amp;clipt=EJDxHhiUwx8'
+      },
+      {
+        text: 'Cuando Roro me tenga delante en el ring... va a sentir miedo.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=PNqW7cYn-m5SIrXX&amp;clip=Ugkxgnawy6NKH7cVWFX5fhgf3ZvfaGVfzInm&amp;clipt=ELCcGxjp3Bs'
+      }
+    ],
     workout: {
       videoID: 'HBTuF3KONZc',
       thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp'
@@ -323,7 +336,20 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Nunca voy a hundir a una mujer para sentirme mejor conmigo misma.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=lBVhjXJ2Zn7cbrch&amp;clip=Ugkxu-CzMHs-3zLGaFFCGIh-tcPMjImucfAT&amp;clipt=EOnqLRjv0y4'
+      },
+      {
+        text: 'Si me enfadas, no te voy a sonreír.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=toSZw_B6pu-wvkej&amp;clip=Ugkx343aGQvxi3px_edJLMmiUwfmyRIZGyB5&amp;clipt=EIzLLBiXoC0'
+      },
+      {
+        text: 'Yo tengo la disciplina para prepararme lo mejor que yo pueda.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=_mA5-y8p57kbFYUS&amp;clip=UgkxFEJaIdinVMKPzvTr575aHeDFcG7x60TN&amp;clipt=EOSaOhi7gzs'
+      }
+    ],
   },
   {
     // https://www.biografia.de/gaspi/
