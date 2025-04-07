@@ -11,18 +11,42 @@ interface BoxerClipProps {
 const { clips = [] } = Astro.props as BoxerClipProps
 ---
 
-<ul class="text-theme-raisin-black flex w-full flex-col gap-4 text-4xl">
+<ul class="flex flex-col gap-8 text-sm md:text-md lg:text-lg xl:text-xl  w-full h-auto ">
   {
     clips.map((clip) => (
-      <li>
+      <li class=" w-full group cursor-pointer relative p-2 -skew-3">
+        <p
+          
+          class="text-center z-20 w-full h-full rounded-xl  text-theme-seashell group-hover:text-theme-turquoise transition-all "
+        >
+          "{clip.text}"
+        </p>
+
         <a
           href={clip.url}
           target="_blank"
           rel="noopener noreferrer"
-          class="bg-theme-raisin-black/40 hover:bg-theme-raisin-black/60 flex items-center justify-between space-y-6 rounded-xl p-4 text-white backdrop-blur-sm transition"
-        >
-          {clip.text}
-        </a>
+          class="text-white text-3xl z-30 w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 backdrop-blur-[1.5px]
+          flex items-center justify-center font-bold "> 
+          <svg  xmlns="http://www.w3.org/2000/svg"  
+            width="24"  
+            height="24"
+            class="size-10"  
+            viewBox="0 0 24 24" 
+            fill="none"  
+            stroke="currentColor"  
+            stroke-width="2"  
+            stroke-linecap="round"  
+            stroke-linejoin="round"  
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+            <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+          </svg>
+          ver clip
+         </a>
+
+         <div class="size-full bg-black/30 [mask-image:radial-gradient(black_50%,transparent)] z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100"></div>
       </li>
     ))
   }
