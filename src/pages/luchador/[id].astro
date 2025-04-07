@@ -3,6 +3,8 @@ import { FIGHTERS } from '@/consts/fighters'
 import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
 import BoxerWorkout from '@/components/BoxerWorkout.astro'
+import BoxerCard from '@/components/BoxerCard.astro'
+import BoxerClip from '@/components/BoxerClip.astro'
 
 const { id } = Astro.params
 
@@ -15,42 +17,60 @@ const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   day: 'numeric',
 })
 
-const opponent = FIGHTERS.find(f => f.id === fighter.versus)
+const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 ---
 
 <Layout title={`${fighter.name} | ${fixedTitle}`}>
-  <section class="relative flex min-h-screen w-full">
+  <section class="pt relative flex min-h-screen w-full lowercase">
     <div
-        class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-50"
+      class="relative z-10 flex min-h-screen w-full max-w-xl flex-col items-center justify-center gap-y-32 px-4 pt-24 text-right text-balance lg:pt-32"
+    >
+    <BoxerClip clips={fighter.clips} />
+
+      {
+        opponent && (
+          <div class="flex w-full items-center gap-4 justify-center">
+            <img src="/images/versus.png" alt="Versus" class="h-12 w-auto" />
+            <BoxerCard id={opponent.id} name={opponent.name} class="group-hover:scale-110" />
+          </div>
+        )
+      }
+    </div>
+
+    <div
+      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-50"
     >
     </div>
 
-    <div class="mr-7 relative z-10 flex w-full flex-col items-center justify-center px-4 pt-24 lg:flex-row lg:items-start lg:pt-32">
-      <div class="relative mt-8 flex h-[60vh] w-full items-center justify-center lg:mt-0 lg:h-[80vh] lg:w-1/2">
+    <div
+      class="relative z-10 mr-7 flex w-full flex-col items-center justify-center px-4 pt-24 lg:flex-row lg:items-start lg:pt-32"
+    >
+      <div
+        class="relative mt-8 flex h-[60vh] w-full items-center justify-center lg:mt-0 lg:h-[80vh] lg:w-1/2"
+      >
         <img
-            src={`/images/fighters/big/${id}.webp`}
-            alt={fighter.name}
-            class="h-full w-full object-contain transition-all duration-700 hover:scale-105 animate-fade-in mask-image-fade-bottom"
-            transition:name={`image-${id}`}
+          src={`/images/fighters/big/${id}.webp`}
+          alt={fighter.name}
+          class="animate-fade-in mask-image-fade-bottom h-full w-full object-contain transition-all duration-700 hover:scale-105"
+          transition:name={`image-${id}`}
+        />
+        <img
+          src={`/images/fighters/text/${id}.png`}
+          alt={fighter.name}
+          class="animate-scale-in absolute bottom-24 h-16 w-auto"
+          transition:name={`text-${id}`}
         />
       </div>
-      <div class="ml-7 mt-5 w-full max-w-xl text-white lg:w-1/2">
-        <div
-            class="mb-8 flex flex-col items-center space-x-4 animate-fade-in"
-            transition:name={`name-${id}`}
-        >
-          <img
-              src={`/images/fighters/text/${id}.png`}
-              alt={fighter.name}
-              class="h-16 w-auto animate-scale-in"
-              transition:name={`text-${id}`}
-          />
-          <div class=" text-center text-2xl font-bold animate-slide-in-right">{fighter.realName}</div>
-        </div>
 
-        <div class="space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm animate-fade-up">
-          <!-- Stats Grid -->
-          <div class="grid grid-cols-2 gap-4 text-center pt-7 pr-6">
+      <div class="mt-5 ml-7 w-full max-w-xl text-white lg:w-1/2">
+        <div class="space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm">
+          <div class="mb-8 flex flex-col items-center space-x-4">
+            <h1 class="animate-fade-in-up inline-block text-center text-2xl font-bold">
+              {fighter.realName}
+            </h1>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 pt-7 pr-6 text-center">
             <div class="stat-item">
               <div class="text-sm text-gray-400">Edad</div>
               <div class="text-lg">{fighter.age} años</div>
@@ -70,47 +90,36 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
           </div>
 
           <!-- Birth Date -->
-          <div class="animate-fade-in text-center">
+          <div class="animate-fade-in-up animate-delay-400 text-center">
             <div class="text-sm text-gray-400">Fecha de nacimiento</div>
             <div class="text-lg">{birthDate}</div>
           </div>
-
-          <div class="flex flex-wrap gap-3 space-x-2 justify-center">
-            {
-              (fighter.socials || [])?.map(({ url, image, name, label }) => (
-                  <a
-                      href={url}
-                      target="_blank"
-                      aria-label={label ?? name}
-                      class="hover:scale-125 transition flex items-center justify-center"
-                  >
-                    <image.logo />
-                  </a>
-              ))
-            }
-          </div>
-        </div>
-        <div class="mt-7 space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm animate-fade-up">
-          {opponent && (
-            <div class="flex justify-center items-center space-x-4 animate-pulse"> 
-              <div class="text-xl font-bold">VS</div>
-              <a
-                href={`/luchador/${opponent.id}`}
-                class="group transform rounded-lg bg-white/10 px-4 py-2 transition-all hover:scale-105 hover:bg-white/20"
-              >
-                <span class="inline-block transition-transform group-hover:translate-x-1">
-                  {opponent.name}
-                </span>
-              </a>
-            </div>
-          )}
         </div>
       </div>
     </div>
   </section>
-  {
-    fighter.workout && <BoxerWorkout workout={fighter.workout} />
-  }
+
+  <section>
+    <div class="flex flex-wrap justify-center gap-3 space-x-2">
+      {
+        (fighter.socials || [])?.map(({ url, image, name, label, followers }) => (
+          <a
+            href={url}
+            target="_blank"
+            aria-label={label ?? name}
+            class="hover:to-theme-turquoise/70 hover:from-theme-tickle-me-pink/70 from-theme-turquoise/70 to-theme-tickle-me-pink/70 flex w-20 flex-col items-center justify-center bg-gradient-to-b transition duration-500 hover:scale-125"
+          >
+            <image.logo />
+            <span class="text-white lowercase">{followers}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section>
+    {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
+  </section>
 </Layout>
 
 <style>
@@ -119,10 +128,18 @@ const opponent = FIGHTERS.find(f => f.id === fighter.versus)
     opacity: 0;
   }
 
-  .stat-item:nth-child(1) { animation-delay: 0.1s; }
-  .stat-item:nth-child(2) { animation-delay: 0.2s; }
-  .stat-item:nth-child(3) { animation-delay: 0.3s; }
-  .stat-item:nth-child(4) { animation-delay: 0.4s; }
+  .stat-item:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .stat-item:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .stat-item:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .stat-item:nth-child(4) {
+    animation-delay: 0.4s;
+  }
 
   .mask-image-fade-bottom {
     mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
