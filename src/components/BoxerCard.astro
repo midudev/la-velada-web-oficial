@@ -42,7 +42,7 @@ interface Props {
   <div 
     class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
     <h3 
-      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
     >
       {name}
     </h3>
@@ -56,33 +56,20 @@ interface Props {
 </a>
 
 <style>
-  /* Estilos para efectos de inclinación */
-  .boxer-left {
-    /* clip-path: polygon(0% 0%, 95% 0%, 100% 100%, 5% 100%); */
-    transform: skew(2deg);
-  }
-  .boxer-right {
-    /* clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%); */
-    transform: skew(-2deg);
-  }
-  
-  /* Sprite de luchadores, usando una imagen única */
+  .boxer-left { transform: skew(2deg); }
+  .boxer-right { transform: skew(-2deg); }
   .fighter-sprite {
     background-image: url('/images/fighters/cards/fighters-sheet.webp');
     background-repeat: no-repeat;
-    background-size: 1400% 100%; /* 14 imágenes en una fila */
+    background-size: 1400% 100%;
     position: relative;
     background-position: calc(var(--fighter-index, 0) / 13 * 100%) 0;
   }
-
-  /* Estilo para cuando el sprite falla y usamos imagen individual */
   .sprite-error {
     background-image: var(--fallback-url) !important;
     background-size: cover !important;
     background-position: center !important;
   }
-
-  /* Definir índices para cada luchador */
   .fighter-sprite[data-fighter="abby"] { --fighter-index: 0; }
   .fighter-sprite[data-fighter="alana"] { --fighter-index: 1; }
   .fighter-sprite[data-fighter="andoni"] { --fighter-index: 2; }
@@ -108,34 +95,15 @@ interface Props {
     }
   }
 
-  /* Animaciones para el borde seleccionado */
   @keyframes pulseBorder {
-    0% {
-      box-shadow: 0 0 0 0 rgba(255, 20, 147, 0.7);
-    }
-    70% {
-      box-shadow: 0 0 0 10px rgba(255, 20, 147, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(255, 20, 147, 0);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(255, 20, 147, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 20, 147, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 20, 147, 0); }
   }
   @keyframes selectedPulse {
-    0% {
-      box-shadow:
-        0 0 0 0 rgba(255, 20, 147, 0.7),
-        inset 0 0 0 2px rgba(255, 20, 147, 1);
-    }
-    70% {
-      box-shadow:
-        0 0 0 15px rgba(255, 20, 147, 0),
-        inset 0 0 0 2px rgba(255, 20, 147, 1);
-    }
-    100% {
-      box-shadow:
-        0 0 0 0 rgba(255, 20, 147, 0),
-        inset 0 0 0 2px rgba(255, 20, 147, 1);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(255, 20, 147, 0.7), inset 0 0 0 2px rgba(255, 20, 147, 1); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 20, 147, 0), inset 0 0 0 2px rgba(255, 20, 147, 1); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 20, 147, 0), inset 0 0 0 2px rgba(255, 20, 147, 1); }
   }
   .boxer-card.selected {
     animation: selectedPulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
@@ -151,10 +119,8 @@ interface Props {
 <script>
   import { FIGHTERS } from '@/consts/fighters';
 
-  // Tipos
   type FighterId = typeof FIGHTERS[number]['id'];
-  
-  // Constantes y config
+
   const CONFIG = {
     classes: {
       selected: 'selected',
@@ -165,7 +131,7 @@ interface Props {
     timing: {
       hoverExitDelay: 500,
       clickDelay: 600,
-      particleThrottle: 300, // Evitar crear partículas demasiado seguido
+      particleThrottle: 300,
     },
     particles: {
       count: 10,
@@ -179,90 +145,53 @@ interface Props {
     },
     paths: {
       spriteSheet: '/images/fighters/cards/fighters-sheet.webp',
-      fallbackTemplate: (id: string) => `/images/fighters/cards/${id}.webp`,
+      fallbackTemplate: (id) => `/images/fighters/cards/${id}.webp`,
     },
   };
 
-  // Mapa de oponentes precalculado (inmutable)
-  const versusMap = Object.freeze(
-    new Map(FIGHTERS.flatMap(fighter => 
-      fighter.versus ? [[fighter.id, fighter.versus], [fighter.versus, fighter.id]] : [],
-  )),
-);
-  
-  // Estado global (minimizado)
+  const versusMap = Object.freeze(new Map(FIGHTERS.flatMap(f => f.versus ? [[f.id, f.versus], [f.versus, f.id]] : [])));
+
   const state = {
     lastParticleTime: 0,
-    hoverTimeoutId: null as number | null,
+    hoverTimeoutId: null,
   };
 
-  // Crea partículas con DocumentFragment (optimizado)
-  function createParticles(element: HTMLElement): void {
-    // Throttle: limitar creación de partículas (mejor rendimiento)
+  function createParticles(el) {
     const now = Date.now();
     if (now - state.lastParticleTime < CONFIG.timing.particleThrottle) return;
     state.lastParticleTime = now;
-    
+
     const fragment = document.createDocumentFragment();
-    const { count, duration, baseRadius, varianceRadius } = CONFIG.particles;
-    
-    // Crear partículas con un solo bucle y minimizar reflows
-    for (let i = 0; i < count; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'absolute w-1 h-1 bg-theme-tickle-me-pink rounded-full';
-      
+    for (let i = 0; i < CONFIG.particles.count; i++) {
+      const p = document.createElement('div');
+      p.className = 'absolute w-1 h-1 bg-theme-tickle-me-pink rounded-full';
       const angle = Math.random() * Math.PI * 2;
-      const radius = baseRadius + Math.random() * varianceRadius;
-      
-      // Establecer estilos de una vez
-      particle.style.cssText = `
-        left: ${50 + Math.cos(angle) * radius}%;
-        top: ${50 + Math.sin(angle) * radius}%;
-        pointer-events: none;
-      `;
-      
-      // Animar y limpiar
-      particle.animate(
-        [
-          { opacity: 1, transform: 'scale(1)' },
-          { opacity: 0, transform: 'scale(0)' },
-        ],
-        { duration, easing: 'ease-out', fill: 'forwards' },
-    ).onfinish = () => particle.remove();
-      
-      fragment.appendChild(particle);
+      const radius = CONFIG.particles.baseRadius + Math.random() * CONFIG.particles.varianceRadius;
+      p.style.cssText = `left: ${50 + Math.cos(angle) * radius}%; top: ${50 + Math.sin(angle) * radius}%; pointer-events: none;`;
+      p.animate([
+        { opacity: 1, transform: 'scale(1)' },
+        { opacity: 0, transform: 'scale(0)' },
+      ], { duration: CONFIG.particles.duration, easing: 'ease-out', fill: 'forwards' }).onfinish = () => p.remove();
+      fragment.appendChild(p);
     }
-    
-    // Una sola operación DOM para todas las partículas
-    element.appendChild(fragment);
+    el.appendChild(fragment);
   }
 
-  // Inicializa fallback para sprite sheet
-  function initSpriteFallback(): void {
-    const spriteSheet = new Image();
-    
-    // Solo manejar error - no hacer nada si carga correctamente
-    spriteSheet.onerror = () => {
-      document.querySelectorAll<HTMLElement>(CONFIG.selectors.sprite).forEach(sprite => {
+  function initSpriteFallback() {
+    const img = new Image();
+    img.onerror = () => {
+      document.querySelectorAll(CONFIG.selectors.sprite).forEach(sprite => {
         const id = sprite.dataset.fighter;
         if (!id) return;
-        
-        // Aplicar fallback
         sprite.classList.add(CONFIG.classes.spriteError);
-        sprite.style.setProperty(
-          '--fallback-url',
-          `url('${CONFIG.paths.fallbackTemplate(id)}')`,
-      );
+        sprite.style.setProperty('--fallback-url', `url('${CONFIG.paths.fallbackTemplate(id)}')`);
       });
     };
-    
-    // Cargar sprite
-    spriteSheet.src = CONFIG.paths.spriteSheet;
+    img.src = CONFIG.paths.spriteSheet;
   }
 
-  // Actualizar estilos de tarjetas en batch
-  function updateCardStyles(cards: HTMLElement[], currentId: FighterId | null, opponentId?: FighterId): void {
-    window.requestAnimationFrame(() => {
+  function updateCardStyles(cards, currentId, opponentId) {
+    requestAnimationFrame(() => {
       cards.forEach(card => {
         const cardId = card.dataset.id;
         const isRelevant = !currentId || cardId === currentId || cardId === opponentId;
@@ -272,60 +201,48 @@ interface Props {
     });
   }
 
-  // Inicializar cuando Astro carga la página
   document.addEventListener('astro:page-load', () => {
     initSpriteFallback();
-    
-    const allCards = Array.from(document.querySelectorAll<HTMLElement>(CONFIG.selectors.card));
+    const allCards = Array.from(document.querySelectorAll(CONFIG.selectors.card));
 
     allCards.forEach(card => {
-      const id = card.dataset.id as FighterId;
+      const id = card.dataset.id;
       if (!id) return;
-            
-      const handleEnter = () => {
-        state.hoverTimeoutId && clearTimeout(state.hoverTimeoutId);
-        state.hoverTimeoutId = null;
 
-        // versusMap
+      const handleEnter = () => {
+        if (state.hoverTimeoutId) clearTimeout(state.hoverTimeoutId);
+        state.hoverTimeoutId = null;
         const opponentId = versusMap.get(id);
-                
         document.dispatchEvent(new CustomEvent('boxer-card-hovered', { detail: { id, versus: opponentId } }));
         updateCardStyles(allCards, id, opponentId);
         createParticles(card);
       };
-      
+
       const handleLeave = () => {
-        state.hoverTimeoutId = window.setTimeout(() => {
+        state.hoverTimeoutId = setTimeout(() => {
           document.dispatchEvent(new CustomEvent('boxer-card-exit'));
           updateCardStyles(allCards, null);
         }, CONFIG.timing.hoverExitDelay);
       };
-      
-      const handleClick = (e: MouseEvent) => {
+
+      const handleClick = (e) => {
         e.preventDefault();
-        
-        // Batch las operaciones DOM juntas
-        window.requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
           allCards.forEach(c => c.classList.remove(CONFIG.classes.selected));
           card.classList.add(CONFIG.classes.selected);
         });
-        
         createParticles(card);
-        
         const href = card.getAttribute('href');
         if (href) {
-          setTimeout(() => {
-            window.location.href = href;
-          }, CONFIG.timing.clickDelay);
+          setTimeout(() => { window.location.href = href; }, CONFIG.timing.clickDelay);
         }
       };
-      
-      // Añadir listeners con passive donde sea posible (mejor scrolling)
+
       card.addEventListener('mouseenter', handleEnter, { passive: true });
       card.addEventListener('focusin', handleEnter, { passive: true });
       card.addEventListener('mouseleave', handleLeave, { passive: true });
       card.addEventListener('focusout', handleLeave, { passive: true });
-      card.addEventListener('click', handleClick); // No puede ser passive
+      card.addEventListener('click', handleClick);
     });
   });
 </script>
