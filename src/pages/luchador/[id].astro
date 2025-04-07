@@ -1,11 +1,11 @@
 ---
-import { FIGHTERS } from '@/consts/fighters'
-import Layout from '@/layouts/Layout.astro'
-import { fixedTitle } from '@/consts/pageTitles'
-import BoxerWorkout from '@/components/BoxerWorkout.astro'
 import BoxerCard from '@/components/BoxerCard.astro'
 import BoxerClip from '@/components/BoxerClip.astro'
 import FighterProfileCard from '@/components/FighterProfileCard.astro'
+import BoxerWorkout from '@/components/BoxerWorkout.astro'
+import { FIGHTERS } from '@/consts/fighters'
+import { fixedTitle } from '@/consts/pageTitles'
+import Layout from '@/layouts/Layout.astro'
 
 const { id } = Astro.params
 
@@ -22,13 +22,11 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 ---
 
 <Layout title={`${fighter.name} | ${fixedTitle}`}>
-  <section class="pt relative flex min-h-screen w-full lowercase">
+  <section class="pt relative flex min-h-screen w-full">
     <div
       class="relative z-10 flex min-h-screen w-full max-w-xl flex-col items-center justify-center gap-y-32 px-4 pt-24 text-right text-balance lg:pt-32"
     >
-    <BoxerClip clips={fighter.clips} />
-
-
+      <BoxerClip clips={fighter.clips} />
     </div>
 
     <div
@@ -44,15 +42,16 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
       >
         <img
           src={`/images/fighters/big/${id}.webp`}
-          alt={fighter.name}
+          alt={`Retrato de ${fighter.name}, participante de La Velada V`}
           class="animate-fade-in mask-image-fade-bottom h-full w-full object-contain transition-all duration-700 hover:scale-105"
           transition:name={`image-${id}`}
         />
         <img
           src={`/images/fighters/text/${id}.png`}
-          alt={fighter.name}
+          alt={`Nombre de ${fighter.name} en texto decorativo`}
           class="animate-scale-in absolute bottom-24 h-16 w-auto"
           transition:name={`text-${id}`}
+          loading="lazy"
         />
       </div>
 
@@ -63,9 +62,14 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
         />
         {
           opponent && (
-            <div class="flex w-full items-center gap-4 justify-center">
-              <img src="/images/versus.png" alt="Versus" class="h-12 w-auto" />
-              <BoxerCard id={opponent.id} name={opponent.name} class="group-hover:scale-110" />
+            <div class="flex w-full items-center justify-center gap-4">
+              <img alt={`Enfrentamiento entre ${fighter.name} y ${opponent?.name ?? 'su oponente'}`} src="/images/versus.png" alt="Versus" class="h-12 w-auto" />
+              <BoxerCard
+                id={opponent.id}
+                versus={fighter.id}
+                name={opponent.name}
+                class="group-hover:scale-110"
+              />
             </div>
           )
         }
@@ -83,8 +87,8 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
             aria-label={label ?? name}
             class="hover:to-theme-turquoise/70 hover:from-theme-tickle-me-pink/70 from-theme-turquoise/70 to-theme-tickle-me-pink/70 flex w-20 flex-col items-center justify-center bg-gradient-to-b transition duration-500 hover:scale-125"
           >
-            <image.logo />
-            <span class="text-white lowercase">{followers}</span>
+            <image.logo aria-hidden="true" />
+            <span class="text-white">{followers}</span>
           </a>
         ))
       }
