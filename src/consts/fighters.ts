@@ -12,6 +12,8 @@ export const FIGHTERS: Fighters[] = [
     id: 'peereira',
     name: 'Peereira',
     realName: 'Pablo Pereira Ramos',
+    description:
+      'Pablo Pereira Ramos, conocido en línea como Peereira7, es un streamer y creador de contenido español nacido el 21 de diciembre de 1998 en Galicia, España. Ganó reconocimiento por sus transmisiones en vivo de videojuegos, especialmente Fortnite, en plataformas como Twitch y YouTube. Peereira se enfrentara al mexicano Rivaldios. Durante la presentación del evento, ambos protagonizaron un tenso cara a cara que casi derivó en una confrontación física',
     gender: 'masculino',
     birthDate: new Date(1998, 11, 21),
     height: 1.63,
@@ -19,7 +21,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 63,
     country: 'es',
     city: 'A Coruña',
-    versus: 'rivaldios',
+    opponent: 'rivaldios',
+    versus: {
+      leftPortrait: 'peereira',
+      rightPortrait: 'rivaldios',
+    },
     socials: [
       {
         id: 'x',
@@ -86,22 +92,28 @@ export const FIGHTERS: Fighters[] = [
       {
         text: 'En seis meses va a caer, lo voy a noquear 100% y le voy a arrancar la p*** cabeza.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=GIR26FtonnzIbZZL&amp;clip=UgkxLQNqwPqlJLU97lVJkD2lEWrJXswPfHOU&amp;clipt=ENGYChjaywo'
-        },
+      },
       {
         text: 'Vengo aquí para ser el mejor boxeador posible, estoy con el mejor equipo posible y lo único que te pido es que entrenes lo suficientemente bien para que toda esta gente vea el show que se merece.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=OQAXdqDuQ33flPQg&amp;clip=UgkxtAMxt3Q-BIOC7G6PqfRTs8qkUZgaXwWP&amp;clipt=ENS2KBjkiik'
-        },
+      },
       {
         text: 'Entreno literalmente para noquearlo, no vengo a otra cosa.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I'
-        },
+      },
     ],
+    faceOff: {
+      videoID: 'OjOItlQQHNM',
+      thumbnail: '/images/fighters/faceOffThumbnails/peereira-vs-rivaldios-thumbnail.webp',
+    },
   },
   {
     // https://laletrade.com/biografias/twitch/18087-perxitaa
     id: 'perxitaa',
     name: 'Perxitaa',
     realName: 'Jaume Cremades Gradoli',
+    description:
+      'Perxitaa, es un streamer y creador de contenido español con más de una década de experiencia en plataformas como YouTube y Twitch. Reconocido por su carisma y habilidades en el roleplay, ha participado en series destacadas como "GTA V Roleplay" y "TortillaLand". Su próximo combate contra Gaspi en "La Velada del Año 5" pondrá a prueba su determinación y capacidad para enfrentar nuevos desafíos.',
     gender: 'masculino',
     birthDate: new Date(1991, 6, 9),
     height: 1.86,
@@ -109,7 +121,11 @@ export const FIGHTERS: Fighters[] = [
     city: 'Catarroja, Valencia',
     weight: 102,
     country: 'es',
-    versus: 'gaspi',
+    opponent: 'gaspi',
+    versus: {
+      leftPortrait: 'perxitaa',
+      rightPortrait: 'gaspi',
+    },
     socials: [
       {
         id: 'x',
@@ -175,13 +191,19 @@ export const FIGHTERS: Fighters[] = [
     clips: [],
     workout: {
       videoID: 'dj-4LLi5cck',
-      thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp',
+    },
+    faceOff: {
+      videoID: 'aOKOUIx8mPU',
+      thumbnail: '/images/fighters/faceOffThumbnails/perxitaa-vs-gaspi-thumbnail.webp',
+    },
   },
   {
     id: 'abby',
     name: 'Abby',
     realName: 'Abril Gené Capriles',
+    description:
+      'Abby, es una destacada streamer española reconocida por su fuerte presencia en redes sociales y su habilidad para generar contenido que capta la atención de una amplia audiencia. Su próximo combate contra RoRo en "La Velada del Año 5" ha generado gran expectación, especialmente debido a la notable diferencia de altura entre ambas',
     gender: 'femenino',
     birthDate: new Date(2000, 11, 28),
     height: 1.72,
@@ -189,7 +211,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 62,
     country: 'es',
     city: 'Barcelona',
-    versus: 'roro',
+    opponent: 'roro',
+    versus: {
+      leftPortrait: 'abby',
+      rightPortrait: 'roro',
+    },
     socials: [
       {
         id: 'x',
@@ -256,14 +282,20 @@ export const FIGHTERS: Fighters[] = [
     clips: [],
     workout: {
       videoID: 'HBTuF3KONZc',
-      thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp',
+    },
+    faceOff: {
+      videoID: '_A0QFge7TlI',
+      thumbnail: '/images/fighters/faceOffThumbnails/abby-vs-roro-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/roro/
     id: 'roro',
     name: 'Roro',
     realName: 'Rocío López Bueno',
+    description:
+      'RoRo, es una influencer española de 23 años que ha ganado popularidad por sus contenidos de cocina y estilo de vida en plataformas como TikTok e Instagram. Con una estatura de 1.49 metros, se enfrentará a Abby, quien mide 1.72 metros, en "La Velada del Año 5',
     gender: 'femenino',
     birthDate: new Date(2002, 2, 1),
     height: 1.49,
@@ -271,7 +303,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 47,
     country: 'es',
     city: 'Madrid',
-    versus: 'abby',
+    opponent: 'abby',
+    versus: {
+      leftPortrait: 'abby',
+      rightPortrait: 'roro',
+    },
     socials: [
       {
         id: 'instagram',
@@ -311,12 +347,18 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    faceOff: {
+      videoID: '_A0QFge7TlI',
+      thumbnail: '/images/fighters/faceOffThumbnails/abby-vs-roro-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/gaspi/
     id: 'gaspi',
     name: 'Gaspi',
     realName: 'Gaspar Prim Díaz',
+    description:
+      'Gaspi, es un youtuber y humorista argentino conocido por su contenido irreverente y humorístico que ha captado la atención de una amplia audiencia en plataformas como YouTube, donde cuenta con más de 2 millones de suscriptores. Su estilo desenfadado y su capacidad para conectar con el público lo han convertido en una figura destacada en la comunidad digital. Aunque no posee experiencia previa en boxeo, su carisma y determinación lo posicionan como un oponente a considerar en su próximo enfrentamiento contra Perxitaa en "La Velada del Año 5". ',
     gender: 'masculino',
     birthDate: new Date(2002, 11, 28),
     height: 1.83,
@@ -324,7 +366,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 112,
     country: 'ar',
     city: 'Buenos Aires',
-    versus: 'perxitaa',
+    opponent: 'perxitaa',
+    versus: {
+      leftPortrait: 'perxitaa',
+      rightPortrait: 'gaspi',
+    },
     socials: [
       {
         id: 'instagram',
@@ -377,12 +423,18 @@ export const FIGHTERS: Fighters[] = [
 
     ],
     clips: [],
+    faceOff: {
+      videoID: 'aOKOUIx8mPU',
+      thumbnail: '/images/fighters/faceOffThumbnails/perxitaa-vs-gaspi-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/rivaldios/
     id: 'rivaldios',
     name: 'Rivaldios',
     realName: 'Rivaldo Reatiga Ojeda',
+    description:
+      'Rivaldios, cuyo nombre real es Rivaldo Reátiga Ojeda, es un creador de contenido mexicano originario de Culiacán, Sinaloa, nacido el 6 de febrero de 2001. Apasionado del fútbol, ha participado en fuerzas básicas de equipos como Santos Laguna, Querétaro y Xolos de Tijuana. Conocido por su carisma y confianza en sí mismo, ha ganado popularidad en plataformas como TikTok e Instagram, donde comparte contenido relacionado con el fútbol y su vida diaria. En "La Velada del Año 5", se enfrentará a Peereira, un combate que ha generado gran expectación debido a la intensa rivalidad entre ambos, evidenciada en su reciente cara a cara durante la presentación del evento. A pesar de no tener experiencia previa en boxeo, la determinación y espíritu competitivo de Rivaldios lo convierten en un oponente a tener en cuenta en el ring.',
     gender: 'masculino',
     birthDate: new Date(2001, 1, 6),
     height: 1.7,
@@ -390,7 +442,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 69,
     country: 'mx',
     city: 'Culiacán',
-    versus: 'peereira',
+    opponent: 'peereira',
+    versus: {
+      leftPortrait: 'peereira',
+      rightPortrait: 'rivaldios',
+    },
     socials: [
       {
         id: 'instagram',
@@ -432,22 +488,28 @@ export const FIGHTERS: Fighters[] = [
     clips: [
       {
         text: 'Pereira, ponte trucha, amigo. Te voy a enseñar que la cuna del boxeo está en México.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=2yNcYbYAnGXc4jRD&amp;clip=UgkxuVSmgfc49HRArsmT522Vf42fmDo_W1WA&amp;clipt=EKOABBj8rgQ'  
+        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=2yNcYbYAnGXc4jRD&amp;clip=UgkxuVSmgfc49HRArsmT522Vf42fmDo_W1WA&amp;clipt=EKOABBj8rgQ',
       },
       {
-        text:'Voy a llegar al punto en que este v**** me va a tener miedo después de la pelea.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=qXDaC9BtQVT2Lw3r&amp;clip=Ugkxyvlpe6cGZqC2A2tU6B_-kgYlAqHuWn90&amp;clipt=EJC-LxiY5S8'
+        text: 'Voy a llegar al punto en que este v**** me va a tener miedo después de la pelea.',
+        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=qXDaC9BtQVT2Lw3r&amp;clip=Ugkxyvlpe6cGZqC2A2tU6B_-kgYlAqHuWn90&amp;clipt=EJC-LxiY5S8',
       },
       {
         text: 'La sangre culichi está bien pesada, una vez que te metes con un culichi, papito, a ver si sales de ahí.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=JZx9yIQa0lXP9BTh&amp;clip=Ugkxjn97-DOruGG1ClS3KgmuiNEMXRf5a4aj&amp;clipt=EJytRBjj4EQ'
+        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=JZx9yIQa0lXP9BTh&amp;clip=Ugkxjn97-DOruGG1ClS3KgmuiNEMXRf5a4aj&amp;clipt=EJytRBjj4EQ',
       },
     ],
+    faceOff: {
+      videoID: 'OjOItlQQHNM',
+      thumbnail: '/images/fighters/faceOffThumbnails/peereira-vs-rivaldios-thumbnail.webp',
+    },
   },
   {
     id: 'andoni',
     name: 'Andoni',
     realName: 'Andoni Talledo Gutiérrez',
+    description:
+      'Andoni Talledo Gutiérrez, conocido en las redes sociales como Andoni Fitness, es un influencer español originario de San Sebastián, nacido el 3 de enero de 2003. Destacado por su impresionante físico y contenido relacionado con el culturismo, ha acumulado una amplia audiencia en plataformas como TikTok e Instagram, donde comparte sus entrenamientos y consejos de fitness. En "La Velada del Año 5", se enfrentará a Carlos Belcast en un combate que promete ser una intensa prueba de fuerza y resistencia.',
     gender: 'masculino',
     birthDate: new Date(2003, 0, 3),
     height: 1.87,
@@ -455,7 +517,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 115,
     country: 'es',
     city: 'Bilbao',
-    versus: 'carlos',
+    opponent: 'carlos',
+    versus: {
+      leftPortrait: 'andoni',
+      rightPortrait: 'carlos',
+    },
     socials: [
       {
         id: 'instagram',
@@ -497,14 +563,20 @@ export const FIGHTERS: Fighters[] = [
     clips: [],
     workout: {
       videoID: 'QDy_MM6y-7U',
-      thumbnail: '/images/fighters/workoutThumbnails/andoni-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/andoni-thumbnail.webp',
+    },
+    faceOff: {
+      videoID: 'NbaFxQiuFek',
+      thumbnail: '/images/fighters/faceOffThumbnails/andoni-vs-carlos-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/viruzz/
     id: 'viruzz',
     name: 'Viruzz',
     realName: 'Víctor Mélida Cambra',
+    description:
+      'Viruzz, cuyo nombre real es Víctor Mélida Cambra, es un youtuber y streamer español originario de Zaragoza. Antes de su carrera en las plataformas digitales, fue jugador profesional de balonmano. Inició su canal de YouTube en 2015, donde ha acumulado más de seis millones de suscriptores, ofreciendo contenido variado que incluye fitness, videojuegos y desafíos. ​En el ámbito del boxeo, Viruzz ha participado en múltiples ediciones de "La Velada del Año". En la primera edición, se enfrentó a Mister Jägger, en la segunda derrotó a Momo por detención del árbitro, y en la cuarta edición combatió contra Shelao. Su próxima pelea será contra Tomás Mazza en "La Velada del Año 5", un combate que pondrá a prueba su experiencia y habilidades en el ring',
     gender: 'masculino',
     birthDate: new Date(1992, 4, 1),
     height: 1.82,
@@ -512,7 +584,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 87,
     country: 'es',
     city: 'Andorra La Vella',
-    versus: 'tomas',
+    opponent: 'tomas',
+    versus: {
+      leftPortrait: 'viruzz',
+      rightPortrait: 'tomas',
+    },
     socials: [
       {
         id: 'instagram',
@@ -576,6 +652,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    faceOff: {
+      videoID: 'yhs5HYCLftg',
+      thumbnail: '/images/fighters/faceOffThumbnails/viruzz-vs-tomas-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/alana-flores/
@@ -583,6 +663,8 @@ export const FIGHTERS: Fighters[] = [
     name: 'Alana',
     fightName: 'Alana La Rana',
     realName: 'Alana Scarlett Flores Fuentes',
+    description:
+      'Alana Flores, conocida en el mundo digital como Alana, es una destacada streamer e influencer mexicana que ha consolidado su presencia en el ámbito del boxeo amateur. Su participación en "La Velada del Año 4" fue especialmente memorable, donde, junto a Ama Blitz, derrotó a las españolas Zeling y Nissaxter en un combate 2 vs 2 celebrado en el Estadio Santiago Bernabéu. Alana se enfrentará a Ari Geli en un combate que promete ser uno de los más emocionantes del evento. Ambas luchadoras han intensificado sus entrenamientos y han mostrado avances significativos en su preparación, lo que augura un enfrentamiento de alto nivel',
     gender: 'femenino',
     birthDate: new Date(2000, 11, 15),
     height: 1.57,
@@ -592,7 +674,11 @@ export const FIGHTERS: Fighters[] = [
     targetGloves: '12oz',
     country: 'mx',
     city: 'Nuevo León',
-    versus: 'arigeli',
+    opponent: 'arigeli',
+    versus: {
+      leftPortrait: 'alana',
+      rightPortrait: 'arigeli',
+    },
     socials: [
       {
         id: 'instagram',
@@ -658,14 +744,20 @@ export const FIGHTERS: Fighters[] = [
     clips: [],
     workout: {
       videoID: 'TmC9TuD8NoQ',
-      thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp',
+    },
+    faceOff: {
+      videoID: 'qdS_XOZ5kyU',
+      thumbnail: '/images/fighters/faceOffThumbnails/alana-vs-arigeli-thumbnail.webp',
+    },
   },
   {
     // https://laletrade.com/biografias/youtuber/espanol/22589-thegrefg
     id: 'grefg',
     name: 'Grefg',
     realName: 'David Cánovas Martínez',
+    description:
+      'TheGrefg, es un creador de contenido español nacido en 1997 en Alhama de Murcia. Con una destacada trayectoria en el mundo del streaming, ha acumulado más de 19 millones de suscriptores en YouTube y una sólida presencia en Twitch, plataformas donde comparte contenido relacionado con videojuegos y entretenimiento. TheGrefg se enfrentará al streamer colombiano Westcol en el combate estelar de la noche. Este enfrentamiento ha generado gran expectación, ya que ambos buscan demostrar su valía en el ring.',
     gender: 'masculino',
     birthDate: new Date(1997, 3, 24),
     height: 1.79,
@@ -673,7 +765,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 74,
     country: 'es',
     city: 'Alhama de Murcia',
-    versus: 'westcol',
+    opponent: 'westcol',
+    versus: {
+      leftPortrait: 'grefg',
+      rightPortrait: 'westcol',
+    },
     socials: [
       {
         id: 'instagram',
@@ -739,14 +835,20 @@ export const FIGHTERS: Fighters[] = [
     clips: [],
     workout: {
       videoID: '_Rh-VjB3ATk',
-      thumbnail: '/images/fighters/workoutThumbnails/grefg-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/grefg-thumbnail.webp',
+    },
+    faceOff: {
+      videoID: 'cfpvro5tD7g',
+      thumbnail: '/images/fighters/faceOffThumbnails/grefg-vs-westcol-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/westcol/
     id: 'westcol',
     name: 'Westcol',
     realName: 'Luis Fernando Villa Álvarez',
+    description:
+      'Westcol, es un streamer y creador de contenido colombiano nacido el 24 de diciembre de 2000 en Ciudad Bolívar, Antioquia. Comenzó su carrera en YouTube en 2015 y posteriormente se trasladó a plataformas de streaming en vivo, donde ha ganado una considerable audiencia. Westcol se enfrentará a TheGrefg en el combate estelar de "La Velada del Año 5", programado para el 26 de julio de 2025 en el Estadio La Cartuja de Sevilla. Para su preparación, ha recibido entrenamiento de figuras destacadas como Ilia Topuria y Omar Montes, quienes han compartido sesiones y conocimientos para fortalecer sus habilidades en el ring.',
     gender: 'masculino',
     birthDate: new Date(2001, 1, 2),
     height: 1.65,
@@ -754,7 +856,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 63,
     country: 'co',
     city: 'Medellín',
-    versus: 'grefg',
+    opponent: 'grefg',
+    versus: {
+      leftPortrait: 'grefg',
+      rightPortrait: 'westcol',
+    },
     socials: [
       {
         id: 'instagram',
@@ -818,12 +924,18 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    faceOff: {
+      videoID: 'cfpvro5tD7g',
+      thumbnail: '/images/fighters/faceOffThumbnails/grefg-vs-westcol-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/ari-geli/
     id: 'arigeli',
     name: 'Arigeli',
     realName: 'Ariadna Geli Pérez',
+    description:
+      'Ari Geli, es una creadora de contenido y jugadora de baloncesto 3x3 nacida el 11 de octubre de 2002 en Barcelona, España. Su pasión por el baloncesto la llevó a fundar y ser propietaria del equipo Panthers 3x3, con sede en Barcelona. A través de plataformas como TikTok, donde cuenta con más de 3.4 millones de seguidores, comparte contenido relacionado con el baloncesto, fusionando el deporte profesional con la narrativa digital moderna. Ari Geli se enfrentará a la mexicana Alana Flores en un combate que ha generado gran expectación. Ambas participantes han mostrado confianza y determinación en los eventos previos al combate, prometiendo ofrecer un espectáculo de alto nivel.',
     gender: 'femenino',
     birthDate: new Date(2002, 9, 11),
     height: 1.58,
@@ -831,7 +943,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 53,
     country: 'es',
     city: 'Barcelona',
-    versus: 'alana',
+    opponent: 'alana',
+    versus: {
+      leftPortrait: 'alana',
+      rightPortrait: 'arigeli',
+    },
     socials: [
       {
         id: 'x',
@@ -897,14 +1013,20 @@ export const FIGHTERS: Fighters[] = [
     clips: [],
     workout: {
       videoID: 'rugHsv9JCSU',
-      thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp',
+    },
+    faceOff: {
+      videoID: 'qdS_XOZ5kyU',
+      thumbnail: '/images/fighters/faceOffThumbnails/alana-vs-arigeli-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/tomas-mazza/
     id: 'tomas',
     name: 'Tomás',
     realName: 'Tomás Francisco Pérez Mazza',
+    description:
+      'Tomás Mazza es un creador de contenido y entusiasta del fitness argentino de 24 años, reconocido por su enfoque en salud y entrenamiento físico. Cuenta con una amplia audiencia en plataformas como Instagram y YouTube, donde comparte rutinas de ejercicio y consejos de bienestar. Tomás se enfrentará al experimentado boxeador español Viruzz. Este combate representa una oportunidad para Mazza de demostrar su habilidad y consolidarse en el ámbito del boxeo de exhibición.',
     gender: 'masculino',
     birthDate: new Date(2000, 3, 16),
     height: 1.76,
@@ -912,7 +1034,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 80,
     country: 'ar',
     city: 'Buenos Aires',
-    versus: 'viruzz',
+    opponent: 'viruzz',
+    versus: {
+      leftPortrait: 'viruzz',
+      rightPortrait: 'tomas',
+    },
     socials: [
       {
         id: 'x',
@@ -976,12 +1102,18 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    faceOff: {
+      videoID: 'yhs5HYCLftg',
+      thumbnail: '/images/fighters/faceOffThumbnails/viruzz-vs-tomas-thumbnail.webp',
+    },
   },
   {
     // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
     id: 'carlos',
     name: 'Carlos',
     realName: 'Carlos Belcast',
+    description:
+      'Carlos Belcast, apodado "El Padrino", es un fisicoculturista y creador de contenido mexicano que ha ganado reconocimiento en el ámbito del fitness. Con una estatura de 1.77 metros y un peso aproximado de 85 kilogramos, ha construido una sólida presencia en plataformas como Instagram, donde comparte su trayectoria en el culturismo y su estilo de vida saludable. Belcast se enfrentará a Andoni Fitness en un combate que ha generado gran expectación. Andoni, de origen español, mide 1.87 metros y pesa alrededor de 115 kilogramos, lo que representa una notable diferencia de peso entre ambos contendientes',
     gender: 'masculino',
     birthDate: new Date(1998, 9, 5),
     height: 1.77,
@@ -989,7 +1121,11 @@ export const FIGHTERS: Fighters[] = [
     weight: 85,
     country: 'mx',
     city: 'Monterrey',
-    versus: 'andoni',
+    opponent: 'andoni',
+    versus: {
+      leftPortrait: 'andoni',
+      rightPortrait: 'carlos',
+    },
     socials: [
       {
         id: 'x',
@@ -1053,5 +1189,9 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    faceOff: {
+      videoID: 'NbaFxQiuFek',
+      thumbnail: '/images/fighters/faceOffThumbnails/andoni-vs-carlos-thumbnail.webp',
+    },
   },
 ] as const
