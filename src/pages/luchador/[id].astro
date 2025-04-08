@@ -7,6 +7,7 @@ import BoxerCard from '@/components/BoxerCard.astro'
 import BoxerClipList from '@/components/BoxerClipList.astro'
 import BoxerClipDrawer from '@/components/BoxerClipDrawer.astro'
 import BoxerProfileCard from '@/components/BoxerProfileCard.astro'
+import BoxerGallery from '@/components/BoxerGallery.astro'
 
 const { id } = Astro.params
 
@@ -116,9 +117,11 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
   <section>
     {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
   </section>
+  <!-- Fin de los videos de entrenamiento -->
 
+  <!-- Galeria de fotos -->
   {fighter.gallery && <BoxerGallery id={fighter.id} name={fighter.name} /> }
-  
+  <!-- Fin de la galeria de fotos -->
 </Layout>
 
 <style>
