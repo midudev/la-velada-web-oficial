@@ -26,14 +26,14 @@ const isActive = (path: string) => pathname === path;
         {/* Contenedor del subrayado con overflow hidden para la animación */}
         <div class="relative mt-1 h-[2px] w-full overflow-hidden">
           {/* Línea rosa que se anima desde la izquierda */}
-          <div 
+          <div
             class:list={[
               "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-250 ease-out",
               isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
             ]}
           ></div>
           {/* Línea turquesa que se anima desde la derecha */}
-          <div 
+          <div
             class:list={[
               "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-250 ease-out",
               isActive("/la-porra") ? "w-[51%]" : "group-hover:w-[51%] w-0",
@@ -50,14 +50,14 @@ const isActive = (path: string) => pathname === path;
         {/* Contenedor del subrayado con overflow hidden para la animación */}
         <div class="relative mt-1 h-[2px] w-full overflow-hidden">
           {/* Línea rosa que se anima desde la izquierda */}
-          <div 
+          <div
             class:list={[
               "absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out",
               isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
             ]}
           ></div>
           {/* Línea turquesa que se anima desde la derecha */}
-          <div 
+          <div
             class:list={[
               "absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out",
               isActive("/combates") ? "w-[51%]" : "group-hover:w-[51%] w-0",
@@ -71,14 +71,14 @@ const isActive = (path: string) => pathname === path;
       <a
         href="/"
         class="mx-auto hover:scale-110 cursor-pointer duration-500 relative">
-        <img
+          <img
           class="w-10 h-auto"
-          src="/favicon.svg"
-          fetchpriority="high"
-          alt="La Velada del Año V"
-          decoding="async"
-        />
-      </a>
+            src="/favicon.svg"
+            fetchpriority="high"
+            alt="La Velada del Año V"
+            decoding="async"
+          />
+        </a>
     )}
 
     <div class="hidden md:flex flex-col items-end">
@@ -86,7 +86,7 @@ const isActive = (path: string) => pathname === path;
         class="inline-block text-theme-seashell opacity-90 cursor-not-allowed relative tracking-wider py-1 leading-relaxed"
         >COMPRA LAS ENTRADAS
         <span
-          class="absolute top-4 inset-0 text-[10px] text-yellow-500 mt-1 text-center tracking-wide leading-normal"
+          class="absolute top-4 inset-0 text-[10px] text-theme-turquoise mt-1 text-center tracking-wide leading-normal"
           >PRÓXIMAMENTE</span
         >
       </span>
@@ -100,20 +100,23 @@ const isActive = (path: string) => pathname === path;
     animation: header-blur-scroll 0.3s linear both;
     animation-timeline: scroll();
     animation-range: 0 250px;
-    border-bottom: 1px solid transparent;
+    border-radius: 0;
   }
 
   @keyframes header-blur-scroll {
     0% {
-      backdrop-filter: blur(0px);
       background: transparent;
     }
 
     100% {
-      backdrop-filter: blur(10px);
-      background: rgba(0, 0, 0, 0.5);
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.6) 30%,
+        rgba(0, 0, 0, 0.3) 70%,
+        rgba(0, 0, 0, 0) 100%
+      );
       padding-bottom: var(--spacing-6);
-      border-bottom-color: black;
     }
   }
 </style>
