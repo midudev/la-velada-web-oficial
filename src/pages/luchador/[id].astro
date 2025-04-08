@@ -2,14 +2,20 @@
 import { FIGHTERS } from '@/consts/fighters'
 import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
-import BoxerWorkout from '@/components/BoxerWorkout.astro'
-import BoxerCard from '@/components/BoxerCard.astro'
-import BoxerClip from '@/components/BoxerClip.astro'
+import LiteYouTube from '@/components/LiteYouTube.astro'
+import SectionTitle from '@/components/SectionTitle.astro'
+import Box from '@/components/Box.astro'
+import ProgressBar from '@/components/ProgressBar.astro'
+import TicketIcon from '@/assets/svg/ticket.svg'
+import Declaration from '@/components/Declaration.astro'
 
 const { id } = Astro.params
 
 const fighter = FIGHTERS.find((fighter) => fighter.id === id)
 if (!fighter) return Astro.redirect('/404')
+
+const [firstName, ...restNameArr] = fighter.realName.split(' ')
+const restName = restNameArr.join(' ')
 
 const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   year: 'numeric',
@@ -17,28 +23,31 @@ const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   day: 'numeric',
 })
 
-const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
+const details = [
+  { label: 'Edad', value: `${fighter.age} AÑOS` },
+  { label: 'Altura', value: `${fighter.height}M` },
+  { label: 'Peso', value: `${fighter.weight}KG` },
+  { label: 'Ciudad', value: fighter.city },
+  { label: 'Fecha de Nacimiento', value: birthDate },
+]
+
+const opponent = FIGHTERS.find((f) => f.id === fighter.opponent)
+
+const firstFigther = {
+  name: fighter.name,
+  percentage: 50,
+}
+
+const secondFighter = {
+  name: opponent?.name ?? '',
+  percentage: 50,
+}
 ---
 
 <Layout title={`${fighter.name} | ${fixedTitle}`}>
   <section class="pt relative flex min-h-screen w-full lowercase">
     <div
-      class="relative z-10 flex min-h-screen w-full max-w-xl flex-col items-center justify-center gap-y-32 px-4 pt-24 text-right text-balance lg:pt-32"
-    >
-    <BoxerClip clips={fighter.clips} />
-
-      {
-        opponent && (
-          <div class="flex w-full items-center gap-4 justify-center">
-            <img src="/images/versus.png" alt="Versus" class="h-12 w-auto" />
-            <BoxerCard id={opponent.id} name={opponent.name} class="group-hover:scale-110" />
-          </div>
-        )
-      }
-    </div>
-
-    <div
-      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-50"
+      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-80"
     >
     </div>
 
@@ -61,64 +70,215 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
           transition:name={`text-${id}`}
         />
       </div>
+    </div>
+  </section>
 
-      <div class="mt-5 ml-7 w-full max-w-xl text-white lg:w-1/2">
-        <div class="space-y-6 rounded-xl bg-black/40 p-6 backdrop-blur-sm">
-          <div class="mb-8 flex flex-col items-center space-x-4">
-            <h1 class="animate-fade-in-up inline-block text-center text-2xl font-bold">
-              {fighter.realName}
-            </h1>
+  <div class="flex w-full flex-col items-center justify-center">
+    <div class="mx-auto flex w-full max-w-5xl flex-col gap-12 lowercase">
+      <!-- fighter name -->
+      <h1 class="text-shadow self-center text-4xl font-extrabold tracking-wide md:text-6xl">
+        <span class="text-white">{firstName}</span>
+        <span class="text-theme-raisin-black ml-2">{restName}</span>
+      </h1>
+
+      <!-- stats -->
+      <Box
+        class="flex-1"
+        title={`Estadísticas de${fighter.gender === 'masculino' ? 'l luchador' : ' la luchadora'}`}
+      >
+        <ul class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            details.map((detail) => (
+              <li class="flex flex-col text-lg md:text-2xl">
+                <h3 class="text-theme-raisin-black mb-1 text-base font-semibold md:text-lg">
+                  {detail.label}
+                </h3>
+                <span class="font-medium text-white">{detail.value}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </Box>
+
+      <!-- description -->
+      <Box
+        class="flex-1"
+        title={`Sobre ${fighter.gender === 'masculino' ? 'el luchador' : 'la luchadora'}`}
+      >
+        <p class="text-theme-raisin-black text-justify text-lg leading-relaxed md:text-xl">
+          {fighter.description}
+        </p>
+      </Box>
+
+      <!-- socials -->
+      <section class="flex flex-col items-center justify-center gap-4">
+        <h2 class="text-theme-raisin-black text-2xl font-bold tracking-wide uppercase md:text-3xl">
+          Redes Sociales
+        </h2>
+        <div class="flex flex-wrap justify-center gap-4">
+          {
+            (fighter.socials || [])?.map(({ url, image, name, label }) => (
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label ?? name}
+                class="flex size-12 items-center justify-center rounded-full bg-white/10 shadow-lg transition-transform duration-300 hover:scale-110 hover:shadow-xl md:size-14"
+              >
+                <image.logo class="text-theme-raisin-black h-7 w-7 md:h-8 md:w-8" />
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+
+    <!-- versus -->
+    <section
+      class="relative mt-16 flex min-h-screen w-full items-center justify-center overflow-hidden"
+    >
+      <!-- background -->
+      <div
+        class="mask-fade-y animate-fade-in-slow absolute inset-0 z-0 h-full rounded-[0px] bg-[url('/images/versus-background.webp')] bg-cover bg-center opacity-75"
+      >
+      </div>
+
+      <!-- left fighter -->
+      <img
+        class="mask-fade-bottom animate-slide-in-left absolute top-1/2 left-0 z-[1] max-h-[25%] -translate-y-1/2 transform sm:max-h-[40%] lg:max-h-[60%] xl:max-h-[70%]"
+        src={`/images/fighters/portrait/${fighter.versus.leftPortrait}.webp`}
+        alt={fighter.versus.leftPortrait}
+        loading="lazy"
+      />
+
+      <!-- right fighter -->
+      <img
+        class="mask-fade-bottom animate-slide-in-right absolute top-1/2 right-0 z-[1] max-h-[25%] -translate-y-1/2 transform sm:max-h-[40%] lg:max-h-[60%] xl:max-h-[70%]"
+        src={`/images/fighters/portrait/${fighter.versus.rightPortrait}.webp`}
+        alt={fighter.versus.rightPortrait}
+        loading="lazy"
+      />
+
+      <!-- content -->
+      <div
+        class="animate-fade-in z-10 flex h-full max-h-[25%] w-1/3 flex-col space-y-10 sm:max-h-[40%] lg:max-h-[60%] xl:max-h-[70%]"
+      >
+        <!-- title -->
+        <div
+          class="animate-fade-in mb-8 flex flex-col items-center justify-center space-y-6 sm:mb-24 xl:mb-46"
+        >
+          <div
+            class="bg-theme-pastel-rose text-theme-raisin-black rounded-md px-2 py-2 text-sm lowercase shadow-[0px_0px_10px_rgba(0,0,0,0.25)] sm:text-xl xl:px-4 xl:text-2xl"
+          >
+            <h3>combate #3</h3>
           </div>
+          <h2
+            class="text-theme-raisin-black text-shadow text-center text-lg font-bold sm:text-2xl xl:text-4xl"
+          >
+            PRÓXIMO ENCUENTRO
+          </h2>
+        </div>
 
-          <div class="grid grid-cols-2 gap-4 pt-7 pr-6 text-center">
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Edad</div>
-              <div class="text-lg">{fighter.age} años</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Altura</div>
-              <div class="text-lg">{fighter.height}m</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Peso</div>
-              <div class="text-lg">{fighter.weight}kg</div>
-            </div>
-            <div class="stat-item">
-              <div class="text-sm text-gray-400">Ciudad</div>
-              <div class="text-lg">{fighter.city}</div>
-            </div>
-          </div>
+        <!-- bottom content -->
+        <div class="flex w-full flex-col space-y-4 self-center">
+          <!-- VS -->
+          <img
+            class="animate-pulse-glow h-auto w-20 self-center sm:w-28 xl:w-36"
+            src="/images/versus.webp"
+            alt="Versus"
+            loading="lazy"
+          />
 
-          <!-- Birth Date -->
-          <div class="animate-fade-in-up animate-delay-400 text-center">
-            <div class="text-sm text-gray-400">Fecha de nacimiento</div>
-            <div class="text-lg">{birthDate}</div>
+          <!-- button -->
+          <button
+            class="bg-theme-pastel-rose text-theme-raisin-black hidden w-2/3 min-w-fit cursor-not-allowed items-center justify-center space-x-2 self-center rounded-lg border border-white/10 px-2 py-2 shadow-md transition duration-300 hover:scale-105 md:flex xl:px-6"
+          >
+            <span class="text-sm font-bold text-nowrap uppercase xl:text-xl">Comprar entradas</span>
+            <TicketIcon class="size-5 xl:size-6" />
+          </button>
+
+          <!-- forecast -->
+          <div
+            class="bg-theme-pastel-rose text-theme-raisin-black animate-fade-in-slow hidden w-2/3 min-w-fit flex-col items-center justify-center self-center rounded-2xl border border-white/10 px-2 shadow-lg md:flex"
+          >
+            <h2 class="p-2 text-xl font-bold uppercase xl:text-3xl">Prónostico</h2>
+            <div
+              class="mb-4 flex flex-col items-center justify-center rounded-2xl border border-black/20 bg-white/10 p-2 xl:p-4"
+            >
+              <h2 class="p-2 text-lg uppercase xl:text-xl">Próximamente</h2>
+              <ProgressBar firstFighter={firstFigther} secondFighter={secondFighter} />
+              <span class="text-theme-raisin-black text-sm lowercase xl:text-lg"
+                >Las apuestas abriran pronto</span
+              >
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section>
-    <div class="flex flex-wrap justify-center gap-3 space-x-2">
-      {
-        (fighter.socials || [])?.map(({ url, image, name, label, followers }) => (
-          <a
-            href={url}
-            target="_blank"
-            aria-label={label ?? name}
-            class="hover:to-theme-turquoise/70 hover:from-theme-tickle-me-pink/70 from-theme-turquoise/70 to-theme-tickle-me-pink/70 flex w-20 flex-col items-center justify-center bg-gradient-to-b transition duration-500 hover:scale-125"
-          >
-            <image.logo />
-            <span class="text-white lowercase">{followers}</span>
-          </a>
-        ))
-      }
-    </div>
-  </section>
+    <!-- declarations -->
+    {
+      fighter.clips.length > 0 && (
+        <>
+          <SectionTitle title="Declaraciones" />
+          <ul class="grid max-w-[90%] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {fighter.clips.map(({ text, url }) => (
+              <Declaration fighterName={fighter.name} text={text} url={url} />
+            ))}
+          </ul>
+        </>
+      )
+    }
+  </div>
 
-  <section>
-    {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
+  <!-- multimedia content -->
+  <section
+    class="relative mt-48 flex min-h-[100dvh] w-full flex-col items-center justify-center px-6 py-24"
+  >
+    <div
+      class="animate-gradient from-theme-pastel-rose via-theme-french-mauve to-theme-turquoise absolute top-0 left-0 -z-10 h-full w-full bg-gradient-to-br bg-[length:200%_200%] opacity-90"
+    >
+    </div>
+
+    <div class="grainy pointer-events-none absolute inset-0 z-0"></div>
+
+    <SectionTitle title="Contenido Multimedia" class="relative z-20 w-full px-6 pb-24" />
+
+    <!-- workout -->
+    {
+      fighter.workout && (
+        <div class="text-theme-raisin-black relative z-20 mb-32 flex w-full max-w-7xl flex-col items-center justify-center lowercase">
+          <h3 class="text-4xl font-light">Entrenamiento</h3>
+          <p class="mt-5 text-2xl">Preparación para el combate</p>
+          <div class="relative mt-8 flex w-full items-center justify-center overflow-hidden rounded-xl bg-white/10 shadow-xl ring-1 ring-white/20 drop-shadow-[0_0_20px_var(--color-theme-turquoise)] backdrop-blur-md">
+            <div class="relative z-10 h-full w-full">
+              <LiteYouTube
+                videoId={fighter.workout.videoID}
+                backgroundImage={fighter.workout.thumbnail}
+              />
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    <!-- faceOff -->
+    {
+      fighter.faceOff && (
+        <div class="text-theme-raisin-black relative z-20 flex w-full max-w-7xl flex-col items-center justify-center lowercase">
+          <h3 class="text-4xl font-light">Cara a Cara</h3>
+          <p class="mt-5 text-2xl">Una mirada al encuentro previo</p>
+          <div class="relative mt-8 flex w-full items-center justify-center overflow-hidden rounded-xl bg-white/10 shadow-xl ring-1 ring-white/20 drop-shadow-[0_0_20px_var(--color-theme-turquoise)] backdrop-blur-md">
+            <div class="relative z-10 h-full w-full">
+              <LiteYouTube
+                videoId={fighter.faceOff.videoID}
+                backgroundImage={fighter.faceOff.thumbnail}
+              />
+            </div>
+          </div>
+        </div>
+      )
+    }
   </section>
 </Layout>
 
@@ -155,5 +315,116 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  .text-shadow {
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  .mask-fade-y {
+    mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 30%,
+      black 70%,
+      transparent 100%
+    );
+  }
+
+  @keyframes fadeInSlow {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInLeft {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInRight {
+    0% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes pulseGlow {
+    0%,
+    100% {
+      transform: scale(1);
+      filter: drop-shadow(0 0 10px #ff99cc);
+    }
+    50% {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 15px #ff99cc);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+  }
+
+  .animate-fade-in-slow {
+    animation: fadeInSlow 2s ease-out forwards;
+  }
+
+  .animate-slide-in-left {
+    animation: slideInLeft 1.2s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 1.2s ease-out;
+  }
+
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+
+  /* Animación del gradiente */
+  @keyframes gradientScroll {
+    0% {
+      background-position: 50% 0%;
+    }
+    50% {
+      background-position: 50% 100%;
+    }
+    100% {
+      background-position: 50% 0%;
+    }
+  }
+
+  .animate-gradient {
+    animation: gradientScroll 30s ease-in-out infinite;
+  }
+
+  .grainy {
+    background: transparent;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .grainy::before {
+    content: '';
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%25'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+    opacity: 0.3;
   }
 </style>
