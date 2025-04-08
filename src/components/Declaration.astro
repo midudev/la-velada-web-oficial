@@ -1,0 +1,16 @@
+---
+interface Props {
+  fighterName: string
+  text: string
+  url: string
+}
+
+const { fighterName, text, url } = Astro.props
+---
+
+<div
+  class="group border-l-theme-turquoise hover:bg-theme-rose hover:border-l-theme-orange flex min-h-40 cursor-pointer flex-col justify-between rounded-lg border-l-4 bg-white/10 p-6 lowercase shadow-md transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+>
+  <p class="group-hover:text-theme-yellow text-lg text-white">"{text}"</p>
+  <h3 class="text-theme-raisin-black mt-4 text-xl">- {fighterName}</h3>
+</div>
