@@ -1,0 +1,17 @@
+---
+const { class: className = '', title } = Astro.props
+---
+
+<section
+  class={`bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-6 shadow-[0_4px_20px_rgba(0,0,0,0.15)] ${className}`}
+>
+  {
+    title && (
+      <div class="mb-5 flex items-center space-x-3">
+        <div class="bg-theme-turquoise h-6 w-[4px] rounded md:h-8" />
+        <h2 class="text-xl font-bold tracking-tight text-white md:text-2xl">{title}</h2>
+      </div>
+    )
+  }
+  <slot />
+</section>
