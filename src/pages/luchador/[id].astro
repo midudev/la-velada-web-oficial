@@ -1,6 +1,7 @@
 ---
 import BoxerCard from '@/components/BoxerCard.astro'
 import BoxerClip from '@/components/BoxerClip.astro'
+import BoxerGallery from '@/components/BoxerGallery.astro'
 import BoxerWorkout from '@/components/BoxerWorkout.astro'
 import { FIGHTERS } from '@/consts/fighters'
 import { fixedTitle } from '@/consts/pageTitles'
@@ -126,6 +127,9 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
   <section>
     {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
   </section>
+
+  {fighter.gallery && <BoxerGallery id={fighter.id} name={fighter.name} /> }
+  
 </Layout>
 
 <style>
