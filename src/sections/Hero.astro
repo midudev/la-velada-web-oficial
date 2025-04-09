@@ -1,6 +1,6 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
-import BoxerCard from '@/components/BoxerCard.astro'
+import BoxerCardHero from '@/components/BoxerCardHero.astro'
 
 const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
@@ -120,7 +120,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
               <div
                 class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}
               >
-                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
+                <BoxerCardHero id={id} name={name} class="boxer-left" versus={versus} />
               </div>
             ))
           }
@@ -132,7 +132,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
               <div
                 class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}
               >
-                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
+                <BoxerCardHero id={id} name={name} class="boxer-right" versus={versus} />
               </div>
             ))
           }
@@ -144,7 +144,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
           {
             leftSecondRow.map(({ id, name, versus }, index) => (
               <div class={`animate-fade-in-up animate-delay-${animationDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
+                <BoxerCardHero id={id} name={name} class="boxer-left" versus={versus} />
               </div>
             ))
           }
@@ -153,7 +153,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
           {
             rightSecondRow.map(({ id, name, versus }, index) => (
               <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
+                <BoxerCardHero id={id} name={name} class="boxer-right" versus={versus} />
               </div>
             ))
           }

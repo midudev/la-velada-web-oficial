@@ -1,0 +1,40 @@
+---
+import BoxerCard from './BoxerCard.astro'
+
+const { id, name, versus, class: extraClass } = Astro.props
+
+interface Props {
+  id: string
+  name: string
+  versus: string
+  class: string
+}
+---
+<BoxerCard
+  id={id}
+  name={name}
+  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
+  versus={versus}
+  />
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const boxerCards = document.querySelectorAll('.boxer-card')
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
+    let versusCard: HTMLAnchorElement | null = null
+    let versusCardDiv: HTMLDivElement | null = null
+
+    boxerCards.forEach((singleBoxerCard, index) => {
+      singleBoxerCard.addEventListener('click', () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+          timeoutId = null
+        }
+
+        const id = singleBoxerCard.getAttribute('data-id')
+      })
+    })
+  })
+
+
+</script>
