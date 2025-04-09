@@ -1,21 +1,17 @@
 ---
 import { SPONSORS } from "@/consts/sponsors"
-
-const firstRow = SPONSORS.slice(0, 5)
-const secondRow = SPONSORS.slice(5)
 ---
 
-<section id="sponsors" class="mx-auto max-w-xl py-36">
+<section id="sponsors" class="mx-auto w-full py-36">
   <h2 class="mb-4 text-4xl font-light text-center text-dark-magenta">
     <div class="block sm:inline">
       <strong class="font-normal">Patrocinadores</strong>
     </div>
     <div class="block sm:inline">del evento</div>
   </h2>
-  <div class="w-full flex justify-center items-center flex-col-reverse gap-8 md:flex-col md:gap-5 py-5">
-    <div class="w-1/2 flex flex-wrap justify-evenly gap-8 max-w-md md:flex-row md:w-[100%] md:justify-around md:gap-5">
-    {
-      firstRow.map(({ url, image, name, label }) => (
+  <div class="overflow-hidden relative">
+    <div class="carousel-track flex flex-row gap-10 scale-160 animate-carousel">
+      {SPONSORS.map(({ url, image, name, label }) => (
         <a
           href={url}
           target="_blank"
@@ -28,12 +24,9 @@ const secondRow = SPONSORS.slice(5)
             class="h-14 w-auto"
           />
         </a>
-      ))
-    }
-  </div>
-  <div class="w-1/2 flex flex-wrap justify-evenly gap-8 max-w-md md:flex-row md:w-[100%] md:justify-around md:gap-5">
-    {
-      secondRow.map(({ url, image, name, label }) => (
+      ))}
+      {/* Se duplica el listado para lograr un efecto continuo */}
+      {SPONSORS.map(({ url, image, name, label }) => (
         <a
           href={url}
           target="_blank"
@@ -46,8 +39,21 @@ const secondRow = SPONSORS.slice(5)
             class="h-14 w-auto"
           />
         </a>
-      ))
-    }
+      ))}
+    </div>
   </div>
-</div>
 </section>
+
+<style>
+  @keyframes carousel {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .animate-carousel {
+    animation: carousel 30s linear infinite;
+  }
+</style>
