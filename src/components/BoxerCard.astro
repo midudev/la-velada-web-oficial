@@ -221,7 +221,7 @@ interface Props {
       const handleLeave = () => {
         state.hoverTimeoutId = setTimeout(() => {
           document.dispatchEvent(new CustomEvent('boxer-card-exit'));
-          updateCardStyles(allCards, null);
+          updateCardStyles(allCards, null, null);
         }, CONFIG.timing.hoverExitDelay);
       };
 
