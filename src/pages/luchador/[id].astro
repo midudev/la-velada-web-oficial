@@ -13,7 +13,7 @@ if (!fighter) return Astro.redirect('/404')
 
 const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   year: 'numeric',
-  month: 'long',
+  month: 'short',
   day: 'numeric',
 })
 
@@ -108,6 +108,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
           />
         </div>
       </div>
+      <!-- Fin de la tarjeta del boxeador -->
     </div>
     
     <!-- Redes sociales de luchador -->
@@ -127,6 +128,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
       }
     </div>
   </section>
+  <!-- Clips del boxeador -->
 
   <!-- Video de cara a cara -->
   <section class="max-w-6xl mx-auto my-36 px-2 lg:px-10">
@@ -138,6 +140,9 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
       <LiteYouTube videoId={faceOff.videoID} backgroundImage={faceOff.thumbnail} />
     </div>
   </section>
+
+  {fighter.gallery && <BoxerGallery id={fighter.id} name={fighter.name} /> }
+  
 </Layout>
 
 <style>
@@ -175,3 +180,4 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
     }
   }
 </style>
+

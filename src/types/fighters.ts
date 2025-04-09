@@ -52,6 +52,7 @@ export interface Fighters {
   age: number
   weight: number
   country: string
+  gallery?: boolean
   versus: fighterId
   socials: Social[]
   clips: Clips[]
