@@ -1,5 +1,6 @@
 ---
 import SectionTitle from '@/components/SectionTitle.astro'
+import { fighterGallery } from '@/utils/get-image-count'
 
 interface Props {
   id: string
@@ -8,20 +9,21 @@ interface Props {
 
 const { id, name } = Astro.props
 
-const IMAGES_TO_LOAD = 5
+let gallery = fighterGallery(id)
+const IMAGES_TO_LOAD = Math.min(gallery, 5)
 ---
 
 <section class="mx-auto max-w-6xl px-2 py-36 lg:px-10">
   <SectionTitle title="Galería de Fotos" />
 
-  <div id="boxer-gallery" class="mt-10 grid grid-cols-6 gap-3 pt-12">
+  <div id="boxer-gallery" class={`mt-10 grid gap-3 pt-12 ${gallery === 4 ? "grid-cols-8" : "grid-cols-6"}`} >
     {
       Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => (
         <a
           class:list={[
-            'boxer-image aspect-square transition hover:scale-105 hover:brightness-125',
-            { 'col-span-3': index < 2 },
-            { 'col-span-2': index >= 2 },
+            "boxer-image aspect-square transition hover:scale-105 hover:brightness-125",
+            { "col-span-3": gallery === 2 || (gallery === 5 && index < 2) },
+            { "col-span-2": [3, 4].includes(gallery) || (gallery === 5 && index >= 2), },
           ]}
           href={`/images/fighters/gallery/${id}/${index + 1}.webp`}
           title={`Abrir imagen ${index} de la galería de ${name}`}
