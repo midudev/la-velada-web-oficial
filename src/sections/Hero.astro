@@ -99,6 +99,7 @@ twitch.tv<br />Ibai
     <img src="/images/versus.png" alt="Versus" class="h-12 w-auto">
   </div>
 
+
   <!-- Right Slider -->
   <div
     id="rightSlider"
@@ -107,14 +108,13 @@ twitch.tv<br />Ibai
     {rightRow.map(({ id, name, versus }) => (
       <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
         <BoxerCard id={id} name={name} class="boxer-right w-full h-full" versus={versus} />
-      </div>
+        </div>
     ))}
     {rightSecondRow.map(({ id, name, versus }) => (
       <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
         <BoxerCard id={id} name={name} class="boxer-right w-full h-full" versus={versus} />
       </div>
     ))}
-  </div>
 
   <!-- Botón Siguiente -->
   <button
@@ -134,15 +134,20 @@ id="fighter-container"
       <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
         {
           FIGHTERS.map(({ id, name }) => (
-            <img
-              transition:name={`text-${id}`}
-              data-id={`hero-text-${id}`}
-              src={`/images/fighters/text/${id}.webp`}
-              alt={name}
-              decoding="async"
-              class="mask-fade-text absolute hidden h-full w-auto"
-              fetchpriority="low"
-            />
+            <div class="relative h-20 overflow-hidden">
+              <img
+                data-id={`hero-text-${id}`}
+                src={`/images/fighters/text/${id}.webp`}
+                alt={name}
+                decoding="async"
+                class="mask-fade-text hidden h-full w-auto"
+                fetchpriority="low"
+              />
+              <div
+                id={`mask-fade-text-${id}`}
+                class="absolute inset-0 -translate-x-full rotate-45 bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-[2s] ease-in-out"
+              ></div>
+            </div>
           ))
         }
       </div>
@@ -166,8 +171,9 @@ id="fighter-container"
       </div>
     </div>
 
-    
-    <div class="hidden relative md:flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
+
+    <div id="fighters-selection-container"  class="hidden relative md:flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
+
       <div class="flex w-full flex-wrap justify-between px-4">
         <div class="flex flex-wrap justify-start gap-4">
           {
@@ -223,10 +229,194 @@ id="fighter-container"
   .mask-fade-text {
     mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
   }
+
+  @keyframes fighter-select {
+    from {
+      opacity: 0.5;
+      border-color: rgba(255, 20, 147, 1);
+    }
+    to {
+      opacity: 1;
+      border-color: rgba(255, 20, 147, 0.5);
+    }
+  }
 </style>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
+ import { $ } from '@/lib/dom-selector'
+
+document.addEventListener('astro:page-load', () => {
+  const $landing = $('#landing')
+
+  let currentFighterId: string | null = null
+  let hideFighterTimer: ReturnType<typeof setTimeout>
+
+  document.addEventListener('boxer-card-exit', () => {
+    $landing?.classList.remove('hidden')
+
+    if (!currentFighterId) return
+
+    const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+    const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+    const heroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
+
+    if (heroText && heroImage) {
+      heroText.classList.remove('animate-zoom-int')
+      heroImage.classList.remove('animate-slide-up-fade')
+
+      heroText.classList.add('animate-zoom-out')
+      heroImage.classList.add('animate-fade-out-down')
+
+      heroMaskFadeText?.classList.remove('translate-x-full')
+      heroMaskFadeText?.classList.add('-translate-x-full')
+
+      hideFighterTimer = setTimeout(() => {
+        heroText.classList.add('hidden')
+        heroImage.classList.add('hidden')
+        currentFighterId = null
+      }, 500)
+    }
+  })
+
+  document.addEventListener('boxer-card-hovered', (event: Event) => {
+    if (currentFighterId) {
+      // si ya hay un luchador visible, lo ocultamos
+      clearTimeout(hideFighterTimer)
+
+      const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+      const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+      const heroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
+
+      heroText?.classList.add('hidden')
+      heroImage?.classList.add('hidden')
+      heroMaskFadeText?.classList.remove('translate-x-full')
+      heroMaskFadeText?.classList.add('-translate-x-full')
+      currentFighterId = null
+    }
+
+    const customEvent = event as CustomEvent<{ id: string }>
+    const id = customEvent.detail.id
+
+    const heroText = $(`[data-id="hero-text-${id}"]`)
+    const heroImage = $(`[data-id="hero-image-${id}"]`)
+    const heroMaskFadeText = $(`#mask-fade-text-${id}`)
+
+    if (heroText && heroImage) {
+      heroText.classList.remove('animate-zoom-out')
+      heroImage.classList.remove('animate-fade-out-down')
+    }
+
+    // si el luchador que entras es el mismo que ya se muestra
+    // entonces no hacemos nada
+    if (currentFighterId === id) return
+
+    // si ya estamos mostrando un luchador, tenemos que ocultarlo
+    if (currentFighterId) {
+      const currentHeroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+      const currentHeroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+      const currentHeroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
+
+      if (currentHeroText && currentHeroMaskFadeText && currentHeroImage) {
+        currentHeroText.classList.add('hidden')
+        currentHeroImage.classList.add('hidden')
+
+        currentHeroText.classList.remove('animate-zoom-in')
+        currentHeroImage.classList.remove('animate-slide-up-fade')
+        currentHeroMaskFadeText?.classList.remove('translate-x-full')
+        currentHeroMaskFadeText?.classList.add('-translate-x-full')
+      }
+    }
+
+    $landing?.classList.add('hidden')
+
+    // mostramos el luchador que quiere ver el usuario
+    heroText?.classList.remove('hidden')
+    heroText?.classList.add('animate-zoom-in')
+    heroImage?.classList.remove('hidden')
+    heroImage?.classList.add('animate-slide-up-fade')
+    heroMaskFadeText?.classList.remove('-translate-x-full')
+    heroMaskFadeText?.classList.add('translate-x-full')
+
+    currentFighterId = id
+  })
+
+  const $fighterSelector = document.createElement('div')
+  $fighterSelector.id = 'selectorFighter'
+
+  $fighterSelector.style.position = 'absolute'
+  $fighterSelector.style.width = 'var(--selector--width)'
+  $fighterSelector.style.height = 'var(--selector--height)'
+  $fighterSelector.style.top = 'var(--selector--top)'
+  $fighterSelector.style.left = 'var(--selector--left)'
+  $fighterSelector.style.transitionDuration = '500ms'
+  $fighterSelector.style.transitionTimingFunction = 'cubic-bezier(0.4, 0, 0.2, 1)'
+  $fighterSelector.style.transitionProperty = 'all'
+  $fighterSelector.style.opacity = '0'
+  $fighterSelector.style.zIndex = '40'
+  $fighterSelector.style.pointerEvents = 'none'
+  $fighterSelector.style.animation = 'fighter-select 0.5s infinite alternate';
+
+  const beforeElement = document.createElement('div');
+  beforeElement.style.position = 'absolute';
+  beforeElement.style.inset = '-4px';
+  beforeElement.style.background = 'transparent';
+  beforeElement.style.borderRadius = '8px';
+  beforeElement.style.opacity = '1';
+  beforeElement.style.zIndex = '30';
+  beforeElement.style.animation = 'fighter-select 0.5s infinite alternate';
+
+  const afterElement = document.createElement('div');
+  afterElement.style.position = 'absolute';
+  afterElement.style.inset = '-4px';
+  afterElement.style.zIndex = '30';
+  afterElement.style.opacity = '1';
+  afterElement.style.background = `
+    linear-gradient(to right, #fff 4px, transparent 4px) top left,
+    linear-gradient(to bottom, #fff 4px, transparent 4px) top left,
+    linear-gradient(to left, #fff 4px, transparent 4px) top right,
+    linear-gradient(to bottom, #fff 4px, transparent 4px) top right,
+    linear-gradient(to right, #fff 4px, transparent 4px) bottom left,
+    linear-gradient(to top, #fff 4px, transparent 4px) bottom left,
+    linear-gradient(to left, #fff 4px, transparent 4px) bottom right,
+    linear-gradient(to top, #fff 4px, transparent 4px) bottom right`;
+  afterElement.style.backgroundRepeat = 'no-repeat';
+  afterElement.style.backgroundSize = '25px 25px';
+  afterElement.style.borderRadius = '8px';
+  afterElement.style.animation = 'fighter-select 0.5s infinite alternate';
+
+  $fighterSelector.appendChild(beforeElement);
+  $fighterSelector.appendChild(afterElement);
+
+  const $fightersContainer = document.getElementById('fighters-selection-container') as HTMLElement
+  $fightersContainer.appendChild($fighterSelector)
+
+  const boxerCards = document.querySelectorAll('.boxer-card')
+
+  boxerCards.forEach((card) => {
+    card.addEventListener('mouseenter', () => {
+      const { width, height, left, top } = card.getBoundingClientRect()
+      const { left: leftFighterContainer, top: topFighterContainer } = $fightersContainer.getBoundingClientRect()
+      
+      $fighterSelector.style.setProperty('--selector--left', `${left - leftFighterContainer}px`)
+      $fighterSelector.style.setProperty('--selector--top', `${top - topFighterContainer}px`)
+      $fighterSelector.style.setProperty('--selector--width', `${width}px`)
+      $fighterSelector.style.setProperty('--selector--height', `${height}px`)
+      $fighterSelector.style.transform = card.classList.contains('boxer-left') 
+        ? 'skew(2deg) scale(1.05)' 
+        : 'skew(-2deg) scale(1.05)'
+
+      $fighterSelector.style.opacity = '1'
+      $fighterSelector.style.visibility = 'visible'
+    })
+
+    card.addEventListener('mouseleave', () => {
+      $fighterSelector.style.transform = 'scale(1)'
+      $fighterSelector.style.opacity = '0'
+      $fighterSelector.style.visibility = 'hidden'
+    })
+  })
+})
+document.addEventListener('astro:page-load', () => {
     const leftSlider = document.getElementById('leftSlider');
     const rightSlider = document.getElementById('rightSlider');
     const prevButton = document.getElementById('prevButton');
