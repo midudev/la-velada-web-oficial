@@ -18,7 +18,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 63,
     country: 'es',
-    city: 'A Coruña',
+    city: 'A Coruña, Galicia',
     versus: 'rivaldios',
     socials: [
       {
@@ -196,6 +196,7 @@ export const FIGHTERS: Fighters[] = [
     }
   },
   {
+    // https://www.biografia.de/abby/
     id: 'abby',
     name: 'Abby',
     realName: 'Abril Gené Capriles',
@@ -205,7 +206,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 62,
     country: 'es',
-    city: 'Barcelona',
+    city: 'Mallorca, Islas Baleares',
     versus: 'roro',
     socials: [
       {
@@ -292,7 +293,7 @@ export const FIGHTERS: Fighters[] = [
     age: 23,
     weight: 47,
     country: 'es',
-    city: 'Madrid',
+    city: 'Barcelona, Cataluña',
     versus: 'abby',
     socials: [
       {
@@ -429,7 +430,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 69,
     country: 'mx',
-    city: 'Culiacán',
+    city: 'Rosales, Culiacán',
     versus: 'peereira',
     socials: [
       {
@@ -485,6 +486,7 @@ export const FIGHTERS: Fighters[] = [
     ],
   },
   {
+    // https://www.biografia.de/andoni/
     id: 'andoni',
     name: 'Andoni',
     realName: 'Andoni Talledo Gutiérrez',
@@ -494,7 +496,7 @@ export const FIGHTERS: Fighters[] = [
     age: 22,
     weight: 115,
     country: 'es',
-    city: 'Bilbao',
+    city: 'San Sebastian, Guipúzcoa',
     versus: 'carlos',
     socials: [
       {
@@ -564,7 +566,7 @@ export const FIGHTERS: Fighters[] = [
     age: 32,
     weight: 87,
     country: 'es',
-    city: 'Andorra La Vella',
+    city: 'Zaragoza, Aragón',
     versus: 'tomas',
     socials: [
       {
@@ -645,7 +647,7 @@ export const FIGHTERS: Fighters[] = [
     targetGloves: '12oz',
     country: 'mx',
     gallery: true,
-    city: 'Nuevo León',
+    city: 'Monterrey, Nuevo León',
     versus: 'arigeli',
     socials: [
       {
@@ -731,7 +733,7 @@ export const FIGHTERS: Fighters[] = [
     age: 27,
     weight: 74,
     country: 'es',
-    city: 'Alhama de Murcia',
+    city: 'Alhama de Murcia, Murcia',
     versus: 'westcol',
     socials: [
       {
@@ -817,7 +819,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 63,
     country: 'co',
-    city: 'Medellín',
+    city: 'Ciudad Bolívar, Antioquia',
     versus: 'grefg',
     socials: [
       {
@@ -900,7 +902,7 @@ export const FIGHTERS: Fighters[] = [
     weight: 53,
     country: 'es',
     gallery: true,
-    city: 'Barcelona',
+    city: 'Barcelona, Cataluña',
     versus: 'alana',
     socials: [
       {
@@ -1063,7 +1065,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 85,
     country: 'mx',
-    city: 'Monterrey',
+    city: 'Monterrey, Nuevo León',
     versus: 'andoni',
     socials: [
       {
