@@ -10,7 +10,7 @@ interface Props {
 ---
 
 <a
-  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
+  class={`boxer-card  ${extraClass} min-w-[80px] max-w-[140px] inline-block transition-all w-full md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
   href={`/luchador/${id}`}
   data-id={id}
   data-versus={versus}
@@ -104,7 +104,7 @@ interface Props {
     animation: selectedPulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
   }
 
-  @media (prefers-reduced-motion) {
+  @media (prefers-reduced-motion)  {
     .boxer-card.selected {
       animation: none;
       box-shadow: inset 0 0 0 2px rgba(255, 20, 147, 1);
@@ -114,6 +114,12 @@ interface Props {
 
 <script>
   document.addEventListener('astro:page-load', () => {
+    const isSmallScreen = window.matchMedia('(max-width: 48rem)');
+    if (isSmallScreen.matches) {
+      // Si la pantalla es pequeña, no aplicar el efecto de hover
+      return;
+    }
+
     const boxerCards = document.querySelectorAll('.boxer-card')
     let timeoutId: ReturnType<typeof setTimeout> | null = null
     let versusCard: HTMLAnchorElement | null = null
