@@ -628,7 +628,12 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Es el único que se ha atrevido a enfrentarse a mi otra vez.',
+        url: 'https://www.youtube.com/watch?v=yhs5HYCLftg'
+      },
+    ],
   },
   {
     // https://www.biografia.de/alana-flores/
@@ -1050,7 +1055,12 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Si yo acepto la pelea, es porque siento que voy a ganar',
+        url: 'https://www.youtube.com/watch?v=yhs5HYCLftg'
+      },
+    ],
   },
   {
     // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
