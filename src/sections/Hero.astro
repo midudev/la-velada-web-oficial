@@ -19,202 +19,154 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
 <section class="relative flex min-h-screen w-full">
   <div
-  class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center duration-75"
-  >
-</div>
+    class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center duration-75"
+  ></div>
 
-<div class="mask-fade-bottom absolute inset-0 w-full bg-black opacity-10"></div>
+  <div class="mask-fade-bottom absolute inset-0 w-full bg-black opacity-10"></div>
 
-<div class="relative flex w-full flex-col items-center p-8 text-center">
-  <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
-    <h3
-    class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 leading-[100%] font-medium"
-    >
-    26 DE <br />JULIO
-  </h3>
-  <figure class="animate-fade-in relative">
-    <img
-    class="relative z-20 h-auto w-64 sm:w-72 md:w-80 lg:w-96"
-    src="/images/logo.png"
-    fetchpriority="high"
-    alt="La Velada del Año V"
-    decoding="async"
-    />
-    <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
-  </figure>
-  
-  <div class="relative z-10">
-    <h3
-    class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-relaxed font-medium tracking-wider uppercase"
-    >
-    <a
-    href="https://maps.app.goo.gl/RVUArf48FwuvqJjD6"
-    rel="noopener noreferrer"
-    target="_blank"
-    class="animate-fade-in animate-dalay-700 z-50 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-115"
-    >
-    Estadio<br />La Cartuja,<br />Sevilla
-  </a>
-</h3>
-<div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
-<a
-href="https://twitch.tv/ibai"
-rel="noopener noreferrer"
-target="_blank"
-class="animate-fade-in animate-delay-700 z-10 mt-4 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-125"
->
-twitch.tv<br />Ibai
-</a>
-</div>
-<!--slider-->
-<div class="md:hidden">
-<div class="flex h-60 w-full justify-center overflow-hidden relative">
-  <!-- Botón Anterior -->
-  <button
-    id="prevButton"
-    class="absolute left-0 z-10 h-full px-4 bg-black/20 text-white hover:bg-black/70"
-  >
-    &#8249;
-  </button>
-
-  <!-- Left Slider -->
-  <div
-    id="leftSlider"
-    class="w-1/2 h-full flex gap-4 overflow-hidden snap-x snap-mandatory"
-  >
-    {[...leftRow].reverse().map(({ id, name, versus }) => (
-      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
-        <BoxerCard id={id} name={name} class="boxer-left w-full h-full" versus={versus} />
-      </div>
-    ))}
-    {[...leftSecondRow].reverse().map(({ id, name, versus }) => (
-      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
-        <BoxerCard id={id} name={name} class="boxer-left w-full h-full" versus={versus} />
-      </div>
-    ))}
-  </div>
-
-  <!-- Center -->
-  <div class="flex items-center justify-center">
-    <img src="/images/versus.png" alt="Versus" class="h-12 w-auto">
-  </div>
-
-  <!-- Right Slider -->
-  <div
-    id="rightSlider"
-    class="w-1/2 h-full flex gap-4 overflow-hidden snap-x snap-mandatory"
-  >
-    {rightRow.map(({ id, name, versus }) => (
-      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
-        <BoxerCard id={id} name={name} class="boxer-right w-full h-full" versus={versus} />
-      </div>
-    ))}
-    {rightSecondRow.map(({ id, name, versus }) => (
-      <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
-        <BoxerCard id={id} name={name} class="boxer-right w-full h-full" versus={versus} />
-      </div>
-    ))}
-  </div>
-
-  <!-- Botón Siguiente -->
-  <button
-    id="nextButton"
-    class="absolute right-0 z-10 h-full px-4 bg-black/20 text-white hover:bg-black/70"
-  >
-    &#8250;
-  </button>
-</div>
-<!--slider-->
-</div>
-
-<div
-id="fighter-container"
-      class="pointer-events-none absolute inset-0 flex flex-col items-center"
-    >
-      <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
-        {
-          FIGHTERS.map(({ id, name }) => (
-            <img
-              transition:name={`text-${id}`}
-              data-id={`hero-text-${id}`}
-              src={`/images/fighters/text/${id}.webp`}
-              alt={name}
-              decoding="async"
-              class="mask-fade-text absolute hidden h-full w-auto"
-              fetchpriority="low"
-            />
-          ))
-        }
-      </div>
-
-      <div
-        class="mask-fade-bottom relative bottom-0 mx-auto flex h-[80vh] w-full items-center justify-center"
+  <div class="relative flex w-full flex-col items-center p-8 text-center">
+    <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
+      <h3
+        class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 leading-[100%] font-medium"
       >
-        {
-          FIGHTERS.map(({ id, name }) => (
-            <img
-              transition:name={`image-${id}`}
-              data-id={`hero-image-${id}`}
-              src={`/images/fighters/big/${id}.webp`}
-              alt={name}
-              decoding="async"
-              class="absolute hidden h-full w-auto object-cover lg:object-contain"
-              fetchpriority="low"
-            />
-          ))
-        }
+        26 DE <br />JULIO
+      </h3>
+      <figure class="animate-fade-in relative">
+        <img
+          class="relative z-20 h-auto w-64 sm:w-72 md:w-80 lg:w-96"
+          src="/images/logo.png"
+          fetchpriority="high"
+          alt="La Velada del Año V"
+          decoding="async"
+        />
+        <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
+      </figure>
+
+      <div class="relative z-10">
+        <h3
+          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 leading-relaxed font-medium tracking-wider uppercase"
+        >
+          <a
+            href="https://maps.app.goo.gl/RVUArf48FwuvqJjD6"
+            rel="noopener noreferrer"
+            target="_blank"
+            class="animate-fade-in animate-delay-700 z-50 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-115"
+          >
+            Estadio<br />La Cartuja,<br />Sevilla
+          </a>
+        </h3>
+        <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
+        <a
+          href="https://twitch.tv/ibai"
+          rel="noopener noreferrer"
+          target="_blank"
+          class="animate-fade-in animate-delay-700 z-10 mt-4 inline-block leading-relaxed font-medium tracking-wider uppercase transition hover:scale-125"
+        >
+          twitch.tv<br />Ibai
+        </a>
       </div>
     </div>
 
-    
-    <div class="hidden relative md:flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
+    <!-- Slider para móviles -->
+    <div class="md:hidden absolute top-150">
+      <div class="flex h-60 w-full justify-center overflow-hidden relative">
+        <!-- Botón Anterior -->
+        <button
+          id="prevButton"
+          class="absolute left-0 z-10 h-full px-4 bg-black/20 text-white hover:bg-black/70"
+        >
+          &#8249;
+        </button>
+
+        <!-- Left Slider -->
+        <div
+          id="leftSlider"
+          class="w-1/2 h-full flex gap-4 overflow-hidden snap-x snap-mandatory"
+        >
+          {[...leftRow].reverse().map(({ id, name, versus }) => (
+            <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+              <BoxerCard id={id} name={name} class="boxer-left w-full h-full" versus={versus} />
+            </div>
+          ))}
+          {[...leftSecondRow].reverse().map(({ id, name, versus }) => (
+            <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+              <BoxerCard id={id} name={name} class="boxer-left w-full h-full" versus={versus} />
+            </div>
+          ))}
+        </div>
+
+        <!-- Center -->
+        <div class="flex items-center justify-center">
+          <img src="/images/versus.png" alt="Versus" class="h-12 w-auto">
+        </div>
+
+        <!-- Right Slider -->
+        <div
+          id="rightSlider"
+          class="w-1/2 h-full flex gap-4 overflow-hidden snap-x snap-mandatory"
+        >
+          {rightRow.map(({ id, name, versus }) => (
+            <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+              <BoxerCard id={id} name={name} class="boxer-right w-full h-full" versus={versus} />
+            </div>
+          ))}
+          {rightSecondRow.map(({ id, name, versus }) => (
+            <div class="snap-center flex-shrink-0 w-full h-full flex items-center justify-center">
+              <BoxerCard id={id} name={name} class="boxer-right w-full h-full" versus={versus} />
+            </div>
+          ))}
+        </div>
+
+        <!-- Botón Siguiente -->
+        <button
+          id="nextButton"
+          class="absolute right-0 z-10 h-full px-4 bg-black/20 text-white hover:bg-black/70"
+        >
+          &#8250;
+        </button>
+      </div>
+    </div>
+
+    <!-- Galería para escritorio -->
+    <div id="fighters-selection-container" class="hidden absolute md:flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
       <div class="flex w-full flex-wrap justify-between px-4">
         <div class="flex flex-wrap justify-start gap-4">
-          {
-            leftRow.map(({ id, name, versus }, index) => (
-              <div
-                class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}
-              >
-                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
-              </div>
-            ))
-          }
+          {leftRow.map(({ id, name, versus }, index) => (
+            <div
+              class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}
+            >
+              <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
+            </div>
+          ))}
         </div>
 
         <div class="flex flex-wrap justify-end gap-4">
-          {
-            rightRow.map(({ id, name, versus }, index) => (
-              <div
-                class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}
-              >
-                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
-              </div>
-            ))
-          }
+          {rightRow.map(({ id, name, versus }, index) => (
+            <div
+              class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}
+            >
+              <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
+            </div>
+          ))}
         </div>
       </div>
 
       <div class="flex flex-wrap justify-between gap-4">
         <div class="flex flex-wrap justify-start gap-4">
-          {
-            leftSecondRow.map(({ id, name, versus }, index) => (
-              <div class={`animate-fade-in-up animate-delay-${animationDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
-              </div>
-            ))
-          }
+          {leftSecondRow.map(({ id, name, versus }, index) => (
+            <div class={`animate-fade-in-up animate-delay-${animationDelaySecondRow[index]}`}>
+              <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
+            </div>
+          ))}
         </div>
         <div class="flex flex-wrap justify-end gap-4">
-          {
-            rightSecondRow.map(({ id, name, versus }, index) => (
-              <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
-              </div>
-            ))
-          }
+          {rightSecondRow.map(({ id, name, versus }, index) => (
+            <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>
+              <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
+            </div>
+          ))}
         </div>
       </div>
-    </div>
     </div>
   </div>
 </section>
@@ -223,10 +175,194 @@ id="fighter-container"
   .mask-fade-text {
     mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
   }
+
+  @keyframes fighter-select {
+    from {
+      opacity: 0.5;
+      border-color: rgba(255, 20, 147, 1);
+    }
+    to {
+      opacity: 1;
+      border-color: rgba(255, 20, 147, 0.5);
+    }
+  }
 </style>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
+  import { $ } from '@/lib/dom-selector'
+
+document.addEventListener('astro:page-load', () => {
+  const $landing = $('#landing')
+
+  let currentFighterId: string | null = null
+  let hideFighterTimer: ReturnType<typeof setTimeout>
+
+  document.addEventListener('boxer-card-exit', () => {
+    $landing?.classList.remove('hidden')
+
+    if (!currentFighterId) return
+
+    const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+    const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+    const heroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
+
+    if (heroText && heroImage) {
+      heroText.classList.remove('animate-zoom-int')
+      heroImage.classList.remove('animate-slide-up-fade')
+
+      heroText.classList.add('animate-zoom-out')
+      heroImage.classList.add('animate-fade-out-down')
+
+      heroMaskFadeText?.classList.remove('translate-x-full')
+      heroMaskFadeText?.classList.add('-translate-x-full')
+
+      hideFighterTimer = setTimeout(() => {
+        heroText.classList.add('hidden')
+        heroImage.classList.add('hidden')
+        currentFighterId = null
+      }, 500)
+    }
+  })
+
+  document.addEventListener('boxer-card-hovered', (event: Event) => {
+    if (currentFighterId) {
+      // si ya hay un luchador visible, lo ocultamos
+      clearTimeout(hideFighterTimer)
+
+      const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+      const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+      const heroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
+
+      heroText?.classList.add('hidden')
+      heroImage?.classList.add('hidden')
+      heroMaskFadeText?.classList.remove('translate-x-full')
+      heroMaskFadeText?.classList.add('-translate-x-full')
+      currentFighterId = null
+    }
+
+    const customEvent = event as CustomEvent<{ id: string }>
+    const id = customEvent.detail.id
+
+    const heroText = $(`[data-id="hero-text-${id}"]`)
+    const heroImage = $(`[data-id="hero-image-${id}"]`)
+    const heroMaskFadeText = $(`#mask-fade-text-${id}`)
+
+    if (heroText && heroImage) {
+      heroText.classList.remove('animate-zoom-out')
+      heroImage.classList.remove('animate-fade-out-down')
+    }
+
+    // si el luchador que entras es el mismo que ya se muestra
+    // entonces no hacemos nada
+    if (currentFighterId === id) return
+
+    // si ya estamos mostrando un luchador, tenemos que ocultarlo
+    if (currentFighterId) {
+      const currentHeroText = $(`[data-id="hero-text-${currentFighterId}"]`)
+      const currentHeroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
+      const currentHeroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
+
+      if (currentHeroText && currentHeroMaskFadeText && currentHeroImage) {
+        currentHeroText.classList.add('hidden')
+        currentHeroImage.classList.add('hidden')
+
+        currentHeroText.classList.remove('animate-zoom-in')
+        currentHeroImage.classList.remove('animate-slide-up-fade')
+        currentHeroMaskFadeText?.classList.remove('translate-x-full')
+        currentHeroMaskFadeText?.classList.add('-translate-x-full')
+      }
+    }
+
+    $landing?.classList.add('hidden')
+
+    // mostramos el luchador que quiere ver el usuario
+    heroText?.classList.remove('hidden')
+    heroText?.classList.add('animate-zoom-in')
+    heroImage?.classList.remove('hidden')
+    heroImage?.classList.add('animate-slide-up-fade')
+    heroMaskFadeText?.classList.remove('-translate-x-full')
+    heroMaskFadeText?.classList.add('translate-x-full')
+
+    currentFighterId = id
+  })
+
+  const $fighterSelector = document.createElement('div')
+  $fighterSelector.id = 'selectorFighter'
+
+  $fighterSelector.style.position = 'absolute'
+  $fighterSelector.style.width = 'var(--selector--width)'
+  $fighterSelector.style.height = 'var(--selector--height)'
+  $fighterSelector.style.top = 'var(--selector--top)'
+  $fighterSelector.style.left = 'var(--selector--left)'
+  $fighterSelector.style.transitionDuration = '500ms'
+  $fighterSelector.style.transitionTimingFunction = 'cubic-bezier(0.4, 0, 0.2, 1)'
+  $fighterSelector.style.transitionProperty = 'all'
+  $fighterSelector.style.opacity = '0'
+  $fighterSelector.style.zIndex = '40'
+  $fighterSelector.style.pointerEvents = 'none'
+  $fighterSelector.style.animation = 'fighter-select 0.5s infinite alternate';
+
+  const beforeElement = document.createElement('div');
+  beforeElement.style.position = 'absolute';
+  beforeElement.style.inset = '-4px';
+  beforeElement.style.background = 'transparent';
+  beforeElement.style.borderRadius = '8px';
+  beforeElement.style.opacity = '1';
+  beforeElement.style.zIndex = '30';
+  beforeElement.style.animation = 'fighter-select 0.5s infinite alternate';
+
+  const afterElement = document.createElement('div');
+  afterElement.style.position = 'absolute';
+  afterElement.style.inset = '-4px';
+  afterElement.style.zIndex = '30';
+  afterElement.style.opacity = '1';
+  afterElement.style.background = `
+    linear-gradient(to right, #fff 4px, transparent 4px) top left,
+    linear-gradient(to bottom, #fff 4px, transparent 4px) top left,
+    linear-gradient(to left, #fff 4px, transparent 4px) top right,
+    linear-gradient(to bottom, #fff 4px, transparent 4px) top right,
+    linear-gradient(to right, #fff 4px, transparent 4px) bottom left,
+    linear-gradient(to top, #fff 4px, transparent 4px) bottom left,
+    linear-gradient(to left, #fff 4px, transparent 4px) bottom right,
+    linear-gradient(to top, #fff 4px, transparent 4px) bottom right`;
+  afterElement.style.backgroundRepeat = 'no-repeat';
+  afterElement.style.backgroundSize = '25px 25px';
+  afterElement.style.borderRadius = '8px';
+  afterElement.style.animation = 'fighter-select 0.5s infinite alternate';
+
+  $fighterSelector.appendChild(beforeElement);
+  $fighterSelector.appendChild(afterElement);
+
+  const $fightersContainer = document.getElementById('fighters-selection-container') as HTMLElement
+  $fightersContainer.appendChild($fighterSelector)
+
+  const boxerCards = document.querySelectorAll('.boxer-card')
+
+  boxerCards.forEach((card) => {
+    card.addEventListener('mouseenter', () => {
+      const { width, height, left, top } = card.getBoundingClientRect()
+      const { left: leftFighterContainer, top: topFighterContainer } = $fightersContainer.getBoundingClientRect()
+      
+      $fighterSelector.style.setProperty('--selector--left', `${left - leftFighterContainer}px`)
+      $fighterSelector.style.setProperty('--selector--top', `${top - topFighterContainer}px`)
+      $fighterSelector.style.setProperty('--selector--width', `${width}px`)
+      $fighterSelector.style.setProperty('--selector--height', `${height}px`)
+      $fighterSelector.style.transform = card.classList.contains('boxer-left') 
+        ? 'skew(2deg) scale(1.05)' 
+        : 'skew(-2deg) scale(1.05)'
+
+      $fighterSelector.style.opacity = '1'
+      $fighterSelector.style.visibility = 'visible'
+    })
+
+    card.addEventListener('mouseleave', () => {
+      $fighterSelector.style.transform = 'scale(1)'
+      $fighterSelector.style.opacity = '0'
+      $fighterSelector.style.visibility = 'hidden'
+    })
+  })
+})
+document.addEventListener('astro:page-load', () => {
     const leftSlider = document.getElementById('leftSlider');
     const rightSlider = document.getElementById('rightSlider');
     const prevButton = document.getElementById('prevButton');
