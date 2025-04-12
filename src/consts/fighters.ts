@@ -96,6 +96,33 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I'
         },
     ],
+    "qualities": {
+      "defense": {
+        "description": "Defensa sólida, con capacidad para anticipar los movimientos del oponente y bloquear golpes.",
+        "percentage": 0.75,
+        "type": "defensivo"
+      },
+      "mobility": {
+        "description": "Movimientos rápidos y precisos que le permiten evadir ataques y reposicionarse con facilidad.",
+        "percentage": 0.78,
+        "type": "defensivo-ofensivo"
+      },
+      "technique": {
+        "description": "Técnica de golpeo refinada, con énfasis en la precisión y la potencia.",
+        "percentage": 0.82,
+        "type": "ofensivo"
+      },
+      "resistance": {
+        "description": "Capacidad para mantener un alto nivel de energía durante el combate, resistiendo los embates del oponente.",
+        "percentage": 0.80,
+        "type": "defensivo"
+      },
+      "strategy": {
+        "description": "Estratega en el ring, capaz de adaptarse a diferentes estilos de pelea y aprovechar las debilidades del oponente.",
+        "percentage": 0.76,
+        "type": "defensivo-ofensivo"
+      }
+    }
   },
   {
     // https://laletrade.com/biografias/twitch/18087-perxitaa
@@ -193,6 +220,33 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: 'dj-4LLi5cck',
       thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp'
+    },
+    "qualities": {
+      "defense": {
+        "description": "Defensa sólida, con buena capacidad para bloquear golpes y evitar ser golpeado.",
+        "percentage": 0.7,
+        "type": "defensivo"
+      },
+      "mobility": {
+        "description": "Movimientos ágiles que le permiten evadir ataques y reposicionarse rápidamente.",
+        "percentage": 0.75,
+        "type": "defensivo-ofensivo"
+      },
+      "technique": {
+        "description": "Técnica de golpeo efectiva, con énfasis en la precisión y combinaciones rápidas.",
+        "percentage": 0.8,
+        "type": "ofensivo"
+      },
+      "resistance": {
+        "description": "Capacidad para mantener un alto nivel de energía durante el combate, especialmente en peleas largas.",
+        "percentage": 0.85,
+        "type": "defensivo"
+      },
+      "strategy": {
+        "description": "Estratega en el ring, capaz de adaptarse a diferentes estilos de pelea y leer a sus oponentes.",
+        "percentage": 0.7,
+        "type": "defensivo-ofensivo"
+      }
     }
   },
   {
@@ -279,6 +333,33 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: 'HBTuF3KONZc',
       thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp'
+    },
+    "qualities": {
+      "defense": {
+        "description": "Defensa sólida, con buena capacidad para bloquear golpes y evitar ser golpeada.",
+        "percentage": 0.7,
+        "type": "defensivo"
+      },
+      "mobility": {
+        "description": "Movimientos ágiles que le permiten evadir ataques y reposicionarse rápidamente.",
+        "percentage": 0.75,
+        "type": "defensivo-ofensivo"
+      },
+      "technique": {
+        "description": "Técnica de golpeo efectiva, con énfasis en la precisión y combinaciones rápidas.",
+        "percentage": 0.8,
+        "type": "ofensivo"
+      },
+      "resistance": {
+        "description": "Capacidad para mantener un alto nivel de energía durante el combate, especialmente en peleas largas.",
+        "percentage": 0.85,
+        "type": "defensivo"
+      },
+      "strategy": {
+        "description": "Estratega en el ring, capaz de adaptarse a diferentes estilos de pelea y leer a sus oponentes.",
+        "percentage": 0.7,
+        "type": "defensivo-ofensivo"
+      }
     }
   },
   {
@@ -332,12 +413,40 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
+    qualities: {
+      defense: {
+        description: "Defensa sólida, con buena capacidad para bloquear golpes y evitar ser golpeado.",
+        percentage: 0.65,
+        type: "defensivo"
+      },
+      mobility: {
+        description: "Movimientos ágiles que le permiten evadir ataques y reposicionarse rápidamente.",
+        percentage: 0.7,
+        type: "defensivo-ofensivo"
+      },
+      technique: {
+        description: "Técnica de golpeo efectiva, con énfasis en la precisión y combinaciones rápidas.",
+        percentage: 0.75,
+        type: "ofensivo"
+      },
+      resistance: {
+        description: "Capacidad para mantener un alto nivel de energía durante el combate, especialmente en peleas largas.",
+        percentage: 0.8,
+        type: "defensivo"
+      },
+      strategy: {
+        description: "Estratega en el ring, capaz de adaptarse a diferentes estilos de pelea y leer a sus oponentes.",
+        percentage: 0.7,
+        type: "defensivo-ofensivo"
+      }
+    },
     clips: [
       {
         text: 'Confío en mí; estoy lista.',
         url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=3YC34708Wn8ThWVG&amp;clip=UgkxdN0LKsJBhRFzg7codYDoWTEG9MC6dh0U&amp;clipt=EIL7AhiKogM'
       }
     ],
+
   },
   {
     // https://www.biografia.de/gaspi/
@@ -403,6 +512,33 @@ export const FIGHTERS: Fighters[] = [
       }
 
     ],
+    qualities: {
+      defense: {
+        description: "Defensa creativa, utiliza movimientos inesperados para evitar golpes. A veces se inclina hacia la comedia para desorientar a sus oponentes.",
+        percentage: 0.68,
+        type: "defensivo"
+      },
+      mobility: {
+        description: "Movimientos ágiles y divertidos que le permiten evadir ataques y reposicionarse rápidamente. Su estilo es impredecible y lleno de energía.",
+        percentage: 0.72,
+        type: "defensivo-ofensivo"
+      },
+      technique: {
+        description: "Técnica única que combina diversión y efectividad en sus golpes. A veces utiliza movimientos exagerados para sorprender a sus oponentes.",
+        percentage: 0.75,
+        type: "ofensivo"
+      },
+      resistance: {
+        description: "Capacidad para mantener la energía y el humor durante el combate. Su actitud positiva y su capacidad para reírse de sí mismo lo ayudan a mantenerse fuerte.",
+        percentage: 0.78,
+        type: "defensivo"
+      },
+      strategy: {
+        description: "Estratega en el ring, capaz de sorprender a sus oponentes con tácticas inesperadas. Su estilo es impredecible y a menudo se basa en la improvisación.",
+        percentage: 0.7,
+        type: "defensivo-ofensivo"
+      }
+    },
     clips: [
       {
         text: 'Perxitaa, mira que la vida real no es como el Minecraft… pasan cosas afuera.',
@@ -483,6 +619,33 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=JZx9yIQa0lXP9BTh&amp;clip=Ugkxjn97-DOruGG1ClS3KgmuiNEMXRf5a4aj&amp;clipt=EJytRBjj4EQ'
       },
     ],
+    "qualities": {
+      "defense": {
+        "description": "Defensa sólida, con capacidad para anticipar los movimientos del oponente y bloquear golpes.",
+        "percentage": 0.75,
+        "type": "defensivo"
+      },
+      "mobility": {
+        "description": "Movimientos rápidos y precisos que le permiten evadir ataques y reposicionarse con facilidad.",
+        "percentage": 0.78,
+        "type": "defensivo-ofensivo"
+      },
+      "technique": {
+        "description": "Técnica de golpeo refinada, con énfasis en la precisión y la potencia.",
+        "percentage": 0.82,
+        "type": "ofensivo"
+      },
+      "resistance": {
+        "description": "Capacidad para mantener un alto nivel de energía durante el combate, resistiendo los embates del oponente.",
+        "percentage": 0.80,
+        "type": "defensivo"
+      },
+      "strategy": {
+        "description": "Estratega en el ring, capaz de adaptarse a diferentes estilos de pelea y aprovechar las debilidades del oponente.",
+        "percentage": 0.76,
+        "type": "defensivo-ofensivo"
+      }
+    }
   },
   {
     id: 'andoni',
@@ -551,7 +714,34 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: 'QDy_MM6y-7U',
       thumbnail: '/images/fighters/workoutThumbnails/andoni-thumbnail.webp'
-    }
+    },
+    "qualities": {
+        "defense": {
+          "description": "Defensa activa, utiliza movimientos para evitar golpes.",
+          "percentage": 0.65,
+          "type": "defensivo"
+        },
+        "mobility": {
+          "description": "Gran movilidad que le permite cambiar de posición rápidamente.",
+          "percentage": 0.8,
+          "type": "defensivo-ofensivo"
+        },
+        "technique": {
+          "description": "Técnica de golpeo efectiva, con énfasis en la precisión.",
+          "percentage": 0.75,
+          "type": "ofensivo"
+        },
+        "resistance": {
+          "description": "Resistencia media, puede mantener el ritmo en combates largos.",
+          "percentage": 0.7,
+          "type": "defensivo"
+        },
+        "strategy": {
+          "description": "Capacidad para adaptarse a diferentes estilos de pelea.",
+          "percentage": 0.65,
+          "type": "defensivo-ofensivo"
+        }
+      }
   },
   {
     // https://www.biografia.de/viruzz/
@@ -629,6 +819,33 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    "qualities": {
+        "defense": {
+          "description": "Defensa activa, utiliza movimientos para evitar golpes.",
+          "percentage": 0.65,
+          "type": "defensivo"
+        },
+        "mobility": {
+          "description": "Gran movilidad que le permite cambiar de posición rápidamente.",
+          "percentage": 0.8,
+          "type": "defensivo-ofensivo"
+        },
+        "technique": {
+          "description": "Técnica de golpeo efectiva, con énfasis en la precisión.",
+          "percentage": 0.75,
+          "type": "ofensivo"
+        },
+        "resistance": {
+          "description": "Resistencia media, puede mantener el ritmo en combates largos.",
+          "percentage": 0.7,
+          "type": "defensivo"
+        },
+        "strategy": {
+          "description": "Capacidad para adaptarse a diferentes estilos de pelea.",
+          "percentage": 0.65,
+          "type": "defensivo-ofensivo"
+        }
+      }
   },
   {
     // https://www.biografia.de/alana-flores/
@@ -718,6 +935,33 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: 'TmC9TuD8NoQ',
       thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp'
+    },
+    qualities: {
+      defense: {
+        description: 'guardia izquierda,Buena defensa ,golpes efectivos ,mano dominante.',
+        percentage: 0.5,
+        type: 'defensivo-ofensivo'
+      },
+      mobility: {
+        description: 'Su estilo incluye una buena movilidad, lo que le permite esquivar golpes y posicionarse estratégicamente para atacar. Esto es crucial en el boxeo, ya que le ayuda a evitar ser golpeada mientras busca oportunidades para contraatacar.',
+        percentage: 0.7,
+        type: 'defensivo-ofensivo'
+      },
+      technique: {
+        description: 'Alana ha trabajado en su técnica de golpeo, lo que le permite lanzar combinaciones rápidas y precisas. Esto es fundamental para acumular puntos y causar daño a sus oponentes.',
+        percentage: 0.8,
+        type: 'ofensivo'
+      },
+      resistance: {
+        description: 'Su entrenamiento le ha proporcionado una gran resistencia, lo que le permite mantener un alto nivel de energía durante las peleas, especialmente en combates largos.',
+        percentage: 0.9,
+        type: 'defensivo'
+      },
+      strategy: {
+        description: 'Alana es conocida por su capacidad para adaptarse a sus oponentes. Esto significa que puede cambiar su enfoque y estrategia en función de cómo se desarrolla la pelea.',
+        percentage: 0.6,
+        type: 'defensivo-ofensivo'
+      }
     }
   },
   {
@@ -804,7 +1048,34 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: '_Rh-VjB3ATk',
       thumbnail: '/images/fighters/workoutThumbnails/grefg-thumbnail.webp'
-    }
+    },
+    "qualities": {
+        "defense": {
+          "description": "Defensa sólida, con buen uso de la guardia.",
+          "percentage": 0.7,
+          "type": "defensivo"
+        },
+        "mobility": {
+          "description": "Movimientos rápidos que le permiten esquivar ataques.",
+          "percentage": 0.75,
+          "type": "defensivo-ofensivo"
+        },
+        "technique": {
+          "description": "Técnica de golpeo bien desarrollada, con combinaciones efectivas.",
+          "percentage": 0.8,
+          "type": "ofensivo"
+        },
+        "resistance": {
+          "description": "Alta resistencia, capaz de soportar combates intensos.",
+          "percentage": 0.85,
+          "type": "defensivo"
+        },
+        "strategy": {
+          "description": "Estrategia flexible, se adapta a las circunstancias del combate.",
+          "percentage": 0.7,
+          "type": "defensivo-ofensivo"
+        }
+      }
   },
   {
     // https://www.biografia.de/westcol/
@@ -881,6 +1152,33 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
+    qualities: {
+      defense: {
+        description: "Defensa sólida, con capacidad para anticipar los movimientos del oponente y bloquear golpes.",
+        percentage: 0.75,
+        type: "defensivo"
+      },
+      mobility: {
+        description: "Movimientos rápidos y precisos que le permiten evadir ataques y reposicionarse con facilidad.",
+        percentage: 0.78,
+        type: "defensivo-ofensivo"
+      },
+      technique: {
+        description: "Técnica de golpeo refinada, con énfasis en la precisión y la potencia.",
+        percentage: 0.82,
+        type: "ofensivo"
+      },
+      resistance: {
+        description: "Capacidad para mantener un alto nivel de energía durante el combate, resistiendo los embates del oponente.",
+        percentage: 0.80,
+        type: "defensivo"
+      },
+      strategy: {
+        description: "Estratega en el ring, capaz de adaptarse a diferentes estilos de pelea y aprovechar las debilidades del oponente.",
+        percentage: 0.76,
+        type: "defensivo-ofensivo"
+      }
+    },
     clips: [
       {
         text: 'Vamos a ver si le dan las hue***.',
@@ -973,7 +1271,34 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: 'rugHsv9JCSU',
       thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp'
-    }
+    },
+    "qualities": {
+        "defense": {
+          "description": "Guardia sólida, buena capacidad para bloquear golpes.",
+          "percentage": 0.6,
+          "type": "defensivo"
+        },
+        "mobility": {
+          "description": "Movimientos ágiles que le permiten evadir ataques.",
+          "percentage": 0.75,
+          "type": "defensivo-ofensivo"
+        },
+        "technique": {
+          "description": "Técnica depurada que le permite realizar golpes precisos.",
+          "percentage": 0.85,
+          "type": "ofensivo"
+        },
+        "resistance": {
+          "description": "Capacidad para resistir el desgaste físico durante el combate.",
+          "percentage": 0.8,
+          "type": "defensivo"
+        },
+        "strategy": {
+          "description": "Estratega en el ring, capaz de leer a sus oponentes.",
+          "percentage": 0.7,
+          "type": "defensivo-ofensivo"
+        }
+      }
   },
   {
     // https://www.biografia.de/tomas-mazza/
@@ -1051,6 +1376,33 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    "qualities": {
+        "defense": {
+          "description": "Defensa activa, utiliza movimientos para evitar golpes.",
+          "percentage": 0.65,
+          "type": "defensivo"
+        },
+        "mobility": {
+          "description": "Gran movilidad que le permite cambiar de posición rápidamente.",
+          "percentage": 0.8,
+          "type": "defensivo-ofensivo"
+        },
+        "technique": {
+          "description": "Técnica de golpeo efectiva, con énfasis en la precisión.",
+          "percentage": 0.75,
+          "type": "ofensivo"
+        },
+        "resistance": {
+          "description": "Resistencia media, puede mantener el ritmo en combates largos.",
+          "percentage": 0.7,
+          "type": "defensivo"
+        },
+        "strategy": {
+          "description": "Capacidad para adaptarse a diferentes estilos de pelea.",
+          "percentage": 0.65,
+          "type": "defensivo-ofensivo"
+        }
+      }
   },
   {
     // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
@@ -1127,6 +1479,33 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
+    qualities: {
+        defense: {
+          description: "Defensa activa, utiliza movimientos para evitar golpes.",
+          percentage: 0.65,
+          type: "defensivo"
+        },
+        mobility: {
+          description: "Gran movilidad que le permite cambiar de posición rápidamente.",
+          percentage: 0.8,
+          type: "defensivo-ofensivo"
+        },
+        technique: {
+          description: "Técnica de golpeo efectiva, con énfasis en la precisión.",
+          percentage: 0.75,
+          type: "ofensivo"
+        },
+        resistance: {
+          description: "Resistencia media, puede mantener el ritmo en combates largos.",
+          percentage: 0.7,
+          type: "defensivo"
+        },
+        strategy: {
+          description: "Capacidad para adaptarse a diferentes estilos de pelea.",
+          percentage: 0.65,
+          type: "defensivo-ofensivo"
+        }
+      },
     clips: [
       {
         text: 'Estoy de acuerdo, es una máquina, y eso hace más emocionante para mí la pelea. Una pelea difícil, un reto para mí.',
