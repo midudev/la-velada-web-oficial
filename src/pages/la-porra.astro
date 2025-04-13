@@ -2,10 +2,14 @@
 import Layout from '@/layouts/Layout.astro'
 import { porra } from '@/consts/pageTitles'
 import BackgroundLayout from '@/layouts/BackgroundLayout.astro'
+import LoginButtons from '@/components/LoginButtons'
+import { getSession } from 'auth-astro/server'
+
+const session = await getSession(Astro.request)
 ---
 
 <Layout title={porra}>
-  <BackgroundLayout>
+  <BackgroundLayout >
     <header
       class="absolute top-28 mx-auto flex min-h-screen w-full flex-col items-center justify-start gap-4"
     >
@@ -14,6 +18,29 @@ import BackgroundLayout from '@/layouts/BackgroundLayout.astro'
       >
         PARTICIPA EN LA PORRA
       </h2>
+
+      <main>
+        <div class="text-center flex flex-col items-center gap-2 mt-4">
+          {
+            session?.user ? (
+              <>
+                <img
+                  src={session.user.image}
+                  alt="Foto de perfil"
+                  class="w-20 h-20 rounded-full border-2 border-white shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+                />
+                <p class="animate-fade-in animate-delay-300 bg-gradient-to-r from-sky-100 to-pink-300 bg-clip-text text-center text-2xl font-bold text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">¡Hola, {session.user.name}!</p>
+              </>
+            ) : (
+              <p class="animate-fade-in animate-delay-300 bg-gradient-to-r from-sky-100 to-pink-300 bg-clip-text text-center text-2xl font-bold text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">¡Hola, invitado!</p>
+            )
+          }
+        </div>
+        <div class="mt-4">
+          <LoginButtons client:load isLoggedIn={Boolean(session?.user)} />
+        </div>
+      </main>
+      
     </header>
   </BackgroundLayout>
 </Layout>
