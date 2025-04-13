@@ -2,8 +2,7 @@
 import { defineConfig } from 'astro/config'
 import tailwindcss from '@tailwindcss/vite'
 import auth from 'auth-astro';
-
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel'
 import sitemap from '@astrojs/sitemap'
 import react from '@astrojs/react'
 
@@ -22,13 +21,9 @@ export default defineConfig({
     svg: true,
   },
 
+  adapter: vercel(),
 
   integrations: [react(), sitemap(), auth()],
 
   site: 'https://www.infolavelada.com/',
-
-  adapter: vercel({
-    edgeMiddleware: true,
-    include: ['@auth/core/providers/twitch']
-  })
 });
