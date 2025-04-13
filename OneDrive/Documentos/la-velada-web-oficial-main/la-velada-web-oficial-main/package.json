@@ -1,0 +1,33 @@
+{
+  "name": "la-velada-del-ano-v-web-oficial",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "predev": "pnpm generate:blur-images",
+    "dev": "astro dev",
+    "prebuild": "pnpm generate:blur-images",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint --ext .astro .",
+    "lint:fix": "eslint --ext .astro --fix .",
+    "generate:blur-images": "node scripts/generate-blur-placeholders.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.3.0",
+    "@astrojs/vercel": "8.1.3",
+    "@midudev/tailwind-animations": "0.2.0",
+    "@tailwindcss/vite": "4.0.17",
+    "astro": "5.5.5",
+    "tailwindcss": "4.0.17"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "8.28.0",
+    "eslint": "9.23.0",
+    "eslint-plugin-astro": "1.3.1",
+    "prettier": "3.5.3",
+    "prettier-plugin-astro": "0.14.1",
+    "prettier-plugin-tailwindcss": "0.6.11",
+    "sharp": "^0.33.5"
+  }
+}

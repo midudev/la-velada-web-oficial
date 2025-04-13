@@ -1,0 +1,209 @@
+---
+import SectionTitle from '@/components/SectionTitle.astro'
+
+interface Props {
+  id: string
+  name: string
+  imageCount?: number
+}
+
+const { id, name, imageCount = 3 } = Astro.props
+
+---
+
+<section class="mx-auto max-w-6xl px-2 py-36 lg:px-10">
+  <SectionTitle title="Galería de Fotos" />
+
+  <div id="boxer-gallery" class="mt-10 grid grid-cols-6 gap-3 pt-12">
+    {
+      Array.from({ length: imageCount }).map((_, index) => (
+        <a
+          class:list={[
+            'boxer-image aspect-square transition hover:scale-105 hover:brightness-125',
+            { 'col-span-3': index < 2 },
+            { 'col-span-2': index >= 2 },
+          ]}
+          href={`/images/fighters/gallery/${id}/${index + 1}.webp`}
+          title={`Abrir imagen ${index} de la galería de ${name}`}
+        >
+          <figure class="h-full w-full">
+            <picture class="block h-full w-full">
+              <img
+                loading="lazy"
+                decoding="async"
+                class="aspect-square h-full w-full rounded object-cover object-top"
+                alt={`Imagen de ${name}`}
+                src={`/images/fighters/gallery/${id}/${index + 1}.webp`}
+              />
+            </picture>
+          </figure>
+        </a>
+      ))
+    }
+    <dialog
+      id="lightbox"
+      class="w-full h-full bg-transparent backdrop:bg-black/90 mt-20"
+    >
+      <div class="mx-auto flex h-[80%] w-[80%] items-center justify-center animate-zoom-in">
+        <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
+        <button
+          type="button"
+          class="hover:text-theme-tickle-me-pink z-10 rounded bg-black/60 p-4 text-theme-turquoise transition hover:scale-110 right-8 top-8 absolute cursor-pointer"
+        >
+          <svg class="size-5" aria-hidden="true" fill="none" viewBox="0 0 14 14">
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
+          </svg>
+        </button>
+        <button
+          data-btn-prev
+          class="group z-10 transition hover:scale-125 motion-reduce:transition-none text-theme-turquoise motion-reduce:hover:scale-100 hover:text-theme-tickle-me-pink absolute left-[10px] md:left-0 md:relative cursor-pointer"
+          id="btn-prev"
+        >
+          <svg class="size-16" width="80" height="80" fill="none"
+            ><g clip-path="url(#a)"
+              ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"></path></g
+            ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs
+            ></svg
+          >
+        </button>
+        <img
+          loading="lazy"
+          decoding="async"
+          class="boxer-gallery-img z-8 h-full rounded object-contain object-center"
+          alt={`Imagen de ${name}`}
+          src={`/images/fighters/gallery/${id}/1.webp`}
+        />
+        <button
+          data-btn-next
+          class="group z-10 transition hover:scale-125 motion-reduce:transition-none text-theme-turquoise motion-reduce:hover:scale-100 hover:text-theme-tickle-me-pink absolute right-[10px] md:right-0 md:relative cursor-pointer"
+          id="btn-next"
+        >
+          <svg
+            class="size-16 rotate-180"
+            width="80"
+            height="80"
+            fill="none"
+            ><g clip-path="url(#a)"
+              ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"></path></g
+            ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs
+            ></svg
+          >
+        </button>
+      </div>
+    </dialog>
+  </div>
+</section>
+
+<script>
+  import { $ } from '@/lib/dom-selector'
+
+  document.addEventListener('astro:page-load', () => {
+    const $lightbox = $('#lightbox') as HTMLDialogElement
+    const $gallery = $('#boxer-gallery') as HTMLElement
+    const $btnPrev = $('#btn-prev') as HTMLButtonElement
+    const $btnNext = $('#btn-next') as HTMLButtonElement
+    if (!$gallery) return
+
+    const $links = $gallery?.querySelectorAll('a')
+    const $close = $lightbox?.querySelector('button')
+
+    const updateImg = (link: HTMLElement) => {
+      const img = $lightbox?.querySelector('.boxer-gallery-img') as HTMLImageElement
+      const newImg = link.querySelector('img') as HTMLImageElement
+      if (img && newImg) {
+        resetMainImageAnimation(img)
+        img.src = newImg.src
+        img.classList.add('animate-fade-in')
+      }
+    }
+
+    const close = () => {
+      $lightbox.close()
+    }
+
+    const resetMainImageAnimation = (mainImage: HTMLImageElement) => {
+      mainImage.style.animation = 'none'
+      mainImage.offsetWidth // trigger reflow
+      mainImage.style.animation = ''
+    }
+
+    const showPrevImage = () => {
+      const current = $gallery.querySelector('a[data-current=true]') as HTMLAnchorElement
+      const prev = (current.previousElementSibling ||
+        $gallery.querySelector('a:last-of-type')) as HTMLAnchorElement
+      prev.click()
+    }
+
+    const showNextImage = () => {
+      const current = $gallery.querySelector('a[data-current=true]') as HTMLAnchorElement
+      const next = (
+        current.nextElementSibling?.nodeName === 'A'
+          ? current.nextElementSibling
+          : $gallery.querySelector('a:first-of-type')
+      ) as HTMLAnchorElement
+      next.click()
+    }
+
+    $btnPrev.addEventListener('click', () => {
+      if (!$lightbox.open) return
+      showPrevImage()
+    })
+
+    $btnNext.addEventListener('click', () => {
+      if (!$lightbox.open) return
+      showNextImage()
+    })
+
+    document.addEventListener('keydown', (event) => {
+      if (!$lightbox.open) return
+
+      if (event.key === 'Escape') {
+        close()
+      }
+
+      if (event.key === 'ArrowRight') {
+        showNextImage()
+      }
+
+      if (event.key === 'ArrowLeft') {
+        showPrevImage()
+      }
+    })
+
+    $close?.addEventListener('click', close)
+
+    $lightbox?.addEventListener('click', (event) => {
+      const $dialogBg = $('[data-dialog-bg]') as HTMLDivElement
+      const canClose = event.target === $dialogBg || event.target === $lightbox
+      if (canClose) close()
+    })
+
+    // When clicking on a lightbox link
+    // use the link image as the main image.
+    $links.forEach((link) =>
+      link.addEventListener('click', (event) => {
+        event.preventDefault()
+        // remove current data atribute
+        $gallery.querySelector('a[data-current=true]')?.removeAttribute('data-current')
+        // set current data atribute
+        link.setAttribute('data-current', 'true')
+
+        // update image before show lightbox
+        if ($lightbox.open) {
+          updateImg(link)
+        }
+
+        // add lightbox
+        if (!$lightbox.open) {
+          updateImg(link)
+          $lightbox.showModal()
+        }
+      }),
+    )
+  })
+</script>

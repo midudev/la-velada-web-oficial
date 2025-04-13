@@ -1,0 +1,111 @@
+---
+import { ClientRouter } from 'astro:transitions'
+
+import '@/styles/global.css'
+
+import Header from '@/components/Header.astro'
+import Footer from '@/components/Footer.astro'
+import Sponsors from '@/components/Sponsors.astro'
+import { fixedTitle } from '@/consts/pageTitles'
+interface Props {
+  title: string
+}
+
+const { title = fixedTitle } = Astro.props
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>
+      {title}
+    </title>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link
+      rel="preload"
+      href="/images/hero.avif"
+      as="image"
+      type="image/avif"
+      crossorigin="anonymous"
+    />
+
+    <!-- Preload de las fuentes para que no se vea el cambio de fuente al cargar la pagina -->
+    <link
+      rel="preload"
+      href="/fonts/anisette-medium.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/fonts/anisette-light.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/fonts/anisette-bold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/fonts/anisette-black.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <meta
+      name="description"
+      content="Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos"
+    />
+
+    <meta property="og:url" content="https://www.infolavelada.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="La Velada del Año V de Ibai Llanos" />
+    <meta
+      property="og:description"
+      content="Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos"
+    />
+    <meta property="og:image" content="https://www.infolavelada.com/og.jpg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content="La Velada del Año V" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@infoLaVelada" />
+    <meta name="twitter:creator" content="@ibaiLlanos" />
+    <meta name="twitter:title" content="La Velada del Año V de Ibai Llanos" />
+    <meta
+      name="twitter:description"
+      content="Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos"
+    />
+    <ClientRouter />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Sponsors />
+    <Footer />
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: #f19fca;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
