@@ -1,6 +1,7 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
 import BoxerCard from '@/components/BoxerCard.astro'
+import TwitchEventLink from '@/components/TwitchEventLink.astro'
 
 const firstRow = FIGHTERS.slice(0, 6)
 const leftRow = firstRow.slice(0, 3)
@@ -15,6 +16,9 @@ const reverseDelay = [...animationDelay].reverse()
 
 const animationDelaySecondRow = [...animationDelay, 900]
 const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
+const generateItems = (length: number) => {
+  return Array.from({ length }, (_, i) => `Item ${i + 1}`);
+}
 ---
 
 <section class="relative flex min-h-screen w-full">
@@ -26,7 +30,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
   <div class="mask-fade-bottom absolute inset-0 w-full bg-black opacity-10"></div>
 
   <div class="relative flex w-full flex-col items-center p-8 text-center">
-    <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
+    <div id="landing" class="md:absolute top-0 flex w-full flex-col items-center py-24">
       <h3
         class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 leading-[100%] font-medium"
       >
@@ -57,14 +61,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
           </a>
         </h3>
         <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
-        <a
-          href="https://twitch.tv/ibai"
-          rel="noopener noreferrer"
-          target="_blank"
-          class="animate-fade-in animate-delay-700 z-10 mt-4 inline-block leading-relaxed font-medium tracking-wider transition hover:scale-125"
-        >
-          twitch.tv<br />Ibai
-        </a>
+        <TwitchEventLink />
       </div>
     </div>
 
@@ -112,9 +109,9 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       </div>
     </div>
 
-    <div id="fighters-selection-container" class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 p-8">
-      <div class="flex w-full flex-wrap justify-between px-4">
-        <div class="flex flex-wrap justify-start gap-4">
+    <div id="fighters-selection-container" class="relative flex flex-col-reverse md:flex-col  h-full w-full max-w-6xl items-center justify-end gap-8">
+      <div class="flex w-full justify-around md:justify-between px-0 md:px-4 gap-2 md:gap-4">
+        <div class="flex flex-col md:flex-row gap-2 md:gap-4">
           {
             leftRow.map(({ id, name, versus }, index) => (
               <div
@@ -125,8 +122,13 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
             ))
           }
         </div>
-
-        <div class="flex flex-wrap justify-end gap-4">
+        <ul class="flex md:hidden flex-wrap flex-col justify-around ">
+          {Array.from({ length: 3 }).map((_, index) => (
+              <img alt={`versus`} src="/images/versus.png" class="h-auto w-full max-w-20 min-w-12" />
+          ))}
+        </ul>
+        <div class="flex flex-col-reverse md:flex-row gap-2 md:gap-4">
+        
           {
             rightRow.map(({ id, name, versus }, index) => (
               <div
@@ -138,6 +140,8 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
           }
         </div>
       </div>
+      <div class="flex w-full md:w-auto justify-around px-0 md:px-4 gap-2 md:gap-4">
+        <div class="flex gap-2 flex-col-reverse md:flex-row md:gap-4  ">
 
       <div class="flex flex-wrap justify-between gap-4">
         <div class="flex flex-wrap justify-start gap-4">
@@ -149,7 +153,12 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
             ))
           }
         </div>
-        <div class="flex flex-wrap justify-end gap-4">
+        <ul class="flex md:hidden flex-wrap flex-col justify-around ">
+          {Array.from({ length: 4 }).map((_, index) => (
+              <img alt={`versus`} src="/images/versus.png" class="h-auto w-full max-w-20 min-w-12" />
+          ))}
+        </ul>
+        <div class="flex gap-2 flex-col md:flex-row md:gap-4 ">
           {
             rightSecondRow.map(({ id, name, versus }, index) => (
               <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>

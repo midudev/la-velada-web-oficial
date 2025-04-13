@@ -10,20 +10,20 @@ interface Props {
 const { timestamp } = Astro.props
 ---
 
-<section class="flex w-full flex-col place-items-center px-2 py-48" aria-label="cuenta atrás">
+<section class="flex w-full flex-col place-items-center px-2 py-26 md:py-55 overflow-hidden" aria-label="cuenta atrás">
   <SectionTitle title="Cuenta atrás para el evento..." />
 
   <div
-    class="flex items-center justify-center gap-2 text-[var(--color-white)] select-none"
+    class="flex md:flex-row items-center justify-center gap-2 text-[var(--color-white)] select-none"
     data-date={timestamp}
     role="timer"
   >
     <Date
       dateType="DÍAS"
       attribute={{ 'data-days': '' }}
-      className="text-6xl font-bold md:text-7xl lg:text-8xl"
+      className="text-4xl font-bold sm:text-6xl md:text-7xl lg:text-8xl"
       wrapperClassName="my-0"
-      height={'h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
+      height={'h-[2.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
       max={129}
       withBackground={true}
     />
@@ -32,8 +32,8 @@ const { timestamp } = Astro.props
       wrapperClassName="my-0"
       dateType="HORAS"
       attribute={{ 'data-hours': '' }}
-      className="text-6xl font-bold md:text-7xl lg:text-8xl"
-      height={'h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
+      className="text-4xl font-bold sm:text-6xl md:text-7xl lg:text-8xl"
+      height={'h-[2.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
       max={23}
       withBackground={true}
     />
@@ -42,8 +42,8 @@ const { timestamp } = Astro.props
       wrapperClassName="my-0"
       dateType="MINUTOS"
       attribute={{ 'data-minutes': '' }}
-      className="text-6xl font-bold md:text-7xl lg:text-8xl"
-      height={'h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
+      className="text-4xl font-bold sm:text-6xl md:text-7xl lg:text-8xl"
+      height={'h-[2.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
       max={59}
       withBackground={true}
     />
@@ -52,14 +52,15 @@ const { timestamp } = Astro.props
       wrapperClassName="my-0"
       dateType="SEGUNDOS"
       attribute={{ 'data-seconds': '' }}
-      className="text-6xl font-bold md:text-7xl lg:text-8xl"
-      height={'h-[3.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
+      className="text-4xl font-bold sm:text-6xl md:text-7xl lg:text-8xl"
+      height={'h-[2.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
       max={59}
       withBackground={true}
     />
   </div>
-  <LinkToAddCalendar class="text-center mt-10">Añade el evento al calendario!</LinkToAddCalendar>
-</section>
+  <LinkToAddCalendar class="mt-6 text-center md:mt-8 lg:mt-10">
+    Añade el evento al calendario!
+  </LinkToAddCalendar>
 
 <script>
   import createCountdown, { type TimeParts } from '@/lib/countdown'
