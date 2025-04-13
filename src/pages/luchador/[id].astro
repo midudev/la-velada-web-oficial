@@ -1,0 +1,159 @@
+---
+import { FIGHTERS } from '@/consts/fighters'
+import Layout from '@/layouts/Layout.astro'
+import { fixedTitle } from '@/consts/pageTitles'
+import BoxerWorkout from '@/components/BoxerWorkout.astro'
+import BoxerCard from '@/components/BoxerCard.astro'
+import BoxerClipList from '@/components/BoxerClipList.astro'
+import BoxerClipDrawer from '@/components/BoxerClipDrawer.astro'
+import BoxerProfileCard from '@/components/BoxerProfileCard.astro'
+
+const { id } = Astro.params
+
+const fighter = FIGHTERS.find((fighter) => fighter.id === id)
+if (!fighter) return Astro.redirect('/404')
+
+const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+})
+
+const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
+---
+
+<Layout title={`${fighter.name} | ${fixedTitle}`}>
+  <section class="relative flex lg:min-h-screen w-full flex-col-reverse lg:flex-row">
+    <!-- Fondo de la pagina -->
+    <div class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-50">
+    </div>
+
+    <!-- Listado de Clips -->
+    <div
+      class="group flex lg:min-h-screen w-full lg:max-w-xl flex-col items-center justify-center gap-y-32 px-8 pt-4 lg:pt-24 text-right text-balance"
+    >
+      <BoxerClipList
+        clips={fighter.clips}
+        externalPlayer={false}
+      />
+
+      <div class="relative z-[101]">
+        <BoxerClipDrawer
+            clips={fighter.clips}
+        />
+      </div>
+    </div>
+
+    <!-- Boxeador perfil -->
+    <div
+      class=" relative z-10 flex w-full flex-col items-center justify-center pl-0 pr-0 lg:pr-8 pt-24 lg:flex-row lg:items-start lg:pt-32"
+    >
+      <!-- Imagenes del boxeador -->
+      <div
+        class=" relative mt-8 px-6 lg:px-2 flex h-[60vh] w-full lg:min-w-sm items-center justify-center lg:mt-0 lg:h-[80vh] lg:w-1/2"
+      >
+        <img
+          src={`/images/fighters/big/${id}.webp`}
+          alt={`Retrato de ${fighter.name}, participante de La Velada V`}
+          class="animate-fade-in mask-image-fade-bottom h-full w-full object-contain transition-all duration-700 hover:scale-105"
+          transition:name={`image-${id}`}
+        />
+        <img
+          src={`/images/fighters/text/${id}.png`}
+          alt={`Nombre de ${fighter.name} en texto decorativo`}
+          class="animate-scale-in absolute bottom-6 lg:bottom-34 h-10 lg:h-16 w-auto "
+          transition:name={`text-${id}`}
+          loading="lazy"
+        />
+      </div>
+      <!-- Fin de las imagenes del boxeador -->
+
+      <!-- Tarjeta del boxeador -->
+      <div class=" px-8 lg:px-0 mt-5 w-full flex flex-col items-center justify-center max-w-xl text-white lg:w-1/2 space-y-4">
+        <BoxerProfileCard
+          fighter={fighter}
+          birthDate={birthDate}
+        />
+        {
+          opponent && (
+            <div class="flex w-full items-center justify-center gap-4">
+              <img alt={`Enfrentamiento entre ${fighter.name} y ${opponent?.name ?? 'su oponente'}`} src="/images/versus.png" class="h-12 w-auto" />
+              <BoxerCard
+                id={opponent.id}
+                versus={fighter.id}
+                name={opponent.name}
+                class="group-hover:scale-110"
+              />
+            </div>
+          )
+        }
+      </div>
+      <!-- Fin de la tarjeta del boxeador -->
+    </div>
+  </section>
+
+  <!-- Redes Sociales del Boxeador -->
+  <section>
+    <div class="flex flex-wrap justify-center gap-3 space-x-2 px-4 lg:px-0">
+      {
+        (fighter.socials || [])?.map(({ url, image, name, label, followers }) => (
+          <a
+            href={url}
+            target="_blank"
+            aria-label={label ?? name}
+            class="text-dark-magenta hover:to-theme-turquoise/70 hover:from-theme-tickle-me-pink/70 from-theme-turquoise/70 to-theme-tickle-me-pink/70 flex w-20 flex-col items-center justify-center bg-gradient-to-b transition duration-500 hover:scale-125 shadow-sm rounded-md "
+          >
+            <image.logo aria-hidden="true"/>
+            <span class="text-pink-600 lowercase text-lg">{followers}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+  <!-- Clips del boxeador -->
+
+  <!-- Video de Entrenamientos -->
+  <section>
+    {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
+  </section>
+
+  {fighter.gallery && <BoxerGallery id={fighter.id} name={fighter.name} /> }
+  
+</Layout>
+
+<style>
+  .stat-item {
+    animation: fadeIn 0.5s ease-out forwards;
+    opacity: 0;
+  }
+
+  .stat-item:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .stat-item:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .stat-item:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .stat-item:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+
+  .mask-image-fade-bottom {
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
