@@ -1,4 +1,4 @@
-import Twitch from '@auth/core/providers/Twitch'
+import Twitch from "next-auth/providers/twitch"
 import { defineConfig } from 'auth-astro'
 
 export default defineConfig({
