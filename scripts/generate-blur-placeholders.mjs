@@ -9,6 +9,11 @@ const BLUR_DATA_FILE = path.join(__dirname, '../src/blur-placeholders.json')
 
 const VALID_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.avif']
 
+// Load existing data
+const existingData = await fs.readFile(BLUR_DATA_FILE, 'utf8')
+  .then(json => JSON.parse(json))
+  .catch(() => ({}))
+
 async function generateBlurPlaceholder(imagePath) {
   try {
     const imageBuffer = await sharp(imagePath)
@@ -45,11 +50,24 @@ async function generatePlaceholders() {
       const ext = path.extname(filePath).toLowerCase()
       if (VALID_EXTENSIONS.includes(ext)) {
         const relativePath = path.relative(PUBLIC_DIR, filePath)
+        const stat = await fs.stat(filePath)
+        const lastModified = stat.mtimeMs
+
+        // Skip if already processed and unchanged
+        if (existingData[relativePath] && existingData[relativePath].mtime === lastModified) {
+          blurData[relativePath] = existingData[relativePath]
+          continue
+        }
+
         console.log(`Processing: ${relativePath}`)
 
         const placeholder = await generateBlurPlaceholder(filePath)
+        
         if (placeholder) {
-          blurData[`/${relativePath}`] = placeholder
+          blurData[relativePath] = {
+            placeholder,
+            mtime: lastModified,
+          }
           count++
         }
       }
