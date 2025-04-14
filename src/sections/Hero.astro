@@ -228,6 +228,8 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
         heroText?.classList.add('hidden')
         heroImage?.classList.add('hidden')
+        heroText?.classList.remove('animate-zoom-in')
+        heroMaskFadeText?.classList.remove('animate-slide-up-fade')
         heroMaskFadeText?.classList.remove('translate-x-full')
         heroMaskFadeText?.classList.add('-translate-x-full')
         currentFighterId = null
@@ -248,23 +250,6 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       // si el luchador que entras es el mismo que ya se muestra
       // entonces no hacemos nada
       if (currentFighterId === id) return
-
-      // si ya estamos mostrando un luchador, tenemos que ocultarlo
-      if (currentFighterId) {
-        const currentHeroText = $(`[data-id="hero-text-${currentFighterId}"]`)
-        const currentHeroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
-        const currentHeroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
-
-        if (currentHeroText && currentHeroMaskFadeText && currentHeroImage) {
-          currentHeroText.classList.add('hidden')
-          currentHeroImage.classList.add('hidden')
-
-          currentHeroText.classList.remove('animate-zoom-in')
-          currentHeroImage.classList.remove('animate-slide-up-fade')
-          currentHeroMaskFadeText?.classList.remove('translate-x-full')
-          currentHeroMaskFadeText?.classList.add('-translate-x-full')
-        }
-      }
 
       $landing?.classList.add('hidden')
 
