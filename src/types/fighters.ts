@@ -59,6 +59,7 @@ export interface Fighters {
   country: string
   opponent: fighterId
   versus: Versus
+  gallery?: boolean
   socials: Social[]
   clips: Clips[]
   workout?: {

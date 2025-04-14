@@ -1,12 +1,12 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "@midudev/tailwind-animations";
 
 @theme {
   --color-dark-magenta: #2a1f26;
-  --font-fallback: "Adjusted Arial Fallback", system-ui, -apple-system, blinkmacsystemfont, "Segoe UI",
-    "Noto Sans", helvetica, arial, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji";
-  --font-primary: "Anisette";
+  --font-fallback:
+    'Adjusted Arial Fallback', system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI',
+    'Noto Sans', helvetica, arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-primary: 'Anisette';
 
   /* Velada V Custom Colors */
   --color-theme-french-mauve:oklch(67.65% 0.1539 329.18);
@@ -41,12 +41,11 @@
   * {
     scrollbar-color: var(--color-theme-french-mauve) var(--color-theme-raisin-black);
     scrollbar-width: thin;
-    border-radius: 5px;
   }
 }
 
 @font-face {
-  font-family: "Adjusted Arial Fallback";
+  font-family: 'Adjusted Arial Fallback';
   src: local(Arial);
   size-adjust: 112%;
   ascent-override: 74%;
@@ -55,21 +54,22 @@
 }
 
 @font-face {
-  font-family: "Anisette";
-  src: url("/fonts/anisette-medium.woff2") format("woff2");
+  font-family: 'Anisette';
+  src: url('/fonts/anisette-medium.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Anisette";
-  src: url("/fonts/anisette-bold.woff2") format("woff2");
+  font-family: 'Anisette';
+  src: url('/fonts/anisette-bold.woff2') format('woff2');
   font-weight: 600;
   font-display: swap;
 }
 
 html {
-  font-family: "Anisette", var(--font-fallback);
+  font-family: 'Anisette', var(--font-fallback);
+  text-transform: uppercase;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;

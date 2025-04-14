@@ -1,6 +1,11 @@
 ---
+import BoxerCard from '@/components/BoxerCard.astro'
+import BoxerClipDrawer from '@/components/BoxerClipDrawer.astro'
+import BoxerClipList from '@/components/BoxerClipList.astro'
+import BoxerGallery from '@/components/BoxerGallery.astro'
+import BoxerProfileCard from '@/components/BoxerProfileCard.astro'
+import BoxerWorkout from '@/components/BoxerWorkout.astro'
 import { FIGHTERS } from '@/consts/fighters'
-import Layout from '@/layouts/Layout.astro'
 import { fixedTitle } from '@/consts/pageTitles'
 import LiteYouTube from '@/components/LiteYouTube.astro'
 import SectionTitle from '@/components/SectionTitle.astro'
@@ -19,7 +24,7 @@ const restName = restNameArr.join(' ')
 
 const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   year: 'numeric',
-  month: 'long',
+  month: 'short',
   day: 'numeric',
 })
 
@@ -51,23 +56,26 @@ const secondFighter = {
     >
     </div>
 
+    <!-- Boxeador perfil -->
     <div
-      class="relative z-10 mr-7 flex w-full flex-col items-center justify-center px-4 pt-24 lg:flex-row lg:items-start lg:pt-32"
+      class=" relative z-10 flex w-full flex-col items-center justify-center pl-0 pr-0 lg:pr-8 pt-24 lg:flex-row lg:items-start lg:pt-32"
     >
+      <!-- Imagenes del boxeador -->
       <div
-        class="relative mt-8 flex h-[60vh] w-full items-center justify-center lg:mt-0 lg:h-[80vh] lg:w-1/2"
+        class=" relative mt-8 px-6 lg:px-2 flex h-[60vh] w-full lg:min-w-sm items-center justify-center lg:mt-0 lg:h-[80vh] lg:w-1/2"
       >
         <img
           src={`/images/fighters/big/${id}.webp`}
-          alt={fighter.name}
+          alt={`Retrato de ${fighter.name}, participante de La Velada V`}
           class="animate-fade-in mask-image-fade-bottom h-full w-full object-contain transition-all duration-700 hover:scale-105"
           transition:name={`image-${id}`}
         />
         <img
           src={`/images/fighters/text/${id}.png`}
-          alt={fighter.name}
-          class="animate-scale-in absolute bottom-24 h-16 w-auto"
+          alt={`Nombre de ${fighter.name} en texto decorativo`}
+          class="animate-scale-in absolute bottom-6 lg:bottom-34 h-10 lg:h-16 w-auto "
           transition:name={`text-${id}`}
+          loading="lazy"
         />
       </div>
     </div>
@@ -280,6 +288,11 @@ const secondFighter = {
       )
     }
   </section>
+  <!-- Fin de video de entrenamientos -->
+
+  <!-- Galeria del boxeador -->
+  {fighter.gallery && <BoxerGallery id={fighter.id} name={fighter.name} /> }
+  <!-- Fin de la galeria del boxeador -->
 </Layout>
 
 <style>
@@ -428,3 +441,4 @@ const secondFighter = {
     opacity: 0.3;
   }
 </style>
+
