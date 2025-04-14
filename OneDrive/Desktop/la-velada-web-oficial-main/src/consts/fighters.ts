@@ -20,6 +20,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 63,
     country: 'es',
+    gallery: true,
     city: 'A Coruña',
     versus: 'rivaldios',
     socials: [
@@ -112,9 +113,10 @@ export const FIGHTERS: Fighters[] = [
     birthDate: new Date(1991, 6, 9),
     height: 1.86,
     age: 33,
-    city: 'Catarroja, Valencia',
     weight: 102,
     country: 'es',
+    gallery: true,
+    city: 'Catarroja, Valencia',
     versus: 'gaspi',
     socials: [
       {
@@ -211,6 +213,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 62,
     country: 'es',
+    gallery: true,
     city: 'Barcelona',
     versus: 'roro',
     socials: [
@@ -298,6 +301,7 @@ export const FIGHTERS: Fighters[] = [
     age: 23,
     weight: 47,
     country: 'es',
+    gallery: true,
     city: 'Madrid',
     versus: 'abby',
     socials: [
@@ -356,6 +360,7 @@ export const FIGHTERS: Fighters[] = [
     age: 22,
     weight: 112,
     country: 'ar',
+    gallery: true,
     city: 'Buenos Aires',
     versus: 'perxitaa',
     socials: [
@@ -435,6 +440,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 69,
     country: 'mx',
+    gallery: true,
     city: 'Culiacán',
     versus: 'peereira',
     socials: [
@@ -575,6 +581,7 @@ export const FIGHTERS: Fighters[] = [
     age: 32,
     weight: 87,
     country: 'es',
+    gallery: true,
     city: 'Andorra La Vella',
     versus: 'tomas',
     socials: [
@@ -1099,6 +1106,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 85,
     country: 'mx',
+    gallery: true,
     city: 'Monterrey',
     versus: 'andoni',
     socials: [
