@@ -96,6 +96,10 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I'
         },
     ],
+    workout: {
+      videoID: 'msvzME2RPu0',
+      thumbnail: '/images/fighters/workoutThumbnails/peereira-thumbnail.webp'
+    }
   },
   {
     // https://laletrade.com/biografias/twitch/18087-perxitaa
@@ -500,6 +504,10 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=JZx9yIQa0lXP9BTh&amp;clip=Ugkxjn97-DOruGG1ClS3KgmuiNEMXRf5a4aj&amp;clipt=EJytRBjj4EQ'
       },
     ],
+    workout: {
+      videoID: 'bNwgdNDz4d4',
+      thumbnail: '/images/fighters/workoutThumbnails/rivaldios-thumbnail.webp',
+    }
   },
   {
     // https://www.biografia.de/andoni/
@@ -647,6 +655,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'Uy48X5YxujI',
+      thumbnail: '/images/fighters/workoutThumbnails/viruzz-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/alana-flores/
@@ -899,6 +911,10 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
+    workout: {
+      videoID: '_XWxZUwzhXk',
+      thumbnail: '/images/fighters/workoutThumbnails/westcol-thumbnail.webp'
+    }
     clips: [
       {
         text: 'Vamos a ver si le dan las hue***.',
@@ -1069,6 +1085,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'FBjMQogPr-U',
+      thumbnail: '/images/fighters/workoutThumbnails/tomas-thumbnail.webp',
+    }
   },
   {
     // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
@@ -1145,6 +1165,10 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
+    workout: {
+      videoID: 'R3nXNgSLnYA',
+      thumbnail: '/images/fighters/workoutThumbnails/carlos-thumbnail.webp',
+    },
     clips: [
       {
         text: 'Estoy de acuerdo, es una máquina, y eso hace más emocionante para mí la pelea. Una pelea difícil, un reto para mí.',
