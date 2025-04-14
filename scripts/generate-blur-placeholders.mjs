@@ -44,6 +44,7 @@ async function* walkDirectory(dir) {
 async function generatePlaceholders() {
   const blurData = {}
   let count = 0
+  let skipped = 0
 
   try {
     for await (const filePath of walkDirectory(PUBLIC_DIR)) {
@@ -56,6 +57,7 @@ async function generatePlaceholders() {
         // Skip if already processed and unchanged
         if (existingData[relativePath] && existingData[relativePath].mtime === lastModified) {
           blurData[relativePath] = existingData[relativePath]
+          skipped++
           continue
         }
 
@@ -76,7 +78,8 @@ async function generatePlaceholders() {
     // Save the blur data
     await fs.writeFile(BLUR_DATA_FILE, JSON.stringify(blurData, null, 2))
 
-    console.log(`✅ Generated blur placeholders for ${count} images`)
+    count > 0 && console.log(`🆕 Generated blur placeholders for ${count} images`)
+    skipped > 0 && console.log(`✅ Skipped ${skipped} unchanged images`)
     console.log(`📝 Data saved to ${path.relative(process.cwd(), BLUR_DATA_FILE)}`)
   } catch (error) {
     console.error('Error generating placeholders:', error)
