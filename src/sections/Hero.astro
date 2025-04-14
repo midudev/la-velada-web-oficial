@@ -182,6 +182,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
 <script>
   import { $ } from '@/lib/dom-selector'
+  import { BoxerCardHoveredEvent } from '../events/boxers-events'
 
   document.addEventListener('astro:page-load', () => {
     const $landing = $('#landing')
@@ -232,7 +233,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         currentFighterId = null
       }
 
-      const customEvent = event as CustomEvent<{ id: string }>
+      const customEvent = event as BoxerCardHoveredEvent
       const id = customEvent.detail.id
 
       const heroText = $(`[data-id="hero-text-${id}"]`)

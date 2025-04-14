@@ -113,6 +113,8 @@ interface Props {
 </style>
 
 <script>
+  import { BoxerCardHoveredEvent, BoxerCardExitEvent } from '../events/boxers-events'
+
   document.addEventListener('astro:page-load', () => {
     const boxerCards = document.querySelectorAll('.boxer-card')
     let timeoutId: ReturnType<typeof setTimeout> | null = null
@@ -129,9 +131,7 @@ interface Props {
         const id = singleBoxerCard.getAttribute('data-id')
         if (id) {
           // Dispatch a custom event to notify a boxer card id is hovered
-          const event = new CustomEvent('boxer-card-hovered', {
-            detail: { id },
-          })
+          const event = new BoxerCardHoveredEvent(id)
           document.dispatchEvent(event)
         }
         // Aplicar la clase 'grayscale-100' a todas las tarjetas
@@ -167,7 +167,7 @@ interface Props {
 
       singleBoxerCard.addEventListener('mouseleave', () => {
         timeoutId = setTimeout(() => {
-          const event = new CustomEvent('boxer-card-exit')
+          const event = new BoxerCardExitEvent()
           document.dispatchEvent(event)
         }, 500)
 
@@ -194,16 +194,14 @@ interface Props {
       singleBoxerCard.addEventListener('focus', () => {
         const id = singleBoxerCard.getAttribute('data-id')
         if (id) {
-          const event = new CustomEvent('boxer-card-hovered', {
-            detail: { id },
-          })
+          const event = new BoxerCardHoveredEvent(id)
           document.dispatchEvent(event)
         }
       })
 
       singleBoxerCard.addEventListener('blur', () => {
         timeoutId = setTimeout(() => {
-          const event = new CustomEvent('boxer-card-exit')
+          const event = new BoxerCardExitEvent()
           document.dispatchEvent(event)
         }, 500)
       })
