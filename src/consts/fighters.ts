@@ -1,10 +1,10 @@
-import type { Fighters } from '@/types/fighters'
-import X from "@/assets/svg/x.svg";
 import Instagram from "@/assets/svg/instagram.svg";
-import Youtube from "@/assets/svg/youtube.svg";
+import Kick from "@/assets/svg/kick.svg";
 import TikTok from "@/assets/svg/tiktok.svg";
 import Twitch from "@/assets/svg/twitch.svg";
-import Kick from "@/assets/svg/kick.svg";
+import X from "@/assets/svg/x.svg";
+import Youtube from "@/assets/svg/youtube.svg";
+import type { Fighters } from '@/types/fighters';
 
 export const FIGHTERS: Fighters[] = [
   {
@@ -18,7 +18,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 63,
     country: 'es',
-    city: 'A Coruña',
+    city: 'A Coruña, Galicia',
     versus: 'rivaldios',
     socials: [
       {
@@ -86,16 +86,20 @@ export const FIGHTERS: Fighters[] = [
       {
         text: 'En seis meses va a caer, lo voy a noquear 100% y le voy a arrancar la p*** cabeza.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=GIR26FtonnzIbZZL&amp;clip=UgkxLQNqwPqlJLU97lVJkD2lEWrJXswPfHOU&amp;clipt=ENGYChjaywo'
-        },
+      },
       {
         text: 'Vengo aquí para ser el mejor boxeador posible, estoy con el mejor equipo posible y lo único que te pido es que entrenes lo suficientemente bien para que toda esta gente vea el show que se merece.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=OQAXdqDuQ33flPQg&amp;clip=UgkxtAMxt3Q-BIOC7G6PqfRTs8qkUZgaXwWP&amp;clipt=ENS2KBjkiik'
-        },
+      },
       {
         text: 'Entreno literalmente para noquearlo, no vengo a otra cosa.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I'
-        },
+      },
     ],
+    workout: {
+      videoID: 'msvzME2RPu0',
+      thumbnail: '/images/fighters/workoutThumbnails/peereira-thumbnail.webp'
+    }
   },
   {
     // https://laletrade.com/biografias/twitch/18087-perxitaa
@@ -196,6 +200,7 @@ export const FIGHTERS: Fighters[] = [
     }
   },
   {
+    // https://www.biografia.de/abby/
     id: 'abby',
     name: 'Abby',
     realName: 'Abril Gené Capriles',
@@ -205,7 +210,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 62,
     country: 'es',
-    city: 'Barcelona',
+    city: 'Mallorca, Islas Baleares',
     versus: 'roro',
     socials: [
       {
@@ -272,6 +277,14 @@ export const FIGHTERS: Fighters[] = [
     ],
     clips: [
       {
+        text: 'No sé cómo ha aceptado esta pelea, la verdad.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=vZ8QPx7N3N3b8pPG&amp;clip=UgkxneRcG-WbxSh6Vsz4bAXq_sNFOJlXNP6z&amp;clipt=EJDxHhiUwx8'
+      },
+      {
+        text: 'Cuando Roro me tenga delante en el ring... va a sentir miedo.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=PNqW7cYn-m5SIrXX&amp;clip=Ugkxgnawy6NKH7cVWFX5fhgf3ZvfaGVfzInm&amp;clipt=ELCcGxjp3Bs'
+      },
+      {
         text: 'Esto es algo que tenía que pasar... A ver, Roro, si estás preparada.',
         url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=KH5GLwytjfIaqnuC&amp;clip=UgkxtRthPKbk_vfmyz7EmhYbhskD5mDJcXCd&amp;clipt=EO2_BRjNpgY'
       },
@@ -292,7 +305,7 @@ export const FIGHTERS: Fighters[] = [
     age: 23,
     weight: 47,
     country: 'es',
-    city: 'Madrid',
+    city: 'Barcelona, Cataluña',
     versus: 'abby',
     socials: [
       {
@@ -334,8 +347,16 @@ export const FIGHTERS: Fighters[] = [
     ],
     clips: [
       {
-        text: 'Confío en mí; estoy lista.',
-        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=3YC34708Wn8ThWVG&amp;clip=UgkxdN0LKsJBhRFzg7codYDoWTEG9MC6dh0U&amp;clipt=EIL7AhiKogM'
+        text: 'Nunca voy a hundir a una mujer para sentirme mejor conmigo misma.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=lBVhjXJ2Zn7cbrch&amp;clip=Ugkxu-CzMHs-3zLGaFFCGIh-tcPMjImucfAT&amp;clipt=EOnqLRjv0y4'
+      },
+      {
+        text: 'Si me enfadas, no te voy a sonreír.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=toSZw_B6pu-wvkej&amp;clip=Ugkx343aGQvxi3px_edJLMmiUwfmyRIZGyB5&amp;clipt=EIzLLBiXoC0'
+      },
+      {
+        text: 'Yo tengo la disciplina para prepararme lo mejor que yo pueda.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=_mA5-y8p57kbFYUS&amp;clip=UgkxFEJaIdinVMKPzvTr575aHeDFcG7x60TN&amp;clipt=EOSaOhi7gzs'
       }
     ],
   },
@@ -429,7 +450,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 69,
     country: 'mx',
-    city: 'Culiacán',
+    city: 'Rosales, Culiacán',
     versus: 'peereira',
     socials: [
       {
@@ -472,10 +493,10 @@ export const FIGHTERS: Fighters[] = [
     clips: [
       {
         text: 'Pereira, ponte trucha, amigo. Te voy a enseñar que la cuna del boxeo está en México.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=2yNcYbYAnGXc4jRD&amp;clip=UgkxuVSmgfc49HRArsmT522Vf42fmDo_W1WA&amp;clipt=EKOABBj8rgQ'  
+        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=2yNcYbYAnGXc4jRD&amp;clip=UgkxuVSmgfc49HRArsmT522Vf42fmDo_W1WA&amp;clipt=EKOABBj8rgQ'
       },
       {
-        text:'Voy a llegar al punto en que este v**** me va a tener miedo después de la pelea.',
+        text: 'Voy a llegar al punto en que este v**** me va a tener miedo después de la pelea.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=qXDaC9BtQVT2Lw3r&amp;clip=Ugkxyvlpe6cGZqC2A2tU6B_-kgYlAqHuWn90&amp;clipt=EJC-LxiY5S8'
       },
       {
@@ -483,8 +504,13 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=JZx9yIQa0lXP9BTh&amp;clip=Ugkxjn97-DOruGG1ClS3KgmuiNEMXRf5a4aj&amp;clipt=EJytRBjj4EQ'
       },
     ],
+    workout: {
+      videoID: 'bNwgdNDz4d4',
+      thumbnail: '/images/fighters/workoutThumbnails/rivaldios-thumbnail.webp',
+    }
   },
   {
+    // https://www.biografia.de/andoni/
     id: 'andoni',
     name: 'Andoni',
     realName: 'Andoni Talledo Gutiérrez',
@@ -494,7 +520,7 @@ export const FIGHTERS: Fighters[] = [
     age: 22,
     weight: 115,
     country: 'es',
-    city: 'Bilbao',
+    city: 'San Sebastian, Guipúzcoa',
     versus: 'carlos',
     socials: [
       {
@@ -564,7 +590,7 @@ export const FIGHTERS: Fighters[] = [
     age: 32,
     weight: 87,
     country: 'es',
-    city: 'Andorra La Vella',
+    city: 'Zaragoza, Aragón',
     versus: 'tomas',
     socials: [
       {
@@ -629,6 +655,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'Uy48X5YxujI',
+      thumbnail: '/images/fighters/workoutThumbnails/viruzz-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/alana-flores/
@@ -645,7 +675,7 @@ export const FIGHTERS: Fighters[] = [
     targetGloves: '12oz',
     country: 'mx',
     gallery: true,
-    city: 'Nuevo León',
+    city: 'Monterrey, Nuevo León',
     versus: 'arigeli',
     socials: [
       {
@@ -731,7 +761,7 @@ export const FIGHTERS: Fighters[] = [
     age: 27,
     weight: 74,
     country: 'es',
-    city: 'Alhama de Murcia',
+    city: 'Alhama de Murcia, Murcia',
     versus: 'westcol',
     socials: [
       {
@@ -817,7 +847,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 63,
     country: 'co',
-    city: 'Medellín',
+    city: 'Ciudad Bolívar, Antioquia',
     versus: 'grefg',
     socials: [
       {
@@ -881,6 +911,10 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
+    workout: {
+      videoID: '_XWxZUwzhXk',
+      thumbnail: '/images/fighters/workoutThumbnails/westcol-thumbnail.webp'
+    },
     clips: [
       {
         text: 'Vamos a ver si le dan las hue***.',
@@ -900,7 +934,7 @@ export const FIGHTERS: Fighters[] = [
     weight: 53,
     country: 'es',
     gallery: true,
-    city: 'Barcelona',
+    city: 'Barcelona, Cataluña',
     versus: 'alana',
     socials: [
       {
@@ -1051,6 +1085,10 @@ export const FIGHTERS: Fighters[] = [
       }
     ],
     clips: [],
+    workout: {
+      videoID: 'FBjMQogPr-U',
+      thumbnail: '/images/fighters/workoutThumbnails/tomas-thumbnail.webp',
+    }
   },
   {
     // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
@@ -1063,7 +1101,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 85,
     country: 'mx',
-    city: 'Monterrey',
+    city: 'Monterrey, Nuevo León',
     versus: 'andoni',
     socials: [
       {
@@ -1127,6 +1165,10 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
+    workout: {
+      videoID: 'R3nXNgSLnYA',
+      thumbnail: '/images/fighters/workoutThumbnails/carlos-thumbnail.webp',
+    },
     clips: [
       {
         text: 'Estoy de acuerdo, es una máquina, y eso hace más emocionante para mí la pelea. Una pelea difícil, un reto para mí.',
