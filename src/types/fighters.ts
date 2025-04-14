@@ -1,3 +1,5 @@
+import type { Social } from "@/types/social";
+
 type fighterId =
   | 'peereira'
   | 'perxitaa'
@@ -27,11 +29,34 @@ type fighterName =
   | 'Grefg'
   | 'Westcol'
   | 'Arigeli'
-  | 'Tomas'
+  | 'Tomás'
   | 'Carlos'
+
+interface Clips {
+  text: string
+  url: string
+}
 
 export interface Fighters {
   id: fighterId
   name: fighterName
+  fightName?: string
+  city?: string
+  realName: string
+  gender: 'masculino' | 'femenino' | 'otro'
+  targetWeight?: number
+  targetGloves?: string
+  birthDate: Date
+  height: number
+  age: number
+  weight: number
+  country: string
+  gallery?: boolean
   versus: fighterId
+  socials: Social[]
+  clips: Clips[]
+  workout?: {
+    videoID: string
+    thumbnail: string
+  }
 }
