@@ -1,12 +1,14 @@
 ---
-import { FIGHTERS } from '@/consts/fighters'
-import Layout from '@/layouts/Layout.astro'
-import { fixedTitle } from '@/consts/pageTitles'
-import BoxerWorkout from '@/components/BoxerWorkout.astro'
 import BoxerCard from '@/components/BoxerCard.astro'
-import BoxerClipList from '@/components/BoxerClipList.astro'
 import BoxerClipDrawer from '@/components/BoxerClipDrawer.astro'
+import BoxerClipList from '@/components/BoxerClipList.astro'
+import BoxerGallery from '@/components/BoxerGallery.astro'
 import BoxerProfileCard from '@/components/BoxerProfileCard.astro'
+import BoxerWorkout from '@/components/BoxerWorkout.astro'
+import { FIGHTERS } from '@/consts/fighters'
+import { fixedTitle } from '@/consts/pageTitles'
+import Layout from '@/layouts/Layout.astro'
+import BoxerSocialLink from '../../components/BoxerSocialLink.astro'
 
 const { id } = Astro.params
 
@@ -120,7 +122,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 
   <!-- Redes Sociales del Boxeador -->
   <section>
-    <div class="flex flex-wrap justify-center gap-3 space-x-2 px-4 lg:px-0">
+    <div class="flex flex-wrap justify-center gap-2 space-x-2 px-4 lg:px-0">
       {
         (fighter.socials || [])?.map(({ url, image, name, label, followers }) => (
           <a
@@ -142,8 +144,11 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
   <section>
     {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
   </section>
+  <!-- Fin de video de entrenamientos -->
 
-  {fighter.gallery && <BoxerGallery id={fighter.id} name={fighter.name} />}
+  <!-- Galeria del boxeador -->
+  {fighter.gallery && <BoxerGallery id={fighter.id} name={fighter.name} /> }
+  <!-- Fin de la galeria del boxeador -->
 </Layout>
 
 <style>
