@@ -1,5 +1,6 @@
 ---
 import LiteYouTube from './LiteYouTube.astro'
+import SectionTitle from './SectionTitle.astro'
 interface Props {
   workout?: {
     videoID: string
@@ -12,12 +13,12 @@ const hasWorkout = workout !== undefined
 
 {
   hasWorkout && (
-    <section class="mx-auto my-36 max-w-6xl px-2 lg:px-10">
+    <section class="mx-auto  my-16 lg:my-36  max-w-6xl px-2 lg:px-10">
       <div class="text-dark-magenta text-center">
-        <h3 class="text-4xl font-light">Entrenamiento</h3>
-        <p class="mt-5 text-2xl">Preparación para el combate</p>
+        <SectionTitle title="Entrenamiento" />
+        <p class="mt-5 text-xl uppercase">Preparación para el combate</p>
       </div>
-      <div class="mt-10 pt-12">
+      <div class="mt-10 pt-12 px-4">
         <LiteYouTube videoId={workout.videoID} backgroundImage={workout.thumbnail} />
       </div>
     </section>
