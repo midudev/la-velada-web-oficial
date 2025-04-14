@@ -18,7 +18,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 63,
     country: 'es',
-    city: 'A Coruña',
+    city: 'A Coruña, Galicia',
     versus: 'rivaldios',
     socials: [
       {
@@ -172,13 +172,31 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Me es indiferente, me adaptaré a lo que toque, competiremos y ganaremos. Es que no veo otro escenario.',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=ao2b-RL5rdAkoTXY&amp;clip=Ugkx5nWUXM5WtVO9Bf3Nf3hJ1BkQP_ZY6TO9&amp;clipt=ELTuGxinpBw'
+      },
+      {
+        text: 'Creo que este es un reto, porque lo veo grande, lo veo que va a pegar fuerte. Voy a tener que pegar el doble de fuerte.',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=Fjv_96aIwtSIFxsD&amp;clip=UgkxjZakldIAOdYJdcaksZax_wQZIrZ7nq9m&amp;clipt=EKzsGhijmhs'
+      },
+      {
+        text: '¿Va a ser una pelea de boxeo o una pelea de sumo?',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=k_vt7-vi3PoyKjnp&amp;clip=UgkxWCffIotsU0x8oWW2HPc8sqFlY5EKtZ2r&amp;clipt=EJiLDRigsg0'
+      },
+      {
+        text: 'Llevas el mismo traje hace 4 dias.',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=5vHVGPD2lSLWPKGE&amp;clip=UgkxZ65f4VwWoQJLjI0oTYCpoiIxt5klwwY-&amp;clipt=EPzFCRiE7Qk'
+      },
+    ],
     workout: {
       videoID: 'dj-4LLi5cck',
       thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp'
     }
   },
   {
+    // https://www.biografia.de/abby/
     id: 'abby',
     name: 'Abby',
     realName: 'Abril Gené Capriles',
@@ -188,7 +206,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 62,
     country: 'es',
-    city: 'Barcelona',
+    city: 'Mallorca, Islas Baleares',
     versus: 'roro',
     socials: [
       {
@@ -253,7 +271,20 @@ export const FIGHTERS: Fighters[] = [
       }
 
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'No sé cómo ha aceptado esta pelea, la verdad.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=vZ8QPx7N3N3b8pPG&amp;clip=UgkxneRcG-WbxSh6Vsz4bAXq_sNFOJlXNP6z&amp;clipt=EJDxHhiUwx8'
+      },
+      {
+        text: 'Cuando Roro me tenga delante en el ring... va a sentir miedo.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=PNqW7cYn-m5SIrXX&amp;clip=Ugkxgnawy6NKH7cVWFX5fhgf3ZvfaGVfzInm&amp;clipt=ELCcGxjp3Bs'
+      },
+      {
+        text: 'Esto es algo que tenía que pasar... A ver, Roro, si estás preparada.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=KH5GLwytjfIaqnuC&amp;clip=UgkxtRthPKbk_vfmyz7EmhYbhskD5mDJcXCd&amp;clipt=EO2_BRjNpgY'
+      },
+    ],
     workout: {
       videoID: 'HBTuF3KONZc',
       thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp'
@@ -270,7 +301,7 @@ export const FIGHTERS: Fighters[] = [
     age: 23,
     weight: 47,
     country: 'es',
-    city: 'Madrid',
+    city: 'Barcelona, Cataluña',
     versus: 'abby',
     socials: [
       {
@@ -310,7 +341,20 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Nunca voy a hundir a una mujer para sentirme mejor conmigo misma.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=lBVhjXJ2Zn7cbrch&amp;clip=Ugkxu-CzMHs-3zLGaFFCGIh-tcPMjImucfAT&amp;clipt=EOnqLRjv0y4'
+      },
+      {
+        text: 'Si me enfadas, no te voy a sonreír.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=toSZw_B6pu-wvkej&amp;clip=Ugkx343aGQvxi3px_edJLMmiUwfmyRIZGyB5&amp;clipt=EIzLLBiXoC0'
+      },
+      {
+        text: 'Yo tengo la disciplina para prepararme lo mejor que yo pueda.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=_mA5-y8p57kbFYUS&amp;clip=UgkxFEJaIdinVMKPzvTr575aHeDFcG7x60TN&amp;clipt=EOSaOhi7gzs'
+      }
+    ],
   },
   {
     // https://www.biografia.de/gaspi/
@@ -376,7 +420,20 @@ export const FIGHTERS: Fighters[] = [
       }
 
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Perxitaa, mira que la vida real no es como el Minecraft… pasan cosas afuera.',
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=xe0_jPqJ7lBEMNDx&amp;clip=UgkxVZqXUgbXM15VuQBnVAg38-8W2PnL8oqT&amp;clipt=EJDeAxiYhQQ&autoplay=1'
+      },
+      {
+        text: 'Te vi haciendo videitos. ¿Vas a pelear con el joystick o con el teclado y el mouse?',
+        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=up7KtwZu2l3qEfmY&amp;clip=Ugkxf1_rx09dGrsr69Wdu2-Bi1wq8BvACp2f&amp;clipt=EPLYDBjYjA0'
+      },
+      {
+        text: 'Me dijiste que era contra el Rubius. ¿Quién es ese?',
+        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=wsz9otQaciQnFKsV&amp;clip=UgkxGw6p-ksOymoiuVHBCw5Mx5UUmZqrAiY8&amp;clipt=EJycBxjRwwc'
+      }
+    ],
   },
   {
     // https://www.biografia.de/rivaldios/
@@ -389,7 +446,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 69,
     country: 'mx',
-    city: 'Culiacán',
+    city: 'Rosales, Culiacán',
     versus: 'peereira',
     socials: [
       {
@@ -445,6 +502,7 @@ export const FIGHTERS: Fighters[] = [
     ],
   },
   {
+    // https://www.biografia.de/andoni/
     id: 'andoni',
     name: 'Andoni',
     realName: 'Andoni Talledo Gutiérrez',
@@ -454,7 +512,7 @@ export const FIGHTERS: Fighters[] = [
     age: 22,
     weight: 115,
     country: 'es',
-    city: 'Bilbao',
+    city: 'San Sebastian, Guipúzcoa',
     versus: 'carlos',
     socials: [
       {
@@ -494,7 +552,20 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Yo voy a ir obviamente a ganar, y que eso no afecte nuestra relación.',
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=b9Sxnq2S0zG-74SV&amp;clip=Ugkx_ci1g5b732avNi7KVaeOw46sgni4lutX&amp;clipt=ELDMJBjYkiU'
+      },
+      {
+        text: 'Cualquier puño de ambos, si entra, es un puño de una persona pesada. Entonces es muy probable que, si entra de manera contundente… pues que acabe.',
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=mrqP0DjJ6dMTG3A9&amp;clip=UgkxOd-2XnnjkWi3KR1fp5cmGPP3s1yXdQqY&amp;clipt=ELjGGhiAlxs'
+      },
+      {
+        text: 'Carlos y yo habíamos dicho que por cada puño íbamos a lanzarnos un ‘te amo’.',
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=km59ayaLbPKm19qb&amp;clip=UgkxDfmm-4rtX6GmFfRRue8dNTsqDS2D4YbF&amp;clipt=EMG4Jhin6iY'
+      },
+    ],
     workout: {
       videoID: 'QDy_MM6y-7U',
       thumbnail: '/images/fighters/workoutThumbnails/andoni-thumbnail.webp'
@@ -511,7 +582,7 @@ export const FIGHTERS: Fighters[] = [
     age: 32,
     weight: 87,
     country: 'es',
-    city: 'Andorra La Vella',
+    city: 'Zaragoza, Aragón',
     versus: 'tomas',
     socials: [
       {
@@ -591,7 +662,8 @@ export const FIGHTERS: Fighters[] = [
     targetWeight: 52,
     targetGloves: '12oz',
     country: 'mx',
-    city: 'Nuevo León',
+    gallery: true,
+    city: 'Monterrey, Nuevo León',
     versus: 'arigeli',
     socials: [
       {
@@ -655,7 +727,12 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Llevas un año pidiendo probar mis guantes; por fin, te voy a dar el gusto.',
+        url: 'https://www.youtube.com/embed/qdS_XOZ5kyU?si=ma0Sdomx1JJOyld1&amp;clip=Ugkxd-wfH9H1C-ZaiGBlFn3hZeAk9qQWK48w&amp;clipt=EKjUAhiw-wI'
+      },
+    ],
     workout: {
       videoID: 'TmC9TuD8NoQ',
       thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp'
@@ -672,7 +749,7 @@ export const FIGHTERS: Fighters[] = [
     age: 27,
     weight: 74,
     country: 'es',
-    city: 'Alhama de Murcia',
+    city: 'Alhama de Murcia, Murcia',
     versus: 'westcol',
     socials: [
       {
@@ -736,7 +813,12 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Siempre gano; y si no, es porque no ha acabado.',
+        url: 'https://www.youtube.com/embed/cfpvro5tD7g?si=rjaM5jJdImEtefJ6&amp;clip=UgkxuoAS_mblPPU-wtj4bH3GiLXmVRBAow2b&amp;clipt=EImsAhjj2gI'
+      },
+    ],
     workout: {
       videoID: '_Rh-VjB3ATk',
       thumbnail: '/images/fighters/workoutThumbnails/grefg-thumbnail.webp'
@@ -753,7 +835,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 63,
     country: 'co',
-    city: 'Medellín',
+    city: 'Ciudad Bolívar, Antioquia',
     versus: 'grefg',
     socials: [
       {
@@ -817,7 +899,12 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Vamos a ver si le dan las hue***.',
+        url: 'https://www.youtube.com/embed/cfpvro5tD7g?si=ZcMgqxaAfHxRQb96&amp;clip=UgkxQ5sj8mAkLsReNNl3UPmr5g6CkSbZyERl&amp;clipt=EKjXAhiw_gI'
+      }
+    ],
   },
   {
     // https://www.biografia.de/ari-geli/
@@ -830,7 +917,8 @@ export const FIGHTERS: Fighters[] = [
     age: 22,
     weight: 53,
     country: 'es',
-    city: 'Barcelona',
+    gallery: true,
+    city: 'Barcelona, Cataluña',
     versus: 'alana',
     socials: [
       {
@@ -894,7 +982,12 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Disfruta del titulo mientras puedas, por que este año es mio.',
+        url: 'https://www.youtube.com/embed/qdS_XOZ5kyU?si=D8fgVfCSRy_SwZHv&amp;clip=UgkxEmtFin7L3_YLiJW_OyRkmeZtFj53PnkT&amp;clipt=EPWwAhj91wI'
+      },
+    ],
     workout: {
       videoID: 'rugHsv9JCSU',
       thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp'
@@ -988,7 +1081,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 85,
     country: 'mx',
-    city: 'Monterrey',
+    city: 'Monterrey, Nuevo León',
     versus: 'andoni',
     socials: [
       {
@@ -1052,6 +1145,19 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Estoy de acuerdo, es una máquina, y eso hace más emocionante para mí la pelea. Una pelea difícil, un reto para mí.',
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=_zo9rym4J9nuprTz&amp;clip=UgkxA55s3XmbPCzb0W3fcV3a5ynwEsfrpWnY&amp;clipt=EMD-DBjIpQ0'
+      },
+      {
+        text: 'Quiero poner a mi país en alto, es lo que más quiero.',
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=ycZse19c6kilirh5&amp;clip=Ugkx_DVmBQCwGsesR_3YKdmsSI2VEzymSdZW&amp;clipt=EMWoDRjH1w0'
+      },
+      {
+        text: 'Somos muy grandes amigos, nos queremos mucho… pero eso no quiere decir que nos vayamos a dar con todo.',
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=1KpotzlUDqM1VYYQ&amp;clip=UgkxQadrp40FBpmDXn2yaSgdQJVUYUFaAqKO&amp;clipt=EOTJIhjL_CI'
+      },
+    ],
   },
 ] as const
