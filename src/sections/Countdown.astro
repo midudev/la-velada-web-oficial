@@ -1,5 +1,6 @@
 ---
 import Date from '@/components/Date.astro'
+import LinkToAddCalendar from '@/components/LinkToAddCalendar.astro'
 import SectionTitle from '@/components/SectionTitle.astro'
 
 interface Props {
@@ -13,7 +14,7 @@ const { timestamp } = Astro.props
   <SectionTitle title="Cuenta atrás para el evento..." />
 
   <div
-    class="flex items-center justify-center gap-2 text-[var(--color-white)] uppercase select-none"
+    class="flex items-center justify-center gap-2 text-[var(--color-white)] select-none"
     data-date={timestamp}
     role="timer"
   >
@@ -57,12 +58,12 @@ const { timestamp } = Astro.props
       withBackground={true}
     />
   </div>
+  <LinkToAddCalendar class="mt-10">Añade el evento al calendario!</LinkToAddCalendar>
 </section>
 
 <script>
-  import createCountdown from '@/lib/countdown'
+  import createCountdown, { type TimeParts } from '@/lib/countdown'
   import { $ } from '@/lib/dom-selector'
-  import { type TimeParts } from '@/lib/countdown'
 
   function initCountdown() {
     const $countdown = $('[data-date]')
@@ -151,7 +152,7 @@ const { timestamp } = Astro.props
 							</div>
 					`
         $countdown.className =
-          'text-[var(--color-white)] uppercase font-semibold animate-fade-in text-lg sm:text-xl md:text-2xl text-center p-4 text-stroke-dark'
+          'text-[var(--color-white)] font-semibold animate-fade-in text-lg sm:text-xl md:text-2xl text-center p-4 text-stroke-dark'
       },
     })
 
@@ -184,7 +185,7 @@ const { timestamp } = Astro.props
     }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('astro:page-load', () => {
     const countdown = initCountdown()
     countdown && countdown.start()
   })
