@@ -72,6 +72,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       id="fighter-container"
       class="pointer-events-none absolute inset-0 flex flex-col items-center"
     >
+      <fighter-selector id="selectorFighter"></fighter-selector>
       <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
         {
           FIGHTERS.map(({ id, name }) => (
@@ -183,6 +184,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 <script>
   import { $ } from '@/lib/dom-selector'
   import { BoxerCardHoveredEvent } from '../events/boxers-events'
+  import { FighterSelector } from '@/components/customElements/fighter-selector'
 
   document.addEventListener('astro:page-load', () => {
     const $landing = $('#landing')
@@ -264,52 +266,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       currentFighterId = id
     })
 
-    const $fighterSelector = document.createElement('div')
-    $fighterSelector.id = 'selectorFighter'
-
-    $fighterSelector.style.position = 'absolute'
-    $fighterSelector.style.width = 'var(--selector--width)'
-    $fighterSelector.style.height = 'var(--selector--height)'
-    $fighterSelector.style.top = 'var(--selector--top)'
-    $fighterSelector.style.left = 'var(--selector--left)'
-    $fighterSelector.style.transitionDuration = '500ms'
-    $fighterSelector.style.transitionTimingFunction = 'cubic-bezier(0.4, 0, 0.2, 1)'
-    $fighterSelector.style.transitionProperty = 'all'
-    $fighterSelector.style.opacity = '0'
-    $fighterSelector.style.zIndex = '40'
-    $fighterSelector.style.pointerEvents = 'none'
-    $fighterSelector.style.animation = 'fighter-select 0.5s infinite alternate';
-
-    const beforeElement = document.createElement('div');
-    beforeElement.style.position = 'absolute';
-    beforeElement.style.inset = '-4px';
-    beforeElement.style.background = 'transparent';
-    beforeElement.style.borderRadius = '8px';
-    beforeElement.style.opacity = '1';
-    beforeElement.style.zIndex = '30';
-    beforeElement.style.animation = 'fighter-select 0.5s infinite alternate';
-
-    const afterElement = document.createElement('div');
-    afterElement.style.position = 'absolute';
-    afterElement.style.inset = '-4px';
-    afterElement.style.zIndex = '30';
-    afterElement.style.opacity = '1';
-    afterElement.style.background = `
-      linear-gradient(to right, #fff 4px, transparent 4px) top left,
-      linear-gradient(to bottom, #fff 4px, transparent 4px) top left,
-      linear-gradient(to left, #fff 4px, transparent 4px) top right,
-      linear-gradient(to bottom, #fff 4px, transparent 4px) top right,
-      linear-gradient(to right, #fff 4px, transparent 4px) bottom left,
-      linear-gradient(to top, #fff 4px, transparent 4px) bottom left,
-      linear-gradient(to left, #fff 4px, transparent 4px) bottom right,
-      linear-gradient(to top, #fff 4px, transparent 4px) bottom right`;
-    afterElement.style.backgroundRepeat = 'no-repeat';
-    afterElement.style.backgroundSize = '25px 25px';
-    afterElement.style.borderRadius = '8px';
-    afterElement.style.animation = 'fighter-select 0.5s infinite alternate';
-
-    $fighterSelector.appendChild(beforeElement);
-    $fighterSelector.appendChild(afterElement);
+    const $fighterSelector = $('#selectorFighter') as FighterSelector
 
     const $fightersContainer = document.getElementById('fighters-selection-container') as HTMLElement
     $fightersContainer.appendChild($fighterSelector)
@@ -320,23 +277,17 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       card.addEventListener('mouseenter', () => {
         const { width, height, left, top } = card.getBoundingClientRect()
         const { left: leftFighterContainer, top: topFighterContainer } = $fightersContainer.getBoundingClientRect()
-        
-        $fighterSelector.style.setProperty('--selector--left', `${left - leftFighterContainer}px`)
-        $fighterSelector.style.setProperty('--selector--top', `${top - topFighterContainer}px`)
-        $fighterSelector.style.setProperty('--selector--width', `${width}px`)
-        $fighterSelector.style.setProperty('--selector--height', `${height}px`)
-        $fighterSelector.style.transform = card.classList.contains('boxer-left') 
-          ? 'skew(2deg) scale(1.05)' 
-          : 'skew(-2deg) scale(1.05)'
-
-        $fighterSelector.style.opacity = '1'
-        $fighterSelector.style.visibility = 'visible'
+        $fighterSelector.moveTo({ 
+          left: left - leftFighterContainer, 
+          top: top - topFighterContainer ,
+          width: width,
+          height: height,
+          isInLeft: card.classList.contains('boxer-left'),
+        })
       })
 
       card.addEventListener('mouseleave', () => {
-        $fighterSelector.style.transform = 'scale(1)'
-        $fighterSelector.style.opacity = '0'
-        $fighterSelector.style.visibility = 'hidden'
+        $fighterSelector.hide()
       })
     })
   })
