@@ -1,21 +1,30 @@
 ---
 import BoxerCard from './BoxerCard.astro'
 
-const { id, name, versus, class: extraClass } = Astro.props
+const { id, name, versus, class: extraClass, group } = Astro.props
 
 interface Props {
   id: string
   name: string
   versus: string
   class: string
+  group: number
 }
 ---
-<BoxerCard
-  id={id}
-  name={name}
-  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
-  versus={versus}
-  />
+<label class="inline-block cursor-pointer">
+  <input
+    type="radio"
+    value={id}
+    class="peer hidden"
+    name={`group-${group}`}
+    />
+    <BoxerCard
+      id={id}
+      name={name}
+      class={`peer-checked:grayscale-0 peer-checked:opacity-100 grayscale-100 opacity-60 boxer-card ${extraClass} inline-block transition-all w-32 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
+      versus={versus}
+    />
+</label>
 
 <script>
   document.addEventListener('astro:page-load', () => {

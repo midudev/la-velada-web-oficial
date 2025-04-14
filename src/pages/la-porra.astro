@@ -4,6 +4,7 @@ import { porra } from '@/consts/pageTitles'
 import BackgroundLayout from '@/layouts/BackgroundLayout.astro'
 import { FIGHTERS as _FIGHTERS } from '@/consts/fighters'
 import BoxerCardPorra from '@/components/BoxerCardPorra.astro'
+import { undefined } from 'astro:schema'
 
 const FIGHTERS = _FIGHTERS.map(
   ({ id, name, versus: _versus }, index) => {
@@ -16,34 +17,48 @@ const FIGHTERS = _FIGHTERS.map(
 ---
 
 <Layout title={porra}>
-  <BackgroundLayout>
-    <header
-      class="mt-28 mx-auto flex w-full flex-col items-center justify-start gap-4"
+  <section class="min-h-screen w-full">
+    <div
+      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
     >
-      <h2
+    </div>
+
+    <div class="flex w-full flex-col items-center text-center">
+      <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-30">
+        <h3
         class="animate-fade-in animate-delay-300 bg-gradient-to-r from-sky-100 to-pink-300 bg-clip-text text-center text-2xl font-bold text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
+        >
+          PARTICIPA EN LA PORRA
+        </h3>
+      </div>
+
+      <div
+        id="combats-container"
+        class="relative top-36 max-w-7xl mt-10 mb-72 flex flex-wrap justify-center gap-4 md:gap-8 w-full flex-col items-center pt-12"
       >
-        PARTICIPA EN LA PORRA
-      </h2>
-    </header>
-    <section class="mx-auto flex w-full flex-col items-center justify-start p-24 pt-12">
-      <form id="porra-form" class="grid w-full grid-cols-1 gap-4 rounded-lg bg-white/10 p-4 shadow-lg backdrop-blur-md sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
-          {FIGHTERS.map(({versus, ...fighter }, index) => (
-            <>{versus && (
-              <div class="flex w-full items-center justify-center gap-4">
-                <BoxerCardPorra id={fighter.id} name={fighter.name} class="boxer-left" versus={versus.id} />
-                <img
-                  src="/images/versus.png"
-                  class="animate-slide-out-bottom size-16"
-                  alt="Imagen de Versus"
-                />
-                <BoxerCardPorra id={versus.id} name={versus.name} class="boxer-right" versus={fighter.id} />
+        <form id="porra-form" class="grid w-full grid-cols-1 gap-12 rounded-lg sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
+            {FIGHTERS.map(({versus, ...fighter }, index) => {
+              const isLast = index === FIGHTERS.length - 1
+              return (
+                <div class={isLast ? 'col-span-2':null}>
+                  <div class="mx-auto flex lg:w-full items-center justify-center gap-4 relative">
+                    <div class="absolute -bottom-10 h-7/8 w-full bg-gradient-to-b from-pink-900/30 from-60% to-transparent transition-colors duration-300 group-hover:from-pink-900/20" />
+                    <BoxerCardPorra group={index} id={fighter.id} name={fighter.name} class="boxer-right" versus={versus.id} />
+                    <img
+                      src="/images/versus.png"
+                      class="animate-slide-out-bottom size-16"
+                      alt="Imagen de Versus"
+                    />
+                    <BoxerCardPorra group={index} id={versus.id} name={versus.name} class="boxer-right" versus={fighter.id} />
+                    <span
+                      class={`absolute -bottom-10 peer-checked:bg-white h-12 w-1/2 transition-all`}
+                    />
+                  </div>
               </div>
-            )}</>
-          ))}
-        </select>
-        <button type="submit" class="bg-fuchsia-200 text-fuchsia-900 m-auto px-12 py-4 rounded-lg">Enviar porra</button>
-      </form>
-    </section>
-  </BackgroundLayout>
+            )})}
+          </select>
+        </form>
+      </div>
+    </div>
+  </section>
 </Layout>
