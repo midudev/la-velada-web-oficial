@@ -8,60 +8,93 @@ interface Props {
 }
 
 const { timestamp } = Astro.props
+const textResponsiveStyles = 'text-6xl font-bold md:text-7xl lg:text-8xl'
 ---
 
-<section class="flex w-full flex-col place-items-center px-2 py-26 md:py-36 overflow-hidden" aria-label="cuenta atrás">
-  <SectionTitle title="Cuenta atrás para el evento..." />
+<section class="flex w-full flex-col place-items-center px-2 py-48" aria-label="cuenta atrás">
+  <SectionTitle title="Cuenta atrás para&nbsp;el&nbsp;evento..." />
 
   <div
-    class="flex md:flex-row items-center justify-center gap-2 text-[var(--color-white)] select-none"
+    class="flex items-center justify-center gap-2 text-[var(--color-white)] select-none flex-col sm:flex-row"
     data-date={timestamp}
     role="timer"
   >
-    <Date
-      dateType="DÍAS"
-      attribute={{ 'data-days': '' }}
-      className="text-4xl font-bold sm:text-6xl md:text-7xl lg:text-8xl"
-      wrapperClassName="my-0"
-      height={'h-[2.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
-      max={129}
-      withBackground={true}
-    />
+    <div class="flex items-center justify-center gap-2 w-[240px] sm:w-auto">
+      <Date
+        dateType="DÍAS"
+        attribute={{ 'data-days': '' }}
+        className={textResponsiveStyles}
+        wrapperClassName="my-0"
+        max={129}
+        withBackground={true}
+      />
 
-    <Date
-      wrapperClassName="my-0"
-      dateType="HORAS"
-      attribute={{ 'data-hours': '' }}
-      className="text-4xl font-bold sm:text-6xl md:text-7xl lg:text-8xl"
-      height={'h-[2.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
-      max={23}
-      withBackground={true}
-    />
+      <Date
+        wrapperClassName="my-0"
+        dateType="HORAS"
+        attribute={{ 'data-hours': '' }}
+        className={textResponsiveStyles}
+        max={23}
+        withBackground={true}
+      />
+    </div>
 
-    <Date
-      wrapperClassName="my-0"
-      dateType="MINUTOS"
-      attribute={{ 'data-minutes': '' }}
-      className="text-4xl font-bold sm:text-6xl md:text-7xl lg:text-8xl"
-      height={'h-[2.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
-      max={59}
-      withBackground={true}
-    />
+    <div class="flex items-center justify-center gap-2 w-[240px] sm:w-auto">
+      <Date
+        wrapperClassName="my-0"
+        dateType="MINUTOS"
+        attribute={{ 'data-minutes': '' }}
+        className={textResponsiveStyles}
+        max={59}
+        withBackground={true}
+      />
 
-    <Date
-      wrapperClassName="my-0"
-      dateType="SEGUNDOS"
-      attribute={{ 'data-seconds': '' }}
-      className="text-4xl font-bold sm:text-6xl md:text-7xl lg:text-8xl"
-      height={'h-[2.5rem] sm:h-[3.8rem] md:h-[4.2rem] lg:h-[5.5rem]'}
-      max={59}
-      withBackground={true}
-    />
+      <Date
+        wrapperClassName="my-0"
+        dateType="SEGUNDOS"
+        attribute={{ 'data-seconds': '' }}
+        className={textResponsiveStyles}
+        max={59}
+        withBackground={true}
+      />
+    </div>
   </div>
   <LinkToAddCalendar class="mt-6 md:mt-8 lg:mt-10">
     Añade el evento al calendario!
   </LinkToAddCalendar>
 </section>
+
+<style is:global>
+  .top-flip,
+  .bottom-flip {
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+  }
+  .top-flip {
+    animation: flip-top 250ms ease-in;
+  }
+
+  .bottom-flip {
+    animation: flip-bottom 250ms ease-out 250ms;
+    transform: rotateX(90deg);
+    bottom: 0;
+  }
+
+  @keyframes flip-top {
+    100% {
+      transform: rotateX(90deg);
+    }
+  }
+
+  @keyframes flip-bottom {
+    100% {
+      transform: rotateX(0deg);
+    }
+  }
+</style>
 
 <script>
   import createCountdown, { type TimeParts } from '@/lib/countdown'
@@ -98,40 +131,40 @@ const { timestamp } = Astro.props
         ) {
           switch (days.length) {
             case 3:
-              animateDigit($days.firstDigit, days[0], 'day')
-              animateDigit($days.secondDigit, days[1], 'day')
-              animateDigit($days.thirdDigit, days[2], 'day')
+              animateDigit($days.firstDigit, parseInt(days[0]))
+              animateDigit($days.secondDigit, parseInt(days[1]))
+              animateDigit($days.thirdDigit, parseInt(days[2]))
               break
             case 2:
               $days.firstDigit.parentNode?.removeChild($days.firstDigit)
-              animateDigit($days.secondDigit, days[0], 'day')
-              animateDigit($days.thirdDigit, days[1], 'day')
+              animateDigit($days.secondDigit, parseInt(days[0]))
+              animateDigit($days.thirdDigit, parseInt(days[1]))
               break
             default:
               $days.secondDigit.parentNode?.removeChild($days.secondDigit)
-              animateDigit($days.thirdDigit, days[0], 'day')
+              animateDigit($days.thirdDigit, parseInt(days[0]))
           }
         }
 
         if ($hours.firstDigit instanceof HTMLElement && $hours.secondDigit instanceof HTMLElement) {
-          animateDigit($hours.firstDigit, hours[0], 'hour')
-          animateDigit($hours.secondDigit, hours[1], 'hour')
+          animateDigit($hours.firstDigit, parseInt(hours[0]))
+          animateDigit($hours.secondDigit, parseInt(hours[1]))
         }
 
         if (
           $minutes.firstDigit instanceof HTMLElement &&
           $minutes.secondDigit instanceof HTMLElement
         ) {
-          animateDigit($minutes.firstDigit, minutes[0], 'minute')
-          animateDigit($minutes.secondDigit, minutes[1], 'minute')
+          animateDigit($minutes.firstDigit, parseInt(minutes[0]))
+          animateDigit($minutes.secondDigit, parseInt(minutes[1]))
         }
 
         if (
           $seconds.firstDigit instanceof HTMLElement &&
           $seconds.secondDigit instanceof HTMLElement
         ) {
-          animateDigit($seconds.firstDigit, seconds[0], 'second')
-          animateDigit($seconds.secondDigit, seconds[1], 'second')
+          animateDigit($seconds.firstDigit, parseInt(seconds[0]))
+          animateDigit($seconds.secondDigit, parseInt(seconds[1]))
         }
       },
 
@@ -161,30 +194,39 @@ const { timestamp } = Astro.props
     return countdown
   }
 
-  function animateDigit(group: HTMLElement, value: string, type: string) {
-    const wrapper = $('[data-wrapper]', group)
-    const num = $(`[data-num="${value}"]`, group)
-    const xnum = $('[data-num-x0]', group) // 0 añadido para la animación
+  function animateDigit(flipCard: HTMLElement, newNumber: number) {
+    const topHalf = flipCard.querySelector('.top') as HTMLElement
+    const startNumber = parseInt(topHalf.textContent || '')
+    if (newNumber === startNumber) return
 
-    if (
-      wrapper instanceof HTMLElement &&
-      num instanceof HTMLElement &&
-      xnum instanceof HTMLElement
-    ) {
-      wrapper.style.transform = `translateY(-${num.offsetTop}px)`
+    const bottomHalf = flipCard.querySelector('.bottom') as HTMLElement
+    const topFlip = document.createElement('div')
+    const bottomFlip = document.createElement('div')
+    topFlip.classList.add(
+      ...'top-flip h-[.5em] leading-none origin-bottom bg-theme-raisin-black border-b-2 border-b-theme-raisin-black'.split(
+        ' ',
+      ),
+    )
+    bottomFlip.classList.add(
+      ...'bottom-flip h-[.5em] leading-none origin-top items-end bg-theme-raisin-black'.split(' '),
+    )
 
-      // Cuando cambie, volver arriba
-      if (value === '0') {
-        setTimeout(() => {
-          wrapper.classList.toggle('duration-[800ms]', false)
-          wrapper.classList.toggle('transition-transform', false)
-          wrapper.style.transform = `translateY(-${xnum.offsetTop}px)`
-        }, 800)
-      } else {
-        wrapper.classList.toggle('duration-[800ms]', true)
-        wrapper.classList.toggle('transition-transform', true)
-      }
-    }
+    topHalf.textContent = `${startNumber}`
+    bottomHalf.textContent = `${startNumber}`
+    topFlip.textContent = `${startNumber}`
+    bottomFlip.textContent = `${newNumber}`
+
+    topFlip.addEventListener('animationstart', (e) => {
+      topHalf.textContent = `${newNumber}`
+    })
+    topFlip.addEventListener('animationend', (e) => {
+      topFlip.remove()
+    })
+    bottomFlip.addEventListener('animationend', (e) => {
+      bottomHalf.textContent = `${newNumber}`
+      bottomFlip.remove()
+    })
+    flipCard.append(topFlip, bottomFlip)
   }
 
   document.addEventListener('astro:page-load', () => {
