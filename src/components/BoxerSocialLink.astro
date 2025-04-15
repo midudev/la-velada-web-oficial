@@ -1,11 +1,11 @@
 ---
 // BoxerSocialLink.astro
-import { Social } from '../types/social';
+import { type Social } from '../types/social';
 const { social } = Astro.props as { social: Social };
 
 const getColorBySocialNetwork = (name: string) => {
   const socialNewtwork = name.toLowerCase();
-  const commonClass = 'text-white bg-gradient-to-br';
+  const commonClass = 'hover:text-white hover:bg-gradient-to-br sm:bg-gradient-to-br sm:text-white md:bg-gradient-to-br md:text-white lg:bg-none lg:text-black ';
   switch (socialNewtwork)  {
     case 'facebook':
       return `${commonClass} from-blue-600 to-blue-800`;
@@ -31,7 +31,7 @@ const getColorBySocialNetwork = (name: string) => {
   href={social.url}
   target="_blank"
   aria-label={social.label ?? social.name}
-  class={`${getColorBySocialNetwork(social.name)} w-20 py-1 flex flex-col items-center justify-center rounded-lg shadow-lg transition duration-500 hover:scale-125`}
+  class={`${getColorBySocialNetwork(social.name)} w-20 py-1 flex flex-col items-center justify-center rounded-lg hover:shadow-lg transition duration-500 hover:scale-125 group `}
 >
   {social.image?.logo && (
     // Asegúrate de que logo es un componente o imagen
@@ -41,5 +41,5 @@ const getColorBySocialNetwork = (name: string) => {
       <social.image.logo />
     )
   )}
-  <span class=" lowercase text-lg">{social.followers}</span>
+  <span class="lg:opacity-0 md:opacity-100 sm:opacity-100 lowercase text-lg group-hover:opacity-100 ">{social.followers}</span>
 </a>

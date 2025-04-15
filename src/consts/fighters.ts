@@ -20,6 +20,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'A Coruña, Galicia',
     versus: 'rivaldios',
+    mirrorImage: true,
     socials: [
       {
         id: 'x',
@@ -114,6 +115,7 @@ export const FIGHTERS: Fighters[] = [
     weight: 102,
     country: 'es',
     versus: 'gaspi',
+    mirrorImage: true,
     socials: [
       {
         id: 'x',
@@ -212,6 +214,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'Mallorca, Islas Baleares',
     versus: 'roro',
+    mirrorImage: true,
     socials: [
       {
         id: 'x',
@@ -522,6 +525,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'San Sebastian, Guipúzcoa',
     versus: 'carlos',
+    mirrorImage: true,
     socials: [
       {
         id: 'instagram',
@@ -592,6 +596,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'Zaragoza, Aragón',
     versus: 'tomas',
+    mirrorImage: true,
     socials: [
       {
         id: 'instagram',
@@ -677,6 +682,7 @@ export const FIGHTERS: Fighters[] = [
     gallery: true,
     city: 'Monterrey, Nuevo León',
     versus: 'arigeli',
+    mirrorImage: true,
     socials: [
       {
         id: 'instagram',
@@ -763,6 +769,7 @@ export const FIGHTERS: Fighters[] = [
     country: 'es',
     city: 'Alhama de Murcia, Murcia',
     versus: 'westcol',
+    mirrorImage: true,
     socials: [
       {
         id: 'instagram',
@@ -914,7 +921,7 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: '_XWxZUwzhXk',
       thumbnail: '/images/fighters/workoutThumbnails/westcol-thumbnail.webp'
-    }
+    },
     clips: [
       {
         text: 'Vamos a ver si le dan las hue***.',

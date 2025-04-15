@@ -1,7 +1,5 @@
 ---
 import BoxerCard from '@/components/BoxerCard.astro'
-import BoxerClip from '@/components/BoxerClip.astro'
-import FighterDataCard from '@/components/FighterDataCard.astro'
 import BoxerClipDrawer from '@/components/BoxerClipDrawer.astro'
 import BoxerClipList from '@/components/BoxerClipList.astro'
 import BoxerGallery from '@/components/BoxerGallery.astro'
@@ -84,9 +82,10 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
               <img alt={`Enfrentamiento entre ${fighter.name} y ${opponent?.name ?? 'su oponente'}`} src="/images/versus.png" class="h-12 w-auto" />
               <BoxerCard
                 id={opponent.id}
-                versus={fighter.id}
                 name={opponent.name}
+                versus={fighter.id}
                 class="group-hover:scale-110"
+                imgClass={`${!opponent.mirrorImage ? '' : 'scale-x-[-1] group-hover:scale-x-[-1]'}`}
               />
             </div>
           )

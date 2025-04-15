@@ -11,7 +11,7 @@ const generateRandomBars = () => {
 
 const bars = generateRandomBars();
 ---
-<article class="w-full hover:scale-105 transition-all duration-600 max-w-[450px] lg:min-w-[300px] border-2 border-white/40 bg-pink-600/40 rounded-xl overflow-hidden ">
+<article class="group w-full hover:scale-105 transition-all duration-600 max-w-[450px] lg:min-w-[300px] border-2 border-white/40 bg-pink-600/40 rounded-xl overflow-hidden ">
   <!-- Contenedor principal -->
   <main class="grid grid-flow-row sm:grid-flow-col w-full grid-cols-2 lowercase">
     <!-- Informacion General -->
@@ -26,19 +26,19 @@ const bars = generateRandomBars();
       </section>
       <!-- Otros datos del luchador -->
       <div class="grid grid-cols-2 gap-4 px-4 py-4 text-white font-normal text-left animate-fade-in-up animate-delay-200">
-        <section class=" flex flex-col">
+        <section class=" flex flex-col stat-item">
           <span class="text-sm text-dark-magenta">Edad</span>
           <strong class="text-md">{fighter.age} años</strong>
         </section>
-        <section class="flex flex-col">
+        <section class="flex flex-col stat-item">
           <span class="text-sm text-dark-magenta">Peso</span>
           <strong class="text-md">{fighter.weight}kg</strong>
         </section>
-        <section class=" flex flex-col">
+        <section class=" flex flex-col stat-item">
           <span class="text-sm text-dark-magenta">Nacimiento</span>
           <strong class="text-md">{birthDate}</strong>
         </section>
-        <section class=" flex flex-col">
+        <section class=" flex flex-col stat-item">
           <span class="text-sm text-dark-magenta">Altura</span>
           <strong class="text-md">{fighter.height}m</strong>
         </section>
@@ -66,7 +66,7 @@ const bars = generateRandomBars();
           decoding="async"
         />
       </figure>
-      <strong class="lowercase text-md text-white">{fighter.city}</strong>
+      <strong class="lowercase text-md text-white stat-item">{fighter.city}</strong>
     </section>
 
     <section class="flex items-center justify-center space-x-2 animate-fade-in-up animate-delay-200">
@@ -79,3 +79,53 @@ const bars = generateRandomBars();
     </section>
   </footer>
 </article>
+
+<style>
+  /* Efecto de "pulse border" */
+  .group:hover {
+    border-color: rgba(255, 20, 147, 0.7);
+    animation: pulseBorder 2s infinite cubic-bezier(0.66, 0, 0, 1);
+  }
+  
+  @keyframes pulseBorder {
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 20, 147, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(255, 20, 147, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 20, 147, 0);
+    }
+  }
+  
+  /* Animación de fade-in para las estadísticas */
+  .stat-item {
+    animation: fadeIn 0.5s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .stat-item:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .stat-item:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .stat-item:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .stat-item:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  </style>
