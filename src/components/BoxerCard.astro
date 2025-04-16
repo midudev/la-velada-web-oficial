@@ -1,64 +1,89 @@
 ---
-const { id, name, versus, class: extraClass } = Astro.props
+/* 
+  Propiedades del componente y tipado. 
+  Se reciben: id, nombre y clase extra (extraClass)
+*/
+const { id, name, class: extraClass } = Astro.props;
 
 interface Props {
-  id: string
-  name: string
-  versus: string
-  class: string
+  id: string;
+  name: string;
+  class: string;
 }
 ---
 
+<!-- Tarjeta del boxeador -->
 <a
   class={`boxer-card ${extraClass} min-w-26 inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
   href={`/luchador/${id}`}
   data-id={id}
-  data-versus={versus}
 >
   <div class="relative overflow-hidden rounded-lg">
-    <img
-      class="via-40 aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover transition-transform duration-500 group-hover:scale-110"
-      src={`/images/fighters/cards/${id}.webp`}
-      alt={`Tarjeta del boxeador ${name}`}
-    />
+    <!-- Sprite del luchador -->
+    <div 
+      class="fighter-sprite aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 via-40 to-transparent transition-transform duration-500 group-hover:scale-110"
+      data-fighter={id}
+      role="img"
+      aria-label={`Tarjeta del boxeador ${name}`}
+    ></div>
 
-    <div
-      class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full"
-    >
+    <!-- Efecto de barrido -->
+    <div 
+      class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full">
     </div>
 
-    <div
-      class="border-theme-tickle-me-pink/70 absolute inset-0 rounded-lg border-0 opacity-0 transition-all duration-300 group-hover:border-2 group-hover:opacity-100"
-    >
+    <!-- Borde animado -->
+    <div 
+      class="border-theme-tickle-me-pink/70 absolute inset-0 rounded-lg border-0 opacity-0 transition-all duration-300 group-hover:border-2 group-hover:opacity-100">
     </div>
   </div>
 
-  <div
-    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
-  >
-    <h3
+  <!-- Detalle textual, aparece al interactuar -->
+  <div 
+    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+    <h3 
       class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
     >
       {name}
     </h3>
   </div>
 
-  <div
+  <!-- Barra inferior animada -->
+  <div 
     class="bg-theme-tickle-me-pink absolute -bottom-1 left-1/2 h-1 w-0 -translate-x-1/2 transform rounded-t-md transition-all duration-300 group-hover:w-2/3"
   >
   </div>
 </a>
 
 <style>
-  .boxer-left {
-    /* clip-path: polygon(0% 0%, 95% 0%, 100% 100%, 5% 100%); */
-    transform: skew(2deg);
+  .boxer-left { transform: skew(2deg); }
+  .boxer-right { transform: skew(-2deg); }
+  .fighter-sprite {
+    background-image: url('/images/fighters/cards/fighters-sheet.webp');
+    background-repeat: no-repeat;
+    background-size: 1400% 100%;
+    position: relative;
+    background-position: calc(var(--fighter-index, 0) / 13 * 100%) 0;
   }
-
-  .boxer-right {
-    /* clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%); */
-    transform: skew(-2deg);
+  .sprite-error {
+    background-image: var(--fallback-url) !important;
+    background-size: cover !important;
+    background-position: center !important;
   }
+  .fighter-sprite[data-fighter="abby"] { --fighter-index: 0; }
+  .fighter-sprite[data-fighter="alana"] { --fighter-index: 1; }
+  .fighter-sprite[data-fighter="andoni"] { --fighter-index: 2; }
+  .fighter-sprite[data-fighter="arigeli"] { --fighter-index: 3; }
+  .fighter-sprite[data-fighter="carlos"] { --fighter-index: 4; }
+  .fighter-sprite[data-fighter="gaspi"] { --fighter-index: 5; }
+  .fighter-sprite[data-fighter="grefg"] { --fighter-index: 6; }
+  .fighter-sprite[data-fighter="peereira"] { --fighter-index: 7; }
+  .fighter-sprite[data-fighter="perxitaa"] { --fighter-index: 8; }
+  .fighter-sprite[data-fighter="rivaldios"] { --fighter-index: 9; }
+  .fighter-sprite[data-fighter="roro"] { --fighter-index: 10; }
+  .fighter-sprite[data-fighter="tomas"] { --fighter-index: 11; }
+  .fighter-sprite[data-fighter="viruzz"] { --fighter-index: 12; }
+  .fighter-sprite[data-fighter="westcol"] { --fighter-index: 13; }
 
   @media (prefers-reduced-motion) {
     .boxer-card,
@@ -71,39 +96,18 @@ interface Props {
   }
 
   @keyframes pulseBorder {
-    0% {
-      box-shadow: 0 0 0 0 rgba(255, 20, 147, 0.7);
-    }
-    70% {
-      box-shadow: 0 0 0 10px rgba(255, 20, 147, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(255, 20, 147, 0);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(255, 20, 147, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 20, 147, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 20, 147, 0); }
   }
-
   @keyframes selectedPulse {
-    0% {
-      box-shadow:
-        0 0 0 0 rgba(255, 20, 147, 0.7),
-        inset 0 0 0 2px rgba(255, 20, 147, 1);
-    }
-    70% {
-      box-shadow:
-        0 0 0 15px rgba(255, 20, 147, 0),
-        inset 0 0 0 2px rgba(255, 20, 147, 1);
-    }
-    100% {
-      box-shadow:
-        0 0 0 0 rgba(255, 20, 147, 0),
-        inset 0 0 0 2px rgba(255, 20, 147, 1);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(255, 20, 147, 0.7), inset 0 0 0 2px rgba(255, 20, 147, 1); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 20, 147, 0), inset 0 0 0 2px rgba(255, 20, 147, 1); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 20, 147, 0), inset 0 0 0 2px rgba(255, 20, 147, 1); }
   }
-
   .boxer-card.selected {
     animation: selectedPulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
   }
-
   @media (prefers-reduced-motion) {
     .boxer-card.selected {
       animation: none;
@@ -113,134 +117,132 @@ interface Props {
 </style>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
-    const boxerCards = document.querySelectorAll('.boxer-card')
-    let timeoutId: ReturnType<typeof setTimeout> | null = null
-    let versusCard: HTMLAnchorElement | null = null
-    let versusCardDiv: HTMLDivElement | null = null
+  import { FIGHTERS } from '@/consts/fighters';
 
-    boxerCards.forEach((singleBoxerCard, index) => {
-      singleBoxerCard.addEventListener('mouseenter', () => {
-        if (timeoutId) {
-          clearTimeout(timeoutId)
-          timeoutId = null
-        }
+  type FighterId = typeof FIGHTERS[number]['id'];
 
-        const id = singleBoxerCard.getAttribute('data-id')
-        if (id) {
-          // Dispatch a custom event to notify a boxer card id is hovered
-          const event = new CustomEvent('boxer-card-hovered', {
-            detail: { id },
-          })
-          document.dispatchEvent(event)
-        }
-        // Aplicar la clase 'grayscale-100' a todas las tarjetas
-        boxerCards.forEach((card) => card.classList.add('grayscale-100', 'opacity-40'))
+  const CONFIG = {
+    classes: {
+      selected: 'selected',
+      spriteError: 'sprite-error',
+      grayscale: 'grayscale-100',
+      opacity: 'opacity-40',
+    },
+    timing: {
+      hoverExitDelay: 500,
+      clickDelay: 600,
+      particleThrottle: 300,
+    },
+    particles: {
+      count: 10,
+      duration: 1000,
+      baseRadius: 50,
+      varianceRadius: 20,
+    },
+    selectors: {
+      card: '.boxer-card',
+      sprite: '.fighter-sprite',
+    },
+    paths: {
+      spriteSheet: '/images/fighters/cards/fighters-sheet.webp',
+      fallbackTemplate: (id) => `/images/fighters/cards/${id}.webp`,
+    },
+  };
 
-        // Quitar la clase solo de la tarjeta sobre la que se está haciendo hover
-        singleBoxerCard.classList.remove('grayscale-100', 'opacity-40')
+  const versusMap = Object.freeze(new Map(FIGHTERS.flatMap(f => f.versus ? [[f.id, f.versus], [f.versus, f.id]] : [])));
 
-        // Quitar la clase también de su par si existe
-        const versus = singleBoxerCard.getAttribute('data-versus')
-        if (versus) {
-          versusCard = document.querySelector(`[data-id=${versus}]`) as HTMLAnchorElement
-          
-          versusCardDiv = versusCard.children[1] as HTMLDivElement
-        
-          versusCardDiv.classList.remove('translate-y-2')
-          versusCardDiv.classList.add('opacity-100',"translate-y-0")
+  const state = {
+    lastParticleTime: 0,
+    hoverTimeoutId: null,
+  };
 
-          versusCard.classList.remove('grayscale-100', 'opacity-40')
-          versusCard.classList.add("shadow-lg")
+  function createParticles(el) {
+    const now = Date.now();
+    if (now - state.lastParticleTime < CONFIG.timing.particleThrottle) return;
+    state.lastParticleTime = now;
 
-          versusCard.children[0].children[2].classList.add('border-2',"opacity-100")
-          versusCard.children[0].children[1].classList.add('translate-x-full')
-          versusCard.children[0].children[0].classList.add('scale-110')
-
-          versusCard.children[2].classList.add('w-2/3')
-          // select the second div inside the versusCard
-    
-        
-       
-        }
-      })
-
-      singleBoxerCard.addEventListener('mouseleave', () => {
-        timeoutId = setTimeout(() => {
-          const event = new CustomEvent('boxer-card-exit')
-          document.dispatchEvent(event)
-        }, 500)
-
-        // Restaurar la clase en todas las tarjetas cuando el mouse salga
-        boxerCards.forEach((card) => card.classList.remove('grayscale-100', 'opacity-40'))
-        // Quitar la clase de la tarjeta versus si existe
-        if (versusCard) {
-          versusCard.classList.remove("shadow-lg")
-          versusCardDiv?.classList.remove('opacity-100',"translate-y-0")
-          versusCardDiv?.classList.add('translate-y-2')
-
-            
-          versusCard.children[0].children[2].classList.remove('border-2',"opacity-100")
-          versusCard.children[0].children[1].classList.remove('translate-x-full')
-          versusCard.children[0].children[0].classList.remove('scale-110')
-          versusCard.children[2].classList.remove('w-2/3')
-
-          versusCardDiv = null
-          versusCard = null
-        }
-
-      })
-
-      singleBoxerCard.addEventListener('focus', () => {
-        const id = singleBoxerCard.getAttribute('data-id')
-        if (id) {
-          const event = new CustomEvent('boxer-card-hovered', {
-            detail: { id },
-          })
-          document.dispatchEvent(event)
-        }
-      })
-
-      singleBoxerCard.addEventListener('blur', () => {
-        timeoutId = setTimeout(() => {
-          const event = new CustomEvent('boxer-card-exit')
-          document.dispatchEvent(event)
-        }, 500)
-      })
-    })
-
-    function createParticles(element: HTMLElement) {
-      for (let i = 0; i < 10; i++) {
-        const particle = document.createElement('div')
-        particle.className = 'absolute w-1 h-1 bg-theme-tickle-me-pink rounded-full'
-
-        // Posición aleatoria alrededor de la tarjeta
-        const angle = Math.random() * Math.PI * 2
-        const radius = 50 + Math.random() * 20
-
-        particle.style.left = `${50 + Math.cos(angle) * radius}%`
-        particle.style.top = `${50 + Math.sin(angle) * radius}%`
-
-        element.appendChild(particle)
-
-        // Animación
-        particle.animate(
-          [
-            { opacity: 1, transform: 'scale(1)' },
-            { opacity: 0, transform: 'scale(0)' },
-          ],
-          {
-            duration: 1000,
-            fill: 'forwards',
-          },
-        ).onfinish = () => particle.remove()
-      }
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < CONFIG.particles.count; i++) {
+      const p = document.createElement('div');
+      p.className = 'absolute w-1 h-1 bg-theme-tickle-me-pink rounded-full';
+      const angle = Math.random() * Math.PI * 2;
+      const radius = CONFIG.particles.baseRadius + Math.random() * CONFIG.particles.varianceRadius;
+      p.style.cssText = `left: ${50 + Math.cos(angle) * radius}%; top: ${50 + Math.sin(angle) * radius}%; pointer-events: none;`;
+      p.animate([
+        { opacity: 1, transform: 'scale(1)' },
+        { opacity: 0, transform: 'scale(0)' },
+      ], { duration: CONFIG.particles.duration, easing: 'ease-out', fill: 'forwards' }).onfinish = () => p.remove();
+      fragment.appendChild(p);
     }
+    el.appendChild(fragment);
+  }
 
-    boxerCards.forEach((card) => {
-      card.addEventListener('mouseenter', () => {
-        createParticles(card as HTMLElement)
-      })
-    })
-  })
+  function initSpriteFallback() {
+    const img = new Image();
+    img.onerror = () => {
+      document.querySelectorAll(CONFIG.selectors.sprite).forEach(sprite => {
+        const id = sprite.dataset.fighter;
+        if (!id) return;
+        sprite.classList.add(CONFIG.classes.spriteError);
+        sprite.style.setProperty('--fallback-url', `url('${CONFIG.paths.fallbackTemplate(id)}')`);
+      });
+    };
+    img.src = CONFIG.paths.spriteSheet;
+  }
+
+  function updateCardStyles(cards, currentId, opponentId) {
+    requestAnimationFrame(() => {
+      cards.forEach(card => {
+        const cardId = card.dataset.id;
+        const isRelevant = !currentId || cardId === currentId || cardId === opponentId;
+        card.classList.toggle(CONFIG.classes.grayscale, !isRelevant);
+        card.classList.toggle(CONFIG.classes.opacity, !isRelevant);
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    initSpriteFallback();
+    const allCards = Array.from(document.querySelectorAll(CONFIG.selectors.card));
+
+    allCards.forEach(card => {
+      const id = card.dataset.id;
+      if (!id) return;
+
+      const handleEnter = () => {
+        if (state.hoverTimeoutId) clearTimeout(state.hoverTimeoutId);
+        state.hoverTimeoutId = null;
+        const opponentId = versusMap.get(id);
+        document.dispatchEvent(new CustomEvent('boxer-card-hovered', { detail: { id, versus: opponentId } }));
+        updateCardStyles(allCards, id, opponentId);
+        createParticles(card);
+      };
+
+      const handleLeave = () => {
+        state.hoverTimeoutId = setTimeout(() => {
+          document.dispatchEvent(new CustomEvent('boxer-card-exit'));
+          updateCardStyles(allCards, null, null);
+        }, CONFIG.timing.hoverExitDelay);
+      };
+
+      const handleClick = (e) => {
+        e.preventDefault();
+        requestAnimationFrame(() => {
+          allCards.forEach(c => c.classList.remove(CONFIG.classes.selected));
+          card.classList.add(CONFIG.classes.selected);
+        });
+        createParticles(card);
+        const href = card.getAttribute('href');
+        if (href) {
+          setTimeout(() => { window.location.href = href; }, CONFIG.timing.clickDelay);
+        }
+      };
+
+      card.addEventListener('mouseenter', handleEnter, { passive: true });
+      card.addEventListener('focusin', handleEnter, { passive: true });
+      card.addEventListener('mouseleave', handleLeave, { passive: true });
+      card.addEventListener('focusout', handleLeave, { passive: true });
+      card.addEventListener('click', handleClick);
+    });
+  });
 </script>
