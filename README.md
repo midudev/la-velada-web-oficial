@@ -29,6 +29,7 @@ La Velada V es una competición de boxeo que enfrenta a streamers, creadores de 
 - [Contribuir al proyecto](#contribuir-al-proyecto)
   - [Contribuir desde Stackblitz](#contribuir-desde-stackblitz)
 - [🛠️ Stack](#️-stack)
+- [Notas de versión](#notas-de-versión)
 
 </details>
 
@@ -65,6 +66,7 @@ La Velada V es una competición de boxeo que enfrenta a streamers, creadores de 
 	```sh
 	# .bashrc | .zshrc | cualquier archivo de configuración
 	# pequeño script para cambiar de version al entrar al directorio
+
 	cd() {
   builtin cd "$@"
 		if [[ -f .nvmrc ]]; then
@@ -177,6 +179,15 @@ Si quieres contribuir de una manera mas sencilla, puedes iniciar este proyecto d
 - [![Typescript][typescript-badge]][typescript-url] - JavaScript with syntax for types.
 - [![Tailwind CSS][tailwind-badge]][tailwind-url] - A utility-first CSS framework for rapidly building custom designs.
 - [![@midudev/tailwind-animations][animations-badge]][animations-url] - Easy peasy animations for your Tailwind project.
+
+## Notas de versión
+
+### Abril 2025
+- Actualizado Astro a la versión 5.8.0
+- Actualizado @astrojs/sitemap a la versión 3.5.0
+- Actualizado @astrojs/vercel a la versión 8.2.3
+- Eliminada la configuración experimental para SVG, ya que es una característica estable en Astro 5.8.0
+- Añadido soporte mejorado para imágenes con formatos WebP y AVIF
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
