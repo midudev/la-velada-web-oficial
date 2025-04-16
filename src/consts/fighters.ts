@@ -924,8 +924,7 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: '_XWxZUwzhXk',
       thumbnail: '/images/fighters/workoutThumbnails/westcol-thumbnail.webp'
-    }
-    ,
+    },
     clips: [
       {
         text: 'Vamos a ver si le dan las hue***.',
