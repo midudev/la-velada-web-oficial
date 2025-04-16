@@ -15,10 +15,11 @@ export default defineConfig({
     inlineStylesheets: 'always',
   },
 
-  experimental: {
-
-    svg: true
-   },
+  // En Astro 5.8.0, 'svg' ya no es experimental
+  image: {
+    domains: [],
+    formats: ['webp', 'avif', 'svg'],
+  },
 
   adapter: vercel(),
 
