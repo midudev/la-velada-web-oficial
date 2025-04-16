@@ -2,9 +2,10 @@
 import { defineConfig } from 'astro/config'
 import tailwindcss from '@tailwindcss/vite'
 import vercel from '@astrojs/vercel'
-import sitemap from '@astrojs/sitemap'
-
 import auth from 'auth-astro';
+import sitemap from '@astrojs/sitemap'
+import react from '@astrojs/react'
+
 
 export default defineConfig({
   output: 'server',
@@ -24,7 +25,7 @@ export default defineConfig({
 
   adapter: vercel(),
 
-  integrations: [sitemap(), auth()],
+  integrations: [sitemap(), auth(), react()],
 
   site: 'https://www.infolavelada.com/',
 })
