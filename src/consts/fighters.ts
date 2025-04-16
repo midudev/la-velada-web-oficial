@@ -18,6 +18,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 63,
     country: 'es',
+    gallery: true,
     city: 'A Coruña, Galicia',
     versus: 'rivaldios',
     socials: [
@@ -113,6 +114,7 @@ export const FIGHTERS: Fighters[] = [
     city: 'Catarroja, Valencia',
     weight: 102,
     country: 'es',
+    gallery: true,
     versus: 'gaspi',
     socials: [
       {
@@ -210,6 +212,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 62,
     country: 'es',
+    gallery: true,
     city: 'Mallorca, Islas Baleares',
     versus: 'roro',
     socials: [
@@ -305,6 +308,7 @@ export const FIGHTERS: Fighters[] = [
     age: 23,
     weight: 47,
     country: 'es',
+    gallery: true,
     city: 'Barcelona, Cataluña',
     versus: 'abby',
     socials: [
@@ -371,6 +375,7 @@ export const FIGHTERS: Fighters[] = [
     age: 22,
     weight: 112,
     country: 'ar',
+    gallery: true,
     city: 'Buenos Aires',
     versus: 'perxitaa',
     socials: [
@@ -450,6 +455,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 69,
     country: 'mx',
+    gallery: true,
     city: 'Rosales, Culiacán',
     versus: 'peereira',
     socials: [
@@ -520,6 +526,7 @@ export const FIGHTERS: Fighters[] = [
     age: 22,
     weight: 115,
     country: 'es',
+    gallery: true,
     city: 'San Sebastian, Guipúzcoa',
     versus: 'carlos',
     socials: [
@@ -761,6 +768,7 @@ export const FIGHTERS: Fighters[] = [
     age: 27,
     weight: 74,
     country: 'es',
+    gallery: true,
     city: 'Alhama de Murcia, Murcia',
     versus: 'westcol',
     socials: [
@@ -847,6 +855,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 63,
     country: 'co',
+    gallery: true,
     city: 'Ciudad Bolívar, Antioquia',
     versus: 'grefg',
     socials: [
@@ -1020,6 +1029,7 @@ export const FIGHTERS: Fighters[] = [
     age: 25,
     weight: 80,
     country: 'ar',
+    gallery: true,
     city: 'Buenos Aires',
     versus: 'viruzz',
     socials: [
@@ -1101,6 +1111,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 85,
     country: 'mx',
+    gallery: true,
     city: 'Monterrey, Nuevo León',
     versus: 'andoni',
     socials: [
