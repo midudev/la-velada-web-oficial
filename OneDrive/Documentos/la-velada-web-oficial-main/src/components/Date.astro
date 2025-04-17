@@ -1,0 +1,77 @@
+---
+interface Props {
+  wrapperClassName: string
+  dateType: string
+  attribute: Record<string, string>
+  max: number
+  className?: string
+  withBackground?: boolean
+}
+
+const {
+  dateType,
+  attribute,
+  className,
+  max,
+  wrapperClassName,
+  withBackground = false,
+} = Astro.props
+const maximumSplit = Astro.props.max.toString().split('')
+const FLIP_CARD_STYLES = 'flip-card w-[.7em] sm:w-[.725em] h-[1em] inline-flex flex-col relative'
+---
+
+<div class="relative flex w-full flex-col items-center justify-center text-center">
+  <div
+    class:list={[
+      'relative flex w-full flex-col gap-2 overflow-hidden rounded sm:-skew-x-6',
+      withBackground ? 'text-navy bg-theme-raisin-black shadow-md backdrop-grayscale' : '',
+      wrapperClassName,
+    ]}
+    {...attribute}
+  >
+    <div class="flex w-full justify-center p-1 pb-0 md:p-2 md:pb-0">
+      <div class:list="float-left block overflow-hidden w-full">
+        <div class={`${FLIP_CARD_STYLES} ${className}`} data-first-group>
+          <div
+            class="top border-b-theme-raisin-black flex h-[.5em] justify-center overflow-hidden border-b-2 leading-none"
+          >
+            {maximumSplit[0]}
+          </div>
+          <div class="bottom flex h-[.5em] items-end justify-center overflow-hidden leading-none">
+            {maximumSplit[0]}
+          </div>
+        </div>
+      </div>
+      <div class:list="float-left block w-auto overflow-hidden">
+        <div class={`${FLIP_CARD_STYLES} ${className}`} data-second-group>
+          <div
+            class="top border-b-theme-raisin-black flex h-[.5em] justify-center overflow-hidden border-b-2 leading-none"
+          >
+            {maximumSplit[1]}
+          </div>
+          <div class="bottom flex h-[.5em] items-end justify-center overflow-hidden leading-none">
+            {maximumSplit[1]}
+          </div>
+        </div>
+      </div>
+      {
+        max > 99 && (
+          <div class:list="float-left block w-auto overflow-hidden">
+            <div class={`${FLIP_CARD_STYLES} ${className}`} data-third-group>
+              <div class="top border-b-theme-raisin-black flex h-[.5em] justify-center overflow-hidden border-b-2 leading-none">
+                {maximumSplit[2]}
+              </div>
+              <div class="bottom flex h-[.5em] items-end justify-center overflow-hidden leading-none">
+                {maximumSplit[2]}
+              </div>
+            </div>
+          </div>
+        )
+      }
+    </div>
+    <span
+      class="text-navy px-1 pb-1 text-center text-[0.6rem] font-medium tracking-wider md:pb-2 md:text-sm"
+      >{dateType}</span
+    >
+  </div>
+</div>
