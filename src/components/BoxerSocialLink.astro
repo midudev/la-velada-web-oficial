@@ -1,6 +1,6 @@
 ---
 // BoxerSocialLink.astro
-import { Social } from '../types/social';
+import type { Social } from '../types/social';
 const { social } = Astro.props as { social: Social };
 
 const getColorBySocialNetwork = (name: string) => {
@@ -11,7 +11,7 @@ const getColorBySocialNetwork = (name: string) => {
       return `${commonClass} from-blue-600 to-blue-800`;
     case 'instagram':
       return `${commonClass} from-yellow-400 via-pink-500 to-purple-600`;
-    case 'x': // Twitter / X
+    case 'x': // Twitter / XSS
       return `${commonClass} from-gray-800 to-black`;
     case 'youtube':
       return `${commonClass} from-red-600 to-red-800`;
