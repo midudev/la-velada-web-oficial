@@ -1,0 +1,46 @@
+---
+interface Props {
+  url?: string
+  class?: string
+}
+const { url = '/laveladaes.ics', class: className } = Astro.props
+---
+
+<a
+  class:list={[
+    'group relative overflow-hidden leading-none bg-theme-raisin-black h-8  px-4 text-md md:text-lg text-white transition hover:scale-110 rounded-sm flex items-center justify-center  lowercase',
+    className,
+  ]}
+  rel="noreferrer noopener"
+  id="add-to-calendar"
+  target="_blank"
+  href={url}
+>
+  <div
+    class="width-full absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full"
+  >
+  </div>
+  <div class="inline-flex items-end justify-center rounded-sm p-1 text-nowrap">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="mr-2"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5"></path>
+      <path d="M16 3v4"></path>
+      <path d="M8 3v4"></path>
+      <path d="M4 11h16"></path>
+      <path d="M16 19h6"></path>
+      <path d="M19 16v6"></path>
+    </svg>
+    <slot />
+  </div>
+</a>
