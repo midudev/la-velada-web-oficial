@@ -1,6 +1,7 @@
 ---
 import NavLink from './NavLink.astro'
 import { links } from '../consts/links'
+import BurguerButton from './BurguerButton.astro'
 
 const { pathname } = Astro.url
 
@@ -9,11 +10,14 @@ const hideLogoRoutes = ['/']
 const shouldShowLogo = !hideLogoRoutes.includes(pathname)
 ---
 
-<header class="fixed top-0 z-50 mx-auto flex h-20 w-full items-center rounded-b-md text-white">
+<header
+  class="fixed top-0 z-50 mx-auto flex w-full items-center overflow-hidden rounded-b-md text-white transition-colors duration-300"
+>
+  <!-- Desktop -->
   <nav
     class:list={[
       shouldShowLogo ? 'grid-cols-3' : 'grid-cols-2',
-      'mx-auto grid w-full max-w-6xl items-center justify-between px-6 text-sm font-medium',
+      'mx-auto hidden w-full max-w-6xl items-center justify-between p-4 px-6 text-sm font-medium lg:grid',
     ]}
   >
     <div class="hidden flex-row justify-start gap-8 md:flex">
@@ -26,23 +30,6 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname)
         <a href="/" class="relative mx-auto cursor-pointer duration-500 hover:scale-110">
           <img
             class="h-auto w-10"
-            src="/favicon.svg"
-            fetchpriority="high"
-            alt="La Velada del Año V"
-            decoding="async"
-          />
-        </a>
-      )
-    }
-
-    {
-      shouldShowLogo && (
-        <a
-          href="/"
-          class="relative mx-auto hidden w-1/3 cursor-pointer duration-500 hover:scale-110 md:inline-block"
-        >
-          <img
-            class="mx-auto h-auto w-10"
             src="/favicon.svg"
             fetchpriority="high"
             alt="La Velada del Año V"
@@ -68,6 +55,48 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname)
       </span>
     </div>
   </nav>
+
+  <!-- Mobile -->
+  <nav class:list={'flex w-full flex-col gap-6 p-4 duration-300 lg:hidden'}>
+    <div class="flex w-full items-center justify-between">
+      <a
+        href="/"
+        onclick="localStorage.setItem('mobile-nav', 'off'); window.dispatchEvent(new Event('mobile-nav'))"
+        class="relative cursor-pointer duration-500 hover:scale-110"
+      >
+        <img
+          class="h-auto w-9"
+          src="/favicon.svg"
+          fetchpriority="high"
+          alt="La Velada del Año V"
+          decoding="async"
+        />
+      </a>
+
+      <BurguerButton color="#ccc" />
+    </div>
+
+    <!-- Links -->
+    <div
+      id="mobile-nav-content"
+      class="hidden max-h-0 flex-col items-center justify-center gap-8 overflow-hidden text-sm transition-all duration-700"
+    >
+      <div class="flex flex-col gap-4">
+        {links.map((link) => <NavLink href={link.href} text={link.text} />)}
+      </div>
+
+      <div class:list={'mb-2 lg:hidden'}>
+        <span
+          class="text-theme-seashell relative inline-block cursor-not-allowed py-1 leading-relaxed tracking-wider opacity-90"
+          >COMPRA LAS ENTRADAS
+          <span
+            class="absolute inset-0 top-4 mt-1 text-center text-[10px] leading-normal tracking-wide text-yellow-500"
+            >PRÓXIMAMENTE</span
+          >
+        </span>
+      </div>
+    </div>
+  </nav>
 </header>
 
 <style>
@@ -76,6 +105,20 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname)
     animation: header-blur-scroll 0.3s linear both;
     animation-timeline: scroll();
     animation-range: 0 250px;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+    z-index: -1;
+    backdrop-filter: blur(10px) !important;
+  }
+
+  header.bg-fallback::before {
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   @keyframes header-blur-scroll {
@@ -91,3 +134,79 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname)
     }
   }
 </style>
+
+<script is:inline>
+  const classToAdd = ['bg-fallback', '!backdrop-blur-sm']
+
+  const headerIsTransparent = () => {
+    const header = document.getElementsByTagName('header')[0]
+    if (header) {
+      const style = window.getComputedStyle(header)
+      const bg = style.backgroundColor
+
+      return (t = bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent')
+    }
+  }
+
+  const currentHeaderBG = headerIsTransparent()
+
+  const openNav = () => {
+    const content = document.getElementById('mobile-nav-content')
+    const header = document.getElementsByTagName('header')[0]
+
+    if (!content || !header) return
+
+    content.classList.remove('hidden')
+    requestAnimationFrame(() => {
+      content.classList.remove('max-h-0', '-translate-y-[50px]', 'opacity-0')
+      content.classList.add('max-h-[500px]', 'flex', 'opacity-100')
+
+      headerIsTransparent() && header.classList.add(...classToAdd)
+    })
+  }
+
+  const closeNav = () => {
+    const content = document.getElementById('mobile-nav-content')
+    const header = document.getElementsByTagName('header')[0]
+
+    if (!content || !header) return
+
+    content.classList.remove('max-h-[500px]', 'opacity-100')
+    content.classList.add('max-h-0', '-translate-y-[50px]', 'opacity-0')
+
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        content.classList.remove('flex')
+        content.classList.add('hidden')
+
+        currentHeaderBG && header.classList.remove(...classToAdd)
+      }, 500)
+    })
+  }
+
+  const updateVisibility = () => {
+    const isOpen = localStorage.getItem('mobile-nav') === 'on'
+    if (isOpen) return openNav()
+    closeNav()
+  }
+
+  const setup = () => {
+    window.addEventListener('mobile-nav', updateVisibility)
+    updateVisibility()
+  }
+
+  window.addEventListener('DOMContentLoaded', setup)
+  window.addEventListener('astro:after-swap', setup)
+
+  window.addEventListener('scroll', () => {
+    const header = document.getElementsByTagName('header')[0]
+    const isOpen = localStorage.getItem('mobile-nav') === 'on'
+    const scrollY = window.scrollY
+
+    if (!header) return
+
+    if (isOpen && scrollY <= 250) return header.classList.add(...classToAdd)
+
+    header.classList.remove(...classToAdd)
+  })
+</script>
