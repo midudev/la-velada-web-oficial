@@ -1,131 +1,91 @@
 ---
+import NavLink from './NavLink.astro'
+import { links } from '../consts/links'
+import BurguerButton from './BurguerButton.astro'
+
 const { pathname } = Astro.url
 
 // Lista de rutas donde NO debe aparecer el logo
 const hideLogoRoutes = ['/']
 const shouldShowLogo = !hideLogoRoutes.includes(pathname)
-
-// Comprueba si la ruta actual está activa
-const isActive = (path: string) => pathname === path
 ---
 
-<div class="fixed top-8 right-8 z-[100] md:hidden">
-  <button
-    id="menuButton"
-    aria-expanded="false"
-    aria-controls="menuMobileContent"
-    class="hamburgerButton group relative flex h-[20px] w-6 cursor-pointer flex-col items-center justify-between transition duration-300 hover:scale-110 lg:hidden"
-    aria-label="Abrir menú de navegación"
+<header
+  class="fixed top-0 z-50 mx-auto flex w-full items-center overflow-hidden rounded-b-md text-white transition-colors duration-300"
+>
+  <!-- Desktop -->
+  <nav
+    class:list={[
+      shouldShowLogo ? 'grid-cols-3' : 'grid-cols-2',
+      'mx-auto hidden w-full max-w-6xl items-center justify-between p-4 px-6 text-sm font-medium lg:grid',
+    ]}
   >
-    <span
-      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:translate-y-2 group-[.open]:rotate-45"
-    ></span>
-    <span
-      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:opacity-0"
-    ></span>
-    <span
-      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:opacity-0"
-    ></span>
-    <span
-      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:-translate-y-[0.6rem] group-[.open]:-rotate-45"
-    ></span>
-  </button>
-</div>
+    <div class="hidden flex-row justify-start gap-8 md:flex">
+      {/* Enlace con animación de subrayado dividido en dos colores */}
+      {links.map((link) => <NavLink href={link.href} text={link.text} />)}
+    </div>
 
-<header class="fixed top-0 z-50 mx-auto flex h-20 w-full items-center text-white">
-  <div class="flex justify-between px-6 py-4 md:w-full">
-    <a href="/" class="cursor-pointer transition duration-300 hover:scale-110 md:hidden">
-      <img src="/favicon.svg" alt="logo" class="h-auto w-7" />
-    </a>
+    {
+      shouldShowLogo && (
+        <a href="/" class="relative mx-auto cursor-pointer duration-500 hover:scale-110">
+          <img
+            class="h-auto w-10"
+            src="/favicon.svg"
+            fetchpriority="high"
+            alt="La Velada del Año V"
+            decoding="async"
+          />
+        </a>
+      )
+    }
 
-    <div id="overlay-menu" class="bg-theme-raisin-black/50 fixed inset-0 hidden h-screen"></div>
-    <nav
-      id="navContent"
-      class="bg-theme-french-mauve/90 fixed top-0 right-0 mx-auto hidden h-screen max-w-6xl items-center justify-between space-y-2 px-6 pt-14 text-sm font-light backdrop-blur-2xl md:relative md:flex md:h-fit md:w-full md:space-y-0 md:bg-transparent md:py-4 md:backdrop-blur-none"
+    <div
+      class:list={[
+        'flex-col items-end md:text-right',
+        shouldShowLogo ? 'md:w-1/3' : 'md:flex-grow',
+      ]}
     >
-      <div
-        class:list={[
-          'flex flex-col justify-start space-y-2 md:flex-row md:gap-8 md:space-y-0',
-          shouldShowLogo ? 'md:w-1/3' : 'md:flex-grow',
-        ]}
+      <span
+        class="text-theme-seashell relative inline-block cursor-not-allowed py-1 leading-relaxed tracking-wider opacity-90"
+        >COMPRA LAS ENTRADAS
+        <span
+          class="absolute inset-0 top-4 mt-1 text-center text-[10px] leading-normal tracking-wide text-yellow-500"
+          >PRÓXIMAMENTE</span
+        >
+      </span>
+    </div>
+  </nav>
+
+  <!-- Mobile -->
+  <nav class:list={'flex w-full flex-col gap-6 p-4 duration-300 lg:hidden'}>
+    <div class="flex w-full items-center justify-between">
+      <a
+        href="/"
+        onclick="localStorage.setItem('mobile-nav', 'off'); window.dispatchEvent(new Event('mobile-nav'))"
+        class="relative cursor-pointer duration-500 hover:scale-110"
       >
-        {/* Enlace con animación de subrayado dividido en dos colores */}
-        <a
-          href="/la-porra"
-          class="group relative inline-block w-fit py-1 leading-relaxed tracking-wider"
-        >
-          <span class="text-theme-seashell">HAZ TU PORRA</span>
-          {/* Contenedor del subrayado con overflow hidden para la animación */}
-          <div class="relative mt-1 h-[2px] w-full overflow-hidden">
-            {/* Línea rosa que se anima desde la izquierda */}
-            <div
-              class:list={[
-                'absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-250 ease-out',
-                isActive('/la-porra') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
-              ]}
-            >
-            </div>
-            {/* Línea turquesa que se anima desde la derecha */}
-            <div
-              class:list={[
-                'absolute right-0 bottom-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-250 ease-out',
-                isActive('/la-porra') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
-              ]}
-            >
-            </div>
-          </div>
-        </a>
-        {/* Segundo enlace con la misma animación */}
-        <a
-          href="/combates"
-          class="group relative inline-block w-fit py-1 leading-relaxed tracking-wider"
-        >
-          <span class="text-theme-seashell">VER COMBATES</span>
-          {/* Contenedor del subrayado con overflow hidden para la animación */}
-          <div class="relative mt-1 h-[2px] w-full overflow-hidden">
-            {/* Línea rosa que se anima desde la izquierda */}
-            <div
-              class:list={[
-                'absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out',
-                isActive('/combates') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
-              ]}
-            >
-            </div>
-            {/* Línea turquesa que se anima desde la derecha */}
-            <div
-              class:list={[
-                'absolute right-0 bottom-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out',
-                isActive('/combates') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
-              ]}
-            >
-            </div>
-          </div>
-        </a>
+        <img
+          class="h-auto w-9"
+          src="/favicon.svg"
+          fetchpriority="high"
+          alt="La Velada del Año V"
+          decoding="async"
+        />
+      </a>
+
+      <BurguerButton color="#ccc" />
+    </div>
+
+    <!-- Links -->
+    <div
+      id="mobile-nav-content"
+      class="hidden max-h-0 flex-col items-center justify-center gap-8 overflow-hidden text-sm transition-all duration-700"
+    >
+      <div class="flex flex-col gap-4">
+        {links.map((link) => <NavLink href={link.href} text={link.text} />)}
       </div>
 
-      {
-        shouldShowLogo && (
-          <a
-            href="/"
-            class="relative mx-auto hidden w-1/3 cursor-pointer duration-500 hover:scale-110 md:inline-block"
-          >
-            <img
-              class="mx-auto h-auto w-10"
-              src="/favicon.svg"
-              fetchpriority="high"
-              alt="La Velada del Año V"
-              decoding="async"
-            />
-          </a>
-        )
-      }
-
-      <div
-        class:list={[
-          'flex-col items-end md:text-right',
-          shouldShowLogo ? 'md:w-1/3' : 'md:flex-grow',
-        ]}
-      >
+      <div class:list={'mb-2 lg:hidden'}>
         <span
           class="text-theme-seashell relative inline-block cursor-not-allowed py-1 leading-relaxed tracking-wider opacity-90"
           >COMPRA LAS ENTRADAS
@@ -135,8 +95,8 @@ const isActive = (path: string) => pathname === path
           >
         </span>
       </div>
-    </nav>
-  </div>
+    </div>
+  </nav>
 </header>
 
 <style>
@@ -145,7 +105,20 @@ const isActive = (path: string) => pathname === path
     animation: header-blur-scroll 0.3s linear both;
     animation-timeline: scroll();
     animation-range: 0 250px;
-    border-bottom: 1px solid transparent;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+    z-index: -1;
+    backdrop-filter: blur(10px) !important;
+  }
+
+  header.bg-fallback::before {
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   @keyframes header-blur-scroll {
@@ -158,28 +131,82 @@ const isActive = (path: string) => pathname === path
       backdrop-filter: blur(10px);
       background: rgba(0, 0, 0, 0.5);
       padding-bottom: var(--spacing-6);
-      border-bottom-color: black;
     }
   }
 </style>
 
-<script>
-  document.addEventListener('astro:page-load', () => {
-    function toggleMenu(
-      menuBtn: Element | null,
-      navContent: Element | null,
-      overlayMenu: Element | null,
-    ) {
-      menuBtn?.classList.toggle('open')
-      navContent?.classList.toggle('hidden')
-      overlayMenu?.classList.toggle('hidden')
+<script is:inline>
+  const classToAdd = ['bg-fallback', '!backdrop-blur-sm']
+
+  const headerIsTransparent = () => {
+    const header = document.getElementsByTagName('header')[0]
+    if (header) {
+      const style = window.getComputedStyle(header)
+      const bg = style.backgroundColor
+
+      return (t = bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent')
     }
+  }
 
-    const navContent = document.querySelector('#navContent')
-    const menuButton = document.querySelector('#menuButton')
-    const overlayMenu = document.querySelector('#overlay-menu')
+  const currentHeaderBG = headerIsTransparent()
 
-    menuButton?.addEventListener('click', () => toggleMenu(menuButton, navContent, overlayMenu))
-    overlayMenu?.addEventListener('click', () => toggleMenu(menuButton, navContent, overlayMenu))
+  const openNav = () => {
+    const content = document.getElementById('mobile-nav-content')
+    const header = document.getElementsByTagName('header')[0]
+
+    if (!content || !header) return
+
+    content.classList.remove('hidden')
+    requestAnimationFrame(() => {
+      content.classList.remove('max-h-0', '-translate-y-[50px]', 'opacity-0')
+      content.classList.add('max-h-[500px]', 'flex', 'opacity-100')
+
+      headerIsTransparent() && header.classList.add(...classToAdd)
+    })
+  }
+
+  const closeNav = () => {
+    const content = document.getElementById('mobile-nav-content')
+    const header = document.getElementsByTagName('header')[0]
+
+    if (!content || !header) return
+
+    content.classList.remove('max-h-[500px]', 'opacity-100')
+    content.classList.add('max-h-0', '-translate-y-[50px]', 'opacity-0')
+
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        content.classList.remove('flex')
+        content.classList.add('hidden')
+
+        currentHeaderBG && header.classList.remove(...classToAdd)
+      }, 500)
+    })
+  }
+
+  const updateVisibility = () => {
+    const isOpen = localStorage.getItem('mobile-nav') === 'on'
+    if (isOpen) return openNav()
+    closeNav()
+  }
+
+  const setup = () => {
+    window.addEventListener('mobile-nav', updateVisibility)
+    updateVisibility()
+  }
+
+  window.addEventListener('DOMContentLoaded', setup)
+  window.addEventListener('astro:after-swap', setup)
+
+  window.addEventListener('scroll', () => {
+    const header = document.getElementsByTagName('header')[0]
+    const isOpen = localStorage.getItem('mobile-nav') === 'on'
+    const scrollY = window.scrollY
+
+    if (!header) return
+
+    if (isOpen && scrollY <= 250) return header.classList.add(...classToAdd)
+
+    header.classList.remove(...classToAdd)
   })
 </script>
