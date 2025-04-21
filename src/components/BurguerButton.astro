@@ -1,0 +1,74 @@
+---
+interface Props {
+  color?: string
+}
+
+const props: Props = Astro.props
+---
+
+<button
+  id="mobile-nav-button"
+  class={`size-6 lg:hidden z-10 group relative flex cursor-pointer flex-col items-start justify-center gap-0.5 duration-300`}
+>
+  <span
+    id="top-line"
+    class="left-0 top-[37%] h-1 w-[75%] rounded-sm delay-75 duration-500 group-hover:w-[85%]"
+    style={{ backgroundColor: props.color }}></span>
+  <span
+    id="middle-line"
+    class="left-0 top-[50%] h-1 w-[57%] rounded-sm delay-100 duration-500 group-hover:w-[67%]"
+    style={{ backgroundColor: props.color }}></span>
+  <span
+    id="bottom-line"
+    class="left-0 top-[63%] h-1 w-[37%] rounded-sm delay-150 duration-500 group-hover:w-[47%]"
+    style={{ backgroundColor: props.color }}></span>
+</button>
+
+<script>
+  const mobileNav = 'mobile-nav'
+
+  function toggleMobileNav() {
+    const current = localStorage.getItem(mobileNav)
+
+    const newValue = current === 'on' ? 'off' : 'on'
+    localStorage.setItem(mobileNav, newValue)
+    applyMobileNavState()
+  }
+
+  function applyMobileNavState() {
+    const isActive = localStorage.getItem(mobileNav) === 'on'
+
+    const top = document.getElementById('top-line')
+    const middle = document.getElementById('middle-line')
+    const bottom = document.getElementById('bottom-line')
+
+    if (!top || !middle || !bottom) return
+
+    if (isActive) {
+      top.classList.remove('w-full')
+      top.classList.add('w-[75%]', 'group-hover:w-[85%]', 'delay-75')
+
+      middle.classList.remove('w-full')
+      middle.classList.add('w-[57%]', 'group-hover:w-[67%]', 'delay-100')
+
+      bottom.classList.remove('w-full')
+      bottom.classList.add('w-[37%]', 'group-hover:w-[47%]', 'delay-150')
+      return
+    }
+    top.classList.remove('w-[75%]', 'group-hover:w-[85%]', 'delay-75')
+    top.classList.add('w-full')
+
+    middle.classList.remove('w-[57%]', 'group-hover:w-[67%]', 'delay-100')
+    middle.classList.add('w-full')
+
+    bottom.classList.remove('w-[37%]', 'group-hover:w-[47%]', 'delay-150')
+    bottom.classList.add('w-full')
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    applyMobileNavState()
+
+    const button = document.getElementById('mobile-nav-button')
+    button && button.addEventListener('click', toggleMobileNav)
+  })
+</script>
