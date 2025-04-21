@@ -35,7 +35,29 @@ const shouldShowLogo = !hideLogoRoutes.includes(pathname)
       )
     }
 
-    <div class="hidden flex-col items-end md:flex">
+    {
+      shouldShowLogo && (
+        <a
+          href="/"
+          class="relative mx-auto hidden w-1/3 cursor-pointer duration-500 hover:scale-110 md:inline-block"
+        >
+          <img
+            class="mx-auto h-auto w-10"
+            src="/favicon.svg"
+            fetchpriority="high"
+            alt="La Velada del Año V"
+            decoding="async"
+          />
+        </a>
+      )
+    }
+
+    <div
+      class:list={[
+        'flex-col items-end md:text-right',
+        shouldShowLogo ? 'md:w-1/3' : 'md:flex-grow',
+      ]}
+    >
       <span
         class="text-theme-seashell relative inline-block cursor-not-allowed py-1 leading-relaxed tracking-wider opacity-90"
         >COMPRA LAS ENTRADAS

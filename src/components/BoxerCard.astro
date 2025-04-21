@@ -10,7 +10,8 @@ interface Props {
 ---
 
 <a
-  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
+  class={`boxer-card ${extraClass} min-w-26 inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-24 xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20 focus-visible:scale-110 focus-visible:shadow-lg focus-visible:z-20 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-theme-tickle-me-pink`}
+  aria-label={`Ver perfil del boxeador ${name}`}
   href={`/luchador/${id}`}
   data-id={id}
   data-versus={versus}
@@ -37,7 +38,7 @@ interface Props {
     class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
   >
     <h3
-      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+      class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
     >
       {name}
     </h3>
@@ -116,6 +117,8 @@ interface Props {
   document.addEventListener('astro:page-load', () => {
     const boxerCards = document.querySelectorAll('.boxer-card')
     let timeoutId: ReturnType<typeof setTimeout> | null = null
+    let versusCard: HTMLAnchorElement | null = null
+    let versusCardDiv: HTMLDivElement | null = null
 
     boxerCards.forEach((singleBoxerCard, index) => {
       singleBoxerCard.addEventListener('mouseenter', () => {
@@ -141,7 +144,22 @@ interface Props {
         // Quitar la clase también de su par si existe
         const versus = singleBoxerCard.getAttribute('data-versus')
         if (versus) {
-          document.querySelector(`[data-id=${versus}]`)?.classList.remove('grayscale-100', 'opacity-40')
+          versusCard = document.querySelector(`[data-id=${versus}]`) as HTMLAnchorElement
+
+          versusCardDiv = versusCard.children[1] as HTMLDivElement
+
+          versusCardDiv.classList.remove('translate-y-2')
+          versusCardDiv.classList.add('opacity-100', 'translate-y-0')
+
+          versusCard.classList.remove('grayscale-100', 'opacity-40')
+          versusCard.classList.add('shadow-lg')
+
+          versusCard.children[0].children[2].classList.add('border-2', 'opacity-100')
+          versusCard.children[0].children[1].classList.add('translate-x-full')
+          versusCard.children[0].children[0].classList.add('scale-110')
+
+          versusCard.children[2].classList.add('w-2/3')
+          // select the second div inside the versusCard
         }
       })
 
@@ -153,6 +171,20 @@ interface Props {
 
         // Restaurar la clase en todas las tarjetas cuando el mouse salga
         boxerCards.forEach((card) => card.classList.remove('grayscale-100', 'opacity-40'))
+        // Quitar la clase de la tarjeta versus si existe
+        if (versusCard) {
+          versusCard.classList.remove('shadow-lg')
+          versusCardDiv?.classList.remove('opacity-100', 'translate-y-0')
+          versusCardDiv?.classList.add('translate-y-2')
+
+          versusCard.children[0].children[2].classList.remove('border-2', 'opacity-100')
+          versusCard.children[0].children[1].classList.remove('translate-x-full')
+          versusCard.children[0].children[0].classList.remove('scale-110')
+          versusCard.children[2].classList.remove('w-2/3')
+
+          versusCardDiv = null
+          versusCard = null
+        }
       })
 
       singleBoxerCard.addEventListener('focus', () => {
@@ -170,27 +202,6 @@ interface Props {
           const event = new CustomEvent('boxer-card-exit')
           document.dispatchEvent(event)
         }, 500)
-      })
-
-      singleBoxerCard.addEventListener('click', (e) => {
-        e.preventDefault()
-
-        // Remover la clase selected de todas las tarjetas
-        boxerCards.forEach((card) => card.classList.remove('selected'))
-
-        // Añadir la clase selected SOLO a la tarjeta clickeada (removemos la parte de la pareja)
-        singleBoxerCard.classList.add('selected')
-
-        // Crear partículas solo en la tarjeta clickeada
-        createParticles(singleBoxerCard as HTMLElement)
-
-        // Navegar a la página del boxeador después de un pequeño delay
-        const href = singleBoxerCard.getAttribute('href')
-        if (href) {
-          setTimeout(() => {
-            window.location.href = href
-          }, 600)
-        }
       })
     })
 

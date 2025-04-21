@@ -1,0 +1,27 @@
+---
+import BoxerClipCard from './BoxerClipCard.astro'
+
+interface Clip {
+  text: string
+  url: string
+}
+
+interface BoxerClipProps {
+  clips?: Clip[]
+  externalPlayer?: boolean
+}
+
+const { clips = [], externalPlayer } = Astro.props as BoxerClipProps
+---
+
+<input type="checkbox" id="clip-drawer-toggle" class="hidden" />
+
+<!-- Start ListClips -->
+<ul>
+  {
+    clips.map((clip, i) => (
+      <BoxerClipCard externalPlayer={externalPlayer} index={i} text={clip.text} url={clip.url} />
+    ))
+  }
+</ul>
+<!-- End ListClips -->
