@@ -32,7 +32,7 @@ import { combates } from '@/consts/pageTitles'
               href={`combates/${id}`}
               title={`Ir al combate ${number} de ${title}`}
             >
-              <div class="combat group animate-fade-in animate-delay-200 relative flex h-[40vh] w-full sm:h-[50vh] lg">
+              <div class= {`combat group ${number == 7 ? 'animate-fade-in-up' : number % 2 == 0 ? 'animate-fade-in-left' : 'animate-fade-in-right'}  animate-delay-200 relative flex h-[40vh] w-full sm:h-[50vh] lg`}>
                 {fighters.map((fighter, index) => (
                   <img
                     src={`/images/fighters/big/${fighter}.webp`}
