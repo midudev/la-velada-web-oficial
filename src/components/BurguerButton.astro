@@ -27,15 +27,17 @@ const props: Props = Astro.props
 <script>
   const mobileNav = 'mobile-nav'
 
-  function toggleMobileNav() {
+  const toggleMobileNav = () => {
     const current = localStorage.getItem(mobileNav)
 
     const newValue = current === 'on' ? 'off' : 'on'
     localStorage.setItem(mobileNav, newValue)
-    applyMobileNavState()
+    applyBurguerBtnStyle()
+
+    window.dispatchEvent(new Event('mobile-nav'))
   }
 
-  function applyMobileNavState() {
+  const applyBurguerBtnStyle = () => {
     const isActive = localStorage.getItem(mobileNav) === 'on'
 
     const top = document.getElementById('top-line')
@@ -66,7 +68,14 @@ const props: Props = Astro.props
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    applyMobileNavState()
+    applyBurguerBtnStyle()
+
+    const button = document.getElementById('mobile-nav-button')
+    button && button.addEventListener('click', toggleMobileNav)
+  })
+
+  document.addEventListener('astro:after-swap', () => {
+    applyBurguerBtnStyle()
 
     const button = document.getElementById('mobile-nav-button')
     button && button.addEventListener('click', toggleMobileNav)
