@@ -5,6 +5,7 @@ import BackgroundLayout from '@/layouts/BackgroundLayout.astro'
 import { FIGHTERS as _FIGHTERS } from '@/consts/fighters'
 import BoxerCardPorra from '@/components/BoxerCardPorra.astro'
 import { undefined } from 'astro:schema'
+import PorraBar from '@/components/PorraBar.astro'
 
 const FIGHTERS = _FIGHTERS.map(
   ({ id, name, versus: _versus }, index) => {
@@ -54,6 +55,7 @@ const FIGHTERS = _FIGHTERS.map(
                       class={`absolute -bottom-10 peer-checked:bg-white h-12 w-1/2 transition-all`}
                     />
                   </div>
+                  <PorraBar id={`porra-bar-${index}`} />
               </div>
             )})}
             <div class='lg:col-span-2 items-center content-center mt-10'>
@@ -80,25 +82,34 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs'
     if(!visitorId)
         return
 
-    var cookie = JSON.parse(document.cookie || "{}");
-    if(cookie.porra){
-      // console.log('porra', cookie.porra)
-      var fighters = (cookie.porra.fighters as {
-        group: string,
-        id: string,
-        winner: string
-      }[])
-      console.log("fighters", fighters)
-      fighters.map(f => {
-        document.getElementsByName(`group-${f.id}`).forEach(_input => {
-          const input = _input as HTMLInputElement
-          if(input && input.value === f.winner) {
-            input.checked = true
-          }
+    function getCooki() {
+      var cookie = JSON.parse(document.cookie || "{}");
+      if(cookie.porra){
+        // console.log('porra', cookie.porra)
+        var fighters = (cookie.porra.fighters as {
+          group: string,
+          id: string,
+          winner: string
+        }[])
+        console.log("fighters", fighters)
+        fighters.map(f => {
+          document.getElementsByName(`group-${f.id}`).forEach(_input => {
+            const input = _input as HTMLInputElement
+            if(input && input.value === f.winner) {
+              input.checked = true
+              let winnerLeft = f.winner === FIGHTERS[parseInt(f.id)].id
+              console.log("winnerLeft", winnerLeft)
+              let barraPorra = document.getElementById(`porra-bar-${f.id}`)
+              let value = Math.round(Math.random()*100) // valores aleatorios hasta obtener de base de datos
+              barraPorra?.setAttribute(winnerLeft ? "left" : "right", value.toString())
+              barraPorra?.setAttribute(!winnerLeft ? "left" : "right",(100-value).toString())
+            }
+          })
         })
-      })
+      }
     }
-    
+    getCooki()
+
     const form = document.getElementById('porra-form') as HTMLFormElement;
     if (!form) {
       console.error('Form not found');
@@ -125,6 +136,7 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs'
       const json = JSON.stringify({porra});
       // document.cookie = `porra=${json}; path=/; max-age=31536000; SameSite=None; Secure`;
       document.cookie = json
+      getCooki()
       const url = 'https://api.example.com/submit'; // Replace with your API endpoint
       fetch(url, {
         method: 'POST',
