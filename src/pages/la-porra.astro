@@ -36,11 +36,11 @@ const FIGHTERS = _FIGHTERS.map(
         id="combats-container"
         class="relative top-36 max-w-7xl mt-10 mb-72 flex flex-wrap justify-center gap-4 md:gap-8 w-full flex-col items-center pt-12"
       >
-        <form id="porra-form" class="grid w-full grid-cols-1 gap-12 rounded-lg sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
+        <form id="porra-form" class="grid w-full grid-cols-1 gap-12 rounded-lg sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {FIGHTERS.map(({versus, ...fighter }, index) => {
               const isLast = index === FIGHTERS.length - 1
               return (
-                <div class={isLast ? 'col-span-2':null}>
+                <div>
                   <div class="mx-auto flex lg:w-full items-center justify-center gap-4 relative">
                     <div class="absolute -bottom-10 h-7/8 w-full bg-gradient-to-b from-pink-900/30 from-60% to-transparent transition-colors duration-300 group-hover:from-pink-900/20" />
                     <BoxerCardPorra group={index} id={fighter.id} name={fighter.name} class="boxer-right" versus={versus.id} />
@@ -56,9 +56,93 @@ const FIGHTERS = _FIGHTERS.map(
                   </div>
               </div>
             )})}
+            <div class='lg:col-span-2 items-center content-center mt-10'>
+              <button type="submit" class="shadow-2xl opacity-75 bg-gradient-to-r from-pink-600 to-cyan-500 text-white border border-pink-950 px-8 py-4 rounded-lg
+              hover:shadow-xl hover:scale-105 hover:opacity-100
+              transition-all duration-500 ease-in-out
+              ">ENVIAR PORRA</button>
+            </div>
           </select>
         </form>
       </div>
     </div>
   </section>
 </Layout>
+
+<script>
+  import { FIGHTERS } from '@/consts/fighters'
+import FingerprintJS from '@fingerprintjs/fingerprintjs'
+  document.addEventListener("astro:page-load", async () => {
+    const fp = await FingerprintJS.load()
+    const result = await fp.get()
+    const visitorId: string = result.visitorId
+    
+    if(!visitorId)
+        return
+
+    var cookie = JSON.parse(document.cookie || "{}");
+    if(cookie.porra){
+      // console.log('porra', cookie.porra)
+      var fighters = (cookie.porra.fighters as {
+        group: string,
+        id: string,
+        winner: string
+      }[])
+      console.log("fighters", fighters)
+      fighters.map(f => {
+        document.getElementsByName(`group-${f.id}`).forEach(_input => {
+          const input = _input as HTMLInputElement
+          if(input && input.value === f.winner) {
+            input.checked = true
+          }
+        })
+      })
+    }
+    
+    const form = document.getElementById('porra-form') as HTMLFormElement;
+    if (!form) {
+      console.error('Form not found');
+      return;
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault()
+      send()
+    })
+    
+    function send() {
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      const fighters = Object.keys(data).map((key) => {
+        const [group, id] = key.split('-');
+        return { group, id, winner: data[key] };
+      });
+      const porra = {
+        visitorId,
+        fighters
+      }
+      // console.log("porra set", {porra})
+      const json = JSON.stringify({porra});
+      // document.cookie = `porra=${json}; path=/; max-age=31536000; SameSite=None; Secure`;
+      document.cookie = json
+      const url = 'https://api.example.com/submit'; // Replace with your API endpoint
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json,
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log('Form submitted successfully');
+        } else {
+          console.error('Error submitting form');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+  })
+</script>

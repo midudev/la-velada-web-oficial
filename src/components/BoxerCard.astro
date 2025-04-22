@@ -11,31 +11,31 @@ interface Props {
 ---
 
 <a
-  class={`boxer-card ${extraClass} inline-block transition-all group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20`}
+  class={`boxer-card ${extraClass} inline-block transition-all group relative rounded-lg duration-300 peer-checked:scale-110 hover:scale-110 peer-checked:shadow-lg hover:shadow-lg peer-checked:z-20 hover:z-20`}
   href={withLink ? `/luchador/${id}` : undefined}
   data-id={id}
   data-versus={versus}
 >
   <div class="relative overflow-hidden rounded-lg">
     <img
-      class="via-40 aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover transition-transform duration-500 group-hover:scale-110"
+      class="via-40 aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover transition-transform duration-500 group-hover:scale-110 peer-checked:scale-110"
       src={`/images/fighters/cards/${id}.webp`}
       alt={`Tarjeta del boxeador ${name}`}
     />
 
     <div
-      class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full"
+      class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full peer-checked:translate-x-full"
     >
     </div>
 
     <div
-      class="border-theme-tickle-me-pink/70 absolute inset-0 rounded-lg border-0 opacity-0 transition-all duration-300 group-hover:border-2 group-hover:opacity-100"
+      class="border-theme-tickle-me-pink/70 absolute inset-0 rounded-lg border-0 opacity-0 transition-all duration-300 group-hover:border-2 peer-checked:border-2 group-hover:opacity-100 peer-checked:opacity-100"
     >
     </div>
   </div>
 
   <div
-    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y peer-checked:translate-y-0 group-hover:opacity-100 peer-checked:opacity-100"
   >
     <h3
       class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
@@ -45,7 +45,7 @@ interface Props {
   </div>
 
   <div
-    class="bg-theme-tickle-me-pink absolute -bottom-1 left-1/2 h-1 w-0 -translate-x-1/2 transform rounded-t-md transition-all duration-300 group-hover:w-2/3"
+    class="bg-theme-tickle-me-pink absolute -bottom-1 left-1/2 h-1 w-0 -translate-x-1/2 transform rounded-t-md transition-all duration-300 group-hover:w-2 peer-checked:w-2/3"
   >
   </div>
 </a>
