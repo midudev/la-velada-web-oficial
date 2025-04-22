@@ -1,99 +1,64 @@
 ---
 import Date from '@/components/Date.astro'
-import LinkToAddCalendar from '@/components/LinkToAddCalendar.astro'
-import SectionTitle from '@/components/SectionTitle.astro'
 
 interface Props {
   timestamp: number
 }
 
 const { timestamp } = Astro.props
-const textResponsiveStyles = 'text-6xl font-bold md:text-7xl lg:text-8xl'
+const textResponsiveStyles = 'text-base font-bold md:text-xl lg:text-2xl'
 ---
 
-<section class="flex w-full flex-col place-items-center px-2 py-48" aria-label="cuenta atrás">
-  <SectionTitle title="Cuenta atrás para el evento..." />
-
+<section
+  class="flex flex-col items-center justify-center gap-2 py-2"
+  aria-label="cuenta atrás entradas"
+>
   <div
-    class="flex select-none flex-col items-center justify-center gap-2 text-[var(--color-white)] sm:flex-row"
-    id="countdown-big"
+    class="flex select-none flex-row items-center justify-center gap-1 text-[var(--color-white)]"
+    id="countdown-small"
     data-date={timestamp}
     role="timer"
   >
-    <div class="flex w-[240px] items-center justify-center gap-2 sm:w-auto">
-      <Date
-        dateType="DÍAS"
-        attribute={{ 'data-days': '' }}
-        className={textResponsiveStyles}
-        wrapperClassName="my-0"
-        max={129}
-        withBackground={true}
-      />
-
-      <Date
-        wrapperClassName="my-0"
-        dateType="HORAS"
-        attribute={{ 'data-hours': '' }}
-        className={textResponsiveStyles}
-        max={23}
-        withBackground={true}
-      />
-    </div>
-
-    <div class="flex w-[240px] items-center justify-center gap-2 sm:w-auto">
-      <Date
-        wrapperClassName="my-0"
-        dateType="MINUTOS"
-        attribute={{ 'data-minutes': '' }}
-        className={textResponsiveStyles}
-        max={59}
-        withBackground={true}
-      />
-
-      <Date
-        wrapperClassName="my-0"
-        dateType="SEGUNDOS"
-        attribute={{ 'data-seconds': '' }}
-        className={textResponsiveStyles}
-        max={59}
-        withBackground={true}
-      />
-    </div>
+    <Date
+      dateType="DÍAS"
+      attribute={{ 'data-days': '' }}
+      className={textResponsiveStyles}
+      wrapperClassName="my-0"
+      max={30}
+      withBackground={true}
+    />
+    <Date
+      dateType="HORAS"
+      attribute={{ 'data-hours': '' }}
+      className={textResponsiveStyles}
+      wrapperClassName="my-0"
+      max={23}
+      withBackground={true}
+    />
+    <Date
+      dateType="MINUTOS"
+      attribute={{ 'data-minutes': '' }}
+      className={textResponsiveStyles}
+      wrapperClassName="my-0"
+      max={59}
+      withBackground={true}
+    />
+    <Date
+      dateType="SEGUNDOS"
+      attribute={{ 'data-seconds': '' }}
+      className={textResponsiveStyles}
+      wrapperClassName="my-0"
+      max={59}
+      withBackground={true}
+    />
   </div>
-  <LinkToAddCalendar class="mt-6 text-center md:mt-8 lg:mt-10">
-    Añade el evento al calendario!
-  </LinkToAddCalendar>
 </section>
 
-<style is:global>
-  .top-flip,
-  .bottom-flip {
-    position: absolute;
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-  }
-  .top-flip {
-    animation: flip-top 250ms ease-in;
-  }
-
-  .bottom-flip {
-    animation: flip-bottom 250ms ease-out 250ms;
-    transform: rotateX(90deg);
-    bottom: 0;
-  }
-
-  @keyframes flip-top {
-    100% {
-      transform: rotateX(90deg);
-    }
-  }
-
-  @keyframes flip-bottom {
-    100% {
-      transform: rotateX(0deg);
-    }
+<style>
+  section[aria-label='cuenta atrás entradas'] .date-background {
+    background: rgba(236, 72, 153, 0.2);
+    border-radius: 8px;
+    padding: 0.1em 0.3em;
   }
 </style>
 
@@ -102,7 +67,7 @@ const textResponsiveStyles = 'text-6xl font-bold md:text-7xl lg:text-8xl'
   import { $ } from '@/lib/dom-selector'
 
   function initCountdown() {
-    const $countdown = $('#countdown-big')
+    const $countdown = $('#countdown-small')
     if (!$countdown) return
 
     const $days = {
@@ -168,30 +133,8 @@ const textResponsiveStyles = 'text-6xl font-bold md:text-7xl lg:text-8xl'
           animateDigit($seconds.secondDigit, parseInt(seconds[1]))
         }
       },
-
-      onComplete() {
-        $('.countdown-text')?.remove()
-
-        if (!$countdown) return
-
-        $countdown.innerHTML = `¡El evento de presentación ha empezado! <span class='[text-shadow:none]'>🎉</span>
-						<div class="flex w-full items-center justify-center w-full">
-								<a
-									href="https://www.twitch.tv/ibai"
-									target="_blank"
-									class="text-white text-stroke-dark mt-4 hover:scale-105 transition inline-flex cursor-pointer text-center text-base leading-tight font-normal md:text-xl"
-								>
-									<span class="text-center text-base leading-tight font-normal md:text-xl">
-										TWITCH.TV/<span class="font-bold">IBAI</span>
-									</span>
-								</a>
-							</div>
-					`
-        $countdown.className =
-          'text-[var(--color-white)] font-semibold animate-fade-in text-lg sm:text-xl md:text-2xl text-center p-4 text-stroke-dark'
-      },
+      onComplete: () => {},
     })
-
     return countdown
   }
 
