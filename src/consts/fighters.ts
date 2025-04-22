@@ -18,6 +18,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 63,
     country: 'es',
+    gallery: true,
     city: 'A Coruña, Galicia',
     versus: 'rivaldios',
     socials: [
@@ -112,7 +113,9 @@ export const FIGHTERS: Fighters[] = [
     age: 33,
     city: 'Catarroja, Valencia',
     weight: 102,
+    gallery: true,
     country: 'es',
+    gallery: true,
     versus: 'gaspi',
     socials: [
       {
@@ -209,7 +212,9 @@ export const FIGHTERS: Fighters[] = [
     height: 1.72,
     age: 24,
     weight: 62,
+    gallery: true,
     country: 'es',
+    gallery: true,
     city: 'Mallorca, Islas Baleares',
     versus: 'roro',
     socials: [
@@ -305,6 +310,7 @@ export const FIGHTERS: Fighters[] = [
     age: 23,
     weight: 47,
     country: 'es',
+    gallery: true,
     city: 'Barcelona, Cataluña',
     versus: 'abby',
     socials: [
@@ -370,7 +376,9 @@ export const FIGHTERS: Fighters[] = [
     height: 1.83,
     age: 22,
     weight: 112,
+    gallery: true,
     country: 'ar',
+    gallery: true,
     city: 'Buenos Aires',
     versus: 'perxitaa',
     socials: [
@@ -449,7 +457,9 @@ export const FIGHTERS: Fighters[] = [
     height: 1.7,
     age: 24,
     weight: 69,
+    gallery: true,
     country: 'mx',
+    gallery: true,
     city: 'Rosales, Culiacán',
     versus: 'peereira',
     socials: [
@@ -519,6 +529,7 @@ export const FIGHTERS: Fighters[] = [
     height: 1.87,
     age: 22,
     weight: 115,
+    gallery: true,
     country: 'es',
     gallery: true,
     city: 'San Sebastian, Guipúzcoa',
@@ -770,7 +781,9 @@ export const FIGHTERS: Fighters[] = [
     height: 1.79,
     age: 27,
     weight: 74,
+    gallery: true,
     country: 'es',
+    gallery: true,
     city: 'Alhama de Murcia, Murcia',
     versus: 'westcol',
     socials: [
@@ -857,6 +870,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 63,
     country: 'co',
+    gallery: true,
     city: 'Ciudad Bolívar, Antioquia',
     versus: 'grefg',
     socials: [
@@ -1029,6 +1043,7 @@ export const FIGHTERS: Fighters[] = [
     height: 1.76,
     age: 25,
     weight: 80,
+    gallery: true,
     country: 'ar',
     gallery: true,
     city: 'Buenos Aires',
@@ -1120,7 +1135,9 @@ export const FIGHTERS: Fighters[] = [
     height: 1.77,
     age: 26,
     weight: 85,
+    gallery: true,
     country: 'mx',
+    gallery: true,
     city: 'Monterrey, Nuevo León',
     versus: 'andoni',
     socials: [
