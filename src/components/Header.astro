@@ -38,10 +38,10 @@ const isActive = (path: string) => pathname === path
       <img src="/favicon.svg" alt="logo" class="h-auto w-7" />
     </a>
 
-    <div id="overlay-menu" class="bg-theme-raisin-black/50 fixed inset-0 hidden h-screen"></div>
+    <div id="overlay-menu" class="bg-theme-raisin-black/50 fixed inset-0 hidden h-screen md:hidden"></div>
     <nav
       id="navContent"
-      class="bg-theme-french-mauve/90 fixed top-0 right-0 mx-auto hidden h-screen max-w-6xl items-center justify-between space-y-2 px-6 pt-14 text-sm font-light backdrop-blur-2xl md:relative md:flex md:h-fit md:w-full md:space-y-0 md:bg-transparent md:py-4 md:backdrop-blur-none"
+      class="bg-theme-french-mauve/90 fixed top-0 right-0 mx-auto h-screen max-w-6xl items-center justify-between space-y-2 px-6 pt-14 text-sm font-light backdrop-blur-2xl md:relative md:flex md:h-fit md:w-full md:space-y-0 md:bg-transparent md:py-4 md:backdrop-blur-none translate-x-full invisible md:translate-x-0 md:visible"
     >
       <div
         class:list={[
@@ -161,6 +161,15 @@ const isActive = (path: string) => pathname === path
       border-bottom-color: black;
     }
   }
+  #navContent {
+    transition: translate .3s ease-in-out, visibility .3s .3s;
+  }
+
+  #navContent.showing {
+    visibility: visible;
+    translate: 0 0;
+    transition: translate .3s ease-in-out, visibility .3s;
+  }
 </style>
 
 <script>
@@ -171,7 +180,7 @@ const isActive = (path: string) => pathname === path
       overlayMenu: Element | null,
     ) {
       menuBtn?.classList.toggle('open')
-      navContent?.classList.toggle('hidden')
+      navContent?.classList.toggle('showing')
       overlayMenu?.classList.toggle('hidden')
     }
 
