@@ -108,7 +108,9 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 
   <!-- Video de Entrenamientos -->
   <section>
-    {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
+    {fighter.workout && (
+      <BoxerWorkout workout={Array.isArray(fighter.workout) ? fighter.workout : [fighter.workout]} />
+    )}
   </section>
   <!-- Fin de video de entrenamientos -->
 

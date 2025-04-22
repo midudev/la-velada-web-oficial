@@ -96,10 +96,28 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I'
         },
     ],
-    workout: {
-      videoID: 'msvzME2RPu0',
-      thumbnail: '/images/fighters/workoutThumbnails/peereira-thumbnail.webp'
-    }
+    workout: [
+      {
+        videoID: 'msvzME2RPu0',
+        thumbnail: '/images/fighters/workoutThumbnails/peereira/peereira-thumbnail.webp',
+      },
+      {
+        videoID: 'IqHPhJOk9zc',
+        thumbnail: '/images/fighters/workoutThumbnails/peereira/peereira-thumbnail_1.webp',
+      },
+      {
+        videoID: '-kOxuwvE_0E',
+        thumbnail: '/images/fighters/workoutThumbnails/peereira/peereira-thumbnail_2.webp',
+      },
+      {
+        videoID: 'fsaj-zm62xY',
+        thumbnail: '/images/fighters/workoutThumbnails/peereira/peereira-thumbnail_3.webp',
+      },
+      {
+        videoID: 'xFPfF74RbFQ',
+        thumbnail: '/images/fighters/workoutThumbnails/peereira/peereira-thumbnail_4.webp',
+      },
+    ]
   },
   {
     // https://laletrade.com/biografias/twitch/18087-perxitaa
@@ -194,10 +212,28 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=5vHVGPD2lSLWPKGE&amp;clip=UgkxZ65f4VwWoQJLjI0oTYCpoiIxt5klwwY-&amp;clipt=EPzFCRiE7Qk'
       },
     ],
-    workout: {
+    workout: [
+      {
       videoID: 'dj-4LLi5cck',
-      thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/perxitaa/perxitaa-thumbnail.webp'
+    },
+    {
+      videoID: 'jDaTjyMfXP4',
+      thumbnail: '/images/fighters/workoutThumbnails/perxitaa/perxitaa-thumbnail_1.webp'
+    },
+    {
+      videoID: 'YCXL8BJJCE8',
+      thumbnail: '/images/fighters/workoutThumbnails/perxitaa/perxitaa-thumbnail_2.webp'
+    },
+    {
+      videoID: '3AJgZiE8zzo',
+      thumbnail: '/images/fighters/workoutThumbnails/perxitaa/perxitaa-thumbnail_3.webp'
+    },
+    {
+      videoID: '6_ACKj7fpVI',
+      thumbnail: '/images/fighters/workoutThumbnails/perxitaa/perxitaa-thumbnail_4.webp'
+    },
+    ]
   },
   {
     // https://www.biografia.de/abby/
@@ -289,10 +325,20 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=KH5GLwytjfIaqnuC&amp;clip=UgkxtRthPKbk_vfmyz7EmhYbhskD5mDJcXCd&amp;clipt=EO2_BRjNpgY'
       },
     ],
-    workout: {
+    workout:[ 
+    {
       videoID: 'HBTuF3KONZc',
-      thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/abby/abby-thumbnail.webp'
+    },
+    {
+      videoID: 'r6SARnbuhCw',
+      thumbnail: '/images/fighters/workoutThumbnails/abby/abby-thumbnail_1.webp'
+    },
+    {
+      videoID: 'kxiZM36bPF0',
+      thumbnail: '/images/fighters/workoutThumbnails/abby/abby-thumbnail_2.webp'
+    },
+  ]
   },
   {
     // https://www.biografia.de/roro/
@@ -506,7 +552,7 @@ export const FIGHTERS: Fighters[] = [
     ],
     workout: {
       videoID: 'bNwgdNDz4d4',
-      thumbnail: '/images/fighters/workoutThumbnails/rivaldios-thumbnail.webp',
+      thumbnail: '/images/fighters/workoutThumbnails/rivaldios/rivaldios-thumbnail.webp',
     }
   },
   {
@@ -575,10 +621,21 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=km59ayaLbPKm19qb&amp;clip=UgkxDfmm-4rtX6GmFfRRue8dNTsqDS2D4YbF&amp;clipt=EMG4Jhin6iY'
       },
     ],
-    workout: {
+    workout: [
+      {
       videoID: 'QDy_MM6y-7U',
-      thumbnail: '/images/fighters/workoutThumbnails/andoni-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/andoni/andoni-thumbnail.webp'
+    },
+    {
+    videoID: 'XqQofNaaSv8',
+    thumbnail: '/images/fighters/workoutThumbnails/andoni/andoni-thumbnail_1.webp'
+  },
+  {
+  videoID: 'H4DtbxlxPGU',
+  thumbnail: '/images/fighters/workoutThumbnails/andoni/andoni-thumbnail_2.webp'
+},
+  
+  ]
   },
   {
     // https://www.biografia.de/viruzz/
@@ -667,7 +724,7 @@ export const FIGHTERS: Fighters[] = [
     ],
     workout: {
       videoID: 'Uy48X5YxujI',
-      thumbnail: '/images/fighters/workoutThumbnails/viruzz-thumbnail.webp'
+      thumbnail: '/images/fighters/workoutThumbnails/viruzz/viruzz-thumbnail.webp'
     }
   },
   {
@@ -757,7 +814,7 @@ export const FIGHTERS: Fighters[] = [
     ],
     workout: {
       videoID: 'TmC9TuD8NoQ',
-      thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp'
+      thumbnail: '/images/fighters/workoutThumbnails/alana/alana-thumbnail.webp'
     }
   },
   {
@@ -841,10 +898,18 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/cfpvro5tD7g?si=rjaM5jJdImEtefJ6&amp;clip=UgkxuoAS_mblPPU-wtj4bH3GiLXmVRBAow2b&amp;clipt=EImsAhjj2gI'
       },
     ],
-    workout: {
+    workout: [{
       videoID: '_Rh-VjB3ATk',
-      thumbnail: '/images/fighters/workoutThumbnails/grefg-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/grefg/grefg-thumbnail.webp'
+    },
+    {
+      videoID: 'tG433yAb2Vw',
+      thumbnail: '/images/fighters/workoutThumbnails/grefg/grefg-thumbnail_1.webp'
+    },
+    {
+      videoID: 'AitWw4iHaEw',
+      thumbnail: '/images/fighters/workoutThumbnails/grefg/grefg-thumbnail_2.webp'
+    },]
   },
   {
     // https://www.biografia.de/westcol/
@@ -923,7 +988,7 @@ export const FIGHTERS: Fighters[] = [
     ],
     workout: {
       videoID: '_XWxZUwzhXk',
-      thumbnail: '/images/fighters/workoutThumbnails/westcol-thumbnail.webp'
+      thumbnail: '/images/fighters/workoutThumbnails/westcol/westcol-thumbnail.webp'
     },
     clips: [
       {
@@ -1016,7 +1081,7 @@ export const FIGHTERS: Fighters[] = [
     ],
     workout: {
       videoID: 'rugHsv9JCSU',
-      thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp'
+      thumbnail: '/images/fighters/workoutThumbnails/arigeli/arigeli-thumbnail.webp'
     }
   },
   {
@@ -1105,10 +1170,28 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=x1D7VSLOkHRznEbb&amp;clip=UgkxKSYyYGXEofS0Oaeh2MtubiTWnVTYUlks&amp;clipt=EIii2QQYoJfaBA'
       }
     ],
-    workout: {
+    workout:[ 
+    {
       videoID: 'FBjMQogPr-U',
-      thumbnail: '/images/fighters/workoutThumbnails/tomas-thumbnail.webp',
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/tomas/tomas-thumbnail.webp',
+    },
+    {
+      videoID: 'ahEH_K3U_gU',
+      thumbnail: '/images/fighters/workoutThumbnails/tomas/tomas-thumbnail_1.webp',
+    },
+    {
+      videoID: 'zLUhW-wEbgA',
+      thumbnail: '/images/fighters/workoutThumbnails/tomas/tomas-thumbnail_2.webp',
+    },
+    {
+      videoID: 'teefUlixHus',
+      thumbnail: '/images/fighters/workoutThumbnails/tomas/tomas-thumbnail_3.webp',
+    },
+    {
+      videoID: '0_Oy73FXChg',
+      thumbnail: '/images/fighters/workoutThumbnails/tomas/tomas-thumbnail_4.webp',
+    },
+  ]
   },
   {
     // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
@@ -1187,7 +1270,7 @@ export const FIGHTERS: Fighters[] = [
     ],
     workout: {
       videoID: 'R3nXNgSLnYA',
-      thumbnail: '/images/fighters/workoutThumbnails/carlos-thumbnail.webp',
+      thumbnail: '/images/fighters/workoutThumbnails/carlos/carlos-thumbnail.webp',
     },
     clips: [
       {

@@ -55,8 +55,11 @@ export interface Fighters {
   versus: fighterId
   socials: Social[]
   clips: Clips[]
-  workout?: {
-    videoID: string
-    thumbnail: string
-  }
+  workout?: { 
+    videoID: string; 
+    thumbnail: string; 
+  } | { 
+    videoID: string; 
+    thumbnail: string; 
+  }[];
 }
