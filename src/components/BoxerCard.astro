@@ -10,7 +10,7 @@ interface Props {
 ---
 
 <a
-  class={`boxer-card ${extraClass} inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20 focus-visible:scale-110 focus-visible:shadow-lg focus-visible:z-20 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-theme-tickle-me-pink`}
+  class={`boxer-card ${extraClass} min-w-26 inline-block transition-all w-10 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-26 group relative rounded-lg duration-300 hover:scale-110 hover:shadow-lg hover:z-20 focus-visible:scale-110 focus-visible:shadow-lg focus-visible:z-20 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-theme-tickle-me-pink data-[hover]:scale-110 data-[hover]:shadow-lg data-[hover]:z-20`}
   aria-label={`Ver perfil del boxeador ${name}`}
   href={`/luchador/${id}`}
   data-id={id}
@@ -18,24 +18,24 @@ interface Props {
 >
   <div class="relative overflow-hidden rounded-lg">
     <img
-      class="via-40 aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 to-transparent object-cover transition-transform duration-500 group-hover:scale-110"
+      class="aspect-[900/1200] h-full w-full bg-gradient-to-t from-gray-50/40 via-gray-50/20 via-40 to-transparent object-cover transition-transform duration-500 group-hover:scale-110 group-data-[hover]:scale-110"
       src={`/images/fighters/cards/${id}.webp`}
       alt={`Tarjeta del boxeador ${name}`}
     />
 
     <div
-      class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full"
+      class="absolute inset-0 -translate-x-full bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full group-data-[hover]:translate-x-full"
     >
     </div>
 
     <div
-      class="border-theme-tickle-me-pink/70 absolute inset-0 rounded-lg border-0 opacity-0 transition-all duration-300 group-hover:border-2 group-hover:opacity-100"
+      class="border-theme-tickle-me-pink/70 absolute inset-0 rounded-lg border-0 opacity-0 transition-all duration-300 group-hover:border-2 group-hover:opacity-100 group-data-[hover]:border-2 group-data-[hover]:opacity-100"
     >
     </div>
   </div>
 
   <div
-    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+    class="absolute inset-0 flex translate-y-2 flex-col items-center justify-end rounded-lg bg-gradient-to-t from-pink-950/90 via-pink-950/40 to-transparent p-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-data-[hover]:translate-y-0 group-data-[hover]:opacity-100"
   >
     <h3
       class="text-theme-tickle-me-pink text-xs font-semibold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
@@ -45,7 +45,7 @@ interface Props {
   </div>
 
   <div
-    class="bg-theme-tickle-me-pink absolute -bottom-1 left-1/2 h-1 w-0 -translate-x-1/2 transform rounded-t-md transition-all duration-300 group-hover:w-2/3"
+    class="bg-theme-tickle-me-pink absolute -bottom-1 left-1/2 h-1 w-0 -translate-x-1/2 transform rounded-t-md transition-all duration-300 group-hover:w-2/3 group-data-[hover]:w-2/3"
   >
   </div>
 </a>
@@ -115,11 +115,48 @@ interface Props {
 
 <script>
   document.addEventListener('astro:page-load', () => {
-    const boxerCards = document.querySelectorAll('.boxer-card')
+    const boxerCards: NodeListOf<HTMLElement> = document.querySelectorAll('.boxer-card')
     let timeoutId: ReturnType<typeof setTimeout> | null = null
     let versusCard: HTMLAnchorElement | null = null
     let versusCardDiv: HTMLDivElement | null = null
 
+    document.addEventListener('carrusel-scrolling', (event) => {
+      const centerPosition = window.innerWidth / 2
+      let closestIndex = -1;
+      let minDistance = Infinity;
+
+      boxerCards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        if(!rect.left) return;
+
+        const distance = Math.abs(rect.left + card.offsetWidth / 2 - centerPosition);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestIndex = index;
+        }
+      });
+      
+      if(closestIndex<0) return;
+
+      const id = boxerCards[closestIndex].getAttribute('data-id')
+      if (id) {
+        // Dispatch a custom event to notify a boxer card id is hovered
+        const event = new CustomEvent('boxer-card-hovered', {
+          detail: { id },
+        })
+        document.dispatchEvent(event)
+      }
+      // Aplicar la clase 'grayscale-100' a todas las tarjetas
+      boxerCards.forEach((card) => {
+        card.classList.add('grayscale-100', 'opacity-40')
+        card.removeAttribute('data-hover')
+      })
+
+      // Quitar la clase solo de la tarjeta sobre la que se está haciendo hover
+      boxerCards[closestIndex].classList.remove('grayscale-100', 'opacity-40')
+      boxerCards[closestIndex].setAttribute('data-hover','true')
+      createParticles(boxerCards[closestIndex])
+    })
     boxerCards.forEach((singleBoxerCard, index) => {
       singleBoxerCard.addEventListener('mouseenter', () => {
         if (timeoutId) {
