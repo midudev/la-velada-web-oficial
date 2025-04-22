@@ -2,7 +2,8 @@
 import LiteYouTube from './LiteYouTube.astro'
 const { videoId, clipId, text } = Astro.props
 ---
-<li class="p-2 bg-pink-200/80 rounded-lg shadow-md">
+
+<li class="rounded-lg bg-pink-200/80 p-2 shadow-md">
   <div class="overflow-hidden rounded-lg">
     <LiteYouTube
       videoId={`${clipId}`}
@@ -10,7 +11,7 @@ const { videoId, clipId, text } = Astro.props
       title={text}
     />
   </div>
-  <div class="pt-2 px-2 text-dark-magenta text-sm lowercase text-left break-words text-wrap">
+  <div class="text-dark-magenta text-wrap break-words px-2 pt-2 text-left text-sm lowercase">
     <p>{text}</p>
   </div>
 </li>
