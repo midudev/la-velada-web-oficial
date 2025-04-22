@@ -436,7 +436,7 @@ export const FIGHTERS: Fighters[] = [
       },
       {
         text: 'Te vi haciendo videitos. ¿Vas a pelear con el joystick o con el teclado y el mouse?',
-        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=up7KtwZu2l3qEfmY&amp;clip=Ugkxf1_rx09dGrsr69Wdu2-Bi1wq8BvACp2f&amp;clipt=EPLYDBjYjA0'
+        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=up7KtwZu2l3qEfmY&amp;clip=Ugkxf1_rx09dGrsr69Wdu2-Bi1wq8BvACp2f&amp;clipt=EPYLBjYjA0'
       },
       {
         text: 'Me dijiste que era contra el Rubius. ¿Quién es ese?',
@@ -661,7 +661,16 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Una de mis comidas favoritas la empanada argentina.',
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=1tlrUUKM-18eZlen&amp;clip=UgkxW9ZMSp3ZrKKJGaU3qR9kK2njuf0fgO-w&amp;clipt=EPPv0wQY-5bUBA'
+      },
+      {
+        text: 'Estar de rival de visitante en otro país.',
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=IPvCjZ_-7K3fBW63&amp;clip=UgkxEmHfqcAo_spkOhqxLq0KHf7ZhmOMhUuB&amp;clipt=EJTM3QQY08beBA'
+      }
+    ],
     workout: {
       videoID: 'Uy48X5YxujI',
       thumbnail: '/images/fighters/workoutThumbnails/viruzz-thumbnail.webp'
@@ -1094,7 +1103,16 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Yo soy la cura del Viruzz.',
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=tmS6F4zyAwJ8hjfw&amp;clip=UgkxwZjrAtle4_JWz8SOQyqTYSle3QNZSPnD&amp;clipt=EKOm0wQYz_PTBA'
+      },
+      {
+        text: 'Es un desafío muy grande la verdad nadie cree en mi ',
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=x1D7VSLOkHRznEbb&amp;clip=UgkxKSYyYGXEofS0Oaeh2MtubiTWnVTYUlks&amp;clipt=EIii2QQYoJfaBA'
+      }
+    ],
     workout: {
       videoID: 'FBjMQogPr-U',
       thumbnail: '/images/fighters/workoutThumbnails/tomas-thumbnail.webp',
