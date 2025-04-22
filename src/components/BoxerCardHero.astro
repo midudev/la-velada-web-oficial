@@ -49,24 +49,21 @@ interface Props {
         const versus = singleBoxerCard.getAttribute('data-versus')
         if (versus) {
           versusCard = document.querySelector(`[data-id=${versus}]`) as HTMLAnchorElement
-          
+
           versusCardDiv = versusCard.children[1] as HTMLDivElement
-        
+
           versusCardDiv.classList.remove('translate-y-2')
-          versusCardDiv.classList.add('opacity-100',"translate-y-0")
+          versusCardDiv.classList.add('opacity-100', 'translate-y-0')
 
           versusCard.classList.remove('grayscale-100', 'opacity-40')
-          versusCard.classList.add("shadow-lg")
+          versusCard.classList.add('shadow-lg')
 
-          versusCard.children[0].children[2].classList.add('border-2',"opacity-100")
+          versusCard.children[0].children[2].classList.add('border-2', 'opacity-100')
           versusCard.children[0].children[1].classList.add('translate-x-full')
           versusCard.children[0].children[0].classList.add('scale-110')
 
           versusCard.children[2].classList.add('w-2/3')
           // select the second div inside the versusCard
-    
-        
-       
         }
       })
 
@@ -80,12 +77,11 @@ interface Props {
         boxerCards.forEach((card) => card.classList.remove('grayscale-100', 'opacity-40'))
         // Quitar la clase de la tarjeta versus si existe
         if (versusCard) {
-          versusCard.classList.remove("shadow-lg")
-          versusCardDiv?.classList.remove('opacity-100',"translate-y-0")
+          versusCard.classList.remove('shadow-lg')
+          versusCardDiv?.classList.remove('opacity-100', 'translate-y-0')
           versusCardDiv?.classList.add('translate-y-2')
 
-            
-          versusCard.children[0].children[2].classList.remove('border-2',"opacity-100")
+          versusCard.children[0].children[2].classList.remove('border-2', 'opacity-100')
           versusCard.children[0].children[1].classList.remove('translate-x-full')
           versusCard.children[0].children[0].classList.remove('scale-110')
           versusCard.children[2].classList.remove('w-2/3')
@@ -93,7 +89,6 @@ interface Props {
           versusCardDiv = null
           versusCard = null
         }
-
       })
 
       singleBoxerCard.addEventListener('focus', () => {
