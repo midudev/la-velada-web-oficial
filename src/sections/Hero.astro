@@ -28,7 +28,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
   <div class="relative flex w-full flex-col items-center p-8 text-center">
     <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
       <h3
-        class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 leading-[100%] font-medium"
+        class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 font-medium leading-[100%]"
       >
         26 DE <br />JULIO
       </h3>
@@ -44,14 +44,12 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       </figure>
 
       <div class="relative z-10">
-        <h3
-          class="text-theme-seashell animate-fade-in animate-delay-500 z-0 leading-relaxed font-medium tracking-wider"
-        >
+        <h3 class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 font-medium">
           <a
             href="https://maps.app.goo.gl/RVUArf48FwuvqJjD6"
             rel="noopener noreferrer"
             target="_blank"
-            class="animate-fade-in animate-dalay-700 z-50 inline-block leading-relaxed font-medium tracking-wider transition hover:scale-115"
+            class="animate-fade-in animate-dalay-700 hover:scale-115 z-50 inline-block font-medium leading-snug tracking-wider transition"
           >
             Estadio<br />La Cartuja,<br />Sevilla
           </a>
@@ -61,7 +59,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
           target="_blank"
-          class="animate-fade-in animate-delay-700 z-10 mt-3 inline-block leading-relaxed font-medium tracking-wider transition hover:scale-125"
+          class="animate-fade-in animate-delay-700 z-10 mt-3 inline-block leading-snug font-medium tracking-wider transition hover:scale-125"
         >
           twitch.tv<br />Ibai
         </a>
@@ -72,7 +70,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       id="fighter-container"
       class="pointer-events-none absolute inset-0 flex flex-col items-center"
     >
-      <div class="relative top-96 z-1 mx-auto flex h-[4.5rem] w-full items-center justify-center">
+      <div class="z-1 relative top-96 mx-auto flex h-[4.5rem] w-full items-center justify-center">
         {
           FIGHTERS.map(({ id, name }) => (
             <div class="relative h-20 overflow-hidden">
@@ -87,7 +85,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
               <div
                 id={`mask-fade-text-${id}`}
                 class="absolute inset-0 -translate-x-full rotate-45 bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-[2s] ease-in-out"
-              ></div>
+              />
             </div>
           ))
         }
@@ -292,22 +290,22 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     $fighterSelector.style.opacity = '0'
     $fighterSelector.style.zIndex = '40'
     $fighterSelector.style.pointerEvents = 'none'
-    $fighterSelector.style.animation = 'fighter-select 0.5s infinite alternate';
+    $fighterSelector.style.animation = 'fighter-select 0.5s infinite alternate'
 
-    const beforeElement = document.createElement('div');
-    beforeElement.style.position = 'absolute';
-    beforeElement.style.inset = '-4px';
-    beforeElement.style.background = 'transparent';
-    beforeElement.style.borderRadius = '8px';
-    beforeElement.style.opacity = '1';
-    beforeElement.style.zIndex = '30';
-    beforeElement.style.animation = 'fighter-select 0.5s infinite alternate';
+    const beforeElement = document.createElement('div')
+    beforeElement.style.position = 'absolute'
+    beforeElement.style.inset = '-4px'
+    beforeElement.style.background = 'transparent'
+    beforeElement.style.borderRadius = '8px'
+    beforeElement.style.opacity = '1'
+    beforeElement.style.zIndex = '30'
+    beforeElement.style.animation = 'fighter-select 0.5s infinite alternate'
 
-    const afterElement = document.createElement('div');
-    afterElement.style.position = 'absolute';
-    afterElement.style.inset = '-4px';
-    afterElement.style.zIndex = '30';
-    afterElement.style.opacity = '1';
+    const afterElement = document.createElement('div')
+    afterElement.style.position = 'absolute'
+    afterElement.style.inset = '-4px'
+    afterElement.style.zIndex = '30'
+    afterElement.style.opacity = '1'
     afterElement.style.background = `
       linear-gradient(to right, #fff 4px, transparent 4px) top left,
       linear-gradient(to bottom, #fff 4px, transparent 4px) top left,
@@ -316,16 +314,18 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       linear-gradient(to right, #fff 4px, transparent 4px) bottom left,
       linear-gradient(to top, #fff 4px, transparent 4px) bottom left,
       linear-gradient(to left, #fff 4px, transparent 4px) bottom right,
-      linear-gradient(to top, #fff 4px, transparent 4px) bottom right`;
-    afterElement.style.backgroundRepeat = 'no-repeat';
-    afterElement.style.backgroundSize = '25px 25px';
-    afterElement.style.borderRadius = '8px';
-    afterElement.style.animation = 'fighter-select 0.5s infinite alternate';
+      linear-gradient(to top, #fff 4px, transparent 4px) bottom right`
+    afterElement.style.backgroundRepeat = 'no-repeat'
+    afterElement.style.backgroundSize = '25px 25px'
+    afterElement.style.borderRadius = '8px'
+    afterElement.style.animation = 'fighter-select 0.5s infinite alternate'
 
-    $fighterSelector.appendChild(beforeElement);
-    $fighterSelector.appendChild(afterElement);
+    $fighterSelector.appendChild(beforeElement)
+    $fighterSelector.appendChild(afterElement)
 
-    const $fightersContainer = document.getElementById('fighters-selection-container') as HTMLElement
+    const $fightersContainer = document.getElementById(
+      'fighters-selection-container',
+    ) as HTMLElement
     $fightersContainer.appendChild($fighterSelector)
 
     const boxerCards = document.querySelectorAll('.boxer-card')
@@ -333,14 +333,15 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     boxerCards.forEach((card) => {
       card.addEventListener('mouseenter', () => {
         const { width, height, left, top } = card.getBoundingClientRect()
-        const { left: leftFighterContainer, top: topFighterContainer } = $fightersContainer.getBoundingClientRect()
-        
+        const { left: leftFighterContainer, top: topFighterContainer } =
+          $fightersContainer.getBoundingClientRect()
+
         $fighterSelector.style.setProperty('--selector--left', `${left - leftFighterContainer}px`)
         $fighterSelector.style.setProperty('--selector--top', `${top - topFighterContainer}px`)
         $fighterSelector.style.setProperty('--selector--width', `${width}px`)
         $fighterSelector.style.setProperty('--selector--height', `${height}px`)
-        $fighterSelector.style.transform = card.classList.contains('boxer-left') 
-          ? 'skew(2deg) scale(1.05)' 
+        $fighterSelector.style.transform = card.classList.contains('boxer-left')
+          ? 'skew(2deg) scale(1.05)'
           : 'skew(-2deg) scale(1.05)'
 
         $fighterSelector.style.opacity = '1'
