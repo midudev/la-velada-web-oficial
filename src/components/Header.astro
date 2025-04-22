@@ -51,17 +51,26 @@ const isActive = (path: string) => pathname === path
         ]}
       >
         <a
-          class="group relative inline-block w-fit cursor-not-allowed py-1 leading-relaxed tracking-wider opacity-80"
-          tabindex="-1"
-          aria-disabled="true"
+          href="/la-porra"
+          class="group relative inline-block w-fit py-1 leading-relaxed tracking-wider"
         >
-          <span class="text-theme-seashell relative inline-block"
-            >HAZ TU PORRA
-            <span
-              class="absolute inset-0 top-3.5 mt-1 text-left text-[10px] leading-normal tracking-wide text-yellow-500 md:text-center"
-              >PRÓXIMAMENTE</span
+          <span class="text-theme-seashell py-1">HAZ TU PORRA</span>
+          <div class="relative mt-1 h-[2px] w-full overflow-hidden">
+            <div
+              class:list={[
+                'absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out',
+                isActive('/combates') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+              ]}
             >
-          </span>
+            </div>
+            <div
+              class:list={[
+                'absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out',
+                isActive('/combates') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
+              ]}
+            >
+            </div>
+          </div>
         </a>
         <a
           href="/combates"
