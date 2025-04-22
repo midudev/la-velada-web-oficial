@@ -18,7 +18,8 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 63,
     country: 'es',
-    city: 'A Coruña',
+    gallery: true,
+    city: 'A Coruña, Galicia',
     versus: 'rivaldios',
     socials: [
       {
@@ -96,6 +97,10 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I'
         },
     ],
+    workout: {
+      videoID: 'msvzME2RPu0',
+      thumbnail: '/images/fighters/workoutThumbnails/peereira-thumbnail.webp'
+    }
   },
   {
     // https://laletrade.com/biografias/twitch/18087-perxitaa
@@ -110,6 +115,7 @@ export const FIGHTERS: Fighters[] = [
     weight: 102,
     gallery: true,
     country: 'es',
+    gallery: true,
     versus: 'gaspi',
     socials: [
       {
@@ -197,6 +203,7 @@ export const FIGHTERS: Fighters[] = [
     }
   },
   {
+    // https://www.biografia.de/abby/
     id: 'abby',
     name: 'Abby',
     realName: 'Abril Gené Capriles',
@@ -207,7 +214,8 @@ export const FIGHTERS: Fighters[] = [
     weight: 62,
     gallery: true,
     country: 'es',
-    city: 'Barcelona',
+    gallery: true,
+    city: 'Mallorca, Islas Baleares',
     versus: 'roro',
     socials: [
       {
@@ -274,6 +282,14 @@ export const FIGHTERS: Fighters[] = [
     ],
     clips: [
       {
+        text: 'No sé cómo ha aceptado esta pelea, la verdad.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=vZ8QPx7N3N3b8pPG&amp;clip=UgkxneRcG-WbxSh6Vsz4bAXq_sNFOJlXNP6z&amp;clipt=EJDxHhiUwx8'
+      },
+      {
+        text: 'Cuando Roro me tenga delante en el ring... va a sentir miedo.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=PNqW7cYn-m5SIrXX&amp;clip=Ugkxgnawy6NKH7cVWFX5fhgf3ZvfaGVfzInm&amp;clipt=ELCcGxjp3Bs'
+      },
+      {
         text: 'Esto es algo que tenía que pasar... A ver, Roro, si estás preparada.',
         url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=KH5GLwytjfIaqnuC&amp;clip=UgkxtRthPKbk_vfmyz7EmhYbhskD5mDJcXCd&amp;clipt=EO2_BRjNpgY'
       },
@@ -294,7 +310,8 @@ export const FIGHTERS: Fighters[] = [
     age: 23,
     weight: 47,
     country: 'es',
-    city: 'Madrid',
+    gallery: true,
+    city: 'Barcelona, Cataluña',
     versus: 'abby',
     socials: [
       {
@@ -336,8 +353,16 @@ export const FIGHTERS: Fighters[] = [
     ],
     clips: [
       {
-        text: 'Confío en mí; estoy lista.',
-        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=3YC34708Wn8ThWVG&amp;clip=UgkxdN0LKsJBhRFzg7codYDoWTEG9MC6dh0U&amp;clipt=EIL7AhiKogM'
+        text: 'Nunca voy a hundir a una mujer para sentirme mejor conmigo misma.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=lBVhjXJ2Zn7cbrch&amp;clip=Ugkxu-CzMHs-3zLGaFFCGIh-tcPMjImucfAT&amp;clipt=EOnqLRjv0y4'
+      },
+      {
+        text: 'Si me enfadas, no te voy a sonreír.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=toSZw_B6pu-wvkej&amp;clip=Ugkx343aGQvxi3px_edJLMmiUwfmyRIZGyB5&amp;clipt=EIzLLBiXoC0'
+      },
+      {
+        text: 'Yo tengo la disciplina para prepararme lo mejor que yo pueda.',
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=_mA5-y8p57kbFYUS&amp;clip=UgkxFEJaIdinVMKPzvTr575aHeDFcG7x60TN&amp;clipt=EOSaOhi7gzs'
       }
     ],
   },
@@ -353,6 +378,7 @@ export const FIGHTERS: Fighters[] = [
     weight: 112,
     gallery: true,
     country: 'ar',
+    gallery: true,
     city: 'Buenos Aires',
     versus: 'perxitaa',
     socials: [
@@ -413,7 +439,7 @@ export const FIGHTERS: Fighters[] = [
       },
       {
         text: 'Te vi haciendo videitos. ¿Vas a pelear con el joystick o con el teclado y el mouse?',
-        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=up7KtwZu2l3qEfmY&amp;clip=Ugkxf1_rx09dGrsr69Wdu2-Bi1wq8BvACp2f&amp;clipt=EPLYDBjYjA0'
+        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=up7KtwZu2l3qEfmY&amp;clip=Ugkxf1_rx09dGrsr69Wdu2-Bi1wq8BvACp2f&amp;clipt=EPYLBjYjA0'
       },
       {
         text: 'Me dijiste que era contra el Rubius. ¿Quién es ese?',
@@ -433,7 +459,8 @@ export const FIGHTERS: Fighters[] = [
     weight: 69,
     gallery: true,
     country: 'mx',
-    city: 'Culiacán',
+    gallery: true,
+    city: 'Rosales, Culiacán',
     versus: 'peereira',
     socials: [
       {
@@ -487,8 +514,13 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=JZx9yIQa0lXP9BTh&amp;clip=Ugkxjn97-DOruGG1ClS3KgmuiNEMXRf5a4aj&amp;clipt=EJytRBjj4EQ'
       },
     ],
+    workout: {
+      videoID: 'bNwgdNDz4d4',
+      thumbnail: '/images/fighters/workoutThumbnails/rivaldios-thumbnail.webp',
+    }
   },
   {
+    // https://www.biografia.de/andoni/
     id: 'andoni',
     name: 'Andoni',
     realName: 'Andoni Talledo Gutiérrez',
@@ -499,7 +531,8 @@ export const FIGHTERS: Fighters[] = [
     weight: 115,
     gallery: true,
     country: 'es',
-    city: 'Bilbao',
+    gallery: true,
+    city: 'San Sebastian, Guipúzcoa',
     versus: 'carlos',
     socials: [
       {
@@ -569,7 +602,7 @@ export const FIGHTERS: Fighters[] = [
     age: 32,
     weight: 87,
     country: 'es',
-    city: 'Andorra La Vella',
+    city: 'Zaragoza, Aragón',
     versus: 'tomas',
     socials: [
       {
@@ -633,7 +666,20 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Una de mis comidas favoritas la empanada argentina.',
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=1tlrUUKM-18eZlen&amp;clip=UgkxW9ZMSp3ZrKKJGaU3qR9kK2njuf0fgO-w&amp;clipt=EPPv0wQY-5bUBA'
+      },
+      {
+        text: 'Estar de rival de visitante en otro país.',
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=IPvCjZ_-7K3fBW63&amp;clip=UgkxEmHfqcAo_spkOhqxLq0KHf7ZhmOMhUuB&amp;clipt=EJTM3QQY08beBA'
+      }
+    ],
+    workout: {
+      videoID: 'Uy48X5YxujI',
+      thumbnail: '/images/fighters/workoutThumbnails/viruzz-thumbnail.webp'
+    }
   },
   {
     // https://www.biografia.de/alana-flores/
@@ -650,7 +696,7 @@ export const FIGHTERS: Fighters[] = [
     targetGloves: '12oz',
     country: 'mx',
     gallery: true,
-    city: 'Nuevo León',
+    city: 'Monterrey, Nuevo León',
     versus: 'arigeli',
     socials: [
       {
@@ -737,7 +783,8 @@ export const FIGHTERS: Fighters[] = [
     weight: 74,
     gallery: true,
     country: 'es',
-    city: 'Alhama de Murcia',
+    gallery: true,
+    city: 'Alhama de Murcia, Murcia',
     versus: 'westcol',
     socials: [
       {
@@ -823,7 +870,8 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 63,
     country: 'co',
-    city: 'Medellín',
+    gallery: true,
+    city: 'Ciudad Bolívar, Antioquia',
     versus: 'grefg',
     socials: [
       {
@@ -887,6 +935,10 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
+    workout: {
+      videoID: '_XWxZUwzhXk',
+      thumbnail: '/images/fighters/workoutThumbnails/westcol-thumbnail.webp'
+    },
     clips: [
       {
         text: 'Vamos a ver si le dan las hue***.',
@@ -906,7 +958,7 @@ export const FIGHTERS: Fighters[] = [
     weight: 53,
     country: 'es',
     gallery: true,
-    city: 'Barcelona',
+    city: 'Barcelona, Cataluña',
     versus: 'alana',
     socials: [
       {
@@ -993,6 +1045,7 @@ export const FIGHTERS: Fighters[] = [
     weight: 80,
     gallery: true,
     country: 'ar',
+    gallery: true,
     city: 'Buenos Aires',
     versus: 'viruzz',
     socials: [
@@ -1057,7 +1110,20 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
-    clips: [],
+    clips: [
+      {
+        text: 'Yo soy la cura del Viruzz.',
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=tmS6F4zyAwJ8hjfw&amp;clip=UgkxwZjrAtle4_JWz8SOQyqTYSle3QNZSPnD&amp;clipt=EKOm0wQYz_PTBA'
+      },
+      {
+        text: 'Es un desafío muy grande la verdad nadie cree en mi ',
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=x1D7VSLOkHRznEbb&amp;clip=UgkxKSYyYGXEofS0Oaeh2MtubiTWnVTYUlks&amp;clipt=EIii2QQYoJfaBA'
+      }
+    ],
+    workout: {
+      videoID: 'FBjMQogPr-U',
+      thumbnail: '/images/fighters/workoutThumbnails/tomas-thumbnail.webp',
+    }
   },
   {
     // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
@@ -1071,7 +1137,8 @@ export const FIGHTERS: Fighters[] = [
     weight: 85,
     gallery: true,
     country: 'mx',
-    city: 'Monterrey',
+    gallery: true,
+    city: 'Monterrey, Nuevo León',
     versus: 'andoni',
     socials: [
       {
@@ -1135,6 +1202,10 @@ export const FIGHTERS: Fighters[] = [
         }
       }
     ],
+    workout: {
+      videoID: 'R3nXNgSLnYA',
+      thumbnail: '/images/fighters/workoutThumbnails/carlos-thumbnail.webp',
+    },
     clips: [
       {
         text: 'Estoy de acuerdo, es una máquina, y eso hace más emocionante para mí la pelea. Una pelea difícil, un reto para mí.',
