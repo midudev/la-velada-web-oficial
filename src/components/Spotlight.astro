@@ -29,7 +29,7 @@ const {
 ---
 
 <div
-  class={`appear pointer-events-none absolute inset-0 z-10 h-full w-full ${fixed ? 'fixed' : ''}`}
+  class={`appear hidden pointer-events-none absolute inset-0 z-10 h-full w-full ${fixed ? 'sm:fixed' : ''}`}
 >
   <div
     style={`--x-offset: ${xOffset}px; --duration: ${duration}s; --direction: reverse;`}
@@ -42,7 +42,7 @@ const {
       repeatType: 'reverse',
       ease: 'easeInOut',
     })}
-    class="move-x pointer-events-none absolute top-0 left-0 z-40 h-screen w-screen"
+    class="move-x pointer-events-none absolute left-0 top-0 z-40 h-screen w-screen"
   >
     <div
       style={{
@@ -80,7 +80,7 @@ const {
 
   <div
     style={`--x-offset: ${-xOffset}px; --duration: ${duration}s; --direction: reverse;`}
-    class="move-x pointer-events-none absolute top-0 right-0 z-40 h-screen w-screen"
+    class="move-x pointer-events-none absolute right-0 top-0 z-40 h-screen w-screen"
   >
     <div
       style={{
