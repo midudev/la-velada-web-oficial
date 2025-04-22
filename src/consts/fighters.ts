@@ -1,10 +1,10 @@
 import type { Fighters } from '@/types/fighters'
-import X from "@/assets/svg/x.svg";
-import Instagram from "@/assets/svg/instagram.svg";
-import Youtube from "@/assets/svg/youtube.svg";
-import TikTok from "@/assets/svg/tiktok.svg";
-import Twitch from "@/assets/svg/twitch.svg";
-import Kick from "@/assets/svg/kick.svg";
+import X from '@/assets/svg/x.svg'
+import Instagram from '@/assets/svg/instagram.svg'
+import Youtube from '@/assets/svg/youtube.svg'
+import TikTok from '@/assets/svg/tiktok.svg'
+import Twitch from '@/assets/svg/twitch.svg'
+import Kick from '@/assets/svg/kick.svg'
 
 export const FIGHTERS: Fighters[] = [
   {
@@ -18,6 +18,7 @@ export const FIGHTERS: Fighters[] = [
     age: 26,
     weight: 63,
     country: 'es',
+    gallery: true,
     city: 'A Coruña, Galicia',
     versus: 'rivaldios',
     mirrorImage: true,
@@ -56,7 +57,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -68,7 +69,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'twitch',
@@ -80,27 +81,27 @@ export const FIGHTERS: Fighters[] = [
           logo: Twitch,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     clips: [
       {
         text: 'En seis meses va a caer, lo voy a noquear 100% y le voy a arrancar la p*** cabeza.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=GIR26FtonnzIbZZL&amp;clip=UgkxLQNqwPqlJLU97lVJkD2lEWrJXswPfHOU&amp;clipt=ENGYChjaywo'
-        },
+        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=GIR26FtonnzIbZZL&amp;clip=UgkxLQNqwPqlJLU97lVJkD2lEWrJXswPfHOU&amp;clipt=ENGYChjaywo',
+      },
       {
         text: 'Vengo aquí para ser el mejor boxeador posible, estoy con el mejor equipo posible y lo único que te pido es que entrenes lo suficientemente bien para que toda esta gente vea el show que se merece.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=OQAXdqDuQ33flPQg&amp;clip=UgkxtAMxt3Q-BIOC7G6PqfRTs8qkUZgaXwWP&amp;clipt=ENS2KBjkiik'
-        },
+        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=OQAXdqDuQ33flPQg&amp;clip=UgkxtAMxt3Q-BIOC7G6PqfRTs8qkUZgaXwWP&amp;clipt=ENS2KBjkiik',
+      },
       {
         text: 'Entreno literalmente para noquearlo, no vengo a otra cosa.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I'
-        },
+        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I',
+      },
     ],
     workout: {
       videoID: 'msvzME2RPu0',
-      thumbnail: '/images/fighters/workoutThumbnails/peereira-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/peereira-thumbnail.webp',
+    },
   },
   {
     // https://laletrade.com/biografias/twitch/18087-perxitaa
@@ -114,6 +115,7 @@ export const FIGHTERS: Fighters[] = [
     city: 'Catarroja, Valencia',
     weight: 102,
     country: 'es',
+    gallery: true,
     versus: 'gaspi',
     mirrorImage: true,
     socials: [
@@ -151,7 +153,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -163,7 +165,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'twitch',
@@ -175,31 +177,31 @@ export const FIGHTERS: Fighters[] = [
           logo: Twitch,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     clips: [
       {
         text: 'Me es indiferente, me adaptaré a lo que toque, competiremos y ganaremos. Es que no veo otro escenario.',
-        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=ao2b-RL5rdAkoTXY&amp;clip=Ugkx5nWUXM5WtVO9Bf3Nf3hJ1BkQP_ZY6TO9&amp;clipt=ELTuGxinpBw'
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=ao2b-RL5rdAkoTXY&amp;clip=Ugkx5nWUXM5WtVO9Bf3Nf3hJ1BkQP_ZY6TO9&amp;clipt=ELTuGxinpBw',
       },
       {
         text: 'Creo que este es un reto, porque lo veo grande, lo veo que va a pegar fuerte. Voy a tener que pegar el doble de fuerte.',
-        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=Fjv_96aIwtSIFxsD&amp;clip=UgkxjZakldIAOdYJdcaksZax_wQZIrZ7nq9m&amp;clipt=EKzsGhijmhs'
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=Fjv_96aIwtSIFxsD&amp;clip=UgkxjZakldIAOdYJdcaksZax_wQZIrZ7nq9m&amp;clipt=EKzsGhijmhs',
       },
       {
         text: '¿Va a ser una pelea de boxeo o una pelea de sumo?',
-        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=k_vt7-vi3PoyKjnp&amp;clip=UgkxWCffIotsU0x8oWW2HPc8sqFlY5EKtZ2r&amp;clipt=EJiLDRigsg0'
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=k_vt7-vi3PoyKjnp&amp;clip=UgkxWCffIotsU0x8oWW2HPc8sqFlY5EKtZ2r&amp;clipt=EJiLDRigsg0',
       },
       {
         text: 'Llevas el mismo traje hace 4 dias.',
-        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=5vHVGPD2lSLWPKGE&amp;clip=UgkxZ65f4VwWoQJLjI0oTYCpoiIxt5klwwY-&amp;clipt=EPzFCRiE7Qk'
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=5vHVGPD2lSLWPKGE&amp;clip=UgkxZ65f4VwWoQJLjI0oTYCpoiIxt5klwwY-&amp;clipt=EPzFCRiE7Qk',
       },
     ],
     workout: {
       videoID: 'dj-4LLi5cck',
-      thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/abby/
@@ -212,6 +214,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 62,
     country: 'es',
+    gallery: true,
     city: 'Mallorca, Islas Baleares',
     versus: 'roro',
     mirrorImage: true,
@@ -225,8 +228,8 @@ export const FIGHTERS: Fighters[] = [
         image: {
           logo: X,
           width: 200,
-          height: 200
-        }
+          height: 200,
+        },
       },
       {
         id: 'instagram',
@@ -237,8 +240,8 @@ export const FIGHTERS: Fighters[] = [
         image: {
           logo: Instagram,
           width: 200,
-          height: 200
-        }
+          height: 200,
+        },
       },
       {
         id: 'tiktok',
@@ -249,8 +252,8 @@ export const FIGHTERS: Fighters[] = [
         image: {
           logo: TikTok,
           width: 200,
-          height: 200
-        }
+          height: 200,
+        },
       },
       {
         id: 'twitch',
@@ -261,8 +264,8 @@ export const FIGHTERS: Fighters[] = [
         image: {
           logo: Twitch,
           width: 200,
-          height: 200
-        }
+          height: 200,
+        },
       },
       {
         id: 'youtube',
@@ -273,29 +276,28 @@ export const FIGHTERS: Fighters[] = [
         image: {
           logo: Youtube,
           width: 200,
-          height: 200
-        }
-      }
-
+          height: 200,
+        },
+      },
     ],
     clips: [
       {
         text: 'No sé cómo ha aceptado esta pelea, la verdad.',
-        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=vZ8QPx7N3N3b8pPG&amp;clip=UgkxneRcG-WbxSh6Vsz4bAXq_sNFOJlXNP6z&amp;clipt=EJDxHhiUwx8'
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=vZ8QPx7N3N3b8pPG&amp;clip=UgkxneRcG-WbxSh6Vsz4bAXq_sNFOJlXNP6z&amp;clipt=EJDxHhiUwx8',
       },
       {
         text: 'Cuando Roro me tenga delante en el ring... va a sentir miedo.',
-        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=PNqW7cYn-m5SIrXX&amp;clip=Ugkxgnawy6NKH7cVWFX5fhgf3ZvfaGVfzInm&amp;clipt=ELCcGxjp3Bs'
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=PNqW7cYn-m5SIrXX&amp;clip=Ugkxgnawy6NKH7cVWFX5fhgf3ZvfaGVfzInm&amp;clipt=ELCcGxjp3Bs',
       },
       {
         text: 'Esto es algo que tenía que pasar... A ver, Roro, si estás preparada.',
-        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=KH5GLwytjfIaqnuC&amp;clip=UgkxtRthPKbk_vfmyz7EmhYbhskD5mDJcXCd&amp;clipt=EO2_BRjNpgY'
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=KH5GLwytjfIaqnuC&amp;clip=UgkxtRthPKbk_vfmyz7EmhYbhskD5mDJcXCd&amp;clipt=EO2_BRjNpgY',
       },
     ],
     workout: {
       videoID: 'HBTuF3KONZc',
-      thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/roro/
@@ -308,6 +310,7 @@ export const FIGHTERS: Fighters[] = [
     age: 23,
     weight: 47,
     country: 'es',
+    gallery: true,
     city: 'Barcelona, Cataluña',
     versus: 'abby',
     socials: [
@@ -321,7 +324,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Instagram,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -333,7 +336,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'youtube',
@@ -345,22 +348,22 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     clips: [
       {
         text: 'Nunca voy a hundir a una mujer para sentirme mejor conmigo misma.',
-        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=lBVhjXJ2Zn7cbrch&amp;clip=Ugkxu-CzMHs-3zLGaFFCGIh-tcPMjImucfAT&amp;clipt=EOnqLRjv0y4'
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=lBVhjXJ2Zn7cbrch&amp;clip=Ugkxu-CzMHs-3zLGaFFCGIh-tcPMjImucfAT&amp;clipt=EOnqLRjv0y4',
       },
       {
         text: 'Si me enfadas, no te voy a sonreír.',
-        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=toSZw_B6pu-wvkej&amp;clip=Ugkx343aGQvxi3px_edJLMmiUwfmyRIZGyB5&amp;clipt=EIzLLBiXoC0'
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=toSZw_B6pu-wvkej&amp;clip=Ugkx343aGQvxi3px_edJLMmiUwfmyRIZGyB5&amp;clipt=EIzLLBiXoC0',
       },
       {
         text: 'Yo tengo la disciplina para prepararme lo mejor que yo pueda.',
-        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=_mA5-y8p57kbFYUS&amp;clip=UgkxFEJaIdinVMKPzvTr575aHeDFcG7x60TN&amp;clipt=EOSaOhi7gzs'
-      }
+        url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=_mA5-y8p57kbFYUS&amp;clip=UgkxFEJaIdinVMKPzvTr575aHeDFcG7x60TN&amp;clipt=EOSaOhi7gzs',
+      },
     ],
   },
   {
@@ -374,6 +377,7 @@ export const FIGHTERS: Fighters[] = [
     age: 22,
     weight: 112,
     country: 'ar',
+    gallery: true,
     city: 'Buenos Aires',
     versus: 'perxitaa',
     socials: [
@@ -387,7 +391,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Instagram,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'x',
@@ -399,7 +403,7 @@ export const FIGHTERS: Fighters[] = [
           logo: X,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -411,7 +415,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'youtube',
@@ -423,23 +427,22 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
-      }
-
+        },
+      },
     ],
     clips: [
       {
         text: 'Perxitaa, mira que la vida real no es como el Minecraft… pasan cosas afuera.',
-        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=xe0_jPqJ7lBEMNDx&amp;clip=UgkxVZqXUgbXM15VuQBnVAg38-8W2PnL8oqT&amp;clipt=EJDeAxiYhQQ&autoplay=1'
+        url: 'https://www.youtube.com/embed/aOKOUIx8mPU?si=xe0_jPqJ7lBEMNDx&amp;clip=UgkxVZqXUgbXM15VuQBnVAg38-8W2PnL8oqT&amp;clipt=EJDeAxiYhQQ&autoplay=1',
       },
       {
         text: 'Te vi haciendo videitos. ¿Vas a pelear con el joystick o con el teclado y el mouse?',
-        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=up7KtwZu2l3qEfmY&amp;clip=Ugkxf1_rx09dGrsr69Wdu2-Bi1wq8BvACp2f&amp;clipt=EPYLBjYjA0'
+        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=up7KtwZu2l3qEfmY&amp;clip=Ugkxf1_rx09dGrsr69Wdu2-Bi1wq8BvACp2f&amp;clipt=EPYLBjYjA0',
       },
       {
         text: 'Me dijiste que era contra el Rubius. ¿Quién es ese?',
-        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=wsz9otQaciQnFKsV&amp;clip=UgkxGw6p-ksOymoiuVHBCw5Mx5UUmZqrAiY8&amp;clipt=EJycBxjRwwc'
-      }
+        url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=wsz9otQaciQnFKsV&amp;clip=UgkxGw6p-ksOymoiuVHBCw5Mx5UUmZqrAiY8&amp;clipt=EJycBxjRwwc',
+      },
     ],
   },
   {
@@ -453,6 +456,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 69,
     country: 'mx',
+    gallery: true,
     city: 'Rosales, Culiacán',
     versus: 'peereira',
     socials: [
@@ -466,7 +470,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Instagram,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -478,7 +482,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'youtube',
@@ -490,27 +494,27 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     clips: [
       {
         text: 'Pereira, ponte trucha, amigo. Te voy a enseñar que la cuna del boxeo está en México.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=2yNcYbYAnGXc4jRD&amp;clip=UgkxuVSmgfc49HRArsmT522Vf42fmDo_W1WA&amp;clipt=EKOABBj8rgQ'  
+        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=2yNcYbYAnGXc4jRD&amp;clip=UgkxuVSmgfc49HRArsmT522Vf42fmDo_W1WA&amp;clipt=EKOABBj8rgQ',
       },
       {
-        text:'Voy a llegar al punto en que este v**** me va a tener miedo después de la pelea.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=qXDaC9BtQVT2Lw3r&amp;clip=Ugkxyvlpe6cGZqC2A2tU6B_-kgYlAqHuWn90&amp;clipt=EJC-LxiY5S8'
+        text: 'Voy a llegar al punto en que este v**** me va a tener miedo después de la pelea.',
+        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=qXDaC9BtQVT2Lw3r&amp;clip=Ugkxyvlpe6cGZqC2A2tU6B_-kgYlAqHuWn90&amp;clipt=EJC-LxiY5S8',
       },
       {
         text: 'La sangre culichi está bien pesada, una vez que te metes con un culichi, papito, a ver si sales de ahí.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=JZx9yIQa0lXP9BTh&amp;clip=Ugkxjn97-DOruGG1ClS3KgmuiNEMXRf5a4aj&amp;clipt=EJytRBjj4EQ'
+        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=JZx9yIQa0lXP9BTh&amp;clip=Ugkxjn97-DOruGG1ClS3KgmuiNEMXRf5a4aj&amp;clipt=EJytRBjj4EQ',
       },
     ],
     workout: {
       videoID: 'bNwgdNDz4d4',
       thumbnail: '/images/fighters/workoutThumbnails/rivaldios-thumbnail.webp',
-    }
+    },
   },
   {
     // https://www.biografia.de/andoni/
@@ -538,7 +542,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Instagram,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -550,7 +554,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'youtube',
@@ -562,27 +566,27 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     clips: [
       {
         text: 'Yo voy a ir obviamente a ganar, y que eso no afecte nuestra relación.',
-        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=b9Sxnq2S0zG-74SV&amp;clip=Ugkx_ci1g5b732avNi7KVaeOw46sgni4lutX&amp;clipt=ELDMJBjYkiU'
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=b9Sxnq2S0zG-74SV&amp;clip=Ugkx_ci1g5b732avNi7KVaeOw46sgni4lutX&amp;clipt=ELDMJBjYkiU',
       },
       {
         text: 'Cualquier puño de ambos, si entra, es un puño de una persona pesada. Entonces es muy probable que, si entra de manera contundente… pues que acabe.',
-        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=mrqP0DjJ6dMTG3A9&amp;clip=UgkxOd-2XnnjkWi3KR1fp5cmGPP3s1yXdQqY&amp;clipt=ELjGGhiAlxs'
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=mrqP0DjJ6dMTG3A9&amp;clip=UgkxOd-2XnnjkWi3KR1fp5cmGPP3s1yXdQqY&amp;clipt=ELjGGhiAlxs',
       },
       {
         text: 'Carlos y yo habíamos dicho que por cada puño íbamos a lanzarnos un ‘te amo’.',
-        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=km59ayaLbPKm19qb&amp;clip=UgkxDfmm-4rtX6GmFfRRue8dNTsqDS2D4YbF&amp;clipt=EMG4Jhin6iY'
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=km59ayaLbPKm19qb&amp;clip=UgkxDfmm-4rtX6GmFfRRue8dNTsqDS2D4YbF&amp;clipt=EMG4Jhin6iY',
       },
     ],
     workout: {
       videoID: 'QDy_MM6y-7U',
-      thumbnail: '/images/fighters/workoutThumbnails/andoni-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/andoni-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/viruzz/
@@ -598,6 +602,7 @@ export const FIGHTERS: Fighters[] = [
     city: 'Zaragoza, Aragón',
     versus: 'tomas',
     mirrorImage: true,
+    gallery: true,
     socials: [
       {
         id: 'instagram',
@@ -609,7 +614,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Instagram,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -621,7 +626,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'twitch',
@@ -633,7 +638,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Twitch,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'x',
@@ -645,7 +650,7 @@ export const FIGHTERS: Fighters[] = [
           logo: X,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'youtube',
@@ -657,23 +662,23 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     clips: [
       {
         text: 'Una de mis comidas favoritas la empanada argentina.',
-        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=1tlrUUKM-18eZlen&amp;clip=UgkxW9ZMSp3ZrKKJGaU3qR9kK2njuf0fgO-w&amp;clipt=EPPv0wQY-5bUBA'
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=1tlrUUKM-18eZlen&amp;clip=UgkxW9ZMSp3ZrKKJGaU3qR9kK2njuf0fgO-w&amp;clipt=EPPv0wQY-5bUBA',
       },
       {
         text: 'Estar de rival de visitante en otro país.',
-        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=IPvCjZ_-7K3fBW63&amp;clip=UgkxEmHfqcAo_spkOhqxLq0KHf7ZhmOMhUuB&amp;clipt=EJTM3QQY08beBA'
-      }
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=IPvCjZ_-7K3fBW63&amp;clip=UgkxEmHfqcAo_spkOhqxLq0KHf7ZhmOMhUuB&amp;clipt=EJTM3QQY08beBA',
+      },
     ],
     workout: {
       videoID: 'Uy48X5YxujI',
-      thumbnail: '/images/fighters/workoutThumbnails/viruzz-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/viruzz-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/alana-flores/
@@ -704,7 +709,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Instagram,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'twitch',
@@ -716,7 +721,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Twitch,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'x',
@@ -728,7 +733,7 @@ export const FIGHTERS: Fighters[] = [
           logo: X,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -740,7 +745,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'youtube',
@@ -752,19 +757,19 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     clips: [
       {
         text: 'Llevas un año pidiendo probar mis guantes; por fin, te voy a dar el gusto.',
-        url: 'https://www.youtube.com/embed/qdS_XOZ5kyU?si=ma0Sdomx1JJOyld1&amp;clip=Ugkxd-wfH9H1C-ZaiGBlFn3hZeAk9qQWK48w&amp;clipt=EKjUAhiw-wI'
+        url: 'https://www.youtube.com/embed/qdS_XOZ5kyU?si=ma0Sdomx1JJOyld1&amp;clip=Ugkxd-wfH9H1C-ZaiGBlFn3hZeAk9qQWK48w&amp;clipt=EKjUAhiw-wI',
       },
     ],
     workout: {
       videoID: 'TmC9TuD8NoQ',
-      thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp',
+    },
   },
   {
     // https://laletrade.com/biografias/youtuber/espanol/22589-thegrefg
@@ -777,6 +782,7 @@ export const FIGHTERS: Fighters[] = [
     age: 27,
     weight: 74,
     country: 'es',
+    gallery: true,
     city: 'Alhama de Murcia, Murcia',
     versus: 'westcol',
     mirrorImage: true,
@@ -791,7 +797,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Instagram,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -803,7 +809,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'twitch',
@@ -815,7 +821,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Twitch,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'x',
@@ -827,7 +833,7 @@ export const FIGHTERS: Fighters[] = [
           logo: X,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'youtube',
@@ -839,19 +845,19 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     clips: [
       {
         text: 'Siempre gano; y si no, es porque no ha acabado.',
-        url: 'https://www.youtube.com/embed/cfpvro5tD7g?si=rjaM5jJdImEtefJ6&amp;clip=UgkxuoAS_mblPPU-wtj4bH3GiLXmVRBAow2b&amp;clipt=EImsAhjj2gI'
+        url: 'https://www.youtube.com/embed/cfpvro5tD7g?si=rjaM5jJdImEtefJ6&amp;clip=UgkxuoAS_mblPPU-wtj4bH3GiLXmVRBAow2b&amp;clipt=EImsAhjj2gI',
       },
     ],
     workout: {
       videoID: '_Rh-VjB3ATk',
-      thumbnail: '/images/fighters/workoutThumbnails/grefg-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/grefg-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/westcol/
@@ -864,6 +870,7 @@ export const FIGHTERS: Fighters[] = [
     age: 24,
     weight: 63,
     country: 'co',
+    gallery: true,
     city: 'Ciudad Bolívar, Antioquia',
     versus: 'grefg',
     socials: [
@@ -877,7 +884,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Instagram,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'x',
@@ -889,7 +896,7 @@ export const FIGHTERS: Fighters[] = [
           logo: X,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'youtube',
@@ -901,7 +908,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -913,7 +920,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'kick',
@@ -925,18 +932,18 @@ export const FIGHTERS: Fighters[] = [
           logo: Kick,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     workout: {
       videoID: '_XWxZUwzhXk',
-      thumbnail: '/images/fighters/workoutThumbnails/westcol-thumbnail.webp'
+      thumbnail: '/images/fighters/workoutThumbnails/westcol-thumbnail.webp',
     },
     clips: [
       {
         text: 'Vamos a ver si le dan las hue***.',
-        url: 'https://www.youtube.com/embed/cfpvro5tD7g?si=ZcMgqxaAfHxRQb96&amp;clip=UgkxQ5sj8mAkLsReNNl3UPmr5g6CkSbZyERl&amp;clipt=EKjXAhiw_gI'
-      }
+        url: 'https://www.youtube.com/embed/cfpvro5tD7g?si=ZcMgqxaAfHxRQb96&amp;clip=UgkxQ5sj8mAkLsReNNl3UPmr5g6CkSbZyERl&amp;clipt=EKjXAhiw_gI',
+      },
     ],
   },
   {
@@ -964,7 +971,7 @@ export const FIGHTERS: Fighters[] = [
           logo: X,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'instagram',
@@ -976,7 +983,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Instagram,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -988,7 +995,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'youtube',
@@ -1000,7 +1007,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'twitch',
@@ -1012,19 +1019,19 @@ export const FIGHTERS: Fighters[] = [
           logo: Twitch,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     clips: [
       {
         text: 'Disfruta del titulo mientras puedas, por que este año es mio.',
-        url: 'https://www.youtube.com/embed/qdS_XOZ5kyU?si=D8fgVfCSRy_SwZHv&amp;clip=UgkxEmtFin7L3_YLiJW_OyRkmeZtFj53PnkT&amp;clipt=EPWwAhj91wI'
+        url: 'https://www.youtube.com/embed/qdS_XOZ5kyU?si=D8fgVfCSRy_SwZHv&amp;clip=UgkxEmtFin7L3_YLiJW_OyRkmeZtFj53PnkT&amp;clipt=EPWwAhj91wI',
       },
     ],
     workout: {
       videoID: 'rugHsv9JCSU',
-      thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp'
-    }
+      thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/tomas-mazza/
@@ -1051,7 +1058,7 @@ export const FIGHTERS: Fighters[] = [
           logo: X,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'instagram',
@@ -1063,7 +1070,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Instagram,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'youtube',
@@ -1075,7 +1082,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -1087,7 +1094,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'twitch',
@@ -1099,23 +1106,23 @@ export const FIGHTERS: Fighters[] = [
           logo: Twitch,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     clips: [
       {
         text: 'Yo soy la cura del Viruzz.',
-        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=tmS6F4zyAwJ8hjfw&amp;clip=UgkxwZjrAtle4_JWz8SOQyqTYSle3QNZSPnD&amp;clipt=EKOm0wQYz_PTBA'
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=tmS6F4zyAwJ8hjfw&amp;clip=UgkxwZjrAtle4_JWz8SOQyqTYSle3QNZSPnD&amp;clipt=EKOm0wQYz_PTBA',
       },
       {
         text: 'Es un desafío muy grande la verdad nadie cree en mi ',
-        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=x1D7VSLOkHRznEbb&amp;clip=UgkxKSYyYGXEofS0Oaeh2MtubiTWnVTYUlks&amp;clipt=EIii2QQYoJfaBA'
-      }
+        url: 'https://www.youtube.com/embed/t7r5O_5B-E0?si=x1D7VSLOkHRznEbb&amp;clip=UgkxKSYyYGXEofS0Oaeh2MtubiTWnVTYUlks&amp;clipt=EIii2QQYoJfaBA',
+      },
     ],
     workout: {
       videoID: 'FBjMQogPr-U',
       thumbnail: '/images/fighters/workoutThumbnails/tomas-thumbnail.webp',
-    }
+    },
   },
   {
     // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
@@ -1127,6 +1134,7 @@ export const FIGHTERS: Fighters[] = [
     height: 1.77,
     age: 26,
     weight: 85,
+    gallery: true,
     country: 'mx',
     city: 'Monterrey, Nuevo León',
     versus: 'andoni',
@@ -1141,7 +1149,7 @@ export const FIGHTERS: Fighters[] = [
           logo: X,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'instagram',
@@ -1153,7 +1161,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Instagram,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'tiktok',
@@ -1165,7 +1173,7 @@ export const FIGHTERS: Fighters[] = [
           logo: TikTok,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'youtube',
@@ -1177,7 +1185,7 @@ export const FIGHTERS: Fighters[] = [
           logo: Youtube,
           width: 200,
           height: 200,
-        }
+        },
       },
       {
         id: 'twitch',
@@ -1189,8 +1197,8 @@ export const FIGHTERS: Fighters[] = [
           logo: Twitch,
           width: 200,
           height: 200,
-        }
-      }
+        },
+      },
     ],
     workout: {
       videoID: 'R3nXNgSLnYA',
@@ -1199,15 +1207,15 @@ export const FIGHTERS: Fighters[] = [
     clips: [
       {
         text: 'Estoy de acuerdo, es una máquina, y eso hace más emocionante para mí la pelea. Una pelea difícil, un reto para mí.',
-        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=_zo9rym4J9nuprTz&amp;clip=UgkxA55s3XmbPCzb0W3fcV3a5ynwEsfrpWnY&amp;clipt=EMD-DBjIpQ0'
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=_zo9rym4J9nuprTz&amp;clip=UgkxA55s3XmbPCzb0W3fcV3a5ynwEsfrpWnY&amp;clipt=EMD-DBjIpQ0',
       },
       {
         text: 'Quiero poner a mi país en alto, es lo que más quiero.',
-        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=ycZse19c6kilirh5&amp;clip=Ugkx_DVmBQCwGsesR_3YKdmsSI2VEzymSdZW&amp;clipt=EMWoDRjH1w0'
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=ycZse19c6kilirh5&amp;clip=Ugkx_DVmBQCwGsesR_3YKdmsSI2VEzymSdZW&amp;clipt=EMWoDRjH1w0',
       },
       {
         text: 'Somos muy grandes amigos, nos queremos mucho… pero eso no quiere decir que nos vayamos a dar con todo.',
-        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=1KpotzlUDqM1VYYQ&amp;clip=UgkxQadrp40FBpmDXn2yaSgdQJVUYUFaAqKO&amp;clipt=EOTJIhjL_CI'
+        url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=1KpotzlUDqM1VYYQ&amp;clip=UgkxQadrp40FBpmDXn2yaSgdQJVUYUFaAqKO&amp;clipt=EOTJIhjL_CI',
       },
     ],
   },
