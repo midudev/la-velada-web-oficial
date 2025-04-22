@@ -9,6 +9,11 @@ const BLUR_DATA_FILE = path.join(__dirname, '../src/blur-placeholders.json')
 
 const VALID_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.avif']
 
+// Load existing data
+const existingData = await fs.readFile(BLUR_DATA_FILE, 'utf8')
+  .then(json => JSON.parse(json))
+  .catch(() => ({}))
+
 async function generateBlurPlaceholder(imagePath) {
   try {
     const imageBuffer = await sharp(imagePath)
@@ -39,17 +44,32 @@ async function* walkDirectory(dir) {
 async function generatePlaceholders() {
   const blurData = {}
   let count = 0
+  let skipped = 0
 
   try {
     for await (const filePath of walkDirectory(PUBLIC_DIR)) {
       const ext = path.extname(filePath).toLowerCase()
       if (VALID_EXTENSIONS.includes(ext)) {
         const relativePath = path.relative(PUBLIC_DIR, filePath)
+        const stat = await fs.stat(filePath)
+        const lastModified = stat.mtimeMs
+
+        // Skip if already processed and unchanged
+        if (existingData[relativePath] && existingData[relativePath].mtime === lastModified) {
+          blurData[relativePath] = existingData[relativePath]
+          skipped++
+          continue
+        }
+
         console.log(`Processing: ${relativePath}`)
 
         const placeholder = await generateBlurPlaceholder(filePath)
+        
         if (placeholder) {
-          blurData[`/${relativePath}`] = placeholder
+          blurData[relativePath] = {
+            placeholder,
+            mtime: lastModified,
+          }
           count++
         }
       }
@@ -58,7 +78,8 @@ async function generatePlaceholders() {
     // Save the blur data
     await fs.writeFile(BLUR_DATA_FILE, JSON.stringify(blurData, null, 2))
 
-    console.log(`✅ Generated blur placeholders for ${count} images`)
+    count > 0 && console.log(`🆕 Generated blur placeholders for ${count} images`)
+    skipped > 0 && console.log(`✅ Skipped ${skipped} unchanged images`)
     console.log(`📝 Data saved to ${path.relative(process.cwd(), BLUR_DATA_FILE)}`)
   } catch (error) {
     console.error('Error generating placeholders:', error)
