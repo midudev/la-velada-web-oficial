@@ -191,6 +191,21 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       border-color: rgba(255, 20, 147, 0.5);
     }
   }
+
+  
+  #carrusel {
+    animation: fade-out linear;
+    animation-timeline: scroll();
+    animation-range: 0 100px;
+    animation-fill-mode: both;
+  }
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+      scale: .75;
+      transform: translateY(200px);
+    }
+  }
 </style>
 
 <script>
