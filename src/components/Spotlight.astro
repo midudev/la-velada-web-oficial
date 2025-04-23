@@ -1,0 +1,150 @@
+---
+export interface Props {
+  gradientFirst?: string
+  gradientSecond?: string
+  gradientThird?: string
+  translateY?: number
+  width?: number
+  height?: number
+  smallWidth?: number
+  duration?: number
+  xOffset?: number
+  fixed?: boolean
+}
+
+const {
+  gradientFirst = 'radial-gradient(68.54% 68.72% at 55.02% 31.46%, oklch(82.97% 0.148864 181.7442 / .58) 0, oklch(100% 55% 181 / .02) 50%, oklch(45% 100% 181 / 0) 80%)',
+  gradientSecond = 'radial-gradient(50% 50% at 50% 50%, oklch(82.97% 0.148864 181.7442 / .56) 0, oklch(100% 55% 181 / .02) 80%, transparent 100%)',
+  gradientThird = 'radial-gradient(50% 50% at 50% 50%, oklch(82.97% 0.148864 181.7442 / .24) 0, oklch(100% 45% 181 / .02) 80%, transparent 100%)',
+
+  translateY = -350,
+  width = 560,
+  height = 1380,
+  smallWidth = 240,
+  duration = 7,
+  xOffset = 100,
+
+  fixed = false,
+} = Astro.props
+---
+
+<div
+  class={`appear hidden pointer-events-none absolute inset-0 z-10 h-full w-full ${fixed ? 'sm:fixed' : ''}`}
+>
+  <div
+    style={`--x-offset: ${xOffset}px; --duration: ${duration}s; --direction: reverse;`}
+    data-animate={JSON.stringify({
+      x: [0, xOffset, 0],
+    })}
+    data-transition={JSON.stringify({
+      duration,
+      repeat: Infinity,
+      repeatType: 'reverse',
+      ease: 'easeInOut',
+    })}
+    class="move-x pointer-events-none absolute left-0 top-0 z-40 h-screen w-screen"
+  >
+    <div
+      style={{
+        transform: `translateY(${translateY}px) rotate(-45deg)`,
+        background: gradientFirst,
+        width: `${width}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 left-0`}
+    >
+    </div>
+
+    <div
+      style={{
+        transform: 'rotate(-45deg) translate(5%, -50%)',
+        background: gradientSecond,
+        width: `${smallWidth}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 left-0 origin-top-left`}
+    >
+    </div>
+
+    <div
+      style={{
+        transform: 'rotate(-45deg) translate(-180%, -70%)',
+        background: gradientThird,
+        width: `${smallWidth}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 left-0 origin-top-left`}
+    >
+    </div>
+  </div>
+
+  <div
+    style={`--x-offset: ${-xOffset}px; --duration: ${duration}s; --direction: reverse;`}
+    class="move-x pointer-events-none absolute right-0 top-0 z-40 h-screen w-screen"
+  >
+    <div
+      style={{
+        transform: `translateY(${translateY}px) rotate(45deg)`,
+        background: gradientFirst,
+        width: `${width}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 right-0`}
+    >
+    </div>
+
+    <div
+      style={{
+        transform: 'rotate(45deg) translate(-5%, -50%)',
+        background: gradientSecond,
+        width: `${smallWidth}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 right-0 origin-top-right`}
+    >
+    </div>
+
+    <div
+      style={{
+        transform: 'rotate(45deg) translate(180%, -70%)',
+        background: gradientThird,
+        width: `${smallWidth}px`,
+        height: `${height}px`,
+      }}
+      class={`absolute top-0 right-0 origin-top-right`}
+    >
+    </div>
+  </div>
+</div>
+
+<style>
+  .appear {
+    opacity: 0;
+    animation: appearAnimation 2s ease-in-out forwards;
+  }
+
+  @keyframes appearAnimation {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .move-x {
+    animation: moveXAnimation var(--duration) ease-in-out var(--direction) infinite;
+  }
+
+  @keyframes moveXAnimation {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(var(--x-offset));
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+</style>
