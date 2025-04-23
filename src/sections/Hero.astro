@@ -33,8 +33,6 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
         <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
       </figure>
 
-
-
       <div class="relative z-10">
         <h3 class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-0 font-medium">
           <a
@@ -83,14 +81,36 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
 
   document.addEventListener('astro:page-load', () => {
     const $landing = $('#landing')
+    let isMobile = window.matchMedia('(max-width: 768px)').matches
+
+    // Para que cuando cambie el tamaño de la ventana cambie el estado de si es mobile
+    // por si alguien al hacer resize ve que no funciona bien el cambio
+    // Los cambios estan pensandos para que se apliquen al entrar con un dispositivo u otro
+    window.addEventListener('resize', () => {
+      isMobile = window.matchMedia('(max-width: 768px)').matches
+    })
 
     let currentFighterId: string | null = null
     let hideFighterTimer: ReturnType<typeof setTimeout>
 
     document.addEventListener('boxer-card-exit', () => {
-      $landing?.classList.remove('hidden')
+      let showFighter = false
 
       if (!currentFighterId) return
+
+      if (isMobile) {
+        for (const card of boxerCards) {
+          if (card.getAttribute('data-id') === currentFighterId) {
+            if (card.getAttribute('data-selected') === 'true') {
+              showFighter = true
+              break
+            }
+          }
+        }
+
+        if (showFighter) return
+      }
+      $landing?.classList.remove('hidden')
 
       const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
       const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
@@ -226,11 +246,43 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
     const $fightersContainer = document.getElementById(
       'fighters-selection-container',
     ) as HTMLElement
-    $fightersContainer.appendChild($fighterSelector)
+    if (!isMobile) {
+      $fightersContainer.appendChild($fighterSelector)
+    }
+
+    if (isMobile) {
+      // Quitamos `data-selected` cuando el usuario hace click en el contenedor
+      $fightersContainer.addEventListener('click', (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        boxerCards.forEach((card) => card.removeAttribute('data-selected'))
+        $landing?.classList.remove('hidden')
+      })
+    }
 
     const boxerCards = document.querySelectorAll('.boxer-card')
 
-    boxerCards.forEach((card) => {
+    boxerCards.forEach((card, cardIndex) => {
+      if (isMobile) {
+        // Agregamos `data-selected` cuando el usuario hace click en el card
+        card.addEventListener('click', (event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          // Si no tiene `data-selected` entonces lo agregamos
+          if (card.getAttribute('data-selected') === null) {
+            card.setAttribute('data-selected', 'true')
+            // Aseguramos que solo se selecciona el luchador que se hizo click
+            boxerCards.forEach((selectedCard, idx) => {
+              if (selectedCard.getAttribute('data-selected') === null || idx === cardIndex) return
+              selectedCard.removeAttribute('data-selected')
+            })
+            return
+          }
+          // Si ya tiene `data-selected` entonces lo quitamos y vamos a la url
+          card.removeAttribute('data-selected')
+          window.location.href = `/luchador/${card.getAttribute('data-id')}`
+        })
+      }
       card.addEventListener('mouseenter', () => {
         const { width, height, left, top } = card.getBoundingClientRect()
         const { left: leftFighterContainer, top: topFighterContainer } =
