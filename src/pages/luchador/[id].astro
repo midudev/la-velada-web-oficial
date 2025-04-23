@@ -32,7 +32,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 
     <!-- Listado de Clips -->
     <div
-      class="group flex lg:min-h-screen w-full lg:max-w-xl flex-col items-center justify-center gap-y-32 px-8 pt-4 lg:pt-24 text-right text-balance"
+      class="group flex z-10 lg:min-h-screen w-full lg:max-w-xl flex-col items-center justify-center gap-y-32 px-8 pt-4 lg:pt-24 text-right text-balance"
     >
       <BoxerClipList
         clips={fighter.clips}
@@ -41,14 +41,14 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 
       <div class="relative z-[101]">
         <BoxerClipDrawer
-            clips={fighter.clips}
+            clips={fighter.clips}  
         />
       </div>
     </div>
 
     <!-- Boxeador perfil -->
     <div
-      class=" relative z-10 flex w-full flex-col items-center justify-center pl-0 pr-0 lg:pr-8 pt-24 lg:flex-row lg:items-start lg:pt-32"
+      class=" relative  flex w-full flex-col items-center justify-center pl-0 pr-0 lg:pr-8 pt-24 lg:flex-row lg:items-start lg:pt-32"
     >
       <!-- Imagenes del boxeador -->
       <div
@@ -84,7 +84,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
                 id={opponent.id}
                 name={opponent.name}
                 versus={fighter.id}
-                class="group-hover:scale-110"
+                class="group-hover:scale-105"
                 imgClass={`${!opponent.mirrorImage ? '' : 'scale-x-[-1] group-hover:scale-x-[-1]'}`}
               />
             </div>
