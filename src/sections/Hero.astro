@@ -1,20 +1,10 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
 import BoxerCard from '@/components/BoxerCard.astro'
+import SelectYourBoxer from '@/components/Boxers/SelectYourBoxer.astro'
 
-const firstRow = FIGHTERS.slice(0, 6)
-const leftRow = firstRow.slice(0, 3)
-const rightRow = firstRow.slice(3)
-
-const secondRow = FIGHTERS.slice(6)
-const leftSecondRow = secondRow.slice(0, 4)
-const rightSecondRow = secondRow.slice(4, 8)
-
-const animationDelay = [500, 700, 800]
-const reverseDelay = [...animationDelay].reverse()
-
-const animationDelaySecondRow = [...animationDelay, 900]
-const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
+const selectedBoxerId = Astro.url.searchParams.get('luchador') ?? FIGHTERS[0].id
+const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? FIGHTERS[0]
 ---
 
 <section class="relative flex min-h-screen w-full">
@@ -43,8 +33,6 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
       </figure>
 
-
-
       <div class="relative z-10">
         <h3 class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-0 font-medium">
           <a
@@ -67,102 +55,7 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         </a>
       </div>
     </div>
-
-    <div
-      id="fighter-container"
-      class="pointer-events-none absolute inset-0 flex flex-col items-center"
-    >
-      <div class="z-1 relative top-96 mx-auto flex h-[4.5rem] w-full items-center justify-center">
-        {
-          FIGHTERS.map(({ id, name }) => (
-            <div class="relative h-20 overflow-hidden">
-              <img
-                data-id={`hero-text-${id}`}
-                src={`/images/fighters/text/${id}.webp`}
-                alt={name}
-                decoding="async"
-                class="mask-fade-text hidden h-full w-auto"
-                fetchpriority="low"
-              />
-              <div
-                id={`mask-fade-text-${id}`}
-                class="absolute inset-0 -translate-x-full rotate-45 bg-gradient-to-tr from-transparent via-white/20 to-transparent transition-transform duration-[2s] ease-in-out"
-              />
-            </div>
-          ))
-        }
-      </div>
-
-      <div
-        class="mask-fade-bottom relative bottom-0 mx-auto flex h-[80vh] w-full items-center justify-center"
-      >
-        {
-          FIGHTERS.map(({ id, name }) => (
-            <img
-              transition:name={`image-${id}`}
-              data-id={`hero-image-${id}`}
-              src={`/images/fighters/big/${id}.webp`}
-              alt={name}
-              decoding="async"
-              class="absolute hidden h-full w-auto object-cover lg:object-contain"
-              fetchpriority="low"
-            />
-          ))
-        }
-      </div>
-    </div>
-
-    <div
-      id="fighters-selection-container"
-      class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 sm:p-4"
-    >
-      <div class="flex w-full flex-wrap justify-center gap-4 px-0 sm:justify-between sm:px-4">
-        <div class="flex flex-wrap justify-start gap-4">
-          {
-            leftRow.map(({ id, name, versus }, index) => (
-              <div
-                class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}
-              >
-                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
-              </div>
-            ))
-          }
-        </div>
-
-        <div class="flex flex-wrap justify-end gap-4">
-          {
-            rightRow.map(({ id, name, versus }, index) => (
-              <div
-                class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}
-              >
-                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
-              </div>
-            ))
-          }
-        </div>
-      </div>
-
-      <div class="flex flex-wrap justify-center gap-4 sm:justify-between">
-        <div class="flex flex-wrap justify-start gap-4">
-          {
-            leftSecondRow.map(({ id, name, versus }, index) => (
-              <div class={`animate-fade-in-up animate-delay-${animationDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
-              </div>
-            ))
-          }
-        </div>
-        <div class="flex flex-wrap justify-end gap-4">
-          {
-            rightSecondRow.map(({ id, name, versus }, index) => (
-              <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>
-                <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
-              </div>
-            ))
-          }
-        </div>
-      </div>
-    </div>
+    <SelectYourBoxer boxers={FIGHTERS} selectedBoxer={selectedBoxer} />
   </div>
 </section>
 
@@ -188,14 +81,36 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
   document.addEventListener('astro:page-load', () => {
     const $landing = $('#landing')
+    let isMobile = window.matchMedia('(max-width: 768px)').matches
+
+    // Para que cuando cambie el tamaño de la ventana cambie el estado de si es mobile
+    // por si alguien al hacer resize ve que no funciona bien el cambio
+    // Los cambios estan pensandos para que se apliquen al entrar con un dispositivo u otro
+    window.addEventListener('resize', () => {
+      isMobile = window.matchMedia('(max-width: 768px)').matches
+    })
 
     let currentFighterId: string | null = null
     let hideFighterTimer: ReturnType<typeof setTimeout>
 
     document.addEventListener('boxer-card-exit', () => {
-      $landing?.classList.remove('hidden')
+      let showFighter = false
 
       if (!currentFighterId) return
+
+      if (isMobile) {
+        for (const card of boxerCards) {
+          if (card.getAttribute('data-id') === currentFighterId) {
+            if (card.getAttribute('data-selected') === 'true') {
+              showFighter = true
+              break
+            }
+          }
+        }
+
+        if (showFighter) return
+      }
+      $landing?.classList.remove('hidden')
 
       const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
       const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
@@ -331,11 +246,43 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     const $fightersContainer = document.getElementById(
       'fighters-selection-container',
     ) as HTMLElement
-    $fightersContainer.appendChild($fighterSelector)
+    if (!isMobile) {
+      $fightersContainer.appendChild($fighterSelector)
+    }
+
+    if (isMobile) {
+      // Quitamos `data-selected` cuando el usuario hace click en el contenedor
+      $fightersContainer.addEventListener('click', (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        boxerCards.forEach((card) => card.removeAttribute('data-selected'))
+        $landing?.classList.remove('hidden')
+      })
+    }
 
     const boxerCards = document.querySelectorAll('.boxer-card')
 
-    boxerCards.forEach((card) => {
+    boxerCards.forEach((card, cardIndex) => {
+      if (isMobile) {
+        // Agregamos `data-selected` cuando el usuario hace click en el card
+        card.addEventListener('click', (event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          // Si no tiene `data-selected` entonces lo agregamos
+          if (card.getAttribute('data-selected') === null) {
+            card.setAttribute('data-selected', 'true')
+            // Aseguramos que solo se selecciona el luchador que se hizo click
+            boxerCards.forEach((selectedCard, idx) => {
+              if (selectedCard.getAttribute('data-selected') === null || idx === cardIndex) return
+              selectedCard.removeAttribute('data-selected')
+            })
+            return
+          }
+          // Si ya tiene `data-selected` entonces lo quitamos y vamos a la url
+          card.removeAttribute('data-selected')
+          window.location.href = `/luchador/${card.getAttribute('data-id')}`
+        })
+      }
       card.addEventListener('mouseenter', () => {
         const { width, height, left, top } = card.getBoundingClientRect()
         const { left: leftFighterContainer, top: topFighterContainer } =
