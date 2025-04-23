@@ -73,7 +73,8 @@ const FIGHTERS = _FIGHTERS.map(
 
 <script>
   import { FIGHTERS } from '@/consts/fighters'
-import FingerprintJS from '@fingerprintjs/fingerprintjs'
+  import FingerprintJS from '@fingerprintjs/fingerprintjs'
+  
   document.addEventListener("astro:page-load", async () => {
     const fp = await FingerprintJS.load()
     const result = await fp.get()
@@ -83,30 +84,32 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs'
         return
 
     function getCooki() {
-      var cookie = JSON.parse(document.cookie || "{}");
-      if(cookie.porra){
-        // console.log('porra', cookie.porra)
-        var fighters = (cookie.porra.fighters as {
-          group: string,
-          id: string,
-          winner: string
-        }[])
-        console.log("fighters", fighters)
-        fighters.map(f => {
-          document.getElementsByName(`group-${f.id}`).forEach(_input => {
-            const input = _input as HTMLInputElement
-            if(input && input.value === f.winner) {
-              input.checked = true
-              let winnerLeft = f.winner === FIGHTERS[parseInt(f.id)].id
-              console.log("winnerLeft", winnerLeft)
-              let barraPorra = document.getElementById(`porra-bar-${f.id}`)
-              let value = Math.round(Math.random()*100) // valores aleatorios hasta obtener de base de datos
-              barraPorra?.setAttribute(winnerLeft ? "left" : "right", value.toString())
-              barraPorra?.setAttribute(!winnerLeft ? "left" : "right",(100-value).toString())
-            }
+      var data = document.cookie.split('; ');
+      var fighters: { id: number, winner: string }[] = [];
+      data.map(d => {
+        if(d.includes("fighters")) {
+          fighters = d.replace("fighters=","").split(",").map(f => {
+            var [id, winner] = f.split(":")
+            return { id: parseInt(id), winner }
           })
+        }
+      })
+      console.log("fighters", fighters)
+      FIGHTERS.map((fighter, index) => {
+        document.getElementsByName(`group-${index}`).forEach(_input => {
+          const input = _input as HTMLInputElement
+          const fPorra = fighters.find(f => f.id === index)
+          console.log(fPorra)
+          if(fPorra) {
+            input.checked = true
+          }
+          let points = Math.round(Math.random() * 100)
+          let winnerLeft = points > 50
+          let barraPorra = document.getElementById(`porra-bar-${index}`)
+          barraPorra?.setAttribute(winnerLeft ? "left" : "right", points.toString())
+          barraPorra?.setAttribute(!winnerLeft ? "left" : "right",(100-points).toString())
         })
-      }
+      })
     }
     getCooki()
 
@@ -118,6 +121,7 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs'
 
     form.addEventListener("submit", (e) => {
       e.preventDefault()
+      console.log('Form submitted')
       send()
     })
     
@@ -132,10 +136,11 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs'
         visitorId,
         fighters
       }
-      // console.log("porra set", {porra})
       const json = JSON.stringify({porra});
-      // document.cookie = `porra=${json}; path=/; max-age=31536000; SameSite=None; Secure`;
-      document.cookie = json
+      let visitorCookie = `visitor=${visitorId}`;
+      let fightersCookie = `fighters=${porra.fighters.map(f => `${f.id}:${f.winner}`).join(',')}`;
+      document.cookie = visitorCookie+";path=/";
+      document.cookie = fightersCookie+";path=/";
       getCooki()
       const url = 'https://api.example.com/submit'; // Replace with your API endpoint
       fetch(url, {
