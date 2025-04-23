@@ -17,6 +17,7 @@
 }
 
 @layer base {
+
   /* Webkit Browsers (Chrome, Safari, Edge) */
   ::-webkit-scrollbar {
     width: 10px;
@@ -33,13 +34,28 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--color-theme-tickle-me-pink); /* Efecto hover */
+    background-color: var(--color-theme-tickle-me-pink);
+    /* Efecto hover */
   }
 
   /* Firefox */
   * {
     scrollbar-color: var(--color-theme-french-mauve) var(--color-theme-raisin-black);
     scrollbar-width: thin;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 }
 
