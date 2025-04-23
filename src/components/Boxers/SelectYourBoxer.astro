@@ -3,6 +3,7 @@ import BoxerCard from '@/components/BoxerCard.astro'
 import BoxerBigImages from '@/components/Boxers/BoxerBigImages.astro'
 import ColumnBoxers from '@/components/Boxers/ColumnBoxers.astro'
 import type { Fighters } from '@/types/fighters'
+import HorizontalScroll from '@/components/Icons/HorizontalScroll.astro'
 
 interface Props {
   boxers: Fighters[]
@@ -82,12 +83,12 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 <div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
   <div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
     <div
-      class="carousel-inner flex snap-x snap-mandatory overflow-y-hidden overflow-x-scroll pr-[40%]"
+      class="fadeout-horizontal no-scrollbar flex snap-x snap-mandatory gap-12 overflow-y-hidden overflow-x-scroll py-2 pr-[40%]"
     >
       {
         boxers.map((boxer, index) => (
           <div
-            class:list={`carousel-item w-[70%] flex-shrink-0 snap-center px-2 ${index === 0 ? 'ml-[65%]' : ''} `}
+            class:list={`w-fit flex-shrink-0 snap-center px-2 ${index === 0 ? 'ml-[75%]' : ''} `}
           >
             <ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
           </div>
@@ -95,4 +96,17 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       }
     </div>
   </div>
+  <HorizontalScroll class:list={['text-theme-seashell w-16 pt-2 opacity-80']} />
 </div>
+
+<style>
+  .fadeout-horizontal {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 4.5rem,
+      black calc(100% - 4.5rem),
+      transparent
+    );
+  }
+</style>
