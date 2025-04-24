@@ -1,13 +1,15 @@
 ---
 interface Props {
+  class?: string
   title: string
   class?: string
 }
 
-const { title, class: className } = Astro.props
+
+const { class: className, title } = Astro.props
 ---
 
-<h2 class=`text-dark-magenta mb-4 text-center text-4xl font-light lowercase ${className}`>
+<h2 class:list={[`text-dark-magenta mb-4 text-center text-4xl font-light`, className]}>
   <div class="block sm:inline">
     <strong class="font-bold lowercase">{title}</strong>
   </div>

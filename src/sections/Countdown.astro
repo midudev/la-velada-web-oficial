@@ -12,14 +12,15 @@ const textResponsiveStyles = 'text-6xl font-bold md:text-7xl lg:text-8xl'
 ---
 
 <section class="flex w-full flex-col place-items-center px-2 py-48" aria-label="cuenta atrás">
-  <SectionTitle title="Cuenta atrás para&nbsp;el&nbsp;evento..." />
+  <SectionTitle title="Cuenta atrás para el evento..." />
 
   <div
-    class="flex items-center justify-center gap-2 text-[var(--color-white)] select-none flex-col sm:flex-row"
+    class="flex select-none flex-col items-center justify-center gap-2 text-[var(--color-white)] sm:flex-row"
+    id="countdown-big"
     data-date={timestamp}
     role="timer"
   >
-    <div class="flex items-center justify-center gap-2 w-[240px] sm:w-auto">
+    <div class="flex w-[240px] items-center justify-center gap-2 sm:w-auto">
       <Date
         dateType="DÍAS"
         attribute={{ 'data-days': '' }}
@@ -39,7 +40,7 @@ const textResponsiveStyles = 'text-6xl font-bold md:text-7xl lg:text-8xl'
       />
     </div>
 
-    <div class="flex items-center justify-center gap-2 w-[240px] sm:w-auto">
+    <div class="flex w-[240px] items-center justify-center gap-2 sm:w-auto">
       <Date
         wrapperClassName="my-0"
         dateType="MINUTOS"
@@ -101,7 +102,7 @@ const textResponsiveStyles = 'text-6xl font-bold md:text-7xl lg:text-8xl'
   import { $ } from '@/lib/dom-selector'
 
   function initCountdown() {
-    const $countdown = $('[data-date]')
+    const $countdown = $('#countdown-big')
     if (!$countdown) return
 
     const $days = {
