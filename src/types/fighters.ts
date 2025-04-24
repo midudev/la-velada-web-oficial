@@ -37,12 +37,18 @@ interface Clips {
   url: string
 }
 
+interface Versus {
+  leftPortrait: string
+  rightPortrait: string
+}
+
 export interface Fighters {
   id: fighterId
   name: fighterName
   fightName?: string
   city?: string
   realName: string
+  description: string
   gender: 'masculino' | 'femenino' | 'otro'
   targetWeight?: number
   targetGloves?: string
@@ -51,11 +57,16 @@ export interface Fighters {
   age: number
   weight: number
   country: string
+  opponent: fighterId
+  versus: Versus
   gallery?: boolean
-  versus: fighterId
   socials: Social[]
   clips: Clips[]
   workout?: {
+    videoID: string
+    thumbnail: string
+  }
+  faceOff: {
     videoID: string
     thumbnail: string
   }

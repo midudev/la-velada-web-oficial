@@ -1,0 +1,59 @@
+---
+interface Fighter {
+  name: string
+  percentage: number
+}
+
+interface Props {
+  firstFighter: Fighter
+  secondFighter: Fighter
+  showPercentage?: boolean
+}
+
+const { firstFighter, secondFighter, showPercentage = false } = Astro.props
+---
+
+<div
+  class="border-theme-raisin-black/50 relative my-4 flex h-3 w-full rounded-full border lowercase xl:h-4"
+>
+  <!-- lado izquierdo -->
+  <div
+    class={`h-full rounded-l-full ${firstFighter.percentage > 0 ? 'bg-theme-turquoise' : 'hidden'}`}
+    style={`width: ${firstFighter.percentage}%`}
+  >
+    {
+      firstFighter.name && (
+        <span class="text-theme-raisin-black absolute top-0 left-0 -translate-y-full transform text-sm">
+          {firstFighter.name}
+        </span>
+      )
+    }
+    {
+      firstFighter.percentage > 0 && showPercentage && (
+        <span class="text-theme-raisin-black absolute bottom-0 left-0 translate-y-full transform text-sm">
+          {firstFighter.percentage}%
+        </span>
+      )
+    }
+  </div>
+  <!-- lado derecho -->
+  <div
+    class={`h-full rounded-r-full ${secondFighter?.percentage > 0 ? 'bg-gray-100' : 'hidden'}`}
+    style={`width: ${secondFighter.percentage}%`}
+  >
+    {
+      secondFighter.name && (
+        <span class="text-theme-raisin-black absolute top-0 right-0 -translate-y-full transform text-sm">
+          {secondFighter.name}
+        </span>
+      )
+    }
+    {
+      secondFighter.percentage > 0 && showPercentage && (
+        <span class="text-theme-raisin-black absolute right-0 bottom-0 translate-y-full transform text-sm">
+          {secondFighter.percentage}%
+        </span>
+      )
+    }
+  </div>
+</div>
