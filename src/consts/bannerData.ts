@@ -6,7 +6,7 @@ export const BANNERS: Banner[] = [
     id: "revolut",
     name: "Revolut",
     url: "https://www.revolut.com/es-ES/velada5-revolut",
-    label: "Ir al sitio de Revolut",
+    label: "Ir a la promoción de Revolut",
     image: {
       logo: RevolutBanner.src,
       width: 600,
