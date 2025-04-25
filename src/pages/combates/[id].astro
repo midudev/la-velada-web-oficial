@@ -50,6 +50,9 @@ const fighter2Country = countries.find((c) => c.id === fighter2?.country)
               class="absolute top-8 md:top-20 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-auto w-16 md:w-52 rotate-180 inline-flex"
             /> -->
         </a>
+        <div class="health-bar">
+          <div class="health" style="width: 70%;"></div>
+        </div>
       </div>
 
       <!-- Versus Letra o Imagen -->
@@ -81,6 +84,9 @@ const fighter2Country = countries.find((c) => c.id === fighter2?.country)
             class="mask-fade-bottom max-h-[600px] object-cover"
           />
         </a>
+        <div class="health-bar">
+          <div class="health" style="width: 70%;"></div>
+        </div>
       </div>
     </div>
 
@@ -142,50 +148,78 @@ const fighter2Country = countries.find((c) => c.id === fighter2?.country)
         >
           estadísticas del combate por votaciones.
         </p>
-        <div class="grid">
-          <span class="my-10 text-center text-3xl text-white md:text-6xl">próximamente..</span>
-        </div>
+        
+       
       </div>
     </div>
+    <div class="flex items-center justify-between w-full p-4">
+      <img src={`/images/fighters/cards/${fighter1?.id}.webp`} alt="Luchador 1" class="w-60 h-60 border-radius-50% border-2px solid #fff transition-transform duration-200 hover:scale-105">
+      <div class="health-bar bg-#333 border-2px solid #fff radius-50% overflow-hidden position-relative margin-10">
+        <div class="bg-red-600 h-96 transition width 0.3s" style="width: 10%;"></div>
+        <button onclick="voteForFighter('fighter1')">Vota</button>
+      </div>
+      <div class="health-bar w-20 h-20 bg-#333 border-2px solid #fff radius-50% overflow-hidden position-relative margin-10" style="direction: rtl;">
+        <div class="bg-red-600 h-96 transition width 0.3s " style="width: 10%; transform: scaleX(-1);"></div>
+      </div>
+      <button onclick="voteForFighter('fighter2')" style="border: none; background: none; padding: 0;">
+        <img src={`/images/fighters/cards/${fighter2?.id}.webp`} alt="Luchador 2" class="w-60 h-60 border-radius-50% border-2px solid #fff transition-transform duration-200 hover:scale-105">
+      </button>
+    </div>
+   
   </section>
+  <style>
+   
+    .custom-clip {
+      clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+
+    .vertical-text {
+      writing-mode: vertical-lr;
+      text-orientation: upright;
+    }
+
+    .animate-crash {
+      animation: crash 1s linear forwards;
+    }
+
+    @keyframes crash {
+      0% {
+        transform: translateX(100px);
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0); /* Sin sombra */
+        opacity: 0;
+      }
+      40% {
+        transform: translateX(-10px);
+        box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Sombra visible más intensa */
+        opacity: 1;
+      }
+      60% {
+        transform: translateX(50px);
+        box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
+      }
+      80% {
+        transform: translateX(0);
+        box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
+      }
+      100% {
+        transform: translateX(-10px);
+        box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
+      }
+    }
+
+    .health-bar {
+      width: 300px;
+      height: 30px;
+      background-color: #333;
+      border: 2px solid #fff;
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+      margin: 10px;
+    }
+
+  
+  </style>
+
+ 
 </Layout>
-
-<style>
-  .custom-clip {
-    clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
-  }
-
-  .vertical-text {
-    writing-mode: vertical-lr;
-    text-orientation: upright;
-  }
-
-  .animate-crash {
-    animation: crash 1s linear forwards;
-  }
-
-  @keyframes crash {
-    0% {
-      transform: translateX(100px);
-      box-shadow: 0 0 0 rgba(255, 255, 255, 0); /* Sin sombra */
-      opacity: 0;
-    }
-    40% {
-      transform: translateX(-10px);
-      box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Sombra visible más intensa */
-      opacity: 1;
-    }
-    60% {
-      transform: translateX(50px);
-      box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
-    }
-    80% {
-      transform: translateX(0);
-      box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
-    }
-    100% {
-      transform: translateX(-10px);
-      box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
-    }
-  }
-</style>
