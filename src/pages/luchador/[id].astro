@@ -38,9 +38,27 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
     >
       <BoxerClipList clips={fighter.clips} externalPlayer={false} />
 
-      <div class="relative z-[101]">
+      <div class="relative z-[101] hidden">
         <BoxerClipDrawer clips={fighter.clips} />
       </div>
+
+      {
+        opponent && (
+          <div class="flex w-full items-center justify-center gap-4">
+            <img
+              alt={`Enfrentamiento entre ${fighter.name} y ${opponent?.name ?? 'su oponente'}`}
+              src="/images/versus.webp"
+              class="h-12 w-auto"
+            />
+            <BoxerCard
+              id={opponent.id}
+              versus={fighter.id}
+              name={opponent.name}
+              class="hover:scale-110"
+            />
+          </div>
+        )
+      }
     </div>
 
     <!-- Boxeador perfil -->
