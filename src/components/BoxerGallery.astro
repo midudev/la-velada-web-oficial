@@ -10,20 +10,23 @@ interface Props {
 const { id, name } = Astro.props
 
 let gallery = fighterGallery(id)
-const IMAGES_TO_LOAD = Math.min(gallery,5)
+const IMAGES_TO_LOAD = Math.min(gallery, 5)
 ---
 
-<section class="mx-auto max-w-6xl px-2 py-36 lg:px-10">
+<section class="mx-auto max-w-6xl px-2 py-10 lg:px-10">
   <SectionTitle title="Galería de Fotos" />
 
-  <div id="boxer-gallery" class={`mt-10 grid gap-3 pt-12 ${gallery === 4 ? "grid-cols-8" : "grid-cols-6"}`} >
+  <div
+    id="boxer-gallery"
+    class={`mt-10 grid gap-3 pt-12 ${gallery === 4 ? 'grid-cols-8' : 'grid-cols-6'}`}
+  >
     {
       Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => (
         <a
           class:list={[
-            "boxer-image aspect-square transition hover:scale-105 hover:brightness-125",
-            { "col-span-3": gallery === 2 || (gallery === 5 && index < 2) },
-            { "col-span-2": [3, 4].includes(gallery) || (gallery === 5 && index >= 2) },
+            'boxer-image aspect-square transition hover:scale-105 hover:brightness-125',
+            { 'col-span-3': gallery === 2 || (gallery === 5 && index < 2) },
+            { 'col-span-2': [3, 4].includes(gallery) || (gallery === 5 && index >= 2) },
           ]}
           href={`/images/fighters/gallery/${id}/${index + 1}.webp`}
           title={`Abrir imagen ${index} de la galería de ${name}`}
@@ -42,15 +45,12 @@ const IMAGES_TO_LOAD = Math.min(gallery,5)
         </a>
       ))
     }
-    <dialog
-      id="lightbox"
-      class="w-full h-full bg-transparent backdrop:bg-black/90 mt-20"
-    >
-      <div class="mx-auto flex h-[80%] w-[80%] items-center justify-center animate-zoom-in">
+    <dialog id="lightbox" class="mt-20 h-full w-full bg-transparent backdrop:bg-black/90">
+      <div class="animate-zoom-in mx-auto flex h-[80%] w-[80%] items-center justify-center">
         <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
         <button
           type="button"
-          class="hover:text-theme-tickle-me-pink z-10 rounded bg-black/60 p-4 text-theme-turquoise transition hover:scale-110 right-8 top-8 absolute cursor-pointer"
+          class="hover:text-theme-tickle-me-pink text-theme-turquoise absolute right-8 top-8 z-10 cursor-pointer rounded bg-black/60 p-4 transition hover:scale-110"
         >
           <svg class="size-5" aria-hidden="true" fill="none" viewBox="0 0 14 14">
             <path
@@ -63,12 +63,13 @@ const IMAGES_TO_LOAD = Math.min(gallery,5)
         </button>
         <button
           data-btn-prev
-          class="group z-10 transition hover:scale-125 motion-reduce:transition-none text-theme-turquoise motion-reduce:hover:scale-100 hover:text-theme-tickle-me-pink absolute left-[10px] md:left-0 md:relative cursor-pointer"
+          class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute left-[10px] z-10 cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:left-0"
           id="btn-prev"
         >
           <svg class="size-16" width="80" height="80" fill="none"
             ><g clip-path="url(#a)"
-              ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"></path></g
+              ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"
+              ></path></g
             ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs
             ></svg
           >
@@ -82,16 +83,13 @@ const IMAGES_TO_LOAD = Math.min(gallery,5)
         />
         <button
           data-btn-next
-          class="group z-10 transition hover:scale-125 motion-reduce:transition-none text-theme-turquoise motion-reduce:hover:scale-100 hover:text-theme-tickle-me-pink absolute right-[10px] md:right-0 md:relative cursor-pointer"
+          class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute right-[10px] z-10 cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:right-0"
           id="btn-next"
         >
-          <svg
-            class="size-16 rotate-180"
-            width="80"
-            height="80"
-            fill="none"
+          <svg class="size-16 rotate-180" width="80" height="80" fill="none"
             ><g clip-path="url(#a)"
-              ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"></path></g
+              ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"
+              ></path></g
             ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs
             ></svg
           >
