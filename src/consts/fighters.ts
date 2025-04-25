@@ -11,7 +11,7 @@ export const FIGHTERS: Fighters[] = [
     // https://www.biografia.de/peereira/
     id: 'peereira',
     name: 'Peereira',
-    bio: 'El streamer español Peereira7 (A Coruña, 1998) es un creador de contenido de eSports. Combina sus directos en videojuegos como Valorant o Fortnite con otros contenidos IRL y de viajes. Futbolero y fan del RC Deportivo de la Coruña, su nombre real es Pablo y uno de sus motes, además de Pereira, es ‘El Gorras’. 163 centímetros de mala baba, ideal para dejarlo todo en el ring.',
+    bio: 'El streamer español Peereira7 es un creador de contenido de eSports. Combina sus directos en videojuegos como Valorant o Fortnite con otros contenidos IRL y de viajes. Futbolero y fan del RC Deportivo de la Coruña, su nombre real es Pablo y uno de sus motes, además de Pereira, es ‘El Gorras’. 163 centímetros de mala baba, ideal para dejarlo todo en el ring.',
     realName: 'Pablo Pereira Ramos',
     gender: 'masculino',
     birthDate: new Date(1998, 11, 21),
@@ -107,7 +107,7 @@ export const FIGHTERS: Fighters[] = [
     // https://laletrade.com/biografias/twitch/18087-perxitaa
     id: 'perxitaa',
     name: 'Perxitaa',
-    bio: 'El youtuber y streamer español Perxitaa (Valencia, 1991) es una auténtica leyenda, desde sus comienzos en videojuegos como Minecraft, GTA o Fortnite hasta su andadura más reciente como presidente de Los Troncos FC de la Kings League. Jaume Cremades, arquitecto, es todo un grande también en lo físico. Y se entregará al máximo.',
+    bio: 'El youtuber y streamer español Perxitaa es una auténtica leyenda, desde sus comienzos en videojuegos como Minecraft, GTA o Fortnite hasta su andadura más reciente como presidente de Los Troncos FC de la Kings League. Jaume Cremades, arquitecto, es todo un grande también en lo físico. Y se entregará al máximo.',
     realName: 'Jaume Cremades Gradoli',
     gender: 'masculino',
     birthDate: new Date(1991, 6, 9),
@@ -207,7 +207,7 @@ export const FIGHTERS: Fighters[] = [
     // https://www.biografia.de/abby/
     id: 'abby',
     name: 'Abby',
-    bio: 'Abby (Palma, 2000) es una streamer española que ha construido una gran comunidad jugando a League of Legends desde hace años, pero poco a poco ha ido ampliando y enriqueciendo su contenido con nuevos enfoques. Ganadora del concurso ‘El último en pie’ de Ibai en 2022, Abril Gené fue crítica con el contenido y formato de su oponente Roro. Es el momento de llevar esa rivalidad al cuadrilátero.',
+    bio: 'Abby es una streamer española que ha construido una gran comunidad jugando a League of Legends desde hace años, pero poco a poco ha ido ampliando y enriqueciendo su contenido con nuevos enfoques. Ganadora del concurso ‘El último en pie’ de Ibai en 2022, Abril Gené fue crítica con el contenido y formato de su oponente Roro. Es el momento de llevar esa rivalidad al cuadrilátero.',
     realName: 'Abril Gené Capriles',
     gender: 'femenino',
     birthDate: new Date(2000, 11, 28),
@@ -216,7 +216,7 @@ export const FIGHTERS: Fighters[] = [
     weight: 62,
     country: 'es',
     gallery: true,
-    city: 'Mallorca, Islas Baleares',
+    city: 'Palma, Mallorca',
     versus: 'roro',
     socials: [
       {
@@ -303,7 +303,7 @@ export const FIGHTERS: Fighters[] = [
     // https://www.biografia.de/roro/
     id: 'roro',
     name: 'Roro',
-    bio: 'Probablemente la tiktoker revelación de los últimos tiempos, Roro (Madrid, 2002) tiene una mano especial para cocinar y preparar recetas increíbles desde cero, unidas a una creatividad que la han catapultado al éxito. Rocío viene de participar recientemente en un ‘talent show’ de cocina en televisión y pocos saben que sus primeros vídeos en redes eran en el gimnasio. ¿Es Roro una ‘gymbro’? Disciplina y motivación no le faltan para ponerse el cinturón.',
+    bio: 'Probablemente la tiktoker revelación de los últimos tiempos, Roro tiene una mano especial para cocinar y preparar recetas increíbles desde cero, unidas a una creatividad que la han catapultado al éxito. Rocío viene de participar recientemente en un ‘talent show’ de cocina en televisión y pocos saben que sus primeros vídeos en redes eran en el gimnasio. ¿Es Roro una ‘gymbro’? Disciplina y motivación no le faltan para ponerse el cinturón.',
     realName: 'Rocío López Bueno',
     gender: 'femenino',
     birthDate: new Date(2002, 2, 1),
@@ -371,7 +371,7 @@ export const FIGHTERS: Fighters[] = [
     // https://www.biografia.de/gaspi/
     id: 'gaspi',
     name: 'Gaspi',
-    bio: 'El rey de la improvisación, el argentino Gaspi (Buenos Aires, 2022) desconoce el significado de la palabra vergüenza cuando tiene un micrófono en la mano. Sus bromas pesadas y chistes en cualquier rincón, calle, tienda o bar, regalan clips de oro con una frecuencia asombrosa. Su voz y sonidos indescriptibles despistan a cualquiera. ¿Alguien puede imaginarse qué personalidad mostrará sobre el ring? Solo él lo sabe.',
+    bio: 'El rey de la improvisación, el argentino Gaspi desconoce el significado de la palabra vergüenza cuando tiene un micrófono en la mano. Sus bromas pesadas y chistes en cualquier rincón, calle, tienda o bar, regalan clips de oro con una frecuencia asombrosa. Su voz y sonidos indescriptibles despistan a cualquiera. ¿Alguien puede imaginarse qué personalidad mostrará sobre el ring? Solo él lo sabe.',
     realName: 'Gaspar Prim Díaz',
     gender: 'masculino',
     birthDate: new Date(2002, 11, 28),
@@ -451,7 +451,7 @@ export const FIGHTERS: Fighters[] = [
     // https://www.biografia.de/rivaldios/
     id: 'rivaldios',
     name: 'Rivaldios',
-    bio: 'El tiktoker mexicano Rivaldios (Culiacán, 2001) es uno de los grandes creadores latinoamericanos especializados en contenido de fútbol. Como jugador, llegó a progresar en las categorías inferiores de distintos equipos profesionales antes de centrar su futuro como influencer deportivo. El de Sinaloa realiza retos de fútbol en redes, donde su zurda garantiza calidad. Ahora veremos cómo La Cabra se desenvuelve con los guantes.',
+    bio: 'El tiktoker mexicano Rivaldios es uno de los grandes creadores latinoamericanos especializados en contenido de fútbol. Como jugador, llegó a progresar en las categorías inferiores de distintos equipos profesionales antes de centrar su futuro como influencer deportivo. El de Sinaloa realiza retos de fútbol en redes, donde su zurda garantiza calidad. Ahora veremos cómo La Cabra se desenvuelve con los guantes.',
     realName: 'Rivaldo Reatiga Ojeda',
     gender: 'masculino',
     birthDate: new Date(2001, 1, 6),
@@ -523,7 +523,7 @@ export const FIGHTERS: Fighters[] = [
     // https://www.biografia.de/andoni/
     id: 'andoni',
     name: 'Andoni',
-    bio: 'Andoni Talledo (Bilbao, 2003) es una promesa del culturismo en España que ha alcanzado una gran popularidad en internet con contenido sobre fitness y entrenamiento personal. Desde hace años comparte en redes su progreso físico hasta alcanzar el punto en el que está: es un auténtico animal. Su reto mayúsculo será bajar de peso alrededor de 15 kilos para adaptarse a los 100 en los que ha acordado el combate con Belcast.',
+    bio: 'Andoni Talledo es una promesa del culturismo en España que ha alcanzado una gran popularidad en internet con contenido sobre fitness y entrenamiento personal. Desde hace años comparte en redes su progreso físico hasta alcanzar el punto en el que está: es un auténtico animal. Su reto mayúsculo será bajar de peso alrededor de 15 kilos para adaptarse a los 100 en los que ha acordado el combate con Belcast.',
     realName: 'Andoni Talledo Gutiérrez',
     gender: 'masculino',
     birthDate: new Date(2003, 0, 3),
@@ -596,7 +596,7 @@ export const FIGHTERS: Fighters[] = [
     id: 'viruzz',
     name: 'Viruzz',
     realName: 'Víctor Mélida Cambra',
-    bio: 'El papá de La Velada, con dos cinturones ya y tres participaciones, Víctor Mélida, Viruzz (Zaragoza, 1992) va a por la cuarta. El formato se adapta a la perfección a este creador español que asegura una cosa: el mejor boxeo de la noche lo veremos con él en pie. Viruzz consiguió su redención tras las malas decisiones del pasado batiendo a Shelao en 2024 con un derechazo inmenso, probablemente el mejor golpe en la historia de las Veladas. Exjugador profesional de balonmano en Liga Asobal, su contenido va desde deportes hasta videojuegos, pasando por IRL, comida… ¿Podrá alcanzar la triple corona en Sevilla?',
+    bio: 'El papá de La Velada, con dos cinturones ya y tres participaciones, Víctor Mélida, Viruzz va a por la cuarta. El formato se adapta a la perfección a este creador español que asegura una cosa: el mejor boxeo de la noche lo veremos con él en pie. Viruzz consiguió su redención tras las malas decisiones del pasado batiendo a Shelao en 2024 con un derechazo inmenso, probablemente el mejor golpe en la historia de las Veladas. Exjugador profesional de balonmano en Liga Asobal, su contenido va desde deportes hasta videojuegos, pasando por IRL, comida… ¿Podrá alcanzar la triple corona en Sevilla?',
     gender: 'masculino',
     birthDate: new Date(1992, 4, 1),
     height: 1.82,
@@ -687,7 +687,7 @@ export const FIGHTERS: Fighters[] = [
     // https://www.biografia.de/alana-flores/
     id: 'alana',
     name: 'Alana',
-    bio: 'Presidenta de Raniza FC de la Kings League Américas, la mexicana Alana Flores (Nuevo León, 2000) vivirá su segunda participación en La Velada después de imponerse con claridad en el 2vs2 junto a Amablitz, destrozando a las españolas Zeling y Nissaxter el año pasado en el Santiago Bernabéu. Pese a la victoria, nos quedamos con ganas de más y ahora habrá mucha más Alana en el cuadrilátero. El boxeo y el deporte la han llevado a un brutal cambio físico que centra ahora su contenido, donde también hay videojuegos o IRL. Sin duda, una de las grandes streamers de Latinoamérica.',
+    bio: 'Presidenta de Raniza FC de la Kings League Américas, la mexicana Alana Flores vivirá su segunda participación en La Velada después de imponerse con claridad en el 2vs2 junto a Amablitz, destrozando a las españolas Zeling y Nissaxter el año pasado en el Santiago Bernabéu. Pese a la victoria, nos quedamos con ganas de más y ahora habrá mucha más Alana en el cuadrilátero. El boxeo y el deporte la han llevado a un brutal cambio físico que centra ahora su contenido, donde también hay videojuegos o IRL. Sin duda, una de las grandes streamers de Latinoamérica.',
     fightName: 'Alana La Rana',
     realName: 'Alana Scarlett Flores Fuentes',
     gender: 'femenino',
@@ -788,7 +788,7 @@ export const FIGHTERS: Fighters[] = [
     gallery: true,
     city: 'Alhama de Murcia, Murcia',
     versus: 'westcol',
-    bio: 'Un coloso de la creación de contenido, David Cánovas ‘TheGrefg’ (Alhama de Murcia, 1997) ha pasado de sus comienzos subiendo gameplays a convertirse en un creador total. Copropietario de una de las grandes entidades de eSports, Team Heretics, organiza desde 2022 los Premios Esland que reconocen a los mejores creadores hispanohablantes. Para la historia queda su presentación de skin en Fortnite, que reunió en Twitch a casi 2,5 millones de espectadores, una cifra que solo las Veladas II, III y IV han podido superar. El presidente de los Saiyans FC de la Kings League viaja, prueba comida, juega a videojuegos, trabaja en un cambio físico que ya es brutal… y que puede ser clave para llevarse el cinturón.',
+    bio: 'Un coloso de la creación de contenido, David Cánovas ‘TheGrefg’ ha pasado de sus comienzos subiendo gameplays a convertirse en un creador total. Copropietario de una de las grandes entidades de eSports, Team Heretics, organiza desde 2022 los Premios Esland que reconocen a los mejores creadores hispanohablantes. Para la historia queda su presentación de skin en Fortnite, que reunió en Twitch a casi 2,5 millones de espectadores, una cifra que solo las Veladas II, III y IV han podido superar. El presidente de los Saiyans FC de la Kings League viaja, prueba comida, juega a videojuegos, trabaja en un cambio físico que ya es brutal… y que puede ser clave para llevarse el cinturón.',
     socials: [
       {
         id: 'instagram',
@@ -876,7 +876,7 @@ export const FIGHTERS: Fighters[] = [
     gallery: true,
     city: 'Ciudad Bolívar, Antioquia',
     versus: 'grefg',
-    bio: 'El colombiano Luis Villa (Ciudad Bolívar, 2000), Westcol, es uno de los streamers más populares y exitosos de Latinoamérica. Presidente junto al rapero Arcángel de West Santos FC de la Kings League Américas, su comunidad y números hablan por sí solos. Con contenido variado, incluyendo videojuegos y charlas con sus seguidores, entrevistas, etc, ha organizado hasta su propia velada de boxeo: la exitosa Stream Fighters. Recientemente se ha adentrado en el mundo de la música, colaborando con Beéle, Blessd u Ovy On The Drums en éxitos mundiales como Soltera y La Plena. Polémico y amante de la buena vida, la expectación es máxima por seguir su preparación para la gran cita.',
+    bio: 'El colombiano Luis Villa, Westcol, es uno de los streamers más populares y exitosos de Latinoamérica. Presidente junto al rapero Arcángel de West Santos FC de la Kings League Américas, su comunidad y números hablan por sí solos. Con contenido variado, incluyendo videojuegos y charlas con sus seguidores, entrevistas, etc, ha organizado hasta su propia velada de boxeo: la exitosa Stream Fighters. Recientemente se ha adentrado en el mundo de la música, colaborando con Beéle, Blessd u Ovy On The Drums en éxitos mundiales como Soltera y La Plena. Polémico y amante de la buena vida, la expectación es máxima por seguir su preparación para la gran cita.',
     socials: [
       {
         id: 'instagram',
@@ -954,7 +954,7 @@ export const FIGHTERS: Fighters[] = [
     // https://www.biografia.de/ari-geli/
     id: 'arigeli',
     name: 'Arigeli',
-    bio: 'Jugadora de baloncesto y creadora deportiva, Ari Geli (Barcelona, 2002) ha viajado por todo el mundo con un balón en las manos y es propietaria y fundadora del equipo Panthers3x3. Su contenido siempre centrado en deporte y con buen humor le ha impulsado a hitos como el de mejor creador referente en deportes en España en 2022. Su forma de enfocar, por ejemplo, las lesiones deportivas y su recuperación ha contribuido sin duda al gran crecimiento de Pitufina, la reina de los triples.',
+    bio: 'Jugadora de baloncesto y creadora deportiva, Ari Geli ha viajado por todo el mundo con un balón en las manos y es propietaria y fundadora del equipo Panthers3x3. Su contenido siempre centrado en deporte y con buen humor le ha impulsado a hitos como el de mejor creador referente en deportes en España en 2022. Su forma de enfocar, por ejemplo, las lesiones deportivas y su recuperación ha contribuido sin duda al gran crecimiento de Pitufina, la reina de los triples.',
     realName: 'Ariadna Geli Pérez',
     gender: 'femenino',
     birthDate: new Date(2002, 9, 11),
@@ -1043,7 +1043,7 @@ export const FIGHTERS: Fighters[] = [
     id: 'tomas',
     name: 'Tomás',
     realName: 'Tomás Francisco Pérez Mazza',
-    bio: 'El youtuber argentino Tomás Mazza (Buenos Aires, 2000), especializado en contenido sobre fitness y salud, vive su segunda preparación para subirse a un ring. Ya peleó el año pasado en el ‘Párense de manos 2’, otra gran velada de creadores que se disputa en Argentina y que tuvo también decenas de miles de espectadores en las gradas. Vivida ya la experiencia y conocido el sabor de la victoria, el reto para Mazza será aún mayor. Ahora espera que su gran crecimiento como creador vaya de la mano de un salto en el boxeo que le permita tumbar a Viruzz.',
+    bio: 'El youtuber argentino Tomás Mazza, especializado en contenido sobre fitness y salud, vive su segunda preparación para subirse a un ring. Ya peleó el año pasado en el ‘Párense de manos 2’, otra gran velada de creadores que se disputa en Argentina y que tuvo también decenas de miles de espectadores en las gradas. Vivida ya la experiencia y conocido el sabor de la victoria, el reto para Mazza será aún mayor. Ahora espera que su gran crecimiento como creador vaya de la mano de un salto en el boxeo que le permita tumbar a Viruzz.',
     gender: 'masculino',
     birthDate: new Date(2000, 3, 16),
     height: 1.76,
@@ -1134,7 +1134,7 @@ export const FIGHTERS: Fighters[] = [
     // https://laletrade.com/biografias/youtuber/19752-carlos-belcast
     id: 'carlos',
     name: 'Carlos',
-    bio: 'Referencia en su sector, Carlos Belcast (Monterrey, 1998) es un creador de contenido especializado en fitness, entrenador personal y atleta de culturismo mexicano. Apasionado por contar su cambio gracias al deporte, su contenido no solo se centra en el plano físico, sino también en la mentalidad y actitud necesarias para alcanzar el siguiente nivel.',
+    bio: 'Referencia en su sector, Carlos Belcast es un creador de contenido especializado en fitness, entrenador personal y atleta de culturismo mexicano. Apasionado por contar su cambio gracias al deporte, su contenido no solo se centra en el plano físico, sino también en la mentalidad y actitud necesarias para alcanzar el siguiente nivel.',
     realName: 'Carlos Belcast',
     gender: 'masculino',
     birthDate: new Date(1998, 9, 5),
