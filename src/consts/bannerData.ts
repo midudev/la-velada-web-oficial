@@ -1,4 +1,4 @@
-import RevolutBanner from "@/assets/banners/revolut.png";
+import RevolutBanner from "@/assets/banners/revolut.webp";
 import type { Banner } from "@/types/bannerType";
 
 export const BANNERS: Banner[] = [
