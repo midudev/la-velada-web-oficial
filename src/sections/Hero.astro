@@ -1,20 +1,10 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
 import BoxerCard from '@/components/BoxerCard.astro'
+import SelectYourBoxer from '@/components/Boxers/SelectYourBoxer.astro'
 
-const firstRow = FIGHTERS.slice(0, 6)
-const leftRow = firstRow.slice(0, 3)
-const rightRow = firstRow.slice(3)
-
-const secondRow = FIGHTERS.slice(6)
-const leftSecondRow = secondRow.slice(0, 4)
-const rightSecondRow = secondRow.slice(4, 8)
-
-const animationDelay = [500, 700, 800]
-const reverseDelay = [...animationDelay].reverse()
-
-const animationDelaySecondRow = [...animationDelay, 900]
-const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
+const selectedBoxerId = Astro.url.searchParams.get('luchador') ?? FIGHTERS[0].id
+const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? FIGHTERS[0]
 ---
 
 <section class="relative flex min-h-screen w-full">
@@ -28,14 +18,18 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
   <div class="relative flex w-full flex-col items-center p-8 text-center">
     <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
       <h3
+<<<<<<< HEAD
         class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 font-medium leading-[100%]"
+=======
+        class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 text-xs font-medium leading-[100%] sm:text-base"
+>>>>>>> main
       >
         26 DE <br />JULIO
       </h3>
       <figure class="animate-fade-in relative">
         <img
-          class="relative z-20 h-auto w-64 sm:w-72 md:w-80 lg:w-96"
-          src="/images/logo.png"
+          class="relative z-20 h-auto w-48 sm:w-72 md:w-80 lg:w-96"
+          src="/images/logo.webp"
           fetchpriority="high"
           alt="La Velada del Año V"
           decoding="async"
@@ -44,14 +38,22 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
       </figure>
 
       <div class="relative z-10">
+<<<<<<< HEAD
         <h3
           class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-4 font-medium leading-relaxed tracking-wider"
         >
+=======
+        <h3 class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-0 font-medium">
+>>>>>>> main
           <a
             href="https://maps.app.goo.gl/RVUArf48FwuvqJjD6"
             rel="noopener noreferrer"
             target="_blank"
+<<<<<<< HEAD
             class="animate-fade-in animate-dalay-700 hover:scale-115 z-50 inline-block font-medium leading-relaxed tracking-wider transition"
+=======
+            class="animate-fade-in animate-dalay-700 hover:scale-115 z-50 inline-block text-xs font-medium leading-tight tracking-wider transition sm:text-base"
+>>>>>>> main
           >
             Estadio<br />La Cartuja,<br />Sevilla
           </a>
@@ -61,12 +63,17 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
           href="https://twitch.tv/ibai"
           rel="noopener noreferrer"
           target="_blank"
+<<<<<<< HEAD
           class="animate-fade-in animate-delay-700 z-10 mt-4 inline-block font-medium leading-relaxed tracking-wider transition hover:scale-125"
+=======
+          class="animate-fade-in animate-delay-700 z-10 mt-3 inline-block text-xs font-medium leading-tight tracking-wider transition hover:scale-125 sm:text-base"
+>>>>>>> main
         >
           twitch.tv<br />Ibai
         </a>
       </div>
     </div>
+<<<<<<< HEAD
 
     <div
       id="fighter-container"
@@ -163,6 +170,9 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         </div>
       </div>
     </div>
+=======
+    <SelectYourBoxer boxers={FIGHTERS} selectedBoxer={selectedBoxer} />
+>>>>>>> main
   </div>
 </section>
 
@@ -188,14 +198,36 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 
   document.addEventListener('astro:page-load', () => {
     const $landing = $('#landing')
+    let isMobile = window.matchMedia('(max-width: 768px)').matches
+
+    // Para que cuando cambie el tamaño de la ventana cambie el estado de si es mobile
+    // por si alguien al hacer resize ve que no funciona bien el cambio
+    // Los cambios estan pensandos para que se apliquen al entrar con un dispositivo u otro
+    window.addEventListener('resize', () => {
+      isMobile = window.matchMedia('(max-width: 768px)').matches
+    })
 
     let currentFighterId: string | null = null
     let hideFighterTimer: ReturnType<typeof setTimeout>
 
     document.addEventListener('boxer-card-exit', () => {
-      $landing?.classList.remove('hidden')
+      let showFighter = false
 
       if (!currentFighterId) return
+
+      if (isMobile) {
+        for (const card of boxerCards) {
+          if (card.getAttribute('data-id') === currentFighterId) {
+            if (card.getAttribute('data-selected') === 'true') {
+              showFighter = true
+              break
+            }
+          }
+        }
+
+        if (showFighter) return
+      }
+      $landing?.classList.remove('hidden')
 
       const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
       const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
@@ -331,11 +363,47 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
     const $fightersContainer = document.getElementById(
       'fighters-selection-container',
     ) as HTMLElement
+<<<<<<< HEAD
     $fightersContainer?.appendChild($fighterSelector)
+=======
+    if (!isMobile) {
+      $fightersContainer.appendChild($fighterSelector)
+    }
+
+    if (isMobile) {
+      // Quitamos `data-selected` cuando el usuario hace click en el contenedor
+      $fightersContainer.addEventListener('click', (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        boxerCards.forEach((card) => card.removeAttribute('data-selected'))
+        $landing?.classList.remove('hidden')
+      })
+    }
+>>>>>>> main
 
     const boxerCards = document.querySelectorAll('.boxer-card')
 
-    boxerCards.forEach((card) => {
+    boxerCards.forEach((card, cardIndex) => {
+      if (isMobile) {
+        // Agregamos `data-selected` cuando el usuario hace click en el card
+        card.addEventListener('click', (event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          // Si no tiene `data-selected` entonces lo agregamos
+          if (card.getAttribute('data-selected') === null) {
+            card.setAttribute('data-selected', 'true')
+            // Aseguramos que solo se selecciona el luchador que se hizo click
+            boxerCards.forEach((selectedCard, idx) => {
+              if (selectedCard.getAttribute('data-selected') === null || idx === cardIndex) return
+              selectedCard.removeAttribute('data-selected')
+            })
+            return
+          }
+          // Si ya tiene `data-selected` entonces lo quitamos y vamos a la url
+          card.removeAttribute('data-selected')
+          window.location.href = `/luchador/${card.getAttribute('data-id')}`
+        })
+      }
       card.addEventListener('mouseenter', () => {
         const { width, height, left, top } = card.getBoundingClientRect()
         const { left: leftFighterContainer, top: topFighterContainer } =

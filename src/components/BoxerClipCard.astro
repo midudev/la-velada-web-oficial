@@ -1,35 +1,41 @@
 ---
 import Youtube from '@/assets/svg/youtube.svg'
-const { index, text, url, externalPlayer }  = Astro.props
-const delay = index * 400;
-const { id } = Astro.params;
+const { index, text, url, externalPlayer } = Astro.props
+const delay = index * 400
+const { id } = Astro.params
 ---
 
 <li
   style={{ animationDelay: `${delay}ms` }}
-  class="flex justify-end mt-4 opacity-0 animate-fade-in-up backdrop-blur-sm"
+  class="animate-fade-in-up mt-4 flex justify-end opacity-0 backdrop-blur-sm"
 >
-  {externalPlayer && (
-    <a href={url} target="_blank" class="clips-drawer-open flex bg-pink-200/60 rounded-2xl rounded-br-none lowercase flex-col cursor-pointer pt-6 px-3 items-start relative z-0 hover:scale-105 animate-fade-in duration-600 justify-start space-x-2 text-left break-words text-wrap text-lg font-normal relative before:content-['“'] before:z-1 before:text-pink-500 before:text-8xl before:absolute before:-top-5 before:left-6 ">
-      <span class="text-dark-magenta">{text}</span>
-      <span class="relative w-full mt-2 flex items-center justify-end text-sm text-red-600 before:content-[''] before:absolute before:top-0 before:right-0 before:w-[60px] before:h-[2px] before:bg-pink-500 before:rounded-full">
-        <Youtube class="w-4  inline-flex mr-2" />
-        <span class=" text-sm">
-          Ver clips del combate
+  {
+    externalPlayer && (
+      <a
+        href={url}
+        target="_blank"
+        class="clips-drawer-open animate-fade-in duration-600 before:z-1 group relative z-0 flex cursor-pointer flex-col items-start justify-start space-x-2 break-words rounded-2xl rounded-br-none bg-pink-200/60 px-3 pt-6 text-left text-lg font-normal lowercase before:absolute before:-top-5 before:left-6 before:text-8xl before:text-pink-500 before:content-['“'] hover:scale-105"
+      >
+        <span class="text-dark-magenta">{text}</span>
+        <span class="relative mt-2 flex w-full items-center justify-end text-sm text-red-600 opacity-0 transition-opacity before:absolute before:right-0 before:top-0 before:h-[2px] before:w-[60px] before:rounded-full before:bg-pink-500 before:content-[''] group-hover:opacity-100">
+          <Youtube class="mr-2 inline-flex w-4" />
+          <span class="text-sm">Ver clips del combate</span>
         </span>
-      </span>
-    </a>
-  )}
-  {!externalPlayer && (
-    <label for="clip-drawer-toggle" class=" flex bg-pink-200/60 rounded-2xl rounded-br-none lowercase flex-col cursor-pointer pt-6 px-3 items-start relative z-0 hover:scale-105 animate-fade-in duration-600 justify-start space-x-2 text-left break-words text-wrap text-lg font-normal relative before:content-['“'] before:z-1 before:text-pink-500 before:text-8xl before:absolute before:-top-5 before:left-6 ">
-      <span class="text-dark-magenta">{text}</span>
-      <span class="relative w-full mt-2 flex items-center justify-end text-sm text-red-600 before:content-[''] before:absolute before:top-0 before:right-0 before:w-[60px] before:h-[2px] before:bg-pink-500 before:rounded-full">
-        <Youtube class="w-4  inline-flex mr-2" />
-        <span class=" text-sm">
-          Ver clips del combate
+      </a>
+    )
+  }
+  {
+    !externalPlayer && (
+      <label
+        for="clip-drawer-toggle"
+        class="animate-fade-in duration-600 before:z-1 relative z-0 flex cursor-pointer flex-col items-start justify-start space-x-2 break-words rounded-2xl rounded-br-none bg-pink-200/60 px-3 pt-6 text-left text-lg font-normal lowercase before:absolute before:-top-5 before:left-6 before:text-8xl before:text-pink-500 before:content-['“'] hover:scale-105"
+      >
+        <span class="text-dark-magenta">{text}</span>
+        <span class="relative mt-2 flex w-full items-center justify-end text-sm text-red-600 opacity-0 transition-opacity before:absolute before:right-0 before:top-0 before:h-[2px] before:w-[60px] before:rounded-full before:bg-pink-500 before:content-['']">
+          <Youtube class="mr-2 inline-flex w-4" />
+          <span class="text-sm">Ver clips del combate</span>
         </span>
-      </span>
-    </label>
-  )}
+      </label>
+    )
+  }
 </li>
-
