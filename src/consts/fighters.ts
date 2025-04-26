@@ -1,20 +1,10 @@
-<<<<<<< HEAD
-import Instagram from "@/assets/svg/instagram.svg";
-import Kick from "@/assets/svg/kick.svg";
-import TikTok from "@/assets/svg/tiktok.svg";
-import Twitch from "@/assets/svg/twitch.svg";
-import X from "@/assets/svg/x.svg";
-import Youtube from "@/assets/svg/youtube.svg";
-import type { Fighters } from '@/types/fighters';
-=======
-import type { Fighters } from '@/types/fighters'
-import X from '@/assets/svg/x.svg'
 import Instagram from '@/assets/svg/instagram.svg'
-import Youtube from '@/assets/svg/youtube.svg'
+import Kick from '@/assets/svg/kick.svg'
 import TikTok from '@/assets/svg/tiktok.svg'
 import Twitch from '@/assets/svg/twitch.svg'
-import Kick from '@/assets/svg/kick.svg'
->>>>>>> main
+import X from '@/assets/svg/x.svg'
+import Youtube from '@/assets/svg/youtube.svg'
+import type { Fighters } from '@/types/fighters'
 
 export const FIGHTERS: Fighters[] = [
   {
@@ -97,17 +87,6 @@ export const FIGHTERS: Fighters[] = [
     clips: [
       {
         text: 'En seis meses va a caer, lo voy a noquear 100% y le voy a arrancar la p*** cabeza.',
-<<<<<<< HEAD
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=GIR26FtonnzIbZZL&amp;clip=UgkxLQNqwPqlJLU97lVJkD2lEWrJXswPfHOU&amp;clipt=ENGYChjaywo'
-      },
-      {
-        text: 'Vengo aquí para ser el mejor boxeador posible, estoy con el mejor equipo posible y lo único que te pido es que entrenes lo suficientemente bien para que toda esta gente vea el show que se merece.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=OQAXdqDuQ33flPQg&amp;clip=UgkxtAMxt3Q-BIOC7G6PqfRTs8qkUZgaXwWP&amp;clipt=ENS2KBjkiik'
-      },
-      {
-        text: 'Entreno literalmente para noquearlo, no vengo a otra cosa.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I'
-=======
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=GIR26FtonnzIbZZL&amp;clip=UgkxLQNqwPqlJLU97lVJkD2lEWrJXswPfHOU&amp;clipt=ENGYChjaywo',
       },
       {
@@ -117,7 +96,6 @@ export const FIGHTERS: Fighters[] = [
       {
         text: 'Entreno literalmente para noquearlo, no vengo a otra cosa.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=AOlsjKIAacuwz_NZ&amp;clip=Ugkx2wfrvLVecdcny4Aw7hy0wu44LEZ8p3Ua&amp;clipt=EI2IQhiVr0I',
->>>>>>> main
       },
     ],
     workout: {
@@ -525,19 +503,11 @@ export const FIGHTERS: Fighters[] = [
     clips: [
       {
         text: 'Pereira, ponte trucha, amigo. Te voy a enseñar que la cuna del boxeo está en México.',
-<<<<<<< HEAD
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=2yNcYbYAnGXc4jRD&amp;clip=UgkxuVSmgfc49HRArsmT522Vf42fmDo_W1WA&amp;clipt=EKOABBj8rgQ'
-      },
-      {
-        text: 'Voy a llegar al punto en que este v**** me va a tener miedo después de la pelea.',
-        url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=qXDaC9BtQVT2Lw3r&amp;clip=Ugkxyvlpe6cGZqC2A2tU6B_-kgYlAqHuWn90&amp;clipt=EJC-LxiY5S8'
-=======
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=2yNcYbYAnGXc4jRD&amp;clip=UgkxuVSmgfc49HRArsmT522Vf42fmDo_W1WA&amp;clipt=EKOABBj8rgQ',
       },
       {
         text: 'Voy a llegar al punto en que este v**** me va a tener miedo después de la pelea.',
         url: 'https://www.youtube.com/embed/OjOItlQQHNM?si=qXDaC9BtQVT2Lw3r&amp;clip=Ugkxyvlpe6cGZqC2A2tU6B_-kgYlAqHuWn90&amp;clipt=EJC-LxiY5S8',
->>>>>>> main
       },
       {
         text: 'La sangre culichi está bien pesada, una vez que te metes con un culichi, papito, a ver si sales de ahí.',
@@ -971,11 +941,7 @@ export const FIGHTERS: Fighters[] = [
     ],
     workout: {
       videoID: '_XWxZUwzhXk',
-<<<<<<< HEAD
-      thumbnail: '/images/fighters/workoutThumbnails/westcol-thumbnail.webp'
-=======
       thumbnail: '/images/fighters/workoutThumbnails/westcol-thumbnail.webp',
->>>>>>> main
     },
     clips: [
       {
