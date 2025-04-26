@@ -247,7 +247,7 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
       'fighters-selection-container',
     ) as HTMLElement
     if (!isMobile) {
-      $fightersContainer.appendChild($fighterSelector)
+      $fightersContainer?.appendChild($fighterSelector)
     }
 
     if (isMobile) {
@@ -286,7 +286,7 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
       card.addEventListener('mouseenter', () => {
         const { width, height, left, top } = card.getBoundingClientRect()
         const { left: leftFighterContainer, top: topFighterContainer } =
-          $fightersContainer.getBoundingClientRect()
+          $fightersContainer?.getBoundingClientRect()
 
         $fighterSelector.style.setProperty('--selector--left', `${left - leftFighterContainer}px`)
         $fighterSelector.style.setProperty('--selector--top', `${top - topFighterContainer}px`)
