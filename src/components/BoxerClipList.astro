@@ -13,19 +13,14 @@ interface BoxerClipProps {
 }
 
 const { clips = [], externalPlayer } = Astro.props as BoxerClipProps
-const clips_soted_by_text_size = clips.sort((a, b) => {
-  const aSize = a.text.length
-  const bSize = b.text.length
-  return bSize - aSize
-})
+const clips_sorted_by_text_size = clips.sort((a, b) => b.text.length - a.text.length)
 ---
 
 <input type="checkbox" id="clip-drawer-toggle" class="hidden" />
 
-<!-- Start ListClips -->
 <ul>
   {
-    clips_soted_by_text_size.map((clip, i) => (
+    clips_sorted_by_text_size.map((clip, i) => (
       <BoxerClipCard externalPlayer={externalPlayer} index={i} text={clip.text} url={clip.url} />
     ))
   }
@@ -36,5 +31,4 @@ const clips_soted_by_text_size = clips.sort((a, b) => {
     </label>
   </li>
 </ul>
-
 <!-- End ListClips -->
