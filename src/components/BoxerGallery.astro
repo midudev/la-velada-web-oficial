@@ -50,7 +50,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 5)
         <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
         <button
           type="button"
-          class="hover:text-theme-tickle-me-pink text-theme-turquoise absolute right-8 top-8 z-10 cursor-pointer rounded bg-black/60 p-4 transition hover:scale-110"
+          class="hover:text-theme-tickle-me-pink text-theme-turquoise absolute right-8 top-8 z-10 hidden cursor-pointer rounded bg-black/60 p-4 transition hover:scale-110 md:block"
         >
           <svg class="size-5" aria-hidden="true" fill="none" viewBox="0 0 14 14">
             <path
@@ -63,7 +63,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 5)
         </button>
         <button
           data-btn-prev
-          class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute left-[10px] z-10 cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:left-0"
+          class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute left-[10px] z-10 hidden cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:left-0 md:block"
           id="btn-prev"
         >
           <svg class="size-16" width="80" height="80" fill="none"
@@ -83,7 +83,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 5)
         />
         <button
           data-btn-next
-          class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute right-[10px] z-10 cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:right-0"
+          class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute right-[10px] z-10 hidden cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:right-0 md:block"
           id="btn-next"
         >
           <svg class="size-16 rotate-180" width="80" height="80" fill="none"
@@ -119,6 +119,9 @@ const IMAGES_TO_LOAD = Math.min(gallery, 5)
         resetMainImageAnimation(img)
         img.src = newImg.src
         img.classList.add('animate-fade-in')
+
+        img.style.transition = 'transform 0.2s ease'
+        img.style.transform = 'translateX(0)'
       }
     }
 
@@ -147,6 +150,64 @@ const IMAGES_TO_LOAD = Math.min(gallery, 5)
           : $gallery.querySelector('a:first-of-type')
       ) as HTMLAnchorElement
       next.click()
+    }
+
+    let isAnimating = false
+
+    const startSwipeDrag = (startEvent: MouseEvent | TouchEvent) => {
+      let initialTouchX: number
+      let swipeDeltaX: number = 0
+
+      const getTouchX = (e: MouseEvent | TouchEvent) =>
+        e instanceof MouseEvent ? e.pageX : e.touches[0].pageX
+
+      const handleSwipeMove = (moveEvent: MouseEvent | TouchEvent) => {
+        const currentTouchX = getTouchX(moveEvent)
+        swipeDeltaX = currentTouchX - initialTouchX
+        const $lightboxImg = $lightbox.querySelector('.boxer-gallery-img') as HTMLImageElement
+        if ($lightboxImg) {
+          $lightboxImg.style.transform = `translateX(${swipeDeltaX}px)`
+        }
+      }
+
+      const handleSwipeDecision = () => {
+        if (isAnimating) return
+
+        const $lightboxImg = $lightbox.querySelector('.boxer-gallery-img') as HTMLImageElement
+        if (!$lightboxImg) return
+
+        if (swipeDeltaX > $lightboxImg.offsetWidth * 0.5) {
+          isAnimating = true
+          showPrevImage()
+        } else if (swipeDeltaX < -$lightboxImg.offsetWidth * 0.5) {
+          isAnimating = true
+          showNextImage()
+        } else {
+          $lightboxImg.style.transition = 'transform 0.2s ease'
+          $lightboxImg.style.transform = 'translateX(0)'
+        }
+
+        document.removeEventListener('mousemove', handleSwipeMove)
+        document.removeEventListener('mouseup', handleSwipeDecision)
+        document.removeEventListener('touchmove', handleSwipeMove)
+        document.removeEventListener('touchend', handleSwipeDecision)
+      }
+
+      initialTouchX = getTouchX(startEvent)
+
+      document.addEventListener('mousemove', handleSwipeMove)
+      document.addEventListener('mouseup', handleSwipeDecision)
+      document.addEventListener('touchmove', handleSwipeMove, { passive: true })
+      document.addEventListener('touchend', handleSwipeDecision, { passive: true })
+    }
+
+    const $lightboxImg = $lightbox?.querySelector('.boxer-gallery-img') as HTMLImageElement
+    if ($lightboxImg) {
+      $lightboxImg.addEventListener('mousedown', (e) => startSwipeDrag(e))
+      $lightboxImg.addEventListener('touchstart', (e) => startSwipeDrag(e))
+      $lightboxImg.addEventListener('animationend', () => {
+        isAnimating = false // Permitir nuevos movimientos después de que la animación termine
+      })
     }
 
     $btnPrev.addEventListener('click', () => {
