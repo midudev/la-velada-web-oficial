@@ -34,16 +34,19 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
     </div>
 
     <!-- Listado de Clips -->
-    <div
+    <aside
       class="group flex w-full flex-col items-center justify-center gap-y-32 text-balance px-8 pt-4 text-right lg:min-h-screen lg:max-w-xl lg:pt-24"
     >
-      <BoxerClipList clips={fighter.clips} externalPlayer={false} />
+      <main>
+        <BoxerClipList clips={fighter.clips} externalPlayer={false} />
 
-      <div class="relative z-[101]">
-        <BoxerClipDrawer clips={fighter.clips} />
-      </div>
 
-    </div>
+        <div class="relative z-[101]">
+          <BoxerClipDrawer clips={fighter.clips} />
+        </div>
+
+      </main>
+    </aside>
 
     <!-- Boxeador perfil -->
     <div
