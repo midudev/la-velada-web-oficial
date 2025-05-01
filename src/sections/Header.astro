@@ -146,13 +146,18 @@ const isActive = (path: string) => pathname === path
       border-bottom-color: black;
     }
   }
+
   #navContent {
+    pointer-events: none;
+    z-index: -9999;
     transition:
       translate 0.3s ease-in-out,
       visibility 0.3s 0.3s;
   }
 
   #navContent.showing {
+    pointer-events: auto;
+    z-index: 0;
     visibility: visible;
     translate: 0 0;
     transition:
