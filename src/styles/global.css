@@ -46,6 +46,91 @@
 }
 
 @layer utilities {
+
+/* Efecto neón sutil solo para el texto */
+.neon-text {
+  color: #fff;
+  text-shadow:
+    0 4px 18px rgba(0,0,0,0.85), /* sombra oscura general */
+    0 0 2px #00fff7,
+    0 0 4px #ff4f9f;
+  animation: neon-flicker 2.2s infinite both;
+  transition: text-shadow 0.3s;
+}
+
+@keyframes neon-flicker {
+  0%, 100% {
+    opacity: 1;
+    text-shadow:
+      0 2px 8px rgba(0,0,0,0.6),
+      0 0 2px #00fff7,
+      0 0 4px #ff4f9f;
+  }
+  10% {
+    opacity: 0.95;
+    text-shadow:
+      0 2px 8px rgba(0,0,0,0.6),
+      0 0 3px #00fff7,
+      0 0 6px #ff4f9f;
+  }
+  18% {
+    opacity: 0.85;
+    text-shadow:
+      0 2px 8px rgba(0,0,0,0.6),
+      0 0 1px #00fff7,
+      0 0 2px #ff4f9f;
+  }
+  20% {
+    opacity: 0.95;
+    text-shadow:
+      0 2px 8px rgba(0,0,0,0.6),
+      0 0 3px #00fff7,
+      0 0 6px #ff4f9f;
+  }
+  25% {
+    opacity: 0.9;
+    text-shadow:
+      0 2px 8px rgba(0,0,0,0.6),
+      0 0 1px #00fff7,
+      0 0 2px #ff4f9f;
+  }
+  30% {
+    opacity: 1;
+    text-shadow:
+      0 2px 8px rgba(0,0,0,0.6),
+      0 0 2px #00fff7,
+      0 0 4px #ff4f9f;
+  }
+  70% {
+    opacity: 0.97;
+    text-shadow:
+      0 2px 8px rgba(0,0,0,0.6),
+      0 0 2px #00fff7,
+      0 0 4px #ff4f9f;
+  }
+  80% {
+    opacity: 0.85;
+    text-shadow:
+      0 2px 8px rgba(0,0,0,0.6),
+      0 0 1px #00fff7,
+      0 0 2px #ff4f9f;
+  }
+  90% {
+    opacity: 1;
+    text-shadow:
+      0 2px 8px rgba(0,0,0,0.6),
+      0 0 2px #00fff7,
+      0 0 4px #ff4f9f;
+  }
+}
+
+.neon-text:hover {
+  text-shadow:
+    0 0 4px #00fff7,
+    0 0 8px #ff4f9f;
+  animation: none;
+}
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
