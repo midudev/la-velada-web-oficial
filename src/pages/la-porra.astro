@@ -2,18 +2,164 @@
 import Layout from '@/layouts/Layout.astro'
 import { porra } from '@/consts/pageTitles'
 import BackgroundLayout from '@/layouts/BackgroundLayout.astro'
+import { FIGHTERS as _FIGHTERS } from '@/consts/fighters'
+import BoxerCardPorra from '@/components/BoxerCardPorra.astro'
+import { undefined } from 'astro:schema'
+import PorraBar from '@/components/PorraBar.astro'
+
+const FIGHTERS = _FIGHTERS.map(
+  ({ id, name, versus: _versus }, index) => {
+    const versusIndex = _FIGHTERS.findIndex(f => f.id === _versus)
+    if(versusIndex < index)
+      return;
+    const versus = _FIGHTERS[versusIndex]
+    return {id, name, versus }
+  }).filter(f => !!f)
 ---
 
 <Layout title={porra}>
-  <BackgroundLayout>
-    <header
-      class="absolute top-28 mx-auto flex min-h-screen w-full flex-col items-center justify-start gap-4"
+  <section class="min-h-screen w-full">
+    <div
+      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
     >
-      <h2
+    </div>
+
+    <div class="flex w-full flex-col items-center text-center">
+      <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-30">
+        <h3
         class="animate-fade-in animate-delay-300 bg-gradient-to-r from-sky-100 to-pink-300 bg-clip-text text-center text-2xl font-bold text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
+        >
+          PARTICIPA EN LA PORRA
+        </h3>
+      </div>
+
+      <div
+        id="combats-container"
+        class="relative top-36 max-w-7xl mt-10 mb-72 flex flex-wrap justify-center gap-4 md:gap-8 w-full flex-col items-center pt-12"
       >
-        PARTICIPA EN LA PORRA
-      </h2>
-    </header>
-  </BackgroundLayout>
+        <form id="porra-form" class="grid w-full grid-cols-1 gap-12 rounded-lg sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {FIGHTERS.map(({versus, ...fighter }, index) => {
+              const isLast = index === FIGHTERS.length - 1
+              return (
+                <div>
+                  <div class="mx-auto flex lg:w-full items-center justify-center gap-4 relative">
+                    <div class="absolute -bottom-10 h-7/8 w-full bg-gradient-to-b from-pink-900/30 from-60% to-transparent transition-colors duration-300 group-hover:from-pink-900/20" />
+                    <BoxerCardPorra group={index} id={fighter.id} name={fighter.name} class="boxer-right" versus={versus.id} />
+                    <img
+                      src="/images/versus.png"
+                      class="animate-slide-out-bottom size-16"
+                      alt="Imagen de Versus"
+                    />
+                    <BoxerCardPorra group={index} id={versus.id} name={versus.name} class="boxer-right" versus={fighter.id} />
+                    <span
+                      class={`absolute -bottom-10 peer-checked:bg-white h-12 w-1/2 transition-all`}
+                    />
+                  </div>
+                  <PorraBar id={`porra-bar-${index}`} />
+              </div>
+            )})}
+            <div class='lg:col-span-2 items-center content-center mt-10'>
+              <button type="submit" class="shadow-2xl opacity-75 bg-gradient-to-r from-pink-600 to-cyan-500 text-white border border-pink-950 px-8 py-4 rounded-lg
+              hover:shadow-xl hover:scale-105 hover:opacity-100
+              transition-all duration-500 ease-in-out
+              ">ENVIAR PORRA</button>
+            </div>
+          </select>
+        </form>
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<script>
+  import { FIGHTERS } from '@/consts/fighters'
+  import FingerprintJS from '@fingerprintjs/fingerprintjs'
+  
+  document.addEventListener("astro:page-load", async () => {
+    const fp = await FingerprintJS.load()
+    const result = await fp.get()
+    const visitorId: string = result.visitorId
+    
+    if(!visitorId)
+        return
+
+    function getCooki() {
+      var data = document.cookie.split('; ');
+      var fighters: { id: number, winner: string }[] = [];
+      data.map(d => {
+        if(d.includes("fighters")) {
+          fighters = d.replace("fighters=","").split(",").map(f => {
+            var [id, winner] = f.split(":")
+            return { id: parseInt(id), winner }
+          })
+        }
+      })
+      console.log("fighters", fighters)
+      FIGHTERS.map((fighter, index) => {
+        document.getElementsByName(`group-${index}`).forEach(_input => {
+          const input = _input as HTMLInputElement
+          const fPorra = fighters.find(f => f.id === index)
+          console.log(fPorra)
+          if(fPorra) {
+            input.checked = true
+          }
+          let points = Math.round(Math.random() * 100)
+          let winnerLeft = points > 50
+          let barraPorra = document.getElementById(`porra-bar-${index}`)
+          barraPorra?.setAttribute(winnerLeft ? "left" : "right", points.toString())
+          barraPorra?.setAttribute(!winnerLeft ? "left" : "right",(100-points).toString())
+        })
+      })
+    }
+    getCooki()
+
+    const form = document.getElementById('porra-form') as HTMLFormElement;
+    if (!form) {
+      console.error('Form not found');
+      return;
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault()
+      console.log('Form submitted')
+      send()
+    })
+    
+    function send() {
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      const fighters = Object.keys(data).map((key) => {
+        const [group, id] = key.split('-');
+        return { group, id, winner: data[key] };
+      });
+      const porra = {
+        visitorId,
+        fighters
+      }
+      const json = JSON.stringify({porra});
+      let visitorCookie = `visitor=${visitorId}`;
+      let fightersCookie = `fighters=${porra.fighters.map(f => `${f.id}:${f.winner}`).join(',')}`;
+      document.cookie = visitorCookie+";path=/";
+      document.cookie = fightersCookie+";path=/";
+      getCooki()
+      const url = 'https://api.example.com/submit'; // Replace with your API endpoint
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json,
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log('Form submitted successfully');
+        } else {
+          console.error('Error submitting form');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+  })
+</script>

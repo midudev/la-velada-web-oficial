@@ -1,0 +1,51 @@
+---
+const { id, left = 50, right = 50 } = Astro.props
+
+interface Props {
+  id: string
+  left?: number
+  right?: number
+}
+---
+<div id={id} class="transition-all duration-1000 rotate-y-90 opacity-0 barra-porra relative w-full p-4">
+  <div class="relative w-full max-w-md h-8 rounded-full overflow-hidden flex text-white font-bold text-lg shadow-xl border border-black/10">
+    <div id="left" class={`bg-pink-500 h-full flex items-center justify-center`} style={`width: ${left}%`}>
+      <span>{left}%</span>
+    </div>
+    <div class="w-4 bg-gradient-to-r from-pink-500 via-white to-cyan-500 shadow-2xl z-10"></div>
+    <div id="right" class={`bg-cyan-500 h-full flex items-center justify-center`} style={`width: ${right}%`}>
+      <span>{right}%</span>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const barras = document.querySelectorAll('.barra-porra')
+    barras.forEach((barra) => {
+      const left = barra.querySelector('#left') as HTMLDivElement
+      const right = barra.querySelector('#right') as HTMLDivElement
+      
+      const observer = new MutationObserver((mutationsList, observer) => {
+        for (const mutation of mutationsList) {
+          if (mutation.type === 'attributes') {
+            if(mutation.attributeName === "left"){
+              left.style.width = `${barra.getAttribute('left')}%`
+              left.innerText = `${barra.getAttribute('left')}%`
+              barra.classList.remove('rotate-y-90')
+              barra.classList.remove('opacity-0')
+            } else if(mutation.attributeName === "right"){
+              right.innerText = `${barra.getAttribute('right')}%`
+              right.style.width = `${barra.getAttribute('right')}%`
+            }
+          }
+        }
+      });
+      // Configura qué cambios queremos observar
+      const config = { attributes: true };
+      // Comienza a observar el elemento
+      observer.observe(barra, config);
+    })
+  })
+</script>
