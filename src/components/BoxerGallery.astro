@@ -1,5 +1,4 @@
 ---
-import SectionTitle from '@/components/SectionTitle.astro'
 import { fighterGallery } from '@/utils/get-image-count'
 
 interface Props {
@@ -9,95 +8,85 @@ interface Props {
 
 const { id, name } = Astro.props
 
-let gallery = fighterGallery(id)
-const IMAGES_TO_LOAD = Math.min(gallery, 5)
+const gallery = fighterGallery(id)
+const IMAGES_TO_LOAD = Math.min(gallery, 3)
 ---
 
-<section class="mx-auto max-w-6xl px-2 py-10 lg:px-10">
-  <SectionTitle title="Galería de Fotos" />
-
-  <div
-    id="boxer-gallery"
-    class={`mt-10 grid gap-3 pt-12 ${gallery === 4 ? 'grid-cols-8' : 'grid-cols-6'}`}
-  >
-    {
-      Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => (
-        <a
-          class:list={[
-            'boxer-image aspect-square transition hover:scale-105 hover:brightness-125',
-            { 'col-span-3': gallery === 2 || (gallery === 5 && index < 2) },
-            { 'col-span-2': [3, 4].includes(gallery) || (gallery === 5 && index >= 2) },
-          ]}
-          href={`/images/fighters/gallery/${id}/${index + 1}.webp`}
-          title={`Abrir imagen ${index} de la galería de ${name}`}
+<div id="boxer-gallery" class={`grid gap-3 grid-rows-2 grid-cols-2`}>
+  {
+    Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => (
+      <a
+        class:list={[
+          'boxer-image aspect-square transition hover:scale-105 hover:brightness-110',
+          'col-span-1 row-span-1',
+        ]}
+        href={`/images/fighters/gallery/${id}/${index + 1}.webp`}
+        title={`Abrir imagen ${index} de la galería de ${name}`}
+      >
+        <figure class="h-full w-full">
+          <picture class="block h-full w-full">
+            <img
+              loading="lazy"
+              decoding="async"
+              class="aspect-square h-full w-full rounded object-cover object-top"
+              alt={`Imagen de la galería de fotos de ${name}`}
+              src={`/images/fighters/gallery/${id}/${index + 1}.webp`}
+            />
+          </picture>
+        </figure>
+      </a>
+    ))
+  }
+  <dialog id="lightbox" class="mt-20 h-full w-full bg-transparent backdrop:bg-black/90">
+    <div class="animate-zoom-in mx-auto flex h-[80%] w-[80%] items-center justify-center">
+      <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
+      <button
+        type="button"
+        class="hover:text-theme-tickle-me-pink text-theme-turquoise absolute right-8 top-8 z-10 cursor-pointer rounded bg-black/60 p-4 transition hover:scale-110"
+      >
+        <svg class="size-5" aria-hidden="true" fill="none" viewBox="0 0 14 14">
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
+        </svg>
+      </button>
+      <button
+        data-btn-prev
+        class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute left-[10px] z-10 cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:left-0"
+        id="btn-prev"
+      >
+        <svg class="size-16" width="80" height="80" fill="none"
+          ><g clip-path="url(#a)"
+            ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"
+            ></path></g
+          ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs></svg
         >
-          <figure class="h-full w-full">
-            <picture class="block h-full w-full">
-              <img
-                loading="lazy"
-                decoding="async"
-                class="aspect-square h-full w-full rounded object-cover object-top"
-                alt={`Imagen de la galería de fotos de ${name}`}
-                src={`/images/fighters/gallery/${id}/${index + 1}.webp`}
-              />
-            </picture>
-          </figure>
-        </a>
-      ))
-    }
-    <dialog id="lightbox" class="mt-20 h-full w-full bg-transparent backdrop:bg-black/90">
-      <div class="animate-zoom-in mx-auto flex h-[80%] w-[80%] items-center justify-center">
-        <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
-        <button
-          type="button"
-          class="hover:text-theme-tickle-me-pink text-theme-turquoise absolute right-8 top-8 z-10 cursor-pointer rounded bg-black/60 p-4 transition hover:scale-110"
+      </button>
+      <img
+        loading="lazy"
+        decoding="async"
+        class="boxer-gallery-img z-8 h-full rounded object-contain object-center"
+        alt={`Imagen de la galería de fotos de ${name}`}
+        src={`/images/fighters/gallery/${id}/1.webp`}
+      />
+      <button
+        data-btn-next
+        class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute right-[10px] z-10 cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:right-0"
+        id="btn-next"
+      >
+        <svg class="size-16 rotate-180" width="80" height="80" fill="none"
+          ><g clip-path="url(#a)"
+            ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"
+            ></path></g
+          ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs></svg
         >
-          <svg class="size-5" aria-hidden="true" fill="none" viewBox="0 0 14 14">
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
-          </svg>
-        </button>
-        <button
-          data-btn-prev
-          class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute left-[10px] z-10 cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:left-0"
-          id="btn-prev"
-        >
-          <svg class="size-16" width="80" height="80" fill="none"
-            ><g clip-path="url(#a)"
-              ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"
-              ></path></g
-            ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs
-            ></svg
-          >
-        </button>
-        <img
-          loading="lazy"
-          decoding="async"
-          class="boxer-gallery-img z-8 h-full rounded object-contain object-center"
-          alt={`Imagen de la galería de fotos de ${name}`}
-          src={`/images/fighters/gallery/${id}/1.webp`}
-        />
-        <button
-          data-btn-next
-          class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute right-[10px] z-10 cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:right-0"
-          id="btn-next"
-        >
-          <svg class="size-16 rotate-180" width="80" height="80" fill="none"
-            ><g clip-path="url(#a)"
-              ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"
-              ></path></g
-            ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs
-            ></svg
-          >
-        </button>
-      </div>
-    </dialog>
-  </div>
-</section>
+      </button>
+    </div>
+  </dialog>
+</div>
 
 <script>
   import { $ } from '@/lib/dom-selector'
