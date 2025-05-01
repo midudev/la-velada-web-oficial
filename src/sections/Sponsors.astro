@@ -1,16 +1,37 @@
 ---
 import { SPONSORS } from '@/consts/sponsors'
-import SectionTitle from './SectionTitle.astro'
+import SectionTitle from '@/components/SectionTitle.astro'
 
-const firstRow = SPONSORS.slice(0, 5)
-const secondRow = SPONSORS.slice(5)
+const revolutSponsor = SPONSORS.find((s) => s.id === 'revolut')
+const sponsorsWithoutRevolut = SPONSORS.filter((s) => s.id !== 'revolut')
+const firstRow = sponsorsWithoutRevolut.slice(0, 5)
+const secondRow = sponsorsWithoutRevolut.slice(5)
 ---
 
-<section id="sponsors" class="mx-auto max-w-xl my-16 lg:my-36">
+<section id="sponsors" class="mx-auto my-16 max-w-xl lg:my-36">
   <SectionTitle title="Patrocinadores del Evento" />
+  {
+    revolutSponsor && (
+      <div class="-mb-4 flex flex-col items-center">
+        <a
+          href={revolutSponsor.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={revolutSponsor.label ?? revolutSponsor.name}
+          class="text-dark-magenta flex items-center justify-center transition hover:scale-125"
+        >
+          <revolutSponsor.image.logo
+            width={revolutSponsor.image.width * 1.7}
+            height={revolutSponsor.image.width * 1.7}
+            class="h-24 w-auto md:h-32"
+          />
+        </a>
+      </div>
+    )
+  }
 
   <div
-    class="flex w-full flex-col-reverse items-center justify-center gap-8 py-5 md:flex-col md:gap-5"
+    class="flex w-full flex-col-reverse items-center justify-center gap-8 py-2 md:flex-col md:gap-5"
   >
     <div
       class="flex w-1/2 max-w-md flex-wrap justify-evenly gap-8 md:w-[100%] md:flex-row md:justify-around md:gap-5"

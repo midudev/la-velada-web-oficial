@@ -1,0 +1,180 @@
+---
+import Date from '@/components/Date.astro'
+
+interface Props {
+  timestamp: number
+}
+
+const { timestamp } = Astro.props
+const textResponsiveStyles = 'text-base font-bold md:text-xl lg:text-2xl'
+---
+
+<section
+  class="flex flex-col items-center justify-center gap-2 py-2"
+  aria-label="cuenta atrás entradas"
+>
+  <div
+    class="flex select-none flex-row items-center justify-center gap-1 text-[var(--color-white)]"
+    id="countdown-small"
+    data-date={timestamp}
+    role="timer"
+  >
+    <Date
+      dateType="DÍAS"
+      attribute={{ 'data-days': '' }}
+      className={textResponsiveStyles}
+      wrapperClassName="my-0"
+      max={30}
+      withBackground={true}
+    />
+    <Date
+      dateType="HORAS"
+      attribute={{ 'data-hours': '' }}
+      className={textResponsiveStyles}
+      wrapperClassName="my-0"
+      max={23}
+      withBackground={true}
+    />
+    <Date
+      dateType="MINUTOS"
+      attribute={{ 'data-minutes': '' }}
+      className={textResponsiveStyles}
+      wrapperClassName="my-0"
+      max={59}
+      withBackground={true}
+    />
+    <Date
+      dateType="SEGUNDOS"
+      attribute={{ 'data-seconds': '' }}
+      className={textResponsiveStyles}
+      wrapperClassName="my-0"
+      max={59}
+      withBackground={true}
+    />
+  </div>
+</section>
+
+<style>
+  section[aria-label='cuenta atrás entradas'] .date-background {
+    background: rgba(236, 72, 153, 0.2);
+    border-radius: 8px;
+    padding: 0.1em 0.3em;
+  }
+</style>
+
+<script>
+  import createCountdown, { type TimeParts } from '@/lib/countdown'
+  import { $ } from '@/lib/dom-selector'
+
+  function initCountdown() {
+    const $countdown = $('#countdown-small')
+    if (!$countdown) return
+
+    const $days = {
+      firstDigit: $('[data-days] [data-first-group]', $countdown),
+      secondDigit: $('[data-days] [data-second-group]', $countdown),
+      thirdDigit: $('[data-days] [data-third-group]', $countdown),
+    }
+    const $hours = {
+      firstDigit: $('[data-hours] [data-first-group]', $countdown),
+      secondDigit: $('[data-hours] [data-second-group]', $countdown),
+    }
+    const $minutes = {
+      firstDigit: $('[data-minutes] [data-first-group]', $countdown),
+      secondDigit: $('[data-minutes] [data-second-group]', $countdown),
+    }
+    const $seconds = {
+      firstDigit: $('[data-seconds] [data-first-group]', $countdown),
+      secondDigit: $('[data-seconds] [data-second-group]', $countdown),
+    }
+    const timestamp = Number($countdown?.getAttribute('data-date') ?? 0)
+    const countdown = createCountdown(timestamp, {
+      onTick({ days, hours, minutes, seconds }: TimeParts) {
+        if (
+          $days.firstDigit instanceof HTMLElement &&
+          $days.secondDigit instanceof HTMLElement &&
+          $days.thirdDigit instanceof HTMLElement
+        ) {
+          switch (days.length) {
+            case 3:
+              animateDigit($days.firstDigit, parseInt(days[0]))
+              animateDigit($days.secondDigit, parseInt(days[1]))
+              animateDigit($days.thirdDigit, parseInt(days[2]))
+              break
+            case 2:
+              $days.firstDigit.parentNode?.removeChild($days.firstDigit)
+              animateDigit($days.secondDigit, parseInt(days[0]))
+              animateDigit($days.thirdDigit, parseInt(days[1]))
+              break
+            default:
+              $days.secondDigit.parentNode?.removeChild($days.secondDigit)
+              animateDigit($days.thirdDigit, parseInt(days[0]))
+          }
+        }
+
+        if ($hours.firstDigit instanceof HTMLElement && $hours.secondDigit instanceof HTMLElement) {
+          animateDigit($hours.firstDigit, parseInt(hours[0]))
+          animateDigit($hours.secondDigit, parseInt(hours[1]))
+        }
+
+        if (
+          $minutes.firstDigit instanceof HTMLElement &&
+          $minutes.secondDigit instanceof HTMLElement
+        ) {
+          animateDigit($minutes.firstDigit, parseInt(minutes[0]))
+          animateDigit($minutes.secondDigit, parseInt(minutes[1]))
+        }
+
+        if (
+          $seconds.firstDigit instanceof HTMLElement &&
+          $seconds.secondDigit instanceof HTMLElement
+        ) {
+          animateDigit($seconds.firstDigit, parseInt(seconds[0]))
+          animateDigit($seconds.secondDigit, parseInt(seconds[1]))
+        }
+      },
+      onComplete: () => {},
+    })
+    return countdown
+  }
+
+  function animateDigit(flipCard: HTMLElement, newNumber: number) {
+    const topHalf = flipCard.querySelector('.top') as HTMLElement
+    const startNumber = parseInt(topHalf.textContent || '')
+    if (newNumber === startNumber) return
+
+    const bottomHalf = flipCard.querySelector('.bottom') as HTMLElement
+    const topFlip = document.createElement('div')
+    const bottomFlip = document.createElement('div')
+    topFlip.classList.add(
+      ...'top-flip h-[.5em] leading-none origin-bottom bg-theme-raisin-black border-b-2 border-b-theme-raisin-black'.split(
+        ' ',
+      ),
+    )
+    bottomFlip.classList.add(
+      ...'bottom-flip h-[.5em] leading-none origin-top items-end bg-theme-raisin-black'.split(' '),
+    )
+
+    topHalf.textContent = `${startNumber}`
+    bottomHalf.textContent = `${startNumber}`
+    topFlip.textContent = `${startNumber}`
+    bottomFlip.textContent = `${newNumber}`
+
+    topFlip.addEventListener('animationstart', (e) => {
+      topHalf.textContent = `${newNumber}`
+    })
+    topFlip.addEventListener('animationend', (e) => {
+      topFlip.remove()
+    })
+    bottomFlip.addEventListener('animationend', (e) => {
+      bottomHalf.textContent = `${newNumber}`
+      bottomFlip.remove()
+    })
+    flipCard.append(topFlip, bottomFlip)
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const countdown = initCountdown()
+    countdown && countdown.start()
+  })
+</script>

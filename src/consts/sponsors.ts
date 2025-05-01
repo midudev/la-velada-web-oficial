@@ -25,6 +25,17 @@ export const SPONSORS: Sponsors[] = [
     },
   },
   {
+    id: 'grefusa',
+    name: 'Grefusa',
+    url: 'https://www.grefusa.com/',
+    label: 'Ir a la página web de Grefusa',
+    image: {
+      logo: Grefusa,
+      width: 200,
+      height: 200,
+    },
+  },
+  {
     id: 'spotify',
     name: 'Spotify',
     url: 'https://www.spotify.com/',
@@ -75,17 +86,6 @@ export const SPONSORS: Sponsors[] = [
     label: 'Ir a la página web de Infojobs',
     image: {
       logo: Infojobs,
-      width: 200,
-      height: 200,
-    },
-  },
-  {
-    id: 'grefusa',
-    name: 'Grefusa',
-    url: 'https://www.grefusa.com/',
-    label: 'Ir a la página web de Grefusa',
-    image: {
-      logo: Grefusa,
       width: 200,
       height: 200,
     },
