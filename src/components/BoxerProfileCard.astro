@@ -25,36 +25,34 @@ const bars = generateRandomBars()
       <!-- Nombre -->
       <section class="col-span-2 mt-0 sm:mt-6">
         <h1
-          class="animate-fade-in-up animate-delay-200 text-dark-magenta flex items-center justify-center text-balance bg-pink-200/60 px-2 text-center text-xl font-bold"
+          class="animate-fade-in text-dark-magenta flex items-center justify-center text-balance bg-pink-200/60 px-2 text-center text-xl font-bold"
         >
           {fighter.realName}
         </h1>
       </section>
       <!-- Otros datos del luchador -->
-      <div
-        class="animate-fade-in-up animate-delay-200 grid grid-cols-2 gap-4 px-4 py-4 text-left font-normal text-white"
-      >
+      <div class="grid grid-cols-2 gap-4 px-4 py-4 text-left font-normal text-white">
         <section class="flex flex-col">
           <span class="text-dark-magenta text-sm">Edad</span>
-          <strong class="text-md">{fighter.age} años</strong>
+          <strong class="text-md animate-fade-in animate-delay-250">{fighter.age} años</strong>
         </section>
         <section class="flex flex-col">
           <span class="text-dark-magenta text-sm">Peso</span>
-          <strong class="text-md">{fighter.weight}kg</strong>
+          <strong class="text-md animate-fade-in animate-delay-300">{fighter.weight}kg</strong>
         </section>
         <section class="flex flex-col">
           <span class="text-dark-magenta text-sm">Nacimiento</span>
-          <strong class="text-md">{birthDate}</strong>
+          <strong class="text-md animate-fade-in animate-delay-[350ms]">{birthDate}</strong>
         </section>
         <section class="flex flex-col">
           <span class="text-dark-magenta text-sm">Altura</span>
-          <strong class="text-md">{fighter.height}m</strong>
+          <strong class="text-md animate-fade-in animate-delay-400">{fighter.height}m</strong>
         </section>
       </div>
     </section>
     <!-- Imagen del luchador -->
     <section
-      class="item-center animate-fade-in-up animate-delay-200 order-1 col-span-2 flex justify-center sm:order-2"
+      class="item-center animate-fade-in animate-delay-500 order-1 col-span-2 flex justify-center sm:order-2"
     >
       <figure class="w-full max-w-[140px]">
         <img
@@ -68,7 +66,7 @@ const bars = generateRandomBars()
 
   <!-- Información adicional y código de barras -->
   <footer class="bg-dark-magenta flex items-center justify-between px-2 py-3 pl-4">
-    <section class="animate-fade-in-up animate-delay-200 flex items-center space-x-2">
+    <section class="flex items-center space-x-2">
       <figure>
         <img
           class="block h-auto w-8"
@@ -77,12 +75,12 @@ const bars = generateRandomBars()
           decoding="async"
         />
       </figure>
-      <strong class="text-md lowercase text-white">{fighter.city}</strong>
+      <strong class="text-md animate-fade-in animate-delay-700 lowercase text-white"
+        >{fighter.city}</strong
+      >
     </section>
 
-    <section
-      class="animate-fade-in-up animate-delay-200 flex items-center justify-center space-x-2"
-    >
+    <section class="animate-fade-in animate-delay-800 flex items-center justify-center space-x-2">
       <Logo class="h-8 w-8 text-yellow-200" />
       <div class="flex items-end bg-white py-0.5 pl-0.5">
         {
