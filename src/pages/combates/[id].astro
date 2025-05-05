@@ -1,4 +1,6 @@
 ---
+import type { GetStaticPaths } from 'astro'
+
 import { COMBATS } from '@/consts/combats'
 import { countries } from '@/consts/countries'
 import { FIGHTERS } from '@/consts/fighters'
@@ -13,6 +15,12 @@ const fighter2 = FIGHTERS.find((f) => f.id === combat?.fighters[1])
 
 const fighter1Country = countries.find((c) => c.id === fighter1?.country)
 const fighter2Country = countries.find((c) => c.id === fighter2?.country)
+
+export const getStaticPaths = (() => {
+  return COMBATS.map((c) => ({
+    params: { id: c.id },
+  }))
+}) satisfies GetStaticPaths
 
 export const prerender = true
 ---
