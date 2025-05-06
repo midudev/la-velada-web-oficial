@@ -45,9 +45,10 @@ const IMAGES_TO_LOAD = Math.min(gallery, 5)
         </a>
       ))
     }
-    <dialog id="lightbox" class="mt-20 h-full w-full bg-transparent backdrop:bg-black/90">
+    <dialog id="lightbox" class="mx-auto mt-20 h-full w-full bg-transparent backdrop:bg-black/90">
       <div class="animate-zoom-in mx-auto flex h-[80%] w-[80%] items-center justify-center">
         <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
+        <p class="absolute md:hidden text-white/50 text-xs bottom-20 text-center pointer-events-none">Desliza para la siguiente</p>
         <button
           type="button"
           class="hover:text-theme-tickle-me-pink text-theme-turquoise absolute right-8 top-8 z-10 hidden cursor-pointer rounded bg-black/60 p-4 transition hover:scale-110 md:block"
@@ -77,7 +78,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 5)
         <img
           loading="lazy"
           decoding="async"
-          class="boxer-gallery-img z-8 h-full rounded object-contain object-center"
+          class="boxer-gallery-img z-8 h-fit md:h-full rounded object-contain object-center"
           alt={`Imagen de la galería de fotos de ${name}`}
           src={`/images/fighters/gallery/${id}/1.webp`}
         />
@@ -206,7 +207,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 5)
       $lightboxImg.addEventListener('mousedown', (e) => startSwipeDrag(e))
       $lightboxImg.addEventListener('touchstart', (e) => startSwipeDrag(e))
       $lightboxImg.addEventListener('animationend', () => {
-        isAnimating = false // Permitir nuevos movimientos después de que la animación termine
+        isAnimating = false 
       })
     }
 
