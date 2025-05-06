@@ -1,5 +1,6 @@
 ---
 import { fighterGallery } from '@/utils/get-image-count'
+import { Icons } from '@/components/Icons'
 
 interface Props {
   id: string
@@ -38,53 +39,53 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
       </a>
     ))
   }
-    <dialog id="lightbox" class="mx-auto mt-20 h-full w-full bg-transparent backdrop:bg-black/90">
-      <div class="animate-zoom-in mx-auto flex h-[80%] w-[80%] items-center justify-center">
-        <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
-        <p class="font-primary font-fallback absolute md:hidden text-white/50 text-xs bottom-20 text-center pointer-events-none">Desliza para la siguiente</p>
+  <dialog
+    id="lightbox"
+    class="mx-auto my-auto h-screen w-full border-none bg-transparent outline-none ring-0 backdrop:bg-black/90 md:mt-20"
+  >
+    <div
+      class="animate-zoom-in mx-auto flex h-[80%] w-[80%] items-center justify-center overflow-hidden"
+    >
+      <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
+      <p
+        class="font-primary pointer-events-none absolute bottom-0 text-center text-xs text-white/50 md:hidden"
+      >
+        Desliza para la siguiente
+      </p>
+      <button
+        data-btn-prev
+        class="group absolute left-[10px] z-10 hidden cursor-pointer text-transparent transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:left-0 md:flex md:items-center md:justify-center"
+        id="btn-prev"
+      >
+        <Icons.ChevronLeft
+          class="stroke-theme-turquoise group-hover:stroke-theme-tickle-me-pink h-20 w-20 bg-transparent fill-transparent"
+        />
+      </button>
+      <div class="z-8 relative h-fit rounded md:h-full">
         <button
+          data-btn-close
+          id="btn-close"
           type="button"
-          class="hover:text-theme-tickle-me-pink text-theme-turquoise absolute right-8 top-8 z-10 hidden cursor-pointer rounded bg-black/60 p-4 transition hover:scale-110 md:block"
+          class="hover:text-theme-tickle-me-pink text-theme-turquoise absolute right-2 top-2 z-10 hidden cursor-pointer rounded bg-black/60 p-4 transition hover:scale-110 md:block"
         >
-          <svg class="size-5" aria-hidden="true" fill="none" viewBox="0 0 14 14">
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
-          </svg>
-        </button>
-        <button
-          data-btn-prev
-          class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute left-[10px] z-10 hidden cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:left-0 md:block"
-          id="btn-prev"
-        >
-          <svg class="size-16" width="80" height="80" fill="none"
-            ><g clip-path="url(#a)"
-              ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"
-              ></path></g
-            ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs
-            ></svg
-          >
+          <Icons.XIcon class="h-5 w-5" aria-hidden="true" fill="none" />
         </button>
         <img
           loading="lazy"
           decoding="async"
-          class="boxer-gallery-img z-8 h-fit md:h-full rounded object-contain object-center"
+          class="boxer-gallery-img z-8 h-fit rounded object-contain object-center md:h-full"
           alt={`Imagen de la galería de fotos de ${name}`}
           src={`/images/fighters/gallery/${id}/1.webp`}
         />
-        <button
-          data-btn-next
-          class="text-theme-turquoise hover:text-theme-tickle-me-pink group absolute right-[10px] z-10 hidden cursor-pointer transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:right-0 md:block"
-          id="btn-next"
-          >
-        <svg class="size-16 rotate-180" width="80" height="80" fill="none"
-          ><g clip-path="url(#a)"
-            ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"
-            ></path></g
-          ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs></svg>
+      </div>
+      <button
+        data-btn-next
+        class="group absolute right-[10px] z-10 hidden cursor-pointer text-transparent transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:right-0 md:flex md:items-center md:justify-center"
+        id="btn-next"
+      >
+        <Icons.ChevronRight
+          class="stroke-theme-turquoise group-hover:stroke-theme-tickle-me-pink h-20 w-20 bg-transparent fill-transparent"
+        />
       </button>
     </div>
   </dialog>
@@ -98,6 +99,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
     const $gallery = $('#boxer-gallery') as HTMLElement
     const $btnPrev = $('#btn-prev') as HTMLButtonElement
     const $btnNext = $('#btn-next') as HTMLButtonElement
+    const $btnClose = $('#btn-close') as HTMLButtonElement
     if (!$gallery) return
 
     const $links = $gallery?.querySelectorAll('a')
@@ -111,14 +113,17 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
         img.src = newImg.src
         img.classList.add('animate-fade-in')
 
-        img.style.transition = 'transform 0.2s ease'
+        img.style.transition = '0.2s ease transform'
         img.style.transform = 'translateX(0)'
       }
     }
 
     const close = () => {
       $lightbox.close()
+      document.body.style.overflow = ''
     }
+
+    $btnClose?.addEventListener('click', close)
 
     const resetMainImageAnimation = (mainImage: HTMLImageElement) => {
       mainImage.style.animation = 'none'
@@ -174,7 +179,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
           isAnimating = true
           showNextImage()
         } else {
-          $lightboxImg.style.transition = 'transform 0.2s ease'
+          $lightboxImg.style.transition = '0.2s ease transform'
           $lightboxImg.style.transform = 'translateX(0)'
         }
 
@@ -197,7 +202,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
       $lightboxImg.addEventListener('mousedown', (e) => startSwipeDrag(e))
       $lightboxImg.addEventListener('touchstart', (e) => startSwipeDrag(e))
       $lightboxImg.addEventListener('animationend', () => {
-        isAnimating = false 
+        isAnimating = false
       })
     }
 
@@ -254,6 +259,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
         if (!$lightbox.open) {
           updateImg(link)
           $lightbox.showModal()
+          document.body.style.overflow = 'hidden'
         }
       }),
     )
