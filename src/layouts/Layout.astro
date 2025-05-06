@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions'
+import Analytics from '@vercel/analytics/astro'
 
 import '@/styles/global.css'
 
@@ -89,6 +90,7 @@ const { title = fixedTitle } = Astro.props
       content="Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos"
     />
     <ClientRouter />
+    <Analytics />
   </head>
   <body>
     <Spotlight />
