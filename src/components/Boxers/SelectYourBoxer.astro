@@ -4,6 +4,8 @@ import BoxerBigImages from '@/components/Boxers/BoxerBigImages.astro'
 import ColumnBoxers from '@/components/Boxers/ColumnBoxers.astro'
 import type { Fighters } from '@/types/fighters'
 import HorizontalScroll from '@/components/Icons/HorizontalScroll.astro'
+import { getBoxerById, getBoxerVersusById } from '@/lib/get-boxers'
+import { removeMirroredPairs } from '@/utils/remove-mirrored-pairs'
 
 interface Props {
   boxers: Fighters[]
@@ -20,6 +22,27 @@ const secondRow = boxers.slice(6)
 const leftSecondRow = secondRow.slice(0, 4)
 const rightSecondRow = secondRow.slice(4, 8)
 
+let groupBoxersByVersus = boxers.reduce(
+  (acc, boxer) => {
+    const { id, versus } = boxer
+    if (acc[versus]) {
+      acc[versus].push(id)
+    } else {
+      acc[versus] = [id]
+    }
+    return acc
+  },
+  {} as Record<string, string[]>,
+)
+
+groupBoxersByVersus = removeMirroredPairs(groupBoxersByVersus)
+
+// Ordenar para que el combate principal sea el primero
+const mobileBoxers = [
+  Object.keys(groupBoxersByVersus).find((boxerId) => boxerId === 'westcol'),
+  ...Object.keys(groupBoxersByVersus).filter((boxerId) => boxerId !== 'westcol'),
+]
+
 const animationDelay = [500, 700, 800]
 const reverseDelay = [...animationDelay].reverse()
 
@@ -27,77 +50,88 @@ const animationDelaySecondRow = [...animationDelay, 900]
 const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
 ---
 
-<BoxerBigImages boxers={boxers} />
+<>
+  <BoxerBigImages boxers={boxers} />
 
-<div
-  id="fighters-selection-container"
-  class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 sm:p-4"
->
-  <div class="hidden w-full flex-wrap justify-center gap-4 px-0 sm:justify-between sm:px-4 md:flex">
-    <div class="flex flex-wrap justify-start gap-4">
-      {
-        leftRow.map(({ id, name, versus }, index) => (
-          <div
-            class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}
-          >
-            <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
-          </div>
-        ))
-      }
-    </div>
-
-    <div class="hidden flex-wrap justify-end gap-4 md:flex">
-      {
-        rightRow.map(({ id, name, versus }, index) => (
-          <div
-            class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}
-          >
-            <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
-          </div>
-        ))
-      }
-    </div>
-  </div>
-
-  <div class="hidden flex-wrap justify-center gap-4 sm:justify-between md:flex">
-    <div class="flex flex-wrap justify-start gap-4">
-      {
-        leftSecondRow.map(({ id, name, versus }, index) => (
-          <div class={`animate-fade-in-up animate-delay-${animationDelaySecondRow[index]}`}>
-            <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
-          </div>
-        ))
-      }
-    </div>
-    <div class="hidden flex-wrap justify-end gap-4 md:flex">
-      {
-        rightSecondRow.map(({ id, name, versus }, index) => (
-          <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>
-            <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
-          </div>
-        ))
-      }
-    </div>
-  </div>
-</div>
-<div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
-  <div class="carousel mt-8 w-full max-w-[100vw] overflow-y-hidden overflow-x-scroll">
+  <div
+    id="fighters-selection-container"
+    class="relative flex h-full w-full max-w-6xl flex-col items-center justify-end gap-8 sm:p-4"
+  >
     <div
-      class="fadeout-horizontal no-scrollbar flex snap-x snap-mandatory gap-12 overflow-y-hidden overflow-x-scroll py-2 pr-[40%]"
+      class="hidden w-full flex-wrap justify-center gap-4 px-0 sm:justify-between sm:px-4 md:flex"
     >
-      {
-        boxers.map((boxer, index) => (
-          <div
-            class:list={`w-fit flex-shrink-0 snap-center px-2 ${index === 0 ? 'ml-[75%]' : ''} `}
-          >
-            <ColumnBoxers boxers={[boxer]} selectedBoxer={selectedBoxer} />
-          </div>
-        ))
-      }
+      <div class="flex flex-wrap justify-start gap-4">
+        {
+          leftRow.map(({ id, name, versus }, index) => (
+            <div
+              class={`animate-fade-in-right animate-duration-slower animate-delay-${animationDelay[index]}`}
+            >
+              <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="hidden flex-wrap justify-end gap-4 md:flex">
+        {
+          rightRow.map(({ id, name, versus }, index) => (
+            <div
+              class={`animate-fade-in-left animate-duration-slower animate-delay-${reverseDelay[index]}`}
+            >
+              <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="hidden flex-wrap justify-center gap-4 sm:justify-between md:flex">
+      <div class="flex flex-wrap justify-start gap-4">
+        {
+          leftSecondRow.map(({ id, name, versus }, index) => (
+            <div class={`animate-fade-in-up animate-delay-${animationDelaySecondRow[index]}`}>
+              <BoxerCard id={id} name={name} class="boxer-left" versus={versus} />
+            </div>
+          ))
+        }
+      </div>
+      <div class="hidden flex-wrap justify-end gap-4 md:flex">
+        {
+          rightSecondRow.map(({ id, name, versus }, index) => (
+            <div class={`animate-fade-in-up animate-delay-${reverseDelaySecondRow[index]}`}>
+              <BoxerCard id={id} name={name} class="boxer-right" versus={versus} />
+            </div>
+          ))
+        }
+      </div>
     </div>
   </div>
-  <HorizontalScroll class:list={['text-theme-seashell w-16 pt-2 opacity-80']} />
-</div>
+  <div class="-mt-20 flex flex-col items-center justify-center md:mt-32 md:hidden">
+    <div class="mt-8 w-full max-w-[100vw] overflow-x-scroll">
+      <div
+        class="fadeout-horizontal no-scrollbar flex snap-x snap-mandatory gap-12 overflow-x-scroll py-2 pr-[40%]"
+      >
+        {
+          mobileBoxers.map((boxerId, index) => {
+            const boxer = getBoxerById(boxerId)
+            return (
+              <div
+                class:list={`w-fit flex-shrink-0 snap-center px-2 ${index === 0 ? 'ml-[75%]' : ''} `}
+              >
+                <ColumnBoxers
+                  boxer={boxer}
+                  versus={getBoxerVersusById(boxer.versus)}
+                  selectedBoxer={selectedBoxer}
+                />
+              </div>
+            )
+          })
+        }
+      </div>
+    </div>
+    <HorizontalScroll class:list={['text-theme-seashell w-16 pt-2 opacity-80']} />
+  </div>
+</>
 
 <style>
   .fadeout-horizontal {

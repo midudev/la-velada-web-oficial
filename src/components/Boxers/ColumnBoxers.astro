@@ -5,13 +5,14 @@ import type { HTMLAttributes } from 'astro/types'
 import type { Fighters } from '@/types/fighters'
 
 interface Props {
-  boxers: Fighters[]
+  boxer: Fighters
+  versus: Fighters
   class?: string
   selectedBoxer: Fighters
   imgLoading?: HTMLAttributes<'img'>['loading']
 }
 
-const { boxers, class: className = '', selectedBoxer, imgLoading } = Astro.props
+const { boxer, versus, class: className = '', selectedBoxer, imgLoading } = Astro.props
 
 const hasSameOpponents = (selectedBoxerOpponents: string[], opponents: string[]) => {
   return selectedBoxerOpponents.every((sBoxerOpponent) => opponents.includes(sBoxerOpponent))
@@ -31,12 +32,16 @@ const isOpponent = (id: Fighters['id'], versus: Fighters['versus']) => {
 }
 ---
 
-<div class:list={`flex flex-col ${className}`}>
-  {
-    boxers.map(({ id, name, versus }) => (
-      <BoxerCard id={id} name={name} versus={versus} class="boxer-link" />
-    ))
-  }
+<div class:list={`flex flex-row gap-6 ${className} relative`}>
+  <BoxerCard id={versus.id} name={versus.name} versus={versus.versus} class="boxer-link" />
+  <img
+    src="/images/versus.webp"
+    class="animate-slide-out-bottom md:size-50 absolute left-1/2 top-1/2 z-20 size-14 -translate-x-1/2 -translate-y-1/2 transform delay-1000"
+    alt="Imagen de Versus"
+    decoding="async"
+    loading={imgLoading ?? 'lazy'}
+  />
+  <BoxerCard id={boxer.id} name={boxer.name} versus={boxer.versus} class="boxer-link" />
 </div>
 
 <style>

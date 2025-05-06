@@ -1,4 +1,6 @@
 ---
+import type { GetStaticPaths } from 'astro'
+
 import { COMBATS } from '@/consts/combats'
 import { countries } from '@/consts/countries'
 import { FIGHTERS } from '@/consts/fighters'
@@ -13,6 +15,14 @@ const fighter2 = FIGHTERS.find((f) => f.id === combat?.fighters[1])
 
 const fighter1Country = countries.find((c) => c.id === fighter1?.country)
 const fighter2Country = countries.find((c) => c.id === fighter2?.country)
+
+export const getStaticPaths = (() => {
+  return COMBATS.map((c) => ({
+    params: { id: c.id },
+  }))
+}) satisfies GetStaticPaths
+
+export const prerender = true
 ---
 
 <Layout title={combate(fighter1?.name, fighter2?.name)}>
@@ -93,20 +103,19 @@ const fighter2Country = countries.find((c) => c.id === fighter2?.country)
     <!-- Informacion -->
     <div class="mt-16 flex flex-col gap-8 p-3">
       <!-- Caracteristicas -->
-      <div class="-skew-1 bg-black/60">
+      <div class="bg-black/60">
         <h2 class="text-md text-theme-seashell my-4 text-center font-bold md:text-2xl">
           Características
         </h2>
         <p
-          class="text-md text-theme-turquoise mx-auto mt-4 text-wrap text-center font-semibold md:text-2xl"
+          class="text-md text-theme-turquoise mx-auto mt-4 text-wrap text-center font-semibold md:text-lg"
         >
           datos relevantes de los boxeadores
         </p>
 
         <div class="my-8 grid grid-cols-3 gap-4">
-          <div class="text-theme-seashell space-y-2 text-right text-sm font-bold md:text-2xl">
+          <div class="text-theme-seashell space-y-2 text-right text-sm font-bold md:text-xl">
             <p>{fighter1?.age} años</p>
-            <p>{fighter1?.gender}</p>
             <p>{fighter1?.height} mts</p>
             <p>{fighter1?.weight} kg</p>
             <p>{fighter1Country?.name.toLocaleLowerCase()}</p>
@@ -116,16 +125,16 @@ const fighter2Country = countries.find((c) => c.id === fighter2?.country)
               class="md:w-25 inline-flex h-auto w-16"
             />
           </div>
-          <div class="text-theme-seashell space-y-2 text-center text-sm font-bold md:text-2xl">
+
+          <div class="text-theme-seashell space-y-2 text-center text-sm md:text-xl">
             <p>EDAD</p>
-            <p>GÉNERO</p>
             <p>ALTURA</p>
             <p>PESO</p>
             <p>PAÍS</p>
           </div>
-          <div class="text-theme-seashell space-y-2 text-left text-sm font-bold md:text-2xl">
+
+          <div class="text-theme-seashell space-y-2 text-left text-sm font-bold md:text-xl">
             <p>{fighter2?.age} años</p>
-            <p>{fighter2?.gender}</p>
             <p>{fighter2?.height} mts</p>
             <p>{fighter2?.weight} kg</p>
             <p>{fighter2Country?.name.toLocaleLowerCase()}</p>

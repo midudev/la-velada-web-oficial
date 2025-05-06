@@ -2,6 +2,8 @@
 import Layout from '@/layouts/Layout.astro'
 import { COMBATS } from '@/consts/combats'
 import { combates } from '@/consts/pageTitles'
+
+export const prerender = true
 ---
 
 <Layout title={combates}>
@@ -12,9 +14,9 @@ import { combates } from '@/consts/pageTitles'
     </div>
 
     <div class="flex w-full flex-col items-center text-center">
-      <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-30">
+      <div id="landing" class="py-30 absolute top-0 flex w-full flex-col items-center">
         <h3
-          class="text-theme-seashell animate-fade-in animate-delay-300 mt-4 -skew-3 text-[42px] sm:text-6xl leading-[100%] font-medium [text-shadow:_5px_5px_10px_rgb(0_0_0_/_50%)] tracking-wider brightness-125 transition-all duration-300"
+          class="text-theme-seashell animate-fade-in animate-delay-300 -skew-3 mt-4 text-[42px] font-medium leading-[100%] tracking-wider brightness-125 transition-all duration-300 [text-shadow:_5px_5px_10px_rgb(0_0_0_/_50%)] sm:text-6xl"
         >
           <strong>LISTA DE LOS</strong>
           <br /><strong>COMBATES</strong>
@@ -23,7 +25,7 @@ import { combates } from '@/consts/pageTitles'
 
       <div
         id="combats-container"
-        class="relative top-96 mx-auto max-w-7xl p-6 mt-10 mb-72 flex flex-wrap justify-center gap-4 md:gap-8"
+        class="relative top-96 mx-auto mb-72 mt-10 flex max-w-7xl flex-wrap justify-center gap-4 p-6 md:gap-8"
       >
         {
           COMBATS.map(({ id, number, fighters, title }) => (
@@ -32,7 +34,9 @@ import { combates } from '@/consts/pageTitles'
               href={`combates/${id}`}
               title={`Ir al combate ${number} de ${title}`}
             >
-              <div class= {`combat group ${number == 7 ? 'animate-fade-in-up' : number % 2 == 0 ? 'animate-fade-in-left' : 'animate-fade-in-right'}  animate-delay-200 relative flex h-[40vh] w-full sm:h-[50vh] lg`}>
+              <div
+                class={`combat group ${number == 7 ? 'animate-fade-in-up' : number % 2 == 0 ? 'animate-fade-in-left' : 'animate-fade-in-right'} animate-delay-200 lg relative flex h-[40vh] w-full sm:h-[50vh]`}
+              >
                 {fighters.map((fighter, index) => (
                   <img
                     src={`/images/fighters/big/${fighter}.webp`}
@@ -43,7 +47,7 @@ import { combates } from '@/consts/pageTitles'
                   />
                 ))}
 
-                <div class="absolute bottom-0 z-30 flex h-auto w-full -skew-4 flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
+                <div class="-skew-4 absolute bottom-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
                   <img
                     src={`/images/fighters/text/${fighters[0]}.webp`}
                     loading="lazy"
@@ -77,9 +81,8 @@ import { combates } from '@/consts/pageTitles'
   </section>
 </Layout>
 
-
 <style>
-  .combat{
+  .combat {
     animation-timeline: view(block 100% 10%);
   }
 </style>
