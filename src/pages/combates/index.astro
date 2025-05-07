@@ -3,10 +3,13 @@ import Layout from '@/layouts/Layout.astro'
 import { COMBATS } from '@/consts/combats'
 import { combates } from '@/consts/pageTitles'
 
+const description = "Descubre todos los combates de La Velada del Año V, el evento de boxeo de Ibai Llanos con los mejores creadores de contenido."
+const canonical = "https://www.infolavelada.com/combates"
+
 export const prerender = true
 ---
 
-<Layout title={combates}>
+<Layout title={combates} description={description} canonical={canonical}>
   <section class="min-h-screen w-full">
     <div
       class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"

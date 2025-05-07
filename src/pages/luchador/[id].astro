@@ -16,6 +16,9 @@ if (!id) return Astro.redirect('/404')
 const fighter = FIGHTERS.find((fighter) => fighter.id === id)
 if (!fighter) return Astro.redirect('/404')
 
+const description = `Biografía, estadísticas y clips de ${fighter.name}, participante de La Velada del Año V. ${fighter.bio.substring(0, 120)}${fighter.bio.length > 120 ? '...' : ''}`
+const canonical = `https://www.infolavelada.com/luchador/${id}`
+
 const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   year: 'numeric',
   month: 'short',
@@ -27,7 +30,7 @@ const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 export const prerender = false
 ---
 
-<Layout title={`${fighter.name} | ${fixedTitle}`}>
+<Layout title={`${fighter.name} | ${fixedTitle}`} description={description} canonical={canonical}>
   <section class="relative flex w-full flex-col-reverse lg:min-h-screen lg:flex-row">
     <!-- Fondo de la pagina -->
     <div

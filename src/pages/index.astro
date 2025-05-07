@@ -7,11 +7,14 @@ import Presentation from '@/sections/Presentation.astro'
 import FAQ from '@/components/FAQ.astro'
 
 const title = 'La Velada del Año V - Evento de boxeo de Ibai Llanos con creadores de contenido'
+const description =
+  'El mayor evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos. Descubre combates, participantes y cómo ver el evento en directo.'
+const canonical = 'https://www.infolavelada.com/'
 
 export const prerender = true
 ---
 
-<Layout title={title}>
+<Layout title={title} description={description} canonical={canonical}>
   <Hero />
   <Entradas />
   <Countdown timestamp={1753552800000} />

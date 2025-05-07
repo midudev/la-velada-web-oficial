@@ -12,9 +12,17 @@ import { fixedTitle } from '@/consts/pageTitles'
 import Spotlight from '@/components/Spotlight.astro'
 interface Props {
   title: string
+  description?: string
+  canonical?: string
+  robots?: string
 }
 
-const { title = fixedTitle } = Astro.props
+const {
+  title = fixedTitle,
+  description = "Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos",
+  canonical,
+  robots
+} = Astro.props
 ---
 
 <!doctype html>
@@ -67,8 +75,10 @@ const { title = fixedTitle } = Astro.props
     />
     <meta
       name="description"
-      content="Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos"
+      content={description}
     />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {robots && <meta name="robots" content={robots} />}
 
     <meta property="og:url" content="https://www.infolavelada.com" />
     <meta property="og:type" content="website" />
