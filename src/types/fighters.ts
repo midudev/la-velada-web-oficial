@@ -59,5 +59,5 @@ export interface Fighters {
     videoID: string
     thumbnail: string
   }
-  bio?: string
+  bio: string
 }
