@@ -93,13 +93,13 @@ La Velada V es una competición de boxeo que enfrenta a streamers, creadores de 
 
   </details>
 
-- PNPM (es nuestra recomendación por su eficiencia y rapidez)
+	- PNPM (es nuestra recomendación por su eficiencia y rapidez)
 
   ```sh
   npm install -g pnpm
   ```
 
-- o NPM
+	- o NPM
 
   ```sh
   npm install npm@latest -g
