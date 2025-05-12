@@ -35,7 +35,7 @@ const isActive = (path: string) => pathname === path
 <header
   class="fixed top-0 z-50 mx-auto flex h-20 w-full select-none items-center text-white sm:h-screen sm:overflow-hidden md:h-20"
 >
-  <div class="flex justify-between px-6 py-4 md:w-full">
+  <div class="relative flex justify-between px-6 py-4 md:w-full">
     <a href="/" class="cursor-pointer transition duration-300 hover:scale-110 md:hidden">
       <img src="/favicon.svg" alt="logo" class="h-auto w-7" />
     </a>
@@ -93,10 +93,10 @@ const isActive = (path: string) => pathname === path
         shouldShowLogo && (
           <a
             href="/"
-            class="relative mx-auto hidden w-1/3 cursor-pointer duration-500 hover:scale-110 md:inline-block"
+            class="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 transition duration-500 hover:scale-110 md:inline-block"
           >
             <img
-              class="mx-auto h-auto w-10"
+              class="h-10"
               src="/favicon.svg"
               fetchpriority="high"
               alt="La Velada del Año V"
