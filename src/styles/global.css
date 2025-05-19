@@ -33,13 +33,132 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--color-theme-tickle-me-pink); /* Efecto hover */
+    background-color: var(--color-theme-tickle-me-pink);
+    /* Efecto hover */
   }
 
   /* Firefox */
   * {
     scrollbar-color: var(--color-theme-french-mauve) var(--color-theme-raisin-black);
     scrollbar-width: thin;
+  }
+}
+
+@layer utilities {
+  /* Efecto neón sutil solo para el texto */
+  .neon-text {
+    color: #fff;
+    text-shadow:
+      0 4px 18px rgba(0, 0, 0, 1),
+      0 0 2px #00aba5,
+      0 0 4px #ff4f9f;
+    animation: neon-flicker 2.2s infinite both;
+    transition: text-shadow 0.3s;
+  }
+
+  @keyframes neon-flicker {
+    0%,
+    100% {
+      opacity: 1;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 2px #00aba5,
+        0 0 4px #ff4f9f;
+    }
+    10% {
+      opacity: 0.95;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 3px #00aba5,
+        0 0 6px #ff4f9f;
+    }
+    18% {
+      opacity: 0.85;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 1px #00aba5,
+        0 0 2px #ff4f9f;
+    }
+    20% {
+      opacity: 0.95;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 3px #00aba5,
+        0 0 6px #ff4f9f;
+    }
+    25% {
+      opacity: 0.9;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 1px #00aba5,
+        0 0 2px #ff4f9f;
+    }
+    30% {
+      opacity: 1;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 2px #00aba5,
+        0 0 4px #ff4f9f;
+    }
+    70% {
+      opacity: 0.97;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 2px #00aba5,
+        0 0 4px #ff4f9f;
+    }
+    80% {
+      opacity: 0.85;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 1px #00aba5,
+        0 0 2px #ff4f9f;
+    }
+    90% {
+      opacity: 1;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 2px #00aba5,
+        0 0 4px #ff4f9f;
+    }
+  }
+
+  .neon-text:hover {
+    text-shadow:
+      0 2px 8px rgba(0, 0, 0, 1),
+      0 0 4px #00aba5,
+      0 0 8px #ff4f9f;
+    animation: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .min-h-screen {
+    min-height: 100svh;
+  }
+
+  .h-screen {
+    height: 100svh;
+  }
+
+  @media (min-width: 768px) {
+    .min-h-screen {
+      min-height: 100vh;
+    }
+
+    .h-screen {
+      height: 100vh;
+    }
   }
 }
 

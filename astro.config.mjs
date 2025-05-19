@@ -16,9 +16,8 @@ export default defineConfig({
   },
 
   experimental: {
-
     svg: true,
-   },
+  },
 
   adapter: vercel(),
 
