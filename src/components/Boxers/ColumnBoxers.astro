@@ -1,0 +1,115 @@
+---
+import BoxerCard from '@/components/BoxerCard.astro'
+import type { HTMLAttributes } from 'astro/types'
+
+import type { Fighters } from '@/types/fighters'
+
+interface Props {
+  boxer: Fighters
+  versus: Fighters
+  class?: string
+  selectedBoxer: Fighters
+  imgLoading?: HTMLAttributes<'img'>['loading']
+}
+
+const { boxer, versus, class: className = '', selectedBoxer, imgLoading } = Astro.props
+
+const hasSameOpponents = (selectedBoxerOpponents: string[], opponents: string[]) => {
+  return selectedBoxerOpponents.every((sBoxerOpponent) => opponents.includes(sBoxerOpponent))
+}
+
+const isOpponent = (id: Fighters['id'], versus: Fighters['versus']) => {
+  const selectedBoxerOpponents = Array.isArray(selectedBoxer.versus)
+    ? selectedBoxer.versus
+    : [selectedBoxer.versus]
+
+  const opponents = Array.isArray(versus) ? versus : [versus]
+
+  return (
+    selectedBoxerOpponents.includes(id) ||
+    (hasSameOpponents(selectedBoxerOpponents, opponents) && id !== selectedBoxer.id)
+  )
+}
+---
+
+<div class:list={`flex flex-row gap-6 ${className} relative`}>
+  <BoxerCard id={versus.id} name={versus.name} versus={versus.versus} class="boxer-link" />
+  <img
+    src="/images/versus.webp"
+    class="animate-slide-out-bottom md:size-50 absolute left-1/2 top-1/2 z-20 size-14 -translate-x-1/2 -translate-y-1/2 transform delay-1000"
+    alt="Imagen de Versus"
+    decoding="async"
+    loading={imgLoading ?? 'lazy'}
+  />
+  <BoxerCard id={boxer.id} name={boxer.name} versus={boxer.versus} class="boxer-link" />
+</div>
+
+<style>
+  @reference "../../styles/global.css";
+
+  .boxer-link {
+    @apply relative mb-2 flex flex-col items-center justify-center transition-opacity duration-300 ease-in-out md:size-28 xl:size-36;
+
+    &:hover {
+      @apply opacity-90;
+    }
+
+    & .boxer-image {
+      @apply z-20 aspect-square h-full w-full object-contain transition-opacity duration-300 ease-in-out;
+      mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+      filter: grayscale(100%);
+      transition: filter 0.3s ease;
+    }
+  }
+
+  .boxer-link-background {
+    @apply absolute bottom-0 block h-3/5 w-full opacity-25 transition-opacity duration-300 ease-in-out;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.5) 30%,
+      rgba(0, 0, 0, 0) 95%
+    );
+  }
+
+  .boxer-link:hover .boxer-image,
+  .boxer-link.active .boxer-image {
+    transition: scale 0.3s ease-in-out;
+    scale: 1.05;
+    filter: grayscale(0%);
+  }
+
+  .boxer-link.ally {
+    & .boxer-image {
+      transition: scale 0.3s ease-in-out;
+      scale: 1.05;
+    }
+
+    &::after {
+      content: 'aliada';
+      @apply pointer-events-none absolute bottom-0 z-50 text-2xl text-green-500;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .boxer-link.opponent {
+    & .boxer-image {
+      transition: scale 0.3s ease-in-out;
+      scale: 1.05;
+    }
+
+    &::after {
+      content: 'versus';
+      @apply pointer-events-none absolute bottom-0 z-50 text-2xl text-red-500;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .boxer-link.active .boxer-link-background,
+  .boxer-link:hover .boxer-link-background {
+    filter: brightness(0.5);
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+</style>

@@ -1,6 +1,6 @@
 ---
-import SectionTitle from '@/components/SectionTitle.astro'
 import { fighterGallery } from '@/utils/get-image-count'
+import { Icons } from '@/components/Icons'
 
 interface Props {
   id: string
@@ -9,97 +9,87 @@ interface Props {
 
 const { id, name } = Astro.props
 
-let gallery = fighterGallery(id)
-const IMAGES_TO_LOAD = Math.min(gallery,5)
+const gallery = fighterGallery(id)
+const IMAGES_TO_LOAD = Math.min(gallery, 3)
 ---
 
-<section class="mx-auto max-w-6xl px-2 py-36 lg:px-10">
-  <SectionTitle title="Galería de Fotos" />
-
-  <div id="boxer-gallery" class={`mt-10 grid gap-3 pt-12 ${gallery === 4 ? "grid-cols-8" : "grid-cols-6"}`} >
-    {
-      Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => (
-        <a
-          class:list={[
-            "boxer-image aspect-square transition hover:scale-105 hover:brightness-125",
-            { "col-span-3": gallery === 2 || (gallery === 5 && index < 2) },
-            { "col-span-2": [3, 4].includes(gallery) || (gallery === 5 && index >= 2), },
-          ]}
-          href={`/images/fighters/gallery/${id}/${index + 1}.webp`}
-          title={`Abrir imagen ${index} de la galería de ${name}`}
-        >
-          <figure class="h-full w-full">
-            <picture class="block h-full w-full">
-              <img
-                loading="lazy"
-                decoding="async"
-                class="aspect-square h-full w-full rounded object-cover object-top"
-                alt={`Imagen de la galería de fotos de ${name}`}
-                src={`/images/fighters/gallery/${id}/${index + 1}.webp`}
-              />
-            </picture>
-          </figure>
-        </a>
-      ))
-    }
-    <dialog
-      id="lightbox"
-      class="w-full h-full bg-transparent backdrop:bg-black/90 mt-20"
+<div id="boxer-gallery" class={`grid gap-3 grid-rows-2 grid-cols-2`}>
+  {
+    Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => (
+      <a
+        class:list={[
+          'boxer-image aspect-square transition hover:scale-105 hover:brightness-110',
+          'col-span-1 row-span-1',
+          'animate-fade-in animate-delay-[1000ms]',
+        ]}
+        href={`/images/fighters/gallery/${id}/${index + 1}.webp`}
+        title={`Abrir imagen ${index} de la galería de ${name}`}
+      >
+        <figure class="h-full w-full">
+          <picture class="block h-full w-full">
+            <img
+              loading="lazy"
+              decoding="async"
+              class="aspect-square h-full w-full rounded object-cover object-top"
+              alt={`Imagen de la galería de fotos de ${name}`}
+              src={`/images/fighters/gallery/${id}/${index + 1}.webp`}
+            />
+          </picture>
+        </figure>
+      </a>
+    ))
+  }
+  <dialog
+    id="lightbox"
+    class="mx-auto my-auto h-screen w-full border-none bg-transparent outline-none ring-0 backdrop:bg-black/90 md:mt-20"
+  >
+    <div
+      class="animate-zoom-in mx-auto flex h-[80%] w-[80%] items-center justify-center overflow-hidden"
     >
-      <div class="mx-auto flex h-[80%] w-[80%] items-center justify-center animate-zoom-in">
-        <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
+      <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
+      <p
+        class="font-primary pointer-events-none absolute bottom-0 text-center text-xs text-white/50 md:hidden"
+      >
+        Desliza para la siguiente
+      </p>
+      <button
+        data-btn-prev
+        class="group absolute left-[10px] z-10 hidden cursor-pointer text-transparent transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:left-0 md:flex md:items-center md:justify-center"
+        id="btn-prev"
+      >
+        <Icons.ChevronLeft
+          class="stroke-theme-turquoise group-hover:stroke-theme-tickle-me-pink h-20 w-20 bg-transparent fill-transparent"
+        />
+      </button>
+      <div class="z-8 relative h-fit rounded md:h-full">
         <button
+          data-btn-close
+          id="btn-close"
           type="button"
-          class="hover:text-theme-tickle-me-pink z-10 rounded bg-black/60 p-4 text-theme-turquoise transition hover:scale-110 right-8 top-8 absolute cursor-pointer"
+          class="hover:text-theme-tickle-me-pink text-theme-turquoise absolute right-2 top-2 z-10 hidden cursor-pointer rounded bg-black/60 p-4 transition hover:scale-110 md:block"
         >
-          <svg class="size-5" aria-hidden="true" fill="none" viewBox="0 0 14 14">
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
-          </svg>
-        </button>
-        <button
-          data-btn-prev
-          class="group z-10 transition hover:scale-125 motion-reduce:transition-none text-theme-turquoise motion-reduce:hover:scale-100 hover:text-theme-tickle-me-pink absolute left-[10px] md:left-0 md:relative cursor-pointer"
-          id="btn-prev"
-        >
-          <svg class="size-16" width="80" height="80" fill="none"
-            ><g clip-path="url(#a)"
-              ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"></path></g
-            ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs
-            ></svg
-          >
+          <Icons.XIcon class="h-5 w-5" aria-hidden="true" fill="none" />
         </button>
         <img
           loading="lazy"
           decoding="async"
-          class="boxer-gallery-img z-8 h-full rounded object-contain object-center"
+          class="boxer-gallery-img z-8 h-fit rounded object-contain object-center md:h-full"
           alt={`Imagen de la galería de fotos de ${name}`}
           src={`/images/fighters/gallery/${id}/1.webp`}
         />
-        <button
-          data-btn-next
-          class="group z-10 transition hover:scale-125 motion-reduce:transition-none text-theme-turquoise motion-reduce:hover:scale-100 hover:text-theme-tickle-me-pink absolute right-[10px] md:right-0 md:relative cursor-pointer"
-          id="btn-next"
-        >
-          <svg
-            class="size-16 rotate-180"
-            width="80"
-            height="80"
-            fill="none"
-            ><g clip-path="url(#a)"
-              ><path fill="currentColor" d="m25 40 25-25 3.5 3.5L32 40l21.5 21.5L50 65 25 40Z"></path></g
-            ><defs><clipPath id="a"><path fill="#fff" d="M0 0h80v80H0z"></path></clipPath></defs
-            ></svg
-          >
-        </button>
       </div>
-    </dialog>
-  </div>
-</section>
+      <button
+        data-btn-next
+        class="group absolute right-[10px] z-10 hidden cursor-pointer text-transparent transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:right-0 md:flex md:items-center md:justify-center"
+        id="btn-next"
+      >
+        <Icons.ChevronRight
+          class="stroke-theme-turquoise group-hover:stroke-theme-tickle-me-pink h-20 w-20 bg-transparent fill-transparent"
+        />
+      </button>
+    </div>
+  </dialog>
+</div>
 
 <script>
   import { $ } from '@/lib/dom-selector'
@@ -109,6 +99,7 @@ const IMAGES_TO_LOAD = Math.min(gallery,5)
     const $gallery = $('#boxer-gallery') as HTMLElement
     const $btnPrev = $('#btn-prev') as HTMLButtonElement
     const $btnNext = $('#btn-next') as HTMLButtonElement
+    const $btnClose = $('#btn-close') as HTMLButtonElement
     if (!$gallery) return
 
     const $links = $gallery?.querySelectorAll('a')
@@ -121,12 +112,18 @@ const IMAGES_TO_LOAD = Math.min(gallery,5)
         resetMainImageAnimation(img)
         img.src = newImg.src
         img.classList.add('animate-fade-in')
+
+        img.style.transition = '0.2s ease transform'
+        img.style.transform = 'translateX(0)'
       }
     }
 
     const close = () => {
       $lightbox.close()
+      document.body.style.overflow = ''
     }
+
+    $btnClose?.addEventListener('click', close)
 
     const resetMainImageAnimation = (mainImage: HTMLImageElement) => {
       mainImage.style.animation = 'none'
@@ -149,6 +146,64 @@ const IMAGES_TO_LOAD = Math.min(gallery,5)
           : $gallery.querySelector('a:first-of-type')
       ) as HTMLAnchorElement
       next.click()
+    }
+
+    let isAnimating = false
+
+    const startSwipeDrag = (startEvent: MouseEvent | TouchEvent) => {
+      let initialTouchX: number
+      let swipeDeltaX: number = 0
+
+      const getTouchX = (e: MouseEvent | TouchEvent) =>
+        e instanceof MouseEvent ? e.pageX : e.touches[0].pageX
+
+      const handleSwipeMove = (moveEvent: MouseEvent | TouchEvent) => {
+        const currentTouchX = getTouchX(moveEvent)
+        swipeDeltaX = currentTouchX - initialTouchX
+        const $lightboxImg = $lightbox.querySelector('.boxer-gallery-img') as HTMLImageElement
+        if ($lightboxImg) {
+          $lightboxImg.style.transform = `translateX(${swipeDeltaX}px)`
+        }
+      }
+
+      const handleSwipeDecision = () => {
+        if (isAnimating) return
+
+        const $lightboxImg = $lightbox.querySelector('.boxer-gallery-img') as HTMLImageElement
+        if (!$lightboxImg) return
+
+        if (swipeDeltaX > $lightboxImg.offsetWidth * 0.5) {
+          isAnimating = true
+          showPrevImage()
+        } else if (swipeDeltaX < -$lightboxImg.offsetWidth * 0.5) {
+          isAnimating = true
+          showNextImage()
+        } else {
+          $lightboxImg.style.transition = '0.2s ease transform'
+          $lightboxImg.style.transform = 'translateX(0)'
+        }
+
+        document.removeEventListener('mousemove', handleSwipeMove)
+        document.removeEventListener('mouseup', handleSwipeDecision)
+        document.removeEventListener('touchmove', handleSwipeMove)
+        document.removeEventListener('touchend', handleSwipeDecision)
+      }
+
+      initialTouchX = getTouchX(startEvent)
+
+      document.addEventListener('mousemove', handleSwipeMove)
+      document.addEventListener('mouseup', handleSwipeDecision)
+      document.addEventListener('touchmove', handleSwipeMove, { passive: true })
+      document.addEventListener('touchend', handleSwipeDecision, { passive: true })
+    }
+
+    const $lightboxImg = $lightbox?.querySelector('.boxer-gallery-img') as HTMLImageElement
+    if ($lightboxImg) {
+      $lightboxImg.addEventListener('mousedown', (e) => startSwipeDrag(e))
+      $lightboxImg.addEventListener('touchstart', (e) => startSwipeDrag(e))
+      $lightboxImg.addEventListener('animationend', () => {
+        isAnimating = false
+      })
     }
 
     $btnPrev.addEventListener('click', () => {
@@ -204,6 +259,7 @@ const IMAGES_TO_LOAD = Math.min(gallery,5)
         if (!$lightbox.open) {
           updateImg(link)
           $lightbox.showModal()
+          document.body.style.overflow = 'hidden'
         }
       }),
     )

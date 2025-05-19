@@ -1,4 +1,4 @@
-import type { Social } from "@/types/social";
+import type { Social } from '@/types/social'
 
 type fighterId =
   | 'peereira'
@@ -59,4 +59,5 @@ export interface Fighters {
     videoID: string
     thumbnail: string
   }
+  bio: string
 }
