@@ -15,10 +15,6 @@ export default defineConfig({
     inlineStylesheets: 'always',
   },
 
-  experimental: {
-    svg: true,
-  },
-
   adapter: vercel(),
 
   integrations: [sitemap()],
