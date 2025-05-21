@@ -4,11 +4,11 @@ import co from '../../public/images/flags/co.webp'
 import es from '../../public/images/flags/es.webp'
 
 export type Country = {
-  id: string;
-  name: string;
-  image: any; // Assuming the image type is any for now
-  continent: string;
-};
+  id: string
+  name: string
+  image: any // Assuming the image type is any for now
+  continent: string
+}
 
 export const countries: Country[] = [
   {
