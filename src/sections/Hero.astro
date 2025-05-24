@@ -1,6 +1,5 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
-import BoxerCard from '@/components/BoxerCard.astro'
 import SelectYourBoxer from '@/components/Boxers/SelectYourBoxer.astro'
 
 const selectedBoxerId = Astro.url.searchParams.get('luchador') ?? FIGHTERS[0].id
@@ -30,7 +29,7 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
           alt="La Velada del Año V"
           decoding="async"
         />
-        <div class="absolute top-0 z-0 size-64 bg-pink-400/80 blur-2xl"></div>
+        <div class="absolute z-0 size-64 bg-pink-400/80 blur-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
       </figure>
 
       <div class="relative z-10">
@@ -88,6 +87,10 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
     // Los cambios estan pensandos para que se apliquen al entrar con un dispositivo u otro
     window.addEventListener('resize', () => {
       isMobile = window.matchMedia('(max-width: 768px)').matches
+      const $fighterSelector = $('#selectorFighter')
+      if (isMobile && $fighterSelector !== null) {
+        $fighterSelector.remove()
+      }
     })
 
     let currentFighterId: string | null = null
@@ -248,6 +251,10 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
     ) as HTMLElement
     if (!isMobile) {
       $fightersContainer.appendChild($fighterSelector)
+    } else {
+      if ($fighterSelector) {
+        $fighterSelector.remove()
+      }
     }
 
     if (isMobile) {
@@ -255,7 +262,10 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
       $fightersContainer.addEventListener('click', (event) => {
         event.preventDefault()
         event.stopPropagation()
-        boxerCards.forEach((card) => card.removeAttribute('data-selected'))
+        boxerCards.forEach((card) => {
+          card.removeAttribute('data-selected')
+          card.classList.remove('selected')
+        })
         $landing?.classList.remove('hidden')
       })
     }
@@ -271,10 +281,12 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
           // Si no tiene `data-selected` entonces lo agregamos
           if (card.getAttribute('data-selected') === null) {
             card.setAttribute('data-selected', 'true')
+            card.classList.add('selected')
             // Aseguramos que solo se selecciona el luchador que se hizo click
             boxerCards.forEach((selectedCard, idx) => {
               if (selectedCard.getAttribute('data-selected') === null || idx === cardIndex) return
               selectedCard.removeAttribute('data-selected')
+              selectedCard.classList.remove('selected')
             })
             return
           }

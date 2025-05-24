@@ -2,9 +2,14 @@
 import Layout from '@/layouts/Layout.astro'
 import { porra } from '@/consts/pageTitles'
 import BackgroundLayout from '@/layouts/BackgroundLayout.astro'
+
+const description = "Participa en la porra oficial de La Velada del Año V y haz tus predicciones sobre los combates de Ibai Llanos y creadores de contenido."
+const canonical = "https://www.infolavelada.com/la-porra"
+
+export const prerender = true
 ---
 
-<Layout title={porra}>
+<Layout title={porra} description={description} canonical={canonical}>
   <BackgroundLayout>
     <header
       class="absolute top-28 mx-auto flex min-h-screen w-full flex-col items-center justify-start gap-4"

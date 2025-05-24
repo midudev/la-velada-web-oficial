@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions'
+import Analytics from '@vercel/analytics/astro'
 
 import '@/styles/global.css'
 
@@ -11,9 +12,17 @@ import { fixedTitle } from '@/consts/pageTitles'
 import Spotlight from '@/components/Spotlight.astro'
 interface Props {
   title: string
+  description?: string
+  canonical?: string
+  robots?: string
 }
 
-const { title = fixedTitle } = Astro.props
+const {
+  title = fixedTitle,
+  description = 'Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos',
+  canonical,
+  robots,
+} = Astro.props
 ---
 
 <!doctype html>
@@ -64,10 +73,9 @@ const { title = fixedTitle } = Astro.props
       type="font/woff2"
       crossorigin="anonymous"
     />
-    <meta
-      name="description"
-      content="Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos"
-    />
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {robots && <meta name="robots" content={robots} />}
 
     <meta property="og:url" content="https://www.infolavelada.com" />
     <meta property="og:type" content="website" />
@@ -88,7 +96,49 @@ const { title = fixedTitle } = Astro.props
       name="twitter:description"
       content="Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos"
     />
+    <meta name="twitter:image" content="https://www.infolavelada.com/og.jpg" />
+
+    <!-- Datos estructurados para Evento (Schema.org) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "La Velada del Año V",
+        "description": "Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos",
+        "image": "https://www.infolavelada.com/og.jpg",
+        "startDate": "2025-07-26T18:00:00+02:00",
+        "endDate": "2025-07-27T02:00:00+02:00",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "location": {
+          "@type": "Place",
+          "name": "Estadio La Cartuja",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Sevilla",
+            "addressRegion": "Andalucía",
+            "addressCountry": "ES"
+          }
+        },
+        "organizer": {
+          "@type": "Person",
+          "name": "Ibai Llanos"
+        },
+        "offers": {
+          "@type": "Offer",
+          "url": "https://www.entradas.com/artist/la-velada-del-ano/la-velada-del-ano-v-3883352/?affiliate=LVL",
+          "availability": "https://schema.org/InStock",
+          "priceCurrency": "EUR",
+          "validFrom": "2025-04-01T12:00:00+02:00"
+        },
+        "performer": {
+          "@type": "PerformingGroup",
+          "name": "Creadores de contenido"
+        }
+      }
+    </script>
     <ClientRouter />
+    <Analytics />
   </head>
   <body>
     <Spotlight />

@@ -1,0 +1,88 @@
+---
+import SectionTitle from './SectionTitle.astro'
+
+const faqs = [
+  {
+    question: '¿Qué es La Velada del Año?',
+    answer:
+      'La Velada del Año acoge combates de boxeo entre los mayores streamers y creadores contenido del mundo en habla hispana. Durante meses, dejan su habitual rutina para prepararse física y mentalmente para combatir en el cuadrilátero en un estadio a reventar. Además del esperado desenlace sobre el ring, se disfruta de un espectacular show musical en vivo con estrellas nacionales e internacionales.',
+  },
+  {
+    question: '¿Dónde puedo ver el evento?',
+    answer: `El evento se transmite en directo por el canal de Twitch de Ibai Llanos: <a href="https://twitch.tv/ibai" target="_blank" rel="noopener">twitch.tv/ibai</a> Actualmente, La Velada posee el récord de la emisión más vista en la historia de Twitch, con más de 3,8 millones de dispositivos conectados al mismo tiempo en la pasada edición en el Estadio Santiago Bernabéu en 2024. En el top 3 de emisiones más vistas de la plataforma se encuentran las tres últimas veladas.`,
+  },
+  {
+    question: '¿A qué hora empieza La Velada V?',
+    answer:
+      'El horario oficial se anunciará próximamente en las redes sociales de Ibai y en la web oficial.',
+  },
+  {
+    question: '¿Quién va a pelear en La Velada del Año V?',
+    answer: `<ul class='list-disc pl-4 space-y-1'>
+      <li><strong>Primer combate:</strong> Peereira7 vs Rivaldios</li>
+      <li><strong>Segundo combate:</strong> Perxitaa vs Gaspi</li>
+      <li><strong>Tercer combate:</strong> Abby vs Roro</li>
+      <li><strong>Cuarto combate:</strong> Andoni vs Carlos Belcast</li>
+      <li><strong>Quinto combate:</strong> Alana vs Ari Geli</li>
+      <li><strong>Sexto combate:</strong> Viruzz vs Tomás Mazza</li>
+      <li><strong>Séptimo combate:</strong> TheGrefg vs Westcol</li>
+    </ul>`,
+  },
+  {
+    question: '¿Qué artistas participan este año?',
+    answer:
+      'Pronto Ibai anunciará en directo quiénes serán los artistas nacionales e internacionales que aportarán el show entre combates a La Velada V.',
+  },
+  {
+    question: '¿Habrá comida en el evento? ¿Puedo llevar la mía?',
+    answer:
+      'Sí, habrá comida en el evento que podrás comprar. Además, puedes llevar la tuya de casa. Sólo ten en cuenta que se te retirarán los tapones de las botellas y cualquier objeto que pudieras lanzar, por motivos de seguridad.',
+  },
+]
+---
+
+<section class="max-w-4xl rounded-2xl px-5 py-36 md:mx-auto">
+  <SectionTitle title="Preguntas Frecuentes" class="mb-10" />
+  <ul>
+    {
+      faqs.map((faq) => (
+        <li class="mb-4">
+          <details class="group rounded-xl border border-transparent bg-zinc-800/50 transition-all duration-300 hover:border-[#00d7c9] hover:shadow-xl">
+            <summary class="focus-visible:ring-[#00d7c9]-400 duration-600 flex cursor-pointer select-none items-center gap-3 px-6 py-4 text-sm font-bold text-[#00d7c9] outline-none transition-all focus-visible:ring-2 group-open:text-pink-300 lg:text-lg">
+              <svg
+                class="mr-1 inline-block h-7 w-7 flex-shrink-0 text-[#00d7c9] transition-transform duration-300 group-open:rotate-180 lg:h-5 lg:w-5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+              {faq.question}
+            </summary>
+            <div class="animate-fadeInFaq px-8 pb-4 pt-1 font-sans text-base leading-relaxed text-white opacity-95 transition-all duration-300 [text-transform:none]">
+              <p set:html={faq.answer} />
+            </div>
+          </details>
+        </li>
+      ))
+    }
+  </ul>
+  {/* Animación fadeInFaq para respuestas */}
+  <style>
+    @keyframes fadeInFaq {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 0.95;
+        transform: translateY(0);
+      }
+    }
+    .animate-fadeInFaq {
+      animation: fadeInFaq 0.3s;
+    }
+  </style>
+</section>
