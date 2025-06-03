@@ -103,7 +103,6 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
     if (!$gallery) return
 
     const $links = $gallery?.querySelectorAll('a')
-    const $close = $lightbox?.querySelector('button')
 
     const updateImg = (link: HTMLElement) => {
       const img = $lightbox?.querySelector('.boxer-gallery-img') as HTMLImageElement
@@ -231,8 +230,6 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
         showPrevImage()
       }
     })
-
-    $close?.addEventListener('click', close)
 
     $lightbox?.addEventListener('click', (event) => {
       const $dialogBg = $('[data-dialog-bg]') as HTMLDivElement
