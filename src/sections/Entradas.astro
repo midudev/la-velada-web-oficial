@@ -1,21 +1,22 @@
+---
+import { Image } from "astro:assets";
+import EntradasImg from "@/assets/images/entradas-la-velada.webp";
+---
+
 <section
   class="animate-fade-in animate-delay-400 mb-0 mt-32 flex max-w-4xl flex-col items-center gap-4 px-5 py-36 md:mx-auto"
 >
   <div class="pointer-events-none relative inset-0 z-0">
-    <img
-      src="/images/entradas-la-velada.webp"
-      alt=""
-      aria-hidden="true"
-      class="absolute inset-0 -z-10 mx-auto scale-105 object-center opacity-70 blur-xl brightness-75"
-      loading="lazy"
-      decoding="async"
-    />
-    <img
-      src="/images/entradas-la-velada.webp"
+    <Image
+      src={EntradasImg}
       alt="Entradas La Velada a la venta"
-      class="z-10 w-full max-w-4xl rounded-lg"
-      loading="lazy"
-      decoding="async"
+      aria-hidden="true"
+      class="absolute inset-0 -z-10 mx-auto scale-105 object-center opacity-70 blur-xl brightness-75 border-blue-600"
+    />
+    <Image
+      src={EntradasImg}
+      alt="Entradas La Velada a la venta"
+      class="z-10 w-full max-w-4xl rounded-lg border-red-600"
     />
   </div>
   <a
