@@ -44,7 +44,7 @@ export const SPONSORS: Sponsors[] = [
     image: {
       logo: Spotify,
       width: 200,
-      height: 200,
+      height: 120,
     },
   },
   {
@@ -132,7 +132,7 @@ export const SPONSORS: Sponsors[] = [
     image: {
       logo: Gshock,
       width: 488,
-      height: 123,
+      height: 400,
     },
   },
   {
