@@ -54,21 +54,7 @@ const {
     />
     <link
       rel="preload"
-      href="/fonts/anisette-light.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
       href="/fonts/anisette-bold.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      href="/fonts/anisette-black.woff2"
       as="font"
       type="font/woff2"
       crossorigin="anonymous"
@@ -143,7 +129,9 @@ const {
   <body>
     <Spotlight />
     <Header />
-    <main>
+    <!-- Añadir skip link para que los usuarios de teclado puedan saltar al contenido principal -->
+    <a href="#main-content" class="sr-only focus:not-sr-only"> Saltar al contenido principal </a>
+    <main id="main-content">
       <slot />
     </main>
     <BannerSponsors />

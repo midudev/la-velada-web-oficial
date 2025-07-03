@@ -11,6 +11,7 @@ import Nothing from '@/assets/sponsors/Nothing.svg'
 import Revolut from '@/assets/sponsors/Revolut.svg'
 import Spotify from '@/assets/sponsors/Spotify.svg'
 import Vicio from '@/assets/sponsors/Vicio.svg'
+import Gshock from '@/assets/sponsors/Gshock.svg'
 
 export const SPONSORS: Sponsors[] = [
   {
@@ -43,7 +44,7 @@ export const SPONSORS: Sponsors[] = [
     image: {
       logo: Spotify,
       width: 200,
-      height: 200,
+      height: 120,
     },
   },
   {
@@ -121,6 +122,17 @@ export const SPONSORS: Sponsors[] = [
       logo: Mahou,
       width: 200,
       height: 200,
+    },
+  },
+  {
+    id: 'gshock',
+    name: 'Gshock',
+    url: 'https://www.casio.com/es/watches/gshock/',
+    label: 'Ir a la página web de Casio Gshock',
+    image: {
+      logo: Gshock,
+      width: 488,
+      height: 400,
     },
   },
   {
