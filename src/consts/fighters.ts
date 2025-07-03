@@ -24,18 +24,6 @@ export const FIGHTERS: Fighters[] = [
     versus: 'rivaldios',
     socials: [
       {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/Peereira7',
-        label: 'Visitar perfil de Peereira en X',
-        followers: '310k',
-        image: {
-          logo: X,
-          width: 200,
-          height: 200,
-        },
-      },
-      {
         id: 'instagram',
         name: 'Instagram',
         url: 'https://www.instagram.com/peereira7',
@@ -43,6 +31,18 @@ export const FIGHTERS: Fighters[] = [
         followers: '220k',
         image: {
           logo: Instagram,
+          width: 200,
+          height: 200,
+        },
+      },
+      {
+        id: 'tiktok',
+        name: 'TikTok',
+        url: 'https://www.tiktok.com/@peereira7',
+        label: 'Visitar perfil de Peereira en TikTok',
+        followers: '585k',
+        image: {
+          logo: TikTok,
           width: 200,
           height: 200,
         },
@@ -60,13 +60,13 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'tiktok',
-        name: 'TikTok',
-        url: 'https://www.tiktok.com/@peereira7',
-        label: 'Visitar perfil de Peereira en TikTok',
-        followers: '585k',
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/Peereira7',
+        label: 'Visitar perfil de Peereira en X',
+        followers: '310k',
         image: {
-          logo: TikTok,
+          logo: X,
           width: 200,
           height: 200,
         },
@@ -120,18 +120,6 @@ export const FIGHTERS: Fighters[] = [
     versus: 'gaspi',
     socials: [
       {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/Perxitaa',
-        label: 'Visitar perfil de Perxitaa en X',
-        followers: '2.1M',
-        image: {
-          logo: X,
-          width: 200,
-          height: 200,
-        },
-      },
-      {
         id: 'instagram',
         name: 'Instagram',
         url: 'https://www.instagram.com/perxitaa',
@@ -139,6 +127,18 @@ export const FIGHTERS: Fighters[] = [
         followers: '1.1M',
         image: {
           logo: Instagram,
+          width: 200,
+          height: 200,
+        },
+      },
+      {
+        id: 'tiktok',
+        name: 'TikTok',
+        url: 'https://www.tiktok.com/@srperxitaa',
+        label: 'Visitar perfil de Perxitaa en TikTok',
+        followers: '349.7k',
+        image: {
+          logo: TikTok,
           width: 200,
           height: 200,
         },
@@ -156,13 +156,13 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'tiktok',
-        name: 'TikTok',
-        url: 'https://www.tiktok.com/@srperxitaa',
-        label: 'Visitar perfil de Perxitaa en TikTok',
-        followers: '349.7k',
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/Perxitaa',
+        label: 'Visitar perfil de Perxitaa en X',
+        followers: '2.1M',
         image: {
-          logo: TikTok,
+          logo: X,
           width: 200,
           height: 200,
         },
@@ -220,18 +220,6 @@ export const FIGHTERS: Fighters[] = [
     versus: 'roro',
     socials: [
       {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/abbyiimu',
-        label: 'Visitar perfil de Abby en X',
-        followers: '620.8k',
-        image: {
-          logo: X,
-          width: 200,
-          height: 200,
-        },
-      },
-      {
         id: 'instagram',
         name: 'Instagram',
         url: 'https://www.instagram.com/abbyimu/',
@@ -256,18 +244,6 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'twitch',
-        name: 'Twitch',
-        url: 'https://www.twitch.tv/abby_',
-        label: 'Visitar perfil de Abby en Twitch',
-        followers: '626k',
-        image: {
-          logo: Twitch,
-          width: 200,
-          height: 200,
-        },
-      },
-      {
         id: 'youtube',
         name: 'Youtube',
         url: 'https://www.youtube.com/@abbyimu',
@@ -275,6 +251,30 @@ export const FIGHTERS: Fighters[] = [
         followers: '175k',
         image: {
           logo: Youtube,
+          width: 200,
+          height: 200,
+        },
+      },
+      {
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/abbyiimu',
+        label: 'Visitar perfil de Abby en X',
+        followers: '620.8k',
+        image: {
+          logo: X,
+          width: 200,
+          height: 200,
+        },
+      },
+      {
+        id: 'twitch',
+        name: 'Twitch',
+        url: 'https://www.twitch.tv/abby_',
+        label: 'Visitar perfil de Abby en Twitch',
+        followers: '626k',
+        image: {
+          logo: Twitch,
           width: 200,
           height: 200,
         },
@@ -396,18 +396,6 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/gaspipd',
-        label: 'Visitar perfil de Gaspi en X',
-        followers: '570.4k',
-        image: {
-          logo: X,
-          width: 200,
-          height: 200,
-        },
-      },
-      {
         id: 'tiktok',
         name: 'TikTok',
         url: 'https://www.tiktok.com/@gaspipdd',
@@ -427,6 +415,18 @@ export const FIGHTERS: Fighters[] = [
         followers: '2.41M',
         image: {
           logo: Youtube,
+          width: 200,
+          height: 200,
+        },
+      },
+      {
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/gaspipd',
+        label: 'Visitar perfil de Gaspi en X',
+        followers: '570.4k',
+        image: {
+          logo: X,
           width: 200,
           height: 200,
         },
@@ -632,13 +632,13 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'twitch',
-        name: 'Twitch',
-        url: 'https://www.twitch.tv/byViruZz',
-        label: 'Visitar perfil de Viruzz en Twitch',
-        followers: '435k',
+        id: 'youtube',
+        name: 'Youtube',
+        url: 'https://www.youtube.com/user/byViruZz',
+        label: 'Visitar canal de Viruzz en Youtube',
+        followers: '6.14M',
         image: {
-          logo: Twitch,
+          logo: Youtube,
           width: 200,
           height: 200,
         },
@@ -656,13 +656,13 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'youtube',
-        name: 'Youtube',
-        url: 'https://www.youtube.com/user/byViruZz',
-        label: 'Visitar canal de Viruzz en Youtube',
-        followers: '6.14M',
+        id: 'twitch',
+        name: 'Twitch',
+        url: 'https://www.twitch.tv/byViruZz',
+        label: 'Visitar perfil de Viruzz en Twitch',
+        followers: '435k',
         image: {
-          logo: Youtube,
+          logo: Twitch,
           width: 200,
           height: 200,
         },
@@ -715,30 +715,6 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'twitch',
-        name: 'Twitch',
-        url: 'https://www.twitch.tv/alanalarana',
-        label: 'Visitar perfil de Alana en Twitch',
-        followers: '922k',
-        image: {
-          logo: Twitch,
-          width: 200,
-          height: 200,
-        },
-      },
-      {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/alanafloresf',
-        label: 'Visitar perfil de Alana en X',
-        followers: '1M',
-        image: {
-          logo: X,
-          width: 200,
-          height: 200,
-        },
-      },
-      {
         id: 'tiktok',
         name: 'TikTok',
         url: 'https://www.tiktok.com/@alanafloresf',
@@ -758,6 +734,30 @@ export const FIGHTERS: Fighters[] = [
         followers: '574k',
         image: {
           logo: Youtube,
+          width: 200,
+          height: 200,
+        },
+      },
+      {
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/alanafloresf',
+        label: 'Visitar perfil de Alana en X',
+        followers: '1M',
+        image: {
+          logo: X,
+          width: 200,
+          height: 200,
+        },
+      },
+      {
+        id: 'twitch',
+        name: 'Twitch',
+        url: 'https://www.twitch.tv/alanalarana',
+        label: 'Visitar perfil de Alana en Twitch',
+        followers: '922k',
+        image: {
+          logo: Twitch,
           width: 200,
           height: 200,
         },
@@ -815,13 +815,13 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'twitch',
-        name: 'Twitch',
-        url: 'https://www.twitch.tv/thegrefg',
-        label: 'Visitar perfil de Grefg en Twitch',
-        followers: '12.2M',
+        id: 'youtube',
+        name: 'Youtube',
+        url: 'https://www.youtube.com/@TheGrefg',
+        label: 'Visitar canal de Grefg en Youtube',
+        followers: '19M',
         image: {
-          logo: Twitch,
+          logo: Youtube,
           width: 200,
           height: 200,
         },
@@ -839,13 +839,13 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'youtube',
-        name: 'Youtube',
-        url: 'https://www.youtube.com/@TheGrefg',
-        label: 'Visitar canal de Grefg en Youtube',
-        followers: '19M',
+        id: 'twitch',
+        name: 'Twitch',
+        url: 'https://www.twitch.tv/thegrefg',
+        label: 'Visitar perfil de Grefg en Twitch',
+        followers: '12.2M',
         image: {
-          logo: Youtube,
+          logo: Twitch,
           width: 200,
           height: 200,
         },
@@ -891,13 +891,13 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/WestCOL',
-        label: 'Visitar perfil de Westcol en X',
-        followers: '413.3k',
+        id: 'tiktok',
+        name: 'TikTok',
+        url: 'https://www.tiktok.com/@westcol',
+        label: 'Visitar perfil de Westcol en TikTok',
+        followers: '993.4k',
         image: {
-          logo: X,
+          logo: TikTok,
           width: 200,
           height: 200,
         },
@@ -915,13 +915,13 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'tiktok',
-        name: 'TikTok',
-        url: 'https://www.tiktok.com/@westcol',
-        label: 'Visitar perfil de Westcol en TikTok',
-        followers: '993.4k',
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/WestCOL',
+        label: 'Visitar perfil de Westcol en X',
+        followers: '413.3k',
         image: {
-          logo: TikTok,
+          logo: X,
           width: 200,
           height: 200,
         },
@@ -967,18 +967,6 @@ export const FIGHTERS: Fighters[] = [
     versus: 'alana',
     socials: [
       {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/ariigelii',
-        label: 'Visitar perfil de Arigeli en X',
-        followers: '28k',
-        image: {
-          logo: X,
-          width: 200,
-          height: 200,
-        },
-      },
-      {
         id: 'instagram',
         name: 'Instagram',
         url: 'https://www.instagram.com/arigelii/',
@@ -1010,6 +998,18 @@ export const FIGHTERS: Fighters[] = [
         followers: '466k',
         image: {
           logo: Youtube,
+          width: 200,
+          height: 200,
+        },
+      },
+      {
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/ariigelii',
+        label: 'Visitar perfil de Arigeli en X',
+        followers: '28k',
+        image: {
+          logo: X,
           width: 200,
           height: 200,
         },
@@ -1055,18 +1055,6 @@ export const FIGHTERS: Fighters[] = [
     versus: 'viruzz',
     socials: [
       {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/MazzaTomas',
-        label: 'Visitar perfil de Tomás en X',
-        followers: '259.9k',
-        image: {
-          logo: X,
-          width: 200,
-          height: 200,
-        },
-      },
-      {
         id: 'instagram',
         name: 'Instagram',
         url: 'https://www.instagram.com/mazzatomas',
@@ -1074,6 +1062,18 @@ export const FIGHTERS: Fighters[] = [
         followers: '2.9M',
         image: {
           logo: Instagram,
+          width: 200,
+          height: 200,
+        },
+      },
+      {
+        id: 'tiktok',
+        name: 'TikTok',
+        url: 'https://www.tiktok.com/@mazzatomas',
+        label: 'Visitar perfil de Tomás en TikTok',
+        followers: '2.5M',
+        image: {
+          logo: TikTok,
           width: 200,
           height: 200,
         },
@@ -1091,13 +1091,13 @@ export const FIGHTERS: Fighters[] = [
         },
       },
       {
-        id: 'tiktok',
-        name: 'TikTok',
-        url: 'https://www.tiktok.com/@mazzatomas',
-        label: 'Visitar perfil de Tomás en TikTok',
-        followers: '2.5M',
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/MazzaTomas',
+        label: 'Visitar perfil de Tomás en X',
+        followers: '259.9k',
         image: {
-          logo: TikTok,
+          logo: X,
           width: 200,
           height: 200,
         },
@@ -1147,18 +1147,6 @@ export const FIGHTERS: Fighters[] = [
     versus: 'andoni',
     socials: [
       {
-        id: 'x',
-        name: 'X',
-        url: 'https://x.com/CarlosBelcast',
-        label: 'Visitar perfil de Carlos en X',
-        followers: '22.1k',
-        image: {
-          logo: X,
-          width: 200,
-          height: 200,
-        },
-      },
-      {
         id: 'instagram',
         name: 'Instagram',
         url: 'https://www.instagram.com/carlosbelcast/',
@@ -1190,6 +1178,18 @@ export const FIGHTERS: Fighters[] = [
         followers: '1.42M',
         image: {
           logo: Youtube,
+          width: 200,
+          height: 200,
+        },
+      },
+      {
+        id: 'x',
+        name: 'X',
+        url: 'https://x.com/CarlosBelcast',
+        label: 'Visitar perfil de Carlos en X',
+        followers: '22.1k',
+        image: {
+          logo: X,
           width: 200,
           height: 200,
         },
