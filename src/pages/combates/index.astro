@@ -53,7 +53,7 @@ export const prerender = true
                   <img
                     src={`/images/fighters/combat/${fighter}.webp`}
                     class:list={[
-                      'mask-fade-bottom z-20 size-96 h-full w-1/2 object-contain transition-transform duration-300 group-hover:scale-110',
+                      'mask-fade-bottom-quick z-20 size-96 h-full w-1/2 object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
                       fighterIndex === 0 ? 'ml-5 lg:ml-10' : '-ml-10 lg:-ml-20',
                     ]}
                     alt={`Imagen de ${fighter}`}
@@ -61,19 +61,17 @@ export const prerender = true
                   />
                 ))}
 
-                <div class="-skew-4 absolute bottom-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
+                <div class="-skew-4 absolute -bottom-20 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
                   <img
                     src={`/images/fighters/combat/${fighters[0]}-vs-${fighters[1]}.webp`}
                     class:list={[
-                      'transform-3d z-50 object-cover opacity-[99%]',
-                      index === 0 ? 'h-56 w-[28rem] md:h-64 md:w-[32rem]' : 'h-48 w-96',
+                      'transform-3d z-50 object-bottom',
+                      index === 0 ? 'h-[400px] w-[700px] object-contain' : 'h-56 object-cover',
                     ]}
                     alt={`${fighters[0]} contra ${fighters[1]}`}
                     transition:name={`vs:${fighters[0]}-${fighters[1]}`}
                   />
                 </div>
-
-                <div class="absolute bottom-0 z-10 h-2/3 w-full bg-gradient-to-b from-pink-900/30 from-60% to-transparent transition-colors duration-300 group-hover:from-pink-900/20" />
               </div>
             </a>
           ))
@@ -85,7 +83,7 @@ export const prerender = true
 
 <style>
   .combat {
-    animation-timeline: view(block 100% 25%);
+    animation-timeline: view(block 100% 1%);
   }
 
   /* Grid responsivo para combates */
