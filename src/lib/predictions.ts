@@ -166,7 +166,11 @@ export async function getAllPredictions(): Promise<CombatPrediction[]> {
 /**
  * Registra o actualiza un voto para un combate y luchador específicos
  */
-export async function registerVote(combatId: string, fighterId: string): Promise<PredictionVote> {
+export async function registerVote(
+  combatId: string,
+  fighterId: string,
+  userId: string,
+): Promise<PredictionVote> {
   try {
     // Verificar que el combate existe
     const combatExists = COMBATS.find((combat) => combat.id === combatId)
@@ -174,21 +178,62 @@ export async function registerVote(combatId: string, fighterId: string): Promise
       throw new Error('El combate especificado no existe')
     }
 
-    // Verificar si ya existe una predicción para este combate y luchador
-    const existingPrediction = await turso.execute({
-      sql: 'SELECT id, votes FROM predictions WHERE combat_id = ? AND fighter_id = ?',
-      args: [combatId, fighterId],
+    // Verificar que el luchador existe
+    const fighterExists = FIGHTERS.find((fighter) => fighter.id === fighterId)
+    if (!fighterExists) {
+      throw new Error('El luchador especificado no existe')
+    }
+
+    // Verificar si el usuario ya ha votado en este combate
+    const existingUserVote = await turso.execute({
+      sql: 'SELECT fighter_id FROM user_votes WHERE combat_id = ? AND user_id = ?',
+      args: [combatId, userId],
     })
 
-    if (existingPrediction.rows.length > 0) {
-      // Actualizar el voto existente
-      const currentVotes = (existingPrediction.rows[0]?.votes as number) || 0
-      const newVotes = currentVotes + 1
+    if (existingUserVote.rows.length > 0) {
+      const previousFighterId = existingUserVote.rows[0]?.fighter_id as string
+
+      // Si vota por el mismo luchador, no hacer nada
+      if (previousFighterId === fighterId) {
+        // Obtener el conteo actual
+        const currentPrediction = await turso.execute({
+          sql: 'SELECT votes FROM predictions WHERE combat_id = ? AND fighter_id = ?',
+          args: [combatId, fighterId],
+        })
+
+        const currentVotes = (currentPrediction.rows[0]?.votes as number) || 0
+
+        return {
+          combat_id: combatId,
+          fighter_id: fighterId,
+          votes: currentVotes,
+        }
+      }
+
+      // Cambiar el voto: decrementar el luchador anterior e incrementar el nuevo
+      await turso.execute({
+        sql: 'UPDATE predictions SET votes = votes - 1, updated_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND fighter_id = ?',
+        args: [combatId, previousFighterId],
+      })
 
       await turso.execute({
-        sql: 'UPDATE predictions SET votes = ?, updated_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND fighter_id = ?',
-        args: [newVotes, combatId, fighterId],
+        sql: 'UPDATE predictions SET votes = votes + 1, updated_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND fighter_id = ?',
+        args: [combatId, fighterId],
       })
+
+      // Actualizar el voto del usuario
+      await turso.execute({
+        sql: 'UPDATE user_votes SET fighter_id = ?, created_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND user_id = ?',
+        args: [fighterId, combatId, userId],
+      })
+
+      // Obtener el nuevo conteo
+      const newPrediction = await turso.execute({
+        sql: 'SELECT votes FROM predictions WHERE combat_id = ? AND fighter_id = ?',
+        args: [combatId, fighterId],
+      })
+
+      const newVotes = (newPrediction.rows[0]?.votes as number) || 0
 
       return {
         combat_id: combatId,
@@ -196,16 +241,31 @@ export async function registerVote(combatId: string, fighterId: string): Promise
         votes: newVotes,
       }
     } else {
-      // Crear una nueva predicción
+      // Primer voto del usuario en este combate
+      // Incrementar el contador del luchador
       await turso.execute({
-        sql: 'INSERT INTO predictions (combat_id, fighter_id, votes, created_at, updated_at) VALUES (?, ?, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)',
+        sql: 'UPDATE predictions SET votes = votes + 1, updated_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND fighter_id = ?',
         args: [combatId, fighterId],
       })
+
+      // Registrar el voto del usuario
+      await turso.execute({
+        sql: 'INSERT INTO user_votes (combat_id, fighter_id, user_id, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)',
+        args: [combatId, fighterId, userId],
+      })
+
+      // Obtener el nuevo conteo
+      const newPrediction = await turso.execute({
+        sql: 'SELECT votes FROM predictions WHERE combat_id = ? AND fighter_id = ?',
+        args: [combatId, fighterId],
+      })
+
+      const newVotes = (newPrediction.rows[0]?.votes as number) || 0
 
       return {
         combat_id: combatId,
         fighter_id: fighterId,
-        votes: 1,
+        votes: newVotes,
       }
     }
   } catch (error) {
