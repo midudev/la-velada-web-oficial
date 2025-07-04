@@ -1,14 +1,16 @@
 ---
+import Layout from '@/layouts/Layout.astro'
+
 import BoxerCard from '@/components/BoxerCard.astro'
 import BoxerClipDrawer from '@/components/BoxerClipDrawer.astro'
 import BoxerClipList from '@/components/BoxerClipList.astro'
 import BoxerGallery from '@/components/BoxerGallery.astro'
 import BoxerProfileCard from '@/components/BoxerProfileCard.astro'
 import BoxerWorkout from '@/components/BoxerWorkout.astro'
+import BoxerSocialLink from '@/components/BoxerSocialLink.astro'
+
 import { FIGHTERS } from '@/consts/fighters'
 import { fixedTitle } from '@/consts/pageTitles'
-import Layout from '@/layouts/Layout.astro'
-import BoxerSocialLink from '../../components/BoxerSocialLink.astro'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/404')
@@ -27,7 +29,13 @@ const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
 
 const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 
-export const prerender = false
+export const prerender = true
+
+export const getStaticPaths = () => {
+  return FIGHTERS.map((fighter) => ({
+    params: { id: fighter.id },
+  }))
+}
 ---
 
 <Layout title={`${fighter.name} | ${fixedTitle}`} description={description} canonical={canonical}>
@@ -54,15 +62,14 @@ export const prerender = false
         <img
           src={`/images/fighters/big/${id}.webp`}
           alt={`Retrato de ${fighter.name}, participante de La Velada V`}
-          class="mask-image-fade-bottom h-full w-full object-contain transition-transform duration-700 hover:scale-105"
+          class="mask-fade-bottom h-auto w-[400px] object-contain transition-transform duration-700 hover:scale-105"
           transition:name={`image-${id}`}
         />
         <img
           src={`/images/fighters/text/${id}.webp`}
           alt={`Nombre de ${fighter.name} en texto decorativo`}
-          class="animate-scale-in lg:bottom-34 absolute bottom-6 h-10 w-auto lg:h-16"
+          class="lg:bottom-34 absolute bottom-6 h-10 w-auto lg:h-16"
           transition:name={`text-${id}`}
-          loading="lazy"
         />
       </div>
       <!-- Fin de las imagenes del boxeador -->
