@@ -43,7 +43,7 @@ export const prerender = true
   >
   </div>
 
-  <section class="relative mx-auto mt-24 min-h-screen max-w-6xl p-6">
+  <section data-combat-id={id} class="relative mx-auto mt-24 min-h-screen max-w-6xl p-6">
     <!-- Cartelera -->
     <div class="relative -mt-10 flex h-full w-full p-2">
       <!-- Primer Combatiente -->
@@ -87,6 +87,7 @@ export const prerender = true
       </div>
       <!-- Barra de Predicción Overlay -->
       <PredictionBar
+        combatId={id}
         overlay={true}
         fighter1={{
           id: fighter1?.id || '',
@@ -110,8 +111,13 @@ export const prerender = true
           <!-- Columna del primer luchador -->
           <div class="group flex flex-col items-center space-y-4">
             <!-- Foto del luchador -->
-            <div class="flex justify-center">
-              <BoxerCard id={fighter1?.id || ''} name={fighter1?.name || ''} versus="" />
+            <div class="h-42 flex justify-center">
+              <BoxerCard
+                id={fighter1?.id || ''}
+                name={fighter1?.name || ''}
+                versus=""
+                class="scale-125"
+              />
             </div>
             <!-- Características -->
             <div class="space-y-2 text-center text-sm font-bold text-black md:text-xl">
@@ -130,7 +136,7 @@ export const prerender = true
           <!-- Columna central con etiquetas -->
           <div class="flex flex-col items-center space-y-4">
             <!-- Espacio para mantener alineación -->
-            <div class="h-24 md:h-32"></div>
+            <div class="h-42"></div>
             <!-- Etiquetas -->
             <div class="space-y-2 text-center text-sm text-black opacity-70 md:text-xl">
               <p>EDAD</p>
@@ -143,8 +149,13 @@ export const prerender = true
           <!-- Columna del segundo luchador -->
           <div class="group flex flex-col items-center space-y-4">
             <!-- Foto del luchador -->
-            <div class="flex justify-center">
-              <BoxerCard id={fighter2?.id || ''} name={fighter2?.name || ''} versus="" class="" />
+            <div class="h-42 flex justify-center">
+              <BoxerCard
+                id={fighter2?.id || ''}
+                name={fighter2?.name || ''}
+                versus=""
+                class="scale-125"
+              />
             </div>
             <!-- Características -->
             <div class="space-y-2 text-center text-sm font-bold text-black md:text-xl">
@@ -173,10 +184,6 @@ export const prerender = true
       text-orientation: upright;
     }
 
-    .animate-crash {
-      animation: crash 1s linear forwards;
-    }
-
     @keyframes crash {
       0% {
         transform: translateX(100px);
@@ -203,3 +210,22 @@ export const prerender = true
     }
   </style>
 </Layout>
+
+<script>
+  // call api to get predictions for the combat
+  const combatId = document.querySelector('[data-combat-id]')?.getAttribute('data-combat-id')
+  const predictions = await fetch(`/api/predictions?combat_id=${combatId}`)
+  const predictionsData = await predictions.json()
+
+  console.log(predictionsData)
+
+  // dispatch an event to update the prediction bar
+  document.dispatchEvent(
+    new CustomEvent('update-prediction-bar', {
+      detail: {
+        id: combatId,
+        data: predictionsData,
+      },
+    }),
+  )
+</script>
