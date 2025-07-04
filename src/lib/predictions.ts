@@ -210,22 +210,21 @@ export async function registerVote(
         }
       }
 
-      // Cambiar el voto: decrementar el luchador anterior e incrementar el nuevo
-      await turso.execute({
-        sql: 'UPDATE predictions SET votes = votes - 1, updated_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND fighter_id = ?',
-        args: [combatId, previousFighterId],
-      })
-
-      await turso.execute({
-        sql: 'UPDATE predictions SET votes = votes + 1, updated_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND fighter_id = ?',
-        args: [combatId, fighterId],
-      })
-
-      // Actualizar el voto del usuario
-      await turso.execute({
-        sql: 'UPDATE user_votes SET fighter_id = ?, created_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND user_id = ?',
-        args: [fighterId, combatId, userId],
-      })
+      // Cambiar el voto: usar transacción para garantizar atomicidad
+      await turso.batch([
+        {
+          sql: 'UPDATE predictions SET votes = votes - 1, updated_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND fighter_id = ?',
+          args: [combatId, previousFighterId],
+        },
+        {
+          sql: 'UPDATE predictions SET votes = votes + 1, updated_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND fighter_id = ?',
+          args: [combatId, fighterId],
+        },
+        {
+          sql: 'UPDATE user_votes SET fighter_id = ?, created_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND user_id = ?',
+          args: [fighterId, combatId, userId],
+        },
+      ])
 
       // Obtener el nuevo conteo
       const newPrediction = await turso.execute({
@@ -241,18 +240,17 @@ export async function registerVote(
         votes: newVotes,
       }
     } else {
-      // Primer voto del usuario en este combate
-      // Incrementar el contador del luchador
-      await turso.execute({
-        sql: 'UPDATE predictions SET votes = votes + 1, updated_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND fighter_id = ?',
-        args: [combatId, fighterId],
-      })
-
-      // Registrar el voto del usuario
-      await turso.execute({
-        sql: 'INSERT INTO user_votes (combat_id, fighter_id, user_id, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)',
-        args: [combatId, fighterId, userId],
-      })
+      // Primer voto del usuario en este combate: usar transacción
+      await turso.batch([
+        {
+          sql: 'UPDATE predictions SET votes = votes + 1, updated_at = CURRENT_TIMESTAMP WHERE combat_id = ? AND fighter_id = ?',
+          args: [combatId, fighterId],
+        },
+        {
+          sql: 'INSERT INTO user_votes (combat_id, fighter_id, user_id, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)',
+          args: [combatId, fighterId, userId],
+        },
+      ])
 
       // Obtener el nuevo conteo
       const newPrediction = await turso.execute({

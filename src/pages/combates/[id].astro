@@ -38,11 +38,6 @@ export const prerender = true
   description={description}
   canonical={canonical}
 >
-  <div
-    class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
-  >
-  </div>
-
   <section data-combat-id={id} class="relative mx-auto mt-24 min-h-screen max-w-6xl p-6">
     <!-- Cartelera -->
     <div class="relative -mt-10 flex h-full w-full p-2">
@@ -64,7 +59,7 @@ export const prerender = true
       <!-- Versus Letra o Imagen -->
       <img
         src={`/images/fighters/combat/${fighter1?.id}-vs-${fighter2?.id}.webp`}
-        class="transform-3d -skew-4 pointer-events-none absolute left-1/2 top-1/2 z-50 h-auto w-[500px] -translate-x-1/2 -translate-y-1/2 opacity-[99%]"
+        class="transform-3d -skew-4 pointer-events-none absolute bottom-8 left-1/2 z-50 h-auto w-[500px] -translate-x-1/2 opacity-[99%]"
         alt="Imagen de Versus"
         transition:name={`vs:${fighter1?.id}-${fighter2?.id}`}
       />
@@ -212,20 +207,22 @@ export const prerender = true
 </Layout>
 
 <script>
-  // call api to get predictions for the combat
-  const combatId = document.querySelector('[data-combat-id]')?.getAttribute('data-combat-id')
-  const predictions = await fetch(`/api/predictions?combat_id=${combatId}`)
-  const predictionsData = await predictions.json()
+  document.addEventListener('astro:page-load', async () => {
+    // call api to get predictions for the combat
+    const combatId = document.querySelector('[data-combat-id]')?.getAttribute('data-combat-id')
+    const predictions = await fetch(`/api/predictions?combat_id=${combatId}`)
+    const predictionsData = await predictions.json()
 
-  console.log(predictionsData)
+    console.log(predictionsData)
 
-  // dispatch an event to update the prediction bar
-  document.dispatchEvent(
-    new CustomEvent('update-prediction-bar', {
-      detail: {
-        id: combatId,
-        data: predictionsData,
-      },
-    }),
-  )
+    // dispatch an event to update the prediction bar
+    document.dispatchEvent(
+      new CustomEvent('update-prediction-bar', {
+        detail: {
+          id: combatId,
+          data: predictionsData,
+        },
+      }),
+    )
+  })
 </script>
