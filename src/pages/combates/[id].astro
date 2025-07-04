@@ -7,6 +7,7 @@ import { FIGHTERS } from '@/consts/fighters'
 import { combate } from '@/consts/pageTitles'
 import Layout from '@/layouts/Layout.astro'
 import PredictionBar from '@/components/PredictionBar.astro'
+import BoxerCard from '@/components/BoxerCard.astro'
 
 const { id } = Astro.params
 const combat = COMBATS.find((c) => c.id === id)
@@ -54,8 +55,7 @@ export const prerender = true
           <img
             src={`/images/fighters/combat/${fighter1?.id}.webp`}
             alt={`Imagen de ${fighter1?.name}`}
-            loading="eager"
-            class="mask-fade-bottom w-full"
+            class="mask-fade-bottom max-h-[80vh] w-full object-contain"
             transition:name={`combat-img:${fighter1?.id}`}
           />
         </a>
@@ -64,7 +64,7 @@ export const prerender = true
       <!-- Versus Letra o Imagen -->
       <img
         src={`/images/fighters/combat/${fighter1?.id}-vs-${fighter2?.id}.webp`}
-        class="animate-fade-in-down pointer-events-none absolute left-1/2 top-1/2 z-20 h-auto w-[500px] -translate-x-1/2 -translate-y-1/2 transform delay-1000"
+        class="transform-3d pointer-events-none absolute left-1/2 top-1/2 z-50 h-auto w-[500px] -translate-x-1/2 -translate-y-1/2 opacity-[99%]"
         alt="Imagen de Versus"
         transition:name={`vs:${fighter1?.id}-${fighter2?.id}`}
       />
@@ -74,14 +74,13 @@ export const prerender = true
         <!-- Esquina Derecha -->
 
         <a
-          class="mt-8 flex h-full w-full items-center justify-center"
+          class="flex h-full w-full items-center justify-center"
           href={`/luchador/${fighter2?.id}`}
         >
           <img
             src={`/images/fighters/combat/${fighter2?.id}.webp`}
             alt={`Imagen de ${fighter2?.name}`}
-            loading="eager"
-            class="mask-fade-bottom w-full"
+            class="mask-fade-bottom max-h-[80vh] w-full object-contain"
             transition:name={`combat-img:${fighter2?.id}`}
           />
         </a>
@@ -99,52 +98,66 @@ export const prerender = true
           name: fighter2?.name || '',
           percentage: 40,
         }}
+        totalVotes={100}
       />
     </div>
 
     <!-- Informacion -->
-    <div class="mt-16 flex flex-col gap-8 p-3">
+    <div class="mx-auto mt-16 flex w-full max-w-2xl flex-col gap-8 p-3">
       <!-- Caracteristicas -->
       <div>
-        <h2 class="text-md text-theme-seashell my-4 text-center font-bold md:text-2xl">
-          Características
-        </h2>
-        <p
-          class="text-md text-theme-turquoise mx-auto mt-4 text-wrap text-center font-semibold md:text-lg"
-        >
-          datos relevantes de los boxeadores
-        </p>
-
         <div class="my-8 grid grid-cols-3 gap-4">
-          <div class="text-theme-seashell space-y-2 text-right text-sm font-bold md:text-xl">
-            <p>{fighter1?.age} años</p>
-            <p>{fighter1?.height} mts</p>
-            <p>{fighter1?.weight} kg</p>
-            <p>{fighter1Country?.name.toLocaleLowerCase()}</p>
-            <img
-              src={fighter1Country?.image.src}
-              alt={`Bandera de ${fighter1Country?.name ?? 'Desconocido'}`}
-              class="md:w-25 inline-flex h-auto w-16"
-            />
+          <!-- Columna del primer luchador -->
+          <div class="group flex flex-col items-center space-y-4">
+            <!-- Foto del luchador -->
+            <div class="flex justify-center">
+              <BoxerCard id={fighter1?.id || ''} name={fighter1?.name || ''} versus="" />
+            </div>
+            <!-- Características -->
+            <div class="space-y-2 text-center text-sm font-bold text-black md:text-xl">
+              <p>{fighter1?.age} años</p>
+              <p>{fighter1?.height} mts</p>
+              <p>{fighter1?.weight} kg</p>
+              <p>{fighter1Country?.name.toLocaleLowerCase()}</p>
+              <img
+                src={fighter1Country?.image.src}
+                alt={`Bandera de ${fighter1Country?.name ?? 'Desconocido'}`}
+                class="md:w-25 inline-flex h-auto w-16"
+              />
+            </div>
           </div>
 
-          <div class="text-theme-seashell space-y-2 text-center text-sm md:text-xl">
-            <p>EDAD</p>
-            <p>ALTURA</p>
-            <p>PESO</p>
-            <p>PAÍS</p>
+          <!-- Columna central con etiquetas -->
+          <div class="flex flex-col items-center space-y-4">
+            <!-- Espacio para mantener alineación -->
+            <div class="h-24 md:h-32"></div>
+            <!-- Etiquetas -->
+            <div class="space-y-2 text-center text-sm text-black opacity-70 md:text-xl">
+              <p>EDAD</p>
+              <p>ALTURA</p>
+              <p>PESO</p>
+              <p>PAÍS</p>
+            </div>
           </div>
 
-          <div class="text-theme-seashell space-y-2 text-left text-sm font-bold md:text-xl">
-            <p>{fighter2?.age} años</p>
-            <p>{fighter2?.height} mts</p>
-            <p>{fighter2?.weight} kg</p>
-            <p>{fighter2Country?.name.toLocaleLowerCase()}</p>
-            <img
-              src={fighter2Country?.image.src}
-              alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
-              class="md:w-25 inline-flex h-auto w-16"
-            />
+          <!-- Columna del segundo luchador -->
+          <div class="group flex flex-col items-center space-y-4">
+            <!-- Foto del luchador -->
+            <div class="flex justify-center">
+              <BoxerCard id={fighter2?.id || ''} name={fighter2?.name || ''} versus="" class="" />
+            </div>
+            <!-- Características -->
+            <div class="space-y-2 text-center text-sm font-bold text-black md:text-xl">
+              <p>{fighter2?.age} años</p>
+              <p>{fighter2?.height} mts</p>
+              <p>{fighter2?.weight} kg</p>
+              <p>{fighter2Country?.name.toLocaleLowerCase()}</p>
+              <img
+                src={fighter2Country?.image.src}
+                alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
+                class="md:w-25 inline-flex h-auto w-16"
+              />
+            </div>
           </div>
         </div>
       </div>
