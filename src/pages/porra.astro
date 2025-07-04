@@ -2,12 +2,17 @@
 import Layout from '@/layouts/Layout.astro'
 import { porra } from '@/consts/pageTitles'
 import BackgroundLayout from '@/layouts/BackgroundLayout.astro'
+import { getSession } from 'auth-astro/server'
 
 const description =
   'Participa en la porra oficial de La Velada del Año V y haz tus predicciones sobre los combates de Ibai Llanos y creadores de contenido.'
 const canonical = 'https://www.infolavelada.com/porra'
 
-export const prerender = true
+// Obtener la sesión del usuario
+const session = await getSession(Astro.request)
+const user = session?.user
+
+export const prerender = false
 ---
 
 <Layout title={porra} description={description} canonical={canonical}>
@@ -20,6 +25,71 @@ export const prerender = true
       >
         PARTICIPA EN LA PORRA
       </h2>
+
+      {
+        user === undefined || user === null ? (
+          <div class="mt-8 flex flex-col items-center gap-4">
+            <button
+              id="twitch-login-btn"
+              class="group relative mx-auto flex w-fit cursor-pointer items-center gap-3 overflow-hidden rounded-lg bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-4 text-lg font-semibold uppercase text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-purple-500 hover:to-purple-700 hover:shadow-xl"
+            >
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
+              </svg>
+              <span>Iniciar sesión con Twitch</span>
+              <div class="absolute inset-0 -translate-x-full rounded-lg bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-in-out group-hover:translate-x-full" />
+            </button>
+            <p class="max-w-md text-center text-xs text-black/80">
+              Necesitas iniciar sesión con tu cuenta de Twitch para participar en la porra oficial
+            </p>
+          </div>
+        ) : (
+          <div class="mt-8 flex w-full flex-col items-center gap-4 lowercase">
+            <div class="flex items-center gap-4 rounded-lg bg-black/30 px-6 py-4 shadow-lg backdrop-blur-sm">
+              {user.image && (
+                <img src={user.image} alt={`Avatar de ${user.name}`} class="size-14 rounded-full" />
+              )}
+              <div class="flex flex-col">
+                <span class="text-white">¡Hola, {user.name}!</span>
+                <span class="text-sm text-white/80">Ya puedes participar en la porra</span>
+              </div>
+              <button
+                id="logout-btn"
+                class="ml-4 cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-sm font-medium lowercase text-white transition-all duration-300 hover:scale-105 hover:bg-red-700"
+              >
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
+        )
+      }
     </header>
   </BackgroundLayout>
 </Layout>
+
+<script>
+  import { signIn, signOut } from 'auth-astro/client'
+
+  document.addEventListener('astro:page-load', () => {
+    const loginBtn = document.getElementById('twitch-login-btn')
+    if (loginBtn) {
+      loginBtn.addEventListener('click', async () => {
+        try {
+          await signIn('twitch')
+        } catch (error) {
+          console.error('Error al iniciar sesión:', error)
+        }
+      })
+    }
+    const logoutBtn = document.getElementById('logout-btn')
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        try {
+          await signOut()
+        } catch (error) {
+          console.error('Error al cerrar sesión:', error)
+        }
+      })
+    }
+  })
+</script>
