@@ -3,6 +3,9 @@ import Layout from '@/layouts/Layout.astro'
 import { porra } from '@/consts/pageTitles'
 import BackgroundLayout from '@/layouts/BackgroundLayout.astro'
 import { getSession } from 'auth-astro/server'
+import { COMBATS } from '@/consts/combats'
+import { getAllPredictions, type CombatPrediction } from '@/lib/predictions'
+import PredictionBar from '@/components/PredictionBar.astro'
 
 const description =
   'Participa en la porra oficial de La Velada del Año V y haz tus predicciones sobre los combates de Ibai Llanos y creadores de contenido.'
@@ -11,6 +14,16 @@ const canonical = 'https://www.infolavelada.com/porra'
 // Obtener la sesión del usuario
 const session = await getSession(Astro.request)
 const user = session?.user
+
+// Obtener predicciones actuales
+let predictions: CombatPrediction[] = []
+try {
+  predictions = await getAllPredictions()
+} catch (error) {
+  console.error('Error al obtener predicciones:', error)
+}
+
+console.log(predictions)
 
 export const prerender = false
 ---
@@ -44,22 +57,82 @@ export const prerender = false
             </p>
           </div>
         ) : (
-          <div class="mt-8 flex w-full flex-col items-center gap-4 lowercase">
+          <div class="mt-8 flex w-full flex-col items-center gap-8">
+            <!-- Información del usuario -->
             <div class="flex items-center gap-4 rounded-lg bg-black/30 px-6 py-4 shadow-lg backdrop-blur-sm">
               {user.image && (
                 <img src={user.image} alt={`Avatar de ${user.name}`} class="size-14 rounded-full" />
               )}
-              <div class="flex flex-col">
+              <div class="flex flex-col lowercase">
                 <span class="text-white">¡Hola, {user.name}!</span>
-                <span class="text-sm text-white/80">Ya puedes participar en la porra</span>
+                <span class="text-sm text-white/80">Elige quién ganará cada combate</span>
               </div>
               <button
                 id="logout-btn"
-                class="ml-4 cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-sm font-medium lowercase text-white transition-all duration-300 hover:scale-105 hover:bg-red-700"
+                class="ml-4 cursor-pointer rounded-lg bg-red-700 px-4 py-2 text-sm font-medium lowercase text-white transition-all duration-300 hover:scale-105 hover:bg-red-800"
               >
                 Cerrar sesión
               </button>
             </div>
+
+            <!-- Lista de combates -->
+            <div class="flex w-full flex-col items-center text-center">
+      <div
+        id="combats-container"
+        class="relative mx-auto mb-72 mt-10 grid max-w-7xl grid-cols-1 gap-4 p-6 md:gap-8"
+      >
+        {
+          COMBATS.toReversed().map(({ id, number, fighters, title }, index) => (
+            <a
+              class:list={['inline-block', index === 0 ? 'col-span-1' : 'md:col-span-1']}
+              href={`combates/${id}`}
+              title={`Ir al combate ${number} de ${title}`}
+            >
+              <div
+                class:list={[
+                  'combat group relative flex w-full',
+                  index === 0
+                    ? 'animate-fade-in-up h-[50vh] sm:h-[60vh] md:h-[70vh]'
+                    : 'animate-fade-in-left h-[40vh] sm:h-[50vh]',
+                  index % 2 === 0 && index !== 0
+                    ? 'animate-fade-in-left'
+                    : index !== 0
+                      ? 'animate-fade-in-right'
+                      : '',
+                  'animate-delay-200 lg',
+                ]}
+              >
+                {fighters.map((fighter, fighterIndex) => (
+                  <img
+                    src={`/images/fighters/combat/${fighter}.webp`}
+                    class:list={[
+                      'mask-fade-bottom z-20 size-96 h-full w-1/2 object-contain transition-transform duration-300 group-hover:scale-110',
+                      fighterIndex === 0 ? 'ml-5 lg:ml-10' : '-ml-10 lg:-ml-20',
+                    ]}
+                    alt={`Imagen de ${fighter}`}
+                    transition:name={`combat-img:${fighter}`}
+                  />
+                ))}
+
+                <div class="-skew-4 absolute bottom-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
+                  <img
+                    src={`/images/fighters/combat/${fighters[0]}-vs-${fighters[1]}.webp`}
+                    class:list={[
+                      'transform-3d z-50 object-cover opacity-[99%]',
+                      index === 0 ? 'h-56 w-[28rem] md:h-64 md:w-[32rem]' : 'h-48 w-96',
+                    ]}
+                    alt={`${fighters[0]} contra ${fighters[1]}`}
+                    transition:name={`vs:${fighters[0]}-${fighters[1]}`}
+                  />
+                </div>
+
+                <div class="absolute bottom-0 z-10 h-2/3 w-full bg-gradient-to-b from-pink-900/30 from-60% to-transparent transition-colors duration-300 group-hover:from-pink-900/20" />
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
           </div>
         )
       }
@@ -81,6 +154,7 @@ export const prerender = false
         }
       })
     }
+    
     const logoutBtn = document.getElementById('logout-btn')
     if (logoutBtn) {
       logoutBtn.addEventListener('click', async () => {
@@ -91,5 +165,85 @@ export const prerender = false
         }
       })
     }
+
+    // Funcionalidad de votación
+    const voteButtons = document.querySelectorAll('.fighter-vote-btn')
+    
+    voteButtons.forEach(button => {
+      button.addEventListener('click', async (e) => {
+        e.preventDefault()
+        
+        const combatId = button.getAttribute('data-combat-id')
+        const fighterId = button.getAttribute('data-fighter-id')
+        
+        if (!combatId || !fighterId) return
+        
+        try {
+          // Deshabilitar el botón durante la votación
+          ;(button as HTMLButtonElement).disabled = true
+          button.classList.add('opacity-50')
+          
+          // Efecto visual de confirmación
+          button.classList.add('scale-110', 'bg-green-500/20')
+          
+          // Llamada a la API
+          const response = await fetch('/api/predictions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              combat_id: combatId,
+              fighter_id: fighterId,
+            }),
+          })
+          
+          if (response.ok) {
+            // Mostrar confirmación
+            const originalText = button.querySelector('span')?.textContent
+            if (button.querySelector('span')) {
+              button.querySelector('span')!.textContent = '¡Votado!'
+            }
+            
+            // Recargar la página después de 1 segundo para mostrar las predicciones actualizadas
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
+          } else {
+            throw new Error('Error al registrar voto')
+          }
+        } catch (error) {
+          console.error('Error al votar:', error)
+          
+          // Restaurar el botón en caso de error
+          ;(button as HTMLButtonElement).disabled = false
+          button.classList.remove('opacity-50', 'scale-110', 'bg-green-500/20')
+          
+          // Mostrar mensaje de error
+          alert('Error al registrar tu voto. Inténtalo de nuevo.')
+        }
+      })
+    })
   })
 </script>
+
+<style>
+  .combat-card {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .fighter-vote-btn:disabled {
+    cursor: not-allowed;
+  }
+</style>
