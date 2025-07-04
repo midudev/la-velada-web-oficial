@@ -11,9 +11,10 @@ interface Props {
     percentage: number
   }
   overlay?: boolean
+  totalVotes?: number
 }
 
-const { fighter1, fighter2, overlay = false } = Astro.props
+const { fighter1, fighter2, overlay = false, totalVotes } = Astro.props
 ---
 
 <div
@@ -21,7 +22,7 @@ const { fighter1, fighter2, overlay = false } = Astro.props
     overlay
       ? 'absolute left-1/2 -translate-x-1/2 bottom-0 z-30 w-full flex justify-center'
       : 'w-full flex flex-col items-center',
-    'pointer-events-none',
+    'pointer-events-none animate-fade-in-up flex-col justify-center items-center',
   ].join(' ')}
 >
   <div
@@ -55,6 +56,16 @@ const { fighter1, fighter2, overlay = false } = Astro.props
       <span class="text-base leading-none drop-shadow-md md:text-lg">{fighter2.percentage}%</span>
     </div>
   </div>
+
+  <!-- Texto con el número de votaciones -->
+  {
+    totalVotes && (
+      <p class="mt-3 text-center text-xs lowercase text-white/70 drop-shadow-md">
+        Basado en <span class="font-semibold text-white">{totalVotes.toLocaleString()}</span>{' '}
+        votaciones de usuarios
+      </p>
+    )
+  }
 </div>
 
 <style>
