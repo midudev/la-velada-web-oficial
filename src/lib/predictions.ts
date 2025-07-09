@@ -284,3 +284,38 @@ export async function getCombatStats(combatId: string): Promise<CombatPrediction
     throw new Error('Error al obtener estadísticas del combate')
   }
 }
+
+/**
+ * Obtiene los votos de un usuario específico
+ */
+export async function getUserVotes(userId: string): Promise<
+  Array<{
+    combat_id: string
+    fighter_id: string
+    created_at: string
+  }>
+> {
+  try {
+    const result = await turso.execute({
+      sql: `
+        SELECT 
+          uv.combat_id,
+          uv.fighter_id,
+          uv.created_at
+        FROM user_votes uv
+        WHERE uv.user_id = ?
+        ORDER BY uv.created_at DESC
+      `,
+      args: [userId],
+    })
+
+    return result.rows.map((row) => ({
+      combat_id: row.combat_id as string,
+      fighter_id: row.fighter_id as string,
+      created_at: row.created_at as string,
+    }))
+  } catch (error) {
+    console.error('Error al obtener votos del usuario:', error)
+    throw new Error('Error al obtener votos del usuario')
+  }
+}
