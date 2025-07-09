@@ -1,11 +1,48 @@
 import type { APIRoute } from 'astro'
 import { getSession } from 'auth-astro/server'
-import { getPredictionsByCombat, getAllPredictions, registerVote } from '@/lib/predictions'
+import {
+  getPredictionsByCombat,
+  getAllPredictions,
+  registerVote,
+  getUserVotes,
+} from '@/lib/predictions'
 
 export const GET: APIRoute = async ({ request }) => {
   try {
     const url = new URL(request.url)
     const combatId = url.searchParams.get('combat_id')
+    const userPredictions = url.searchParams.get('user_predictions')
+
+    // Si se solicita las predicciones del usuario autenticado
+    if (userPredictions === 'true') {
+      const session = await getSession(request)
+      const user = session?.user
+
+      if (!user || !user.email) {
+        return new Response(
+          JSON.stringify({
+            error: 'No se ha iniciado sesión',
+          }),
+          {
+            status: 401,
+            headers: { 'Content-Type': 'application/json' },
+          },
+        )
+      }
+
+      // Obtener las predicciones del usuario usando la función del lib
+      const userPredictionsData = await getUserVotes(user.email)
+
+      return new Response(
+        JSON.stringify({
+          predictions: userPredictionsData,
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
+    }
 
     // Si se proporciona un combat_id específico, devolver solo esa predicción
     if (combatId) {
@@ -60,9 +97,7 @@ export const POST: APIRoute = async ({ request }) => {
   const session = await getSession(request)
   const user = session?.user
 
-  console.log(user)
-
-  if (!user || !user.id) {
+  if (!user || !user.email) {
     return new Response(
       JSON.stringify({
         error: 'No se ha iniciado sesión',
@@ -73,8 +108,6 @@ export const POST: APIRoute = async ({ request }) => {
       },
     )
   }
-
-  console.log(user.id)
 
   try {
     const body = await request.json()
@@ -94,7 +127,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Registrar el voto usando el servicio
-    const voteResult = await registerVote(combat_id, fighter_id, user.id)
+    const voteResult = await registerVote(combat_id, fighter_id, user.email)
 
     return new Response(
       JSON.stringify({
