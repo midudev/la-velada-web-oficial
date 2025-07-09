@@ -48,7 +48,7 @@ export const prerender = false
 <Layout title={porra} description={description} canonical={canonical}>
   <section class="mx-auto mt-24 flex min-h-screen w-full flex-col items-center justify-start gap-4">
     <h2
-      class="animate-fade-in animate-delay-300 bg-gradient-to-r from-sky-100 to-pink-300 bg-clip-text text-center text-2xl font-bold text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
+      class="bg-gradient-to-r from-sky-100 to-pink-300 bg-clip-text text-center text-2xl font-bold text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
     >
       PARTICIPA EN LA PORRA
     </h2>
@@ -110,7 +110,6 @@ export const prerender = false
                       const userVoteForCombat = userVotes.find((vote) => vote.combat_id === id)
                       const hasUserVoted = userVoteForCombat !== undefined
                       const isUserVoteForThisFighter = userVoteForCombat?.fighter_id === fighter
-                      const isDisabled = hasUserVoted && !isUserVoteForThisFighter
 
                       return (
                         <button
@@ -126,28 +125,24 @@ export const prerender = false
                           <img
                             src={`/images/fighters/combat/${fighter}.webp`}
                             class:list={[
-                              'mask-fade-bottom group-hover:contrast-110 size-96 h-full w-full object-contain transition-all duration-300 group-hover:brightness-110',
+                              'mask-fade-bottom group-hover:contrast-110 size-96 h-full w-full object-contain object-bottom transition-all duration-300 group-hover:brightness-110',
                             ]}
                             alt={`Imagen de ${fighter}`}
                             transition:name={`combat-img:${fighter}`}
                           />
 
-                          {/* Texto "¡Mi voto actual!" */}
-                          {isUserVoteForThisFighter && (
-                            <div
-                              class:list={[
-                                'absolute top-4 z-50 rounded-lg bg-green-600 px-3 py-1 text-xs font-bold uppercase text-white shadow-lg',
-                                fighterIndex === 0 ? 'left-4' : 'right-4',
-                              ]}
-                            >
-                              ¡Mi voto actual!
-                            </div>
-                          )}
+                          <div
+                            class:list={[
+                              'fighter-actual-vote pointer-events-none absolute bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-green-600 px-3 py-1 text-xs font-bold uppercase text-white opacity-0 shadow-lg transition-opacity duration-300',
+                            ]}
+                          >
+                            ¡Mi voto actual!
+                          </div>
 
                           {/* Botón de votación visual */}
                           <span
                             class:list={[
-                              'fighter-vote-btn absolute bottom-4 left-1/2 z-40 -translate-x-1/2 transform cursor-pointer rounded-lg bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-3 text-sm font-semibold uppercase text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:from-purple-500 group-hover:to-purple-700 group-hover:shadow-xl',
+                              'fighter-vote-btn-text absolute bottom-4 left-1/2 z-40 -translate-x-1/2 transform cursor-pointer rounded-lg bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-3 text-xs font-semibold uppercase text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:from-purple-500 group-hover:to-purple-700 group-hover:shadow-xl md:text-sm',
                             ]}
                             data-combat-id={id}
                             data-fighter-id={fighter}
@@ -159,10 +154,10 @@ export const prerender = false
                       )
                     })}
 
-                    <div class="pointer-events-none absolute top-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300">
+                    <div class="pointer-events-none absolute top-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform">
                       <img
                         src={`/images/fighters/combat/${fighters[0]}-vs-${fighters[1]}.webp`}
-                        class:list={['transform-3d z-50', 'h-64 object-contain']}
+                        class:list={['transform-3d z-50', 'h-40 object-contain md:h-64']}
                         alt={`${fighters[0]} contra ${fighters[1]}`}
                         transition:name={`vs:${fighters[0]}-${fighters[1]}`}
                       />
@@ -180,6 +175,7 @@ export const prerender = false
 
 <script>
   import { signIn, signOut } from 'auth-astro/client'
+  import confetti from 'canvas-confetti'
 
   document.addEventListener('astro:page-load', () => {
     const loginBtn = document.getElementById('twitch-login-btn')
@@ -221,14 +217,23 @@ export const prerender = false
 
         if (!combatId || !fighterId) return
 
+        // Guardar el estado original antes de modificar
+        const originalUserVote = button.getAttribute('data-user-vote')
+        const originalUserHasVoted = button.getAttribute('data-user-has-voted')
+        const originalText = button.querySelector('span')?.textContent
+
         try {
+          // Estado de carga: quitar todos los atributos data para quitar los colores
+          button.removeAttribute('data-user-vote')
+          button.removeAttribute('data-user-has-voted')
+
           // Deshabilitar el botón durante la votación
           ;(button as HTMLButtonElement).disabled = true
           button.classList.add('opacity-50')
+
           // Actualizar texto del botón
-          const originalText = button.querySelector('span')?.textContent
           const buttonText = button.querySelector('span')
-          buttonText!.textContent = 'Registrando voto...'
+          buttonText!.textContent = 'Guardando voto...'
 
           console.log(combatId, fighterId)
 
@@ -245,28 +250,59 @@ export const prerender = false
           })
 
           if (response.ok) {
-            // Mostrar confirmación
-            buttonText!.textContent = '¡Votado!'
+            // Actualizar los atributos data para reflejar el nuevo estado
+            button.setAttribute('data-user-vote', 'true')
+            button.setAttribute('data-user-has-voted', 'true')
+
+            // Actualizar el otro luchador del mismo combate
+            const combatContainer = button.closest('.combat')
+            if (combatContainer) {
+              const otherButton = combatContainer.querySelector(
+                `.fighter-vote-btn[data-fighter-id]:not([data-fighter-id="${fighterId}"])`,
+              ) as HTMLElement
+              if (otherButton) {
+                // El otro luchador ya no es el voto del usuario, pero el usuario sí ha votado
+                otherButton.setAttribute('data-user-vote', 'false')
+                otherButton.setAttribute('data-user-has-voted', 'true')
+              }
+            }
+
+            // Obtener la posición de la imagen del luchador para el confetti
+            const fighterImage = button.querySelector('img') as HTMLImageElement
+            const imageRect = fighterImage.getBoundingClientRect()
+            const startX = imageRect.left + imageRect.width / 2
+            const startY = imageRect.top + imageRect.height / 2
+
+            // Detect if button clicked is the first one
+            const isFirstButton = button.getAttribute('data-fighter-index') === '0'
+
+            confetti({
+              particleCount: 200,
+              origin: {
+                x: startX / window.innerWidth,
+                y: startY / window.innerHeight,
+              },
+              angle: isFirstButton ? 45 : 135,
+              scalar: 1,
+              spread: 100,
+              startVelocity: 50,
+              gravity: 0.6,
+              ticks: 200,
+            })
 
             // Hacer scroll al siguiente combate después de 1 segundo
             setTimeout(() => {
               const currentCombat = button.closest('.combat')
-              if (currentCombat) {
-                const nextCombat =
-                  currentCombat.parentElement?.nextElementSibling?.querySelector('.combat')
-                if (nextCombat) {
-                  nextCombat.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                  })
-                } else {
-                  // Si no hay más combates, hacer scroll al inicio
-                  window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
-                  })
-                }
-              }
+              if (!currentCombat) return
+
+              const nextCombat =
+                currentCombat.parentElement?.nextElementSibling?.querySelector('.combat')
+
+              if (!nextCombat) return
+              nextCombat.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+              })
             }, 1000)
           } else {
             throw new Error('Error al registrar voto')
@@ -274,12 +310,29 @@ export const prerender = false
         } catch (error) {
           console.error('Error al votar:', error)
 
-          // Restaurar el botón en caso de error
-          ;(button as HTMLButtonElement).disabled = false
-          button.classList.remove('opacity-50')
+          // Restaurar el estado original en caso de error
+          if (originalUserVote) {
+            button.setAttribute('data-user-vote', originalUserVote)
+          } else {
+            button.removeAttribute('data-user-vote')
+          }
+
+          if (originalUserHasVoted) {
+            button.setAttribute('data-user-has-voted', originalUserHasVoted)
+          } else {
+            button.removeAttribute('data-user-has-voted')
+          }
 
           // Mostrar mensaje de error
           alert('Error al registrar tu voto. Inténtalo de nuevo.')
+        } finally {
+          ;(button as HTMLButtonElement).disabled = false
+          button.classList.remove('opacity-50')
+
+          // Restaurar texto original
+          if (originalText && button.querySelector('span')) {
+            button.querySelector('span')!.textContent = originalText
+          }
         }
       })
     })
@@ -287,26 +340,28 @@ export const prerender = false
 </script>
 
 <style>
-  .fighter-vote-btn:disabled {
-    cursor: not-allowed;
-  }
-
   /* Estilos basados en atributos data- */
 
   /* Luchador votado por el usuario */
-  .fighter-vote-btn[data-user-vote='true'] img {
-    filter: sepia(100%) saturate(200%) hue-rotate(60deg);
+  .fighter-vote-btn[data-user-vote='true'] {
+    pointer-events: none;
+
+    & .fighter-actual-vote {
+      opacity: 1;
+    }
+
+    & img {
+      filter: sepia(100%) saturate(200%) hue-rotate(60deg);
+    }
+
+    & span {
+      display: none;
+    }
   }
 
   /* Luchador no votado cuando el usuario ya votó en este combate */
   .fighter-vote-btn[data-user-has-voted='true']:not([data-user-vote='true']) img {
-    filter: sepia(100%) saturate(300%) hue-rotate(300deg) brightness(0.8) contrast(1);
-  }
-
-  /* Botón deshabilitado cuando el usuario ya votó en este combate */
-  .fighter-vote-btn[data-user-has-voted='true']:not([data-user-vote='true']) {
-    opacity: 0.5;
-    cursor: not-allowed;
+    filter: sepia(100%) saturate(300%) hue-rotate(300deg) brightness(0.4) contrast(1);
   }
 
   /* Botón deshabilitado - estilo gris */
