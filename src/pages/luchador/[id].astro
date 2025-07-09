@@ -11,12 +11,18 @@ import BoxerSocialLink from '@/components/BoxerSocialLink.astro'
 
 import { FIGHTERS } from '@/consts/fighters'
 import { fixedTitle } from '@/consts/pageTitles'
+import { COMBATS } from '@/consts/combats'
+import CombatVersus from '@/components/CombatVersus.astro'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/404')
 
 const fighter = FIGHTERS.find((fighter) => fighter.id === id)
 if (!fighter) return Astro.redirect('/404')
+
+const combat = COMBATS.find((combat) => combat.fighters.includes(id))
+const combatId = combat?.id
+console.log({ combatId })
 
 const description = `Biografía, estadísticas y clips de ${fighter.name}, participante de La Velada del Año V. ${fighter.bio.substring(0, 120)}${fighter.bio.length > 120 ? '...' : ''}`
 const canonical = `https://www.infolavelada.com/luchador/${id}`
@@ -126,13 +132,19 @@ export const getStaticPaths = () => {
     )
   }
 
+  {
+    combat && (
+      <section class="mx-auto max-w-6xl px-4">
+        <CombatVersus id={combatId} />
+      </section>
+    )
+  }
+
   <!-- Video de Entrenamientos -->
   <section>
     {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
   </section>
   <!-- Fin de video de entrenamientos -->
-
-  <!-- Fin de la galeria del boxeador -->
 </Layout>
 
 <style>
