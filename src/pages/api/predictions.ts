@@ -60,7 +60,9 @@ export const POST: APIRoute = async ({ request }) => {
   const session = await getSession(request)
   const user = session?.user
 
-  if (!user) {
+  console.log(user)
+
+  if (!user || !user.id) {
     return new Response(
       JSON.stringify({
         error: 'No se ha iniciado sesión',
@@ -71,6 +73,8 @@ export const POST: APIRoute = async ({ request }) => {
       },
     )
   }
+
+  console.log(user.id)
 
   try {
     const body = await request.json()
@@ -90,7 +94,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Registrar el voto usando el servicio
-    const voteResult = await registerVote(combat_id, fighter_id)
+    const voteResult = await registerVote(combat_id, fighter_id, user.id)
 
     return new Response(
       JSON.stringify({
