@@ -21,12 +21,12 @@ export const prerender = true
     <div class="flex w-full flex-col items-center text-center">
       <div
         id="combats-container"
-        class="relative mx-auto mb-72 mt-10 grid max-w-7xl grid-cols-1 gap-4 p-6 md:gap-8"
+        class="relative mx-auto mb-72 mt-10 grid w-full max-w-2xl grid-cols-2 gap-4 p-6 md:gap-8 lg:max-w-6xl"
       >
         {
           COMBATS.toReversed().map(({ id, number, fighters, title }, index) => (
             <a
-              class:list={['inline-block', index === 0 ? 'col-span-1' : 'md:col-span-1']}
+              class:list={['block', index === 0 ? 'col-span-2' : 'col-span-2 lg:col-span-1']}
               href={`combates/${id}`}
               title={`Ir al combate ${number} de ${title}`}
             >
@@ -34,7 +34,7 @@ export const prerender = true
                 class:list={[
                   'combat group relative flex w-full',
                   index === 0
-                    ? 'animate-fade-in-up h-[50vh] sm:h-[60vh] md:h-[70vh]'
+                    ? 'animate-fade-in-up h-[40vh] sm:h-[50vh] lg:h-[70vh]'
                     : 'animate-fade-in-left h-[40vh] sm:h-[50vh]',
                   index % 2 === 0 && index !== 0
                     ? 'animate-fade-in-left'
@@ -48,8 +48,8 @@ export const prerender = true
                   <img
                     src={`/images/fighters/combat/${fighter}.webp`}
                     class:list={[
-                      'mask-fade-bottom-quick z-20 size-96 h-auto w-[800px] object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
-                      fighterIndex === 0 ? 'ml-5 lg:ml-10' : '-ml-10 lg:-ml-20',
+                      'mask-fade-bottom-quick absolute z-20 h-full w-auto object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
+                      fighterIndex === 0 ? 'left-0' : 'right-0',
                     ]}
                     alt={`Imagen de ${fighter}`}
                     transition:name={`combat-img:${fighter}`}
@@ -61,7 +61,9 @@ export const prerender = true
                     src={`/images/fighters/combat/${fighters[0]}-vs-${fighters[1]}.webp`}
                     class:list={[
                       'transform-3d z-50 object-bottom',
-                      index === 0 ? 'h-[400px] w-[700px] object-contain' : 'h-56 object-cover',
+                      index === 0
+                        ? 'h-[400px] w-[700px] object-contain'
+                        : 'h-80 object-cover lg:h-56',
                     ]}
                     alt={`${fighters[0]} contra ${fighters[1]}`}
                     transition:name={`vs:${fighters[0]}-${fighters[1]}`}
