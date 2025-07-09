@@ -21,7 +21,26 @@ try {
   console.error('Error al obtener predicciones:', error)
 }
 
+// Obtener votos del usuario si está autenticado
+let userVotes: Array<{ combat_id: string; fighter_id: string; created_at: string }> = []
+if (user) {
+  try {
+    const response = await fetch(`${Astro.url.origin}/api/predictions?user_predictions=true`, {
+      headers: {
+        Cookie: Astro.request.headers.get('cookie') || '',
+      },
+    })
+    if (response.ok) {
+      const data = await response.json()
+      userVotes = data.predictions || []
+    }
+  } catch (error) {
+    console.error('Error al obtener votos del usuario:', error)
+  }
+}
+
 console.log(predictions)
+console.log('Votos del usuario:', userVotes)
 
 export const prerender = false
 ---
@@ -86,37 +105,59 @@ export const prerender = false
                       'animate-delay-200 lg',
                     ]}
                   >
-                    {fighters.map((fighter, fighterIndex) => (
-                      <button
-                        class:list={[
-                          'fighter-vote-btn group relative z-20 flex size-96 h-full w-1/2 cursor-pointer flex-col items-center transition-all duration-300',
-                        ]}
-                        data-combat-id={id}
-                        data-fighter-id={fighter}
-                        data-fighter-index={fighterIndex}
-                      >
-                        <img
-                          src={`/images/fighters/combat/${fighter}.webp`}
-                          class:list={[
-                            'mask-fade-bottom group-hover:contrast-110 size-96 h-full w-full object-contain transition-all duration-300 group-hover:brightness-110',
-                          ]}
-                          alt={`Imagen de ${fighter}`}
-                          transition:name={`combat-img:${fighter}`}
-                        />
+                    {fighters.map((fighter, fighterIndex) => {
+                      // Verificar si el usuario ya votó en este combate
+                      const userVoteForCombat = userVotes.find((vote) => vote.combat_id === id)
+                      const hasUserVoted = userVoteForCombat !== undefined
+                      const isUserVoteForThisFighter = userVoteForCombat?.fighter_id === fighter
+                      const isDisabled = hasUserVoted && !isUserVoteForThisFighter
 
-                        {/* Botón de votación visual */}
-                        <span
+                      return (
+                        <button
                           class:list={[
-                            'fighter-vote-btn absolute bottom-4 left-1/2 z-40 -translate-x-1/2 transform cursor-pointer rounded-lg bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-3 text-sm font-semibold uppercase text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:from-purple-500 group-hover:to-purple-700 group-hover:shadow-xl',
+                            'fighter-vote-btn group relative z-20 flex size-96 h-full w-1/2 cursor-pointer flex-col items-center transition-all duration-300',
                           ]}
                           data-combat-id={id}
                           data-fighter-id={fighter}
                           data-fighter-index={fighterIndex}
+                          data-user-vote={isUserVoteForThisFighter}
+                          data-user-has-voted={hasUserVoted}
                         >
-                          <span>Votar por {fighter}</span>
-                        </span>
-                      </button>
-                    ))}
+                          <img
+                            src={`/images/fighters/combat/${fighter}.webp`}
+                            class:list={[
+                              'mask-fade-bottom group-hover:contrast-110 size-96 h-full w-full object-contain transition-all duration-300 group-hover:brightness-110',
+                            ]}
+                            alt={`Imagen de ${fighter}`}
+                            transition:name={`combat-img:${fighter}`}
+                          />
+
+                          {/* Texto "¡Mi voto actual!" */}
+                          {isUserVoteForThisFighter && (
+                            <div
+                              class:list={[
+                                'absolute top-4 z-50 rounded-lg bg-green-600 px-3 py-1 text-xs font-bold uppercase text-white shadow-lg',
+                                fighterIndex === 0 ? 'left-4' : 'right-4',
+                              ]}
+                            >
+                              ¡Mi voto actual!
+                            </div>
+                          )}
+
+                          {/* Botón de votación visual */}
+                          <span
+                            class:list={[
+                              'fighter-vote-btn absolute bottom-4 left-1/2 z-40 -translate-x-1/2 transform cursor-pointer rounded-lg bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-3 text-sm font-semibold uppercase text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:from-purple-500 group-hover:to-purple-700 group-hover:shadow-xl',
+                            ]}
+                            data-combat-id={id}
+                            data-fighter-id={fighter}
+                            data-fighter-index={fighterIndex}
+                          >
+                            <span>Votar por {fighter}</span>
+                          </span>
+                        </button>
+                      )
+                    })}
 
                     <div class="pointer-events-none absolute top-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300">
                       <img
@@ -170,6 +211,11 @@ export const prerender = false
       button.addEventListener('click', async (e) => {
         e.preventDefault()
 
+        // Verificar si el botón está deshabilitado
+        if ((button as HTMLButtonElement).disabled) {
+          return
+        }
+
         const combatId = button.getAttribute('data-combat-id')
         const fighterId = button.getAttribute('data-fighter-id')
 
@@ -179,9 +225,12 @@ export const prerender = false
           // Deshabilitar el botón durante la votación
           ;(button as HTMLButtonElement).disabled = true
           button.classList.add('opacity-50')
+          // Actualizar texto del botón
+          const originalText = button.querySelector('span')?.textContent
+          const buttonText = button.querySelector('span')
+          buttonText!.textContent = 'Registrando voto...'
 
-          // Efecto visual de confirmación
-          button.classList.add('scale-110', 'bg-green-500/20')
+          console.log(combatId, fighterId)
 
           // Llamada a la API
           const response = await fetch('/api/predictions', {
@@ -197,10 +246,7 @@ export const prerender = false
 
           if (response.ok) {
             // Mostrar confirmación
-            const originalText = button.querySelector('span')?.textContent
-            if (button.querySelector('span')) {
-              button.querySelector('span')!.textContent = '¡Votado!'
-            }
+            buttonText!.textContent = '¡Votado!'
 
             // Hacer scroll al siguiente combate después de 1 segundo
             setTimeout(() => {
@@ -222,11 +268,6 @@ export const prerender = false
                 }
               }
             }, 1000)
-
-            // Recargar la página después de 2 segundos para mostrar las predicciones actualizadas
-            setTimeout(() => {
-              window.location.reload()
-            }, 2000)
           } else {
             throw new Error('Error al registrar voto')
           }
@@ -235,7 +276,7 @@ export const prerender = false
 
           // Restaurar el botón en caso de error
           ;(button as HTMLButtonElement).disabled = false
-          button.classList.remove('opacity-50', 'scale-110', 'bg-green-500/20')
+          button.classList.remove('opacity-50')
 
           // Mostrar mensaje de error
           alert('Error al registrar tu voto. Inténtalo de nuevo.')
@@ -248,6 +289,29 @@ export const prerender = false
 <style>
   .fighter-vote-btn:disabled {
     cursor: not-allowed;
+  }
+
+  /* Estilos basados en atributos data- */
+
+  /* Luchador votado por el usuario */
+  .fighter-vote-btn[data-user-vote='true'] img {
+    filter: sepia(100%) saturate(200%) hue-rotate(60deg);
+  }
+
+  /* Luchador no votado cuando el usuario ya votó en este combate */
+  .fighter-vote-btn[data-user-has-voted='true']:not([data-user-vote='true']) img {
+    filter: sepia(100%) saturate(300%) hue-rotate(300deg) brightness(0.8) contrast(1);
+  }
+
+  /* Botón deshabilitado cuando el usuario ya votó en este combate */
+  .fighter-vote-btn[data-user-has-voted='true']:not([data-user-vote='true']) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Botón deshabilitado - estilo gris */
+  .fighter-vote-btn[data-user-has-voted='true']:not([data-user-vote='true']) span {
+    background: rgb(107 114 128) !important;
   }
 
   .fighter-vote-btn:not(:hover):has(~ .fighter-vote-btn:hover),
