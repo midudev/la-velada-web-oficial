@@ -75,41 +75,50 @@ export const prerender = false
               class="relative mx-auto mb-24 mt-10 grid max-w-7xl grid-cols-1 gap-4 p-6 md:gap-8"
             >
               {COMBATS.toReversed().map(({ id, number, fighters, title }, index) => (
-                <div class:list={['inline-block', index === 0 ? 'col-span-1' : 'md:col-span-1']}>
+                <article
+                  class:list={['inline-block', index === 0 ? 'col-span-1' : 'md:col-span-1']}
+                >
                   <div
                     class:list={[
-                      'combat group relative flex w-full',
+                      'combat relative flex w-full',
                       index === 0 ? 'h-[50vh] sm:h-[60vh] md:h-[70vh]' : 'h-[40vh] sm:h-[50vh]',
                       index % 2 === 0 && index !== 0 ? '' : index !== 0 ? '' : '',
                       'animate-delay-200 lg',
                     ]}
                   >
                     {fighters.map((fighter, fighterIndex) => (
-                      <div class="relative flex w-1/2 flex-col items-center">
+                      <button
+                        class:list={[
+                          'fighter-vote-btn group relative z-20 flex size-96 h-full w-1/2 cursor-pointer flex-col items-center transition-all duration-300',
+                        ]}
+                        data-combat-id={id}
+                        data-fighter-id={fighter}
+                        data-fighter-index={fighterIndex}
+                      >
                         <img
                           src={`/images/fighters/combat/${fighter}.webp`}
                           class:list={[
-                            'mask-fade-bottom z-20 size-96 h-full w-full object-contain transition-all duration-300',
+                            'mask-fade-bottom group-hover:contrast-110 size-96 h-full w-full object-contain transition-all duration-300 group-hover:brightness-110',
                           ]}
                           alt={`Imagen de ${fighter}`}
                           transition:name={`combat-img:${fighter}`}
                         />
 
-                        {/* Botón de votación */}
-                        <button
+                        {/* Botón de votación visual */}
+                        <span
                           class:list={[
-                            'fighter-vote-btn absolute bottom-4 left-1/2 z-40 -translate-x-1/2 transform cursor-pointer rounded-lg bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-3 text-sm font-semibold uppercase text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-purple-500 hover:to-purple-700 hover:shadow-xl',
+                            'fighter-vote-btn absolute bottom-4 left-1/2 z-40 -translate-x-1/2 transform cursor-pointer rounded-lg bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-3 text-sm font-semibold uppercase text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:from-purple-500 group-hover:to-purple-700 group-hover:shadow-xl',
                           ]}
                           data-combat-id={id}
                           data-fighter-id={fighter}
                           data-fighter-index={fighterIndex}
                         >
                           <span>Votar por {fighter}</span>
-                        </button>
-                      </div>
+                        </span>
+                      </button>
                     ))}
 
-                    <div class="absolute top-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300">
+                    <div class="pointer-events-none absolute top-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300">
                       <img
                         src={`/images/fighters/combat/${fighters[0]}-vs-${fighters[1]}.webp`}
                         class:list={['transform-3d z-50', 'h-64 object-contain']}
@@ -118,7 +127,7 @@ export const prerender = false
                       />
                     </div>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
           </div>
@@ -232,93 +241,17 @@ export const prerender = false
           alert('Error al registrar tu voto. Inténtalo de nuevo.')
         }
       })
-
-      // Efectos hover para los botones de votación
-      button.addEventListener('mouseenter', () => {
-        const combatContainer = button.closest('.combat')
-        if (!combatContainer) return
-
-        const fighterIndex = parseInt(button.getAttribute('data-fighter-index') || '0')
-        const images = combatContainer.querySelectorAll('img[src*="/images/fighters/combat/"]')
-
-        // Aplicar efectos al luchador seleccionado
-        if (images[fighterIndex]) {
-          images[fighterIndex].classList.add('contrast-105', 'brightness-125', 'filter-glow')
-        }
-
-        // Aplicar efectos al luchador opuesto
-        const oppositeIndex = fighterIndex === 0 ? 1 : 0
-        if (images[oppositeIndex]) {
-          images[oppositeIndex].classList.add('scale-95', 'grayscale', 'opacity-60')
-        }
-      })
-
-      button.addEventListener('mouseleave', () => {
-        const combatContainer = button.closest('.combat')
-        if (!combatContainer) return
-
-        const images = combatContainer.querySelectorAll('img[src*="/images/fighters/combat/"]')
-
-        // Restaurar efectos en todos los luchadores
-        images.forEach((img) => {
-          img.classList.remove(
-            'contrast-105',
-            'brightness-125',
-            'filter-glow',
-            'scale-95',
-            'grayscale',
-            'opacity-60',
-          )
-        })
-      })
     })
   })
 </script>
 
 <style>
-  .combat-card {
-    animation: fadeInUp 0.6s ease-out;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
   .fighter-vote-btn:disabled {
     cursor: not-allowed;
   }
 
-  /* Efectos para los luchadores */
-  .filter-glow {
-    filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.6));
-  }
-
-  .brightness-125 {
-    filter: brightness(1.25);
-  }
-
-  .scale-95 {
-    transform: scale(0.95);
-  }
-
-  .grayscale {
+  .fighter-vote-btn:not(:hover):has(~ .fighter-vote-btn:hover),
+  .fighter-vote-btn:hover ~ .fighter-vote-btn {
     filter: grayscale(100%);
-  }
-
-  /* Transiciones suaves para todos los efectos */
-  .combat img {
-    transition: all 0.3s ease-in-out;
-  }
-
-  /* Efecto de resplandor para el luchador seleccionado */
-  .combat img.scale-110 {
-    box-shadow: 0 0 30px rgba(147, 51, 234, 0.4);
   }
 </style>
