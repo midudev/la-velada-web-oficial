@@ -72,55 +72,53 @@ export const prerender = false
           <div class="flex w-full flex-col items-center text-center">
             <div
               id="combats-container"
-              class="relative mx-auto mb-72 mt-10 grid max-w-7xl grid-cols-1 gap-4 p-6 md:gap-8"
+              class="relative mx-auto mb-24 mt-10 grid max-w-7xl grid-cols-1 gap-4 p-6 md:gap-8"
             >
               {COMBATS.toReversed().map(({ id, number, fighters, title }, index) => (
-                <a
-                  class:list={['inline-block', index === 0 ? 'col-span-1' : 'md:col-span-1']}
-                  href={`combates/${id}`}
-                  title={`Ir al combate ${number} de ${title}`}
-                >
+                <div class:list={['inline-block', index === 0 ? 'col-span-1' : 'md:col-span-1']}>
                   <div
                     class:list={[
                       'combat group relative flex w-full',
-                      index === 0
-                        ? 'animate-fade-in-up h-[50vh] sm:h-[60vh] md:h-[70vh]'
-                        : 'animate-fade-in-left h-[40vh] sm:h-[50vh]',
-                      index % 2 === 0 && index !== 0
-                        ? 'animate-fade-in-left'
-                        : index !== 0
-                          ? 'animate-fade-in-right'
-                          : '',
+                      index === 0 ? 'h-[50vh] sm:h-[60vh] md:h-[70vh]' : 'h-[40vh] sm:h-[50vh]',
+                      index % 2 === 0 && index !== 0 ? '' : index !== 0 ? '' : '',
                       'animate-delay-200 lg',
                     ]}
                   >
                     {fighters.map((fighter, fighterIndex) => (
-                      <img
-                        src={`/images/fighters/combat/${fighter}.webp`}
-                        class:list={[
-                          'mask-fade-bottom z-20 size-96 h-full w-1/2 object-contain transition-transform duration-300 group-hover:scale-110',
-                          fighterIndex === 0 ? 'ml-5 lg:ml-10' : '-ml-10 lg:-ml-20',
-                        ]}
-                        alt={`Imagen de ${fighter}`}
-                        transition:name={`combat-img:${fighter}`}
-                      />
+                      <div class="relative flex w-1/2 flex-col items-center">
+                        <img
+                          src={`/images/fighters/combat/${fighter}.webp`}
+                          class:list={[
+                            'mask-fade-bottom z-20 size-96 h-full w-full object-contain transition-all duration-300',
+                          ]}
+                          alt={`Imagen de ${fighter}`}
+                          transition:name={`combat-img:${fighter}`}
+                        />
+
+                        {/* Botón de votación */}
+                        <button
+                          class:list={[
+                            'fighter-vote-btn absolute bottom-4 left-1/2 z-40 -translate-x-1/2 transform cursor-pointer rounded-lg bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-3 text-sm font-semibold uppercase text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-purple-500 hover:to-purple-700 hover:shadow-xl',
+                          ]}
+                          data-combat-id={id}
+                          data-fighter-id={fighter}
+                          data-fighter-index={fighterIndex}
+                        >
+                          <span>Votar por {fighter}</span>
+                        </button>
+                      </div>
                     ))}
 
-                    <div class="-skew-4 absolute bottom-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
+                    <div class="absolute top-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300">
                       <img
                         src={`/images/fighters/combat/${fighters[0]}-vs-${fighters[1]}.webp`}
-                        class:list={[
-                          'transform-3d z-50 object-cover opacity-[99%]',
-                          index === 0 ? 'h-56 w-[28rem] md:h-64 md:w-[32rem]' : 'h-48 w-96',
-                        ]}
+                        class:list={['transform-3d z-50', 'h-64 object-contain']}
                         alt={`${fighters[0]} contra ${fighters[1]}`}
                         transition:name={`vs:${fighters[0]}-${fighters[1]}`}
                       />
                     </div>
-
-                    <div class="absolute bottom-0 z-10 h-2/3 w-full bg-gradient-to-b from-pink-900/30 from-60% to-transparent transition-colors duration-300 group-hover:from-pink-900/20" />
                   </div>
-                </a>
+                </div>
               ))}
             </div>
           </div>
@@ -195,10 +193,31 @@ export const prerender = false
               button.querySelector('span')!.textContent = '¡Votado!'
             }
 
-            // Recargar la página después de 1 segundo para mostrar las predicciones actualizadas
+            // Hacer scroll al siguiente combate después de 1 segundo
+            setTimeout(() => {
+              const currentCombat = button.closest('.combat')
+              if (currentCombat) {
+                const nextCombat =
+                  currentCombat.parentElement?.nextElementSibling?.querySelector('.combat')
+                if (nextCombat) {
+                  nextCombat.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                  })
+                } else {
+                  // Si no hay más combates, hacer scroll al inicio
+                  window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                  })
+                }
+              }
+            }, 1000)
+
+            // Recargar la página después de 2 segundos para mostrar las predicciones actualizadas
             setTimeout(() => {
               window.location.reload()
-            }, 1000)
+            }, 2000)
           } else {
             throw new Error('Error al registrar voto')
           }
@@ -212,6 +231,45 @@ export const prerender = false
           // Mostrar mensaje de error
           alert('Error al registrar tu voto. Inténtalo de nuevo.')
         }
+      })
+
+      // Efectos hover para los botones de votación
+      button.addEventListener('mouseenter', () => {
+        const combatContainer = button.closest('.combat')
+        if (!combatContainer) return
+
+        const fighterIndex = parseInt(button.getAttribute('data-fighter-index') || '0')
+        const images = combatContainer.querySelectorAll('img[src*="/images/fighters/combat/"]')
+
+        // Aplicar efectos al luchador seleccionado
+        if (images[fighterIndex]) {
+          images[fighterIndex].classList.add('contrast-105', 'brightness-125', 'filter-glow')
+        }
+
+        // Aplicar efectos al luchador opuesto
+        const oppositeIndex = fighterIndex === 0 ? 1 : 0
+        if (images[oppositeIndex]) {
+          images[oppositeIndex].classList.add('scale-95', 'grayscale', 'opacity-60')
+        }
+      })
+
+      button.addEventListener('mouseleave', () => {
+        const combatContainer = button.closest('.combat')
+        if (!combatContainer) return
+
+        const images = combatContainer.querySelectorAll('img[src*="/images/fighters/combat/"]')
+
+        // Restaurar efectos en todos los luchadores
+        images.forEach((img) => {
+          img.classList.remove(
+            'contrast-105',
+            'brightness-125',
+            'filter-glow',
+            'scale-95',
+            'grayscale',
+            'opacity-60',
+          )
+        })
       })
     })
   })
@@ -235,5 +293,32 @@ export const prerender = false
 
   .fighter-vote-btn:disabled {
     cursor: not-allowed;
+  }
+
+  /* Efectos para los luchadores */
+  .filter-glow {
+    filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.6));
+  }
+
+  .brightness-125 {
+    filter: brightness(1.25);
+  }
+
+  .scale-95 {
+    transform: scale(0.95);
+  }
+
+  .grayscale {
+    filter: grayscale(100%);
+  }
+
+  /* Transiciones suaves para todos los efectos */
+  .combat img {
+    transition: all 0.3s ease-in-out;
+  }
+
+  /* Efecto de resplandor para el luchador seleccionado */
+  .combat img.scale-110 {
+    box-shadow: 0 0 30px rgba(147, 51, 234, 0.4);
   }
 </style>
