@@ -33,19 +33,19 @@ const bars = generateRandomBars()
       <!-- Otros datos del luchador -->
       <div class="grid grid-cols-2 gap-4 px-4 py-4 text-left font-normal text-white">
         <section class="flex flex-col">
-          <span class="text-dark-magenta text-sm">Edad</span>
+          <span class="text-sm text-white/60">Edad</span>
           <strong class="text-md animate-fade-in animate-delay-250">{fighter.age} años</strong>
         </section>
         <section class="flex flex-col">
-          <span class="text-dark-magenta text-sm">Peso</span>
+          <span class="text-sm text-white/60">Peso</span>
           <strong class="text-md animate-fade-in animate-delay-300">{fighter.weight}kg</strong>
         </section>
         <section class="flex flex-col">
-          <span class="text-dark-magenta text-sm">Nacimiento</span>
+          <span class="text-sm text-white/60">Nacimiento</span>
           <strong class="text-md animate-fade-in animate-delay-[350ms]">{birthDate}</strong>
         </section>
         <section class="flex flex-col">
-          <span class="text-dark-magenta text-sm">Altura</span>
+          <span class="text-sm text-white/60">Altura</span>
           <strong class="text-md animate-fade-in animate-delay-400">{fighter.height}m</strong>
         </section>
       </div>
@@ -81,14 +81,13 @@ const bars = generateRandomBars()
     </section>
 
     <section class="animate-fade-in animate-delay-800 flex items-center justify-center space-x-2">
-      <Logo class="h-8 w-8 text-yellow-200" />
-      <div class="flex items-end bg-white py-0.5 pl-0.5">
-        {
-          bars.map((width) => (
-            <span class="mr-0.5 h-[25px] bg-black" style={`width: ${width}px;`} />
-          ))
-        }
-      </div>
+      <img
+        class="h-10 opacity-80"
+        src="/favicon.svg"
+        fetchpriority="high"
+        alt="La Velada del Año V"
+        decoding="async"
+      />
     </section>
   </footer>
 </article>
