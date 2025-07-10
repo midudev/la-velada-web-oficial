@@ -3,78 +3,72 @@ import Layout from '@/layouts/Layout.astro'
 import { COMBATS } from '@/consts/combats'
 import { combates } from '@/consts/pageTitles'
 
-const description = "Descubre todos los combates de La Velada del Año V, el evento de boxeo de Ibai Llanos con los mejores creadores de contenido."
-const canonical = "https://www.infolavelada.com/combates"
+const description =
+  'Descubre todos los combates de La Velada del Año V, el evento de boxeo de Ibai Llanos con los mejores creadores de contenido.'
+const canonical = 'https://www.infolavelada.com/combates'
 
 export const prerender = true
 ---
 
 <Layout title={combates} description={description} canonical={canonical}>
   <section class="min-h-screen w-full">
-    <div
-      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
+    <h2
+      class="animate-fade-in animate-delay-300 bg-gradient-to-r from-sky-100 to-pink-300 bg-clip-text pt-24 text-center text-2xl font-bold text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
     >
-    </div>
+      LOS COMBATES
+    </h2>
 
     <div class="flex w-full flex-col items-center text-center">
-      <div id="landing" class="py-30 absolute top-0 flex w-full flex-col items-center">
-        <h3
-          class="text-theme-seashell animate-fade-in animate-delay-300 -skew-3 mt-4 text-[42px] font-medium leading-[100%] tracking-wider brightness-125 transition-all duration-300 [text-shadow:_5px_5px_10px_rgb(0_0_0_/_50%)] sm:text-6xl"
-        >
-          <strong>LISTA DE LOS</strong>
-          <br /><strong>COMBATES</strong>
-        </h3>
-      </div>
-
       <div
         id="combats-container"
-        class="relative top-96 mx-auto mb-72 mt-10 flex max-w-7xl flex-wrap justify-center gap-4 p-6 md:gap-8"
+        class="relative mx-auto mb-72 mt-10 grid w-full max-w-2xl grid-cols-2 gap-4 p-6 md:gap-8 lg:max-w-6xl"
       >
         {
-          COMBATS.map(({ id, number, fighters, title }) => (
+          COMBATS.toReversed().map(({ id, number, fighters, title }, index) => (
             <a
-              class="inline-block w-full md:w-[calc(50%-1rem)]"
+              class:list={['block', index === 0 ? 'col-span-2' : 'col-span-2 lg:col-span-1']}
               href={`combates/${id}`}
               title={`Ir al combate ${number} de ${title}`}
             >
               <div
-                class={`combat group ${number == 7 ? 'animate-fade-in-up' : number % 2 == 0 ? 'animate-fade-in-left' : 'animate-fade-in-right'} animate-delay-200 lg relative flex h-[40vh] w-full sm:h-[50vh]`}
+                class:list={[
+                  'combat group relative flex w-full',
+                  index === 0
+                    ? 'animate-fade-in-up h-[40vh] sm:h-[50vh] lg:h-[70vh]'
+                    : 'animate-fade-in-left h-[40vh] sm:h-[50vh]',
+                  index % 2 === 0 && index !== 0
+                    ? 'animate-fade-in-left'
+                    : index !== 0
+                      ? 'animate-fade-in-right'
+                      : '',
+                  'animate-delay-200 lg',
+                ]}
               >
-                {fighters.map((fighter, index) => (
+                {fighters.map((fighter, fighterIndex) => (
                   <img
-                    src={`/images/fighters/big/${fighter}.webp`}
-                    class={`z-20 h-full w-1/2 object-contain ${index === 0 ? 'ml-5 lg:ml-10' : '-ml-10 lg:-ml-20'} mask-fade-bottom size-96 transition-transform duration-300 group-hover:scale-110`}
+                    src={`/images/fighters/combat/${fighter}.webp`}
+                    class:list={[
+                      'mask-fade-bottom-quick absolute z-20 h-full w-auto object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
+                      fighterIndex === 0 ? 'left-0' : 'right-0',
+                    ]}
                     alt={`Imagen de ${fighter}`}
-                    loading="lazy"
-                    decoding="async"
+                    transition:name={`combat-img:${fighter}`}
                   />
                 ))}
 
-                <div class="-skew-4 absolute bottom-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
+                <div class="-skew-4 absolute -bottom-20 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
                   <img
-                    src={`/images/fighters/text/${fighters[0]}.webp`}
-                    loading="lazy"
-                    decoding="async"
-                    class="w-3/4"
-                    alt=""
-                  />
-                  <img
-                    src="/images/versus.webp"
-                    class="h-auto w-24"
-                    loading="lazy"
-                    decoding="async"
-                    alt=""
-                  />
-                  <img
-                    src={`/images/fighters/text/${fighters[1]}.webp`}
-                    loading="lazy"
-                    decoding="async"
-                    class="w-3/4"
-                    alt=""
+                    src={`/images/fighters/combat/${fighters[0]}-vs-${fighters[1]}.webp`}
+                    class:list={[
+                      'transform-3d z-50 object-bottom',
+                      index === 0
+                        ? 'h-[400px] w-[700px] object-contain'
+                        : 'h-80 object-cover lg:h-56',
+                    ]}
+                    alt={`${fighters[0]} contra ${fighters[1]}`}
+                    transition:name={`vs:${fighters[0]}-${fighters[1]}`}
                   />
                 </div>
-
-                <div class="absolute bottom-0 z-10 h-2/3 w-full bg-gradient-to-b from-pink-900/30 from-60% to-transparent transition-colors duration-300 group-hover:from-pink-900/20" />
               </div>
             </a>
           ))
@@ -86,6 +80,22 @@ export const prerender = true
 
 <style>
   .combat {
-    animation-timeline: view(block 100% 10%);
+    animation-timeline: view(block 100% 1%);
+  }
+
+  /* Grid responsivo para combates */
+  #combats-container {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    #combats-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* El primer combate ocupa todo el ancho */
+    #combats-container > a:first-child {
+      grid-column: 1 / -1;
+    }
   }
 </style>
