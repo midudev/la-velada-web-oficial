@@ -7,11 +7,6 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
 ---
 
 <section class="relative flex min-h-screen w-full">
-  <div
-    class="mask-fade-bottom animate-fade-in absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center duration-75"
-  >
-  </div>
-
   <div class="mask-fade-bottom absolute inset-0 w-full bg-black opacity-10"></div>
 
   <div class="relative flex w-full flex-col items-center p-8 text-center">
@@ -29,7 +24,10 @@ const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? 
           alt="La Velada del Año V"
           decoding="async"
         />
-        <div class="absolute z-0 size-64 bg-pink-400/80 blur-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+        <div
+          class="absolute left-1/2 top-1/2 z-0 size-64 -translate-x-1/2 -translate-y-1/2 bg-pink-400/80 blur-2xl"
+        >
+        </div>
       </figure>
 
       <div class="relative z-10">

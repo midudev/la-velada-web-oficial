@@ -112,20 +112,22 @@ const reverseDelaySecondRow = [...animationDelaySecondRow].reverse()
         class="fadeout-horizontal no-scrollbar flex snap-x snap-mandatory gap-12 overflow-x-scroll py-2 pr-[40%]"
       >
         {
-          mobileBoxers.map((boxerId, index) => {
-            const boxer = getBoxerById(boxerId)
-            return (
-              <div
-                class:list={`w-fit flex-shrink-0 snap-center px-2 ${index === 0 ? 'ml-[75%]' : ''} `}
-              >
-                <ColumnBoxers
-                  boxer={boxer}
-                  versus={getBoxerVersusById(boxer.versus)}
-                  selectedBoxer={selectedBoxer}
-                />
-              </div>
-            )
-          })
+          mobileBoxers
+            .filter((boxerId): boxerId is string => boxerId !== undefined)
+            .map((boxerId, index) => {
+              const boxer = getBoxerById(boxerId)
+              return (
+                <div
+                  class:list={`w-fit flex-shrink-0 snap-center px-2 ${index === 0 ? 'ml-[75%]' : ''} `}
+                >
+                  <ColumnBoxers
+                    boxer={boxer}
+                    versus={getBoxerVersusById(boxer.versus)}
+                    selectedBoxer={selectedBoxer}
+                  />
+                </div>
+              )
+            })
         }
       </div>
     </div>
