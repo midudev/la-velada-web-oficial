@@ -2,10 +2,13 @@
 import type { GetStaticPaths } from 'astro'
 
 import { COMBATS } from '@/consts/combats'
-import { countries } from '@/consts/countries'
 import { FIGHTERS } from '@/consts/fighters'
+import { countries } from '@/consts/countries'
 import { combate } from '@/consts/pageTitles'
+
 import Layout from '@/layouts/Layout.astro'
+import CombatVersus from '@/components/CombatVersus.astro'
+import BoxerCard from '@/components/BoxerCard.astro'
 
 const { id } = Astro.params
 const combat = COMBATS.find((c) => c.id === id)
@@ -36,137 +39,78 @@ export const prerender = true
   description={description}
   canonical={canonical}
 >
-  <div
-    class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
-  >
-  </div>
-
-  <section class="relative mx-auto mt-24 min-h-screen max-w-6xl p-6">
-    <!-- Cartelera -->
-    <div class="relative flex h-full w-full p-2">
-      <!-- Primer Combatiente -->
-      <div
-        class="custom-clip animate-crash relative h-auto w-1/2 rotate-180 overflow-hidden bg-gradient-to-b from-black/50 to-pink-900/50 transition-transform duration-200 hover:scale-105"
-      >
-        <h3
-          class="text-theme-seashell vertical-text animate-slide-in-bottom animate-delay-800 absolute end-0 right-0 z-10 rotate-180 text-2xl font-medium leading-[100%] md:text-6xl"
-        >
-          {fighter1?.name.toLocaleLowerCase()}
-        </h3>
-        <a
-          class="flex h-full w-full items-center justify-center pb-8"
-          href={`/luchador/${fighter1?.id}`}
-        >
-          <img
-            src={`/images/fighters/big/${fighter1?.id}.webp`}
-            alt={`Imagen de ${fighter1?.name}`}
-            decoding="async"
-            loading="eager"
-            class="mask-fade-bottom max-h-[600px] rotate-180"
-          />
-          <!-- <img
-              src={fighter1Country?.image.src}
-              alt={`Bandera de ${fighter1Country?.name ?? 'Desconocido'}`}
-              class="absolute top-8 md:top-20 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-auto w-16 md:w-52 rotate-180 inline-flex"
-            /> -->
-        </a>
-        <div class="health-bar">
-          <div class="health" style="width: 70%;"></div>
-        </div>
-      </div>
-
-      <!-- Versus Letra o Imagen -->
-      <img
-        src="/images/versus.webp"
-        class="animate-slide-out-bottom md:size-50 absolute left-1/2 top-1/2 z-20 size-24 -translate-x-1/2 -translate-y-1/2 transform delay-1000"
-        alt="Imagen de Versus"
-      />
-
-      <!-- Segundo Combatiente -->
-      <div
-        class="custom-clip animate-crash relative h-auto w-1/2 overflow-hidden bg-gradient-to-b from-black/50 to-pink-900/50 transition-transform duration-200 hover:scale-105"
-      >
-        <!-- Esquina Derecha -->
-        <h3
-          class="text-theme-seashell vertical-text animate-slide-in-top animate-delay-800 absolute end-0 right-0 z-10 text-2xl font-medium leading-[100%] md:text-6xl"
-        >
-          {fighter2?.name.toLocaleLowerCase()}
-        </h3>
-        <a
-          class="mt-8 flex h-full w-full items-center justify-center"
-          href={`/luchador/${fighter2?.id}`}
-        >
-          <img
-            src={`/images/fighters/big/${fighter2?.id}.webp`}
-            alt={`Imagen de ${fighter2?.name}`}
-            decoding="async"
-            loading="eager"
-            class="mask-fade-bottom max-h-[600px] object-cover"
-          />
-        </a>
-        <div class="health-bar">
-          <div class="health" style="width: 70%;"></div>
-        </div>
-      </div>
-    </div>
+  <section data-combat-id={id} class="relative mx-auto mt-24 min-h-screen max-w-6xl p-6">
+    <CombatVersus id={id} />
 
     <!-- Informacion -->
-    <div class="mt-16 flex flex-col gap-8 p-3">
+    <div class="mx-auto mt-16 flex w-full max-w-2xl flex-col gap-8 p-3">
       <!-- Caracteristicas -->
-      <div class="bg-black/60">
-        <h2 class="text-md text-theme-seashell my-4 text-center font-bold md:text-2xl">
-          Características
-        </h2>
-        <p
-          class="text-md text-theme-turquoise mx-auto mt-4 text-wrap text-center font-semibold md:text-lg"
-        >
-          datos relevantes de los boxeadores
-        </p>
-
+      <div>
         <div class="my-8 grid grid-cols-3 gap-4">
-          <div class="text-theme-seashell space-y-2 text-right text-sm font-bold md:text-xl">
-            <p>{fighter1?.age} años</p>
-            <p>{fighter1?.height} mts</p>
-            <p>{fighter1?.weight} kg</p>
-            <p>{fighter1Country?.name.toLocaleLowerCase()}</p>
-            <img
-              src={fighter1Country?.image.src}
-              alt={`Bandera de ${fighter1Country?.name ?? 'Desconocido'}`}
-              class="md:w-25 inline-flex h-auto w-16"
-            />
+          <!-- Columna del primer luchador -->
+          <div class="group flex flex-col items-center space-y-4">
+            <!-- Foto del luchador -->
+            <div class="h-42 flex justify-center">
+              <BoxerCard
+                id={fighter1?.id || ''}
+                name={fighter1?.name || ''}
+                versus=""
+                class="scale-125"
+              />
+            </div>
+            <!-- Características -->
+            <div class="space-y-2 text-center text-sm font-bold text-black md:text-xl">
+              <p>{fighter1?.age} años</p>
+              <p>{fighter1?.height} mts</p>
+              <p>{fighter1?.weight} kg</p>
+              <p>{fighter1Country?.name.toLocaleLowerCase()}</p>
+              <img
+                src={fighter1Country?.image.src}
+                alt={`Bandera de ${fighter1Country?.name ?? 'Desconocido'}`}
+                class="md:w-25 inline-flex h-auto w-16"
+              />
+            </div>
           </div>
 
-          <div class="text-theme-seashell space-y-2 text-center text-sm md:text-xl">
-            <p>EDAD</p>
-            <p>ALTURA</p>
-            <p>PESO</p>
-            <p>PAÍS</p>
+          <!-- Columna central con etiquetas -->
+          <div class="flex flex-col items-center space-y-4">
+            <!-- Espacio para mantener alineación -->
+            <div class="h-42"></div>
+            <!-- Etiquetas -->
+            <div class="space-y-2 text-center text-sm text-black opacity-70 md:text-xl">
+              <p>EDAD</p>
+              <p>ALTURA</p>
+              <p>PESO</p>
+              <p>PAÍS</p>
+            </div>
           </div>
 
-          <div class="text-theme-seashell space-y-2 text-left text-sm font-bold md:text-xl">
-            <p>{fighter2?.age} años</p>
-            <p>{fighter2?.height} mts</p>
-            <p>{fighter2?.weight} kg</p>
-            <p>{fighter2Country?.name.toLocaleLowerCase()}</p>
-            <img
-              src={fighter2Country?.image.src}
-              alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
-              class="md:w-25 inline-flex h-auto w-16"
-            />
+          <!-- Columna del segundo luchador -->
+          <div class="group flex flex-col items-center space-y-4">
+            <!-- Foto del luchador -->
+            <div class="h-42 flex justify-center">
+              <BoxerCard
+                id={fighter2?.id || ''}
+                name={fighter2?.name || ''}
+                versus=""
+                class="scale-125"
+              />
+            </div>
+            <!-- Características -->
+            <div class="space-y-2 text-center text-sm font-bold text-black md:text-xl">
+              <p>{fighter2?.age} años</p>
+              <p>{fighter2?.height} mts</p>
+              <p>{fighter2?.weight} kg</p>
+              <p>{fighter2Country?.name.toLocaleLowerCase()}</p>
+              <img
+                src={fighter2Country?.image.src}
+                alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
+                class="md:w-25 inline-flex h-auto w-16"
+              />
+            </div>
           </div>
         </div>
       </div>
-
-      <!-- <div class="bg-black/70">
-        <h2 class="text-md text-theme-seashell my-4 text-center font-bold md:text-2xl">
-          pronóstico
-        </h2>
-        <p
-          class="text-md text-theme-turquoise mx-auto mt-4 text-wrap text-center font-semibold md:text-2xl"
-        >
-          estadísticas del combate por votaciones.
-        </p>
-      </div> -->
     </div>
   </section>
   <style>
@@ -177,10 +121,6 @@ export const prerender = true
     .vertical-text {
       writing-mode: vertical-lr;
       text-orientation: upright;
-    }
-
-    .animate-crash {
-      animation: crash 1s linear forwards;
     }
 
     @keyframes crash {
@@ -206,17 +146,6 @@ export const prerender = true
         transform: translateX(-10px);
         box-shadow: 10px 0 20px rgba(255, 255, 255, 0.6); /* Mantener sombra */
       }
-    }
-
-    .health-bar {
-      width: 300px;
-      height: 30px;
-      background-color: #333;
-      border: 2px solid #fff;
-      border-radius: 5px;
-      overflow: hidden;
-      position: relative;
-      margin: 10px;
     }
   </style>
 </Layout>

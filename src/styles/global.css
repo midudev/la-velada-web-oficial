@@ -17,6 +17,13 @@
 }
 
 @layer base {
+  /* Disable overscroll behavior */
+  html,
+  body {
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+  }
+
   /* Webkit Browsers (Chrome, Safari, Edge) */
   ::-webkit-scrollbar {
     width: 10px;
@@ -195,4 +202,8 @@ html {
 
 @utility mask-fade-bottom {
   mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+@utility mask-fade-bottom-quick {
+  mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
 }

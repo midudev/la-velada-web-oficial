@@ -1,0 +1,86 @@
+---
+import PredictionBar from '@/components/PredictionBar.astro'
+
+import { COMBATS } from '@/consts/combats'
+import { FIGHTERS } from '@/consts/fighters'
+
+const { id = '' } = Astro.props
+const combat = COMBATS.find((c) => c.id === id)
+
+const fighter1 = FIGHTERS.find((f) => f.id === combat?.fighters[0])
+const fighter2 = FIGHTERS.find((f) => f.id === combat?.fighters[1])
+---
+
+<div data-combat-id={id} class="relative -mt-10 flex h-full w-full p-2">
+  <!-- Primer Combatiente -->
+  <div class="relative h-auto w-1/2 overflow-hidden duration-200 hover:scale-105">
+    <a
+      class="flex h-full w-full items-center justify-center pb-8"
+      href={`/luchador/${fighter1?.id}`}
+    >
+      <img
+        src={`/images/fighters/combat/${fighter1?.id}.webp`}
+        alt={`Imagen de ${fighter1?.name}`}
+        class="mask-fade-bottom h-auto max-h-[80vh] w-[800px] object-contain"
+        transition:name={`combat-img:${fighter1?.id}`}
+      />
+    </a>
+  </div>
+
+  <!-- Versus Letra o Imagen -->
+  <img
+    src={`/images/fighters/combat/${fighter1?.id}-vs-${fighter2?.id}.webp`}
+    class="transform-3d -skew-4 pointer-events-none absolute bottom-8 left-1/2 z-10 h-auto w-[150px] -translate-x-1/2 sm:w-[200px] md:w-[300px] lg:w-[500px]"
+    alt="Imagen de Versus"
+    transition:name={`vs:${fighter1?.id}-${fighter2?.id}`}
+  />
+
+  <!-- Segundo Combatiente -->
+  <div class="relative h-auto w-1/2 overflow-hidden duration-200 hover:scale-105">
+    <!-- Esquina Derecha -->
+
+    <a class="flex h-full w-full items-center justify-center" href={`/luchador/${fighter2?.id}`}>
+      <img
+        src={`/images/fighters/combat/${fighter2?.id}.webp`}
+        alt={`Imagen de ${fighter2?.name}`}
+        class="mask-fade-bottom h-auto max-h-[80vh] w-[800px] object-contain"
+        transition:name={`combat-img:${fighter2?.id}`}
+      />
+    </a>
+  </div>
+  <!-- Barra de Predicción Overlay -->
+  <PredictionBar
+    combatId={id}
+    overlay={true}
+    fighter1={{
+      id: fighter1?.id || '',
+      name: fighter1?.name || '',
+      percentage: 60,
+    }}
+    fighter2={{
+      id: fighter2?.id || '',
+      name: fighter2?.name || '',
+      percentage: 40,
+    }}
+    totalVotes={100}
+  />
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', async () => {
+    // call api to get predictions for the combat
+    const combatId = document.querySelector('[data-combat-id]')?.getAttribute('data-combat-id')
+    const predictions = await fetch(`/api/predictions?combat_id=${combatId}`)
+    const predictionsData = await predictions.json()
+
+    // dispatch an event to update the prediction bar
+    document.dispatchEvent(
+      new CustomEvent('update-prediction-bar', {
+        detail: {
+          id: combatId,
+          data: predictionsData,
+        },
+      }),
+    )
+  })
+</script>
