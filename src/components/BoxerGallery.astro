@@ -15,29 +15,34 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
 
 <div id="boxer-gallery" class={`grid gap-3 grid-rows-2 grid-cols-2`}>
   {
-    Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => (
-      <a
-        class:list={[
-          'boxer-image aspect-square transition hover:scale-105 hover:brightness-110',
-          'col-span-1 row-span-1',
-          'animate-fade-in animate-delay-[1000ms]',
-        ]}
-        href={`/images/fighters/gallery/${id}/${index + 1}.webp`}
-        title={`Abrir imagen ${index} de la galería de ${name}`}
-      >
-        <figure class="h-full w-full">
-          <picture class="block h-full w-full">
-            <img
-              loading="lazy"
-              decoding="async"
-              class="aspect-square h-full w-full rounded object-cover object-top"
-              alt={`Imagen de la galería de fotos de ${name}`}
-              src={`/images/fighters/gallery/${id}/${index + 1}.webp`}
-            />
-          </picture>
-        </figure>
-      </a>
-    ))
+    Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => {
+      const currentIndex = ++index
+      const href = `/images/fighters/gallery/${id}/${currentIndex}.webp`
+
+      return (
+        <a
+          class:list={[
+            'boxer-image aspect-square transition hover:scale-105 hover:brightness-110',
+            'col-span-1 row-span-1',
+            'animate-fade-in animate-delay-[1000ms]',
+          ]}
+          href={href}
+          title={`Abrir imagen ${currentIndex} de la galería de ${name}`}
+        >
+          <figure class="h-full w-full">
+            <picture class="block h-full w-full">
+              <img
+                loading="lazy"
+                decoding="async"
+                class="aspect-square h-full w-full rounded object-cover object-top"
+                alt={`Imagen de la galería de fotos de ${name}`}
+                src={href}
+              />
+            </picture>
+          </figure>
+        </a>
+      )
+    })
   }
   <dialog
     id="lightbox"

@@ -1,20 +1,28 @@
 ---
+import Layout from '@/layouts/Layout.astro'
+
 import BoxerCard from '@/components/BoxerCard.astro'
 import BoxerClipDrawer from '@/components/BoxerClipDrawer.astro'
 import BoxerClipList from '@/components/BoxerClipList.astro'
 import BoxerGallery from '@/components/BoxerGallery.astro'
 import BoxerProfileCard from '@/components/BoxerProfileCard.astro'
 import BoxerWorkout from '@/components/BoxerWorkout.astro'
+import BoxerSocialLink from '@/components/BoxerSocialLink.astro'
+
 import { FIGHTERS } from '@/consts/fighters'
 import { fixedTitle } from '@/consts/pageTitles'
-import Layout from '@/layouts/Layout.astro'
-import BoxerSocialLink from '../../components/BoxerSocialLink.astro'
+import { COMBATS } from '@/consts/combats'
+import CombatVersus from '@/components/CombatVersus.astro'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/404')
 
 const fighter = FIGHTERS.find((fighter) => fighter.id === id)
 if (!fighter) return Astro.redirect('/404')
+
+const combat = COMBATS.find((combat) => combat.fighters.includes(id))
+const combatId = combat?.id
+console.log({ combatId })
 
 const description = `Biografía, estadísticas y clips de ${fighter.name}, participante de La Velada del Año V. ${fighter.bio.substring(0, 120)}${fighter.bio.length > 120 ? '...' : ''}`
 const canonical = `https://www.infolavelada.com/luchador/${id}`
@@ -27,17 +35,17 @@ const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
 
 const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
 
-export const prerender = false
+export const prerender = true
+
+export const getStaticPaths = () => {
+  return FIGHTERS.map((fighter) => ({
+    params: { id: fighter.id },
+  }))
+}
 ---
 
 <Layout title={`${fighter.name} | ${fixedTitle}`} description={description} canonical={canonical}>
   <section class="relative flex w-full flex-col-reverse lg:min-h-screen lg:flex-row">
-    <!-- Fondo de la pagina -->
-    <div
-      class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center opacity-50"
-    >
-    </div>
-
     <!-- Listado de Clips -->
     <aside
       class="group flex w-full flex-col items-center justify-center gap-y-32 text-balance px-8 pt-4 text-right lg:min-h-screen lg:max-w-xl lg:pt-24"
@@ -60,15 +68,14 @@ export const prerender = false
         <img
           src={`/images/fighters/big/${id}.webp`}
           alt={`Retrato de ${fighter.name}, participante de La Velada V`}
-          class="mask-image-fade-bottom h-full w-full object-contain transition-transform duration-700 hover:scale-105"
+          class="mask-fade-bottom h-auto w-[400px] object-contain transition-transform duration-700 hover:scale-105"
           transition:name={`image-${id}`}
         />
         <img
           src={`/images/fighters/text/${id}.webp`}
           alt={`Nombre de ${fighter.name} en texto decorativo`}
-          class="animate-scale-in lg:bottom-34 absolute bottom-6 h-10 w-auto lg:h-16"
+          class="lg:bottom-34 absolute bottom-6 h-10 w-auto lg:h-16"
           transition:name={`text-${id}`}
-          loading="lazy"
         />
       </div>
       <!-- Fin de las imagenes del boxeador -->
@@ -125,13 +132,19 @@ export const prerender = false
     )
   }
 
+  {
+    combat && (
+      <section class="mx-auto max-w-6xl px-4">
+        <CombatVersus id={combatId} />
+      </section>
+    )
+  }
+
   <!-- Video de Entrenamientos -->
   <section>
     {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
   </section>
   <!-- Fin de video de entrenamientos -->
-
-  <!-- Fin de la galeria del boxeador -->
 </Layout>
 
 <style>
