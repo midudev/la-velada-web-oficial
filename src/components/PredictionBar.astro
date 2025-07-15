@@ -37,6 +37,7 @@ const { combatId, fighter1, fighter2, overlay = false, totalVotes } = Astro.prop
     >
       <!-- Barra del primer combatiente -->
       <div
+        data-fighter-id={fighter1.id}
         class="prediction-bar-fighter-1 flex h-full flex-col items-center justify-center bg-gradient-to-r from-pink-500 via-pink-400 to-pink-300 font-bold text-white transition-all duration-300"
       >
         <span
@@ -44,7 +45,7 @@ const { combatId, fighter1, fighter2, overlay = false, totalVotes } = Astro.prop
           >{fighter1.name}</span
         >
         <span
-          class="prediction-bar-percentage-1 mt-1 text-xs leading-none drop-shadow-md md:text-base"
+          class="prediction-bar-percentage mt-1 text-xs leading-none drop-shadow-md md:text-base"
           >{fighter1.percentage}%</span
         >
       </div>
@@ -53,13 +54,14 @@ const { combatId, fighter1, fighter2, overlay = false, totalVotes } = Astro.prop
       <div class="-mr-2 h-full w-2 skew-x-12 bg-blue-300 shadow-lg"></div>
       <!-- Barra del segundo combatiente -->
       <div
+        data-fighter-id={fighter2.id}
         class="prediction-bar-fighter-2 flex h-full flex-col items-center justify-center bg-gradient-to-l from-sky-400 via-sky-300 to-blue-300 font-bold text-white transition-all duration-300"
       >
         <span
           class="text-[10px] font-extralight uppercase leading-none tracking-wider drop-shadow-md sm:text-xs md:text-sm"
           >{fighter2.name}</span
         >
-        <span class="prediction-bar-percentage-2 text-xs leading-none drop-shadow-md md:text-base"
+        <span class="prediction-bar-percentage text-xs leading-none drop-shadow-md md:text-base"
           >{fighter2.percentage}%</span
         >
       </div>
@@ -99,30 +101,23 @@ const { combatId, fighter1, fighter2, overlay = false, totalVotes } = Astro.prop
         $votesParent.classList.add('animate-fade-in')
       }
 
+      predictions.map((prediction: { fighter_id: string; percentage: number; votes: number }) => {
+        const $fighter = predictionBar.querySelector(
+          `[data-fighter-id="${prediction.fighter_id}"]`,
+        ) as HTMLElement
+
+        if ($fighter) {
+          const $percentage = $fighter.querySelector('.prediction-bar-percentage') as HTMLElement
+
+          if ($percentage) {
+            $percentage.textContent = `${prediction.percentage}%`
+            $fighter.style.width = `${prediction.percentage}%`
+          }
+        }
+      })
+
       predictionBar.classList.remove('opacity-0')
       predictionBar.classList.add('animate-fade-in')
-
-      // update the width of the fighters
-      const $fighter1 = predictionBar.querySelector('.prediction-bar-fighter-1') as HTMLElement
-      const $fighter2 = predictionBar.querySelector('.prediction-bar-fighter-2') as HTMLElement
-
-      if ($fighter1 && $fighter2) {
-        $fighter1.style.width = `${predictions[0].percentage}%`
-        $fighter2.style.width = `${predictions[1].percentage}%`
-
-        // update the percentage of the fighters
-        const $percentage1 = predictionBar.querySelector(
-          '.prediction-bar-percentage-1',
-        ) as HTMLElement
-        const $percentage2 = predictionBar.querySelector(
-          '.prediction-bar-percentage-2',
-        ) as HTMLElement
-
-        if ($percentage1 && $percentage2) {
-          $percentage1.textContent = `${predictions[0].percentage}%`
-          $percentage2.textContent = `${predictions[1].percentage}%`
-        }
-      }
     }
   })
 </script>
