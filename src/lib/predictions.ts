@@ -13,18 +13,11 @@ export interface Prediction {
 
 export interface CombatPrediction {
   combat_id: string
-  fighter1: {
-    id: string
-    name: string
+  predictions: Array<{
+    fighter_id: string
     votes: number
     percentage: number
-  }
-  fighter2: {
-    id: string
-    name: string
-    votes: number
-    percentage: number
-  }
+  }>
   total_votes: number
 }
 
@@ -118,8 +111,18 @@ export async function getAllPredictions(): Promise<CombatPrediction[]> {
       if (!combatPredictions[combatId]) {
         combatPredictions[combatId] = {
           combat_id: combatId,
-          fighter1: { id: '', name: '', votes: 0, percentage: 0 },
-          fighter2: { id: '', name: '', votes: 0, percentage: 0 },
+          predictions: [
+            {
+              fighter_id: '',
+              votes,
+              percentage: 0,
+            },
+            {
+              fighter_id: '',
+              votes,
+              percentage: 0,
+            },
+          ],
           total_votes: 0,
         }
       }
@@ -128,21 +131,14 @@ export async function getAllPredictions(): Promise<CombatPrediction[]> {
       const fighter = FIGHTERS.find((f) => f.id === fighterId)
       const fighterName = fighter?.name || fighterId
 
-      // Asignar el primer luchador como fighter1 y el segundo como fighter2
-      if (!combatPredictions[combatId].fighter1.id) {
-        combatPredictions[combatId].fighter1 = {
-          id: fighterId,
-          name: fighterName,
-          votes,
-          percentage: 0,
-        }
-      } else if (!combatPredictions[combatId].fighter2.id) {
-        combatPredictions[combatId].fighter2 = {
-          id: fighterId,
-          name: fighterName,
-          votes,
-          percentage: 0,
-        }
+      // Asignar los luchadores
+      const fighterIndex = combatPredictions[combatId].predictions.findIndex(
+        (p) => p.fighter_id === '',
+      )
+      combatPredictions[combatId].predictions[fighterIndex] = {
+        fighter_id: fighterId,
+        votes,
+        percentage: 0,
       }
 
       combatPredictions[combatId].total_votes += votes
@@ -150,10 +146,9 @@ export async function getAllPredictions(): Promise<CombatPrediction[]> {
 
     // Calcular porcentajes para cada combate
     Object.values(combatPredictions).forEach((combat) => {
-      if (combat.total_votes > 0) {
-        combat.fighter1.percentage = Math.round((combat.fighter1.votes / combat.total_votes) * 100)
-        combat.fighter2.percentage = Math.round((combat.fighter2.votes / combat.total_votes) * 100)
-      }
+      combat.predictions.forEach((prediction) => {
+        prediction.percentage = Math.round((prediction.votes / combat.total_votes) * 100)
+      })
     })
 
     return Object.values(combatPredictions)
