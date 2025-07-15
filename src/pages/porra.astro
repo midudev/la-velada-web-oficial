@@ -3,7 +3,9 @@ import Layout from '@/layouts/Layout.astro'
 import { porra } from '@/consts/pageTitles'
 import { getSession } from 'auth-astro/server'
 import { COMBATS } from '@/consts/combats'
+import { FIGHTERS } from '@/consts/fighters'
 import { getAllPredictions, type CombatPrediction } from '@/lib/predictions'
+import PredictionBar from '@/components/PredictionBar.astro'
 
 const description =
   'Participa en la porra oficial de La Velada del Año V y haz tus predicciones sobre los combates de Ibai Llanos y creadores de contenido.'
@@ -164,6 +166,23 @@ export const prerender = false
                       />
                     </div>
                   </div>
+                  <div class="relative mt-24 block">
+                    <PredictionBar
+                      combatId={id}
+                      overlay={true}
+                      fighter1={{
+                        id: FIGHTERS.find((f) => f.id === fighters[0])?.id || '',
+                        name: FIGHTERS.find((f) => f.id === fighters[0])?.name || '',
+                        percentage: 60,
+                      }}
+                      fighter2={{
+                        id: FIGHTERS.find((f) => f.id === fighters[1])?.id || '',
+                        name: FIGHTERS.find((f) => f.id === fighters[1])?.name || '',
+                        percentage: 40,
+                      }}
+                      totalVotes={100}
+                    />
+                  </div>
                 </article>
               ))}
             </div>
@@ -178,7 +197,7 @@ export const prerender = false
   import { signIn, signOut } from 'auth-astro/client'
   import confetti from 'canvas-confetti'
 
-  document.addEventListener('astro:page-load', () => {
+  document.addEventListener('astro:page-load', async () => {
     const loginBtn = document.getElementById('twitch-login-btn')
     if (loginBtn) {
       loginBtn.addEventListener('click', async () => {
@@ -199,6 +218,32 @@ export const prerender = false
           console.error('Error al cerrar sesión:', error)
         }
       })
+    }
+
+    // get all predictions
+    const predictionsResponse = await fetch('/api/predictions')
+    const { predictions } = await predictionsResponse.json()
+    console.log(predictions)
+    if (predictions) {
+      // send for every data an event to update the prediction bar
+      predictions.forEach(
+        (prediction: {
+          combat_id: string
+          fighter_id: string
+          percentage: number
+          votes: number
+        }) => {
+          console.log(prediction)
+          document.dispatchEvent(
+            new CustomEvent('update-prediction-bar', {
+              detail: {
+                id: prediction.combat_id,
+                data: prediction,
+              },
+            }),
+          )
+        },
+      )
     }
 
     // Funcionalidad de votación
