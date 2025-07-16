@@ -1,11 +1,17 @@
 ---
 import Layout from '@/layouts/Layout.astro'
+import { FIGHTERS } from '@/consts/fighters'
 import { COMBATS } from '@/consts/combats'
 import { combates } from '@/consts/pageTitles'
+import PredictionBar from '@/components/PredictionBar.astro'
 
 const description =
   'Descubre todos los combates de La Velada del Año V, el evento de boxeo de Ibai Llanos con los mejores creadores de contenido.'
 const canonical = 'https://www.infolavelada.com/combates'
+
+const getFighterById = (id: string) => {
+  return FIGHTERS.find((f) => f.id === id)
+}
 
 export const prerender = true
 ---
@@ -25,58 +31,84 @@ export const prerender = true
       >
         {
           COMBATS.toReversed().map(({ id, number, fighters, title }, index) => (
-            <a
-              class:list={['block', index === 0 ? 'col-span-2' : 'col-span-2 lg:col-span-1']}
-              href={`combates/${id}`}
-              title={`Ir al combate ${number} de ${title}`}
+            <div
+              class:list={[
+                'relative block',
+                index === 0 ? 'col-span-2' : 'col-span-2 lg:col-span-1',
+              ]}
             >
-              <div
-                class:list={[
-                  'combat group relative flex w-full',
-                  index === 0
-                    ? 'animate-fade-in-up h-[40vh] sm:h-[50vh] lg:h-[70vh]'
-                    : 'animate-fade-in-left h-[40vh] sm:h-[50vh]',
-                  index % 2 === 0 && index !== 0
-                    ? 'animate-fade-in-left'
-                    : index !== 0
-                      ? 'animate-fade-in-right'
-                      : '',
-                  'animate-delay-200 lg',
-                ]}
-              >
-                {fighters.map((fighter, fighterIndex) => (
-                  <img
-                    src={`/images/fighters/combat/${fighter}.webp`}
-                    class:list={[
-                      'mask-fade-bottom-quick absolute z-20 h-full w-auto object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
-                      fighterIndex === 0 ? 'left-0' : 'right-0',
-                    ]}
-                    alt={`Imagen de ${fighter}`}
-                    transition:name={`combat-img:${fighter}`}
-                  />
-                ))}
+              <a href={`combates/${id}`} title={`Ir al combate ${number} de ${title}`}>
+                <article
+                  class:list={[
+                    'combat group relative flex w-full',
+                    index === 0
+                      ? 'animate-fade-in-up h-[40vh] sm:h-[50vh] lg:h-[70vh]'
+                      : 'animate-fade-in-left h-[40vh] sm:h-[50vh]',
+                    index % 2 === 0 && index !== 0
+                      ? 'animate-fade-in-left'
+                      : index !== 0
+                        ? 'animate-fade-in-right'
+                        : '',
+                    'animate-delay-200 lg',
+                  ]}
+                >
+                  {fighters.map((fighter, fighterIndex) => (
+                    <img
+                      src={`/images/fighters/combat/${fighter}.webp`}
+                      class:list={[
+                        'mask-fade-bottom-quick absolute z-20 h-full w-auto object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
+                        fighterIndex === 0 ? 'left-0' : 'right-0',
+                      ]}
+                      alt={`Imagen de ${fighter}`}
+                      transition:name={`combat-img:${fighter}`}
+                    />
+                  ))}
 
-                <div class="-skew-4 absolute -bottom-20 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
-                  <img
-                    src={`/images/fighters/combat/${fighters[0]}-vs-${fighters[1]}.webp`}
-                    class:list={[
-                      'transform-3d z-50 object-bottom',
-                      index === 0
-                        ? 'h-[400px] w-[700px] object-contain'
-                        : 'h-80 object-cover lg:h-56',
-                    ]}
-                    alt={`${fighters[0]} contra ${fighters[1]}`}
-                    transition:name={`vs:${fighters[0]}-${fighters[1]}`}
-                  />
-                </div>
+                  <div class="-skew-4 absolute -bottom-20 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
+                    <img
+                      src={`/images/fighters/combat/${fighters[0]}-vs-${fighters[1]}.webp`}
+                      class:list={[
+                        'transform-3d z-50 object-bottom',
+                        index === 0
+                          ? 'h-[400px] w-[700px] object-contain'
+                          : 'h-80 object-cover lg:h-56',
+                      ]}
+                      alt={`${fighters[0]} contra ${fighters[1]}`}
+                      transition:name={`vs:${fighters[0]}-${fighters[1]}`}
+                    />
+                  </div>
+                </article>
+              </a>
+              <div class="relative mt-24 block">
+                <PredictionBar
+                  combatId={id}
+                  overlay={true}
+                  fighter1={{
+                    id: getFighterById(fighters[0])?.id || '',
+                    name: getFighterById(fighters[0])?.name || '',
+                    percentage: 60,
+                  }}
+                  fighter2={{
+                    id: getFighterById(fighters[1])?.id || '',
+                    name: getFighterById(fighters[1])?.name || '',
+                    percentage: 40,
+                  }}
+                  totalVotes={100}
+                />
               </div>
-            </a>
+            </div>
           ))
         }
       </div>
     </div>
   </section>
 </Layout>
+
+<script>
+  import { getPredictionsForPage } from '@/lib/get-predictions-for-page'
+
+  getPredictionsForPage()
+</script>
 
 <style>
   .combat {
