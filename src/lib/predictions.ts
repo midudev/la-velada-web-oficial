@@ -2,6 +2,57 @@ import { turso } from '@/lib/database'
 import { FIGHTERS } from '@/consts/fighters'
 import { COMBATS } from '@/consts/combats'
 
+// Caché en memoria con timestamp de 30 segundos
+interface CacheEntry<T> {
+  data: T
+  timestamp: number
+}
+
+interface MemoryCache {
+  predictionsByCombat: Record<string, CacheEntry<PredictionResponse>>
+  allPredictions: CacheEntry<CombatPrediction[]> | null
+}
+
+const CACHE_DURATION = 30 * 1000 // 30 segundos en milisegundos
+let memoryCache: MemoryCache = {
+  predictionsByCombat: {},
+  allPredictions: null,
+}
+
+// Función auxiliar para verificar si la caché ha expirado
+const isCacheValid = (timestamp: number): boolean => {
+  return Date.now() - timestamp < CACHE_DURATION
+}
+
+// Función auxiliar para limpiar caché expirada
+const cleanExpiredCache = () => {
+  const now = Date.now()
+
+  // Limpiar caché de predicciones por combate
+  Object.keys(memoryCache.predictionsByCombat).forEach((key) => {
+    if (!isCacheValid(memoryCache.predictionsByCombat[key].timestamp)) {
+      delete memoryCache.predictionsByCombat[key]
+    }
+  })
+
+  // Limpiar caché de todas las predicciones
+  if (memoryCache.allPredictions && !isCacheValid(memoryCache.allPredictions.timestamp)) {
+    memoryCache.allPredictions = null
+  }
+}
+
+// Función auxiliar para invalidar caché después de un voto
+const invalidateCache = (combatId?: string) => {
+  if (combatId) {
+    // Invalidar caché específica del combate
+    delete memoryCache.predictionsByCombat[combatId]
+  } else {
+    // Invalidar toda la caché
+    memoryCache.predictionsByCombat = {}
+    memoryCache.allPredictions = null
+  }
+}
+
 export interface Prediction {
   id: string
   combat_id: string
@@ -41,6 +92,13 @@ export interface PredictionResponse {
  * Obtiene las predicciones para un combate específico
  */
 export async function getPredictionsByCombat(combatId: string): Promise<PredictionResponse | null> {
+  // Verificar si hay datos en caché válidos
+  const cachedData = memoryCache.predictionsByCombat[combatId]
+  if (cachedData && isCacheValid(cachedData.timestamp)) {
+    console.log(`Usando caché en memoria para predicciones del combate ${combatId}`)
+    return cachedData.data
+  }
+
   try {
     const result = await turso.execute({
       sql: `
@@ -70,11 +128,19 @@ export async function getPredictionsByCombat(combatId: string): Promise<Predicti
       percentage: totalVotes > 0 ? Math.round(((row.votes as number) / totalVotes) * 100) : 0,
     }))
 
-    return {
+    const predictionData = {
       combat_id: combatId,
       predictions,
       total_votes: totalVotes,
     }
+
+    // Guardar en caché
+    memoryCache.predictionsByCombat[combatId] = {
+      data: predictionData,
+      timestamp: Date.now(),
+    }
+
+    return predictionData
   } catch (error) {
     console.error('Error al obtener predicciones por combate:', error)
     throw new Error('Error al obtener predicciones por combate')
@@ -85,6 +151,12 @@ export async function getPredictionsByCombat(combatId: string): Promise<Predicti
  * Obtiene todas las predicciones agrupadas por combate
  */
 export async function getAllPredictions(): Promise<CombatPrediction[]> {
+  // Verificar si hay datos en caché válidos
+  if (memoryCache.allPredictions && isCacheValid(memoryCache.allPredictions.timestamp)) {
+    console.log('Usando caché en memoria para todas las predicciones')
+    return memoryCache.allPredictions.data
+  }
+
   try {
     const result = await turso.execute({
       sql: `
@@ -127,10 +199,6 @@ export async function getAllPredictions(): Promise<CombatPrediction[]> {
         }
       }
 
-      // Obtener el nombre real del luchador
-      const fighter = FIGHTERS.find((f) => f.id === fighterId)
-      const fighterName = fighter?.name || fighterId
-
       // Asignar los luchadores
       const fighterIndex = combatPredictions[combatId].predictions.findIndex(
         (p) => p.fighter_id === '',
@@ -151,7 +219,15 @@ export async function getAllPredictions(): Promise<CombatPrediction[]> {
       })
     })
 
-    return Object.values(combatPredictions)
+    const allPredictionsData = Object.values(combatPredictions)
+
+    // Guardar en caché
+    memoryCache.allPredictions = {
+      data: allPredictionsData,
+      timestamp: Date.now(),
+    }
+
+    return allPredictionsData
   } catch (error) {
     console.error('Error al obtener todas las predicciones:', error)
     throw new Error('Error al obtener todas las predicciones')
@@ -229,6 +305,9 @@ export async function registerVote(
 
       const newVotes = (newPrediction.rows[0]?.votes as number) || 0
 
+      // Invalidar caché después del voto
+      invalidateCache(combatId)
+
       return {
         combat_id: combatId,
         fighter_id: fighterId,
@@ -254,6 +333,9 @@ export async function registerVote(
       })
 
       const newVotes = (newPrediction.rows[0]?.votes as number) || 0
+
+      // Invalidar caché después del voto
+      invalidateCache(combatId)
 
       return {
         combat_id: combatId,
