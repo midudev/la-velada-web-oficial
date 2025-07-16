@@ -1,6 +1,10 @@
 import { createClient } from '@libsql/client/web'
 import { COMBATS } from '../src/consts/combats.js'
 import { FIGHTERS } from '../src/consts/fighters.js'
+import dotenv from 'dotenv'
+
+// Load environment variables from .env file
+dotenv.config()
 
 // Configuración de la base de datos
 const turso = createClient({
