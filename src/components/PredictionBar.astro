@@ -1,5 +1,6 @@
 ---
 interface Props {
+  disableLink?: boolean
   combatId: string
   fighter1: {
     id: string
@@ -15,7 +16,14 @@ interface Props {
   totalVotes?: number
 }
 
-const { combatId, fighter1, fighter2, overlay = false, totalVotes } = Astro.props
+const {
+  disableLink = false,
+  combatId,
+  fighter1,
+  fighter2,
+  overlay = false,
+  totalVotes,
+} = Astro.props
 ---
 
 <div
@@ -30,7 +38,10 @@ const { combatId, fighter1, fighter2, overlay = false, totalVotes } = Astro.prop
   <!-- Barra clickeable -->
   <a
     href="/porra"
-    class="group pointer-events-auto block w-full max-w-3xl transition-transform duration-300 hover:scale-105"
+    class:list={[
+      'group pointer-events-auto block w-full max-w-3xl transition-transform duration-300 hover:scale-105',
+      disableLink ? 'pointer-events-none' : '',
+    ]}
   >
     <div
       class="relative flex h-12 w-full overflow-hidden rounded-full border-2 border-white/20 bg-white/10 shadow-2xl md:h-14"
