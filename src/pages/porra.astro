@@ -194,6 +194,7 @@ export const prerender = false
 </Layout>
 
 <script>
+  import { getPredictionsForPage } from '@/lib/get-predictions-for-page'
   import { signIn, signOut } from 'auth-astro/client'
   import confetti from 'canvas-confetti'
 
@@ -220,31 +221,7 @@ export const prerender = false
       })
     }
 
-    // get all predictions
-    const predictionsResponse = await fetch('/api/predictions')
-    const { predictions } = await predictionsResponse.json()
-    console.log(predictions)
-    if (predictions) {
-      // send for every data an event to update the prediction bar
-      predictions.forEach(
-        (prediction: {
-          combat_id: string
-          fighter_id: string
-          percentage: number
-          votes: number
-        }) => {
-          console.log(prediction)
-          document.dispatchEvent(
-            new CustomEvent('update-prediction-bar', {
-              detail: {
-                id: prediction.combat_id,
-                data: prediction,
-              },
-            }),
-          )
-        },
-      )
-    }
+    getPredictionsForPage()
 
     // Funcionalidad de votación
     const voteButtons = document.querySelectorAll('.fighter-vote-btn')
