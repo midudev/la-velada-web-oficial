@@ -4,7 +4,7 @@ import SectionTitle from '@/components/SectionTitle.astro'
 import { Image } from 'astro:assets'
 ---
 
-<section id="banners" class="mx-auto my-16 max-w-xl px-5 md:px-0 lg:my-20">
+<section id="banners" class="mx-auto my-16 max-w-2xl px-5 md:px-0 lg:my-20">
   <SectionTitle title="Promociones" />
   <div class="flex flex-col items-center gap-8">
     {
@@ -19,8 +19,8 @@ import { Image } from 'astro:assets'
         >
           <Image
             src={image.logo}
-            width={image.width}
-            height={image.height}
+            width={image.width * 1.5}
+            height={image.height * 1.5}
             alt={label ?? name}
             class="rounded-lg shadow-md hover:brightness-105"
           />
