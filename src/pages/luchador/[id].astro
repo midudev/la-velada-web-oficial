@@ -7,6 +7,7 @@ import { fixedTitle } from '@/consts/pageTitles'
 import { COMBATS } from '@/consts/combats'
 import CombatVersus from '@/components/CombatVersus.astro'
 import BoxerProfile from '@/components/BoxerProfile.astro'
+import BoxerFaceOff from '@/components/BoxerFaceOff.astro'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/404')
@@ -42,6 +43,9 @@ export const getStaticPaths = () => {
       </section>
     )
   }
+
+  <!-- Cara a Cara -->
+  <BoxerFaceOff fighterId={fighter?.id} />
 
   <!-- Video de Entrenamientos -->
   <section>
