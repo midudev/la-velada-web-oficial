@@ -102,6 +102,10 @@ export const FIGHTERS: Fighters[] = [
       videoID: 'msvzME2RPu0',
       thumbnail: '/images/fighters/workoutThumbnails/peereira-thumbnail.webp',
     },
+    faceOff: {
+      videoID: 'OjOItlQQHNM',
+      thumbnail: '/images/fighters/faceOffThumbnails/peereira-vs-rivaldios-thumbnail.webp',
+    },
   },
   {
     // https://laletrade.com/biografias/twitch/18087-perxitaa
@@ -202,6 +206,10 @@ export const FIGHTERS: Fighters[] = [
       videoID: 'dj-4LLi5cck',
       thumbnail: '/images/fighters/workoutThumbnails/perxitaa-thumbnail.webp',
     },
+    faceOff: {
+      videoID: 'aOKOUIx8mPU',
+      thumbnail: '/images/fighters/faceOffThumbnails/perxitaa-vs-gaspi-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/abby/
@@ -298,6 +306,10 @@ export const FIGHTERS: Fighters[] = [
       videoID: 'HBTuF3KONZc',
       thumbnail: '/images/fighters/workoutThumbnails/abby-thumbnail.webp',
     },
+    faceOff: {
+      videoID: '_A0QFge7TlI',
+      thumbnail: '/images/fighters/faceOffThumbnails/abby-vs-roro-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/roro/
@@ -366,6 +378,10 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/_A0QFge7TlI?si=_mA5-y8p57kbFYUS&amp;clip=UgkxFEJaIdinVMKPzvTr575aHeDFcG7x60TN&amp;clipt=EOSaOhi7gzs',
       },
     ],
+    faceOff: {
+      videoID: '_A0QFge7TlI',
+      thumbnail: '/images/fighters/faceOffThumbnails/abby-vs-roro-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/gaspi/
@@ -446,6 +462,10 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=wsz9otQaciQnFKsV&amp;clip=UgkxGw6p-ksOymoiuVHBCw5Mx5UUmZqrAiY8&amp;clipt=EJycBxjRwwc',
       },
     ],
+    faceOff: {
+      videoID: 'aOKOUIx8mPU',
+      thumbnail: '/images/fighters/faceOffThumbnails/perxitaa-vs-gaspi-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/rivaldios/
@@ -518,6 +538,10 @@ export const FIGHTERS: Fighters[] = [
       videoID: 'bNwgdNDz4d4',
       thumbnail: '/images/fighters/workoutThumbnails/rivaldios-thumbnail.webp',
     },
+    faceOff: {
+      videoID: 'OjOItlQQHNM',
+      thumbnail: '/images/fighters/faceOffThumbnails/peereira-vs-rivaldios-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/andoni/
@@ -589,6 +613,10 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: 'QDy_MM6y-7U',
       thumbnail: '/images/fighters/workoutThumbnails/andoni-thumbnail.webp',
+    },
+    faceOff: {
+      videoID: 'NbaFxQiuFek',
+      thumbnail: '/images/fighters/faceOffThumbnails/andoni-vs-carlos-thumbnail.webp',
     },
   },
   {
@@ -682,6 +710,10 @@ export const FIGHTERS: Fighters[] = [
       videoID: 'Uy48X5YxujI',
       thumbnail: '/images/fighters/workoutThumbnails/viruzz-thumbnail.webp',
     },
+    faceOff: {
+      videoID: 'yhs5HYCLftg',
+      thumbnail: '/images/fighters/faceOffThumbnails/viruzz-vs-tomas-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/alana-flores/
@@ -773,6 +805,10 @@ export const FIGHTERS: Fighters[] = [
       videoID: 'TmC9TuD8NoQ',
       thumbnail: '/images/fighters/workoutThumbnails/alana-thumbnail.webp',
     },
+    faceOff: {
+      videoID: 'qdS_XOZ5kyU',
+      thumbnail: '/images/fighters/faceOffThumbnails/alana-vs-arigeli-thumbnail.webp',
+    },
   },
   {
     // https://laletrade.com/biografias/youtuber/espanol/22589-thegrefg
@@ -860,6 +896,10 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: '_Rh-VjB3ATk',
       thumbnail: '/images/fighters/workoutThumbnails/grefg-thumbnail.webp',
+    },
+    faceOff: {
+      videoID: 'cfpvro5tD7g',
+      thumbnail: '/images/fighters/faceOffThumbnails/grefg-vs-westcol-thumbnail.webp',
     },
   },
   {
@@ -949,6 +989,10 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/cfpvro5tD7g?si=ZcMgqxaAfHxRQb96&amp;clip=UgkxQ5sj8mAkLsReNNl3UPmr5g6CkSbZyERl&amp;clipt=EKjXAhiw_gI',
       },
     ],
+    faceOff: {
+      videoID: 'cfpvro5tD7g',
+      thumbnail: '/images/fighters/faceOffThumbnails/grefg-vs-westcol-thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/ari-geli/
@@ -1036,6 +1080,10 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: 'rugHsv9JCSU',
       thumbnail: '/images/fighters/workoutThumbnails/arigeli-thumbnail.webp',
+    },
+    faceOff: {
+      videoID: 'qdS_XOZ5kyU',
+      thumbnail: '/images/fighters/faceOffThumbnails/alana-vs-arigeli-thumbnail.webp',
     },
   },
   {
@@ -1128,6 +1176,10 @@ export const FIGHTERS: Fighters[] = [
     workout: {
       videoID: 'FBjMQogPr-U',
       thumbnail: '/images/fighters/workoutThumbnails/tomas-thumbnail.webp',
+    },
+    faceOff: {
+      videoID: 'yhs5HYCLftg',
+      thumbnail: '/images/fighters/faceOffThumbnails/viruzz-vs-tomas-thumbnail.webp',
     },
   },
   {
@@ -1225,5 +1277,9 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube.com/embed/NbaFxQiuFek?si=1KpotzlUDqM1VYYQ&amp;clip=UgkxQadrp40FBpmDXn2yaSgdQJVUYUFaAqKO&amp;clipt=EOTJIhjL_CI',
       },
     ],
+    faceOff: {
+      videoID: 'NbaFxQiuFek',
+      thumbnail: '/images/fighters/faceOffThumbnails/andoni-vs-carlos-thumbnail.webp',
+    },
   },
 ] as const
