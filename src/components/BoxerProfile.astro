@@ -25,83 +25,81 @@ const details = [
 const country = countries.find((c) => c.id === fighter?.country)
 ---
 
-{fighter?.id && (
-  <section class="relative mt-5 flex w-full flex-col-reverse lg:min-h-screen lg:flex-row">
-  <!-- Boxeador perfil -->
-  <div
-    id="fighter-container"
-    class="relative mx-auto my-12 flex w-full max-w-2xl flex-col items-center justify-center gap-8 p-6 lg:max-w-6xl lg:flex-row lg:items-start"
-  >
-    <!-- Imagen del Boxeador -->
-    <div class="relative w-full max-w-sm flex-shrink-0">
-      <img
-        src={`/images/fighters/big/${fighter.id}.webp`}
-        alt={`Retrato de ${fighter?.name}, participante de La Velada V`}
-        class="mask-fade-bottom h-auto w-full object-contain transition-transform duration-700 hover:scale-105"
-        transition:name={`image-${fighter.id}`}
-      />
-    </div>
+{
+  fighter?.id && (
+    <section class="relative mt-5 flex w-full flex-col-reverse lg:min-h-screen lg:flex-row">
+      {/* Boxeador perfil */}
+      <div
+        id="fighter-container"
+        class="relative mx-auto my-12 flex w-full max-w-2xl flex-col items-center justify-center gap-8 p-6 lg:max-w-6xl lg:flex-row lg:items-start"
+      >
+        {/* Imagen del Boxeador */}
+        <div class="relative w-full max-w-sm flex-shrink-0">
+          <img
+            src={`/images/fighters/big/${fighter.id}.webp`}
+            alt={`Retrato de ${fighter?.name}, participante de La Velada V`}
+            class="mask-fade-bottom h-auto w-full object-contain transition-transform duration-700 hover:scale-105"
+            transition:name={`image-${fighter.id}`}
+          />
+        </div>
 
-    <!-- Datos del Boxeador -->
-    <div class="text-theme-seashell flex w-full flex-col items-start justify-start gap-6">
-      <!-- Nombre del Boxeador -->
-      <div class="flex flex-col items-start gap-2">
-        <span class="text-xl font-bold uppercase sm:text-2xl">{fighter.realName}</span>
-        <img
-          src={`/images/fighters/text/${fighter.id}.webp`}
-          alt={`Nombre de ${fighter.name} en texto decorativo`}
-          class="h-10 w-auto sm:h-12"
-          transition:name={`text-${fighter.id}`}
-        />
-      </div>
+        {/* Datos del Boxeador */}
+        <div class="text-theme-seashell flex w-full flex-col items-start justify-start gap-6">
+          {/* Nombre del Boxeador */}
+          <div class="flex flex-col items-start gap-2">
+            <span class="text-xl font-bold uppercase sm:text-2xl">{fighter.realName}</span>
+            <img
+              src={`/images/fighters/text/${fighter.id}.webp`}
+              alt={`Nombre de ${fighter.name} en texto decorativo`}
+              class="h-10 w-auto sm:h-12"
+              transition:name={`text-${fighter.id}`}
+            />
+          </div>
 
-      <!-- Biografía -->
-      {
-        fighter?.bio && (
-          <p class="text-base lowercase leading-relaxed sm:text-lg md:text-xl">{fighter.bio}</p>
-        )
-      }
+          {/* Biografía */}
+          {fighter?.bio && (
+            <p class="text-base lowercase leading-relaxed sm:text-lg md:text-xl">{fighter.bio}</p>
+          )}
 
-      <!-- Estadísticas -->
-      <div class="flex flex-col items-start gap-4">
-        <span class="text-xl font-bold uppercase sm:text-2xl">estadísticas</span>
-        <div class="flex flex-wrap gap-6">
-          {
-            details.map((detail) => (
-              <div class="flex flex-col gap-1.5 text-sm sm:text-base md:text-lg">
-                <span class="font-bold uppercase">{detail.label}</span>
-                <p class="lowercase">{detail.value}</p>
-              </div>
-            ))
-          }
+          {/* Estadísticas */}
+          <div class="flex flex-col items-start gap-4">
+            <span class="text-xl font-bold uppercase sm:text-2xl">estadísticas</span>
+            <div class="flex flex-wrap gap-6">
+              {details.map((detail) => (
+                <div class="flex flex-col gap-1.5 text-sm sm:text-base md:text-lg">
+                  <span class="font-bold uppercase">{detail.label}</span>
+                  <p class="lowercase">{detail.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Nacionalidad */}
+          {country?.id && (
+            <div class="flex items-center gap-4">
+              <img
+                src={country?.image.src}
+                alt={`Bandera de ${country?.name ?? 'Desconocido'}`}
+                class="h-auto w-14 sm:w-20 md:w-24"
+              />
+              <span class="text-xl font-bold uppercase sm:text-2xl">{fighter?.city}</span>
+            </div>
+          )}
+
+          {/* Redes */}
+          <div class="flex flex-wrap items-center justify-start gap-2 px-1 sm:px-4 lg:px-0">
+            {(fighter.socials || [])?.map((item) => (
+              <BoxerSocialLink social={item} />
+            ))}
+          </div>
         </div>
       </div>
-
-      <!-- Nacionalidad -->
-      {
-        country?.id && (
-          <div class="flex items-center gap-4">
-            <img
-              src={country?.image.src}
-              alt={`Bandera de ${country?.name ?? 'Desconocido'}`}
-              class="h-auto w-14 sm:w-20 md:w-24"
-            />
-            <span class="text-xl font-bold uppercase sm:text-2xl">{fighter?.city}</span>
-          </div>
-        )
-      }
-
-      <!-- Redes -->
-      <div class="flex flex-wrap items-center justify-start gap-2 px-1 sm:px-4 lg:px-0">
-        {(fighter.socials || [])?.map((item) => <BoxerSocialLink social={item} />)}
-      </div>
-    </div>
-  </div>
-</section>
-)}
+    </section>
+  )
+}
 
 <style>
-    .mask-image-fade-bottom {
+  .mask-image-fade-bottom {
     mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
   }
