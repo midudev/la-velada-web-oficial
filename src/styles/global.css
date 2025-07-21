@@ -17,11 +17,25 @@
 }
 
 @layer base {
-  /* Disable overscroll behavior */
   html,
   body {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    /* Disable overscroll behavior */
     overscroll-behavior: none;
     overscroll-behavior-y: none;
+  }
+
+  html {
+    scrollbar-gutter: stable;
+    background: var(--color-theme-raisin-black);
+  }
+
+  body {
+    background: #f19fca;
   }
 
   /* Webkit Browsers (Chrome, Safari, Edge) */
