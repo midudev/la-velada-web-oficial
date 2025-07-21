@@ -2,6 +2,7 @@
 import { FIGHTERS } from '@/consts/fighters'
 import LiteYouTube from './LiteYouTube.astro'
 import SectionTitle from './SectionTitle.astro'
+import BoxerQuoteCard from './BoxerQuoteCard.astro'
 
 interface Clip {
   text: string
@@ -33,6 +34,14 @@ const opponent = FIGHTERS.find((f) => f.id === fighter1?.versus) ?? null
           backgroundImage={fighter1?.faceOff?.thumbnail}
         />
       </div>
+
+      {fighter1?.clips && (
+        <div class="mt-4 grid w-full grid-cols-1 place-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {fighter1.clips.map((clip) => (
+            <BoxerQuoteCard clip={clip} fighter={fighter1?.name} />
+          ))}
+        </div>
+      )}
     </section>
   )
 }
