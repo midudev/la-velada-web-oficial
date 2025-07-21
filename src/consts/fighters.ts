@@ -446,6 +446,10 @@ export const FIGHTERS: Fighters[] = [
         url: 'https://www.youtube-nocookie.com/embed/aOKOUIx8mPU?si=wsz9otQaciQnFKsV&amp;clip=UgkxGw6p-ksOymoiuVHBCw5Mx5UUmZqrAiY8&amp;clipt=EJycBxjRwwc',
       },
     ],
+      workout: {
+      videoID: 'AGdrRSWJlFo',
+      thumbnail: '/images/fighters/workoutThumbnails/Gaspi-Thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/rivaldios/
