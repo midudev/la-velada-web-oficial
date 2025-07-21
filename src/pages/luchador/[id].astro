@@ -8,6 +8,7 @@ import { COMBATS } from '@/consts/combats'
 import CombatVersus from '@/components/CombatVersus.astro'
 import BoxerProfile from '@/components/BoxerProfile.astro'
 import BoxerFaceOff from '@/components/BoxerFaceOff.astro'
+import BoxerGallery from '@/components/BoxerGallery.astro'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/404')
@@ -50,6 +51,15 @@ export const getStaticPaths = () => {
   <!-- Video de Entrenamientos -->
   <section>
     {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
+  </section>
+
+  <!-- Galeria -->
+  <section>
+    <div
+      class="mx-auto my-16 flex max-w-6xl flex-col items-center justify-center px-6 lg:my-36 lg:px-14"
+    >
+      <BoxerGallery id={id} name={fighter.name} />
+    </div>
   </section>
   <!-- Fin de video de entrenamientos -->
 </Layout>
