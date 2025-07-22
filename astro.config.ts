@@ -9,6 +9,7 @@ import { manifest, seoConfig } from "./src/utils/seoConfig"
 
 // https://astro.build/config
 export default defineConfig({
+	base: "/2024/",
 	build: {
 		inlineStylesheets: "always",
 	},
