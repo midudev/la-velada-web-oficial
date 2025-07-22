@@ -8,7 +8,6 @@ const processPredictions = (predictions: any[]) => {
         percentage: number
         votes: number
       }) => {
-        console.log(prediction)
         document.dispatchEvent(
           new CustomEvent('update-prediction-bar', {
             detail: {
