@@ -73,12 +73,12 @@ const canonicalURL = new URL(determineCanonicalURL(), Astro.site)
 <meta name="robots" content="index, follow" />
 <meta name="googlebot" content="index, follow" />
 
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png" />
+<link rel="icon" type="image/svg+xml" href={new URL("/favicon.svg", Astro.url)} />
+<link rel="apple-touch-icon" href={new URL("/img/icons/apple-touch-icon.png", Astro.url)} />
 
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<meta name="msapplication-config" content="/browserconfig.xml" />
+<link rel="icon" type="image/svg+xml" href={new URL("/favicon.svg", Astro.url)} />
+<meta name="msapplication-config" content={new URL("/browserconfig.xml", Astro.url).toString()} />
 
-<script is:inline src="/registerSW.js"></script>
-<link rel="manifest" href="/manifest.webmanifest" />
+<script is:inline src={new URL("/registerSW.js", Astro.url).toString()}></script>
+<link rel="manifest" href={new URL("/manifest.webmanifest", Astro.url).toString()} />
 <RichResults />
