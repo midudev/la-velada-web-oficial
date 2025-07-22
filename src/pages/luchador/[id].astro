@@ -18,7 +18,6 @@ if (!fighter) return Astro.redirect('/404')
 
 const combat = COMBATS.find((combat) => combat.fighters.includes(id))
 const combatId = combat?.id
-console.log({ combatId })
 
 const description = `Biografía, estadísticas y clips de ${fighter.name}, participante de La Velada del Año V. ${fighter.bio.substring(0, 120)}${fighter.bio.length > 120 ? '...' : ''}`
 const canonical = `https://www.infolavelada.com/luchador/${id}`

@@ -466,6 +466,10 @@ export const FIGHTERS: Fighters[] = [
       videoID: 'aOKOUIx8mPU',
       thumbnail: '/images/fighters/faceOffThumbnails/perxitaa-vs-gaspi-thumbnail.webp',
     },
+      workout: {
+      videoID: 'AGdrRSWJlFo',
+      thumbnail: '/images/fighters/workoutThumbnails/Gaspi-Thumbnail.webp',
+    },
   },
   {
     // https://www.biografia.de/rivaldios/
