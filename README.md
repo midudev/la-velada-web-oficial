@@ -7,7 +7,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-<a href="https://www.infolavelada.com/">
+<a href="https://www.infolavelada.com/" target="_blank" rel="noopener noreferrer">
   <img width="300px" src="https://github.com/user-attachments/assets/9cb3d500-8b37-400a-a983-6a6d1a9356a2" alt="Logo" width="800" />
 </a>
 
