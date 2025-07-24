@@ -39,14 +39,16 @@ const getFighterById = (id: string) => {
                 'animate-delay-200 lg',
               ]}
             >
-              {fighters.map((fighter, fighterIndex) => (                
+              {fighters.map((fighter, fighterIndex) => (
                 <img
                   src={`/images/fighters/combat/${fighter}.webp`}
                   class:list={[
                     'mask-fade-bottom-quick absolute z-20 h-full w-auto object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
                     fighterIndex === 0 ? 'left-0' : 'right-0',
-                    (fighter === "perxitaa" || fighter === "viruzz") && 'max-sm:-translate-x-5 lg:-translate-x-5',
-                    (fighter === "gaspi" || fighter === "tomas" ) && 'max-sm:translate-x-5 lg:translate-x-5'
+                    (fighter === 'perxitaa' || fighter === 'viruzz') &&
+                      'max-sm:-translate-x-5 lg:-translate-x-5',
+                    (fighter === 'gaspi' || fighter === 'tomas') &&
+                      'max-sm:translate-x-5 lg:translate-x-5',
                   ]}
                   alt={`Imagen de ${fighter}`}
                   transition:name={`combat-img:${fighter}`}
@@ -94,5 +96,7 @@ const getFighterById = (id: string) => {
 <script>
   import { getPredictionsForPage } from '@/lib/get-predictions-for-page'
 
-  getPredictionsForPage()
+  document.addEventListener('astro:page-load', () => {
+    getPredictionsForPage()
+  })
 </script>
