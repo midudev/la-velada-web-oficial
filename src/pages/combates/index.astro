@@ -42,8 +42,8 @@ export const prerender = true
                   class:list={[
                     'combat group relative flex w-full',
                     index === 0
-                      ? 'animate-fade-in-up h-[40vh] sm:h-[50vh] lg:h-[70vh]'
-                      : 'animate-fade-in-left h-[40vh] sm:h-[50vh]',
+                      ? 'animate-fade-in-up h-[40vh] max-h-[700px] sm:h-[50vh] lg:h-[70vh]'
+                      : 'animate-fade-in-left h-[40vh] max-h-[400px] sm:h-[50vh]',
                     index % 2 === 0 && index !== 0
                       ? 'animate-fade-in-left'
                       : index !== 0
@@ -58,8 +58,10 @@ export const prerender = true
                       class:list={[
                         'mask-fade-bottom-quick absolute z-20 h-full w-auto object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
                         fighterIndex === 0 ? 'left-0' : 'right-0',
-                        (fighter === 'perxitaa' || fighter === 'viruzz') && 'max-sm:-translate-x-5 lg:-translate-x-5',
-                        (fighter === 'gaspi' || fighter === 'tomas') && 'max-sm:translate-x-5 lg:translate-x-5',
+                        (fighter === 'perxitaa' || fighter === 'viruzz') &&
+                          'max-sm:-translate-x-5 lg:-translate-x-5',
+                        (fighter === 'gaspi' || fighter === 'tomas') &&
+                          'max-sm:translate-x-5 lg:translate-x-5',
                       ]}
                       alt={`Imagen de ${fighter}`}
                       transition:name={`combat-img:${fighter}`}
