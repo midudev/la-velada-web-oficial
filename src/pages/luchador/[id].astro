@@ -1,18 +1,14 @@
 ---
 import Layout from '@/layouts/Layout.astro'
-
-import BoxerCard from '@/components/BoxerCard.astro'
-import BoxerClipDrawer from '@/components/BoxerClipDrawer.astro'
-import BoxerClipList from '@/components/BoxerClipList.astro'
-import BoxerGallery from '@/components/BoxerGallery.astro'
-import BoxerProfileCard from '@/components/BoxerProfileCard.astro'
 import BoxerWorkout from '@/components/BoxerWorkout.astro'
-import BoxerSocialLink from '@/components/BoxerSocialLink.astro'
 
 import { FIGHTERS } from '@/consts/fighters'
 import { fixedTitle } from '@/consts/pageTitles'
 import { COMBATS } from '@/consts/combats'
 import CombatVersus from '@/components/CombatVersus.astro'
+import BoxerProfile from '@/components/BoxerProfile.astro'
+import BoxerFaceOff from '@/components/BoxerFaceOff.astro'
+import BoxerGallery from '@/components/BoxerGallery.astro'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/404')
@@ -26,14 +22,6 @@ const combatId = combat?.id
 const description = `Biografía, estadísticas y clips de ${fighter.name}, participante de La Velada del Año V. ${fighter.bio.substring(0, 120)}${fighter.bio.length > 120 ? '...' : ''}`
 const canonical = `https://www.infolavelada.com/luchador/${id}`
 
-const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-})
-
-const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
-
 export const prerender = true
 
 export const getStaticPaths = () => {
@@ -44,93 +32,10 @@ export const getStaticPaths = () => {
 ---
 
 <Layout title={`${fighter.name} | ${fixedTitle}`} description={description} canonical={canonical}>
-  <section class="relative flex w-full flex-col-reverse lg:min-h-screen lg:flex-row">
-    <!-- Listado de Clips -->
-    <aside
-      class="group flex w-full flex-col items-center justify-center gap-y-32 text-balance px-8 pt-4 text-right lg:min-h-screen lg:max-w-xl lg:pt-24"
-    >
-      <BoxerClipList clips={fighter.clips} externalPlayer={false} />
+  <!-- Perfil del Boxeador -->
+  <BoxerProfile fighter={fighter} />
 
-      <div class="relative z-[101]">
-        <BoxerClipDrawer clips={fighter.clips} />
-      </div>
-    </aside>
-
-    <!-- Boxeador perfil -->
-    <div
-      class="relative z-10 flex w-full flex-col items-center justify-center pl-0 pr-0 lg:flex-row lg:items-start lg:pr-8"
-    >
-      <!-- Imagenes del boxeador -->
-      <div
-        class="lg:min-w-sm relative mt-8 flex h-[60vh] w-full items-center justify-center px-6 pt-24 lg:mt-0 lg:h-[80vh] lg:w-1/2 lg:px-2 lg:pt-32"
-      >
-        <img
-          src={`/images/fighters/big/${id}.webp`}
-          alt={`Retrato de ${fighter.name}, participante de La Velada V`}
-          class="mask-fade-bottom h-auto w-[400px] object-contain transition-transform duration-700 hover:scale-105"
-          transition:name={`image-${id}`}
-        />
-        <img
-          src={`/images/fighters/text/${id}.webp`}
-          alt={`Nombre de ${fighter.name} en texto decorativo`}
-          class="lg:bottom-34 absolute bottom-6 h-10 w-auto lg:h-16"
-          transition:name={`text-${id}`}
-        />
-      </div>
-      <!-- Fin de las imagenes del boxeador -->
-
-      <!-- Tarjeta del boxeador -->
-      <div
-        class="flex w-full max-w-xl flex-col items-center justify-center space-y-4 px-8 text-white lg:min-h-screen lg:w-1/2 lg:px-0"
-      >
-        <BoxerProfileCard fighter={fighter} birthDate={birthDate} />
-        {
-          opponent && (
-            <div class="animate-fade-in-up animate-delay-200 flex w-full items-center justify-center gap-4">
-              <img
-                alt={`Enfrentamiento entre ${fighter.name} y ${opponent?.name ?? 'su oponente'}`}
-                src="/images/versus.webp"
-                class="h-12 w-auto"
-              />
-              <BoxerCard
-                id={opponent.id}
-                versus={fighter.id}
-                name={opponent.name}
-                class="hover:scale-110"
-              />
-            </div>
-          )
-        }
-      </div>
-      <!-- Fin de la tarjeta del boxeador -->
-    </div>
-  </section>
-
-  {
-    fighter.bio && (
-      <section class="relative z-10 mx-auto mb-16 mt-10 max-w-6xl px-4 font-sans font-semibold lg:-mt-48 lg:px-10">
-        <div class="flex flex-col gap-8 lg:flex-row lg:gap-16">
-          {/* Columna izquierda: Biografía */}
-          <div class="gap-y flex flex-col justify-center gap-y-16 lg:w-1/2">
-            <p class="text-dark-magenta mx-auto w-full max-w-xl whitespace-pre-line text-pretty px-4 text-sm [text-transform:none] md:px-0 md:text-base lg:text-left lg:text-lg">
-              {fighter.bio}
-            </p>
-
-            <div class="flex flex-wrap justify-center gap-2 space-x-2 px-4 lg:px-0">
-              {(fighter.socials || [])?.map((item) => (
-                <BoxerSocialLink social={item} />
-              ))}
-            </div>
-          </div>
-          {/* Columna derecha: Galería */}
-          <div class="flex flex-col items-center justify-center lg:w-1/2">
-            <BoxerGallery id={id} name={fighter.name} />
-          </div>
-        </div>
-      </section>
-    )
-  }
-
+  <!-- Versus -->
   {
     combat && (
       <section class="mx-auto max-w-6xl px-4">
@@ -139,9 +44,21 @@ export const getStaticPaths = () => {
     )
   }
 
+  <!-- Cara a Cara -->
+  <BoxerFaceOff fighterId={fighter?.id} />
+
   <!-- Video de Entrenamientos -->
   <section>
     {fighter.workout && <BoxerWorkout workout={fighter.workout} />}
+  </section>
+
+  <!-- Galeria -->
+  <section>
+    <div
+      class="mx-auto my-16 flex max-w-6xl flex-col items-center justify-center px-6 lg:my-36 lg:px-14"
+    >
+      <BoxerGallery id={id} name={fighter.name} />
+    </div>
   </section>
   <!-- Fin de video de entrenamientos -->
 </Layout>
@@ -163,11 +80,6 @@ export const getStaticPaths = () => {
   }
   .stat-item:nth-child(4) {
     animation-delay: 0.4s;
-  }
-
-  .mask-image-fade-bottom {
-    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
   }
 
   @keyframes fadeIn {

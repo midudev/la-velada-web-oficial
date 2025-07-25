@@ -1,0 +1,47 @@
+---
+import { FIGHTERS } from '@/consts/fighters'
+import LiteYouTube from './LiteYouTube.astro'
+import SectionTitle from './SectionTitle.astro'
+import BoxerQuoteCard from './BoxerQuoteCard.astro'
+
+interface Clip {
+  text: string
+  url: string
+}
+
+interface BoxerFaceOffProps {
+  fighterId: string
+}
+
+const { fighterId = null } = Astro.props as BoxerFaceOffProps
+
+const hasFaceOff = !!fighterId
+
+const fighter1 = FIGHTERS.find((f) => f.id === fighterId) ?? null
+const opponent = FIGHTERS.find((f) => f.id === fighter1?.versus) ?? null
+---
+
+{
+  hasFaceOff && (
+    <section class="mx-auto my-16 max-w-6xl px-2 lg:my-36 lg:px-10">
+      <div class="text-dark-magenta text-center">
+        <SectionTitle title="Cara a Cara" />
+        <p class="mt-2 text-xl uppercase">{`${fighter1?.name} vs ${opponent?.name} - previa del combate`}</p>
+      </div>
+      <div class="mt-4 px-4 pt-2">
+        <LiteYouTube
+          videoId={fighter1?.faceOff?.videoID as string}
+          backgroundImage={fighter1?.faceOff?.thumbnail}
+        />
+      </div>
+
+      {fighter1?.clips && (
+        <div class="mt-4 grid w-full grid-cols-1 place-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {fighter1.clips.map((clip) => (
+            <BoxerQuoteCard clip={clip} fighter={fighter1?.name} />
+          ))}
+        </div>
+      )}
+    </section>
+  )
+}
