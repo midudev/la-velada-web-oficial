@@ -1,0 +1,82 @@
+---
+// Componente para mostrar el stream de Ibai cuando esté en directo
+---
+
+<div id="ibai-stream-container" class="hidden">
+  <div class="relative z-10 max-w-6xl w-full mx-auto p-8 pt-24">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+        <h2 class="text-white text-xl font-bold">¡En directo!</h2>
+      </div>
+      <div id="uptime-display" class="text-white text-sm opacity-80"></div>
+    </div>
+    
+    <div id="twitch-container" class="aspect-video bg-black rounded-lg overflow-hidden">
+      <!-- El iframe se cargará dinámicamente solo cuando esté en directo -->
+    </div>
+    
+    <div class="mt-4 text-center">
+      <a 
+        href="https://twitch.tv/ibai" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="inline-flex items-center px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-lg transition-colors duration-200"
+      >
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+        </svg>
+        Ver en Twitch
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    // Función para verificar si Ibai está en directo
+    async function checkIbaiStatus() {
+      try {
+        const response = await fetch('https://midudev-apis.midudev.workers.dev/uptime/ibai');
+        const data = await response.json();
+        
+        const container = document.getElementById('ibai-stream-container');
+        const uptimeDisplay = document.getElementById('uptime-display');
+        const twitchContainer = document.getElementById('twitch-container');
+        
+        if (data.online) {
+          // Mostrar el stream si está en línea
+          container?.classList.remove('hidden');
+          
+          // Crear el iframe solo si no existe y está en directo
+          if (twitchContainer && !twitchContainer.querySelector('iframe')) {
+            const iframe = document.createElement('iframe');
+            iframe.id = 'twitch-embed';
+            iframe.src = 'https://player.twitch.tv/?channel=ibai&parent=localhost&parent=infolavelada.com&parent=www.infolavelada.com&autoplay=true&muted=false';
+            iframe.height = '100%';
+            iframe.width = '100%';
+            iframe.allowFullscreen = true;
+            iframe.className = 'w-full h-full';
+            twitchContainer.appendChild(iframe);
+          }
+        } else {
+          // Ocultar el stream si no está en línea
+          container?.classList.add('hidden');
+          
+          // Remover el iframe para liberar recursos
+          if (twitchContainer) {
+            twitchContainer.innerHTML = '';
+          }
+        }
+      } catch (error) {
+        console.error('Error al verificar el estado de Ibai:', error);
+      }
+    }
+      
+    // Verificar el estado al cargar la página
+    checkIbaiStatus();
+    
+    // Verificar el estado cada 2 minutos
+    setInterval(checkIbaiStatus, 120000);
+  })
+</script>
