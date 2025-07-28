@@ -9,6 +9,8 @@ import { combate } from '@/consts/pageTitles'
 import Layout from '@/layouts/Layout.astro'
 import CombatVersus from '@/components/CombatVersus.astro'
 import BoxerCard from '@/components/BoxerCard.astro'
+import LiteYouTube from '@/components/LiteYouTube.astro'
+import SectionTitle from '@/components/SectionTitle.astro'
 
 const { id } = Astro.params
 const combat = COMBATS.find((c) => c.id === id)
@@ -24,6 +26,14 @@ const canonical = `https://www.infolavelada.com/combates/${id}`
 
 const fighter1Country = countries.find((c) => c.id === fighter1?.country)
 const fighter2Country = countries.find((c) => c.id === fighter2?.country)
+
+// Extraer ID del video de YouTube si existe (acepta URL completa o solo ID)
+const videoId = combat?.video ? 
+  (combat.video.length === 11 ? combat.video : combat.video.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1]) : null
+
+// Debug: verificar que se extrae el ID correctamente
+console.log('Combat video URL:', combat?.video)
+console.log('Extracted video ID:', videoId)
 
 export const getStaticPaths = (() => {
   return COMBATS.map((c) => ({
@@ -41,6 +51,8 @@ export const prerender = true
 >
   <section data-combat-id={id} class="relative mx-auto mt-24 min-h-screen max-w-6xl p-6">
     <CombatVersus id={id} />
+
+ 
 
     <!-- Informacion -->
     <div class="mx-auto mt-16 flex w-full max-w-2xl flex-col gap-8 p-3">
@@ -96,6 +108,7 @@ export const prerender = true
                 class="scale-125"
               />
             </div>
+            
             <!-- Características -->
             <div class="space-y-2 text-center text-sm font-bold text-black md:text-xl">
               <p>{fighter2?.age} años</p>
@@ -107,11 +120,28 @@ export const prerender = true
                 alt={`Bandera de ${fighter2Country?.name ?? 'Desconocido'}`}
                 class="md:w-25 inline-flex h-auto w-16"
               />
+   
             </div>
+                    
           </div>
+  
         </div>
+        
       </div>
+      
     </div>
+    <!-- Video del combate si está disponible -->
+    {videoId && (
+      <div class="mx-auto mt-16 max-w-4xl px-5">
+        <SectionTitle class="pb-8" title={` ${combat?.title}`} />
+        <LiteYouTube
+          videoId={videoId}
+          title={combat?.title || 'Combate'}
+          backgroundImage={`/images/combates/${combat?.id}.webp`}
+          withShadowImage={true}
+        />
+      </div>
+    )}
   </section>
   <style>
     .custom-clip {
