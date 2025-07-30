@@ -1,16 +1,19 @@
 ---
+import LiteYouTube from './LiteYouTube.astro'
+
 interface Props {
   name: string
-  image: string
+  image?: string
+  url: string
 }
 
-const { name, image } = Astro.props
+const { name, image, url } = Astro.props
 ---
 
 <div
-  class="max-w-sm rounded-lg bg-gradient-to-br from-[#01315e] to-white p-6 text-gray-800 shadow-lg"
+  class="max-w-lg rounded-lg bg-gradient-to-br from-[#01315e] to-white p-6 text-gray-800 shadow-lg"
 >
-  <img src={image} alt={name} class="mb-2 rounded-md" />
+  <LiteYouTube videoId={url} title={name} backgroundImage={image} withShadowImage={true} />
 
   <h2 class="mb-2 rounded-md bg-black px-4 py-2 text-center text-xl font-bold text-white">
     {name}
