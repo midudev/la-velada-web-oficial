@@ -19,7 +19,7 @@ export const prerender = true
 <Layout title={combates} description={description} canonical={canonical}>
   <section class="min-h-screen w-full">
     <h2
-      class="animate-fade-in animate-delay-300 bg-gradient-to-r from-sky-100 to-pink-300 bg-clip-text pt-24 text-center text-2xl font-bold text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
+      class="animate-scale-in animate-delay-300 bg-gradient-to-r from-sky-100 to-pink-300 bg-clip-text pt-24 text-center text-2xl font-bold text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
     >
       LOS COMBATES
     </h2>
@@ -42,31 +42,55 @@ export const prerender = true
                   class:list={[
                     'combat group relative flex w-full',
                     index === 0
-                      ? 'animate-fade-in-up h-[40vh] max-h-[700px] sm:h-[50vh] lg:h-[70vh]'
-                      : 'animate-fade-in-left h-[40vh] max-h-[400px] sm:h-[50vh]',
+                      ? 'animate-scale-in h-[40vh] max-h-[700px] sm:h-[50vh] lg:h-[70vh]'
+                      : 'animate-scale-in h-[40vh] max-h-[400px] sm:h-[50vh]',
                     index % 2 === 0 && index !== 0
-                      ? 'animate-fade-in-left'
+                      ? 'animate-scale-in'
                       : index !== 0
-                        ? 'animate-fade-in-right'
+                        ? 'animate-scale-in'
                         : '',
                     'animate-delay-200 lg',
                   ]}
                 >
-                  {fighters.map((fighter, fighterIndex) => (
-                    <img
-                      src={`/images/fighters/combat/${fighter}.webp`}
-                      class:list={[
-                        'mask-fade-bottom-quick absolute z-20 h-full w-auto object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
-                        fighterIndex === 0 ? 'left-0' : 'right-0',
-                        (fighter === 'perxitaa' || fighter === 'viruzz') &&
-                          'max-sm:-translate-x-5 lg:-translate-x-5',
-                        (fighter === 'gaspi' || fighter === 'tomas') &&
-                          'max-sm:translate-x-5 lg:translate-x-5',
-                      ]}
-                      alt={`Imagen de ${fighter}`}
-                      transition:name={`combat-img:${fighter}`}
-                    />
-                  ))}
+                  {fighters.map((fighter, fighterIndex) => {
+                    const combat = COMBATS.find((c) => c.id === id)
+                    const isWinner = combat?.winner === fighter
+
+                    return (
+                      <div
+                        class:list={[
+                          'absolute z-20 flex h-full flex-col items-center',
+                          fighterIndex === 0 ? 'left-0' : 'right-0',
+                        ]}
+                      >
+                        {isWinner && (
+                          <div
+                            class:list={[
+                              'absolute top-4 z-30 rounded-lg bg-gradient-to-r from-yellow-400 to-yellow-600 px-3 py-1 shadow-lg',
+                              'animate-scale-in animate-delay-500 animate-scale-subtle',
+                            ]}
+                          >
+                            <span class="text-xs font-black tracking-wider text-black drop-shadow-sm">
+                              VICTORIA
+                            </span>
+                          </div>
+                        )}
+                        <img
+                          src={`/images/fighters/combat/${fighter}.webp`}
+                          class:list={[
+                            'mask-fade-bottom-quick h-full w-auto object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
+                            (fighter === 'perxitaa' || fighter === 'viruzz') &&
+                              'max-sm:-translate-x-5 lg:-translate-x-5',
+                            (fighter === 'gaspi' || fighter === 'tomas') &&
+                              'max-sm:translate-x-5 lg:translate-x-5',
+                            isWinner && 'contrast-110 brightness-110',
+                          ]}
+                          alt={`Imagen de ${fighter}`}
+                          transition:name={`combat-img:${fighter}`}
+                        />
+                      </div>
+                    )
+                  })}
 
                   <div class="-skew-4 absolute -bottom-20 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
                     <img
@@ -117,6 +141,37 @@ export const prerender = true
 <style>
   .combat {
     animation-timeline: view(block 100% 1%);
+  }
+
+  /* Animación scale-in sutil */
+  @keyframes scale-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.6s ease-out forwards;
+  }
+
+  /* Animación scale continua sutil para Victoria */
+  @keyframes scale-subtle {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .animate-scale-subtle {
+    animation: scale-subtle 2s ease-in-out infinite;
   }
 
   /* Grid responsivo para combates */
