@@ -7,7 +7,11 @@ import { ARTISTS } from '@/consts/artists'
 <section class="flex w-full flex-col place-items-center px-2 py-48" aria-label="artistas">
   <SectionTitle title="Artistas" />
 
-  <div class="flex w-full flex-wrap justify-center gap-4">
-    {ARTISTS.map((artist) => <ArtistCard name={artist.name} image={artist.image} />)}
+  <div class="grid w-full grid-cols-1 items-center justify-center gap-4 p-20 md:grid-cols-2">
+    {
+      ARTISTS.map((artist) => (
+        <ArtistCard name={artist.name} image={artist.image} url={artist.url} />
+      ))
+    }
   </div>
 </section>
