@@ -2,19 +2,9 @@ import type { Artist } from '@/types/artists'
 
 export const ARTISTS: Artist[] = [
   {
-    id: 'aitana',
-    name: 'Aitana',
-    image: '/images/artists/aitana.webp',
-  },
-  {
-    id: 'delarose',
-    name: 'Delarose',
-    image: '/images/artists/delarose.webp',
-  },
-  {
-    id: 'eladiocarrion',
-    name: 'Eladio Carrion',
-    image: '/images/artists/eladiocarrion.webp',
+    id: 'melendi',
+    name: 'Melendi',
+    image: '/images/artists/melendi.webp',
   },
   {
     id: 'grupofrontera',
@@ -27,9 +17,19 @@ export const ARTISTS: Artist[] = [
     image: '/images/artists/losdelrio.webp',
   },
   {
-    id: 'melendi',
-    name: 'Melendi',
-    image: '/images/artists/melendi.webp',
+    id: 'delarose',
+    name: 'Delarose',
+    image: '/images/artists/delarose.webp',
+  },
+  {
+    id: 'eladiocarrion',
+    name: 'Eladio Carrion',
+    image: '/images/artists/eladiocarrion.webp',
+  },
+  {
+    id: 'aitana',
+    name: 'Aitana',
+    image: '/images/artists/aitana.webp',
   },
   {
     id: 'myketowers',
