@@ -51,148 +51,124 @@ export const prerender = false
     <h2
       class="mt-10 bg-gradient-to-r from-sky-100 to-pink-300 bg-clip-text text-center text-2xl font-bold text-transparent drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
     >
-      PARTICIPA EN LA PORRA
+      RESULTADOS DE LA PORRA
     </h2>
 
+    <div
+      class="mt-4 rounded-lg bg-red-600/80 px-4 py-2 text-center text-sm text-white backdrop-blur-sm"
+    >
+      ¡⏰ La votación ha finalizado!
+    </div>
+
     {
-      user === undefined || user === null ? (
-        <div class="mt-8 flex flex-col items-center gap-4">
+      user && (
+        <div class="mt-4 flex items-center gap-4 rounded-lg bg-black/30 px-6 py-4 shadow-lg backdrop-blur-sm">
+          {user.image && (
+            <img src={user.image} alt={`Avatar de ${user.name}`} class="size-14 rounded-full" />
+          )}
+          <div class="flex flex-col lowercase">
+            <span class="text-white">¡Hola, {user.name}!</span>
+            <span class="text-sm text-white/80">Estos fueron tus votos en la porra</span>
+          </div>
           <button
-            id="twitch-login-btn"
-            class="group relative mx-auto flex w-fit cursor-pointer items-center gap-3 overflow-hidden rounded-lg bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-4 text-lg font-semibold uppercase text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-purple-500 hover:to-purple-700 hover:shadow-xl"
+            id="logout-btn"
+            class="ml-4 cursor-pointer rounded-lg bg-red-700 px-4 py-2 text-sm font-medium lowercase text-white transition-all duration-300 hover:scale-105 hover:bg-red-800"
           >
-            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
-            </svg>
-            <span>Iniciar sesión con Twitch</span>
+            Cerrar sesión
           </button>
-          <p class="text-shadow-md z-10 max-w-md text-center text-xs text-white">
-            Necesitas iniciar sesión con tu cuenta de Twitch para participar en la porra oficial
-          </p>
-          <img
-            src="/images/porra.webp"
-            alt="Porra con todos los luchadores de La Velada del Año V"
-            class="z-10 w-full max-w-2xl rounded"
-          />
-        </div>
-      ) : (
-        <div class="mt-8 flex w-full flex-col items-center gap-8">
-          <div class="flex items-center gap-4 rounded-lg bg-black/30 px-6 py-4 shadow-lg backdrop-blur-sm">
-            {user.image && (
-              <img src={user.image} alt={`Avatar de ${user.name}`} class="size-14 rounded-full" />
-            )}
-            <div class="flex flex-col lowercase">
-              <span class="text-white">¡Hola, {user.name}!</span>
-              <span class="text-sm text-white/80">Elige quién ganará cada combate</span>
-            </div>
-            <button
-              id="logout-btn"
-              class="ml-4 cursor-pointer rounded-lg bg-red-700 px-4 py-2 text-sm font-medium lowercase text-white transition-all duration-300 hover:scale-105 hover:bg-red-800"
-            >
-              Cerrar sesión
-            </button>
-          </div>
-
-          <div class="flex w-full flex-col items-center text-center">
-            <div
-              id="combats-container"
-              class="relative mx-auto mb-24 mt-10 grid max-w-7xl grid-cols-1 gap-4 p-6 md:gap-8"
-            >
-              {COMBATS.toReversed().map(({ id, number, fighters, title }, index) => (
-                <article
-                  class:list={['inline-block', index === 0 ? 'col-span-1' : 'md:col-span-1']}
-                >
-                  <div
-                    class:list={[
-                      'combat relative flex w-full',
-                      index === 0 ? 'h-[50vh] sm:h-[60vh] md:h-[70vh]' : 'h-[40vh] sm:h-[50vh]',
-                      index % 2 === 0 && index !== 0 ? '' : index !== 0 ? '' : '',
-                      'animate-delay-200 lg',
-                    ]}
-                  >
-                    {fighters.map((fighter, fighterIndex) => {
-                      // Verificar si el usuario ya votó en este combate
-                      const userVoteForCombat = userVotes.find((vote) => vote.combat_id === id)
-                      const hasUserVoted = userVoteForCombat !== undefined
-                      const isUserVoteForThisFighter = userVoteForCombat?.fighter_id === fighter
-
-                      return (
-                        <button
-                          class:list={[
-                            'fighter-vote-btn group relative z-20 flex size-96 h-full w-1/2 cursor-pointer flex-col items-center transition-all duration-300',
-                          ]}
-                          data-combat-id={id}
-                          data-fighter-id={fighter}
-                          data-fighter-index={fighterIndex}
-                          data-user-vote={isUserVoteForThisFighter}
-                          data-user-has-voted={hasUserVoted}
-                        >
-                          <img
-                            src={`/images/fighters/combat/${fighter}.webp`}
-                            class:list={[
-                              'mask-fade-bottom group-hover:contrast-110 size-96 h-full w-full object-contain object-bottom transition-all duration-300 group-hover:brightness-110',
-                            ]}
-                            alt={`Imagen de ${fighter}`}
-                            transition:name={`combat-img:${fighter}`}
-                          />
-
-                          <div
-                            class:list={[
-                              'fighter-actual-vote pointer-events-none absolute bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-green-600 px-2 py-1 text-[10px] font-bold uppercase text-white opacity-0 shadow-lg transition-opacity duration-300',
-                            ]}
-                          >
-                            ¡Tu voto actual!
-                          </div>
-
-                          {/* Botón de votación visual */}
-                          <span
-                            class:list={[
-                              'fighter-vote-btn-text absolute bottom-4 left-1/2 z-40 -translate-x-1/2 transform cursor-pointer rounded-lg bg-gradient-to-r from-purple-600 to-purple-800 px-2 py-3 text-[10px] font-semibold uppercase text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:from-purple-500 group-hover:to-purple-700 group-hover:shadow-xl md:text-sm',
-                            ]}
-                            data-combat-id={id}
-                            data-fighter-id={fighter}
-                            data-fighter-index={fighterIndex}
-                          >
-                            <span>Votar por {fighter}</span>
-                          </span>
-                        </button>
-                      )
-                    })}
-
-                    <div class="pointer-events-none absolute bottom-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform">
-                      <img
-                        src={`/images/fighters/combat/${fighters[0]}-vs-${fighters[1]}.webp`}
-                        class:list={['transform-3d z-50', 'h-40 object-contain md:h-64']}
-                        alt={`${fighters[0]} contra ${fighters[1]}`}
-                        transition:name={`vs:${fighters[0]}-${fighters[1]}`}
-                      />
-                    </div>
-                  </div>
-                  <div class="relative mt-24 block">
-                    <PredictionBar
-                      disableLink={true}
-                      combatId={id}
-                      overlay={true}
-                      fighter1={{
-                        id: FIGHTERS.find((f) => f.id === fighters[0])?.id || '',
-                        name: FIGHTERS.find((f) => f.id === fighters[0])?.name || '',
-                        percentage: 60,
-                      }}
-                      fighter2={{
-                        id: FIGHTERS.find((f) => f.id === fighters[1])?.id || '',
-                        name: FIGHTERS.find((f) => f.id === fighters[1])?.name || '',
-                        percentage: 40,
-                      }}
-                      totalVotes={100}
-                    />
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
         </div>
       )
     }
+
+    <div class="flex w-full flex-col items-center text-center">
+      <div
+        id="combats-container"
+        class="relative mx-auto mb-24 mt-10 grid max-w-7xl grid-cols-1 gap-4 p-6 md:gap-8"
+      >
+        {
+          COMBATS.toReversed().map(({ id, number, fighters, title }, index) => (
+            <article class:list={['inline-block', index === 0 ? 'col-span-1' : 'md:col-span-1']}>
+              <div
+                class:list={[
+                  'combat relative flex w-full',
+                  index === 0 ? 'h-[50vh] sm:h-[60vh] md:h-[70vh]' : 'h-[40vh] sm:h-[50vh]',
+                  index % 2 === 0 && index !== 0 ? '' : index !== 0 ? '' : '',
+                  'animate-delay-200 lg',
+                ]}
+              >
+                {fighters.map((fighter, fighterIndex) => {
+                  // Verificar si el usuario ya votó en este combate (solo si está autenticado)
+                  const userVoteForCombat = user
+                    ? userVotes.find((vote) => vote.combat_id === id)
+                    : undefined
+                  const hasUserVoted = userVoteForCombat !== undefined
+                  const isUserVoteForThisFighter = userVoteForCombat?.fighter_id === fighter
+
+                  return (
+                    <div
+                      class:list={[
+                        'fighter-result group relative z-20 flex size-96 h-full w-1/2 flex-col items-center transition-all duration-300',
+                      ]}
+                      data-combat-id={id}
+                      data-fighter-id={fighter}
+                      data-fighter-index={fighterIndex}
+                      data-user-vote={isUserVoteForThisFighter}
+                      data-user-has-voted={hasUserVoted}
+                    >
+                      <img
+                        src={`/images/fighters/combat/${fighter}.webp`}
+                        class:list={[
+                          'mask-fade-bottom group-hover:contrast-110 size-96 h-full w-full object-contain object-bottom transition-all duration-300 group-hover:brightness-110',
+                        ]}
+                        alt={`Imagen de ${fighter}`}
+                        transition:name={`combat-img:${fighter}`}
+                      />
+
+                      {user && (
+                        <div
+                          class:list={[
+                            'fighter-user-vote pointer-events-none absolute bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-green-600 px-2 py-1 text-[10px] font-bold uppercase text-white opacity-0 shadow-lg transition-opacity duration-300',
+                          ]}
+                        >
+                          ¡Tu voto!
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+
+                <div class="pointer-events-none absolute bottom-0 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform">
+                  <img
+                    src={`/images/fighters/combat/${fighters[0]}-vs-${fighters[1]}.webp`}
+                    class:list={['transform-3d z-50', 'h-40 object-contain md:h-64']}
+                    alt={`${fighters[0]} contra ${fighters[1]}`}
+                    transition:name={`vs:${fighters[0]}-${fighters[1]}`}
+                  />
+                </div>
+              </div>
+              <div class="relative mt-24 block">
+                <PredictionBar
+                  disableLink={true}
+                  combatId={id}
+                  overlay={true}
+                  fighter1={{
+                    id: FIGHTERS.find((f) => f.id === fighters[0])?.id || '',
+                    name: FIGHTERS.find((f) => f.id === fighters[0])?.name || '',
+                    percentage: 60,
+                  }}
+                  fighter2={{
+                    id: FIGHTERS.find((f) => f.id === fighters[1])?.id || '',
+                    name: FIGHTERS.find((f) => f.id === fighters[1])?.name || '',
+                    percentage: 40,
+                  }}
+                  totalVotes={100}
+                />
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
   </section>
 </Layout>
 
@@ -202,17 +178,6 @@ export const prerender = false
   import confetti from 'canvas-confetti'
 
   document.addEventListener('astro:page-load', async () => {
-    const loginBtn = document.getElementById('twitch-login-btn')
-    if (loginBtn) {
-      loginBtn.addEventListener('click', async () => {
-        try {
-          await signIn('twitch')
-        } catch (error) {
-          console.error('Error al iniciar sesión:', error)
-        }
-      })
-    }
-
     const logoutBtn = document.getElementById('logout-btn')
     if (logoutBtn) {
       logoutBtn.addEventListener('click', async () => {
@@ -226,151 +191,19 @@ export const prerender = false
 
     getPredictionsForPage()
 
-    // Funcionalidad de votación
-    const voteButtons = document.querySelectorAll('.fighter-vote-btn')
-
-    voteButtons.forEach((button) => {
-      button.addEventListener('click', async (e) => {
-        e.preventDefault()
-
-        // Verificar si el botón está deshabilitado
-        if ((button as HTMLButtonElement).disabled) {
-          return
-        }
-
-        const combatId = button.getAttribute('data-combat-id')
-        const fighterId = button.getAttribute('data-fighter-id')
-
-        if (!combatId || !fighterId) return
-
-        // Guardar el estado original antes de modificar
-        const originalUserVote = button.getAttribute('data-user-vote')
-        const originalUserHasVoted = button.getAttribute('data-user-has-voted')
-        const originalText = button.querySelector('span')?.textContent
-
-        try {
-          // Estado de carga: quitar todos los atributos data para quitar los colores
-          button.removeAttribute('data-user-vote')
-          button.removeAttribute('data-user-has-voted')
-
-          // Deshabilitar el botón durante la votación
-          ;(button as HTMLButtonElement).disabled = true
-          button.classList.add('opacity-50')
-
-          // Actualizar texto del botón
-          const buttonText = button.querySelector('span')
-          buttonText!.textContent = 'Guardando voto...'
-
-          // Llamada a la API
-          const response = await fetch('/api/predictions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              combat_id: combatId,
-              fighter_id: fighterId,
-            }),
-          })
-
-          if (response.ok) {
-            // Actualizar los atributos data para reflejar el nuevo estado
-            button.setAttribute('data-user-vote', 'true')
-            button.setAttribute('data-user-has-voted', 'true')
-
-            // Actualizar el otro luchador del mismo combate
-            const combatContainer = button.closest('.combat')
-            if (combatContainer) {
-              const otherButton = combatContainer.querySelector(
-                `.fighter-vote-btn[data-fighter-id]:not([data-fighter-id="${fighterId}"])`,
-              ) as HTMLElement
-              if (otherButton) {
-                // El otro luchador ya no es el voto del usuario, pero el usuario sí ha votado
-                otherButton.setAttribute('data-user-vote', 'false')
-                otherButton.setAttribute('data-user-has-voted', 'true')
-              }
-            }
-
-            // Obtener la posición de la imagen del luchador para el confetti
-            const fighterImage = button.querySelector('img') as HTMLImageElement
-            const imageRect = fighterImage.getBoundingClientRect()
-            const startX = imageRect.left + imageRect.width / 2
-            const startY = imageRect.top + imageRect.height / 2
-
-            // Detect if button clicked is the first one
-            const isFirstButton = button.getAttribute('data-fighter-index') === '0'
-
-            confetti({
-              particleCount: 200,
-              origin: {
-                x: startX / window.innerWidth,
-                y: startY / window.innerHeight,
-              },
-              angle: isFirstButton ? 45 : 135,
-              scalar: 1,
-              spread: 100,
-              startVelocity: 50,
-              gravity: 0.6,
-              ticks: 200,
-            })
-
-            // Hacer scroll al siguiente combate después de 1 segundo
-            setTimeout(() => {
-              const currentCombat = button.closest('.combat')
-              if (!currentCombat) return
-
-              const nextCombat =
-                currentCombat.parentElement?.nextElementSibling?.querySelector('.combat')
-
-              if (!nextCombat) return
-              nextCombat.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-              })
-            }, 1000)
-          } else {
-            throw new Error('Error al registrar voto')
-          }
-        } catch (error) {
-          console.error('Error al votar:', error)
-
-          // Restaurar el estado original en caso de error
-          if (originalUserVote) {
-            button.setAttribute('data-user-vote', originalUserVote)
-          } else {
-            button.removeAttribute('data-user-vote')
-          }
-
-          if (originalUserHasVoted) {
-            button.setAttribute('data-user-has-voted', originalUserHasVoted)
-          } else {
-            button.removeAttribute('data-user-has-voted')
-          }
-
-          // Mostrar mensaje de error
-          alert('Error al registrar tu voto. Inténtalo de nuevo.')
-        } finally {
-          ;(button as HTMLButtonElement).disabled = false
-          button.classList.remove('opacity-50')
-
-          // Restaurar texto original
-          if (originalText && button.querySelector('span')) {
-            button.querySelector('span')!.textContent = originalText
-          }
-        }
-      })
-    })
+    // La votación ha finalizado - solo mostrar resultados
+    console.log('La votación ha finalizado. Solo se muestran los resultados.')
   })
 </script>
 
 <style>
-  /* Estilos basados en atributos data- */
+  /* Estilos para resultados de la porra (votación cerrada) */
 
   /* Luchador votado por el usuario */
-  .fighter-vote-btn[data-user-vote='true'] {
+  .fighter-result[data-user-vote='true'] {
     pointer-events: none;
 
-    & .fighter-actual-vote {
+    & .fighter-user-vote {
       opacity: 1;
     }
 
@@ -378,23 +211,18 @@ export const prerender = false
       filter: sepia(100%) saturate(200%) hue-rotate(60deg);
     }
 
-    & span {
+    & .fighter-info-text {
       display: none;
     }
   }
 
   /* Luchador no votado cuando el usuario ya votó en este combate */
-  .fighter-vote-btn[data-user-has-voted='true']:not([data-user-vote='true']) img {
+  .fighter-result[data-user-has-voted='true']:not([data-user-vote='true']) img {
     filter: sepia(100%) saturate(300%) hue-rotate(300deg) brightness(0.4) contrast(1);
   }
 
-  /* Botón deshabilitado - estilo gris */
-  .fighter-vote-btn[data-user-has-voted='true']:not([data-user-vote='true']) span {
-    background: rgb(107 114 128) !important;
-  }
-
-  .fighter-vote-btn:not(:hover):has(~ .fighter-vote-btn:hover),
-  .fighter-vote-btn:hover ~ .fighter-vote-btn {
-    filter: grayscale(100%);
+  /* Estilos para elementos sin votación del usuario */
+  .fighter-result:not([data-user-has-voted='true']) .fighter-info-text {
+    background: rgb(75 85 99) !important;
   }
 </style>
