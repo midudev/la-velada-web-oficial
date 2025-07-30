@@ -43,4 +43,9 @@ export const ARTISTS: Artist[] = [
     image: '/images/artists/myketowers.webp',
     url: 'v1GO9iRuQug',
   },
+  {
+    id: 'deiv',
+    name: 'Deiv',
+    url: 'L3ur49etTPc',
+  },
 ]
