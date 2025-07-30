@@ -1,0 +1,373 @@
+---
+import SectionTitle from '@/components/SectionTitle.astro'
+import { photos } from '@/consts/lavelad'
+
+// Fotos de La Velada
+---
+
+<section class="flex w-full flex-col place-items-center px-2 py-48" aria-label="fotos de la velada">
+  <SectionTitle title="Fotos de La Velada" />
+
+  <!-- Carrusel de Fotos -->
+  <div class="relative w-full max-w-7xl mx-auto">
+    <!-- Contenedor principal del carrusel -->
+    <div class="carousel-container overflow-hidden rounded-2xl shadow-2xl">
+      <div class="carousel-track flex transition-transform duration-700 ease-in-out" id="carousel-track">
+        {photos.map((photo) => (
+          <div class="carousel-slide flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 p-3">
+            <div class="relative group cursor-pointer overflow-hidden rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+              <img 
+                src={photo.src} 
+                alt={photo.alt}
+                class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110"
+                loading="lazy"
+              />
+              <!-- Overlay con efecto hover -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div class="absolute bottom-4 left-4 text-white">
+                  <p class="text-sm font-medium">{photo.alt}</p>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Botones de navegación -->
+    <button 
+      class="carousel-btn carousel-prev absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-4 rounded-full transition-all duration-300 z-10 shadow-lg backdrop-blur-sm border border-white/20"
+      aria-label="Foto anterior"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
+    
+    <button 
+      class="carousel-btn carousel-next absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-4 rounded-full transition-all duration-300 z-10 shadow-lg backdrop-blur-sm border border-white/20"
+      aria-label="Foto siguiente"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </button>
+
+    <!-- Indicadores de puntos -->
+    <div class="flex justify-center mt-8 space-x-3">
+      {Array.from({ length: Math.ceil(photos.length / 3) }, (_, index) => (
+        <button 
+          class="carousel-dot w-4 h-4 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 border-2 border-white/30"
+          data-slide={index}
+          aria-label={`Ir a la página ${index + 1}`}
+        ></button>
+      ))}
+    </div>
+
+    <!-- Contador de fotos -->
+    <div class="text-center mt-4">
+      <span class="carousel-counter text-white/80 text-sm font-medium bg-black/30 px-4 py-2 rounded-full backdrop-blur-sm">
+        <span id="current-slide">1</span> / <span id="total-slides">{Math.ceil(photos.length / 3)}</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Modal para vista ampliada -->
+  <div id="photo-modal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+    <div class="relative max-w-4xl max-h-full">
+      <img id="modal-image" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg" />
+      <button 
+        id="close-modal"
+        class="absolute top-4 right-4 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-all duration-300"
+        aria-label="Cerrar"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  class PhotoCarousel {
+    constructor() {
+      this.track = document.getElementById('carousel-track');
+      this.slides = document.querySelectorAll('.carousel-slide');
+      this.prevBtn = document.querySelector('.carousel-prev');
+      this.nextBtn = document.querySelector('.carousel-next');
+      this.dots = document.querySelectorAll('.carousel-dot');
+      this.currentSlideSpan = document.getElementById('current-slide');
+      this.totalSlidesSpan = document.getElementById('total-slides');
+      this.modal = document.getElementById('photo-modal');
+      this.modalImage = document.getElementById('modal-image');
+      this.closeModalBtn = document.getElementById('close-modal');
+      
+      this.currentIndex = 0;
+      this.slidesPerView = this.getSlidesPerView();
+      this.maxIndex = Math.ceil(this.slides.length / this.slidesPerView) - 1;
+      this.autoPlayInterval = null;
+      
+      this.init();
+    }
+    
+    getSlidesPerView() {
+      const width = window.innerWidth;
+      if (width >= 1024) return 3; // lg
+      if (width >= 640) return 2;  // sm
+      return 1; // mobile
+    }
+    
+    init() {
+      this.updateCarousel();
+      this.bindEvents();
+      this.startAutoPlay();
+    }
+    
+    bindEvents() {
+      // Navegación con botones
+      this.prevBtn?.addEventListener('click', () => this.prevSlide());
+      this.nextBtn?.addEventListener('click', () => this.nextSlide());
+      
+      // Navegación con puntos
+      this.dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => this.goToSlide(index));
+      });
+      
+      // Modal de imagen
+      this.slides.forEach((slide) => {
+        const img = slide.querySelector('img');
+        img?.addEventListener('click', () => {
+          this.openModal(img.src, img.alt);
+        });
+      });
+      
+      this.closeModalBtn?.addEventListener('click', () => this.closeModal());
+      this.modal?.addEventListener('click', (e) => {
+        if (e.target === this.modal) this.closeModal();
+      });
+      
+      // Cerrar modal con ESC
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') this.closeModal();
+      });
+      
+      // Pausar autoplay al hacer hover
+      this.track?.addEventListener('mouseenter', () => this.stopAutoPlay());
+      this.track?.addEventListener('mouseleave', () => this.startAutoPlay());
+      
+      // Responsive
+      window.addEventListener('resize', () => {
+        this.slidesPerView = this.getSlidesPerView();
+        this.maxIndex = Math.ceil(this.slides.length / this.slidesPerView) - 1;
+        if (this.currentIndex > this.maxIndex) {
+          this.currentIndex = this.maxIndex;
+        }
+        this.updateCarousel();
+      });
+      
+      // Touch/swipe support
+      let startX = 0;
+      let isDragging = false;
+      
+      this.track?.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        this.stopAutoPlay();
+      });
+      
+      this.track?.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+      });
+      
+      this.track?.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) {
+            this.nextSlide();
+          } else {
+            this.prevSlide();
+          }
+        }
+        
+        this.startAutoPlay();
+      });
+    }
+    
+    updateCarousel() {
+      const translateX = -(this.currentIndex * (100 / this.slidesPerView));
+      this.track.style.transform = `translateX(${translateX}%)`;
+      
+      // Actualizar contador
+      if (this.currentSlideSpan) {
+        this.currentSlideSpan.textContent = this.currentIndex + 1;
+      }
+      
+      // Actualizar dots
+      this.dots.forEach((dot, index) => {
+        dot.classList.toggle('bg-blue-500', index === this.currentIndex);
+        dot.classList.toggle('bg-white/50', index !== this.currentIndex);
+        dot.classList.toggle('border-blue-400', index === this.currentIndex);
+        dot.classList.toggle('border-white/30', index !== this.currentIndex);
+      });
+      
+      // Actualizar botones
+      this.prevBtn?.classList.toggle('opacity-50', this.currentIndex === 0);
+      this.nextBtn?.classList.toggle('opacity-50', this.currentIndex === this.maxIndex);
+    }
+    
+    nextSlide() {
+      if (this.currentIndex < this.maxIndex) {
+        this.currentIndex++;
+      } else {
+        this.currentIndex = 0; // Loop back to start
+      }
+      this.updateCarousel();
+    }
+    
+    prevSlide() {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+      } else {
+        this.currentIndex = this.maxIndex; // Loop to end
+      }
+      this.updateCarousel();
+    }
+    
+    goToSlide(index) {
+      this.currentIndex = index;
+      this.updateCarousel();
+    }
+    
+    openModal(src, alt) {
+      this.modalImage.src = src;
+      this.modalImage.alt = alt;
+      this.modal.classList.remove('hidden');
+      this.modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      this.stopAutoPlay();
+    }
+    
+    closeModal() {
+      this.modal.classList.add('hidden');
+      this.modal.classList.remove('flex');
+      document.body.style.overflow = 'auto';
+      this.startAutoPlay();
+    }
+    
+    startAutoPlay() {
+      this.stopAutoPlay();
+      this.autoPlayInterval = setInterval(() => {
+        this.nextSlide();
+      }, 5000); // Cambiar cada 5 segundos
+    }
+    
+    stopAutoPlay() {
+      if (this.autoPlayInterval) {
+        clearInterval(this.autoPlayInterval);
+        this.autoPlayInterval = null;
+      }
+    }
+  }
+  
+  // Inicializar el carrusel cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', () => {
+    new PhotoCarousel();
+  });
+</script>
+
+<style>
+  .carousel-container {
+    position: relative;
+    background: linear-gradient(100deg, #f37cdf 0%, #df53d3 100%);
+    padding: 2rem;
+    border-radius: 1rem;
+  }
+  
+  .carousel-track {
+    display: flex;
+    width: 100%;
+  }
+  
+  .carousel-slide {
+    flex: 0 0 auto;
+  }
+  
+  .carousel-btn {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+  }
+  
+  .carousel-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+  }
+  
+  .carousel-dot {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+  }
+  
+  .carousel-dot:hover {
+    transform: scale(1.3);
+  }
+  
+  .carousel-counter {
+    backdrop-filter: blur(10px);
+  }
+  
+  #photo-modal {
+    backdrop-filter: blur(5px);
+  }
+  
+  @media (max-width: 640px) {
+    .carousel-container {
+      padding: 1rem;
+    }
+    
+    .carousel-btn {
+      padding: 0.75rem;
+    }
+    
+    .carousel-btn svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+    
+    .carousel-slide {
+      padding: 0.5rem;
+    }
+  }
+  
+  /* Animaciones adicionales */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .carousel-slide {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  .carousel-slide:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  
+  .carousel-slide:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+</style>
