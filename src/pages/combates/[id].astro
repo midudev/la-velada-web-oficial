@@ -9,6 +9,8 @@ import { combate } from '@/consts/pageTitles'
 import Layout from '@/layouts/Layout.astro'
 import CombatVersus from '@/components/CombatVersus.astro'
 import BoxerCard from '@/components/BoxerCard.astro'
+import LiteYouTube from '@/components/LiteYouTube.astro'
+import SectionTitle from '@/components/SectionTitle.astro'
 
 const { id } = Astro.params
 const combat = COMBATS.find((c) => c.id === id)
@@ -112,6 +114,20 @@ export const prerender = true
         </div>
       </div>
     </div>
+    <!-- Video del combate -->
+    {
+      combat?.video && (
+        <div class="mx-auto mt-16 max-w-4xl px-5">
+          <SectionTitle class="pb-8" title={` ${combat?.title}`} />
+          <LiteYouTube
+            videoId={combat?.video}
+            title={combat?.title || 'Combate'}
+            backgroundImage={`/images/combates/${combat?.id}.webp`}
+            withShadowImage={true}
+          />
+        </div>
+      )
+    }
   </section>
   <style>
     .custom-clip {

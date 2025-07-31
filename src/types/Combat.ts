@@ -4,5 +4,6 @@ export interface Combat {
   fighters: string[] // id de fighters
   title: string
   video: string
+  winner: string
   description: string
 }
