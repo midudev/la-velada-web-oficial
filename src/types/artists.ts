@@ -6,9 +6,11 @@ type ArtistId =
   | 'losdelrio'
   | 'melendi'
   | 'myketowers'
+  | 'deiv'
 
 export interface Artist {
   id: ArtistId
   name: string
-  image: string
+  image?: string
+  url: string
 }
