@@ -70,6 +70,13 @@ const {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content="https://www.infolavelada.com/og.jpg" />
 
+    <script type="speculationrules">
+      {
+        "prerender": [{ "where": { "href_matches": "/*" }, "eagerness": "moderate" }],
+        "prefetch": [{ "where": { "href_matches": "/*" }, "eagerness": "moderate" }]
+      }
+    </script>
+
     <!-- Datos estructurados para Evento (Schema.org) -->
     <script type="application/ld+json">
       {
