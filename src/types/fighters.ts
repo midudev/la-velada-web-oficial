@@ -59,5 +59,9 @@ export interface Fighters {
     videoID: string
     thumbnail: string
   }
+  faceOff: {
+    videoID: string
+    thumbnail: string
+  }
   bio: string
 }

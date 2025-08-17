@@ -1,0 +1,69 @@
+---
+import QuoteIcon from '@/assets/svg/quote-left.svg'
+
+interface Clip {
+  text: string
+  url: string
+}
+
+interface BoxerQuoteCardProps {
+  clip: Clip
+  fighter: string
+}
+
+const { clip = null, fighter = null } = Astro.props as BoxerQuoteCardProps
+---
+
+{
+  clip?.text && fighter && (
+    <div class="quote-card duration-400 transition-transform hover:scale-105">
+      <div class="inner-card">
+        <QuoteIcon class="text-theme-berry-nights size-8" />
+        <span class="text-theme-berry-nights text-xl font-medium lowercase">{clip.text}</span>
+        <a
+          class="border-theme-berry-nights/25 duration-400 flex items-center justify-center rounded-full border p-2 transition-transform hover:scale-105"
+          href={clip.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="text-theme-french-mauve text-xl font-medium lowercase">Ver Clip</span>
+        </a>
+      </div>
+      <span class="text-theme-berry-nights text-xl font-medium lowercase">{fighter}</span>
+    </div>
+  )
+}
+
+<style>
+  .quote-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    border-radius: 1.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    max-width: 320px;
+    min-height: 300px;
+    box-sizing: border-box;
+    background: linear-gradient(to bottom, #d682d1 0%, #e0a0dc 35%, #f1b1ed 75%, #ffe3ff 100%);
+    box-shadow:
+      rgba(17, 17, 26, 0.1) 0px 4px 16px,
+      rgba(17, 17, 26, 0.1) 0px 8px 24px,
+      rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  }
+
+  .inner-card {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    flex: 1;
+    width: 100%;
+  }
+</style>
