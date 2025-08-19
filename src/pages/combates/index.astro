@@ -79,7 +79,7 @@ export const prerender = true
                               'max-sm:-translate-x-5 lg:-translate-x-5',
                             (fighter === 'gaspi' || fighter === 'tomas') &&
                               'max-sm:translate-x-5 lg:translate-x-5',
-                            isWinner && 'contrast-110 brightness-110',
+                            isWinner && 'contrast-110 winner-aura brightness-110',
                           ]}
                           alt={`Imagen de ${fighter}`}
                           transition:name={`combat-img:${fighter}`}
@@ -184,5 +184,12 @@ export const prerender = true
     #combats-container > a:first-child {
       grid-column: 1 / -1;
     }
+  }
+
+  /* Aura dorada para el ganador */
+  .winner-aura {
+    filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.85))
+      drop-shadow(0 0 20px rgba(245, 158, 11, 0.6)) drop-shadow(0 0 40px rgba(245, 158, 11, 0.5));
+    transition: filter 300ms ease;
   }
 </style>
