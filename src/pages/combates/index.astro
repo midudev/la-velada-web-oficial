@@ -1,17 +1,13 @@
 ---
 import Layout from '@/layouts/Layout.astro'
-import { FIGHTERS } from '@/consts/fighters'
 import { COMBATS } from '@/consts/combats'
 import { combates } from '@/consts/pageTitles'
 import PredictionBar from '@/components/PredictionBar.astro'
+import { getBoxerById } from '@/lib/boxers'
 
 const description =
   'Descubre todos los combates de La Velada del Año V, el evento de boxeo de Ibai Llanos con los mejores creadores de contenido.'
 const canonical = 'https://www.infolavelada.com/combates'
-
-const getFighterById = (id: string) => {
-  return FIGHTERS.find((f) => f.id === id)
-}
 
 export const prerender = true
 ---
@@ -112,13 +108,13 @@ export const prerender = true
                   combatId={id}
                   overlay={true}
                   fighter1={{
-                    id: getFighterById(fighters[0])?.id || '',
-                    name: getFighterById(fighters[0])?.name || '',
+                    id: getBoxerById(fighters[0])?.id || '',
+                    name: getBoxerById(fighters[0])?.name || '',
                     percentage: 60,
                   }}
                   fighter2={{
-                    id: getFighterById(fighters[1])?.id || '',
-                    name: getFighterById(fighters[1])?.name || '',
+                    id: getBoxerById(fighters[1])?.id || '',
+                    name: getBoxerById(fighters[1])?.name || '',
                     percentage: 40,
                   }}
                   totalVotes={100}
