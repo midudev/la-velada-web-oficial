@@ -3,7 +3,7 @@ import Layout from '@/layouts/Layout.astro'
 import { porra } from '@/consts/pageTitles'
 import { getSession } from 'auth-astro/server'
 import { COMBATS } from '@/consts/combats'
-import { FIGHTERS } from '@/consts/fighters'
+import { getBoxerById } from '@/lib/boxers'
 import { getAllPredictions, type CombatPrediction } from '@/lib/predictions'
 import PredictionBar from '@/components/PredictionBar.astro'
 
@@ -152,13 +152,13 @@ export const prerender = false
                   combatId={id}
                   overlay={true}
                   fighter1={{
-                    id: FIGHTERS.find((f) => f.id === fighters[0])?.id || '',
-                    name: FIGHTERS.find((f) => f.id === fighters[0])?.name || '',
+                    id: getBoxerById(fighters[0])?.id || '',
+                    name: getBoxerById(fighters[0])?.name || '',
                     percentage: 60,
                   }}
                   fighter2={{
-                    id: FIGHTERS.find((f) => f.id === fighters[1])?.id || '',
-                    name: FIGHTERS.find((f) => f.id === fighters[1])?.name || '',
+                    id: getBoxerById(fighters[1])?.id || '',
+                    name: getBoxerById(fighters[1])?.name || '',
                     percentage: 40,
                   }}
                   totalVotes={100}
