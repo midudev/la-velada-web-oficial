@@ -35,21 +35,45 @@ import { getBoxerById } from '@/lib/boxers'
                 'animate-delay-200 lg',
               ]}
             >
-              {fighters.map((fighter, fighterIndex) => (
-                <img
-                  src={`/images/fighters/combat/${fighter}.webp`}
-                  class:list={[
-                    'mask-fade-bottom-quick absolute z-20 h-full w-auto object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
-                    fighterIndex === 0 ? 'left-0' : 'right-0',
-                    (fighter === 'perxitaa' || fighter === 'viruzz') &&
-                      'max-sm:-translate-x-5 lg:-translate-x-5',
-                    (fighter === 'gaspi' || fighter === 'tomas') &&
-                      'max-sm:translate-x-5 lg:translate-x-5',
-                  ]}
-                  alt={`Imagen de ${fighter}`}
-                  transition:name={`combat-img:${fighter}`}
-                />
-              ))}
+              {fighters.map((fighter, fighterIndex) => {
+                const combat = COMBATS.find((c) => c.id === id)
+                const isWinner = combat?.winner === fighter
+
+                return (
+                  <div
+                    class:list={[
+                      'absolute z-20 flex h-full flex-col items-center',
+                      fighterIndex === 0 ? 'left-0' : 'right-0',
+                    ]}
+                  >
+                    {isWinner && (
+                      <div
+                        class:list={[
+                          'absolute top-4 z-30 rounded-lg bg-gradient-to-r from-yellow-400 to-yellow-600 px-3 py-1 shadow-lg',
+                          'animate-scale-in animate-delay-500 animate-scale-subtle',
+                        ]}
+                      >
+                        <span class="text-xs font-black tracking-wider text-black drop-shadow-sm">
+                          VICTORIA
+                        </span>
+                      </div>
+                    )}
+                    <img
+                      src={`/images/fighters/combat/${fighter}.webp`}
+                      class:list={[
+                        'mask-fade-bottom-quick h-full w-auto object-contain object-bottom transition-transform duration-300 group-hover:scale-110',
+                        (fighter === 'perxitaa' || fighter === 'viruzz') &&
+                          'max-sm:-translate-x-5 lg:-translate-x-5',
+                        (fighter === 'gaspi' || fighter === 'tomas') &&
+                          'max-sm:translate-x-5 lg:translate-x-5',
+                        isWinner && 'contrast-110 winner-aura brightness-110',
+                      ]}
+                      alt={`Imagen de ${fighter}`}
+                      transition:name={`combat-img:${fighter}`}
+                    />
+                  </div>
+                )
+              })}
 
               <div class="-skew-4 absolute -bottom-20 z-30 flex h-auto w-full flex-col items-center justify-center p-8 transition-transform duration-300 group-hover:scale-90">
                 <img
@@ -96,3 +120,43 @@ import { getBoxerById } from '@/lib/boxers'
     getPredictionsForPage()
   })
 </script>
+
+<style>
+  /* Aura dorada para el ganador */
+  .winner-aura {
+    filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.85))
+      drop-shadow(0 0 20px rgba(245, 158, 11, 0.6)) drop-shadow(0 0 40px rgba(245, 158, 11, 0.5));
+    transition: filter 300ms ease;
+  }
+
+  /* Animación scale-in sutil */
+  @keyframes scale-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.6s ease-out forwards;
+  }
+
+  /* Animación scale continua sutil para Victoria */
+  @keyframes scale-subtle {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .animate-scale-subtle {
+    animation: scale-subtle 2s ease-in-out infinite;
+  }
+</style>
