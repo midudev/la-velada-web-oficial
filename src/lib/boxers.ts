@@ -1,13 +1,11 @@
 import { FIGHTERS } from '@/consts/fighters'
 
-const boxers = FIGHTERS
-
 export function getBoxerById(boxerId: string) {
-  return boxers.find((b) => b.id === boxerId) ?? boxers[0]
+  return FIGHTERS.find((b) => b.id === boxerId) ?? FIGHTERS[0]
 }
 
 export function getBoxerVersusById(boxerId: string) {
-  const boxer = boxers.find((b) => b.id === boxerId)
-  if (!boxer) return boxers[0]
+  const boxer = FIGHTERS.find((b) => b.id === boxerId)
+  if (!boxer) return FIGHTERS[0]
   return boxer
 }
