@@ -1,11 +1,7 @@
 ---
 import { COMBATS } from '@/consts/combats'
-import { FIGHTERS } from '@/consts/fighters'
 import PredictionBar from '@/components/PredictionBar.astro'
-
-const getFighterById = (id: string) => {
-  return FIGHTERS.find((f) => f.id === id)
-}
+import { getBoxerById } from '@/lib/boxers'
 ---
 
 <h2 class="text-dark-magenta mb-4 pb-8 pt-48 text-center text-4xl font-light">
@@ -75,13 +71,13 @@ const getFighterById = (id: string) => {
               combatId={id}
               overlay={true}
               fighter1={{
-                id: getFighterById(fighters[0])?.id || '',
-                name: getFighterById(fighters[0])?.name || '',
+                id: getBoxerById(fighters[0])?.id || '',
+                name: getBoxerById(fighters[0])?.name || '',
                 percentage: 60,
               }}
               fighter2={{
-                id: getFighterById(fighters[1])?.id || '',
-                name: getFighterById(fighters[1])?.name || '',
+                id: getBoxerById(fighters[1])?.id || '',
+                name: getBoxerById(fighters[1])?.name || '',
                 percentage: 40,
               }}
               totalVotes={100}
