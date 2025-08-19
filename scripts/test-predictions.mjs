@@ -1,6 +1,7 @@
 import { createClient } from '@libsql/client/web'
 import { COMBATS } from '../src/consts/combats.js'
 import { FIGHTERS } from '../src/consts/fighters.js'
+import { getBoxerById } from '@/lib/boxers.js'
 
 // Configuración de la base de datos
 const turso = createClient({
@@ -48,7 +49,7 @@ async function simulateVotes() {
         }
 
         // Verificar que el luchador existe
-        const fighterExists = FIGHTERS.find((fighter) => fighter.id === vote.fighterId)
+        const fighterExists = getBoxerById(vote.fighterId)
         if (!fighterExists) {
           console.log(`❌ Luchador no encontrado: ${vote.fighterId}`)
           continue
@@ -132,7 +133,7 @@ async function simulateVotes() {
       for (const row of combatPredictions.rows) {
         const fighterId = row.fighter_id
         const votes = row.votes
-        const fighter = FIGHTERS.find((f) => f.id === fighterId)
+        const fighter = getBoxerById(fighterId)
 
         totalCombatVotes += votes
         console.log(`    - ${fighter?.name || fighterId}: ${votes} votos`)
@@ -144,7 +145,7 @@ async function simulateVotes() {
         for (const row of combatPredictions.rows) {
           const fighterId = row.fighter_id
           const votes = row.votes
-          const fighter = FIGHTERS.find((f) => f.id === fighterId)
+          const fighter = getBoxerById(fighterId)
           const percentage = Math.round((votes / totalCombatVotes) * 100)
           console.log(`      ${fighter?.name || fighterId}: ${percentage}%`)
         }
@@ -165,7 +166,7 @@ async function simulateVotes() {
           const combatId = row.combat_id
           const fighterId = row.fighter_id
           const combat = COMBATS.find((c) => c.id === combatId)
-          const fighter = FIGHTERS.find((f) => f.id === fighterId)
+          const fighter = getBoxerById(fighterId)
 
           console.log(`    - ${combat?.title || combatId}: ${fighter?.name || fighterId}`)
         }

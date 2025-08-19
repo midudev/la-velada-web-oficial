@@ -11,13 +11,14 @@ import CombatVersus from '@/components/CombatVersus.astro'
 import BoxerCard from '@/components/BoxerCard.astro'
 import LiteYouTube from '@/components/LiteYouTube.astro'
 import SectionTitle from '@/components/SectionTitle.astro'
+import { getBoxerById } from '@/lib/boxers'
 
 const { id } = Astro.params
 const combat = COMBATS.find((c) => c.id === id)
 if (!combat) return Astro.redirect('/404')
 
-const fighter1 = FIGHTERS.find((f) => f.id === combat?.fighters[0])
-const fighter2 = FIGHTERS.find((f) => f.id === combat?.fighters[1])
+const fighter1 = getBoxerById(combat?.fighters[0])
+const fighter2 = getBoxerById(combat?.fighters[1])
 
 const description = `Combate entre ${fighter1?.name} y ${fighter2?.name} en La Velada del Año V de Ibai Llanos.`
 

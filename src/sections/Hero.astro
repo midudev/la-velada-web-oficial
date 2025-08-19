@@ -1,9 +1,10 @@
 ---
 import { FIGHTERS } from '@/consts/fighters'
 import SelectYourBoxer from '@/components/Boxers/SelectYourBoxer.astro'
+import { getBoxerById } from '@/lib/boxers'
 
 const selectedBoxerId = Astro.url.searchParams.get('luchador') ?? FIGHTERS[0].id
-const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? FIGHTERS[0]
+const selectedBoxer = getBoxerById(selectedBoxerId) ?? FIGHTERS[0]
 ---
 
 <section class="relative flex min-h-screen w-full">
