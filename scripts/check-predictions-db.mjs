@@ -1,6 +1,6 @@
 import { createClient } from '@libsql/client/web'
 import { COMBATS } from '../src/consts/combats.js'
-import { FIGHTERS } from '../src/consts/fighters.js'
+import { getBoxerById } from '@/lib/boxers.js'
 
 // Configuración de la base de datos
 const turso = createClient({
@@ -88,7 +88,7 @@ async function checkPredictionsDatabase() {
       for (const row of combatPredictions.rows) {
         const fighterId = row.fighter_id
         const votes = row.votes
-        const fighter = FIGHTERS.find((f) => f.id === fighterId)
+        const fighter = getBoxerById(fighterId)
 
         totalCombatVotes += votes
         console.log(`    - ${fighter?.name || fighterId}: ${votes} votos`)
@@ -100,7 +100,7 @@ async function checkPredictionsDatabase() {
         for (const row of combatPredictions.rows) {
           const fighterId = row.fighter_id
           const votes = row.votes
-          const fighter = FIGHTERS.find((f) => f.id === fighterId)
+          const fighter = getBoxerById(fighterId)
           const percentage = Math.round((votes / totalCombatVotes) * 100)
           console.log(`      ${fighter?.name || fighterId}: ${percentage}%`)
         }
@@ -148,7 +148,7 @@ async function checkPredictionsDatabase() {
       const row = topFighters.rows[i]
       const fighterId = row.fighter_id
       const totalVotes = row.total_votes
-      const fighter = FIGHTERS.find((f) => f.id === fighterId)
+      const fighter = getBoxerById(fighterId)
 
       console.log(`  ${i + 1}. ${fighter?.name || fighterId}: ${totalVotes} votos`)
     }
