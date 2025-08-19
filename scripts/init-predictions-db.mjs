@@ -47,7 +47,7 @@ async function initPredictionsDatabase() {
 
       for (const fighterId of combat.fighters) {
         // Verificar que el luchador existe en FIGHTERS
-        const fighter = FIGHTERS.find((f) => f.id === fighterId)
+        const fighter = getBoxerById(fighterId)
         if (!fighter) {
           console.warn(`⚠️  Luchador no encontrado: ${fighterId}`)
           continue
@@ -118,7 +118,7 @@ async function initPredictionsDatabase() {
         combatSummary[combatId] = []
       }
 
-      const fighter = FIGHTERS.find((f) => f.id === fighterId)
+      const fighter = getBoxerById(fighterId)
       combatSummary[combatId].push({
         fighter: fighter?.name || fighterId,
         votes,

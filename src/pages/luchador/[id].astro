@@ -13,11 +13,12 @@ import { FIGHTERS } from '@/consts/fighters'
 import { fixedTitle } from '@/consts/pageTitles'
 import { COMBATS } from '@/consts/combats'
 import CombatVersus from '@/components/CombatVersus.astro'
+import { getBoxerById } from '@/lib/boxers'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/404')
 
-const fighter = FIGHTERS.find((fighter) => fighter.id === id)
+const fighter = getBoxerById(id)
 if (!fighter) return Astro.redirect('/404')
 
 const combat = COMBATS.find((combat) => combat.fighters.includes(id))
@@ -32,7 +33,7 @@ const birthDate = fighter.birthDate.toLocaleDateString('es-ES', {
   day: 'numeric',
 })
 
-const opponent = FIGHTERS.find((f) => f.id === fighter.versus)
+const opponent = getBoxerById(fighter.versus)
 
 export const prerender = true
 
