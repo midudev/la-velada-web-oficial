@@ -113,7 +113,7 @@ export const getStaticPaths = () => {
         <div class="flex flex-col gap-8 lg:flex-row lg:gap-16">
           {/* Columna izquierda: Biografía */}
           <div class="gap-y flex flex-col justify-center gap-y-16 lg:w-1/2">
-            <p class="text-dark-magenta mx-auto w-full max-w-xl whitespace-pre-line text-pretty px-4 text-sm [text-transform:none] md:px-0 md:text-base lg:text-left lg:text-lg">
+            <p class="text-theme-navy mx-auto w-full max-w-xl whitespace-pre-line text-pretty px-4 text-sm [text-transform:none] md:px-0 md:text-base lg:text-left lg:text-lg">
               {fighter.bio}
             </p>
 
@@ -149,7 +149,7 @@ export const getStaticPaths = () => {
 
 <style>
   .stat-item {
-    animation: fadeIn 0.5s ease-out forwards;
+    animation: fade-in-up 0.5s ease-out forwards;
     opacity: 0;
   }
 
@@ -169,16 +169,5 @@ export const getStaticPaths = () => {
   .mask-image-fade-bottom {
     mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 </style>
