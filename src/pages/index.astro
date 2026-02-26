@@ -126,9 +126,17 @@ export const prerender = true
 
       let revealed = false
 
-      function reveal() {
+      function reveal(skipTransition = false) {
         if (revealed) return
         revealed = true
+
+        if (skipTransition) {
+          bg.classList.add('!transition-none')
+          bg.classList.remove('opacity-0')
+          hero!.setAttribute('data-loaded', '')
+          return
+        }
+
         bg.addEventListener(
           'transitionend',
           () => hero!.setAttribute('data-loaded', ''),
@@ -138,11 +146,11 @@ export const prerender = true
       }
 
       if (bg.complete && bg.naturalHeight > 0) {
-        reveal()
+        reveal(true)
       } else {
-        bg.addEventListener('load', reveal)
-        bg.addEventListener('error', reveal)
-        setTimeout(reveal, 3500)
+        bg.addEventListener('load', () => reveal(false))
+        bg.addEventListener('error', () => reveal(true))
+        setTimeout(() => reveal(true), 3500)
       }
     })
   </script>
