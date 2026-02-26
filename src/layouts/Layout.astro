@@ -24,12 +24,14 @@ const {
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
       {title}
     </title>
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="apple-touch-icon" href="/logo.png" />
 
     <link
       rel="preload"
@@ -46,6 +48,8 @@ const {
       crossorigin="anonymous"
     />
     <meta name="description" content={description} />
+    <meta name="author" content="Ibai Llanos" />
+    <meta name="theme-color" content="#0a1024" />
     {canonical && <link rel="canonical" href={canonical} />}
     {robots && <meta name="robots" content={robots} />}
 
@@ -98,6 +102,9 @@ const {
     <Analytics />
   </head>
   <body>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-black focus:outline-none">
+      Saltar al contenido principal
+    </a>
     <main id="main-content">
       <slot />
     </main>
