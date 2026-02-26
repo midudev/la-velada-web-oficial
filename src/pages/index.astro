@@ -1,25 +1,103 @@
 ---
-import Hero from '@/sections/Hero.astro'
-import Entradas from '@/sections/Entradas.astro'
-import Artists from '@/sections/Artists.astro'
 import Layout from '@/layouts/Layout.astro'
-import Presentation from '@/sections/Presentation.astro'
-import FAQ from '@/components/FAQ.astro'
-import PorraHome from '@/sections/PorraHome.astro'
 
-const title = 'La Velada del Año V - Evento de boxeo de Ibai Llanos con creadores de contenido'
+const title = 'La Velada del Año VI - Evento de boxeo de Ibai Llanos con creadores de contenido'
 const description =
-  'El mayor evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos. Descubre combates, participantes y cómo ver el evento en directo.'
+  'La Velada del Año VI. Presentación el 9 de marzo a las 19:00h CET en el Teatro Victoria de Barcelona. El mayor evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos.'
 const canonical = 'https://www.infolavelada.com/'
 
 export const prerender = true
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
-  <Hero />
-  <PorraHome />
-  <Entradas />
-  <Artists />
-  <Presentation />
-  <FAQ />
+  <section class="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-black">
+    <picture class="absolute inset-0 z-0">
+      <source srcset="/background.avif" type="image/avif" />
+      <source srcset="/background.webp" type="image/webp" />
+      <img
+        src="/background.png"
+        alt="La Velada del Año VI"
+        class="h-full w-full object-cover object-center"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
+
+    <div class="absolute inset-0 z-1 bg-linear-to-b from-black/40 via-transparent to-black/80"></div>
+
+    <div class="relative z-10 flex flex-1 flex-col items-center justify-start px-4 pt-20 text-center sm:justify-center sm:pt-12">
+      <p class="animate-fade-in animate-delay-100 mb-0 font-cinzel text-xs font-semibold tracking-[0.35em] text-white/80 sm:text-sm md:text-base">
+        PRESENTACIÓN DE
+      </p>
+
+      <figure class="animate-fade-in animate-delay-200 -mt-8">
+        <picture>
+          <source srcset="/logo.avif" type="image/avif" />
+          <source srcset="/logo.webp" type="image/webp" />
+          <img
+            src="/logo.png"
+            alt="La Velada del Año VI"
+            class="h-auto w-56 sm:w-72 md:w-80 lg:w-96"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </picture>
+      </figure>
+
+      <div class="animate-fade-in animate-delay-500 mt-6 flex flex-col items-center gap-2 sm:flex-row sm:gap-0">
+        <span class="font-cinzel text-xs font-bold tracking-[0.2em] text-white sm:text-sm md:text-base">
+          9 DE MARZO
+        </span>
+        <span class="hidden px-4 text-white/40 sm:inline">|</span>
+        <span class="font-cinzel text-xs font-bold tracking-[0.2em] text-white sm:text-sm md:text-base">
+          19:00H CET
+        </span>
+        <span class="hidden px-4 text-white/40 sm:inline">|</span>
+        <span class="font-cinzel text-xs font-bold tracking-[0.2em] text-white sm:text-sm md:text-base">
+          TEATRO VICTORIA, BARCELONA
+        </span>
+      </div>
+    </div>
+
+    <footer class="relative z-10 mx-auto flex w-full max-w-3xl items-center justify-between px-6 pb-6 sm:px-10 sm:pb-8">
+      <a
+        href="https://twitch.tv/ibai"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group flex items-center gap-2 transition-opacity hover:opacity-80"
+        aria-label="Twitch de Ibai"
+      >
+        <svg class="size-5 text-[#a970ff] sm:size-6" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
+        </svg>
+        <span class="font-cinzel text-xs font-semibold tracking-wider text-white sm:text-sm">/IBAI</span>
+      </a>
+
+      <a
+        href="https://tiktok.com/@ibaillanos"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group flex items-center gap-2 transition-opacity hover:opacity-80"
+        aria-label="TikTok de Ibai Llanos"
+      >
+        <svg class="size-5 text-white sm:size-6" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15.2a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.78a8.28 8.28 0 0 0 4.82 1.54V6.87a4.84 4.84 0 0 1-1.06-.18z"/>
+        </svg>
+        <span class="font-cinzel text-xs font-semibold tracking-wider text-white sm:text-sm">/IBAILLANOS</span>
+      </a>
+
+      <a
+        href="https://youtube.com/@ibaboreal"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group flex items-center gap-2 transition-opacity hover:opacity-80"
+        aria-label="YouTube de Ibai Llanos"
+      >
+        <svg class="size-5 text-[#ff0000] sm:size-6" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+        <span class="font-cinzel text-xs font-semibold tracking-wider text-white sm:text-sm">/IBAILLANOS</span>
+      </a>
+    </footer>
+  </section>
 </Layout>

@@ -4,7 +4,7 @@ import PredictionBar from '@/components/PredictionBar.astro'
 import { getBoxerById } from '@/lib/boxers'
 ---
 
-<h2 class="text-dark-magenta mb-4 pb-8 pt-48 text-center text-4xl font-light">
+<h2 class="text-theme-navy mb-4 pb-8 pt-48 text-center text-4xl font-light">
   <div class="block sm:inline">
     <strong class="font-bold lowercase">Pronósticos de la comunidad</strong>
   </div>
@@ -50,7 +50,7 @@ import { getBoxerById } from '@/lib/boxers'
                       <div
                         class:list={[
                           'absolute top-4 z-30 rounded-lg bg-gradient-to-r from-yellow-400 to-yellow-600 px-3 py-1 shadow-lg',
-                          'animate-scale-in animate-delay-500 animate-scale-subtle',
+                          'animate-zoom-in animate-delay-500 animate-pulsing',
                         ]}
                       >
                         <span class="text-xs font-black tracking-wider text-black drop-shadow-sm">
@@ -129,34 +129,4 @@ import { getBoxerById } from '@/lib/boxers'
     transition: filter 300ms ease;
   }
 
-  /* Animación scale-in sutil */
-  @keyframes scale-in {
-    0% {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  .animate-scale-in {
-    animation: scale-in 0.6s ease-out forwards;
-  }
-
-  /* Animación scale continua sutil para Victoria */
-  @keyframes scale-subtle {
-    0%,
-    100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.05);
-    }
-  }
-
-  .animate-scale-subtle {
-    animation: scale-subtle 2s ease-in-out infinite;
-  }
 </style>
