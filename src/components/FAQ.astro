@@ -61,7 +61,7 @@ const faqs = [
               </svg>
               {faq.question}
             </summary>
-            <div class="animate-fadeInFaq px-8 pb-4 pt-1 font-sans text-base leading-relaxed text-white opacity-95 transition-all duration-300 [text-transform:none]">
+            <div class="animate-fade-in-down animate-duration-300 px-8 pb-4 pt-1 font-sans text-base leading-relaxed text-white opacity-95 transition-all duration-300 [text-transform:none]">
               <p set:html={faq.answer} />
             </div>
           </details>
@@ -69,20 +69,4 @@ const faqs = [
       ))
     }
   </ul>
-  {/* Animación fadeInFaq para respuestas */}
-  <style>
-    @keyframes fadeInFaq {
-      from {
-        opacity: 0;
-        transform: translateY(-8px);
-      }
-      to {
-        opacity: 0.95;
-        transform: translateY(0);
-      }
-    }
-    .animate-fadeInFaq {
-      animation: fadeInFaq 0.3s;
-    }
-  </style>
 </section>

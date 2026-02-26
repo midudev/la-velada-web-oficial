@@ -1,19 +1,20 @@
 @import 'tailwindcss';
-@plugin "@midudev/tailwind-animations";
+@import 'tailwind-animations';
 
 @theme {
-  --color-dark-magenta: #2a1f26;
   --font-fallback:
     'Adjusted Arial Fallback', system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI',
     'Noto Sans', helvetica, arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
   --font-primary: 'Anisette';
+  --font-cinzel: 'Cinzel';
+  --font-fantasy: 'Fantasy Magist';
 
-  /* Velada V Custom Colors */
-  --color-theme-french-mauve: oklch(67.65% 0.1539 329.18);
-  --color-theme-raisin-black: oklch(25.53% 0.0209 340.25);
-  --color-theme-tickle-me-pink: oklch(75.65% 0.143 355.9);
-  --color-theme-seashell: oklch(95.25% 0.0147 33.07);
-  --color-theme-turquoise: oklch(82.97% 0.148864 181.7442);
+  --color-theme-cream: #f4e4c9;
+  --color-theme-gold: #c7a86b;
+  --color-theme-maroon: #480f0e;
+  --color-theme-forest: #1d3524;
+  --color-theme-navy: #142346;
+  --color-theme-midnight: #0a1024;
 }
 
 @layer base {
@@ -31,11 +32,11 @@
 
   html {
     scrollbar-gutter: stable;
-    background: var(--color-theme-raisin-black);
+    background: var(--color-theme-midnight);
   }
 
   body {
-    background: #f19fca;
+    background: var(--color-theme-midnight);
   }
 
   /* Webkit Browsers (Chrome, Safari, Edge) */
@@ -44,23 +45,22 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--color-theme-raisin-black);
+    background: var(--color-theme-midnight);
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: var(--color-theme-french-mauve);
+    background-color: var(--color-theme-gold);
     border-radius: 5px;
-    border: 2px solid oklch(67.65% 0.1539 329.18 / 0.4);
+    border: 2px solid color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--color-theme-tickle-me-pink);
-    /* Efecto hover */
+    background-color: var(--color-theme-cream);
   }
 
   /* Firefox */
   * {
-    scrollbar-color: var(--color-theme-french-mauve) var(--color-theme-raisin-black);
+    scrollbar-color: var(--color-theme-gold) var(--color-theme-midnight);
     scrollbar-width: thin;
   }
 }
@@ -203,6 +203,64 @@
   font-family: 'Anisette';
   src: url('/fonts/anisette-bold.woff2') format('woff2');
   font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  src: url('/fonts/cinzel-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  src: url('/fonts/cinzel-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  src: url('/fonts/cinzel-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  src: url('/fonts/cinzel-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  src: url('/fonts/cinzel-extrabold.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  src: url('/fonts/cinzel-black.woff2') format('woff2');
+  font-weight: 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fantasy Magist';
+  src: url('/fonts/fantasy-magist.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fantasy Magist';
+  src: url('/fonts/fantasy-magist-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
   font-display: swap;
 }
 

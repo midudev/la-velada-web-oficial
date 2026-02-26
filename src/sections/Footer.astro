@@ -1,27 +1,10 @@
 ---
 import { SOCIAL } from '@/consts/social'
-import InfojobsLogo from '@/assets/sponsors/Infojobs.svg'
 ---
 
-<footer class="relative min-h-[400px] w-full pb-32 2xl:mt-24 2xl:pb-96" transition:persist>
-  <div
-    class="absolute inset-0 bg-[url('/images/footer.webp')] bg-cover bg-bottom [mask-image:linear-gradient(transparent,black_50%)]"
-  >
-  </div>
-
-  <div class="relative flex h-full flex-col items-center justify-center text-[#2a1f26]">
-    <div class="mb-8 mt-3 flex flex-col items-center justify-center">
-      <span class="mb-1 text-xs text-[#2a1f26]">Web patrocinada por</span>
-      <a
-        href="https://www.infojobs.net"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="flex items-center justify-center transition hover:scale-125"
-      >
-        <InfojobsLogo class="h-6 w-auto text-[#2a1f26] md:h-7" style="max-width:120px" />
-      </a>
-    </div>
-    <div class="mb-8 mt-4 flex flex-row items-center justify-center gap-x-2">
+<footer class="relative w-full pb-16 pt-8">
+  <div class="relative flex h-full flex-col items-center justify-center text-white/60">
+    <div class="mb-4 flex flex-row items-center justify-center gap-x-3">
       {
         SOCIAL.map(({ url, image, name, label }) => (
           <a
@@ -29,7 +12,7 @@ import InfojobsLogo from '@/assets/sponsors/Infojobs.svg'
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label ?? name}
-            class="flex items-center justify-center transition hover:scale-125"
+            class="flex items-center justify-center transition hover:scale-125 hover:text-white"
           >
             <image.logo />
           </a>
@@ -37,27 +20,16 @@ import InfojobsLogo from '@/assets/sponsors/Infojobs.svg'
       }
     </div>
 
-    <div class="mb-4 flex flex-col items-center justify-center">
-      <a
-        href="https://infolavelada.com/2024"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-xs text-[#2a1f26] underline transition hover:text-[#4b3844]"
-      >
-        Ir a la versión 2024
-      </a>
-    </div>
-
-    <div class="pb-48 opacity-90">
+    <div class="pb-8 opacity-70">
       <p class="text-center text-xs">
-        © 2025 La Velada del Año.<br />Todos los derechos reservados.
+        © 2026 La Velada del Año.<br />Todos los derechos reservados.
       </p>
       <p class="mt-2 text-center text-xs">
         Desarrollado por <a
           href="https://midu.dev"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-[#2a1f26] underline transition hover:text-[#4b3844]">midu.dev</a
+          class="text-white/60 underline transition hover:text-white">midu.dev</a
         > y su comunidad.
       </p>
     </div>

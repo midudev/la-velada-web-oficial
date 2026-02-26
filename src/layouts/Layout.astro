@@ -4,12 +4,7 @@ import Analytics from '@vercel/analytics/astro'
 
 import '@/styles/global.css'
 
-import Header from '@/sections/Header.astro'
-import Footer from '@/sections/Footer.astro'
-import Sponsors from '@/sections/Sponsors.astro'
-import BannerSponsors from '@/sections/BannerSponsors.astro'
 import { fixedTitle } from '@/consts/pageTitles'
-import Spotlight from '@/components/Spotlight.astro'
 interface Props {
   title: string
   description?: string
@@ -36,7 +31,6 @@ const {
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- Preload de las fuentes para que no se vea el cambio de fuente al cargar la pagina -->
     <link
       rel="preload"
       href="/fonts/anisette-medium.woff2"
@@ -61,7 +55,7 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:image" content="https://www.infolavelada.com/og.jpg" />
     <meta property="og:locale" content="es_ES" />
-    <meta property="og:site_name" content="La Velada del Año V" />
+    <meta property="og:site_name" content="La Velada del Año VI" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@infoLaVelada" />
@@ -70,45 +64,29 @@ const {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content="https://www.infolavelada.com/og.jpg" />
 
-    <script type="speculationrules">
-      {
-        "prerender": [{ "where": { "href_matches": "/*" }, "eagerness": "moderate" }],
-        "prefetch": [{ "where": { "href_matches": "/*" }, "eagerness": "moderate" }]
-      }
-    </script>
-
-    <!-- Datos estructurados para Evento (Schema.org) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Event",
-        "name": "La Velada del Año V",
+        "name": "La Velada del Año VI",
         "description": "Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos",
         "image": "https://www.infolavelada.com/og.jpg",
-        "startDate": "2025-07-26T18:00:00+02:00",
-        "endDate": "2025-07-27T02:00:00+02:00",
+        "startDate": "2026-03-09T19:00:00+01:00",
         "eventStatus": "https://schema.org/EventScheduled",
-        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode",
         "location": {
           "@type": "Place",
-          "name": "Estadio La Cartuja",
+          "name": "Teatro Victoria",
           "address": {
             "@type": "PostalAddress",
-            "addressLocality": "Sevilla",
-            "addressRegion": "Andalucía",
+            "addressLocality": "Barcelona",
+            "addressRegion": "Cataluña",
             "addressCountry": "ES"
           }
         },
         "organizer": {
           "@type": "Person",
           "name": "Ibai Llanos"
-        },
-        "offers": {
-          "@type": "Offer",
-          "url": "https://www.entradas.com/artist/la-velada-del-ano/la-velada-del-ano-v-3883352/?affiliate=LVL",
-          "availability": "https://schema.org/InStock",
-          "priceCurrency": "EUR",
-          "validFrom": "2025-04-01T12:00:00+02:00"
         },
         "performer": {
           "@type": "PerformingGroup",
@@ -120,21 +98,8 @@ const {
     <Analytics />
   </head>
   <body>
-    <Spotlight />
-    <Header />
-
-    <a href="#main-content" class="sr-only focus:not-sr-only"> Saltar al contenido principal </a>
-
     <main id="main-content">
-      <div
-        transition:persist
-        class="mask-fade-bottom absolute inset-0 w-full bg-[url('/images/hero.avif')] bg-cover bg-center"
-      >
-      </div>
       <slot />
     </main>
-    <BannerSponsors />
-    <Sponsors />
-    <Footer />
   </body>
 </html>
