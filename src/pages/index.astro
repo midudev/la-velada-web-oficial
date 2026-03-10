@@ -4,8 +4,11 @@ import InfojobsLogo from '@/assets/sponsors/Infojobs.svg'
 
 const title = 'La Velada del Año VI - Evento de boxeo de Ibai Llanos'
 const description =
-  'La Velada del Año VI. 9 de marzo, 19:00h CET en el Teatro Victoria de Barcelona. Evento de boxeo entre streamers organizado por Ibai Llanos.'
+  'La Velada del Año VI. 26 de julio, 20:00h CET. Evento de boxeo entre streamers organizado por Ibai Llanos.'
 const canonical = 'https://www.infolavelada.com/'
+
+const EVENT_DATE = new Date('2026-07-26T20:00:00+02:00')
+const timestamp = EVENT_DATE.getTime()
 
 export const prerender = true
 ---
@@ -33,11 +36,8 @@ export const prerender = true
     <div class="absolute inset-0 z-1 bg-linear-to-b from-black/40 via-transparent to-black/80" aria-hidden="true"></div>
 
     <header class="relative z-10 flex flex-1 flex-col items-center justify-start px-4 pt-20 text-center sm:justify-center sm:pt-12 max-w-3xl mx-auto w-full">
-      <h1 class="sr-only">La Velada del Año VI — Presentación del evento de boxeo de Ibai Llanos el 9 de marzo de 2026 en el Teatro Victoria de Barcelona</h1>
+      <h1 class="sr-only">La Velada del Año VI — Evento de boxeo de Ibai Llanos el 26 de julio de 2026</h1>
 
-      <p class="animate-fade-in animate-delay-200 mb-0 font-cinzel text-xs font-semibold tracking-[0.35em] text-white/80 sm:text-sm md:text-base" aria-hidden="true">
-        PRESENTACIÓN DE
-      </p>
 
       <div class="animate-fade-in animate-delay-500 -mt-4" role="img" aria-label="Logo de La Velada del Año VI">
         <picture>
@@ -56,26 +56,44 @@ export const prerender = true
       </div>
 
       <div data-event-info class="animate-fade-in animate-delay-800 mt-6 flex flex-col items-center gap-2 sm:flex-row sm:gap-0">
-        <time datetime="2026-03-09" class="font-cinzel text-xs font-bold tracking-[0.2em] text-white sm:text-sm md:text-base">
-          9 DE MARZO
+        <time datetime="2026-07-26" class="font-cinzel text-xs font-bold tracking-[0.2em] text-white sm:text-sm md:text-base">
+          26 DE JULIO
         </time>
         <span class="hidden px-4 text-white/40 sm:inline" aria-hidden="true">|</span>
-        <time datetime="2026-03-09T19:00:00+01:00" class="font-cinzel text-xs font-bold tracking-[0.2em] text-white sm:text-sm md:text-base">
-          19:00H CET
+        <time datetime="2026-07-26T20:00:00+02:00" class="font-cinzel text-xs font-bold tracking-[0.2em] text-white sm:text-sm md:text-base">
+          20:00H CET
         </time>
         <span class="hidden px-4 text-white/40 sm:inline" aria-hidden="true">|</span>
         <span class="font-cinzel text-xs font-bold tracking-[0.2em] text-white sm:text-sm md:text-base">
-          TEATRO VICTORIA, BARCELONA
+          ESTADIO DE LA CARTUJA, SEVILLA
         </span>
       </div>
 
-      <div data-twitch-player class="mt-4 hidden w-full max-w-6xl px-4">
-        <div class="aspect-video w-full overflow-hidden rounded-lg shadow-2xl shadow-black/50">
-          <iframe
-            class="h-full w-full"
-            allowfullscreen
-            title="Retransmisión en directo de La Velada del Año VI"
-          ></iframe>
+      <div
+        class="animate-fade-in animate-delay-900 mt-8 flex select-none items-center justify-center gap-3 sm:gap-5 md:gap-7"
+        id="countdown-hero"
+        data-date={timestamp}
+        role="timer"
+        aria-label="Cuenta atrás para La Velada del Año VI"
+      >
+        <div class="flex flex-col items-center gap-1">
+          <span data-days class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">---</span>
+          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">DÍAS</span>
+        </div>
+        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="flex flex-col items-center gap-1">
+          <span data-hours class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">HORAS</span>
+        </div>
+        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="flex flex-col items-center gap-1">
+          <span data-minutes class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">MIN</span>
+        </div>
+        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="flex flex-col items-center gap-1">
+          <span data-seconds class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">SEG</span>
         </div>
       </div>
 
@@ -156,7 +174,38 @@ export const prerender = true
     }
   </style>
 
+  <style>
+    .countdown-digit {
+      text-shadow: 0 0 30px rgba(199, 168, 107, 0.2);
+      min-width: 1.8em;
+      text-align: center;
+    }
+  </style>
+
   <script>
+    import createCountdown, { type TimeParts } from '@/lib/countdown'
+
+    function initCountdown() {
+      const $countdown = document.getElementById('countdown-hero')
+      if (!$countdown) return
+
+      const $days = $countdown.querySelector('[data-days]')
+      const $hours = $countdown.querySelector('[data-hours]')
+      const $minutes = $countdown.querySelector('[data-minutes]')
+      const $seconds = $countdown.querySelector('[data-seconds]')
+
+      const timestamp = Number($countdown.getAttribute('data-date') ?? 0)
+      return createCountdown(timestamp, {
+        onTick({ days, hours, minutes, seconds }: TimeParts) {
+          if ($days) $days.textContent = days
+          if ($hours) $hours.textContent = hours
+          if ($minutes) $minutes.textContent = minutes
+          if ($seconds) $seconds.textContent = seconds
+        },
+        onComplete() {},
+      })
+    }
+
     document.addEventListener('astro:page-load', () => {
       const hero = document.querySelector('[data-hero]')
       const bg = hero?.querySelector('[data-bg]') as HTMLImageElement
@@ -191,27 +240,7 @@ export const prerender = true
         setTimeout(() => reveal(true), 3500)
       }
 
-      const EVENT_DATE = new Date('2026-03-09T19:00:00+01:00')
-      const forceLive = new URLSearchParams(window.location.search).has('live')
-      const isLive = forceLive || Date.now() >= EVENT_DATE.getTime()
-
-      if (isLive) {
-        const header = hero.querySelector('header')
-        const eventInfo = document.querySelector('[data-event-info]')
-        const twitchPlayer = document.querySelector('[data-twitch-player]')
-
-        header?.classList.remove('pt-20', 'sm:pt-12')
-        header?.classList.add('pt-6', 'sm:pt-6')
-
-        eventInfo?.classList.add('hidden')
-        twitchPlayer?.classList.remove('hidden')
-
-        const iframe = twitchPlayer?.querySelector('iframe')
-        if (iframe) {
-          const parent = window.location.hostname
-          iframe.src = `https://player.twitch.tv/?channel=ibai&parent=${parent}`
-        }
-      }
+      initCountdown()?.start()
     })
   </script>
 </Layout>
