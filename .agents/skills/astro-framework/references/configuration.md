@@ -349,17 +349,33 @@ import { PUBLIC_API_URL } from 'astro:env/client';
 ---
 ```
 
+## Session Configuration (Astro 5.7+)
+
+```javascript
+import { defineConfig, sessionDrivers } from 'astro/config';
+
+export default defineConfig({
+  session: {
+    driver: sessionDrivers.redis({
+      url: process.env.REDIS_URL,
+    }),
+    // Or use filesystem, memory, etc.
+  },
+});
+```
+
 ## Experimental Features
 
 ```javascript
 export default defineConfig({
   experimental: {
-    serverIslands: true,
     contentIntellisense: true,
     clientPrerender: true,
   },
 });
 ```
+
+> **Note:** Server islands (`server:defer`) are stable since Astro 5 — no experimental flag needed.
 
 ## Full Example
 
