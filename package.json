@@ -14,7 +14,10 @@
     "generate:blur-images": "node scripts/generate-blur-placeholders.mjs",
     "db:init": "node scripts/init-predictions-db.mjs",
     "db:check": "node scripts/check-predictions-db.mjs",
-    "db:test": "node scripts/test-predictions.mjs"
+    "db:test": "node scripts/test-predictions.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.0",
@@ -22,12 +25,12 @@
     "@auth/core": "0.40.0",
     "@libsql/client": "0.17.0",
     "@lucide/astro": "0.575.0",
-    "tailwind-animations": "1.0.1",
     "@tailwindcss/vite": "4.2.1",
     "@vercel/analytics": "1.6.1",
     "astro": "5.18.0",
     "auth-astro": "4.2.0",
     "canvas-confetti": "1.9.4",
+    "tailwind-animations": "1.0.1",
     "tailwindcss": "4.2.1"
   },
   "devDependencies": {
@@ -35,9 +38,11 @@
     "@typescript-eslint/parser": "8.56.1",
     "eslint": "10.0.2",
     "eslint-plugin-astro": "1.6.0",
+    "happy-dom": "^20.8.9",
     "prettier": "3.8.1",
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-tailwindcss": "0.7.2",
-    "sharp": "0.34.5"
+    "sharp": "0.34.5",
+    "vitest": "^4.1.2"
   }
 }
