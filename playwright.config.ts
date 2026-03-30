@@ -1,27 +1,33 @@
 import { defineConfig } from '@playwright/test'
 
+const isCI = !!process.env.CI
+const baseURL = isCI ? 'http://localhost:4321' : 'https://localhost:4321'
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  forbidOnly: isCI,
+  retries: isCI ? 2 : 0,
+  workers: isCI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:4321',
+    baseURL,
     trace: 'on-first-retry',
+    ignoreHTTPSErrors: true,
   },
   webServer: {
     command: 'pnpm dev',
-    url: 'http://localhost:4321',
-    reuseExistingServer: !process.env.CI,
+    url: baseURL,
+    reuseExistingServer: !isCI,
     timeout: 30000,
+    ignoreHTTPSErrors: true,
     env: {
-      TURSO_DATABASE_URL: 'libsql://placeholder.turso.io',
-      TURSO_AUTH_TOKEN: 'placeholder',
+      TURSO_DATABASE_URL: 'file:local.db',
+      TURSO_AUTH_TOKEN: '',
       TWITCH_CLIENT_ID: 'placeholder',
       TWITCH_CLIENT_SECRET: 'placeholder',
-      AUTH_SECRET: 'placeholder',
+      AUTH_SECRET: 'e2e-test-secret',
+      AUTH_TRUST_HOST: 'true',
     },
   },
   projects: [
