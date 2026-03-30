@@ -4,10 +4,10 @@ import { FIGHTERS } from '@/consts/fighters'
 
 describe('getBoxerById', () => {
   it('should return the correct fighter for a valid id', () => {
-    const fighter = getBoxerById('peereira')
+    const fighter = getBoxerById('grefg')
     expect(fighter).toBeDefined()
-    expect(fighter.id).toBe('peereira')
-    expect(fighter.name).toBe('Peereira')
+    expect(fighter.id).toBe('grefg')
+    expect(fighter.name).toBe('Grefg')
   })
 
   it('should return FIGHTERS[0] for an invalid id', () => {
@@ -16,7 +16,7 @@ describe('getBoxerById', () => {
   })
 
   it('should return a fighter with the expected properties', () => {
-    const fighter = getBoxerById('grefg')
+    const fighter = getBoxerById('illojuan')
     expect(fighter).toHaveProperty('id')
     expect(fighter).toHaveProperty('name')
     expect(fighter).toHaveProperty('realName')
@@ -36,5 +36,12 @@ describe('getBoxerVersusById', () => {
   it('should return FIGHTERS[0] for an invalid id', () => {
     const fighter = getBoxerVersusById('nonexistent-id')
     expect(fighter).toBe(FIGHTERS[0])
+  })
+
+  it('should have matching versus relationships', () => {
+    const grefg = getBoxerById('grefg')
+    const illojuan = getBoxerById('illojuan')
+    expect(grefg.versus).toBe('illojuan')
+    expect(illojuan.versus).toBe('grefg')
   })
 })

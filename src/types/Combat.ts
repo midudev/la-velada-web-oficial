@@ -6,4 +6,6 @@ export interface Combat {
   video: string
   winner: string
   description: string
+  rounds?: number
+  helmet?: boolean
 }
