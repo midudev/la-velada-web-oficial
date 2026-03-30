@@ -22,6 +22,34 @@ export const prerender = true
       PREDICCIONES DE LA COMUNIDAD
     </h2>
 
+    <div id="auth-section" class="mt-4 hidden">
+      <div id="logged-out" class="hidden">
+        <button
+          id="login-btn"
+          class="flex cursor-pointer items-center gap-2 rounded-lg bg-[#9146ff] px-6 py-3 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-[#7c3aed]"
+        >
+          <svg class="size-5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
+          </svg>
+          INICIAR SESIÓN CON TWITCH
+        </button>
+      </div>
+      <div id="logged-in" class="hidden items-center gap-4 rounded-lg bg-black/30 px-6 py-4 shadow-lg backdrop-blur-sm">
+        <img id="user-avatar" src="" alt="" class="size-10 rounded-full" />
+        <span id="user-name" class="text-white lowercase"></span>
+        <button
+          id="logout-btn"
+          class="ml-4 cursor-pointer rounded-lg bg-red-700 px-4 py-2 text-sm font-medium lowercase text-white transition-all duration-300 hover:scale-105 hover:bg-red-800"
+        >
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+
+    <p id="vote-hint" class="mt-2 hidden text-sm text-white/60 lowercase">
+      Haz click en un luchador para votar
+    </p>
+
     <div class="flex w-full flex-col items-center text-center">
       <div
         id="combats-container"
@@ -39,17 +67,20 @@ export const prerender = true
               >
                 {fighters.map((fighter, fighterIndex) => (
                   <div
-                    class="fighter-result group relative z-20 flex size-96 h-full w-1/2 flex-col items-center transition-all duration-300"
+                    class="fighter-vote group relative z-20 flex size-96 h-full w-1/2 cursor-pointer flex-col items-center transition-all duration-300 hover:scale-105"
                     data-combat-id={id}
                     data-fighter-id={fighter}
                     data-fighter-index={fighterIndex}
                   >
                     <img
                       src={`/images/fighters/combat/${fighter}.webp`}
-                      class="mask-fade-bottom group-hover:contrast-110 size-96 h-full w-full object-contain object-bottom transition-all duration-300 group-hover:brightness-110"
-                      alt={`Imagen de ${fighter}`}
+                      class="mask-fade-bottom size-96 h-full w-full object-contain object-bottom transition-all duration-300"
+                      alt={`Votar por ${getBoxerById(fighter)?.name || fighter}`}
                       transition:name={`combat-img:${fighter}`}
                     />
+                    <span class="fighter-name absolute bottom-4 rounded bg-black/60 px-3 py-1 text-xs font-bold text-white opacity-0 transition-opacity group-hover:opacity-100">
+                      {getBoxerById(fighter)?.name || fighter}
+                    </span>
                   </div>
                 ))}
 
@@ -88,9 +119,77 @@ export const prerender = true
 </Layout>
 
 <script>
+  import { signIn, signOut } from 'auth-astro/client'
   import { getPredictionsForPage } from '@/lib/get-predictions-for-page'
 
-  document.addEventListener('astro:page-load', () => {
+  document.addEventListener('astro:page-load', async () => {
+    const authSection = document.getElementById('auth-section')
+    const loggedOut = document.getElementById('logged-out')
+    const loggedIn = document.getElementById('logged-in')
+    const loginBtn = document.getElementById('login-btn')
+    const logoutBtn = document.getElementById('logout-btn')
+    const voteHint = document.getElementById('vote-hint')
+    const userAvatar = document.getElementById('user-avatar') as HTMLImageElement
+    const userName = document.getElementById('user-name')
+
+    let session: any = null
+    try {
+      const res = await fetch('/api/auth/session')
+      session = await res.json()
+    } catch {}
+
+    if (authSection) authSection.classList.remove('hidden')
+
+    if (session?.user) {
+      loggedOut?.classList.add('hidden')
+      loggedIn?.classList.remove('hidden')
+      loggedIn?.classList.add('flex')
+      if (userAvatar && session.user.image) {
+        userAvatar.src = session.user.image
+        userAvatar.alt = `Avatar de ${session.user.name}`
+      }
+      if (userName) userName.textContent = `¡Hola, ${session.user.name}!`
+      if (voteHint) voteHint.classList.remove('hidden')
+    } else {
+      loggedOut?.classList.remove('hidden')
+      loggedIn?.classList.add('hidden')
+    }
+
+    loginBtn?.addEventListener('click', () => signIn('twitch'))
+    logoutBtn?.addEventListener('click', () => signOut())
+
+    document.querySelectorAll('.fighter-vote').forEach((el) => {
+      el.addEventListener('click', async () => {
+        if (!session?.user) {
+          signIn('twitch')
+          return
+        }
+
+        const combatId = el.getAttribute('data-combat-id')
+        const fighterId = el.getAttribute('data-fighter-id')
+
+        try {
+          const res = await fetch('/api/predictions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ combat_id: combatId, fighter_id: fighterId }),
+          })
+
+          if (res.ok) {
+            localStorage.removeItem('predictions-cache')
+            getPredictionsForPage()
+            el.classList.add('ring-2', 'ring-green-400')
+            setTimeout(() => el.classList.remove('ring-2', 'ring-green-400'), 2000)
+          } else {
+            const data = await res.json()
+            console.error('Vote error:', data.error)
+          }
+        } catch (error) {
+          console.error('Vote failed:', error)
+        }
+      })
+    })
+
     getPredictionsForPage()
   })
 </script>
