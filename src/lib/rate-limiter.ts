@@ -1,31 +1,17 @@
-interface RateLimitEntry {
-  count: number
-  resetTime: number
-}
+import { turso } from '@/lib/database'
 
 interface RateLimiterOptions {
   windowMs: number
   maxRequests: number
 }
 
-// In-memory store. Note: in serverless environments (e.g. Vercel), each
-// function instance has its own store, so rate limiting is best-effort.
-// For stricter enforcement, consider using an external store like Vercel KV.
-const store = new Map<string, RateLimitEntry>()
-
 const DEFAULT_OPTIONS: RateLimiterOptions = {
   windowMs: 60 * 1000, // 1 minute
   maxRequests: 30,
 }
 
-function cleanExpiredEntries() {
-  const now = Date.now()
-  for (const [key, entry] of store) {
-    if (now > entry.resetTime) {
-      store.delete(key)
-    }
-  }
-}
+// In-memory fallback for when DB is unavailable
+const memoryStore = new Map<string, { count: number; resetTime: number }>()
 
 export function getClientIp(request: Request): string {
   return (
@@ -35,22 +21,73 @@ export function getClientIp(request: Request): string {
   )
 }
 
-export function checkRateLimit(
+export async function checkRateLimit(
   key: string,
   options: Partial<RateLimiterOptions> = {},
-): { allowed: boolean; limit: number; remaining: number; resetTime: number } {
+): Promise<{ allowed: boolean; limit: number; remaining: number; resetTime: number }> {
   const { windowMs, maxRequests } = { ...DEFAULT_OPTIONS, ...options }
+
+  try {
+    return await checkRateLimitDb(key, windowMs, maxRequests)
+  } catch {
+    return checkRateLimitMemory(key, windowMs, maxRequests)
+  }
+}
+
+async function checkRateLimitDb(
+  key: string,
+  windowMs: number,
+  maxRequests: number,
+): Promise<{ allowed: boolean; limit: number; remaining: number; resetTime: number }> {
   const now = Date.now()
 
-  // Periodic cleanup
-  if (store.size > 10000) {
-    cleanExpiredEntries()
+  // Clean expired entries periodically
+  await turso.execute({
+    sql: 'DELETE FROM rate_limits WHERE reset_time < ?',
+    args: [now],
+  })
+
+  // Get current entry
+  const result = await turso.execute({
+    sql: 'SELECT count, reset_time FROM rate_limits WHERE key = ?',
+    args: [key],
+  })
+
+  if (result.rows.length === 0 || (result.rows[0].reset_time as number) < now) {
+    // New or expired entry
+    const resetTime = now + windowMs
+    await turso.execute({
+      sql: 'INSERT OR REPLACE INTO rate_limits (key, count, reset_time) VALUES (?, 1, ?)',
+      args: [key, resetTime],
+    })
+    return { allowed: true, limit: maxRequests, remaining: maxRequests - 1, resetTime }
   }
 
-  const entry = store.get(key)
+  const currentCount = (result.rows[0].count as number) + 1
+  const resetTime = result.rows[0].reset_time as number
+
+  await turso.execute({
+    sql: 'UPDATE rate_limits SET count = ? WHERE key = ?',
+    args: [currentCount, key],
+  })
+
+  if (currentCount > maxRequests) {
+    return { allowed: false, limit: maxRequests, remaining: 0, resetTime }
+  }
+
+  return { allowed: true, limit: maxRequests, remaining: maxRequests - currentCount, resetTime }
+}
+
+function checkRateLimitMemory(
+  key: string,
+  windowMs: number,
+  maxRequests: number,
+): { allowed: boolean; limit: number; remaining: number; resetTime: number } {
+  const now = Date.now()
+  const entry = memoryStore.get(key)
 
   if (!entry || now > entry.resetTime) {
-    store.set(key, { count: 1, resetTime: now + windowMs })
+    memoryStore.set(key, { count: 1, resetTime: now + windowMs })
     return { allowed: true, limit: maxRequests, remaining: maxRequests - 1, resetTime: now + windowMs }
   }
 
@@ -63,7 +100,7 @@ export function checkRateLimit(
   return { allowed: true, limit: maxRequests, remaining: maxRequests - entry.count, resetTime: entry.resetTime }
 }
 
-export function rateLimitHeaders(result: ReturnType<typeof checkRateLimit>): Record<string, string> {
+export function rateLimitHeaders(result: { limit: number; remaining: number; resetTime: number }): Record<string, string> {
   return {
     'X-RateLimit-Limit': String(result.limit),
     'X-RateLimit-Remaining': String(Math.max(0, result.remaining)),

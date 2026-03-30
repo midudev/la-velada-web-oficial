@@ -41,6 +41,14 @@ async function seed() {
     )
   `)
 
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS rate_limits (
+      key TEXT PRIMARY KEY,
+      count INTEGER DEFAULT 0,
+      reset_time INTEGER NOT NULL
+    )
+  `)
+
   console.log('Seeding predictions with random votes...')
 
   for (const combat of COMBATS) {

@@ -10,7 +10,7 @@ import { checkRateLimit, getClientIp, rateLimitHeaders } from '@/lib/rate-limite
 
 export const GET: APIRoute = async ({ request }) => {
   const ip = getClientIp(request)
-  const rateCheck = checkRateLimit(`get:${ip}`, { windowMs: 60_000, maxRequests: 60 })
+  const rateCheck = await checkRateLimit(`get:${ip}`, { windowMs: 60_000, maxRequests: 60 })
 
   if (!rateCheck.allowed) {
     return new Response(
@@ -109,7 +109,7 @@ export const GET: APIRoute = async ({ request }) => {
 
 export const POST: APIRoute = async ({ request }) => {
   const ip = getClientIp(request)
-  const rateCheck = checkRateLimit(`post:${ip}`, { windowMs: 60_000, maxRequests: 10 })
+  const rateCheck = await checkRateLimit(`post:${ip}`, { windowMs: 60_000, maxRequests: 10 })
 
   if (!rateCheck.allowed) {
     return new Response(

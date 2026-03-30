@@ -1,7 +1,15 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+
+// Mock database to force memory fallback
+vi.mock('@/lib/database', () => ({
+  turso: {
+    execute: vi.fn().mockRejectedValue(new Error('DB not available')),
+  },
+}))
+
 import { checkRateLimit, getClientIp, rateLimitHeaders } from '../rate-limiter'
 
-describe('checkRateLimit', () => {
+describe('checkRateLimit (memory fallback)', () => {
   beforeEach(() => {
     vi.useFakeTimers()
   })
@@ -10,55 +18,55 @@ describe('checkRateLimit', () => {
     vi.useRealTimers()
   })
 
-  it('should allow requests within the limit', () => {
-    const result = checkRateLimit('test-allow', { maxRequests: 5, windowMs: 60000 })
+  it('should allow requests within the limit', async () => {
+    const result = await checkRateLimit('test-allow', { maxRequests: 5, windowMs: 60000 })
     expect(result.allowed).toBe(true)
     expect(result.remaining).toBe(4)
     expect(result.limit).toBe(5)
   })
 
-  it('should block requests exceeding the limit', () => {
+  it('should block requests exceeding the limit', async () => {
     for (let i = 0; i < 3; i++) {
-      checkRateLimit('test-block', { maxRequests: 3, windowMs: 60000 })
+      await checkRateLimit('test-block', { maxRequests: 3, windowMs: 60000 })
     }
-    const result = checkRateLimit('test-block', { maxRequests: 3, windowMs: 60000 })
+    const result = await checkRateLimit('test-block', { maxRequests: 3, windowMs: 60000 })
     expect(result.allowed).toBe(false)
     expect(result.remaining).toBe(0)
   })
 
-  it('should reset after the time window expires', () => {
+  it('should reset after the time window expires', async () => {
     for (let i = 0; i < 3; i++) {
-      checkRateLimit('test-reset', { maxRequests: 3, windowMs: 1000 })
+      await checkRateLimit('test-reset', { maxRequests: 3, windowMs: 1000 })
     }
-    const blocked = checkRateLimit('test-reset', { maxRequests: 3, windowMs: 1000 })
+    const blocked = await checkRateLimit('test-reset', { maxRequests: 3, windowMs: 1000 })
     expect(blocked.allowed).toBe(false)
 
     vi.advanceTimersByTime(1001)
 
-    const allowed = checkRateLimit('test-reset', { maxRequests: 3, windowMs: 1000 })
+    const allowed = await checkRateLimit('test-reset', { maxRequests: 3, windowMs: 1000 })
     expect(allowed.allowed).toBe(true)
     expect(allowed.remaining).toBe(2)
   })
 
-  it('should track different keys independently', () => {
+  it('should track different keys independently', async () => {
     for (let i = 0; i < 3; i++) {
-      checkRateLimit('key-a', { maxRequests: 3, windowMs: 60000 })
+      await checkRateLimit('key-a', { maxRequests: 3, windowMs: 60000 })
     }
-    const blockedA = checkRateLimit('key-a', { maxRequests: 3, windowMs: 60000 })
+    const blockedA = await checkRateLimit('key-a', { maxRequests: 3, windowMs: 60000 })
     expect(blockedA.allowed).toBe(false)
 
-    const allowedB = checkRateLimit('key-b', { maxRequests: 3, windowMs: 60000 })
+    const allowedB = await checkRateLimit('key-b', { maxRequests: 3, windowMs: 60000 })
     expect(allowedB.allowed).toBe(true)
   })
 
-  it('should decrement remaining count correctly', () => {
-    const r1 = checkRateLimit('test-count', { maxRequests: 5, windowMs: 60000 })
+  it('should decrement remaining count correctly', async () => {
+    const r1 = await checkRateLimit('test-count', { maxRequests: 5, windowMs: 60000 })
     expect(r1.remaining).toBe(4)
 
-    const r2 = checkRateLimit('test-count', { maxRequests: 5, windowMs: 60000 })
+    const r2 = await checkRateLimit('test-count', { maxRequests: 5, windowMs: 60000 })
     expect(r2.remaining).toBe(3)
 
-    const r3 = checkRateLimit('test-count', { maxRequests: 5, windowMs: 60000 })
+    const r3 = await checkRateLimit('test-count', { maxRequests: 5, windowMs: 60000 })
     expect(r3.remaining).toBe(2)
   })
 })
