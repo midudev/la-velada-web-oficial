@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Velada VI - Technical Contributions</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        :root {
+            --primary: #0a1024;
+            --primary-light: #111a33;
+            --accent: #c7a86b;
+            --accent-light: #d4b97e;
+            --magenta: #ff4f9f;
+            --cyan: #00aba5;
+            --light: #F8F6F1;
+            --lighter: #FDFCFA;
+            --border: #E8E0D4;
+            --border-light: #F0EBE3;
+            --text: #1E293B;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+        }
+
+        @page {
+            size: A4;
+            margin: 18mm 15mm 22mm 15mm;
+        }
+        @page:first { margin: 0; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 10.5pt;
+            line-height: 1.65;
+            color: var(--text);
+            background: white;
+            max-width: 210mm;
+            margin: 0 auto;
+        }
+
+        /* ===================== COVER (dark, full bleed) ===================== */
+        .cover {
+            height: 100vh;
+            min-height: 297mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(165deg, var(--primary) 0%, var(--primary-light) 50%, #060B18 100%);
+            color: #f4e4c9;
+            padding: 80px 60px;
+            page-break-after: always;
+            overflow: hidden;
+        }
+
+        .cover::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light), var(--accent));
+        }
+
+        .cover-logo { width: 100px; height: auto; margin-bottom: 30px; z-index: 1; }
+        .cover-badge { font-size: 9pt; font-weight: 600; letter-spacing: 6px; text-transform: uppercase; color: var(--accent-light); margin-bottom: 35px; z-index: 1; }
+        .cover h1 { font-family: 'Cinzel', serif; font-size: 42pt; font-weight: 800; line-height: 1.15; color: #f4e4c9; text-transform: uppercase; letter-spacing: 0.03em; z-index: 1; max-width: 600px; }
+        .cover-line { width: 70px; height: 3px; background: var(--accent); margin: 40px auto; z-index: 1; }
+        .cover-meta { font-size: 11pt; color: rgba(244,228,201,0.7); letter-spacing: 1px; z-index: 1; }
+        .cover-meta strong { color: #f4e4c9; font-weight: 500; }
+        .cover-stats { display: flex; gap: 40px; margin-top: 50px; z-index: 1; }
+        .cover-stat-value { font-family: 'Cinzel', serif; font-size: 22pt; font-weight: 800; display: block; }
+        .cover-stat:nth-child(odd) .cover-stat-value { color: var(--magenta); }
+        .cover-stat:nth-child(even) .cover-stat-value { color: var(--cyan); }
+        .cover-stat-label { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(244,228,201,0.7); }
+
+        /* ===================== TOC ===================== */
+        .toc-page {
+            padding: 20mm 18mm 30mm;
+            page-break-after: always;
+        }
+
+        .toc-title { font-family: 'Cinzel', serif; font-size: 22pt; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .toc-line { width: 40px; height: 3px; background: var(--accent); margin-bottom: 30px; }
+
+        .toc-item { display: flex; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--border-light); font-size: 10.5pt; text-decoration: none; color: inherit; }
+        .toc-item:hover { background: var(--lighter); margin: 0 -8px; padding-left: 8px; padding-right: 8px; }
+        .toc-text { color: var(--text); font-weight: 500; }
+        .toc-dots { flex: 1; margin: 0 8px; min-width: 20px; height: 0.8em; background-image: radial-gradient(circle, var(--text-light) 0.5px, transparent 0.5px); background-size: 5px 1em; background-position: left center; background-repeat: repeat-x; }
+
+        .toc-sub-item { display: flex; align-items: baseline; padding: 5px 0 5px 20px; font-size: 9.5pt; text-decoration: none; color: inherit; }
+        .toc-sub-item:hover { background: var(--lighter); margin: 0 -8px; padding-left: 28px; padding-right: 8px; }
+        .toc-sub-text { color: var(--text-muted); }
+
+        a.toc-item, a.toc-sub-item { text-decoration: none; color: inherit; }
+
+        /* ===================== CONTENT ===================== */
+        .content { padding: 0 18mm 40px; }
+
+        .section-block { page-break-inside: avoid; }
+        .subsection { page-break-inside: avoid; margin-bottom: 20px; }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            font-size: 17pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin: 45px 0 20px;
+            padding-top: 15px;
+            page-break-after: avoid;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 35px;
+            height: 3px;
+            background: var(--accent);
+            margin-top: 10px;
+        }
+
+        h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            font-size: 12pt;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin: 28px 0 12px;
+            page-break-after: avoid;
+        }
+
+        p { margin-bottom: 12px; }
+        strong { font-weight: 600; }
+
+        /* ===================== CARDS ===================== */
+        .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; page-break-inside: avoid; }
+        .card { background: var(--light); border: 1px solid var(--border); border-radius: 10px; padding: 16px; page-break-inside: avoid; }
+        .card h3 { font-size: 9.5pt; margin: 0 0 8px; }
+        .card h3::after { display: none; }
+        .card p { font-size: 9pt; line-height: 1.5; margin-bottom: 8px; color: var(--text-muted); }
+
+        .tag { display: inline-block; font-size: 7pt; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+        .tag-api { background: rgba(0,171,165,0.12); color: var(--cyan); }
+        .tag-auth { background: rgba(255,79,159,0.1); color: var(--magenta); }
+        .tag-perf { background: rgba(199,168,107,0.15); color: #8B7340; }
+        .tag-ci { background: rgba(255,79,159,0.1); color: var(--magenta); }
+        .tag-ui { background: rgba(199,168,107,0.15); color: #8B7340; }
+        .tag-seo { background: rgba(0,171,165,0.12); color: var(--cyan); }
+        .tag-data { background: rgba(255,79,159,0.1); color: var(--magenta); }
+
+        /* ===================== CODE ===================== */
+        pre {
+            background: #0F172A; color: #E2E8F0;
+            padding: 14px 18px; border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace; font-size: 8.5pt; line-height: 1.6;
+            margin: 14px 0; page-break-inside: avoid;
+            border-left: 3px solid var(--accent); white-space: pre;
+        }
+
+        /* ===================== TABLES ===================== */
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 9.5pt; page-break-inside: avoid; }
+        th { background: var(--primary); color: white; font-family: 'Cinzel', serif; font-weight: 600; text-align: left; padding: 10px 14px; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 9px 14px; border-bottom: 1px solid var(--border); }
+        tr:nth-child(even) { background: var(--lighter); }
+        .highlight { color: var(--cyan); font-weight: 600; }
+
+        /* ===================== CHECK LISTS ===================== */
+        .check-list { list-style: none; padding: 0; margin: 12px 0; }
+        .check-list li { font-size: 9.5pt; color: var(--text-muted); padding: 5px 0 5px 22px; position: relative; }
+        .check-list li::before { content: '\2713'; position: absolute; left: 0; color: var(--cyan); font-weight: 700; font-size: 10pt; }
+
+        /* ===================== PILLS ===================== */
+        .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+        .pill { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 20px; font-size: 8.5pt; font-weight: 500; background: var(--light); border: 1px solid var(--border); color: var(--text); }
+        .pill-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+
+        /* ===================== FUTURE ===================== */
+        .future-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 14px 0; page-break-inside: avoid; }
+        .future-item { font-size: 9.5pt; color: var(--text-muted); padding: 8px 12px 8px 26px; position: relative; background: var(--light); border-radius: 8px; }
+        .future-item::before { content: '\25CB'; position: absolute; left: 10px; color: var(--accent); }
+
+        /* ===================== FOOTER ===================== */
+        .doc-footer { text-align: center; padding: 30px 0; border-top: 1px solid var(--border); margin-top: 30px; }
+        .doc-footer p { font-size: 8.5pt; color: var(--text-muted); }
+        .doc-footer .links { margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 18px; }
+        .doc-footer a { color: var(--accent); text-decoration: none; font-size: 9pt; font-weight: 500; }
+        .linkedin-link { display: inline-flex; align-items: center; }
+
+        /* ===================== PRINT BAR ===================== */
+        .print-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: var(--primary); color: white;
+            display: flex; justify-content: center; align-items: center; gap: 15px;
+            padding: 12px 24px; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .print-bar button { background: var(--accent); color: var(--primary); border: none; padding: 10px 28px; font-size: 11pt; font-weight: 600; border-radius: 6px; cursor: pointer; font-family: 'Inter', sans-serif; }
+        .print-bar button:hover { background: var(--accent-light); }
+        .print-bar span { font-size: 9pt; opacity: 0.7; }
+
+        /* ===================== PRINT ===================== */
+        @media print {
+            .print-bar { display: none !important; }
+            body { padding: 0; }
+            .cover {
+                height: 100vh;
+                margin: 0;
+                padding: 0 50px;
+                background: linear-gradient(165deg, var(--primary) 0%, var(--primary-light) 50%, #060B18 100%);
+            }
+            .toc-page { padding: 15mm; }
+            .content { padding: 0 0 10px; }
+            h2 { margin-top: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="print-bar">
+        <button onclick="window.print()">Save as PDF</button>
+        <span>Cmd+P / Ctrl+P &mdash; Enable "Background graphics" for dark cover</span>
+    </div>
+
+    <!-- COVER (dark) -->
+    <div class="cover">
+        <svg class="cover-logo" viewBox="0 0 303 303" xmlns="http://www.w3.org/2000/svg" aria-label="La Velada VI"><path fill="#f4e4c9" fill-rule="evenodd" d="m188.1 150.2l90.6 137.4-34.9-16c-7.7-3.5-15.1-7.7-21.9-12.3-15.3-10.4-29-25.3-39.6-43.1l-17.8-30.2-12 18.2-12-18.2-17.7 30.2c-10.6 17.8-24.4 32.7-39.7 43.1-6.8 4.6-14.2 8.8-21.9 12.3l-34.9 16 90.6-137.4-90.6-137.4 34.9 16c7.7 3.5 15.1 7.7 21.9 12.3 15.3 10.4 29.1 25.3 39.7 43.1l17.7 30.2 12-18.2 12 18.2 17.8-30.2c10.6-17.8 24.3-32.7 39.6-43.1 6.8-4.6 14.2-8.8 21.9-12.3l34.9-16zm-21-31.8l18.4 27.9 81.3-123.3-21.2 9.7c-7.5 3.5-14.7 7.5-21.3 12-14.8 10-28 24.5-38.3 41.8zm-128.9-95.4l81.2 123.2 18.4-27.8-18.8-32c-10.3-17.3-23.6-31.7-38.4-41.8-6.6-4.5-13.8-8.5-21.3-11.9zm147.3 131.1l-23.5-35.6-9.5-14.5-9.6 14.5-23.4 35.6-81.3 123.2 21.2-9.7c7.5-3.4 14.6-7.4 21.2-11.9 14.8-10.1 28.1-24.5 38.4-41.8l19.5-33.1 14-23.7 13.9 23.7 19.5 33.1c10.3 17.3 23.6 31.7 38.4 41.8 6.6 4.5 13.8 8.5 21.3 11.9l21.1 9.7zm-23.4 27.8l-9.6-16.2-9.5 16.2 9.5 14.4z"/></svg>
+        <div class="cover-badge">Technical Contributions</div>
+        <h1>La Velada del A&ntilde;o VI</h1>
+        <div class="cover-line"></div>
+        <div class="cover-meta">Full-Stack Development &amp; Testing Infrastructure<br><strong>PR #1435</strong> &mdash; March 2026</div>
+        <div class="cover-stats">
+            <div class="cover-stat"><span class="cover-stat-value">15+</span><span class="cover-stat-label">Commits</span></div>
+            <div class="cover-stat"><span class="cover-stat-value">94</span><span class="cover-stat-label">Tests</span></div>
+            <div class="cover-stat"><span class="cover-stat-value">850</span><span class="cover-stat-label">Req/s</span></div>
+            <div class="cover-stat"><span class="cover-stat-value">3</span><span class="cover-stat-label">Cache Layers</span></div>
+        </div>
+    </div>
+
+    <!-- TOC -->
+    <div class="toc-page">
+        <div class="toc-title">Index</div>
+        <div class="toc-line"></div>
+        <div id="toc-list"></div>
+    </div>
+
+    <!-- CONTENT (light background) -->
+    <div class="content" id="main-content">
+
+        <h2>Architecture Decisions</h2>
+
+        <div class="subsection">
+            <h3>Testing Strategy</h3>
+            <p>Dual-layer testing approach combining fast unit tests with comprehensive end-to-end coverage for maximum confidence with minimal execution time.</p>
+            <pre>Unit (Vitest + happy-dom)
+  Pure logic, cache, rate limiting
+  57 tests, &lt;3s execution
+
+E2E (Playwright)
+  Full page rendering, navigation
+  37 tests, real browser</pre>
+        </div>
+
+        <div class="subsection">
+            <h3>Caching Architecture</h3>
+            <p>Three-layer cache system that reduces database load to under 5% of total requests while keeping response times under 13ms average.</p>
+            <pre>Layer 1: Client (browser)
+  localStorage, 15s TTL
+  Prevents repeated fetches during navigation
+
+Layer 2: Server (memory)
+  In-memory cache, 30s TTL
+  95%+ of API requests served from cache
+
+Layer 3: Database (Turso/SQLite)
+  Only hit on cache miss (~5% of requests)</pre>
+        </div>
+
+        <div class="subsection">
+            <h3>Rate Limiting</h3>
+            <p>SQLite-backed persistent rate limiting that survives server restarts and works correctly in serverless environments, with an in-memory fallback.</p>
+            <pre>Storage: SQLite (persistent)
+  Survives server restarts
+  Works in serverless (Vercel)
+
+Limits:
+  GET  /api/predictions: 60 req/min per IP
+  POST /api/predictions: 10 req/min per IP
+
+Fallback: In-memory if DB unavailable</pre>
+        </div>
+
+        <div class="subsection">
+            <h3>Authentication Flow</h3>
+            <p>Twitch OAuth integration via auth-astro with session-based voting and vote deduplication (one vote per user per combat).</p>
+            <pre>Provider: Twitch OAuth (auth-astro + @auth/core)
+
+Flow:
+  Login &rarr; Twitch OAuth &rarr; Callback &rarr; Session cookie
+  Vote &rarr; POST /api/predictions
+  Dedup: 1 vote per user per combat</pre>
+        </div>
+
+        <div class="section-block">
+        <h2>Features Implemented</h2>
+
+        <div class="card-grid">
+            <div class="card"><h3>Predictions API</h3><p>Full CRUD for combat predictions with vote registration, deduplication, and real-time percentage calculation across 10 combats.</p><span class="tag tag-api">API</span></div>
+            <div class="card"><h3>Persistent Rate Limiter</h3><p>SQLite-backed rate limiting that survives server restarts. IP-based with configurable windows and in-memory fallback.</p><span class="tag tag-perf">Performance</span></div>
+            <div class="card"><h3>CI/CD Pipeline</h3><p>GitHub Actions workflow running lint, 57 unit tests, and full Astro build on every pull request to main.</p><span class="tag tag-ci">CI/CD</span></div>
+            <div class="card"><h3>Twitch OAuth</h3><p>Login with Twitch integration via auth-astro. Session-based voting UI with real-time bar updates.</p><span class="tag tag-auth">Auth</span></div>
+        </div>
+
+        <div class="card-grid">
+            <div class="card"><h3>Page Activation</h3><p>Activated /combates, /combates/[id], /luchador/[id], and /porra with 10 combats, 20+ fighters.</p><span class="tag tag-ui">UI</span></div>
+            <div class="card"><h3>Navigation &amp; Footer</h3><p>Full navigation header with cross-page links and footer with social links in the shared Layout.</p><span class="tag tag-ui">UI</span></div>
+            <div class="card"><h3>JSON-LD &amp; SEO</h3><p>Corrected structured data: Event schema with accurate dates, location (La Cartuja, Sevilla).</p><span class="tag tag-seo">SEO</span></div>
+            <div class="card"><h3>La Velada VI Data</h3><p>10 confirmed combats, 22 fighters with descriptions, rule variations (rounds, helmet), profiles.</p><span class="tag tag-data">Data</span></div>
+        </div>
+        </div>
+
+        <div class="section-block">
+        <h2>Performance Metrics</h2>
+
+        <p>Benchmarked with autocannon 8.0.0 on Astro 5.18 dev server (single-threaded Node.js, Apple Silicon).</p>
+
+        <table>
+            <thead><tr><th>Endpoint</th><th>Avg Latency</th><th>p97.5</th><th>Req/s</th><th>Throughput</th></tr></thead>
+            <tbody>
+                <tr><td>GET /api/predictions (5c)</td><td>5.99ms</td><td>13ms</td><td class="highlight">770 req/s</td><td>271 kB/s</td></tr>
+                <tr><td>GET /api/predictions (10c)</td><td>11.29ms</td><td>22ms</td><td class="highlight">849 req/s</td><td>304 kB/s</td></tr>
+                <tr><td>/ (landing page)</td><td>8.65ms</td><td>16ms</td><td class="highlight">547 req/s</td><td>95 MB/s</td></tr>
+                <tr><td>/combates (overview)</td><td>17.45ms</td><td>33ms</td><td class="highlight">278 req/s</td><td>86 MB/s</td></tr>
+                <tr><td>/combates/[id] (detail)</td><td>13ms</td><td>24ms</td><td class="highlight">370 req/s</td><td>70 MB/s</td></tr>
+            </tbody>
+        </table>
+
+        <p>In production on Vercel: static pages served from CDN edge (&lt;10ms), API scales horizontally via serverless functions, Turso edge replicas for global low-latency reads.</p>
+        </div>
+
+        <div class="section-block">
+        <h2>Test Coverage</h2>
+
+        <div class="subsection">
+            <h3>Unit Tests &mdash; 57 tests (Vitest)</h3>
+            <ul class="check-list">
+                <li>countdown.ts &mdash; 12 tests (timer, formatters, edge cases)</li>
+                <li>predictions.ts &mdash; 12 tests (queries, votes, cache isolation)</li>
+                <li>rate-limiter.ts &mdash; 18 tests (DB + memory fallback)</li>
+                <li>boxers.ts &mdash; 6 tests (lookup, versus relationships)</li>
+                <li>dom-selector.ts &mdash; 6 tests ($ and $$ query helpers)</li>
+                <li>get-predictions-for-page.ts &mdash; 7 tests (fetch, cache, events)</li>
+                <li>remove-mirrored-pairs.ts &mdash; 5 tests (deduplication logic)</li>
+            </ul>
+        </div>
+
+        <div class="subsection">
+            <h3>E2E Tests &mdash; 37 tests (Playwright)</h3>
+            <ul class="check-list">
+                <li>landing.spec.ts &mdash; 8 tests (hero, countdown, SEO)</li>
+                <li>combates.spec.ts &mdash; 13 tests (overview + detail pages)</li>
+                <li>luchador.spec.ts &mdash; 10 tests (profile, stats, responsive)</li>
+                <li>navigation.spec.ts &mdash; 6 tests (links, 404, API health)</li>
+            </ul>
+        </div>
+
+        <p>Skipped with rationale: database.ts (7 LOC wrapper), image utilities (Astro build-time APIs), API route unit tests (already covered by E2E).</p>
+        </div>
+
+        <div class="section-block">
+        <h2>Tech Stack</h2>
+
+        <div class="pills">
+            <span class="pill"><span class="pill-dot" style="background: #ff5d01;"></span>Astro 5.18</span>
+            <span class="pill"><span class="pill-dot" style="background: #3178c6;"></span>TypeScript</span>
+            <span class="pill"><span class="pill-dot" style="background: #38bdf8;"></span>Tailwind CSS 4.2</span>
+            <span class="pill"><span class="pill-dot" style="background: #4FF8D2;"></span>Turso / SQLite</span>
+            <span class="pill"><span class="pill-dot" style="background: #9146ff;"></span>auth-astro (Twitch)</span>
+            <span class="pill"><span class="pill-dot" style="background: #6E9F18;"></span>Vitest</span>
+            <span class="pill"><span class="pill-dot" style="background: #2EAD33;"></span>Playwright</span>
+            <span class="pill"><span class="pill-dot" style="background: #333;"></span>Vercel</span>
+            <span class="pill"><span class="pill-dot" style="background: #2088FF;"></span>GitHub Actions</span>
+            <span class="pill"><span class="pill-dot" style="background: #cb3837;"></span>autocannon</span>
+        </div>
+
+        <h2>Future Work</h2>
+
+        <div class="future-grid">
+            <div class="future-item">WebSocket real-time prediction updates</div>
+            <div class="future-item">E2E tests for full OAuth + voting flow</div>
+            <div class="future-item">Performance monitoring dashboard</div>
+            <div class="future-item">Comprehensive accessibility audit</div>
+            <div class="future-item">Internationalization (i18n) support</div>
+            <div class="future-item">Server-Sent Events for live combat results</div>
+        </div>
+        </div>
+
+        <div class="doc-footer">
+            <p>&copy; 2026 La Velada del A&ntilde;o VI</p>
+            <div class="links">
+                <a href="https://github.com/midudev/la-velada-web-oficial/pull/1435" target="_blank" rel="noopener">PR #1435 on GitHub</a>
+                <a href="https://www.infolavelada.com" target="_blank" rel="noopener">infolavelada.com</a>
+                <a href="https://www.linkedin.com/in/victor-manuel-ramirez-marcos/" target="_blank" rel="noopener" class="linkedin-link" title="LinkedIn Profile">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            var c = document.getElementById('main-content');
+            var hs = c.querySelectorAll('h2, h3');
+            var toc = document.getElementById('toc-list');
+            var s = 0, sub = 0;
+
+            hs.forEach(function(h) {
+                if (h.closest('.card')) return;
+
+                if (h.tagName === 'H2') {
+                    s++; sub = 0;
+                    h.id = 's' + s;
+                    var el = document.createElement('a');
+                    el.href = '#s' + s;
+                    el.className = 'toc-item';
+                    el.innerHTML = '<span class="toc-text">' + h.textContent + '</span><span class="toc-dots"></span>';
+                    toc.appendChild(el);
+                } else {
+                    sub++;
+                    var id = 's' + s + '_' + sub;
+                    h.id = id;
+                    var el = document.createElement('a');
+                    el.href = '#' + id;
+                    el.className = 'toc-sub-item';
+                    el.innerHTML = '<span class="toc-sub-text">' + h.textContent + '</span>';
+                    toc.appendChild(el);
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>
