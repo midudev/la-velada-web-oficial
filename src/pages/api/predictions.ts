@@ -6,8 +6,22 @@ import {
   registerVote,
   getUserVotes,
 } from '@/lib/predictions'
+import { checkRateLimit, getClientIp, rateLimitHeaders } from '@/lib/rate-limiter'
 
 export const GET: APIRoute = async ({ request }) => {
+  const ip = getClientIp(request)
+  const rateCheck = checkRateLimit(`get:${ip}`, { windowMs: 60_000, maxRequests: 60 })
+
+  if (!rateCheck.allowed) {
+    return new Response(
+      JSON.stringify({ error: 'Demasiadas peticiones. Inténtalo de nuevo en un momento.' }),
+      {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', ...rateLimitHeaders(rateCheck) },
+      },
+    )
+  }
+
   try {
     const url = new URL(request.url)
     const combatId = url.searchParams.get('combat_id')
@@ -94,6 +108,19 @@ export const GET: APIRoute = async ({ request }) => {
 }
 
 export const POST: APIRoute = async ({ request }) => {
+  const ip = getClientIp(request)
+  const rateCheck = checkRateLimit(`post:${ip}`, { windowMs: 60_000, maxRequests: 10 })
+
+  if (!rateCheck.allowed) {
+    return new Response(
+      JSON.stringify({ error: 'Demasiadas peticiones. Inténtalo de nuevo en un momento.' }),
+      {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', ...rateLimitHeaders(rateCheck) },
+      },
+    )
+  }
+
   const session = await getSession(request)
   const user = session?.user
 
