@@ -5,6 +5,7 @@ import Analytics from '@vercel/analytics/astro'
 import '@/styles/global.css'
 
 import { fixedTitle } from '@/consts/pageTitles'
+import Header from '@/sections/Header.astro'
 interface Props {
   title: string
   description?: string
@@ -108,6 +109,7 @@ const {
     <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-black focus:outline-none">
       Saltar al contenido principal
     </a>
+    <Header />
     <main id="main-content">
       <slot />
     </main>
