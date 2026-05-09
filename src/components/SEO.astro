@@ -20,6 +20,8 @@ const {
 	image = "https://cdn.lavelada.dev/og.jpg",
 } = Astro.props as Props
 
+const base = import.meta.env.BASE_URL
+
 const determineCanonicalURL = () => {
 	if (Astro.url.host.includes("localhost")) return "http://localhost:4321"
 	return canonical || Astro.url.pathname
@@ -73,12 +75,12 @@ const canonicalURL = new URL(determineCanonicalURL(), Astro.site)
 <meta name="robots" content="index, follow" />
 <meta name="googlebot" content="index, follow" />
 
-<link rel="icon" type="image/svg+xml" href={new URL("/favicon.svg", Astro.url)} />
-<link rel="apple-touch-icon" href={new URL("/img/icons/apple-touch-icon.png", Astro.url)} />
+<link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+<link rel="apple-touch-icon" href={`${base}img/icons/apple-touch-icon.png`} />
 
-<link rel="icon" type="image/svg+xml" href={new URL("/favicon.svg", Astro.url)} />
-<meta name="msapplication-config" content={new URL("/browserconfig.xml", Astro.url).toString()} />
+<link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+<meta name="msapplication-config" content={`${base}browserconfig.xml`} />
 
-<script is:inline src={new URL("/registerSW.js", Astro.url).toString()}></script>
-<link rel="manifest" href={new URL("/manifest.webmanifest", Astro.url).toString()} />
+<script is:inline src={`${base}registerSW.js`}></script>
+<link rel="manifest" href={`${base}manifest.webmanifest`} />
 <RichResults />
