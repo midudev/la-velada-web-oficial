@@ -1,5 +1,7 @@
 ---
 import Action from "@/components/Action.astro"
+
+const base = import.meta.env.BASE_URL
 ---
 
 <Action
@@ -11,7 +13,7 @@ import Action from "@/components/Action.astro"
 	Agregar al calendario
 </Action>
 
-<script is:inline>
+<script is:inline define:vars={{ base }}>
 	const config = {
 		name: "🥊 La Velada del Año 4 - El Evento del Año",
 		description:
@@ -50,7 +52,7 @@ import Action from "@/components/Action.astro"
 			const text = button.innerHTML
 			button.innerHTML = "Cargando..."
 			status = "loading"
-			await Promise.all([import("/js/add-to-calendar.js"), loadStyle("/css/add-to-calendar.css")])
+			await Promise.all([import(base + "js/add-to-calendar.js"), loadStyle(base + "css/add-to-calendar.css")])
 			status = "loaded"
 			button.innerHTML = text
 		}
