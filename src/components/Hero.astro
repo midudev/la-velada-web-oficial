@@ -1,0 +1,69 @@
+<section
+  data-hero
+  class="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-black"
+  aria-label="Presentación de La Velada del Año VI"
+>
+  <picture class="absolute inset-0 z-0">
+    <source srcset="/background.avif" type="image/avif" />
+    <source srcset="/background.webp" type="image/webp" />
+    <img
+      data-bg
+      src="/background.png"
+      alt=""
+      role="presentation"
+      class="h-full w-full object-cover object-center opacity-0 transition-opacity duration-1000 ease-in"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </picture>
+
+  <div
+    class="absolute inset-0 z-1 bg-linear-to-b from-black/40 via-transparent to-black/80"
+    aria-hidden="true"
+  >
+  </div>
+
+  <slot />
+</section>
+
+<style is:inline>
+  [data-hero]:not([data-loaded]) .animate-fade-in {
+    animation-play-state: paused !important;
+    opacity: 0 !important;
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const hero = document.querySelector('[data-hero]')
+    const bg = hero?.querySelector('[data-bg]') as HTMLImageElement
+    if (!hero || !bg) return
+
+    let revealed = false
+
+    function reveal(skipTransition = false) {
+      if (revealed) return
+      revealed = true
+
+      if (skipTransition) {
+        bg.classList.add('!transition-none')
+        bg.classList.remove('opacity-0')
+        hero!.setAttribute('data-loaded', '')
+        return
+      }
+
+      bg.addEventListener('transitionend', () => hero!.setAttribute('data-loaded', ''), {
+        once: true,
+      })
+      bg.classList.remove('opacity-0')
+    }
+
+    if (bg.complete && bg.naturalHeight > 0) {
+      reveal(true)
+    } else {
+      bg.addEventListener('load', () => reveal(false))
+      bg.addEventListener('error', () => reveal(true))
+      setTimeout(() => reveal(true), 3500)
+    }
+  })
+</script>

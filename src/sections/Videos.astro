@@ -1,0 +1,278 @@
+---
+type Span = 'big' | 'small'
+
+interface Video {
+  id: string
+  title: string
+  videoId: string | null
+  active: boolean
+  span: Span
+}
+
+const VIDEOS: Video[] = [
+  {
+    id: 'presentacion',
+    title: 'La Presentación',
+    videoId: 'h-jWhM3ne5U',
+    active: true,
+    span: 'big',
+  },
+  {
+    id: 'pesaje',
+    title: 'El Pesaje',
+    videoId: null,
+    active: false,
+    span: 'small',
+  },
+  {
+    id: 'cara-a-cara',
+    title: 'Cara a Cara',
+    videoId: null,
+    active: false,
+    span: 'small',
+  },
+]
+
+const SPAN_CLASSES: Record<Span, string> = {
+  big: 'sm:col-span-2 lg:col-span-2 lg:row-span-2',
+  small: 'lg:col-span-1 lg:row-span-1',
+}
+
+function getPoster(videoId: string | null) {
+  if (!videoId) return null
+  return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+}
+---
+
+<section
+  id="videos"
+  class="relative w-full px-4 py-20 sm:px-6 lg:py-28"
+  aria-labelledby="videos-title"
+>
+  <div class="mx-auto flex max-w-7xl flex-col items-center">
+    <div class="mb-8 flex items-center gap-4 sm:mb-12" aria-hidden="true">
+      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
+      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
+      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
+    </div>
+
+    <h2
+      id="videos-title"
+      class="mb-3 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
+    >
+      VÍDEOS
+    </h2>
+    <p
+      class="mb-10 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.25em] text-white/55 sm:mb-14 sm:text-sm"
+    >
+      Todo lo que rodea a La Velada del Año VI
+    </p>
+
+    <div
+      class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:aspect-[24/9] lg:grid-cols-3 lg:grid-rows-2 lg:gap-4"
+    >
+      {
+        VIDEOS.map(({ title, videoId, active, span }) => {
+          const poster = getPoster(videoId)
+          const Tag = active ? 'button' : 'div'
+          return (
+            <Tag
+              type={active ? 'button' : undefined}
+              data-video-tile={active ? '' : undefined}
+              data-video-id={active ? videoId : undefined}
+              data-video-title={active ? title : undefined}
+              aria-label={active ? `Reproducir vídeo: ${title}` : `${title}. Próximamente.`}
+              aria-disabled={active ? undefined : 'true'}
+              class:list={[
+                'group relative isolate flex aspect-video w-full overflow-hidden rounded-xl border text-left outline-none transition duration-500 lg:aspect-auto',
+                SPAN_CLASSES[span],
+                active
+                  ? 'cursor-pointer border-white/10 bg-theme-navy/40 hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight'
+                  : 'pointer-events-none cursor-not-allowed border-white/5 bg-theme-navy/30',
+              ]}
+            >
+              {poster ? (
+                <img
+                  src={poster}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  decoding="async"
+                  class:list={[
+                    'absolute inset-0 -z-10 h-full w-full object-cover transition duration-700 ease-out',
+                    active
+                      ? 'scale-105 brightness-90 group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110'
+                      : 'scale-105 grayscale brightness-50',
+                  ]}
+                />
+              ) : (
+                <div
+                  aria-hidden="true"
+                  class="absolute inset-0 -z-10 bg-linear-to-br from-theme-navy via-theme-midnight to-black"
+                />
+              )}
+
+              <div
+                aria-hidden="true"
+                class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
+              />
+              <div
+                aria-hidden="true"
+                class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
+              />
+
+              {active && (
+                <span
+                  aria-hidden="true"
+                  class="absolute inset-0 -z-10 flex items-center justify-center"
+                >
+                  <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
+                    <svg
+                      viewBox="0 0 24 24"
+                      class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </span>
+                </span>
+              )}
+
+              {!active && (
+                <span class="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/55 px-3 py-1 font-cinzel text-[0.55rem] font-semibold tracking-[0.25em] text-theme-gold/90 backdrop-blur-sm sm:text-[0.6rem]">
+                  <span class="size-1.5 rounded-full bg-theme-gold/80" aria-hidden="true" />
+                  PRÓXIMAMENTE
+                </span>
+              )}
+
+              <div class="relative flex h-full w-full flex-col justify-end gap-1 p-5 sm:p-6 lg:p-7">
+                <h3
+                  class:list={[
+                    'font-cinzel font-bold leading-tight tracking-[0.04em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500',
+                    span === 'big'
+                      ? 'text-2xl sm:text-3xl lg:text-4xl xl:text-5xl'
+                      : 'text-xl sm:text-2xl lg:text-3xl',
+                    active ? 'group-hover:text-theme-cream group-focus-visible:text-theme-cream' : 'text-white/75',
+                  ]}
+                >
+                  {title}
+                </h3>
+                {active && (
+                  <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
+                    VER VÍDEO
+                    <svg
+                      class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12h14M13 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                )}
+              </div>
+            </Tag>
+          )
+        })
+      }
+    </div>
+  </div>
+
+  <dialog
+    id="video-dialog"
+    aria-labelledby="video-dialog-title"
+    class="m-0 w-screen max-w-none bg-transparent p-0 backdrop:bg-black/85 backdrop:backdrop-blur-sm open:flex open:h-screen open:items-center open:justify-center"
+  >
+    <div class="relative mx-4 w-full max-w-5xl">
+      <div class="mb-4 flex items-center justify-between gap-4">
+        <h3
+          id="video-dialog-title"
+          data-video-dialog-title
+          class="font-cinzel text-base font-bold tracking-[0.18em] text-theme-cream sm:text-xl"
+        >
+        </h3>
+        <button
+          type="button"
+          data-video-dialog-close
+          aria-label="Cerrar vídeo"
+          class="inline-flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white outline-none transition hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            class="size-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]"
+      >
+        <div data-video-dialog-frame class="absolute inset-0 h-full w-full"></div>
+      </div>
+    </div>
+  </dialog>
+</section>
+
+<script>
+  function initVideoDialog() {
+    const dialog = document.getElementById('video-dialog') as HTMLDialogElement | null
+    if (!dialog) return
+
+    const tiles = document.querySelectorAll<HTMLElement>('[data-video-tile]')
+    const closeBtn = dialog.querySelector<HTMLButtonElement>('[data-video-dialog-close]')
+    const titleEl = dialog.querySelector<HTMLElement>('[data-video-dialog-title]')
+    const frame = dialog.querySelector<HTMLElement>('[data-video-dialog-frame]')
+    if (!frame) return
+
+    function openVideo(videoId: string, title: string) {
+      if (titleEl) titleEl.textContent = title
+      const iframe = document.createElement('iframe')
+      iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&playsinline=1`
+      iframe.allow =
+        'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+      iframe.setAttribute('allowfullscreen', '')
+      iframe.title = title
+      iframe.className = 'h-full w-full border-0'
+      frame!.replaceChildren(iframe)
+      dialog!.showModal()
+    }
+
+    function closeVideo() {
+      if (!dialog!.open) return
+      dialog!.close()
+    }
+
+    tiles.forEach((tile) => {
+      tile.addEventListener('click', () => {
+        const videoId = tile.getAttribute('data-video-id')
+        const title = tile.getAttribute('data-video-title') ?? ''
+        if (!videoId) return
+        openVideo(videoId, title)
+      })
+    })
+
+    closeBtn?.addEventListener('click', closeVideo)
+
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) closeVideo()
+    })
+
+    dialog.addEventListener('close', () => {
+      frame.replaceChildren()
+    })
+  }
+
+  document.addEventListener('astro:page-load', initVideoDialog)
+</script>

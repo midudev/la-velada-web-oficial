@@ -1,0 +1,220 @@
+---
+const CHANNEL_ID = 'UC20NE0K97l6AsBeGKsAYtaA'
+const CHANNEL_URL = 'https://www.youtube.com/@PodcastdeLuzu'
+const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
+const MAX_AGE_DAYS = 60
+
+interface PodcastEpisode {
+  videoId: string
+  title: string
+  published: Date
+  thumbnail: string
+}
+
+function decodeHtmlEntities(value: string) {
+  return value
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
+}
+
+function parseFeed(xml: string): PodcastEpisode[] {
+  const entries: PodcastEpisode[] = []
+  const entryRegex = /<entry>([\s\S]*?)<\/entry>/g
+  let match: RegExpExecArray | null
+  while ((match = entryRegex.exec(xml)) !== null) {
+    const entry = match[1]
+    const videoId = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1]
+    const rawTitle = entry.match(/<title>([^<]+)<\/title>/)?.[1]
+    const published = entry.match(/<published>([^<]+)<\/published>/)?.[1]
+    if (!videoId || !rawTitle || !published) continue
+    entries.push({
+      videoId,
+      title: decodeHtmlEntities(rawTitle),
+      published: new Date(published),
+      thumbnail: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
+    })
+  }
+  return entries
+}
+
+async function loadEpisodes(): Promise<PodcastEpisode[]> {
+  try {
+    const response = await fetch(FEED_URL)
+    if (!response.ok) return []
+    const xml = await response.text()
+    const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000
+    return parseFeed(xml)
+      .filter((episode) => episode.published.getTime() >= cutoff)
+      .sort((a, b) => b.published.getTime() - a.published.getTime())
+  } catch (error) {
+    console.error('[Podcast] No se pudo cargar el feed:', error)
+    return []
+  }
+}
+
+const episodes = await loadEpisodes()
+
+const rtf = new Intl.RelativeTimeFormat('es', { numeric: 'auto' })
+const dateFormatter = new Intl.DateTimeFormat('es', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+})
+
+function formatRelative(date: Date) {
+  const diffMs = date.getTime() - Date.now()
+  const diffHours = Math.round(diffMs / (1000 * 60 * 60))
+  const diffDays = Math.round(diffHours / 24)
+  if (Math.abs(diffHours) < 24) {
+    return rtf.format(diffHours, 'hour')
+  }
+  if (Math.abs(diffDays) < 30) {
+    return rtf.format(diffDays, 'day')
+  }
+  return rtf.format(Math.round(diffDays / 30), 'month')
+}
+---
+
+<section
+  id="podcast"
+  class="relative w-full px-4 pb-20 sm:px-6 lg:pb-28"
+  aria-labelledby="podcast-title"
+>
+  <div class="mx-auto flex max-w-5xl flex-col items-center">
+    <div class="mb-8 flex items-center gap-4 sm:mb-10" aria-hidden="true">
+      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
+      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
+      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
+    </div>
+
+    <h2
+      id="podcast-title"
+      class="mb-3 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
+    >
+      EL PODCAST PIRATA
+    </h2>
+    <p
+      class="mb-10 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.25em] text-white/55 sm:text-sm"
+    >
+      Últimos episodios sobre La Velada del Año VI
+    </p>
+
+    <div
+      class="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-theme-navy/30 shadow-[0_25px_60px_-30px_rgba(0,0,0,0.8)]"
+    >
+      <header
+        class="flex items-center justify-between gap-3 border-b border-white/10 bg-black/30 px-4 py-3 sm:px-6"
+      >
+        <div class="flex items-center gap-3">
+          <span
+            class="flex size-8 items-center justify-center rounded-full bg-theme-gold/15 text-theme-gold sm:size-9"
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 24 24" class="size-4 sm:size-5" fill="currentColor" aria-hidden="true">
+              <path
+                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0C.488 3.45.029 5.804 0 12c.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0C23.512 20.55 23.97 18.196 24 12c-.03-6.185-.484-8.549-4.385-8.816M9 16V8l8 3.993z"
+              />
+            </svg>
+          </span>
+          <div class="flex flex-col">
+            <span
+              class="font-cinzel text-xs font-bold tracking-[0.2em] text-theme-cream sm:text-sm"
+            >
+              EL PODCAST PIRATA DE LA VELADA 6
+            </span>
+            <a
+              href={CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="font-cinzel text-[0.6rem] tracking-[0.25em] text-white/50 transition hover:text-theme-gold focus-visible:text-theme-gold sm:text-[0.65rem]"
+            >
+              VER CANAL EN YOUTUBE
+            </a>
+          </div>
+        </div>
+
+        <span
+          class="hidden font-cinzel text-[0.6rem] tracking-[0.25em] text-white/45 sm:inline-block"
+        >
+          {episodes.length} EPISODIO{episodes.length === 1 ? '' : 'S'}
+        </span>
+      </header>
+
+      {
+        episodes.length === 0 ? (
+          <div class="flex h-[28rem] items-center justify-center px-6 text-center font-cinzel text-xs tracking-[0.2em] text-white/55 sm:h-[32rem] sm:text-sm">
+            No hay episodios publicados en los últimos 2 meses.
+          </div>
+        ) : (
+          <ul
+            class="no-scrollbar h-[28rem] divide-y divide-white/5 overflow-y-auto sm:h-[32rem]"
+            data-podcast-list
+          >
+            {episodes.map((episode) => (
+              <li>
+                <button
+                  type="button"
+                  data-video-tile
+                  data-video-id={episode.videoId}
+                  data-video-title={episode.title}
+                  aria-label={`Reproducir episodio: ${episode.title}`}
+                  class="group flex w-full items-center gap-3 px-3 py-3 text-left outline-none transition duration-300 hover:bg-white/[0.04] focus-visible:bg-white/[0.06] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-theme-gold/60 sm:gap-4 sm:px-5 sm:py-4"
+                >
+                  <span class="relative block aspect-video w-24 shrink-0 overflow-hidden rounded-md border border-white/10 sm:w-32">
+                    <img
+                      src={episode.thumbnail}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105 group-focus-visible:scale-105"
+                    />
+                    <span
+                      aria-hidden="true"
+                      class="absolute inset-0 flex items-center justify-center bg-black/35 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+                    >
+                      <span class="flex size-7 items-center justify-center rounded-full bg-theme-gold/90 text-theme-midnight sm:size-8">
+                        <svg viewBox="0 0 24 24" class="size-3.5 translate-x-[1px] sm:size-4" fill="currentColor" aria-hidden="true">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </span>
+                    </span>
+                  </span>
+
+                  <div class="flex min-w-0 flex-1 flex-col gap-1">
+                    <h3 class="line-clamp-2 font-cinzel text-sm font-bold leading-tight tracking-[0.04em] text-white transition duration-300 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-base">
+                      {episode.title}
+                    </h3>
+                    <time
+                      datetime={episode.published.toISOString()}
+                      title={dateFormatter.format(episode.published)}
+                      class="font-cinzel text-[0.6rem] tracking-[0.25em] text-white/45 sm:text-[0.65rem]"
+                    >
+                      {formatRelative(episode.published)}
+                    </time>
+                  </div>
+
+                  <svg
+                    aria-hidden="true"
+                    class="size-4 shrink-0 text-white/30 transition duration-300 group-hover:translate-x-1 group-hover:text-theme-gold group-focus-visible:translate-x-1 group-focus-visible:text-theme-gold"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M9 6l6 6-6 6" />
+                  </svg>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</section>
