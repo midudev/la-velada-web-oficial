@@ -1,0 +1,157 @@
+---
+import AlsaLogo from '@/assets/sponsors/alsa.svg'
+import CeraveLogo from '@/assets/sponsors/cerave.svg'
+import CocaColaLogo from '@/assets/sponsors/cocacola.svg'
+import GrefusaLogo from '@/assets/sponsors/grefusa.svg'
+import IdealoLogo from '@/assets/sponsors/idealo.svg'
+import InfojobsLogo from '@/assets/sponsors/infojobs.svg'
+import MahouLogo from '@/assets/sponsors/mahou.svg'
+import MaxibonLogo from '@/assets/sponsors/maxibon.svg'
+import McDonaldsLogo from '@/assets/sponsors/mcdonalds.svg'
+import RevolutLogo from '@/assets/sponsors/revolut.svg'
+import SpotifyLogo from '@/assets/sponsors/spotify.svg'
+
+const SPONSOR_ROWS = [
+  [
+    {
+      name: 'Maxibon',
+      url: 'https://froneri.es/nuestras-marcas/maxibon',
+      label: 'Ir a la página web de Maxibon',
+      Logo: MaxibonLogo,
+      logoClass: 'w-[56px] sm:w-[70px] lg:w-[82px]',
+      delayClass: 'animate-delay-[1100ms]',
+    },
+    {
+      name: 'Coca-Cola',
+      url: 'https://www.cocacola.es/',
+      label: 'Ir a la página web de Coca-Cola',
+      Logo: CocaColaLogo,
+      logoClass: 'w-[64px] sm:w-[80px] lg:w-[92px]',
+      delayClass: 'animate-delay-[1160ms]',
+    },
+    {
+      name: 'Revolut',
+      url: 'https://www.revolut.com/',
+      label: 'Ir a la página web de Revolut',
+      Logo: RevolutLogo,
+      logoClass: 'w-[70px] sm:w-[88px] lg:w-[102px]',
+      delayClass: 'animate-delay-[1220ms]',
+    },
+    {
+      name: 'Spotify',
+      url: 'https://www.spotify.com/',
+      label: 'Ir a la página web de Spotify',
+      Logo: SpotifyLogo,
+      logoClass: 'w-[68px] sm:w-[86px] lg:w-[100px]',
+      delayClass: 'animate-delay-[1280ms]',
+    },
+    {
+      name: 'InfoJobs',
+      url: 'https://www.infojobs.net/',
+      label: 'Ir a la página web de InfoJobs',
+      Logo: InfojobsLogo,
+      logoClass: 'w-[64px] sm:w-[80px] lg:w-[92px]',
+      delayClass: 'animate-delay-[1340ms]',
+    },
+  ],
+  [
+    {
+      name: 'Mahou',
+      url: 'https://www.mahou.es/',
+      label: 'Ir a la página web de Mahou',
+      Logo: MahouLogo,
+      logoClass: 'w-[50px] sm:w-[64px] lg:w-[74px]',
+      delayClass: 'animate-delay-[1400ms]',
+    },
+    {
+      name: 'idealo',
+      url: 'https://www.idealo.es/',
+      label: 'Ir a la página web de idealo',
+      Logo: IdealoLogo,
+      logoClass: 'w-[58px] sm:w-[72px] lg:w-[84px]',
+      delayClass: 'animate-delay-[1460ms]',
+    },
+    {
+      name: "McDonald's",
+      url: 'https://www.mcdonalds.es/',
+      label: "Ir a la página web de McDonald's",
+      Logo: McDonaldsLogo,
+      logoClass: 'w-[34px] sm:w-[42px] lg:w-[50px]',
+      delayClass: 'animate-delay-[1520ms]',
+    },
+    {
+      name: 'Grefusa',
+      url: 'https://www.grefusa.com/',
+      label: 'Ir a la página web de Grefusa',
+      Logo: GrefusaLogo,
+      logoClass: 'w-[48px] sm:w-[60px] lg:w-[70px]',
+      delayClass: 'animate-delay-[1580ms]',
+    },
+    {
+      name: 'CeraVe',
+      url: 'https://www.cerave.es/',
+      label: 'Ir a la página web de CeraVe',
+      Logo: CeraveLogo,
+      logoClass: 'w-[64px] sm:w-[80px] lg:w-[92px]',
+      delayClass: 'animate-delay-[1640ms]',
+    },
+    {
+      name: 'Alsa',
+      url: 'https://www.alsa.es/',
+      label: 'Ir a la página web de Alsa',
+      Logo: AlsaLogo,
+      logoClass: 'w-[58px] sm:w-[72px] lg:w-[84px]',
+      delayClass: 'animate-delay-[1700ms]',
+    },
+  ],
+] as const
+---
+
+<section
+  id="sponsors"
+  class="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center gap-5 px-6 py-4 sm:gap-6 sm:px-10"
+  aria-labelledby="sponsors-title"
+>
+  <h2 id="sponsors-title" class="sr-only">Patrocinadores oficiales</h2>
+
+  {
+    SPONSOR_ROWS.map((row, rowIndex) => (
+      <div
+        class:list={[
+          'grid w-full items-center justify-items-center gap-x-4 gap-y-5 sm:gap-x-6 lg:gap-x-8',
+          rowIndex === 0
+            ? 'max-w-3xl grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'
+            : 'max-w-4xl grid-cols-2 sm:grid-cols-3 lg:grid-cols-6',
+        ]}
+      >
+        {row.map(({ name, url, label, Logo, logoClass, delayClass }) => (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label}
+            title={name}
+            class:list={[
+              'group inline-flex min-h-7 items-center justify-center text-white outline-none transition duration-300 hover:scale-105 hover:opacity-80 focus-visible:scale-105 focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-4 focus-visible:ring-offset-black sm:min-h-9',
+              'animate-fade-in',
+              delayClass,
+            ]}
+          >
+            <Logo
+              aria-hidden="true"
+              class={`h-auto max-h-7 drop-shadow-[0_8px_18px_rgba(0,0,0,0.35)] transition duration-300 group-hover:drop-shadow-[0_10px_24px_rgba(255,255,255,0.16)] sm:max-h-9 ${logoClass}`}
+            />
+          </a>
+        ))}
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  @media (prefers-reduced-motion: reduce) {
+    a {
+      transition: opacity 0.2s ease;
+    }
+  }
+</style>
