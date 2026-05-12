@@ -1,0 +1,405 @@
+---
+import {
+  BOXERS,
+  COUNTRY_FLAGS,
+  COUNTRY_NAMES,
+  getBoxerPhoto,
+  getBoxerSelectImage,
+} from '@/consts/boxers'
+
+const initial = BOXERS[0]
+const initialPhoto = getBoxerPhoto(initial)
+const initialFlag = COUNTRY_FLAGS[initial.country] ?? ''
+const initialCountry = COUNTRY_NAMES[initial.country] ?? initial.country
+---
+
+<section
+  data-boxer-selector
+  class="relative mx-auto flex w-full max-w-6xl flex-col items-center"
+  aria-label="Selector de boxeadores de La Velada del Año VI"
+  data-active-id={initial.id}
+>
+  <div
+    class="flex items-center justify-center gap-3 sm:gap-4"
+    aria-hidden="true"
+  >
+    <span class="h-px w-10 bg-linear-to-r from-transparent to-theme-gold/45 sm:w-20"></span>
+    <span class="size-1.5 rotate-45 bg-theme-gold/80"></span>
+    <span
+      class="font-cinzel text-[0.55rem] font-semibold tracking-[0.4em] text-theme-gold/85 sm:text-[0.7rem]"
+    >LOS BOXEADORES</span>
+    <span class="size-1.5 rotate-45 bg-theme-gold/80"></span>
+    <span class="h-px w-10 bg-linear-to-l from-transparent to-theme-gold/45 sm:w-20"></span>
+  </div>
+
+  <div class="relative mt-4 flex w-full flex-col items-center sm:mt-6">
+    <span
+      aria-hidden="true"
+      data-active-watermark
+      class="boxer-watermark pointer-events-none absolute left-1/2 top-2 z-0 -translate-x-1/2 select-none whitespace-nowrap font-cinzel text-[18vw] font-black leading-[0.85] tracking-[-0.04em] text-theme-cream sm:text-[14vw] md:top-4 md:text-[11rem] lg:text-[13rem]"
+    >{initial.name}</span>
+
+    <div class="relative z-10 flex flex-col items-center">
+      <h2
+        data-active-name
+        class="boxer-name relative font-cinzel text-3xl font-black tracking-[0.08em] text-theme-cream sm:text-5xl md:text-6xl lg:text-7xl"
+      >{initial.name}</h2>
+
+      <p
+        class="mt-2 flex items-center gap-x-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.35em] text-theme-cream/75 sm:text-xs"
+        aria-live="polite"
+      >
+        <span class="text-base leading-none sm:text-lg" aria-hidden="true" data-active-flag>{initialFlag}</span>
+        <span data-active-country-name>{initialCountry}</span>
+      </p>
+    </div>
+
+    <div class="relative -mt-2 flex w-full items-end justify-center sm:-mt-4">
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-x-0 bottom-0 -z-1 mx-auto h-[85%] w-[70%] max-w-3xl"
+        style="background: radial-gradient(ellipse 60% 70% at 50% 65%, color-mix(in srgb, var(--color-theme-gold) 35%, transparent) 0%, transparent 70%);"
+      >
+      </div>
+
+      <div aria-hidden="true" class="boxer-beams pointer-events-none absolute inset-0 -z-1"></div>
+
+      <div class="boxer-portrait-wrap relative flex items-end justify-center">
+        <img
+          data-active-image
+          src={initialPhoto}
+          alt={`Foto principal de ${initial.name}`}
+          class="boxer-portrait relative z-10 h-[52vh] max-h-[640px] w-auto max-w-full object-contain object-bottom transition-opacity duration-300"
+          decoding="async"
+          fetchpriority="high"
+        />
+        <div
+          aria-hidden="true"
+          class="boxer-portrait-vignette pointer-events-none absolute inset-0 z-20"
+        >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="boxer-grid-frame relative z-10 mt-2 w-full max-w-md sm:max-w-2xl lg:max-w-5xl">
+    <div
+      class="boxer-grid grid grid-cols-5 lg:grid-cols-10"
+      role="listbox"
+      aria-label="Lista de boxeadores. Selecciona uno para verlo"
+    >
+      {
+        BOXERS.map((boxer, index) => {
+          const isActive = boxer.id === initial.id
+          const flag = COUNTRY_FLAGS[boxer.country] ?? ''
+          const countryName = COUNTRY_NAMES[boxer.country] ?? boxer.country
+          return (
+            <button
+              type="button"
+              data-thumb
+              data-id={boxer.id}
+              data-name={boxer.name}
+              data-photo={getBoxerPhoto(boxer)}
+              data-flag={flag}
+              data-country={countryName}
+              aria-label={`Ver ficha de ${boxer.name}`}
+              aria-pressed={isActive ? 'true' : 'false'}
+              data-active={isActive ? 'true' : 'false'}
+              class="boxer-cell group relative aspect-square cursor-pointer overflow-hidden transition duration-200 ease-out focus-visible:outline-none"
+              tabindex={index === 0 ? 0 : -1}
+            >
+              <img
+                src={getBoxerSelectImage(boxer)}
+                alt=""
+                role="presentation"
+                loading="lazy"
+                decoding="async"
+                width="160"
+                height="160"
+                class="boxer-thumb-img absolute inset-0 h-full w-full object-cover object-top transition duration-200 ease-out group-hover:scale-[1.05] group-focus-visible:scale-[1.05]"
+              />
+            </button>
+          )
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .boxer-watermark {
+    /* Nombre gigante como grabado atmosférico detrás del boxeador.
+       En lugar de un contorno duro con -webkit-text-stroke (que se ve dibujado),
+       usamos un relleno con gradiente muy tenue + un trazo "hairline" sutil,
+       y un fundido vertical para que las letras se disuelvan en la escena. */
+    text-transform: uppercase;
+    color: transparent;
+
+    background-image: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-cream) 14%, transparent) 0%,
+      color-mix(in srgb, var(--color-theme-gold) 10%, transparent) 55%,
+      transparent 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    -webkit-text-stroke: 0.5px
+      color-mix(in srgb, var(--color-theme-cream) 8%, transparent);
+
+    text-shadow:
+      0 0 24px color-mix(in srgb, var(--color-theme-gold) 14%, transparent),
+      0 1px 0 color-mix(in srgb, var(--color-theme-cream) 3%, transparent);
+
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      #000 28%,
+      #000 65%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      #000 28%,
+      #000 65%,
+      transparent 100%
+    );
+
+    transition: opacity 400ms ease;
+  }
+
+  .boxer-name {
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+    text-shadow:
+      0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
+      0 2px 18px color-mix(in srgb, var(--color-theme-gold) 55%, transparent),
+      0 6px 40px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
+    background: linear-gradient(
+      180deg,
+      var(--color-theme-cream) 0%,
+      var(--color-theme-cream) 45%,
+      color-mix(in srgb, var(--color-theme-gold) 95%, var(--color-theme-cream)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: opacity 400ms ease;
+  }
+
+  .boxer-portrait-wrap {
+    /* Garantiza que el vignette lateral siga al ancho de la imagen renderizada */
+    width: max-content;
+    max-width: 100%;
+  }
+
+  .boxer-portrait {
+    /* Funde el borde inferior con el ambiente */
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 82%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, black 82%, transparent 100%);
+    filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.55));
+  }
+
+  .boxer-portrait-vignette {
+    /* Difumina laterales hacia el midnight para esconder el fondo gris del retrato */
+    background:
+      linear-gradient(
+        90deg,
+        var(--color-theme-midnight) 0%,
+        color-mix(in srgb, var(--color-theme-midnight) 80%, transparent) 6%,
+        transparent 16%,
+        transparent 84%,
+        color-mix(in srgb, var(--color-theme-midnight) 80%, transparent) 94%,
+        var(--color-theme-midnight) 100%
+      ),
+      radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in srgb, var(--color-theme-midnight) 95%, transparent) 0%, transparent 70%);
+  }
+
+  .boxer-beams {
+    /* Dos haces de luz diagonales emergiendo desde abajo, en dorado sutil */
+    background:
+      conic-gradient(
+        from 200deg at 50% 105%,
+        transparent 0deg,
+        color-mix(in srgb, var(--color-theme-gold) 18%, transparent) 6deg,
+        transparent 12deg,
+        transparent 348deg,
+        color-mix(in srgb, var(--color-theme-gold) 18%, transparent) 354deg,
+        transparent 360deg
+      );
+    mask-image: linear-gradient(to top, black 0%, transparent 85%);
+    -webkit-mask-image: linear-gradient(to top, black 0%, transparent 85%);
+    opacity: 0.85;
+  }
+
+  .boxer-grid-frame {
+    /* Marco minimalista: una línea dorada fina y ya */
+    margin-inline: auto;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
+  }
+
+  .boxer-grid {
+    /* Separadores finos entre celdas (líneas doradas tenues) */
+    gap: 1px;
+    background: color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+  }
+
+  .boxer-cell {
+    /* Fondo neutro detrás de cada miniatura. La imagen va a tapar este fondo. */
+    background: color-mix(in srgb, var(--color-theme-midnight) 92%, var(--color-theme-navy));
+  }
+
+  .boxer-thumb-img {
+    transition:
+      opacity 200ms ease,
+      filter 200ms ease,
+      transform 200ms ease;
+  }
+
+  /* Celda activa: borde dorado fino interior + glow muy contenido */
+  .boxer-cell[data-active='true'] {
+    z-index: 2;
+    box-shadow:
+      inset 0 0 0 2px var(--color-theme-gold),
+      0 0 12px 0 color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
+  }
+
+  /* Hover/focus: borde sutil cream */
+  .boxer-cell:hover:not([data-active='true']),
+  .boxer-cell:focus-visible:not([data-active='true']) {
+    z-index: 1;
+    box-shadow:
+      inset 0 0 0 2px color-mix(in srgb, var(--color-theme-cream) 70%, transparent);
+  }
+
+  .boxer-cell:not([data-active='true']):not(:hover):not(:focus-visible) .boxer-thumb-img {
+    opacity: 0.85;
+  }
+
+  [data-boxer-selector]:not([data-ready]) [data-active-image] {
+    opacity: 1;
+  }
+
+  [data-active-image].is-switching,
+  [data-active-name].is-switching,
+  [data-active-watermark].is-switching {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boxer-portrait,
+    .boxer-name,
+    .boxer-watermark {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  function initBoxerSelector() {
+    const root = document.querySelector<HTMLElement>('[data-boxer-selector]')
+    if (!root) return
+
+    const image = root.querySelector<HTMLImageElement>('[data-active-image]')
+    const nameNode = root.querySelector<HTMLElement>('[data-active-name]')
+    const watermark = root.querySelector<HTMLElement>('[data-active-watermark]')
+    const flagNode = root.querySelector<HTMLElement>('[data-active-flag]')
+    const countryNode = root.querySelector<HTMLElement>('[data-active-country-name]')
+    const thumbs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-thumb]'))
+    if (!image || !nameNode || thumbs.length === 0) return
+
+    root.setAttribute('data-ready', '')
+
+    const idle =
+      (window as Window & { requestIdleCallback?: (cb: () => void) => number })
+        .requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 800))
+    idle(() => {
+      thumbs.forEach((btn) => {
+        const url = btn.dataset.photo
+        if (!url) return
+        const img = new Image()
+        img.decoding = 'async'
+        img.src = url
+      })
+    })
+
+    function select(thumb: HTMLButtonElement) {
+      if (!image || !nameNode) return
+
+      const { id, name, photo, flag, country } = thumb.dataset
+      if (!id || !name || !photo) return
+
+      if (root!.dataset.activeId === id) return
+      root!.dataset.activeId = id
+
+      thumbs.forEach((btn) => {
+        const isActive = btn === thumb
+        btn.dataset.active = String(isActive)
+        btn.setAttribute('aria-pressed', String(isActive))
+        btn.tabIndex = isActive ? 0 : -1
+      })
+
+      image.classList.add('is-switching')
+      nameNode!.classList.add('is-switching')
+      watermark?.classList.add('is-switching')
+
+      const swap = () => {
+        image.src = photo
+        image.alt = `Foto principal de ${name}`
+
+        nameNode!.textContent = name
+        if (watermark) watermark.textContent = name
+
+        if (flagNode && flag) flagNode.textContent = flag
+        if (countryNode && country) countryNode.textContent = country
+
+        const onLoaded = () => {
+          image.classList.remove('is-switching')
+          nameNode!.classList.remove('is-switching')
+          watermark?.classList.remove('is-switching')
+        }
+        if (image.complete && image.naturalHeight > 0) {
+          requestAnimationFrame(onLoaded)
+        } else {
+          image.addEventListener('load', onLoaded, { once: true })
+          image.addEventListener('error', onLoaded, { once: true })
+        }
+      }
+      setTimeout(swap, 140)
+    }
+
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('click', () => select(thumb))
+      thumb.addEventListener('mouseenter', () => select(thumb))
+      thumb.addEventListener('focus', () => select(thumb))
+    })
+
+    root.addEventListener('keydown', (event) => {
+      const target = event.target as HTMLElement | null
+      if (!target?.matches('[data-thumb]')) return
+
+      const currentIndex = thumbs.indexOf(target as HTMLButtonElement)
+      if (currentIndex < 0) return
+
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        event.preventDefault()
+        const next = thumbs[(currentIndex + 1) % thumbs.length]
+        next.focus()
+      } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        event.preventDefault()
+        const prev = thumbs[(currentIndex - 1 + thumbs.length) % thumbs.length]
+        prev.focus()
+      } else if (event.key === 'Home') {
+        event.preventDefault()
+        thumbs[0].focus()
+      } else if (event.key === 'End') {
+        event.preventDefault()
+        thumbs[thumbs.length - 1].focus()
+      }
+    })
+  }
+
+  document.addEventListener('astro:page-load', initBoxerSelector)
+</script>
