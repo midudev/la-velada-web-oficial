@@ -138,12 +138,6 @@ const SPONSORS: Sponsor[] = [
     </p>
 
     <div class="relative w-full">
-      <div
-        aria-hidden="true"
-        class="pointer-events-none absolute inset-x-0 -top-8 -bottom-8 -z-10 bg-[radial-gradient(ellipse_at_center,_rgba(199,168,107,0.08),_transparent_70%)]"
-      >
-      </div>
-
       <ul class="sponsors-grid" role="list">
         {
           SPONSORS.map(({ name, url, label, Logo, logoClass }, index) => (
@@ -154,17 +148,8 @@ const SPONSORS: Sponsor[] = [
                 rel="noopener noreferrer"
                 aria-label={label}
                 title={name}
-                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-theme-navy/30 text-white outline-none backdrop-blur-sm transition duration-500 hover:-translate-y-1 hover:border-theme-gold/45 hover:bg-theme-navy/55 hover:shadow-[0_22px_55px_-22px_rgba(199,168,107,0.55)] focus-visible:-translate-y-1 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white outline-none transition duration-500 hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               >
-                <span
-                  aria-hidden="true"
-                  class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_rgba(199,168,107,0.20),_transparent_60%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
-                />
-                <span
-                  aria-hidden="true"
-                  class="sponsor-card__sweep pointer-events-none absolute inset-0 -z-10 opacity-0 transition duration-700 group-hover:opacity-100 group-focus-visible:opacity-100"
-                />
-
                 <span
                   aria-hidden="true"
                   class="pointer-events-none absolute top-1.5 left-1.5 size-2.5 border-t border-l border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:top-2 sm:left-2 sm:size-3"
@@ -238,39 +223,14 @@ const SPONSORS: Sponsor[] = [
     }
   }
 
-  .sponsor-card__sweep {
-    background: linear-gradient(
-      120deg,
-      transparent 0%,
-      transparent 38%,
-      rgba(244, 228, 201, 0.12) 50%,
-      transparent 62%,
-      transparent 100%
-    );
-    background-size: 220% 100%;
-    background-position: 100% 0;
-    transition: background-position 0.9s ease;
-  }
-
-  .sponsor-card:hover .sponsor-card__sweep,
-  .sponsor-card:focus-visible .sponsor-card__sweep {
-    background-position: -120% 0;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .sponsor-card {
-      transition:
-        border-color 0.2s ease,
-        background-color 0.2s ease;
+      transition: none;
     }
 
     .sponsor-card:hover,
     .sponsor-card:focus-visible {
       transform: none;
-    }
-
-    .sponsor-card__sweep {
-      display: none;
     }
 
     [class*='animate-fade-in-up'] {
