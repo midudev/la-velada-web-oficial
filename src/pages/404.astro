@@ -1,41 +1,648 @@
 ---
 import Layout from '@/layouts/Layout.astro'
+import Header from '@/sections/Header.astro'
+import Footer from '@/sections/Footer.astro'
+import { battles } from '@/consts/battles'
+import {
+  BOXERS,
+  COUNTRY_FLAGS,
+  COUNTRY_NAMES,
+  getBoxerHeroImages,
+  getBoxerSelectImages,
+} from '@/consts/boxers'
 
 export const prerender = true
+
+// Elegimos un boxeador aleatorio en build-time para que cada compilación
+// "te noquee" un personaje distinto y la 404 tenga personalidad.
+const knockoutBoxer = BOXERS[Math.floor(Math.random() * BOXERS.length)]!
+const knockoutImages = getBoxerHeroImages(knockoutBoxer)
+
+// Mapa boxer → combate, para que cada miniatura del rescate enlace al
+// combate donde participa (la única ruta de detalle ya existente).
+const battleByBoxer = new Map<string, string>()
+for (const battle of battles) {
+  for (const id of battle.boxerIds) battleByBoxer.set(id, battle.id)
+}
+
+// Rescatamos siempre los 20 boxeadores, pero ponemos al "noqueado" al
+// final para que el usuario pueda elegir cualquier otro antes (sin
+// excluirlo: sigue siendo navegación válida si lo quiere).
+const rescueBoxers = [
+  ...BOXERS.filter((boxer) => boxer.id !== knockoutBoxer.id),
+  knockoutBoxer,
+].map((boxer) => ({
+  ...boxer,
+  thumbs: getBoxerSelectImages(boxer),
+  battleId: battleByBoxer.get(boxer.id) ?? '',
+  flag: COUNTRY_FLAGS[boxer.country] ?? '',
+  countryName: COUNTRY_NAMES[boxer.country] ?? boxer.country,
+  isKnockout: boxer.id === knockoutBoxer.id,
+}))
 ---
 
 <Layout
   title="404 - La Velada del Año VI"
   description="Página no encontrada en La Velada del Año VI. Vuelve al inicio para seguir disfrutando del evento de boxeo de Ibai Llanos."
   canonical="https://www.infolavelada.com/404"
+  robots="noindex, follow"
 >
+  <Header />
+
   <section
-    class="mask-fade-bottom flex min-h-screen w-full items-center justify-center text-center"
+    data-not-found
+    class="not-found-hero relative flex w-full flex-col items-center justify-center overflow-hidden bg-theme-midnight px-4 pb-24 pt-28 text-center sm:pt-32"
+    aria-labelledby="not-found-title"
   >
-    <div class="w-full max-w-3xl items-center justify-center">
-      <h1 class="text-theme-midnight">
-        <span
-          class="rotate-113 mb-12 w-fit mx-auto block text-[120px] font-bold tracking-[.025em]"
-          aria-hidden="true"
-        >
-          404
-        </span>
-        <span class="mb-2 block text-4xl font-bold tracking-wider">¡FUERA DE COMBATE!</span>
-      </h1>
-      <p class="text-theme-midnight mb-6 text-xl tracking-wide">
-        vaya, parece que te han noqueado...
+    <picture data-bg-wrap class="absolute inset-0 z-0">
+      <source
+        type="image/avif"
+        srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
+        sizes="100vw"
+      />
+      <source
+        type="image/webp"
+        srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+        sizes="100vw"
+      />
+      <img
+        src="/background.webp"
+        srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+        sizes="100vw"
+        alt=""
+        role="presentation"
+        class="h-full w-full object-cover object-center"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
+
+    <div
+      class="absolute inset-0 z-1 bg-linear-to-b from-black/55 via-theme-midnight/55 to-theme-midnight"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="not-found-aura pointer-events-none absolute inset-0 z-1" aria-hidden="true"></div>
+
+    <picture class="pointer-events-none absolute inset-x-0 bottom-0 z-2 flex items-end justify-center">
+      <source type="image/avif" srcset={knockoutImages.avif} />
+      <source type="image/webp" srcset={knockoutImages.webp} />
+      <img
+        src={knockoutImages.png}
+        alt=""
+        role="presentation"
+        class="knockout-boxer animate-blurred-fade-in animate-delay-500 h-[50vh] max-h-[560px] w-auto max-w-[90vw] object-contain object-bottom"
+        decoding="async"
+        fetchpriority="high"
+        width="600"
+        height="800"
+      />
+    </picture>
+
+    <div class="relative z-10 flex w-full max-w-3xl flex-col items-center">
+      <span
+        class="animate-fade-in animate-delay-200 font-cinzel text-[0.6rem] font-semibold tracking-[0.45em] text-theme-cream/65 sm:text-xs"
+      >
+        ERROR 404
+      </span>
+
+      <p
+        class="not-found-code animate-blurred-fade-in animate-delay-300 mt-3 font-cinzel text-[28vw] font-black leading-[0.85] tracking-[-0.04em] sm:text-[18vw] md:text-[14rem]"
+        aria-hidden="true"
+      >
+        404
       </p>
-      <div class="flex min-h-4 items-center justify-center">
+
+      <h1
+        id="not-found-title"
+        class="not-found-title animate-fade-in-up animate-delay-500 mt-4 font-cinzel text-3xl font-black tracking-[0.12em] sm:text-5xl md:text-6xl"
+      >
+        ¡Fuera de combate!
+      </h1>
+
+      <div
+        class="animate-fade-in animate-delay-700 mt-6 flex w-full items-center justify-center gap-3 sm:gap-4"
+        aria-hidden="true"
+      >
+        <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/60 sm:w-24"></span>
+        <span class="size-1.5 rotate-45 bg-theme-gold/85"></span>
+        <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/60 sm:w-24"></span>
+      </div>
+
+      <p
+        class="animate-fade-in-up animate-delay-900 mt-6 max-w-xl font-cinzel text-sm font-medium tracking-[0.18em] text-theme-cream/85 sm:text-base"
+      >
+        Te han noqueado. Esta página no existe o ya ha colgado los guantes.
+      </p>
+
+      <div
+        class="animate-fade-in-up animate-delay-1100 mt-10 flex flex-col items-center gap-4 sm:flex-row sm:gap-5"
+      >
         <a
           href="/"
-          class="bg-theme-cream text-theme-midnight flex items-center justify-center rounded-lg px-8 py-4 text-sm font-bold tracking-widest transition-all duration-300 ease-out hover:rotate-[2deg] active:scale-90"
-          aria-label="Botón para volver al inicio"
+          class="not-found-cta group inline-flex items-center gap-3 rounded-full border border-theme-gold/55 bg-theme-cream px-8 py-4 font-cinzel text-xs font-bold tracking-[0.32em] text-theme-midnight transition-all duration-300 ease-out hover:-translate-y-0.5 hover:rotate-[-1deg] hover:bg-theme-gold hover:text-theme-midnight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-gold focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight active:scale-95 sm:text-sm"
+          aria-label="Volver al inicio de La Velada del Año VI"
         >
-          <span class="relative z-10 flex items-center gap-2 tracking-widest">
-            Volver al ring
-          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="size-4 transition-transform duration-300 group-hover:-translate-x-1"
+            aria-hidden="true"
+          >
+            <path d="M19 12H5"></path>
+            <path d="m12 19-7-7 7-7"></path>
+          </svg>
+          Volver al ring
+        </a>
+
+        <a
+          href="#rescate"
+          class="not-found-secondary group inline-flex items-center gap-2 rounded-full border border-theme-gold/40 bg-transparent px-7 py-3.5 font-cinzel text-[0.65rem] font-bold tracking-[0.32em] text-theme-cream/85 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-theme-gold hover:text-theme-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-gold focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight active:scale-95 sm:text-xs"
+        >
+          Elegir boxeador
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="size-4 transition-transform duration-300 group-hover:translate-y-0.5"
+            aria-hidden="true"
+          >
+            <path d="M12 5v14"></path>
+            <path d="m19 12-7 7-7-7"></path>
+          </svg>
         </a>
       </div>
     </div>
   </section>
+
+  <section
+    id="rescate"
+    class="rescue-section relative isolate w-full overflow-hidden bg-theme-midnight px-4 pb-24 pt-16 sm:px-6 sm:pt-20"
+    aria-labelledby="rescue-title"
+  >
+    <div aria-hidden="true" class="rescue-bg absolute inset-0 -z-10"></div>
+
+    <div class="relative mx-auto flex w-full max-w-6xl flex-col items-center">
+      <div
+        class="flex w-full items-center justify-center gap-3 sm:gap-4"
+        aria-hidden="true"
+      >
+        <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/55 sm:w-24"></span>
+        <span class="size-1.5 rotate-45 bg-theme-gold/85"></span>
+        <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/55 sm:w-24"></span>
+      </div>
+
+      <span
+        class="mt-5 font-cinzel text-[0.6rem] font-semibold tracking-[0.45em] text-theme-gold/85 sm:text-xs"
+      >
+        SIGUE EN PIE
+      </span>
+
+      <h2
+        id="rescue-title"
+        class="rescue-title mt-3 font-cinzel text-2xl font-black tracking-[0.12em] sm:text-4xl md:text-5xl"
+      >
+        Elige a tu boxeador
+      </h2>
+
+      <p
+        class="mt-4 max-w-xl text-balance font-cinzel text-xs font-medium tracking-[0.22em] text-theme-cream/70 sm:text-sm"
+      >
+        Vuelve al ring eligiendo a cualquiera de los {BOXERS.length} contendientes
+        de La Velada del Año VI.
+      </p>
+
+      <ul
+        class="rescue-grid mt-10 grid w-full grid-cols-3 gap-3 sm:mt-12 sm:grid-cols-4 sm:gap-4 md:grid-cols-5 lg:grid-cols-5 xl:grid-cols-5"
+        role="list"
+      >
+        {
+          rescueBoxers.map((boxer, index) => (
+            <li
+              class="rescue-card-wrap animate-fade-in-up"
+              style={`animation-delay: ${Math.min(index * 35, 800)}ms`}
+            >
+              <a
+                href={boxer.battleId ? `/combate/${boxer.battleId}` : '/'}
+                class="rescue-card group relative block aspect-[3/4] w-full overflow-hidden rounded-md focus-visible:outline-none"
+                aria-label={`Ir al combate de ${boxer.name}`}
+                data-knockout={boxer.isKnockout ? 'true' : 'false'}
+              >
+                <span
+                  aria-hidden="true"
+                  class="rescue-card-bg pointer-events-none absolute inset-0 -z-10"
+                />
+
+                <picture>
+                  <source type="image/avif" srcset={boxer.thumbs.avif} />
+                  <source type="image/webp" srcset={boxer.thumbs.webp} />
+                  <img
+                    src={boxer.thumbs.png}
+                    alt=""
+                    role="presentation"
+                    loading="lazy"
+                    decoding="async"
+                    width="200"
+                    height="266"
+                    class="rescue-card-img absolute inset-0 h-full w-full object-cover object-top"
+                  />
+                </picture>
+
+                <span
+                  aria-hidden="true"
+                  class="rescue-card-veil pointer-events-none absolute inset-0"
+                />
+
+                <span aria-hidden="true" class="rescue-card-corner rescue-card-corner-tl" />
+                <span aria-hidden="true" class="rescue-card-corner rescue-card-corner-tr" />
+                <span aria-hidden="true" class="rescue-card-corner rescue-card-corner-bl" />
+                <span aria-hidden="true" class="rescue-card-corner rescue-card-corner-br" />
+
+                {boxer.isKnockout && (
+                  <span
+                    class="rescue-card-badge pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-theme-midnight/85 px-2.5 py-1 font-cinzel text-[0.5rem] font-bold tracking-[0.28em] text-theme-gold/95 sm:text-[0.55rem]"
+                    aria-hidden="true"
+                  >
+                    <span class="size-1 rotate-45 bg-theme-gold/95" />
+                    K.O.
+                  </span>
+                )}
+
+                <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-1 px-2 pb-3 pt-10 text-center sm:gap-1.5 sm:pb-4">
+                  <span
+                    aria-hidden="true"
+                    class="rescue-card-divider mb-0.5 h-px w-6 bg-theme-gold/60 transition-all duration-500"
+                  />
+                  <h3 class="rescue-card-name font-cinzel text-[0.65rem] font-bold uppercase leading-[1.05] tracking-[0.14em] text-theme-cream text-balance sm:text-xs md:text-sm">
+                    {boxer.name}
+                  </h3>
+                  <p class="rescue-card-country flex items-center gap-1 font-cinzel text-[0.5rem] font-semibold tracking-[0.28em] text-theme-cream/75 sm:text-[0.55rem]">
+                    <span class="text-xs leading-none" aria-hidden="true">
+                      {boxer.flag}
+                    </span>
+                    <span>{boxer.countryName}</span>
+                  </p>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <a
+        href="/boxeadores"
+        class="rescue-all mt-12 inline-flex items-center gap-2 font-cinzel text-[0.6rem] font-bold tracking-[0.32em] text-theme-cream/75 underline-offset-[6px] transition-colors duration-300 hover:text-theme-cream hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold sm:text-xs"
+      >
+        Ver a todos los boxeadores
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="size-3.5"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14"></path>
+          <path d="m12 5 7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <Footer />
 </Layout>
+
+<style>
+  [data-bg-wrap] {
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
+  }
+
+  [data-bg-wrap] img {
+    filter: saturate(0.85) brightness(0.55);
+  }
+
+  .not-found-hero {
+    min-height: 88svh;
+  }
+
+  .not-found-aura {
+    background:
+      radial-gradient(
+        ellipse 60% 55% at 50% 45%,
+        color-mix(in srgb, var(--color-theme-gold) 28%, transparent) 0%,
+        transparent 70%
+      );
+    mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+  }
+
+  .knockout-boxer {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      color-mix(in srgb, black 40%, transparent) 18%,
+      color-mix(in srgb, black 70%, transparent) 35%,
+      black 60%,
+      black 82%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      color-mix(in srgb, black 40%, transparent) 18%,
+      color-mix(in srgb, black 70%, transparent) 35%,
+      black 60%,
+      black 82%,
+      transparent 100%
+    );
+    filter:
+      saturate(0.7)
+      brightness(0.55)
+      drop-shadow(0 24px 40px rgba(0, 0, 0, 0.6));
+    opacity: 0.55;
+  }
+
+  .not-found-code {
+    color: transparent;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-cream) 90%, transparent) 0%,
+      var(--color-theme-cream) 35%,
+      color-mix(in srgb, var(--color-theme-gold) 95%, var(--color-theme-cream)) 70%,
+      color-mix(in srgb, var(--color-theme-gold) 50%, var(--color-theme-midnight)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 0.5px color-mix(in srgb, var(--color-theme-cream) 10%, transparent);
+    text-shadow:
+      0 0 30px color-mix(in srgb, var(--color-theme-gold) 35%, transparent),
+      0 12px 50px color-mix(in srgb, var(--color-theme-midnight) 80%, transparent);
+  }
+
+  .not-found-title {
+    color: var(--color-theme-cream);
+    background: linear-gradient(
+      180deg,
+      var(--color-theme-cream) 0%,
+      var(--color-theme-cream) 50%,
+      color-mix(in srgb, var(--color-theme-gold) 95%, var(--color-theme-cream)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow:
+      0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
+      0 2px 18px color-mix(in srgb, var(--color-theme-gold) 55%, transparent),
+      0 6px 40px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
+  }
+
+  .not-found-cta {
+    box-shadow:
+      0 8px 22px color-mix(in srgb, var(--color-theme-midnight) 60%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+  }
+
+  .not-found-cta:hover {
+    box-shadow:
+      0 12px 28px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent),
+      0 0 24px color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .knockout-boxer,
+    .not-found-code,
+    .not-found-title,
+    .not-found-cta {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* ---------- Sección de rescate (selección de boxeadores) ---------- */
+
+  /* Fondo de la sección: degrade vertical que conecta con la 404 hero y
+     un radial dorado muy sutil en la parte superior para dar foco al
+     título sin restar protagonismo a las cards. */
+  .rescue-bg {
+    background:
+      radial-gradient(
+        ellipse 70% 45% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 12%, transparent) 0%,
+        transparent 65%
+      ),
+      linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
+  }
+
+  .rescue-title {
+    color: var(--color-theme-cream);
+    background: linear-gradient(
+      180deg,
+      var(--color-theme-cream) 0%,
+      var(--color-theme-cream) 50%,
+      color-mix(in srgb, var(--color-theme-gold) 95%, var(--color-theme-cream)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow:
+      0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
+      0 2px 14px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+  }
+
+  /* Card del rescate: misma personalidad que las cards de la página de
+     boxeadores pero más compacta para que entren bien hasta 5 por fila
+     sin perder el contraste del nombre y la bandera. */
+  .rescue-card {
+    background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
+      0 10px 24px rgba(0, 0, 0, 0.4);
+    transition:
+      box-shadow 400ms ease,
+      transform 400ms ease;
+    will-change: transform;
+  }
+
+  .rescue-card:hover,
+  .rescue-card:focus-visible {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 70%, transparent),
+      0 22px 50px rgba(0, 0, 0, 0.6),
+      0 0 28px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    transform: translateY(-4px);
+  }
+
+  /* Halo dorado detrás de la miniatura, intensifica en hover. */
+  .rescue-card-bg {
+    background: radial-gradient(
+      ellipse 90% 65% at 50% 35%,
+      color-mix(in srgb, var(--color-theme-gold) 28%, transparent) 0%,
+      transparent 70%
+    );
+    opacity: 0.4;
+    transition: opacity 500ms ease;
+  }
+
+  .rescue-card:hover .rescue-card-bg,
+  .rescue-card:focus-visible .rescue-card-bg {
+    opacity: 1;
+  }
+
+  /* Card del boxeador "noqueado": leve sangrado rojo para reforzar la
+     metáfora visual con la 404 hero. El hover lo neutraliza para no
+     desalentar la navegación. */
+  .rescue-card[data-knockout='true'] .rescue-card-bg {
+    background: radial-gradient(
+      ellipse 90% 65% at 50% 35%,
+      color-mix(in srgb, #b41f1f 35%, transparent) 0%,
+      transparent 70%
+    );
+    opacity: 0.55;
+  }
+
+  .rescue-card[data-knockout='true']:hover .rescue-card-bg,
+  .rescue-card[data-knockout='true']:focus-visible .rescue-card-bg {
+    background: radial-gradient(
+      ellipse 90% 65% at 50% 35%,
+      color-mix(in srgb, var(--color-theme-gold) 28%, transparent) 0%,
+      transparent 70%
+    );
+    opacity: 1;
+  }
+
+  /* La miniatura del personaje viene en formato 3:4 (recorte vertical),
+     se prioriza la cara y se intensifica con un ligero scale en hover. */
+  .rescue-card-img {
+    transition:
+      scale 600ms ease,
+      filter 500ms ease;
+    filter: saturate(0.9) brightness(0.95);
+  }
+
+  .rescue-card:hover .rescue-card-img,
+  .rescue-card:focus-visible .rescue-card-img {
+    scale: 1.05;
+    filter: saturate(1.1) brightness(1.05);
+  }
+
+  /* Velo inferior para garantizar contraste del nombre y la bandera. */
+  .rescue-card-veil {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 40%,
+      rgba(0, 0, 0, 0.55) 72%,
+      rgba(0, 0, 0, 0.95) 100%
+    );
+  }
+
+  /* Esquinas decorativas estilo "trading card", más pequeñas que las de
+     la lista completa para que casen con el tamaño compacto. */
+  .rescue-card-corner {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: color-mix(in srgb, var(--color-theme-gold) 60%, transparent);
+    transition:
+      width 400ms ease,
+      height 400ms ease,
+      border-color 400ms ease;
+  }
+
+  .rescue-card-corner-tl {
+    top: 8px;
+    left: 8px;
+    border-right-width: 0;
+    border-bottom-width: 0;
+  }
+  .rescue-card-corner-tr {
+    top: 8px;
+    right: 8px;
+    border-left-width: 0;
+    border-bottom-width: 0;
+  }
+  .rescue-card-corner-bl {
+    bottom: 8px;
+    left: 8px;
+    border-right-width: 0;
+    border-top-width: 0;
+  }
+  .rescue-card-corner-br {
+    bottom: 8px;
+    right: 8px;
+    border-left-width: 0;
+    border-top-width: 0;
+  }
+
+  .rescue-card:hover .rescue-card-corner,
+  .rescue-card:focus-visible .rescue-card-corner {
+    width: 18px;
+    height: 18px;
+    border-color: var(--color-theme-gold);
+  }
+
+  .rescue-card:hover .rescue-card-divider,
+  .rescue-card:focus-visible .rescue-card-divider {
+    width: 2.5rem;
+    background-color: var(--color-theme-gold);
+  }
+
+  .rescue-card-name {
+    text-shadow:
+      0 0 2px rgba(0, 0, 0, 0.95),
+      0 1px 2px rgba(0, 0, 0, 0.9),
+      0 2px 10px rgba(0, 0, 0, 0.65);
+  }
+
+  .rescue-card-country {
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.85),
+      0 0 8px rgba(0, 0, 0, 0.65);
+  }
+
+  .rescue-card-badge {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 60%, transparent),
+      0 4px 12px rgba(0, 0, 0, 0.5);
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.6),
+      0 0 8px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rescue-card,
+    .rescue-card-img,
+    .rescue-card-bg,
+    .rescue-card-corner,
+    .rescue-card-divider,
+    .rescue-card-wrap {
+      transition: none;
+      animation: none !important;
+    }
+    .rescue-card:hover,
+    .rescue-card:focus-visible {
+      transform: none;
+    }
+    .rescue-card:hover .rescue-card-img,
+    .rescue-card:focus-visible .rescue-card-img {
+      scale: 1;
+    }
+  }
+</style>
