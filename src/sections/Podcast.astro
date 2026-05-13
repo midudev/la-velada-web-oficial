@@ -157,7 +157,7 @@ function formatRelative(date: Date) {
         ) : (
           <div
             class:list={[
-              'grid gap-px bg-white/10',
+              '@container grid gap-px bg-white/10',
               secondaryEpisodes.length > 0
                 ? 'lg:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)]'
                 : 'lg:grid-cols-1',
@@ -171,7 +171,7 @@ function formatRelative(date: Date) {
                   data-video-id={featuredEpisode.videoId}
                   data-video-title={featuredEpisode.title}
                   aria-label={`Reproducir episodio destacado: ${featuredEpisode.title}`}
-                  class="group relative isolate flex min-h-[24rem] w-full cursor-pointer overflow-hidden border border-white/10 bg-theme-navy/40 text-left outline-none transition duration-500 hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:min-h-[28rem] lg:min-h-[32rem]"
+                  class="group relative isolate flex aspect-video w-full cursor-pointer self-start overflow-hidden border border-white/10 bg-theme-navy/40 text-left outline-none transition duration-500 hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 lg:h-[31.5cqw] lg:aspect-auto"
                 >
                   <img
                     src={featuredEpisode.thumbnail}
@@ -231,7 +231,7 @@ function formatRelative(date: Date) {
                     >
                       {formatRelative(featuredEpisode.published)}
                     </time>
-                    <h3 class="max-w-2xl text-balance font-cinzel text-3xl font-bold leading-tight tracking-[0.05em] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-4xl lg:text-5xl">
+                    <h3 class="max-w-2xl text-balance font-cinzel text-2xl font-bold leading-tight tracking-[0.05em] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl">
                       {featuredEpisode.title}
                     </h3>
                     <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
@@ -257,7 +257,7 @@ function formatRelative(date: Date) {
             {
               secondaryEpisodes.length > 0 && (
                 <ul
-                  class="podcast-scroll grid max-h-[34rem] gap-px overflow-y-auto sm:grid-cols-2 lg:max-h-[32rem] lg:grid-cols-1"
+                  class="podcast-scroll grid max-h-[34rem] gap-px overflow-y-auto sm:grid-cols-2 lg:max-h-[31.5cqw] lg:grid-cols-1"
                   data-podcast-list
                 >
                   {secondaryEpisodes.map((episode, index) => (
