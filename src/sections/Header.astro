@@ -1,6 +1,256 @@
 ---
+const NAV_ITEMS = [
+  {
+    label: 'COMBATES',
+    href: '/#cartelera',
+    disabled: true,
+    note: 'PRÓXIMAMENTE',
+  },
+  {
+    label: 'BOXEADORES',
+    href: '/boxeadores',
+    disabled: false,
+  },
+  {
+    label: 'PRONÓSTICOS',
+    href: '/pronosticos',
+    disabled: true,
+    note: 'PRÓXIMAMENTE',
+  },
+] as const
 ---
 
-<header>
-  
+<header
+  data-header
+  data-menu-open="false"
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent backdrop-blur-[0px] transition-[background-color,backdrop-filter,border-color] duration-500 ease-out data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md"
+>
+  <div
+    class="relative z-50 mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4"
+  >
+    <a
+      href="/"
+      class="group flex items-center gap-3 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+      aria-label="La Velada del Año VI - Inicio"
+    >
+      <img
+        src="/logo.svg"
+        alt=""
+        class="h-9 w-auto transition duration-500 group-hover:rotate-[-2deg] sm:h-10"
+        width="40"
+        height="40"
+        decoding="async"
+      />
+      <span
+        class="hidden font-cinzel text-[0.6rem] font-bold tracking-[0.32em] text-theme-cream/85 sm:inline-block sm:text-xs"
+      >
+        LA VELADA <span class="text-theme-gold">VI</span>
+      </span>
+    </a>
+
+    <nav class="hidden md:block" aria-label="Navegación principal">
+      <ul class="flex items-center gap-1 sm:gap-2">
+        {
+          NAV_ITEMS.map((item) =>
+            item.disabled ? (
+              <li>
+                <span
+                  role="link"
+                  aria-disabled="true"
+                  class="relative inline-flex select-none items-center px-3 py-2 font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-white/40 sm:px-4 sm:text-xs"
+                  title="Próximamente"
+                >
+                  {item.label}
+                  {item.note && (
+                    <span class="pointer-events-none absolute left-1/2 top-full hidden -translate-x-1/2 -translate-y-2 whitespace-nowrap rounded-full border border-theme-gold/40 bg-theme-gold/5 px-2 py-0.5 font-cinzel text-[0.5rem] font-semibold tracking-[0.22em] text-theme-gold/85 sm:inline-block sm:text-[0.55rem]">
+                      {item.note}
+                    </span>
+                  )}
+                </span>
+              </li>
+            ) : (
+              <li>
+                <a
+                  href={item.href}
+                  class="group relative inline-flex items-center px-3 py-2 font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-white/85 transition duration-300 outline-none hover:text-theme-cream focus-visible:text-theme-cream sm:px-4 sm:text-xs"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="pointer-events-none absolute inset-x-3 -bottom-px h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100 sm:inset-x-4"
+                  />
+                  {item.label}
+                </a>
+              </li>
+            )
+          )
+        }
+      </ul>
+    </nav>
+
+    <button
+      type="button"
+      data-mobile-menu-button
+      class="group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] outline-none backdrop-blur-md transition duration-300 hover:border-theme-gold/50 hover:bg-theme-gold/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      aria-label="Abrir menú"
+    >
+      <span class="sr-only">Abrir menú</span>
+      <span
+        aria-hidden="true"
+        class="absolute h-px w-5 -translate-y-1.5 bg-current transition duration-300 group-data-[open=true]:translate-y-0 group-data-[open=true]:rotate-45"
+      ></span>
+      <span
+        aria-hidden="true"
+        class="absolute h-px w-5 bg-current transition duration-300 group-data-[open=true]:opacity-0"
+      ></span>
+      <span
+        aria-hidden="true"
+        class="absolute h-px w-5 translate-y-1.5 bg-current transition duration-300 group-data-[open=true]:translate-y-0 group-data-[open=true]:-rotate-45"
+      ></span>
+    </button>
+  </div>
+
+  <div
+    id="mobile-menu"
+    data-mobile-menu
+    aria-hidden="true"
+    inert
+    class="fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl transition duration-300 ease-out pointer-events-none data-[open=true]:translate-y-0 data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto md:hidden"
+  >
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_50%_0%,rgba(201,164,107,0.22),transparent_62%)]"
+    ></div>
+    <nav aria-label="Menú principal móvil" class="relative w-full max-w-sm">
+      <ul class="flex flex-col items-center gap-6">
+        {
+          NAV_ITEMS.map((item) =>
+            item.disabled ? (
+              <li class="w-full">
+                <span
+                  role="link"
+                  aria-disabled="true"
+                  class="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-white/35"
+                  title="Próximamente"
+                >
+                  {item.label}
+                  {item.note && (
+                    <span class="rounded-full border border-theme-gold/35 bg-theme-gold/10 px-3 py-1 text-[0.55rem] font-semibold tracking-[0.24em] text-theme-gold/80">
+                      {item.note}
+                    </span>
+                  )}
+                </span>
+              </li>
+            ) : (
+              <li class="w-full">
+                <a
+                  href={item.href}
+                  data-mobile-menu-link
+                  class="group relative flex items-center justify-center rounded-2xl border border-theme-gold/35 bg-theme-gold/10 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="pointer-events-none absolute inset-x-6 bottom-3 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                  />
+                  {item.label}
+                </a>
+              </li>
+            )
+          )
+        }
+      </ul>
+    </nav>
+  </div>
 </header>
+
+<script>
+  const SCROLL_THRESHOLD = 24
+
+  let scrollAbortController: AbortController | null = null
+  let menuAbortController: AbortController | null = null
+
+  function setupHeaderScroll() {
+    const header = document.querySelector<HTMLElement>('[data-header]')
+    if (!header) return
+
+    scrollAbortController?.abort()
+    scrollAbortController = new AbortController()
+
+    const update = () => {
+      const scrolled = window.scrollY > SCROLL_THRESHOLD
+      if (scrolled) {
+        header.setAttribute('data-scrolled', 'true')
+      } else {
+        header.removeAttribute('data-scrolled')
+      }
+    }
+
+    update()
+
+    window.addEventListener('scroll', update, {
+      passive: true,
+      signal: scrollAbortController.signal,
+    })
+  }
+
+  function setupMobileMenu() {
+    const header = document.querySelector<HTMLElement>('[data-header]')
+    const menu = document.querySelector<HTMLElement>('[data-mobile-menu]')
+    const button = document.querySelector<HTMLButtonElement>(
+      '[data-mobile-menu-button]'
+    )
+    const links = document.querySelectorAll<HTMLAnchorElement>(
+      '[data-mobile-menu-link]'
+    )
+
+    if (!header || !menu || !button) return
+
+    menuAbortController?.abort()
+    menuAbortController = new AbortController()
+    const { signal } = menuAbortController
+
+    const setMenuOpen = (isOpen: boolean) => {
+      header.dataset.menuOpen = String(isOpen)
+      menu.dataset.open = String(isOpen)
+      button.dataset.open = String(isOpen)
+      menu.setAttribute('aria-hidden', String(!isOpen))
+      menu.inert = !isOpen
+      button.setAttribute('aria-expanded', String(isOpen))
+      button.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú')
+      button.querySelector('.sr-only')!.textContent = isOpen
+        ? 'Cerrar menú'
+        : 'Abrir menú'
+      document.documentElement.classList.toggle('overflow-hidden', isOpen)
+    }
+
+    setMenuOpen(false)
+
+    button.addEventListener(
+      'click',
+      () => {
+        setMenuOpen(button.getAttribute('aria-expanded') !== 'true')
+      },
+      { signal }
+    )
+
+    links.forEach((link) => {
+      link.addEventListener('click', () => setMenuOpen(false), {
+        signal,
+      })
+    })
+
+    window.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key === 'Escape') setMenuOpen(false)
+      },
+      { signal }
+    )
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    setupHeaderScroll()
+    setupMobileMenu()
+  })
+</script>
