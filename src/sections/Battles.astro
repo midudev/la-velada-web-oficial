@@ -1,0 +1,77 @@
+---
+import { battles } from '@/consts/battles'
+import { BOXERS_BY_ID, getBoxerSelectImage } from '@/consts/boxers'
+---
+
+<section
+  id="cartelera"
+  class="relative w-full bg-theme-midnight px-4 py-20 text-theme-cream sm:px-6 lg:py-28"
+  aria-labelledby="battles-title"
+>
+  <div class="mx-auto flex w-full max-w-7xl flex-col items-center">
+    <div class="mb-8 flex items-center gap-4 sm:mb-12" aria-hidden="true">
+      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
+      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
+      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
+    </div>
+
+    <h2
+      id="battles-title"
+      class="mb-3 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
+    >
+      CARTELERA
+    </h2>
+    <p
+      class="mb-10 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.25em] text-white/55 sm:mb-14 sm:text-sm"
+    >
+      Los combates de La Velada del Año VI
+    </p>
+
+    <ol class="grid w-full gap-4 md:grid-cols-2">
+      {
+        battles.map((battle) => {
+          const [boxer1Id, boxer2Id] = battle.boxerIds
+          const boxer1 = BOXERS_BY_ID[boxer1Id]
+          const boxer2 = BOXERS_BY_ID[boxer2Id]
+
+          return (
+            <li>
+              <a
+                href={battle.url}
+                class="group grid min-h-32 grid-cols-[5rem_1fr_5rem] items-center gap-4 rounded-2xl border border-theme-gold/25 bg-white/[0.03] p-4 transition duration-200 hover:border-theme-gold/70 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+              >
+                <img
+                  src={getBoxerSelectImage(boxer1)}
+                  alt=""
+                  class="aspect-square w-20 rounded-lg object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+
+                <div class="text-center">
+                  <p class="text-xs font-bold tracking-[0.35em] text-theme-gold/80">
+                    {String(battle.number).padStart(3, '0')}
+                  </p>
+                  <h3 class="mt-2 text-balance text-lg font-black tracking-wide sm:text-2xl">
+                    {battle.title}
+                  </h3>
+                  <p class="mt-2 text-xs font-semibold tracking-[0.25em] text-white/45">
+                    Ver combate
+                  </p>
+                </div>
+
+                <img
+                  src={getBoxerSelectImage(boxer2)}
+                  alt=""
+                  class="aspect-square w-20 rounded-lg object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            </li>
+          )
+        })
+      }
+    </ol>
+  </div>
+</section>
