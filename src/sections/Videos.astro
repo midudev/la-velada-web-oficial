@@ -5,6 +5,7 @@ interface Video {
   id: string
   title: string
   videoId: string | null
+  poster: string | null
   active: boolean
   span: Span
 }
@@ -14,6 +15,7 @@ const VIDEOS: Video[] = [
     id: 'presentacion',
     title: 'La Presentación',
     videoId: 'h-jWhM3ne5U',
+    poster: '/videos/thumbnails/presentacion.webp',
     active: true,
     span: 'big',
   },
@@ -21,6 +23,7 @@ const VIDEOS: Video[] = [
     id: 'pesaje',
     title: 'El Pesaje',
     videoId: null,
+    poster: null,
     active: false,
     span: 'small',
   },
@@ -28,6 +31,7 @@ const VIDEOS: Video[] = [
     id: 'cara-a-cara',
     title: 'Cara a Cara',
     videoId: null,
+    poster: null,
     active: false,
     span: 'small',
   },
@@ -38,10 +42,6 @@ const SPAN_CLASSES: Record<Span, string> = {
   small: 'lg:col-span-1 lg:row-span-1',
 }
 
-function getPoster(videoId: string | null) {
-  if (!videoId) return null
-  return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
-}
 ---
 
 <section
@@ -72,8 +72,7 @@ function getPoster(videoId: string | null) {
       class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:aspect-[24/9] lg:grid-cols-3 lg:grid-rows-2 lg:gap-4"
     >
       {
-        VIDEOS.map(({ title, videoId, active, span }) => {
-          const poster = getPoster(videoId)
+        VIDEOS.map(({ title, videoId, poster, active, span }) => {
           const Tag = active ? 'button' : 'div'
           return (
             <Tag
