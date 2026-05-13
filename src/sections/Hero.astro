@@ -7,18 +7,28 @@ const timestamp = EVENT_DATE.getTime()
 
 <section
     data-hero
-    class="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-theme-midnight"
+    class="relative w-full overflow-hidden bg-theme-midnight"
     aria-label="Presentación de La Velada del Año VI"
   >
     <picture data-hero-background class="absolute inset-0 z-0">
-      <source srcset="/background.avif" type="image/avif" />
-      <source srcset="/background.webp" type="image/webp" />
+      <source
+        type="image/avif"
+        srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
+        sizes="100vw"
+      />
+      <source
+        type="image/webp"
+        srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+        sizes="100vw"
+      />
       <img
         data-bg
-        src="/background.png"
+        src="/background.webp"
+        srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+        sizes="100vw"
         alt=""
         role="presentation"
-        class="h-full w-full object-cover object-center opacity-0 transition-opacity duration-1000 ease-in"
+        class="h-full w-full object-cover object-center will-change-transform"
         fetchpriority="high"
         decoding="async"
       />
@@ -26,46 +36,25 @@ const timestamp = EVENT_DATE.getTime()
 
     <div class="absolute inset-0 z-1 bg-linear-to-b from-black/40 via-transparent to-theme-midnight/80" aria-hidden="true"></div>
 
-    <header class="relative z-10 flex flex-1 flex-col items-center justify-start px-4 pt-16 text-center sm:pt-10 max-w-6xl mx-auto w-full">
+    {/*
+      El "hero principal" (logo + selector + CTA + grid) ocupa siempre
+      AL MENOS 100vh. El countdown vive como hermano debajo, así que
+      cuando el contenido del header crece más allá del viewport sigue
+      siendo cómodo y no queda apretado contra el countdown.
+
+      Padding inferior reducido (`pb-3 lg:pb-5`) para que la cuadrícula
+      de boxers, anclada al bottom del hero, quede más cerca del
+      countdown sin pegarse al borde.
+    */}
+    <header class="relative z-10 flex min-h-screen w-full flex-col items-center justify-start px-4 pt-14 pb-3 text-center sm:pt-16 lg:pb-5">
       <h1 class="sr-only">La Velada del Año VI — Evento de boxeo de Ibai Llanos el 25 de julio de 2026</h1>
 
+      <BoxerSelector />
+    </header>
 
-      <div class="animate-fade-in animate-delay-500" role="img" aria-label="Logo de La Velada del Año VI">
-        <picture>
-          <source srcset="/logo.avif" type="image/avif" />
-          <source srcset="/logo.webp" type="image/webp" />
-          <img
-            src="/logo.png"
-            alt="La Velada del Año VI"
-            class="h-auto w-40 sm:w-48 md:w-56 lg:w-64"
-            width="384"
-            height="384"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </picture>
-      </div>
-
-      <div class="animate-fade-in animate-delay-700 mt-4 w-full sm:mt-6">
-        <BoxerSelector />
-      </div>
-
-      <div data-event-info class="animate-fade-in animate-delay-800 mt-6 flex flex-col items-center gap-2 sm:flex-row sm:gap-0">
-        <time datetime="2026-07-25" class="font-cinzel text-xs font-bold tracking-[0.2em] text-white sm:text-sm md:text-base">
-          25 DE JULIO
-        </time>
-        <span class="hidden px-4 text-white/40 sm:inline" aria-hidden="true">|</span>
-        <time datetime="2026-07-25T20:00:00+02:00" class="font-cinzel text-xs font-bold tracking-[0.2em] text-white sm:text-sm md:text-base">
-          20:00H CET
-        </time>
-        <span class="hidden px-4 text-white/40 sm:inline" aria-hidden="true">|</span>
-        <span class="font-cinzel text-xs font-bold tracking-[0.2em] text-white sm:text-sm md:text-base">
-          ESTADIO DE LA CARTUJA, SEVILLA
-        </span>
-      </div>
-
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pt-2 pb-6">
       <div
-        class="animate-fade-in animate-delay-900 mt-6 mb-10 flex select-none items-center justify-center gap-3 sm:gap-5 md:gap-7"
+        class="animate-fade-in-up animate-delay-1300 mt-2 flex select-none items-center justify-center gap-3 sm:gap-5 md:gap-7"
         id="countdown-hero"
         data-date={timestamp}
         role="timer"
@@ -91,22 +80,24 @@ const timestamp = EVENT_DATE.getTime()
           <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">SEG</span>
         </div>
       </div>
-
-
-    </header>
+    </div>
   </section>
-
-  <style is:inline>
-    [data-hero]:not([data-loaded]) .animate-fade-in {
-      animation-play-state: paused !important;
-      opacity: 0 !important;
-    }
-  </style>
 
   <style>
     [data-hero-background] {
       -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%);
       mask-image: linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%);
+    }
+
+    [data-bg] {
+      transform-origin: center center;
+      transform: scale(var(--hero-bg-scale, 1));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-bg] {
+        transform: none;
+      }
     }
 
     .countdown-digit {
@@ -141,39 +132,41 @@ const timestamp = EVENT_DATE.getTime()
     }
 
     document.addEventListener('astro:page-load', () => {
-      const hero = document.querySelector('[data-hero]')
-      const bg = hero?.querySelector('[data-bg]') as HTMLImageElement
-      if (!hero || !bg) return
-
-      let revealed = false
-
-      function reveal(skipTransition = false) {
-        if (revealed) return
-        revealed = true
-
-        if (skipTransition) {
-          bg.classList.add('!transition-none')
-          bg.classList.remove('opacity-0')
-          hero!.setAttribute('data-loaded', '')
-          return
-        }
-
-        bg.addEventListener(
-          'transitionend',
-          () => hero!.setAttribute('data-loaded', ''),
-          { once: true },
-        )
-        bg.classList.remove('opacity-0')
-      }
-
-      if (bg.complete && bg.naturalHeight > 0) {
-        reveal(true)
-      } else {
-        bg.addEventListener('load', () => reveal(false))
-        bg.addEventListener('error', () => reveal(true))
-        setTimeout(() => reveal(true), 3500)
-      }
+      const hero = document.querySelector('[data-hero]') as HTMLElement | null
+      if (!hero) return
 
       initCountdown()?.start()
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!reduceMotion) {
+        const controller = new AbortController()
+        const { signal } = controller
+
+        const MAX_SCALE = 0.18
+        let ticking = false
+
+        const update = () => {
+          ticking = false
+          const heroHeight = hero.offsetHeight || window.innerHeight
+          const progress = Math.min(Math.max(window.scrollY / heroHeight, 0), 1)
+          hero.style.setProperty('--hero-bg-scale', String(1 + progress * MAX_SCALE))
+        }
+
+        const onScroll = () => {
+          if (ticking) return
+          ticking = true
+          requestAnimationFrame(update)
+        }
+
+        update()
+        window.addEventListener('scroll', onScroll, { passive: true, signal })
+        window.addEventListener('resize', update, { passive: true, signal })
+
+        document.addEventListener(
+          'astro:before-preparation',
+          () => controller.abort(),
+          { once: true },
+        )
+      }
     })
   </script>
