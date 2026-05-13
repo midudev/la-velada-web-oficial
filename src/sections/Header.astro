@@ -3,6 +3,7 @@ const NAV_ITEMS = [
   {
     label: 'COMBATES',
     href: '/#cartelera',
+    
     disabled: true,
     note: 'PRÓXIMAMENTE',
   },
@@ -25,6 +26,11 @@ const NAV_ITEMS = [
   data-menu-open="false"
   class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent backdrop-blur-[0px] transition-[background-color,backdrop-filter,border-color] duration-500 ease-out data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md"
 >
+  <div
+    data-page-dim
+    aria-hidden="true"
+    class="fixed inset-0 -z-10 pointer-events-none bg-black/0 opacity-0 transition-opacity duration-500 ease-out data-[scrolled=true]:bg-black/10 data-[scrolled=true]:opacity-100"
+  ></div>
   <div
     class="relative z-50 mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4"
   >
@@ -81,7 +87,7 @@ const NAV_ITEMS = [
                   {item.label}
                 </a>
               </li>
-            )
+            ),
           )
         }
       </ul>
@@ -156,7 +162,7 @@ const NAV_ITEMS = [
                   {item.label}
                 </a>
               </li>
-            )
+            ),
           )
         }
       </ul>
@@ -173,6 +179,7 @@ const NAV_ITEMS = [
   function setupHeaderScroll() {
     const header = document.querySelector<HTMLElement>('[data-header]')
     if (!header) return
+    const pageDim = document.querySelector<HTMLElement>('[data-page-dim]')
 
     scrollAbortController?.abort()
     scrollAbortController = new AbortController()
@@ -181,8 +188,10 @@ const NAV_ITEMS = [
       const scrolled = window.scrollY > SCROLL_THRESHOLD
       if (scrolled) {
         header.setAttribute('data-scrolled', 'true')
+        pageDim?.setAttribute('data-scrolled', 'true')
       } else {
         header.removeAttribute('data-scrolled')
+        pageDim?.removeAttribute('data-scrolled')
       }
     }
 
@@ -198,11 +207,11 @@ const NAV_ITEMS = [
     const header = document.querySelector<HTMLElement>('[data-header]')
     const menu = document.querySelector<HTMLElement>('[data-mobile-menu]')
     const button = document.querySelector<HTMLButtonElement>(
-      '[data-mobile-menu-button]'
-    )
+      '[data-mobile-menu-button]',
+  )
     const links = document.querySelectorAll<HTMLAnchorElement>(
-      '[data-mobile-menu-link]'
-    )
+      '[data-mobile-menu-link]',
+  )
 
     if (!header || !menu || !button) return
 
@@ -231,8 +240,8 @@ const NAV_ITEMS = [
       () => {
         setMenuOpen(button.getAttribute('aria-expanded') !== 'true')
       },
-      { signal }
-    )
+      { signal },
+  )
 
     links.forEach((link) => {
       link.addEventListener('click', () => setMenuOpen(false), {
@@ -245,8 +254,8 @@ const NAV_ITEMS = [
       (event) => {
         if (event.key === 'Escape') setMenuOpen(false)
       },
-      { signal }
-    )
+      { signal },
+  )
   }
 
   document.addEventListener('astro:page-load', () => {
