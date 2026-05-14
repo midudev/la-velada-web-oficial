@@ -14,8 +14,8 @@ export interface Boxer {
 
 /**
  * Los `id` coinciden exactamente con:
- *  - `/public/character-select/{id}.png` (miniatura del selector)
- *  - `/public/character-hero/{id}.png` (recorte grande mostrado en el
+ *  - `/public/character-select/{id}.webp` (miniatura del selector)
+ *  - `/public/character-hero/{id}.webp` (recorte grande mostrado en el
  *    hero al hacer hover sobre la miniatura del selector)
  *  - `/public/photos/{id}/01.webp` (foto principal usada en la ficha
  *    del combate)
@@ -345,7 +345,6 @@ export const BOXERS: Boxer[] = [
 export interface BoxerImageVariants {
   avif: string
   webp: string
-  png: string
 }
 
 /** Variantes de la miniatura del selector (carpeta `character-select`). */
@@ -353,14 +352,13 @@ export function getBoxerSelectImages(boxer: Boxer): BoxerImageVariants {
   return {
     avif: `/character-select/${boxer.id}.avif`,
     webp: `/character-select/${boxer.id}.webp`,
-    png: `/character-select/${boxer.id}.png`,
   }
 }
 
 /** Devuelve la ruta a la imagen de selección (miniatura) de un boxeador,
- *  formato PNG. Para mejor rendimiento, prefiere `getBoxerSelectImages`. */
+ *  formato WebP. Para mejor rendimiento, prefiere `getBoxerSelectImages`. */
 export function getBoxerSelectImage(boxer: Boxer): string {
-  return getBoxerSelectImages(boxer).png
+  return getBoxerSelectImages(boxer).webp
 }
 
 /** Variantes del recorte grande para el hero (carpeta `character-hero`). */
@@ -368,17 +366,16 @@ export function getBoxerHeroImages(boxer: Boxer): BoxerImageVariants {
   return {
     avif: `/character-hero/${boxer.id}.avif`,
     webp: `/character-hero/${boxer.id}.webp`,
-    png: `/character-hero/${boxer.id}.png`,
   }
 }
 
 /**
  * Devuelve la ruta al recorte grande del boxeador usado en el hero al
- * hacer hover sobre la miniatura del selector, formato PNG. Para mejor
+ * hacer hover sobre la miniatura del selector, formato WebP. Para mejor
  * rendimiento, prefiere `getBoxerHeroImages`.
  */
 export function getBoxerHeroImage(boxer: Boxer): string {
-  return getBoxerHeroImages(boxer).png
+  return getBoxerHeroImages(boxer).webp
 }
 
 /** Devuelve la ruta a la foto principal del boxeador (01.webp). */
