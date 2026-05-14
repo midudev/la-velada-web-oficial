@@ -1,4 +1,5 @@
 ---
+import ResetIcon from '@/assets/svg/reset.svg'
 import Layout from '@/layouts/Layout.astro'
 import Header from '@/sections/Header.astro'
 import Footer from '@/sections/Footer.astro'
@@ -12,10 +13,33 @@ import {
   type BoxerGender,
 } from '@/consts/boxers'
 
-const title = 'Boxeadores - La Velada del Año VI'
-const description =
-  'Conoce a los 20 boxeadores y boxeadoras que se subirán al ring en La Velada del Año VI: nombre, nacionalidad y combate.'
-const canonical = 'https://www.infolavelada.com/boxeadores'
+const SITE_URL = 'https://www.infolavelada.com'
+const title = `Boxeadores y boxeadoras de La Velada del Año VI (${BOXERS.length} contendientes)`
+const description = `Conoce a los ${BOXERS.length} boxeadores y boxeadoras que se subirán al ring en La Velada del Año VI el 25 de julio de 2026 en el Estadio de La Cartuja de Sevilla: nombre, nacionalidad y combate asignado.`
+const canonical = `${SITE_URL}/boxeadores`
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Boxeadores', item: canonical },
+  ],
+}
+
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Boxeadores de La Velada del Año VI',
+  numberOfItems: BOXERS.length,
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
+  itemListElement: BOXERS.map((boxer, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: `${SITE_URL}/boxeadores/${boxer.id}`,
+    name: boxer.name,
+  })),
+}
 
 export const prerender = true
 
@@ -76,6 +100,19 @@ const totalBoxers = BOXERS.length
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(breadcrumbJsonLd)}
+    slot="head"
+  />
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(itemListJsonLd)}
+    slot="head"
+  />
+
   <Header />
 
   <section
@@ -222,20 +259,7 @@ const totalBoxers = BOXERS.length
               class="boxer-filter-reset"
               aria-label="Restablecer filtros"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="size-3.5"
-                aria-hidden="true"
-              >
-                <path d="M3 12a9 9 0 1 0 3-6.7"></path>
-                <path d="M3 4v5h5"></path>
-              </svg>
+              <ResetIcon class="size-3.5" aria-hidden="true" />
               Limpiar filtros
             </button>
             </div>
@@ -1072,22 +1096,18 @@ const totalBoxers = BOXERS.length
 </style>
 
 <script>
+  import { $, $$ } from '@/lib/dom-selector'
+
   function setupBoxersFilters() {
-    const form = document.querySelector<HTMLFormElement>('[data-boxers-filters]')
-    const grid = document.querySelector<HTMLElement>('[data-boxers-grid]')
-    const empty = document.querySelector<HTMLElement>('[data-boxers-empty]')
-    const footerBlock = document.querySelector<HTMLElement>('[data-boxers-footer]')
+    const form = $<HTMLFormElement>('[data-boxers-filters]')
+    const grid = $<HTMLElement>('[data-boxers-grid]')
+    const empty = $<HTMLElement>('[data-boxers-empty]')
+    const footerBlock = $<HTMLElement>('[data-boxers-footer]')
     if (!form || !grid) return
 
-    const cards = Array.from(
-      grid.querySelectorAll<HTMLElement>('[data-boxer-card]'),
-    )
-    const filterButtons = Array.from(
-      form.querySelectorAll<HTMLButtonElement>('[data-filter]'),
-    )
-    const resetButtons = Array.from(
-      document.querySelectorAll<HTMLButtonElement>('[data-boxers-reset]'),
-    )
+    const cards = Array.from($$<HTMLElement>('[data-boxer-card]', grid))
+    const filterButtons = Array.from($$<HTMLButtonElement>('[data-filter]', form))
+    const resetButtons = Array.from($$<HTMLButtonElement>('[data-boxers-reset]'))
 
     // Estado de filtros: '' = "todos". Sólo un valor activo por grupo.
     const state: { country: string; gender: string } = {
@@ -1153,7 +1173,7 @@ const totalBoxers = BOXERS.length
             ? countMatching(value, state.gender)
             : countMatching(state.country, value)
 
-        const countNode = btn.querySelector<HTMLElement>('.boxer-filter-pill-count')
+        const countNode = $<HTMLElement>('.boxer-filter-pill-count', btn)
         if (countNode) {
           const previous = countNode.textContent
           const next = String(projectedCount)
