@@ -1,4 +1,8 @@
 ---
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import CloseIcon from '@/assets/svg/close.svg'
+import PlayIcon from '@/assets/svg/play.svg'
+
 type Span = 'big' | 'small'
 
 interface Video {
@@ -133,14 +137,10 @@ const SPAN_CLASSES: Record<Span, string> = {
                   class="absolute inset-0 -z-10 flex items-center justify-center"
                 >
                   <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
-                    <svg
-                      viewBox="0 0 24 24"
+                    <PlayIcon
                       class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
-                      fill="currentColor"
                       aria-hidden="true"
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
+                    />
                   </span>
                 </span>
               )}
@@ -159,18 +159,11 @@ const SPAN_CLASSES: Record<Span, string> = {
                   </h3>
                   <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
                     VER VÍDEO
-                    <svg
+                    <ArrowRightIcon
                       class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
                       stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
                       aria-hidden="true"
-                    >
-                      <path d="M5 12h14M13 5l7 7-7 7" />
-                    </svg>
+                    />
                   </span>
                 </div>
               ) : (
@@ -228,18 +221,7 @@ const SPAN_CLASSES: Record<Span, string> = {
           aria-label="Cerrar vídeo"
           class="inline-flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white outline-none transition hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
         >
-          <svg
-            viewBox="0 0 24 24"
-            class="size-5"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M18 6 6 18M6 6l12 12" />
-          </svg>
+          <CloseIcon class="size-5" aria-hidden="true" />
         </button>
       </div>
       <div
@@ -252,14 +234,16 @@ const SPAN_CLASSES: Record<Span, string> = {
 </section>
 
 <script>
+  import { $, $$ } from '@/lib/dom-selector'
+
   function initVideoDialog() {
-    const dialog = document.getElementById('video-dialog') as HTMLDialogElement | null
+    const dialog = $<HTMLDialogElement>('#video-dialog')
     if (!dialog) return
 
-    const tiles = document.querySelectorAll<HTMLElement>('[data-video-tile]')
-    const closeBtn = dialog.querySelector<HTMLButtonElement>('[data-video-dialog-close]')
-    const titleEl = dialog.querySelector<HTMLElement>('[data-video-dialog-title]')
-    const frame = dialog.querySelector<HTMLElement>('[data-video-dialog-frame]')
+    const tiles = $$<HTMLElement>('[data-video-tile]')
+    const closeBtn = $<HTMLButtonElement>('[data-video-dialog-close]', dialog)
+    const titleEl = $<HTMLElement>('[data-video-dialog-title]', dialog)
+    const frame = $<HTMLElement>('[data-video-dialog-frame]', dialog)
     if (!frame) return
 
     function openVideo(videoId: string, title: string) {
