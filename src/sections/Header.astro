@@ -18,6 +18,9 @@ const NAV_ITEMS = [
     note: 'PRÓXIMAMENTE',
   },
 ] as const
+
+const currentPath = Astro.url.pathname
+const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/boxeadores'
 ---
 
 <header
@@ -72,6 +75,7 @@ const NAV_ITEMS = [
               <li>
                 <a
                   href={item.href}
+                  data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
                   class="group relative inline-flex items-center px-3 py-2 font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-white/85 transition duration-300 outline-none hover:text-theme-cream focus-visible:text-theme-cream sm:px-4 sm:text-xs"
                 >
                   <span
@@ -146,6 +150,7 @@ const NAV_ITEMS = [
               <li class="w-full">
                 <a
                   href={item.href}
+                  data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
                   data-mobile-menu-link
                   class="group relative flex items-center justify-center rounded-2xl border border-theme-gold/35 bg-theme-gold/10 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
                 >
