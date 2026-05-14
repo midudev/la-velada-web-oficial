@@ -194,11 +194,12 @@ import DataVisualization from './DataVisualization.jsx';
 
 ## Debugging
 
-Check which components are hydrated:
+Check which components are hydrated from a client script:
 
 ```javascript
-// In browser console
-document.querySelectorAll('[data-astro-cid]').forEach(el => {
+import { $$ } from '@/lib/dom-selector';
+
+$$('[data-astro-cid]').forEach(el => {
   console.log(el, el.dataset);
 });
 ```
