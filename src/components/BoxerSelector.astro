@@ -249,9 +249,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       class="boxer-default-divider flex items-center justify-center gap-3 sm:gap-4"
       aria-hidden="true"
     >
-      <span class="h-px w-10 bg-linear-to-r from-transparent to-theme-gold/55 sm:w-20"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/85"></span>
-      <span class="h-px w-10 bg-linear-to-l from-transparent to-theme-gold/55 sm:w-20"></span>
+      <span class="h-px w-12 bg-theme-gold/55 sm:w-24"></span>
     </div>
 
     <p
@@ -736,11 +734,21 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 
   .boxer-mobile-slide {
     width: var(--mobile-slide-width);
+    border-radius: 4px;
+    border-color: color-mix(in srgb, var(--color-theme-cream) 10%, transparent);
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
-      0 12px 28px rgba(0, 0, 0, 0.35);
+      0 10px 24px rgba(0, 0, 0, 0.45);
     opacity: 0;
     animation: boxer-mobile-slide-in 520ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition:
+      border-color 220ms ease,
+      transform 240ms ease;
+  }
+
+  .boxer-mobile-slide:hover,
+  .boxer-mobile-slide:focus-visible {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    transform: translateY(-2px);
   }
 
   .boxer-mobile-slide::before {
@@ -749,25 +757,11 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.32;
-    background:
-      radial-gradient(
-        ellipse 80% 70% at 50% 22%,
-        color-mix(in srgb, var(--color-theme-gold) 45%, transparent) 0%,
-        transparent 64%
-      ),
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--color-theme-navy) 84%, black) 0%,
-        color-mix(in srgb, var(--color-theme-midnight) 96%, black) 100%
-      );
-  }
-
-  .boxer-mobile-slide:focus-visible {
-    border-color: color-mix(in srgb, var(--color-theme-gold) 80%, white);
-    box-shadow:
-      0 0 0 2px color-mix(in srgb, var(--color-theme-cream) 82%, transparent),
-      0 0 22px color-mix(in srgb, var(--color-theme-gold) 60%, transparent);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-midnight) 90%, black) 0%,
+      color-mix(in srgb, var(--color-theme-midnight) 96%, black) 100%
+    );
   }
 
   .boxer-mobile-slide-img {
@@ -814,11 +808,11 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 
   .boxer-cell {
     background: color-mix(in srgb, var(--color-theme-midnight) 92%, var(--color-theme-navy));
-    /* Cada celda lleva su propio borde dorado para que, al estar opacity:0
+    /* Cada celda lleva su propio borde para que, al estar opacity:0
        durante el cascade inicial, no quede ningún "bloque" visible debajo.
        Los box-shadows de celdas adyacentes se solapan formando las líneas
        internas del grid, y el contorno exterior del bloque completo. */
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-theme-cream) 10%, transparent);
   }
 
   .boxer-thumb-img {
@@ -881,24 +875,24 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   .boxer-cell::before {
-    /* Acento dorado: visible cuando el boxer está activo, en hover o en
-       focus-visible. */
-    background: radial-gradient(
-      ellipse 90% 90% at 50% 35%,
-      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
-      var(--color-theme-gold) 45%,
-      color-mix(in srgb, var(--color-theme-gold) 55%, var(--color-theme-midnight)) 100%
+    /* Acento dorado sutil: visible cuando el boxer está activo, en hover
+       o en focus-visible. Más sobrio que el radial saturado anterior. */
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 28%, transparent) 0%,
+      color-mix(in srgb, var(--color-theme-gold) 8%, transparent) 60%,
+      transparent 100%
     );
   }
 
   .boxer-cell::after {
-    /* Acento rojo sangre: visible cuando este boxer es el contrincante
-       del activo. */
-    background: radial-gradient(
-      ellipse 90% 90% at 50% 35%,
-      #c63030 0%,
-      #9c1f1f 50%,
-      #5a1414 100%
+    /* Acento maroon: visible cuando este boxer es el contrincante del
+       activo. Aliñado con el theme-maroon en lugar del rojo plano. */
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-maroon) 65%, transparent) 0%,
+      color-mix(in srgb, var(--color-theme-maroon) 25%, transparent) 60%,
+      transparent 100%
     );
   }
 
@@ -927,10 +921,10 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
      sin tener que animar el color del texto. */
   .boxer-thumb-name {
     color: var(--color-theme-cream);
+    letter-spacing: 0.1em;
     text-shadow:
-      0 0 2px rgba(0, 0, 0, 0.95),
-      0 1px 2px rgba(0, 0, 0, 0.9),
-      0 2px 8px rgba(0, 0, 0, 0.65);
+      0 1px 2px rgba(0, 0, 0, 0.85),
+      0 2px 8px rgba(0, 0, 0, 0.55);
   }
 
   @media (max-width: 1023px) {
@@ -1000,26 +994,26 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     z-index: 3;
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 70%, transparent),
-      0 0 18px 0 color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+      0 0 14px 0 color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
   }
 
   .boxer-cell[data-active='true']::before,
   .boxer-cell:hover:not([data-active='true'])::before,
   .boxer-cell:focus-visible:not([data-active='true'])::before {
-    opacity: 1;
+    opacity: 0.85;
   }
 
-  /* Contrincante del boxer seleccionado: activamos el acento rojo del
-     pseudo ::after. */
+  /* Contrincante del boxer seleccionado: activamos el acento maroon del
+     pseudo ::after sin glow saturado. */
   .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(:focus-visible) {
     z-index: 2;
     box-shadow:
-      0 0 0 1px color-mix(in srgb, #c63030 55%, transparent),
-      0 0 14px 0 color-mix(in srgb, #c63030 45%, transparent);
+      0 0 0 1px color-mix(in srgb, var(--color-theme-maroon) 75%, transparent),
+      0 0 10px 0 color-mix(in srgb, var(--color-theme-maroon) 30%, transparent);
   }
 
   .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(:focus-visible)::after {
-    opacity: 1;
+    opacity: 0.7;
   }
 
   .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(:focus-visible) .boxer-thumb-img {
