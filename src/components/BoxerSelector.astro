@@ -115,7 +115,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   <div class="boxer-stage relative w-full flex-1">
     <div
       data-default-panel
-      class="boxer-default-panel relative flex w-full flex-col items-center text-center"
+      class="boxer-default-panel relative flex w-full flex-col items-center justify-center text-center md:justify-start"
     >
       <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true"></div>
 
@@ -1016,6 +1016,8 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 </style>
 
 <script>
+  import { $, $$ } from '@/lib/dom-selector'
+
   // Data URIs muy pequeñas (2×2) usadas para detectar soporte de cada
   // formato en el browser. Si la imagen carga sin error, el browser
   // soporta ese formato.
@@ -1044,13 +1046,11 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   function setupMobileInfiniteSlider(root: HTMLElement) {
-    const slider = root.querySelector<HTMLElement>('[data-mobile-slider]')
-    const track = root.querySelector<HTMLElement>('[data-mobile-track]')
+    const slider = $<HTMLElement>('[data-mobile-slider]', root)
+    const track = $<HTMLElement>('[data-mobile-track]', root)
     if (!slider || !track || slider.dataset.initialized === 'true') return
 
-    const slides = Array.from(
-      track.querySelectorAll<HTMLElement>('[data-mobile-slide]'),
-    )
+    const slides = Array.from($$<HTMLElement>('[data-mobile-slide]', track))
     const realSlideCount = slides.filter(
       (slide) => slide.dataset.mobileSet === 'current',
     ).length
@@ -1063,65 +1063,79 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       return pitch > 0 ? pitch * realSlideCount : track.scrollWidth / 3
     }
 
+    // Coloca al usuario en el set central conservando el offset relativo
+    // dentro del set. Como los 3 sets son idénticos, el salto es invisible.
     const moveToMiddleSet = () => {
       const setWidth = getSetWidth()
       if (setWidth <= 0) return
-      slider.scrollLeft = setWidth + (slider.scrollLeft % setWidth)
+      const offsetInSet = ((slider.scrollLeft % setWidth) + setWidth) % setWidth
+      slider.scrollLeft = setWidth + offsetInSet
     }
 
-    let ticking = false
-    const normalizeScroll = () => {
-      ticking = false
-
+    // Reposiciona al usuario al set central cuando ha cruzado el umbral.
+    // CLAVE: solo lo hacemos cuando el scroll YA ha parado, no durante el
+    // momentum. Reasignar `scrollLeft` mientras hay inercia en iOS la corta
+    // bruscamente y se percibe como un parpadeo/reset.
+    const normalize = () => {
       const setWidth = getSetWidth()
       if (setWidth <= 0) return
 
       if (slider.scrollLeft < setWidth * 0.5) {
         slider.scrollLeft += setWidth
-      } else if (slider.scrollLeft > setWidth * 1.5) {
+      } else if (slider.scrollLeft >= setWidth * 1.5) {
         slider.scrollLeft -= setWidth
       }
     }
 
     requestAnimationFrame(moveToMiddleSet)
 
-    slider.addEventListener(
-      'scroll',
-      () => {
-        if (ticking) return
-        ticking = true
-        requestAnimationFrame(normalizeScroll)
-      },
-      { passive: true },
-    )
+    // `scrollend` está disponible en Safari iOS 18.2+, Chrome 114+ y
+    // Firefox 109+. Cuando exista, normalizamos solo cuando todo el scroll
+    // (incluido el snap) ha terminado, evitando cualquier corte visual.
+    // Como fallback, debounce manual: ejecutamos `normalize` ~160ms después
+    // del último evento de scroll, tiempo de sobra para que termine el snap.
+    const supportsScrollEnd = 'onscrollend' in window
+    if (supportsScrollEnd) {
+      slider.addEventListener('scrollend', normalize, { passive: true })
+    } else {
+      let scrollEndTimer: ReturnType<typeof setTimeout> | null = null
+      slider.addEventListener(
+        'scroll',
+        () => {
+          if (scrollEndTimer) clearTimeout(scrollEndTimer)
+          scrollEndTimer = setTimeout(normalize, 160)
+        },
+        { passive: true },
+      )
+    }
 
     window.addEventListener('resize', () => requestAnimationFrame(moveToMiddleSet))
   }
 
   function initBoxerSelector() {
-    const root = document.querySelector<HTMLElement>('[data-boxer-selector]')
+    const root = $<HTMLElement>('[data-boxer-selector]')
     if (!root) return
 
     setupMobileInfiniteSlider(root)
 
-    const image = root.querySelector<HTMLImageElement>('[data-active-image]')
-    const sourceAvif = root.querySelector<HTMLSourceElement>(
+    const image = $<HTMLImageElement>('[data-active-image]', root)
+    const sourceAvif = $<HTMLSourceElement>(
       '[data-active-source-avif]',
+      root,
     )
-    const sourceWebp = root.querySelector<HTMLSourceElement>(
+    const sourceWebp = $<HTMLSourceElement>(
       '[data-active-source-webp]',
+      root,
     )
-    const nameNode = root.querySelector<HTMLElement>('[data-active-name]')
-    const watermark = root.querySelector<HTMLElement>('[data-active-watermark]')
-    const flagNode = root.querySelector<HTMLElement>('[data-active-flag]')
-    const countryNode = root.querySelector<HTMLElement>('[data-active-country-name]')
-    const defaultPanel = root.querySelector<HTMLElement>('[data-default-panel]')
-    const boxerPanel = root.querySelector<HTMLElement>('[data-boxer-panel]')
-    const grid = root.querySelector<HTMLElement>('[data-boxer-grid]')
-    const thumbs = Array.from(root.querySelectorAll<HTMLAnchorElement>('[data-thumb]'))
-    const mobileThumbs = Array.from(
-      root.querySelectorAll<HTMLAnchorElement>('[data-mobile-thumb]'),
-    )
+    const nameNode = $<HTMLElement>('[data-active-name]', root)
+    const watermark = $<HTMLElement>('[data-active-watermark]', root)
+    const flagNode = $<HTMLElement>('[data-active-flag]', root)
+    const countryNode = $<HTMLElement>('[data-active-country-name]', root)
+    const defaultPanel = $<HTMLElement>('[data-default-panel]', root)
+    const boxerPanel = $<HTMLElement>('[data-boxer-panel]', root)
+    const grid = $<HTMLElement>('[data-boxer-grid]', root)
+    const thumbs = Array.from($$<HTMLAnchorElement>('[data-thumb]', root))
+    const mobileThumbs = Array.from($$<HTMLAnchorElement>('[data-mobile-thumb]', root))
     if (!image || !nameNode || !grid || thumbs.length === 0) return
 
     // Detección de formato + precarga en segundo plano. No bloqueamos
@@ -1283,8 +1297,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           return
         }
 
-        const thumbImg = thumb.querySelector<HTMLImageElement>(
+        const thumbImg = $<HTMLImageElement>(
           '.boxer-thumb-img',
+          thumb,
         )
         if (thumbImg) {
           thumbImg.style.viewTransitionName = `boxer-hero-${id}`
@@ -1297,8 +1312,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         const id = thumb.dataset.id
         if (!id) return
 
-        const thumbImg = thumb.querySelector<HTMLImageElement>(
+        const thumbImg = $<HTMLImageElement>(
           '.boxer-mobile-slide-img',
+          thumb,
         )
         if (thumbImg) {
           thumbImg.style.viewTransitionName = `boxer-hero-${id}`
@@ -1309,8 +1325,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     // Al salir con el ratón del grid, volvemos al estado por defecto,
     // salvo que haya un thumb con foco de teclado.
     grid.addEventListener('mouseleave', () => {
-      const keyboardFocused = root!.querySelector<HTMLElement>(
+      const keyboardFocused = $<HTMLElement>(
         '[data-thumb]:focus-visible',
+        root,
       )
       if (keyboardFocused) return
       showDefault()
