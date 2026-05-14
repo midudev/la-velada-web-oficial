@@ -13,7 +13,7 @@
 
 ## Web oficial de La Velada V
 
-La Velada V es una competición de boxeo que enfrenta a streamers, creadores de contenido y otras celebridades sobre un ring· [Reportar error](https://github.com/midudev/la-velada-web-oficial/issues) · [Sugerir algo](https://github.com/midudev/la-velada-web-oficial/issues)
+La Velada V es una competición de boxeo que enfrenta a streamers, creadores de contenido y otras celebridades sobre un ring · [Reportar error](https://github.com/midudev/la-velada-web-oficial/issues) · [Sugerir algo](https://github.com/midudev/la-velada-web-oficial/issues)
 
 </div>
 
@@ -24,10 +24,10 @@ La Velada V es una competición de boxeo que enfrenta a streamers, creadores de 
 - [Características principales](#características-principales)
   - [Capturas de pantalla de la web de La Velada V](#capturas-de-pantalla-de-la-web-de-la-velada-v)
 - [Para empezar](#para-empezar)
-  - [Prerequisitos](#prerequisitos)
+  - [Prerrequisitos](#prerrequisitos)
   - [Instalación](#instalación)
 - [Contribuir al proyecto](#contribuir-al-proyecto)
-  - [Contribuir desde Stackblitz](#contribuir-desde-stackblitz)
+  - [Contribuir desde StackBlitz](#contribuir-desde-stackblitz)
 - [🛠️ Stack](#️-stack)
 
 </details>
@@ -46,7 +46,7 @@ La Velada V es una competición de boxeo que enfrenta a streamers, creadores de 
 
 ## Para empezar
 
-### Prerequisitos
+### Prerrequisitos
 
 - NVM (recomendado para asegurar versión de Node) ver [documentación oficial](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
 
@@ -134,7 +134,7 @@ La Velada V es una competición de boxeo que enfrenta a streamers, creadores de 
    ```
 
 4. Autenticación mediante twitch (opcional)
-   - Accede a la [consola de twitch](https://dev.twitch.tv/), crea un proyecto y obtén tu client id y client secret
+   - Accede a la [consola de Twitch](https://dev.twitch.tv/), crea un proyecto y obtén tu client ID y client secret
    - Genera un hash aleatorio, puedes usar el siguiente comando `openssl rand -hex 32`
    - Crea un archivo llamado `.env.local` y copia el contenido de [.env.demo](.env.demo) en él
    - Reemplaza el texto copiado de demo en `.env.local` con tu id, secreto y hash
@@ -159,7 +159,7 @@ Aquí tienes una guía rápida:
 
 Por favor, consulta nuestra [guía de contribución](https://github.com/midudev/la-velada-web-oficial/blob/la-velada-vi/CONTRIBUTING.md) para saber cómo puedes empezar de la mejor manera y siguiendo [buenas prácticas](https://github.com/midudev/la-velada-web-oficial/blob/la-velada-vi/CONTRIBUTING.md#buenas-prácticas-).
 
-### Contribuir desde Stackblitz
+### Contribuir desde StackBlitz
 
 Si quieres contribuir de una manera mas sencilla, puedes iniciar este proyecto desde _Stackblitz_ usando tu cuenta de GitHub:
 

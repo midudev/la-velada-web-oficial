@@ -39,13 +39,13 @@
 
 ### Buenas prácticas 🌟
 
-- **Revisa los issues abiertos** antes de abrir una PR, si crees que puedes solucionarlo y no hay ninguna otra PR ya abierta, usa `#numero-de-la-issue` en tu commit para que se añada a la issue. No está demás dejar algún comentario para que se sepa que PR está siendo usada para la issue.
-- **Revisa los PRs abiertos** para asegurarte de que no estás trabajando en algo que ya está en progreso. Siempre puedes ayudar en PRs ya abiertas, aportando cambios, comentarios, revisiones, etc..
+- **Revisa los issues abiertos** antes de abrir una PR, si crees que puedes solucionarlo y no hay ninguna otra PR ya abierta, usa `#numero-de-la-issue` en tu commit para que se añada a la issue. No está de más dejar algún comentario para que se sepa que PR está siendo usada para la issue.
+- **Revisa los PRs abiertos** para asegurarte de que no estás trabajando en algo que ya está en progreso. Siempre puedes ayudar en PRs ya abiertas, aportando cambios, comentarios, revisiones, etc.
 - **Mantén tus commits limpios y descriptivos**.
 - **Sigue las convenciones de código del proyecto**.
 - **Actualiza tu rama con frecuencia** para mantenerla al día con la rama principal del proyecto.
 - **Participa en las discusiones** de tu PR si hay comentarios o sugerencias.
-- **Uso de objetos y typos globales** como `new Date` -> `new window.Date`, `NodeListOf` -> `globalThis.NodeListOf`, `NodeJS` -> `globalThis.NodeJS`. En caso de no saber que usar, referenciad en [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis) o en la documentación del framework [Astro](https://docs.astro.build/en/guides/typescript/#extending-window-and-globalthis)
+- **Uso de objetos y typos globales** como `new Date` -> `new window.Date`, `NodeListOf` -> `globalThis.NodeListOf`, `NodeJS` -> `globalThis.NodeJS`. En caso de no saber qué usar, referid en [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis) o en la documentación del framework [Astro](https://docs.astro.build/en/guides/typescript/#extending-window-and-globalthis)
 
 ### ¿Necesitas ayuda? 🆘
 
