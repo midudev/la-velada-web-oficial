@@ -5,19 +5,68 @@ import Analytics from '@vercel/analytics/astro'
 import '@/styles/global.css'
 
 import { fixedTitle } from '@/consts/pageTitles'
+
+const SITE_URL = 'https://www.infolavelada.com'
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og.jpg`
+const DEFAULT_OG_ALT = 'La Velada del Año VI — Evento de boxeo organizado por Ibai Llanos'
+
 interface Props {
   title: string
   description?: string
   canonical?: string
   robots?: string
+  ogImage?: string
+  ogImageAlt?: string
+  ogUrl?: string
+  ogType?: 'website' | 'article' | 'profile'
 }
 
 const {
   title = fixedTitle,
-  description = 'Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos',
+  description = 'La Velada del Año VI: evento de boxeo amateur entre streamers y creadores de contenido, organizado por Ibai Llanos el 25 de julio de 2026 en el Estadio de La Cartuja de Sevilla.',
   canonical,
   robots,
+  ogImage = DEFAULT_OG_IMAGE,
+  ogImageAlt = DEFAULT_OG_ALT,
+  ogUrl = canonical ?? SITE_URL,
+  ogType = 'website',
 } = Astro.props
+
+// Datos estructurados globales (válidos para todas las páginas).
+// El SportsEvent específico vive en la home para evitar duplicar JSON-LD
+// que solo aplica al evento principal en cada ruta.
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE_URL}/#website`,
+  url: `${SITE_URL}/`,
+  name: 'La Velada del Año VI',
+  alternateName: ['La Velada VI', 'Infolavelada'],
+  description:
+    'Sitio oficial informativo de La Velada del Año VI, el evento de boxeo amateur de Ibai Llanos con streamers y creadores de contenido.',
+  inLanguage: 'es-ES',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+}
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE_URL}/#organization`,
+  name: 'La Velada del Año',
+  url: `${SITE_URL}/`,
+  logo: `${SITE_URL}/logo.png`,
+  sameAs: [
+    'https://x.com/infoLaVelada',
+    'https://www.twitch.tv/ibai',
+    'https://www.youtube.com/@IbaiLlanos',
+    'https://www.tiktok.com/@ibaillanos',
+  ],
+  founder: {
+    '@type': 'Person',
+    name: 'Ibai Llanos',
+    url: 'https://www.twitch.tv/ibai',
+  },
+}
 ---
 
 <!doctype html>
@@ -40,6 +89,31 @@ const {
       as="font"
       type="font/woff2"
       crossorigin="anonymous"
+      fetchpriority="low"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/background-1280.avif"
+      type="image/avif"
+      media="(max-width: 768px)"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/background-2048.avif"
+      type="image/avif"
+      media="(min-width: 769px) and (max-width: 1920px)"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/background.avif"
+      type="image/avif"
+      media="(min-width: 1921px)"
+      fetchpriority="high"
     />
     <meta name="description" content={description} />
     <meta name="author" content="Ibai Llanos" />
@@ -47,15 +121,18 @@ const {
     {canonical && <link rel="canonical" href={canonical} />}
     {robots && <meta name="robots" content={robots} />}
 
-    <meta property="og:url" content="https://www.infolavelada.com" />
-    <meta property="og:type" content="website" />
+    <meta property="og:url" content={ogUrl} />
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="https://www.infolavelada.com/og.jpg" />
+    <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="La Velada del Año VI — Evento de boxeo organizado por Ibai Llanos" />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale:alternate" content="es_MX" />
+    <meta property="og:locale:alternate" content="es_AR" />
+    <meta property="og:locale:alternate" content="es_CO" />
     <meta property="og:site_name" content="La Velada del Año VI" />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -63,40 +140,59 @@ const {
     <meta name="twitter:creator" content="@ibaiLlanos" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="https://www.infolavelada.com/og.jpg" />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Event",
-        "name": "La Velada del Año VI",
-        "description": "Evento de boxeo aficionado entre streamers y creadores de contenido, organizado por Ibai Llanos",
-        "image": "https://www.infolavelada.com/og.jpg",
-        "startDate": "2026-03-09T19:00:00+01:00",
-        "eventStatus": "https://schema.org/EventScheduled",
-        "eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode",
-        "location": {
-          "@type": "Place",
-          "name": "Teatro Victoria",
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Barcelona",
-            "addressRegion": "Cataluña",
-            "addressCountry": "ES"
-          }
-        },
-        "organizer": {
-          "@type": "Person",
-          "name": "Ibai Llanos"
-        },
-        "performer": {
-          "@type": "PerformingGroup",
-          "name": "Creadores de contenido"
-        }
-      }
-    </script>
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(websiteJsonLd)}
+    />
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(organizationJsonLd)}
+    />
+    <slot name="head" />
     <ClientRouter />
     <Analytics />
+    <script>
+      type AstroNavigationEvent = Event & {
+        from: URL
+        to: URL
+      }
+
+      type AstroBeforeSwapEvent = AstroNavigationEvent & {
+        newDocument: Document
+      }
+
+      const SKIP_BOXERS_ENTER_ATTR = 'data-skip-boxers-enter'
+      const BOXERS_INDEX_PATH = '/boxeadores'
+      const BOXER_DETAIL_PATH_RE = /^\/boxeadores\/[^/]+$/
+
+      const getNormalizedPathname = (url: URL | string) => {
+        const pathname =
+          url instanceof URL ? url.pathname : new URL(url, window.location.href).pathname
+        return pathname === '/' ? pathname : pathname.replace(/\/$/, '')
+      }
+
+      const isReturningFromBoxerDetail = (event: AstroNavigationEvent) => {
+        const fromPath = getNormalizedPathname(event.from)
+        const toPath = getNormalizedPathname(event.to)
+
+        return toPath === BOXERS_INDEX_PATH && BOXER_DETAIL_PATH_RE.test(fromPath)
+      }
+
+      document.addEventListener('astro:before-swap', (event) => {
+        const transitionEvent = event as AstroBeforeSwapEvent
+        const shouldSkipBoxersEnter = isReturningFromBoxerDetail(transitionEvent)
+
+        transitionEvent.newDocument.documentElement.toggleAttribute(
+          SKIP_BOXERS_ENTER_ATTR,
+          shouldSkipBoxersEnter,
+        )
+      })
+    </script>
   </head>
   <body>
     <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-black focus:outline-none">

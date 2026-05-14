@@ -1,0 +1,68 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import Header from '@/sections/Header.astro'
+import Footer from '@/sections/Footer.astro'
+import Sponsors from '@/sections/Sponsors.astro'
+
+const title = 'Pronósticos - La Velada del Año VI'
+const description =
+  'La página de pronósticos de La Velada del Año VI estará disponible más adelante para votar los resultados de los combates.'
+const canonical = 'https://www.infolavelada.com/pronosticos'
+
+export const prerender = true
+---
+
+<Layout
+  title={title}
+  description={description}
+  canonical={canonical}
+  robots="noindex, nofollow"
+>
+  <Header />
+  <section
+    class="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-24 text-center text-theme-cream sm:px-6"
+  >
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_50%_20%,rgba(199,168,107,0.24),transparent_32%),linear-gradient(180deg,var(--color-theme-midnight)_0%,#050816_100%)]"
+    >
+    </div>
+    <div
+      aria-hidden="true"
+      class="absolute left-1/2 top-1/2 -z-10 size-[22rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-theme-gold/20 shadow-[0_0_80px_rgba(199,168,107,0.14)] sm:size-[34rem]"
+    >
+    </div>
+
+    <div class="mx-auto flex w-full max-w-3xl flex-col items-center">
+      <p class="mb-5 text-xs font-bold tracking-[0.45em] text-theme-gold/85 sm:text-sm">
+        PRÓXIMAMENTE
+      </p>
+      <h1
+        class="font-fantasy text-6xl leading-[0.88] tracking-wide text-theme-cream drop-shadow-[0_12px_35px_rgba(0,0,0,0.55)] sm:text-8xl md:text-9xl"
+      >
+        Pronósticos
+      </h1>
+      <p class="mt-7 max-w-2xl text-balance text-base leading-7 tracking-wide text-white/75 sm:text-lg">
+        Estamos preparando una página para que puedas votar tus predicciones de los combates.
+        Por ahora la votación está desactivada.
+      </p>
+
+      <div
+        class="mt-10 rounded-2xl border border-theme-gold/25 bg-theme-midnight/70 px-6 py-5 shadow-[0_18px_60px_rgba(0,0,0,0.28)] backdrop-blur sm:px-8"
+      >
+        <p class="text-sm font-semibold tracking-[0.28em] text-theme-gold/90">
+          EL RING TODAVÍA ESTÁ CERRADO
+        </p>
+      </div>
+
+      <a
+        href="/"
+        class="mt-10 inline-flex min-h-12 items-center justify-center rounded-lg bg-theme-cream px-8 py-4 text-sm font-bold tracking-widest text-theme-midnight transition-all duration-300 ease-out hover:rotate-[2deg] hover:bg-white active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+      >
+        Volver al inicio
+      </a>
+    </div>
+  </section>
+  <Sponsors />
+  <Footer />
+</Layout>

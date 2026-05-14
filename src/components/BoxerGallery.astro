@@ -97,7 +97,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
 </div>
 
 <script>
-  import { $ } from '@/lib/dom-selector'
+  import { $, $$ } from '@/lib/dom-selector'
 
   document.addEventListener('astro:page-load', () => {
     const $lightbox = $('#lightbox') as HTMLDialogElement
@@ -107,11 +107,11 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
     const $btnClose = $('#btn-close') as HTMLButtonElement
     if (!$gallery) return
 
-    const $links = $gallery?.querySelectorAll('a')
+    const $links = $$<HTMLAnchorElement>('a', $gallery)
 
     const updateImg = (link: HTMLElement) => {
-      const img = $lightbox?.querySelector('.boxer-gallery-img') as HTMLImageElement
-      const newImg = link.querySelector('img') as HTMLImageElement
+      const img = $<HTMLImageElement>('.boxer-gallery-img', $lightbox)
+      const newImg = $<HTMLImageElement>('img', link)
       if (img && newImg) {
         resetMainImageAnimation(img)
         img.src = newImg.src
@@ -136,18 +136,18 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
     }
 
     const showPrevImage = () => {
-      const current = $gallery.querySelector('a[data-current=true]') as HTMLAnchorElement
+      const current = $<HTMLAnchorElement>('a[data-current=true]', $gallery)!
       const prev = (current.previousElementSibling ||
-        $gallery.querySelector('a:last-of-type')) as HTMLAnchorElement
+        $<HTMLAnchorElement>('a:last-of-type', $gallery)) as HTMLAnchorElement
       prev.click()
     }
 
     const showNextImage = () => {
-      const current = $gallery.querySelector('a[data-current=true]') as HTMLAnchorElement
+      const current = $<HTMLAnchorElement>('a[data-current=true]', $gallery)!
       const next = (
         current.nextElementSibling?.nodeName === 'A'
           ? current.nextElementSibling
-          : $gallery.querySelector('a:first-of-type')
+          : $<HTMLAnchorElement>('a:first-of-type', $gallery)
       ) as HTMLAnchorElement
       next.click()
     }
@@ -164,7 +164,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
       const handleSwipeMove = (moveEvent: MouseEvent | TouchEvent) => {
         const currentTouchX = getTouchX(moveEvent)
         swipeDeltaX = currentTouchX - initialTouchX
-        const $lightboxImg = $lightbox.querySelector('.boxer-gallery-img') as HTMLImageElement
+        const $lightboxImg = $<HTMLImageElement>('.boxer-gallery-img', $lightbox)
         if ($lightboxImg) {
           $lightboxImg.style.transform = `translateX(${swipeDeltaX}px)`
         }
@@ -173,7 +173,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
       const handleSwipeDecision = () => {
         if (isAnimating) return
 
-        const $lightboxImg = $lightbox.querySelector('.boxer-gallery-img') as HTMLImageElement
+        const $lightboxImg = $<HTMLImageElement>('.boxer-gallery-img', $lightbox)
         if (!$lightboxImg) return
 
         if (swipeDeltaX > $lightboxImg.offsetWidth * 0.5) {
@@ -201,7 +201,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
       document.addEventListener('touchend', handleSwipeDecision, { passive: true })
     }
 
-    const $lightboxImg = $lightbox?.querySelector('.boxer-gallery-img') as HTMLImageElement
+    const $lightboxImg = $<HTMLImageElement>('.boxer-gallery-img', $lightbox)
     if ($lightboxImg) {
       $lightboxImg.addEventListener('mousedown', (e) => startSwipeDrag(e))
       $lightboxImg.addEventListener('touchstart', (e) => startSwipeDrag(e))
@@ -248,7 +248,7 @@ const IMAGES_TO_LOAD = Math.min(gallery, 3)
       link.addEventListener('click', (event) => {
         event.preventDefault()
         // remove current data atribute
-        $gallery.querySelector('a[data-current=true]')?.removeAttribute('data-current')
+        $<HTMLAnchorElement>('a[data-current=true]', $gallery)?.removeAttribute('data-current')
         // set current data atribute
         link.setAttribute('data-current', 'true')
 

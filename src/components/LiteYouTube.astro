@@ -1,4 +1,6 @@
 ---
+import playCircleMaskUrl from '@/assets/svg/play-circle.svg?url'
+
 interface Props {
   videoId: string
   title?: string
@@ -25,7 +27,7 @@ const { videoId, title, backgroundImage, withShadowImage } = Astro.props
   <lite-youtube
     class="rounded-lg"
     videoid={videoId}
-    style={`background-image: url('${backgroundImage}')`}
+    style={`background-image: url('${backgroundImage}'); --play-circle-mask: url('${playCircleMaskUrl}')`}
     tabindex="0"
     aria-label="button"
   >
@@ -42,6 +44,8 @@ const { videoId, title, backgroundImage, withShadowImage } = Astro.props
 
   <script>
     // @ts-nocheck
+
+    import { $ } from '@/lib/dom-selector'
 
     /*
 	Component extracted from: https://github.com/paulirish/lite-youtube-embed/tree/master
@@ -65,7 +69,7 @@ const { videoId, title, backgroundImage, withShadowImage } = Astro.props
         this.videoId = video[0]
         this.short = video[1]
 
-        let playBtnEl = this.querySelector('.lty-playbtn')
+        let playBtnEl = $('.lty-playbtn', this)
         // A label for the button takes priority over a [playlabel] attribute on the custom-element
         this.playLabel =
           (playBtnEl && playBtnEl.textContent.trim()) ||
@@ -227,7 +231,7 @@ const { videoId, title, backgroundImage, withShadowImage } = Astro.props
 
       async activate() {
         if (this.classList.contains('lyt-activated')) return
-        const playBtnEl = this.querySelector('.lty-playbtn')
+        const playBtnEl = $('.lty-playbtn', this)
         if (playBtnEl && playBtnEl.hasAttribute('href')) {
           playBtnEl.removeAttribute('href')
         }
@@ -378,10 +382,8 @@ const { videoId, title, backgroundImage, withShadowImage } = Astro.props
       background: no-repeat center/100px 100px;
       /* YT's actual play button svg */
       background-color: white;
-      -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M719.4 499.1l-296.1-215A15.9 15.9 0 0 0 398 297v430c0 13.1 14.8 20.5 25.3 12.9l296.1-215a15.9 15.9 0 0 0 0-25.8zm-257.6 134V390.9L628.5 512 461.8 633.1z"></path></svg>')
-        no-repeat center/100px 100px;
-      mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M719.4 499.1l-296.1-215A15.9 15.9 0 0 0 398 297v430c0 13.1 14.8 20.5 25.3 12.9l296.1-215a15.9 15.9 0 0 0 0-25.8zm-257.6 134V390.9L628.5 512 461.8 633.1z"></path></svg>')
-        no-repeat center/100px 100px;
+      -webkit-mask: var(--play-circle-mask) no-repeat center/100px 100px;
+      mask: var(--play-circle-mask) no-repeat center/100px 100px;
       position: absolute;
       cursor: pointer;
       z-index: 1;
