@@ -1,7 +1,15 @@
 packages:
   - .
 
+allowBuilds:
+  esbuild: true
+  sharp: true
+
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
   - esbuild
   - sharp
+
+peerDependencyRules:
+  allowedVersions:
+    '@auth/core': 0.40.0

@@ -1,0 +1,173 @@
+---
+import type { GetStaticPaths } from 'astro'
+
+import { battles, battlesById } from '@/consts/battles'
+import {
+  BOXERS_BY_ID,
+  COUNTRY_FLAGS,
+  COUNTRY_NAMES,
+  getBoxerPhoto,
+} from '@/consts/boxers'
+import Layout from '@/layouts/Layout.astro'
+import Footer from '@/sections/Footer.astro'
+import Sponsors from '@/sections/Sponsors.astro'
+
+const { id = '' } = Astro.params
+const battle = battlesById[id]
+
+if (!battle) return Astro.redirect('/404')
+
+const SITE_URL = 'https://www.infolavelada.com'
+const [boxer1Id, boxer2Id] = battle.boxerIds
+const boxer1 = BOXERS_BY_ID[boxer1Id]
+const boxer2 = BOXERS_BY_ID[boxer2Id]
+const country1 = COUNTRY_NAMES[boxer1.country] ?? boxer1.country
+const country2 = COUNTRY_NAMES[boxer2.country] ?? boxer2.country
+const title = `${battle.title} — Combate ${String(battle.number).padStart(2, '0')} de La Velada del Año VI`
+const description = `Toda la información del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} (${country1}) contra ${boxer2.name} (${country2}). 25 de julio de 2026 en el Estadio de La Cartuja de Sevilla.`
+const canonical = `${SITE_URL}${battle.url}`
+
+const sportsEventJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  name: `${battle.title} — La Velada del Año VI`,
+  description,
+  url: canonical,
+  sport: 'Boxing',
+  startDate: '2026-07-25T20:00:00+02:00',
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+  superEvent: {
+    '@type': 'SportsEvent',
+    name: 'La Velada del Año VI',
+    url: `${SITE_URL}/`,
+  },
+  location: {
+    '@type': 'Place',
+    name: 'Estadio de La Cartuja',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Sevilla',
+      addressRegion: 'Andalucía',
+      addressCountry: 'ES',
+    },
+  },
+  organizer: { '@type': 'Person', name: 'Ibai Llanos' },
+  competitor: [
+    {
+      '@type': 'Person',
+      name: boxer1.name,
+      url: `${SITE_URL}/boxeadores/${boxer1.id}`,
+      image: `${SITE_URL}/photos/${boxer1.id}/01.webp`,
+      nationality: { '@type': 'Country', name: country1 },
+    },
+    {
+      '@type': 'Person',
+      name: boxer2.name,
+      url: `${SITE_URL}/boxeadores/${boxer2.id}`,
+      image: `${SITE_URL}/photos/${boxer2.id}/01.webp`,
+      nationality: { '@type': 'Country', name: country2 },
+    },
+  ],
+}
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Boxeadores', item: `${SITE_URL}/boxeadores` },
+    { '@type': 'ListItem', position: 3, name: battle.title, item: canonical },
+  ],
+}
+
+export const getStaticPaths = (() => {
+  return battles.map((battle) => ({
+    params: { id: battle.id },
+  }))
+}) satisfies GetStaticPaths
+
+export const prerender = true
+---
+
+<Layout title={title} description={description} canonical={canonical}>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(sportsEventJsonLd)}
+    slot="head"
+  />
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(breadcrumbJsonLd)}
+    slot="head"
+  />
+  <section
+    class="relative isolate min-h-screen overflow-hidden px-4 py-24 text-theme-cream sm:px-6"
+    aria-labelledby="battle-title"
+  >
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_50%_18%,rgba(199,168,107,0.22),transparent_30%),linear-gradient(180deg,var(--color-theme-midnight)_0%,#050816_100%)]"
+    >
+    </div>
+
+    <div class="mx-auto flex w-full max-w-6xl flex-col items-center">
+      <a
+        href="/"
+        class="mb-10 text-xs font-bold tracking-[0.28em] text-theme-gold/80 underline-offset-4 hover:text-theme-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+      >
+        Volver al inicio
+      </a>
+
+      <p class="text-xs font-bold tracking-[0.45em] text-theme-gold/85">
+        COMBATE {String(battle.number).padStart(3, '0')}
+      </p>
+      <h1
+        id="battle-title"
+        class="mt-4 text-balance text-center font-fantasy text-6xl leading-[0.9] sm:text-8xl md:text-9xl"
+      >
+        {battle.title}
+      </h1>
+
+      <div class="mt-12 grid w-full gap-6 md:grid-cols-[1fr_auto_1fr] md:items-center">
+        <article class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center">
+          <img
+            src={getBoxerPhoto(boxer1)}
+            alt={`Foto principal de ${boxer1.name}`}
+            class="h-[22rem] max-w-full object-contain object-bottom"
+            fetchpriority="high"
+            decoding="async"
+          />
+          <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer1.name}</h2>
+          <p class="mt-2 text-sm font-semibold tracking-[0.25em] text-white/60">
+            <span aria-hidden="true">{COUNTRY_FLAGS[boxer1.country]}</span>
+            {COUNTRY_NAMES[boxer1.country]}
+          </p>
+        </article>
+
+        <span class="text-center font-fantasy text-7xl text-theme-gold md:text-8xl" aria-hidden="true">
+          VS
+        </span>
+
+        <article class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center">
+          <img
+            src={getBoxerPhoto(boxer2)}
+            alt={`Foto principal de ${boxer2.name}`}
+            class="h-[22rem] max-w-full object-contain object-bottom"
+            fetchpriority="high"
+            decoding="async"
+          />
+          <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer2.name}</h2>
+          <p class="mt-2 text-sm font-semibold tracking-[0.25em] text-white/60">
+            <span aria-hidden="true">{COUNTRY_FLAGS[boxer2.country]}</span>
+            {COUNTRY_NAMES[boxer2.country]}
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+  <Sponsors />
+  <Footer />
+</Layout>

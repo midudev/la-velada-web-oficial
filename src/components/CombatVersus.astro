@@ -67,9 +67,11 @@ const fighter2 = FIGHTERS.find((f) => f.id === combat?.fighters[1])
 </div>
 
 <script>
+  import { $ } from '@/lib/dom-selector'
+
   document.addEventListener('astro:page-load', async () => {
     // call api to get predictions for the combat
-    const combatId = document.querySelector('[data-combat-id]')?.getAttribute('data-combat-id')
+    const combatId = $('[data-combat-id]')?.getAttribute('data-combat-id')
     const predictions = await fetch(`/api/predictions?combat_id=${combatId}`)
     const predictionsData = await predictions.json()
 

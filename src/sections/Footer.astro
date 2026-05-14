@@ -1,36 +1,178 @@
 ---
-import { SOCIAL } from '@/consts/social'
+import TikTokBrandIcon from '@/assets/svg/tiktok-brand.svg'
+import TwitchBrandIcon from '@/assets/svg/twitch-brand.svg'
+import YoutubeSocialIcon from '@/assets/svg/youtube-social.svg'
+import InfojobsLogo from '@/assets/sponsors/infojobs.svg'
+
+const PREVIOUS_EDITIONS = [
+  {
+    year: '2025',
+    url: 'https://2025.infolavelada.com/',
+  },
+  {
+    year: '2024',
+    url: 'https://2024.infolavelada.com/',
+  },
+]
 ---
 
-<footer class="relative w-full pb-16 pt-8">
-  <div class="relative flex h-full flex-col items-center justify-center text-white/60">
-    <div class="mb-4 flex flex-row items-center justify-center gap-x-3">
-      {
-        SOCIAL.map(({ url, image, name, label }) => (
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={label ?? name}
-            class="flex items-center justify-center transition hover:scale-125 hover:text-white"
-          >
-            <image.logo />
-          </a>
-        ))
-      }
+<footer class="relative w-full px-4 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16">
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-40 bg-[radial-gradient(ellipse_at_top,_var(--color-theme-gold)_0%,_transparent_70%)] opacity-[0.05]"
+  >
+  </div>
+
+  <div class="relative flex flex-col items-center justify-center">
+    <div class="animate-fade-in animate-delay-1100 mb-10 flex items-center gap-4 sm:mb-14" aria-hidden="true">
+      <span class="h-px w-16 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-28"></span>
+      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
+      <span class="h-px w-16 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-28"></span>
     </div>
 
-    <div class="pb-8 opacity-70">
-      <p class="text-center text-xs">
-        © 2026 La Velada del Año.<br />Todos los derechos reservados.
+    <div class="mb-12 flex w-full flex-row items-center justify-center sm:mb-14">
+      <nav
+        class="animate-fade-in animate-delay-1100 relative z-10 mx-auto grid w-full max-w-4xl grid-cols-1 gap-3 py-6 sm:grid-cols-3 sm:gap-6 lg:gap-10"
+        aria-label="Redes sociales de Ibai Llanos"
+      >
+        <a
+          href="https://twitch.tv/ibai"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="--brand: #a970ff;"
+          class="group relative flex min-h-11 w-full items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+          aria-label="Seguir a Ibai en Twitch"
+        >
+          <span
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-x-8 top-1/2 -z-10 h-10 -translate-y-1/2 rounded-full bg-[var(--brand)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-30 group-focus-visible:opacity-30"
+          ></span>
+          <TwitchBrandIcon
+            class="size-6 text-[#a970ff] transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:[filter:drop-shadow(0_0_12px_var(--brand))] sm:size-7"
+            aria-hidden="true"
+          />
+          <span
+            class="relative font-cinzel text-sm font-semibold tracking-wider text-white/95 transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-1/2 after:h-px after:w-0 after:-translate-x-1/2 after:bg-[var(--brand)] after:transition-all after:duration-300 group-hover:text-white group-hover:after:w-full sm:text-base"
+            >/IBAI</span
+          >
+        </a>
+
+        <a
+          href="https://tiktok.com/@ibaillanos"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="--brand: #25f4ee;"
+          class="group relative flex min-h-11 w-full items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+          aria-label="Seguir a Ibai Llanos en TikTok"
+        >
+          <span
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-x-8 top-1/2 -z-10 h-10 -translate-y-1/2 rounded-full bg-[var(--brand)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-30 group-focus-visible:opacity-30"
+          ></span>
+          <TikTokBrandIcon
+            class="size-6 text-white transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:[filter:drop-shadow(0_0_12px_var(--brand))] sm:size-7"
+            aria-hidden="true"
+          />
+          <span
+            class="relative font-cinzel text-sm font-semibold tracking-wider text-white/95 transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-1/2 after:h-px after:w-0 after:-translate-x-1/2 after:bg-[var(--brand)] after:transition-all after:duration-300 group-hover:text-white group-hover:after:w-full sm:text-base"
+            >/IBAILLANOS</span
+          >
+        </a>
+
+        <a
+          href="https://youtube.com/@IbaiLlanos"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="--brand: #ff0000;"
+          class="group relative flex min-h-11 w-full items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+          aria-label="Seguir a Ibai Llanos en YouTube"
+        >
+          <span
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-x-8 top-1/2 -z-10 h-10 -translate-y-1/2 rounded-full bg-[var(--brand)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-30 group-focus-visible:opacity-30"
+          ></span>
+          <YoutubeSocialIcon
+            class="size-6 text-[#ff0000] transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:[filter:drop-shadow(0_0_12px_var(--brand))] sm:size-7"
+            aria-hidden="true"
+          />
+          <span
+            class="relative font-cinzel text-sm font-semibold tracking-wider text-white/95 transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-1/2 after:h-px after:w-0 after:-translate-x-1/2 after:bg-[var(--brand)] after:transition-all after:duration-300 group-hover:text-white group-hover:after:w-full sm:text-base"
+            >/IBAILLANOS</span
+          >
+        </a>
+      </nav>
+    </div>
+
+    <div
+      class="animate-fade-in animate-delay-1100 mb-10 flex flex-col items-center gap-6 text-xs sm:mb-14 sm:flex-row sm:gap-10 sm:text-sm"
+    >
+      <div class="flex items-center gap-x-3 text-white/75">
+        <span class="font-cinzel tracking-[0.25em] text-white/55">WEB PATROCINADA POR</span>
+        <a
+          href="https://www.infojobs.net/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Ir a la página web de InfoJobs"
+          class="inline-flex items-center text-white transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+        >
+          <InfojobsLogo class="h-4 w-auto sm:h-5" />
+        </a>
+      </div>
+
+      <span aria-hidden="true" class="hidden h-5 w-px bg-theme-gold/30 sm:block"></span>
+
+      <nav
+        class="flex items-center gap-x-4 font-cinzel tracking-[0.25em]"
+        aria-label="Versiones pasadas de La Velada del Año"
+      >
+        <span class="text-white/55">EDICIONES ANTERIORES</span>
+        <ul class="flex items-center gap-x-2 text-white/75">
+          {
+            PREVIOUS_EDITIONS.map(({ year, url }, index) => (
+              <>
+                {index > 0 && (
+                  <li aria-hidden="true" class="text-theme-gold/40">
+                    ·
+                  </li>
+                )}
+                <li>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex min-h-8 items-center justify-center px-1 underline-offset-4 transition hover:text-theme-cream hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+                    aria-label={`Ir a la web de La Velada del Año ${year}`}
+                  >
+                    {year}
+                  </a>
+                </li>
+              </>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <div class="mb-8 flex items-center gap-3 sm:mb-10" aria-hidden="true">
+      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/25 sm:w-20"></span>
+      <span class="size-1 rotate-45 bg-theme-gold/50"></span>
+      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/25 sm:w-20"></span>
+    </div>
+
+    <div class="pb-2 font-cinzel">
+      <p class="text-center text-[0.7rem] tracking-[0.2em] text-white/60 sm:text-xs">
+        <span>© 2026 LA VELADA DEL AÑO</span>
+        <span aria-hidden="true" class="mx-2 text-theme-gold/40">·</span>
+        <span class="text-white/45">TODOS LOS DERECHOS RESERVADOS</span>
       </p>
-      <p class="mt-2 text-center text-xs">
-        Desarrollado por <a
+      <p class="mt-3 text-center text-[0.7rem] tracking-[0.15em] text-white/55 sm:text-xs">
+        DESARROLLADO POR <a
           href="https://midu.dev"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-white/60 underline transition hover:text-white">midu.dev</a
-        > y su comunidad.
+          class="text-theme-cream/90 underline underline-offset-4 transition hover:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+          >MIDU.DEV</a
+        > Y SU COMUNIDAD
       </p>
     </div>
   </div>
