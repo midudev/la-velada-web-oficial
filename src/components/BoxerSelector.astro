@@ -177,8 +177,20 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       <span
         aria-hidden="true"
         data-active-watermark
-        class="boxer-watermark pointer-events-none absolute left-1/2 top-2 z-0 -translate-x-1/2 select-none whitespace-nowrap font-cinzel text-[18vw] font-black leading-[0.85] tracking-[-0.04em] text-theme-cream sm:text-[14vw] md:top-4 md:text-[11rem] lg:text-[13rem]"
-      >{fallback.name}</span>
+        class="boxer-watermark pointer-events-none absolute left-1/2 top-2 z-0 w-screen -translate-x-1/2 select-none overflow-hidden font-cinzel text-[18vw] font-black leading-[0.85] tracking-[-0.04em] text-theme-cream sm:text-[14vw] md:top-4 md:text-[11rem] lg:text-[13rem]"
+      >
+        <span class="boxer-watermark-track">
+          {
+            [0, 1].map(() => (
+              <span class="boxer-watermark-set">
+                <span data-active-watermark-text>{fallback.name}</span>
+                <span data-active-watermark-text>{fallback.name}</span>
+                <span data-active-watermark-text>{fallback.name}</span>
+              </span>
+            ))
+          }
+        </span>
+      </span>
 
       <div class="boxer-portrait-layer pointer-events-none relative z-10 flex min-h-0 w-full flex-1 items-end justify-center">
         <picture class="boxer-portrait-wrap relative block h-full">
@@ -581,6 +593,30 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     transition: opacity 400ms ease;
   }
 
+  .boxer-watermark-track {
+    display: flex;
+    width: max-content;
+    animation: boxer-watermark-marquee 32s linear infinite;
+    will-change: transform;
+  }
+
+  .boxer-watermark-set {
+    display: flex;
+    align-items: center;
+    gap: 0.22em;
+    padding-right: 0.22em;
+    white-space: nowrap;
+  }
+
+  @keyframes boxer-watermark-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
   .boxer-name {
     text-transform: uppercase;
     color: var(--color-theme-cream);
@@ -588,6 +624,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
       0 2px 18px color-mix(in srgb, var(--color-theme-gold) 55%, transparent),
       0 6px 40px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
+    filter:
+      drop-shadow(0 2px 2px rgba(0, 0, 0, 0.78))
+      drop-shadow(0 0 10px rgba(0, 0, 0, 0.58));
     background: linear-gradient(
       180deg,
       var(--color-theme-cream) 0%,
@@ -1008,6 +1047,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     .boxer-portrait,
     .boxer-name,
     .boxer-watermark,
+    .boxer-watermark-track,
     .boxer-default-logo {
       transition: none;
       animation: none;
@@ -1129,6 +1169,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     )
     const nameNode = $<HTMLElement>('[data-active-name]', root)
     const watermark = $<HTMLElement>('[data-active-watermark]', root)
+    const watermarkTexts = Array.from(
+      $$<HTMLElement>('[data-active-watermark-text]', root),
+    )
     const flagNode = $<HTMLElement>('[data-active-flag]', root)
     const countryNode = $<HTMLElement>('[data-active-country-name]', root)
     const defaultPanel = $<HTMLElement>('[data-default-panel]', root)
@@ -1194,7 +1237,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       image!.alt = `Foto principal de ${name}`
 
       nameNode!.textContent = name
-      if (watermark) watermark.textContent = name
+      watermarkTexts.forEach((node) => {
+        node.textContent = name
+      })
 
       if (flagNode && flag) flagNode.textContent = flag
       if (countryNode && country) countryNode.textContent = country
