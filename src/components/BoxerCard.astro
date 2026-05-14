@@ -114,8 +114,10 @@ interface Props {
 </style>
 
 <script>
+  import { $, $$ } from '@/lib/dom-selector'
+
   document.addEventListener('astro:page-load', () => {
-    const boxerCards = document.querySelectorAll('.boxer-card')
+    const boxerCards = $$<HTMLElement>('.boxer-card')
     let timeoutId: ReturnType<typeof setTimeout> | null = null
     let versusCard: HTMLAnchorElement | null = null
     let versusCardDiv: HTMLDivElement | null = null
@@ -144,7 +146,8 @@ interface Props {
         // Quitar la clase también de su par si existe
         const versus = singleBoxerCard.getAttribute('data-versus')
         if (versus) {
-          versusCard = document.querySelector(`[data-id=${versus}]`) as HTMLAnchorElement
+          versusCard = $<HTMLAnchorElement>(`[data-id="${versus}"]`)
+          if (!versusCard) return
 
           versusCardDiv = versusCard.children[1] as HTMLDivElement
 

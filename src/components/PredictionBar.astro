@@ -94,6 +94,8 @@ const {
 </div>
 
 <script>
+  import { $ } from '@/lib/dom-selector'
+
   // listen an event to update the prediction bar
   document.addEventListener('update-prediction-bar', (event) => {
     const {
@@ -103,7 +105,7 @@ const {
     const predictionBar = document.getElementById(`prediction-bar-${id}`)
 
     if (predictionBar) {
-      const $votes = predictionBar.querySelector('.prediction-bar-votes')
+      const $votes = $('.prediction-bar-votes', predictionBar)
       const $votesParent = $votes?.parentNode as HTMLElement
 
       if ($votes && $votesParent) {
@@ -113,12 +115,13 @@ const {
       }
 
       predictions.map((prediction: { fighter_id: string; percentage: number; votes: number }) => {
-        const $fighter = predictionBar.querySelector(
+        const $fighter = $<HTMLElement>(
           `[data-fighter-id="${prediction.fighter_id}"]`,
-        ) as HTMLElement
+          predictionBar,
+        )
 
         if ($fighter) {
-          const $percentage = $fighter.querySelector('.prediction-bar-percentage') as HTMLElement
+          const $percentage = $<HTMLElement>('.prediction-bar-percentage', $fighter)
 
           if ($percentage) {
             $percentage.textContent = `${prediction.percentage}%`
