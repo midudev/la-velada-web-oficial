@@ -9,9 +9,12 @@ Practical, copy-paste-ready patterns for common accessibility requirements. Each
 Trap keyboard focus inside a modal dialog so Tab/Shift+Tab cycle through its focusable elements and Escape closes it.
 
 ```javascript
+import { $$ } from '@/lib/dom-selector';
+
 function openModal(modal) {
-  const focusableElements = modal.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  const focusableElements = $$(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    modal
   );
   const firstElement = focusableElements[0];
   const lastElement = focusableElements[focusableElements.length - 1];
@@ -90,8 +93,10 @@ Announce errors to screen readers and focus the first invalid field on submit.
 ```
 
 ```javascript
+import { $ } from '@/lib/dom-selector';
+
 form.addEventListener('submit', (e) => {
-  const firstError = form.querySelector('[aria-invalid="true"]');
+  const firstError = $('[aria-invalid="true"]', form);
   if (firstError) {
     e.preventDefault();
     firstError.focus();
