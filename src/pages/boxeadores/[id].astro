@@ -27,6 +27,7 @@ import Sponsors from '@/sections/Sponsors.astro'
 import { formatCount } from '@/lib/socials/format'
 import { resolveSocials, totalFollowers as sumFollowers } from '@/lib/socials/resolve'
 import type { SocialPlatform } from '@/lib/socials/types'
+import { fetchVeladaVideos } from '@/lib/youtube/velada'
 
 export const prerender = true
 
@@ -106,6 +107,14 @@ const socials = resolved.map((entry) => ({
   url: socialUrl(entry.platform, entry.username),
 }))
 const totalFollowers = sumFollowers(resolved)
+
+const veladaVideos = await fetchVeladaVideos(boxer.youtubeChannelId)
+
+function formatVideoDate(iso: string): string {
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) return ''
+  return new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'short' }).format(date)
+}
 
 function formatBirthDate(value: string | null): string | null {
   if (!value) return null
@@ -471,6 +480,63 @@ const breadcrumbJsonLd = {
                     </li>
                   )
                 })}
+              </ul>
+            </section>
+          )}
+
+          {veladaVideos.length > 0 && (
+            <section
+              class="boxer-detail-videos animate-fade-in-up animate-delay-700 mt-10 w-full"
+              aria-labelledby="boxer-videos-title"
+            >
+              <header class="boxer-detail-section-header">
+                <span class="boxer-detail-section-index font-cinzel" aria-hidden="true">
+                  03
+                </span>
+                <h2
+                  id="boxer-videos-title"
+                  class="boxer-detail-section-title font-cinzel"
+                >
+                  Vídeos de La Velada
+                </h2>
+                <span class="boxer-detail-section-total font-cinzel">
+                  Últimos {veladaVideos.length}
+                </span>
+              </header>
+
+              <ul class="boxer-detail-videos-grid">
+                {veladaVideos.map((video) => (
+                  <li class="boxer-detail-video-card">
+                    <a
+                      href={video.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="boxer-detail-video-link"
+                      aria-label={`Ver "${video.title}" en YouTube`}
+                    >
+                      <span class="boxer-detail-video-thumb">
+                        <img
+                          src={video.thumbnail}
+                          alt=""
+                          role="presentation"
+                          loading="lazy"
+                          decoding="async"
+                          width="320"
+                          height="180"
+                        />
+                        <span class="boxer-detail-video-play" aria-hidden="true">▶</span>
+                      </span>
+                      <span class="boxer-detail-video-meta">
+                        <span class="boxer-detail-video-title font-cinzel">
+                          {video.title}
+                        </span>
+                        <span class="boxer-detail-video-date font-cinzel">
+                          {formatVideoDate(video.publishedAt)}
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
               </ul>
             </section>
           )}
@@ -902,6 +968,119 @@ const breadcrumbJsonLd = {
     .boxer-detail-social-count-value {
       font-size: 0.95rem;
     }
+  }
+
+  .boxer-detail-videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 0.9rem;
+    margin: 0.85rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .boxer-detail-video-card {
+    min-width: 0;
+  }
+
+  .boxer-detail-video-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--color-theme-cream);
+    transition: transform 200ms ease;
+  }
+
+  .boxer-detail-video-link:hover,
+  .boxer-detail-video-link:focus-visible {
+    transform: translateY(-2px);
+    outline: none;
+  }
+
+  .boxer-detail-video-thumb {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--color-theme-midnight) 92%, black);
+    border: 1px solid color-mix(in srgb, var(--color-theme-cream) 8%, transparent);
+    transition: border-color 200ms ease;
+  }
+
+  .boxer-detail-video-link:hover .boxer-detail-video-thumb,
+  .boxer-detail-video-link:focus-visible .boxer-detail-video-thumb {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 65%, transparent);
+  }
+
+  .boxer-detail-video-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition:
+      transform 500ms ease,
+      filter 250ms ease;
+    filter: saturate(0.95) brightness(0.9);
+  }
+
+  .boxer-detail-video-link:hover .boxer-detail-video-thumb img,
+  .boxer-detail-video-link:focus-visible .boxer-detail-video-thumb img {
+    transform: scale(1.06);
+    filter: saturate(1.05) brightness(1);
+  }
+
+  .boxer-detail-video-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-theme-cream);
+    font-size: 1.2rem;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+    opacity: 0.78;
+    transition:
+      opacity 200ms ease,
+      color 200ms ease;
+  }
+
+  .boxer-detail-video-link:hover .boxer-detail-video-play,
+  .boxer-detail-video-link:focus-visible .boxer-detail-video-play {
+    color: var(--color-theme-gold);
+    opacity: 1;
+  }
+
+  .boxer-detail-video-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .boxer-detail-video-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    color: var(--color-theme-cream);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 200ms ease;
+  }
+
+  .boxer-detail-video-link:hover .boxer-detail-video-title,
+  .boxer-detail-video-link:focus-visible .boxer-detail-video-title {
+    color: var(--color-theme-gold);
+  }
+
+  .boxer-detail-video-date {
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 50%, transparent);
   }
 
   .boxer-detail-portrait-wrap {
