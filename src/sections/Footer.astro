@@ -16,14 +16,52 @@ const PREVIOUS_EDITIONS = [
 ]
 ---
 
-<footer class="relative w-full px-4 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16">
+<footer class="relative isolate w-full px-4 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16">
+  <picture
+    aria-hidden="true"
+    class="footer-bg pointer-events-none absolute inset-0 z-0 block"
+  >
+    <source
+      type="image/avif"
+      srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
+      sizes="100vw"
+    />
+    <source
+      type="image/webp"
+      srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+      sizes="100vw"
+    />
+    <img
+      src="/background.webp"
+      srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+      sizes="100vw"
+      alt=""
+      role="presentation"
+      class="h-full w-full object-cover object-bottom opacity-40"
+      loading="lazy"
+      decoding="async"
+    />
+  </picture>
+
   <div
     aria-hidden="true"
-    class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-40 bg-[radial-gradient(ellipse_at_top,_var(--color-theme-gold)_0%,_transparent_70%)] opacity-[0.05]"
+    class="pointer-events-none absolute inset-x-0 -top-40 bottom-0 z-1 bg-linear-to-b from-theme-gold/0 via-theme-gold/[0.02] via-75% to-theme-gold/20"
   >
   </div>
 
-  <div class="relative flex flex-col items-center justify-center">
+  <div
+    aria-hidden="true"
+    class="footer-noise pointer-events-none absolute inset-x-0 -top-40 bottom-0 z-2 opacity-[0.06] mix-blend-overlay"
+  >
+  </div>
+
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 top-0 z-3 h-px bg-linear-to-r from-transparent via-theme-gold/30 to-transparent"
+  >
+  </div>
+
+  <div class="relative z-10 flex flex-col items-center justify-center">
     <div class="animate-fade-in animate-delay-1100 mb-10 flex items-center gap-4 sm:mb-14" aria-hidden="true">
       <span class="h-px w-16 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-28"></span>
       <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
@@ -177,3 +215,16 @@ const PREVIOUS_EDITIONS = [
     </div>
   </div>
 </footer>
+
+<style>
+  .footer-bg {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 70%, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 70%, #000 100%);
+  }
+
+  .footer-noise {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 100%);
+  }
+</style>
