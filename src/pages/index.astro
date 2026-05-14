@@ -6,23 +6,234 @@ import Videos from '@/sections/Videos.astro'
 import Podcast from '@/sections/Podcast.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 import Footer from '@/sections/Footer.astro'
+import { battles } from '@/consts/battles'
+import { BOXERS, BOXERS_BY_ID, COUNTRY_NAMES, getBoxerPhoto } from '@/consts/boxers'
 
-const title = 'La Velada del Año VI - Evento de boxeo de Ibai Llanos'
+const SITE_URL = 'https://www.infolavelada.com'
+const title =
+  'La Velada del Año VI — 25 julio 2026, Estadio de La Cartuja (Sevilla) · Ibai Llanos'
 const description =
-  'La Velada del Año VI. 25 de julio, 20:00h CET. Evento de boxeo entre streamers organizado por Ibai Llanos.'
-const canonical = 'https://www.infolavelada.com/'
+  'La Velada del Año VI: evento de boxeo amateur entre streamers y creadores de contenido organizado por Ibai Llanos. 25 de julio de 2026 a las 20:00h en el Estadio de La Cartuja, Sevilla.'
+const canonical = `${SITE_URL}/`
 
 const EVENT_DATE = new Date('2026-07-25T20:00:00+02:00')
-const timestamp = EVENT_DATE.getTime()
+const EVENT_ISO = EVENT_DATE.toISOString()
+
+const sportsEventJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  '@id': `${SITE_URL}/#event`,
+  name: 'La Velada del Año VI',
+  alternateName: ['La Velada VI', 'La Velada del Año 6'],
+  description,
+  url: canonical,
+  image: [`${SITE_URL}/og.jpg`, `${SITE_URL}/logo.png`],
+  sport: 'Boxing',
+  startDate: EVENT_ISO,
+  endDate: new Date(EVENT_DATE.getTime() + 5 * 60 * 60 * 1000).toISOString(),
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+  inLanguage: 'es-ES',
+  location: [
+    {
+      '@type': 'Place',
+      name: 'Estadio de La Cartuja',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Sevilla',
+        addressRegion: 'Andalucía',
+        addressCountry: 'ES',
+      },
+    },
+    {
+      '@type': 'VirtualLocation',
+      url: 'https://www.twitch.tv/ibai',
+    },
+  ],
+  organizer: {
+    '@type': 'Person',
+    name: 'Ibai Llanos',
+    url: 'https://www.twitch.tv/ibai',
+  },
+  performer: BOXERS.map((boxer) => ({
+    '@type': 'Person',
+    name: boxer.name,
+    url: `${SITE_URL}/boxeadores/${boxer.id}`,
+    nationality: {
+      '@type': 'Country',
+      name: COUNTRY_NAMES[boxer.country] ?? boxer.country,
+    },
+  })),
+  subEvent: battles.map((battle) => {
+    const [a, b] = battle.boxerIds
+    const boxer1 = BOXERS_BY_ID[a]
+    const boxer2 = BOXERS_BY_ID[b]
+    return {
+      '@type': 'SportsEvent',
+      name: battle.title,
+      url: `${SITE_URL}${battle.url}`,
+      sport: 'Boxing',
+      startDate: EVENT_ISO,
+      eventStatus: 'https://schema.org/EventScheduled',
+      eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+      location: {
+        '@type': 'Place',
+        name: 'Estadio de La Cartuja',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Sevilla',
+          addressCountry: 'ES',
+        },
+      },
+      competitor: [
+        {
+          '@type': 'Person',
+          name: boxer1.name,
+          image: `${SITE_URL}${getBoxerPhoto(boxer1)}`,
+          url: `${SITE_URL}/boxeadores/${boxer1.id}`,
+        },
+        {
+          '@type': 'Person',
+          name: boxer2.name,
+          image: `${SITE_URL}${getBoxerPhoto(boxer2)}`,
+          url: `${SITE_URL}/boxeadores/${boxer2.id}`,
+        },
+      ],
+    }
+  }),
+}
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '¿Cuándo es La Velada del Año VI?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'La Velada del Año VI se celebra el sábado 25 de julio de 2026 a partir de las 20:00h (horario de España peninsular).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Dónde se celebra La Velada del Año VI?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'La sexta edición de La Velada del Año tiene lugar en el Estadio de La Cartuja, en Sevilla (España).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Quién organiza La Velada del Año VI?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'La Velada del Año VI está organizada por el streamer Ibai Llanos, que la retransmite en directo a través de su canal de Twitch.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Cómo se puede ver La Velada del Año VI?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'El evento se podrá seguir en directo y de manera gratuita en el canal oficial de Ibai Llanos en Twitch: twitch.tv/ibai.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Cuántos combates hay en La Velada del Año VI?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `La cartelera de La Velada VI cuenta con ${battles.length} combates de boxeo amateur entre ${BOXERS.length} streamers y creadores de contenido de habla hispana.`,
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Quiénes son los boxeadores de La Velada del Año VI?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `Los ${BOXERS.length} contendientes son: ${BOXERS.map((b) => b.name).join(', ')}.`,
+      },
+    },
+  ],
+}
 
 export const prerender = true
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(sportsEventJsonLd)}
+    slot="head"
+  />
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(faqJsonLd)}
+    slot="head"
+  />
+
   <Header />
   <Hero />
   <Sponsors />
   <Videos />
   <Podcast />
+
+  {/*
+    Bloque informativo accesible (lectores de pantalla) y rastreable por
+    motores de búsqueda. Aporta el texto completo del evento que el resto
+    de la home expresa visualmente con imágenes (logo, selector, fondos).
+  */}
+  <aside class="sr-only" aria-labelledby="event-details-title">
+    <h2 id="event-details-title">Información de La Velada del Año VI</h2>
+    <p>
+      La Velada del Año VI es la sexta edición del mayor evento de boxeo
+      amateur entre streamers y creadores de contenido en habla hispana,
+      organizado por el streamer Ibai Llanos. El evento se celebra el sábado
+      25 de julio de 2026 a partir de las 20:00 horas (horario peninsular
+      español) en el Estadio de La Cartuja de Sevilla, España, y se retransmite
+      en directo y de forma gratuita en el canal oficial de Ibai Llanos en
+      Twitch.
+    </p>
+
+    <h3>Cartelera de combates</h3>
+    <p>
+      Esta edición cuenta con {battles.length} combates de boxeo entre {BOXERS.length}
+      contendientes procedentes de España, México, Argentina, Colombia, El
+      Salvador y Puerto Rico.
+    </p>
+    <ol>
+      {
+        battles.map((battle) => {
+          const [aId, bId] = battle.boxerIds
+          const a = BOXERS_BY_ID[aId]
+          const b = BOXERS_BY_ID[bId]
+          return (
+            <li>
+              Combate {battle.number}:{' '}
+              <a href={`/boxeadores/${a.id}`}>{a.name}</a> ({COUNTRY_NAMES[a.country] ?? a.country})
+              {' vs '}
+              <a href={`/boxeadores/${b.id}`}>{b.name}</a> ({COUNTRY_NAMES[b.country] ?? b.country})
+            </li>
+          )
+        })
+      }
+    </ol>
+
+    <h3>Boxeadores y boxeadoras</h3>
+    <ul>
+      {
+        BOXERS.map((boxer) => (
+          <li>
+            <a href={`/boxeadores/${boxer.id}`}>{boxer.name}</a> —{' '}
+            {COUNTRY_NAMES[boxer.country] ?? boxer.country}
+          </li>
+        ))
+      }
+    </ul>
+  </aside>
+
   <Footer />
 </Layout>

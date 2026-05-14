@@ -47,12 +47,25 @@ const timestamp = EVENT_DATE.getTime()
       countdown sin pegarse al borde.
     */}
     <header class="relative z-10 flex min-h-screen w-full flex-col items-center justify-start px-4 pt-14 pb-3 text-center sm:pt-16 lg:pb-5">
-      <h1 class="sr-only">La Velada del Año VI — Evento de boxeo de Ibai Llanos el 25 de julio de 2026</h1>
+      <h1 class="sr-only">
+        La Velada del Año VI — Evento de boxeo amateur entre streamers organizado por Ibai
+        Llanos el sábado 25 de julio de 2026 en el Estadio de La Cartuja de Sevilla
+      </h1>
 
       <BoxerSelector />
     </header>
 
     <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pt-2 pb-6">
+      <p
+        class="animate-fade-in animate-delay-1200 mb-3 text-center font-cinzel text-[0.6rem] font-semibold tracking-[0.32em] text-theme-gold/85 sm:mb-4 sm:text-xs sm:tracking-[0.38em]"
+      >
+        SÁBADO 25 JULIO 2026
+        <span aria-hidden="true" class="mx-2 text-theme-gold/40">·</span>
+        ESTADIO DE LA CARTUJA
+        <span aria-hidden="true" class="mx-2 text-theme-gold/40">·</span>
+        SEVILLA
+      </p>
+
       <div
         class="animate-fade-in-up animate-delay-1300 mt-2 flex select-none items-center justify-center gap-3 sm:gap-5 md:gap-7"
         id="countdown-hero"
@@ -109,15 +122,16 @@ const timestamp = EVENT_DATE.getTime()
 
   <script>
     import createCountdown, { type TimeParts } from '@/lib/countdown'
+    import { $ } from '@/lib/dom-selector'
 
     function initCountdown() {
-      const $countdown = document.getElementById('countdown-hero')
+      const $countdown = $<HTMLElement>('#countdown-hero')
       if (!$countdown) return
 
-      const $days = $countdown.querySelector('[data-days]')
-      const $hours = $countdown.querySelector('[data-hours]')
-      const $minutes = $countdown.querySelector('[data-minutes]')
-      const $seconds = $countdown.querySelector('[data-seconds]')
+      const $days = $('[data-days]', $countdown)
+      const $hours = $('[data-hours]', $countdown)
+      const $minutes = $('[data-minutes]', $countdown)
+      const $seconds = $('[data-seconds]', $countdown)
 
       const timestamp = Number($countdown.getAttribute('data-date') ?? 0)
       return createCountdown(timestamp, {
@@ -132,7 +146,7 @@ const timestamp = EVENT_DATE.getTime()
     }
 
     document.addEventListener('astro:page-load', () => {
-      const hero = document.querySelector('[data-hero]') as HTMLElement | null
+      const hero = $<HTMLElement>('[data-hero]')
       if (!hero) return
 
       initCountdown()?.start()
