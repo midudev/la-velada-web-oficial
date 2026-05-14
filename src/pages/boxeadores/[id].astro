@@ -1,6 +1,8 @@
 ---
 import type { GetStaticPaths } from 'astro'
 
+import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import { battles } from '@/consts/battles'
 import {
   BOXERS,
@@ -183,20 +185,7 @@ const breadcrumbJsonLd = {
         href="/boxeadores"
         class="boxer-detail-back inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-bold tracking-[0.32em] text-theme-gold/80 sm:text-xs"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="size-3.5"
-          aria-hidden="true"
-        >
-          <path d="M19 12H5"></path>
-          <path d="m12 19-7-7 7-7"></path>
-        </svg>
+        <ArrowLeftIcon class="size-3.5" aria-hidden="true" />
         Volver a boxeadores
       </a>
 
@@ -272,20 +261,10 @@ const breadcrumbJsonLd = {
               <span class="boxer-detail-versus-name font-cinzel text-xs font-bold tracking-[0.22em] text-theme-cream sm:text-sm">
                 {opponent.name}
               </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+              <ArrowRightIcon
                 class="boxer-detail-versus-arrow size-3.5 text-theme-gold/70"
                 aria-hidden="true"
-              >
-                <path d="M5 12h14"></path>
-                <path d="m12 5 7 7-7 7"></path>
-              </svg>
+              />
             </a>
           )}
 

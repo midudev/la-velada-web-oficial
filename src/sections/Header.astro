@@ -165,13 +165,15 @@ const NAV_ITEMS = [
 </header>
 
 <script>
+  import { $, $$ } from '@/lib/dom-selector'
+
   const SCROLL_THRESHOLD = 24
 
   let scrollAbortController: AbortController | null = null
   let menuAbortController: AbortController | null = null
 
   function setupHeaderScroll() {
-    const header = document.querySelector<HTMLElement>('[data-header]')
+    const header = $<HTMLElement>('[data-header]')
     if (!header) return
 
     scrollAbortController?.abort()
@@ -195,14 +197,10 @@ const NAV_ITEMS = [
   }
 
   function setupMobileMenu() {
-    const header = document.querySelector<HTMLElement>('[data-header]')
-    const menu = document.querySelector<HTMLElement>('[data-mobile-menu]')
-    const button = document.querySelector<HTMLButtonElement>(
-      '[data-mobile-menu-button]'
-    )
-    const links = document.querySelectorAll<HTMLAnchorElement>(
-      '[data-mobile-menu-link]'
-    )
+    const header = $<HTMLElement>('[data-header]')
+    const menu = $<HTMLElement>('[data-mobile-menu]')
+    const button = $<HTMLButtonElement>('[data-mobile-menu-button]')
+    const links = $$<HTMLAnchorElement>('[data-mobile-menu-link]')
 
     if (!header || !menu || !button) return
 
@@ -218,9 +216,8 @@ const NAV_ITEMS = [
       menu.inert = !isOpen
       button.setAttribute('aria-expanded', String(isOpen))
       button.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú')
-      button.querySelector('.sr-only')!.textContent = isOpen
-        ? 'Cerrar menú'
-        : 'Abrir menú'
+      const label = $<HTMLElement>('.sr-only', button)
+      if (label) label.textContent = isOpen ? 'Cerrar menú' : 'Abrir menú'
       document.documentElement.classList.toggle('overflow-hidden', isOpen)
     }
 
