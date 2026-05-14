@@ -1,8 +1,11 @@
 ---
-const CHANNEL_ID = 'UC20NE0K97l6AsBeGKsAYtaA'
+import { getCollection } from 'astro:content'
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import ChevronRightIcon from '@/assets/svg/chevron-right.svg'
+import PlayIcon from '@/assets/svg/play.svg'
+import YoutubeBrandIcon from '@/assets/svg/youtube-brand.svg'
+
 const CHANNEL_URL = 'https://www.youtube.com/@PodcastdeLuzu'
-const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
-const MAX_AGE_DAYS = 60
 
 interface PodcastEpisode {
   videoId: string
@@ -13,54 +16,18 @@ interface PodcastEpisode {
   thumbnailFallback: string
 }
 
-function decodeHtmlEntities(value: string) {
-  return value
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&apos;/g, "'")
-}
+const rawEpisodes = await getCollection('podcast')
+const episodes: PodcastEpisode[] = rawEpisodes
+  .map(({ data }) => ({
+    videoId: data.videoId,
+    title: data.title,
+    published: new Date(data.published),
+    thumbnail: `https://i.ytimg.com/vi/${data.videoId}/mqdefault.jpg`,
+    thumbnailHighRes: `https://i.ytimg.com/vi/${data.videoId}/maxresdefault.jpg`,
+    thumbnailFallback: `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`,
+  }))
+  .sort((a, b) => b.published.getTime() - a.published.getTime())
 
-function parseFeed(xml: string): PodcastEpisode[] {
-  const entries: PodcastEpisode[] = []
-  const entryRegex = /<entry>([\s\S]*?)<\/entry>/g
-  let match: RegExpExecArray | null
-  while ((match = entryRegex.exec(xml)) !== null) {
-    const entry = match[1]
-    const videoId = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1]
-    const rawTitle = entry.match(/<title>([^<]+)<\/title>/)?.[1]
-    const published = entry.match(/<published>([^<]+)<\/published>/)?.[1]
-    if (!videoId || !rawTitle || !published) continue
-    entries.push({
-      videoId,
-      title: decodeHtmlEntities(rawTitle),
-      published: new Date(published),
-      thumbnail: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
-      thumbnailHighRes: `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
-      thumbnailFallback: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-    })
-  }
-  return entries
-}
-
-async function loadEpisodes(): Promise<PodcastEpisode[]> {
-  try {
-    const response = await fetch(FEED_URL)
-    if (!response.ok) return []
-    const xml = await response.text()
-    const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000
-    return parseFeed(xml)
-      .filter((episode) => episode.published.getTime() >= cutoff)
-      .sort((a, b) => b.published.getTime() - a.published.getTime())
-  } catch (error) {
-    console.error('[Podcast] No se pudo cargar el feed:', error)
-    return []
-  }
-}
-
-const episodes = await loadEpisodes()
 const [featuredEpisode, ...secondaryEpisodes] = episodes
 
 const rtf = new Intl.RelativeTimeFormat('es', { numeric: 'auto' })
@@ -119,11 +86,7 @@ function formatRelative(date: Date) {
             class="flex size-8 items-center justify-center rounded-full bg-theme-gold/15 text-theme-gold sm:size-9"
             aria-hidden="true"
           >
-            <svg viewBox="0 0 24 24" class="size-4 sm:size-5" fill="currentColor" aria-hidden="true">
-              <path
-                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0C.488 3.45.029 5.804 0 12c.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0C23.512 20.55 23.97 18.196 24 12c-.03-6.185-.484-8.549-4.385-8.816M9 16V8l8 3.993z"
-              />
-            </svg>
+            <YoutubeBrandIcon class="size-4 sm:size-5" aria-hidden="true" />
           </span>
           <div class="flex flex-col">
             <span
@@ -212,14 +175,10 @@ function formatRelative(date: Date) {
                     class="absolute inset-0 -z-10 flex items-center justify-center"
                   >
                     <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
-                      <svg
-                        viewBox="0 0 24 24"
+                      <PlayIcon
                         class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
-                        fill="currentColor"
                         aria-hidden="true"
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
+                      />
                     </span>
                   </span>
 
@@ -236,18 +195,11 @@ function formatRelative(date: Date) {
                     </h3>
                     <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
                       VER EPISODIO
-                      <svg
+                      <ArrowRightIcon
                         class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
                         stroke-width="2.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
                         aria-hidden="true"
-                      >
-                        <path d="M5 12h14M13 5l7 7-7 7" />
-                      </svg>
+                      />
                     </span>
                   </div>
                 </button>
@@ -283,9 +235,10 @@ function formatRelative(date: Date) {
                             class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
                           >
                             <span class="flex size-7 items-center justify-center rounded-full bg-theme-gold/90 text-theme-midnight">
-                              <svg viewBox="0 0 24 24" class="size-3.5 translate-x-[1px]" fill="currentColor" aria-hidden="true">
-                                <path d="M8 5v14l11-7z" />
-                              </svg>
+                              <PlayIcon
+                                class="size-3.5 translate-x-[1px]"
+                                aria-hidden="true"
+                              />
                             </span>
                           </span>
                         </span>
@@ -295,18 +248,10 @@ function formatRelative(date: Date) {
                             <span class="font-cinzel text-[0.62rem] font-bold tracking-[0.22em] text-theme-gold/75">
                               E{String(secondaryEpisodes.length - index).padStart(2, '0')}
                             </span>
-                            <svg
+                            <ChevronRightIcon
                               aria-hidden="true"
                               class="size-4 shrink-0 text-white/30 transition duration-300 group-hover:translate-x-1 group-hover:text-theme-gold group-focus-visible:translate-x-1 group-focus-visible:text-theme-gold"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="2.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            >
-                              <path d="M9 6l6 6-6 6" />
-                            </svg>
+                            />
                           </span>
 
                           <div class="flex flex-col gap-1">
@@ -336,7 +281,9 @@ function formatRelative(date: Date) {
 </section>
 
 <script>
-  const featuredImage = document.querySelector<HTMLImageElement>('[data-podcast-featured-image]')
+  import { $ } from '@/lib/dom-selector'
+
+  const featuredImage = $<HTMLImageElement>('[data-podcast-featured-image]')
 
   if (featuredImage) {
     const reveal = () => featuredImage.classList.add('is-loaded')
