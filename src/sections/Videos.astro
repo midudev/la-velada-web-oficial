@@ -1,4 +1,5 @@
 ---
+import SectionHeader from '@/components/SectionHeader.astro'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import CloseIcon from '@/assets/svg/close.svg'
 import PlayIcon from '@/assets/svg/play.svg'
@@ -59,23 +60,12 @@ const SPAN_CLASSES: Record<Span, string> = {
   aria-labelledby="videos-title"
 >
   <div class="mx-auto flex max-w-7xl flex-col items-center">
-    <div class="mb-8 flex items-center gap-4 sm:mb-12" aria-hidden="true">
-      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-    </div>
-
-    <h2
-      id="videos-title"
-      class="mb-3 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
-    >
-      VÍDEOS
-    </h2>
-    <p
-      class="mb-10 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.25em] text-white/55 sm:mb-14 sm:text-sm"
-    >
-      Todo lo que rodea a La Velada del Año VI
-    </p>
+    <SectionHeader
+      titleId="videos-title"
+      title="VÍDEOS"
+      subtitle="Todo lo que rodea a La Velada del Año VI"
+      subtitleClass="mb-10 max-w-xl tracking-[0.25em] sm:mb-14 sm:text-sm"
+    />
 
     <div
       class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:aspect-[24/9] lg:grid-cols-3 lg:grid-rows-2 lg:gap-4"

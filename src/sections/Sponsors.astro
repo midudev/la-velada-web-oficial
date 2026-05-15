@@ -1,4 +1,5 @@
 ---
+import SectionHeader from '@/components/SectionHeader.astro'
 import AlsaLogo from '@/assets/sponsors/alsa.svg'
 import CeraveLogo from '@/assets/sponsors/cerave.svg'
 import CocaColaLogo from '@/assets/sponsors/cocacola.svg'
@@ -159,23 +160,12 @@ const SPONSORS: Sponsor[] = [
   </div>
 
   <div class="relative mx-auto flex max-w-6xl flex-col items-center">
-    <div class="mb-8 flex items-center gap-4 sm:mb-12" aria-hidden="true">
-      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-    </div>
-
-    <h2
-      id="sponsors-title"
-      class="mb-3 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
-    >
-      PATROCINADORES
-    </h2>
-    <p
-      class="mb-10 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.25em] text-balance text-white/55 sm:mb-12 sm:text-sm"
-    >
-      Las marcas que hacen posible La Velada del Año VI
-    </p>
+    <SectionHeader
+      titleId="sponsors-title"
+      title="PATROCINADORES"
+      subtitle="Las marcas que hacen posible La Velada del Año VI"
+      subtitleClass="mb-10 max-w-xl tracking-[0.25em] sm:mb-12 sm:text-sm"
+    />
 
     <div class="mb-12 flex w-full max-w-[760px] flex-col gap-3 sm:mb-16">
       {
