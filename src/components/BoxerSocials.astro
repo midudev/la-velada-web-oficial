@@ -1,0 +1,149 @@
+---
+import InstagramIcon from '@/assets/svg/instagram.svg'
+import KickIcon from '@/assets/svg/kick.svg'
+import SpotifyIcon from '@/assets/svg/spotify.svg'
+import TiktokIcon from '@/assets/svg/tiktok.svg'
+import TwitchIcon from '@/assets/svg/twitch.svg'
+import XIcon from '@/assets/svg/x.svg'
+import YoutubeIcon from '@/assets/svg/youtube.svg'
+import type { Boxer } from '@/consts/boxers'
+import {
+  formatFollowers,
+  getSocialLabel,
+  getSocialMetricValue,
+  getSocialUrl,
+} from '@/lib/socials'
+
+interface Props {
+  boxer: Boxer
+}
+
+const { boxer } = Astro.props
+
+const ICON_BY_PLATFORM = {
+  twitch: TwitchIcon,
+  tiktok: TiktokIcon,
+  instagram: InstagramIcon,
+  youtube: YoutubeIcon,
+  kick: KickIcon,
+  spotify: SpotifyIcon,
+  x: XIcon,
+} as const
+
+type SupportedPlatform = keyof typeof ICON_BY_PLATFORM
+
+const BRAND_COLOR_BY_PLATFORM = {
+  twitch: '#a970ff',
+  tiktok: '#ff3b5c',
+  instagram: '#e1306c',
+  youtube: '#ff3d3d',
+  kick: '#53fc18',
+  spotify: '#1db954',
+  x: '#ffffff',
+} satisfies Record<SupportedPlatform, string>
+
+const socialItems = boxer.socials.map((social) => {
+  const platform = social.platform.toLowerCase() as SupportedPlatform
+  const Icon = ICON_BY_PLATFORM[platform] ?? null
+  const value = getSocialMetricValue(social)
+
+  return {
+    social,
+    Icon,
+    platform,
+    url: getSocialUrl(social, boxer),
+    label: getSocialLabel(social.platform),
+    formattedValue: formatFollowers(value),
+    brandColor: BRAND_COLOR_BY_PLATFORM[platform] ?? 'var(--color-theme-gold)',
+  }
+})
+---
+
+{
+  socialItems.length > 0 && (
+    <ul
+      class="boxer-socials"
+      aria-label={`Redes sociales de ${boxer.name}`}
+    >
+      {socialItems.map(({ social, Icon, url, label, formattedValue, brandColor }) => (
+        <li class="boxer-socials__item">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="boxer-socials__link"
+            style={`--plat: ${brandColor}`}
+            aria-label={`${formattedValue} en ${label} (@${social.username})`}
+            title={`${label} · @${social.username}`}
+          >
+            {Icon && <Icon class="boxer-socials__icon" aria-hidden="true" />}
+            <span class="boxer-socials__value">{formattedValue}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style is:global>
+  @reference '../styles/global.css';
+
+  .boxer-socials {
+    @apply m-0 flex list-none flex-wrap items-center justify-center gap-2 p-0;
+  }
+
+  .boxer-socials__item {
+    @apply m-0 p-0;
+  }
+
+  .boxer-socials__link {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1.5 leading-none text-theme-cream no-underline transition-[transform,box-shadow,background-color,color] duration-200 ease-out sm:px-3.5 sm:py-2;
+
+    background-color: color-mix(
+      in srgb,
+      var(--color-theme-midnight) 70%,
+      black
+    );
+    box-shadow: inset 0 0 0 1px
+      color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: inset 0 0 0 1px
+        color-mix(in srgb, var(--plat) 70%, transparent);
+    }
+
+    &:focus-visible {
+      @apply outline-none;
+    }
+
+    &:hover .boxer-socials__icon,
+    &:focus-visible .boxer-socials__icon {
+      color: var(--plat);
+    }
+  }
+
+  .boxer-socials__icon {
+    @apply size-[0.95rem] shrink-0 transition-colors duration-200 sm:size-[1.05rem];
+
+    color: color-mix(
+      in srgb,
+      var(--color-theme-cream) 78%,
+      transparent
+    );
+  }
+
+  .boxer-socials__value {
+    @apply font-cinzel text-[0.8rem] font-black leading-none tracking-[0.04em] sm:text-sm;
+
+    text-shadow: 0 1px 0 rgb(0 0 0 / 55%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boxer-socials__link,
+    .boxer-socials__icon {
+      @apply transition-none;
+    }
+  }
+</style>
