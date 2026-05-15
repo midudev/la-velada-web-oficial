@@ -1,5 +1,6 @@
 ---
 import ResetIcon from '@/assets/svg/reset.svg'
+import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
 import Layout from '@/layouts/Layout.astro'
 import Header from '@/sections/Header.astro'
 import Footer from '@/sections/Footer.astro'
@@ -380,6 +381,13 @@ const totalBoxers = BOXERS.length
                   </span>
                 )}
 
+                <BoxerWinsBadge
+                  wins={b.previousVeladaWins}
+                  boxerName={b.name}
+                  variant="card"
+                  class="boxer-card-wins"
+                />
+
                 <div class="boxer-card-caption absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-1 px-2.5 pb-4 pt-12 text-center sm:gap-1.5 sm:px-3 sm:pb-6 sm:pt-14">
                   <span
                     aria-hidden="true"
@@ -584,6 +592,60 @@ const totalBoxers = BOXERS.length
     text-shadow:
       0 1px 2px rgba(0, 0, 0, 0.9),
       0 0 12px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+  }
+
+  /* Badge de "Campeón previo" anclado a la esquina superior-izquierda
+     de la card. El propio componente ya es `position: absolute`, aquí
+     sólo fijamos la posición. */
+  :global(.boxer-card-wins) {
+    top: 14px;
+    left: 14px;
+  }
+
+  @media (max-width: 639px) {
+    :global(.boxer-card-wins) {
+      top: 12px;
+      left: 12px;
+    }
+  }
+
+  /* Cuando la card tiene un badge de campeón, escondemos la esquina
+     decorativa superior-izquierda para que no se cruce con el badge
+     dorado. La esquina inferior-izquierda y las dos de la derecha
+     siguen visibles como marco visual. */
+  .boxer-card:has(:global(.wins-badge)) .boxer-card-corner-tl {
+    display: none;
+  }
+
+  /* Al hacer hover/focus sobre la card entera (no sólo sobre el
+     badge) también se despliegan los años. Usamos `:global` porque
+     las clases viven dentro del componente scoped y Astro las
+     "hashifica" al ser importadas. */
+  .boxer-card:hover :global(.wins-badge) :global(.win-year),
+  .boxer-card:focus-visible :global(.wins-badge) :global(.win-year) {
+    max-width: 3rem;
+    opacity: 1;
+    margin-left: 4px;
+    margin-right: 4px;
+    transition-delay: var(--win-delay, 0ms);
+  }
+
+  .boxer-card:hover :global(.wins-badge) :global(.win-pill),
+  .boxer-card:focus-visible :global(.wins-badge) :global(.win-pill) {
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.6),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
+      0 0 22px color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    transition-delay: var(--win-delay, 0ms);
+  }
+
+  @media (max-width: 639px) {
+    .boxer-card:hover :global(.wins-badge) :global(.win-year),
+    .boxer-card:focus-visible :global(.wins-badge) :global(.win-year) {
+      max-width: 2.5rem;
+      margin-left: 3px;
+      margin-right: 3px;
+    }
   }
 
   /* Línea decorativa encima del nombre que se amplía en hover. */
@@ -848,7 +910,6 @@ const totalBoxers = BOXERS.length
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    font-family: 'Cinzel', var(--font-fallback);
     font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.32em;
@@ -995,7 +1056,6 @@ const totalBoxers = BOXERS.length
     display: inline-flex;
     align-items: center;
     gap: 0.55rem;
-    font-family: 'Cinzel', var(--font-fallback);
     font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.32em;
@@ -1065,7 +1125,6 @@ const totalBoxers = BOXERS.length
     box-shadow:
       inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
     color: color-mix(in srgb, var(--color-theme-cream) 86%, transparent);
-    font-family: 'Cinzel', var(--font-fallback);
     font-size: 0.6rem;
     font-weight: 600;
     letter-spacing: 0.22em;
@@ -1186,7 +1245,6 @@ const totalBoxers = BOXERS.length
     border-radius: 3px;
     background: color-mix(in srgb, var(--color-theme-midnight) 60%, transparent);
     color: color-mix(in srgb, var(--color-theme-cream) 75%, transparent);
-    font-family: 'Cinzel', var(--font-fallback);
     font-size: 0.55rem;
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -1227,7 +1285,6 @@ const totalBoxers = BOXERS.length
     border-radius: 9999px;
     padding: 0.45rem 0.95rem;
     color: color-mix(in srgb, var(--color-theme-cream) 80%, transparent);
-    font-family: 'Cinzel', var(--font-fallback);
     font-size: 0.55rem;
     font-weight: 700;
     letter-spacing: 0.3em;
