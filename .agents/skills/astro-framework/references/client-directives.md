@@ -182,6 +182,68 @@ import DataVisualization from './DataVisualization.jsx';
 </div>
 ```
 
+## Expert Gotchas
+
+### `client:visible` on Above-the-Fold Components
+
+`client:visible` uses IntersectionObserver to detect viewport entry. If the component is **already visible** on load (hero, header, above-fold CTA), the observer fires immediately anyway — you pay the observer setup cost for zero benefit. Use `client:load` directly.
+
+### `client:idle` on Low-End Mobile
+
+`requestIdleCallback` on low-RAM Android devices can delay **10+ seconds** because the main thread never goes truly idle. If users might interact with the component within the first 5 seconds, use `client:load` instead. Reserve `client:idle` for genuinely non-urgent components (analytics widgets, secondary sidebars).
+
+### The Navbar Hydration Trap
+
+A common mistake: wrapping an entire React/Vue navbar in `client:load` just for a mobile hamburger toggle. The toggle is 5 lines of vanilla JS, but you're shipping an entire framework runtime. Instead:
+
+```astro
+<nav>
+  <ul class="nav-links">{/* static links */}</ul>
+  <button id="menu-toggle" aria-expanded="false">Menu</button>
+</nav>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  toggle?.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    document.querySelector('.nav-links')?.classList.toggle('open');
+  });
+</script>
+```
+
+**Rule of thumb:** If the only interactivity is show/hide or toggle, use a `<script>` tag. If there's state management, forms, or complex UI logic, use a framework component with a client directive.
+
+### Large Bundle Splitting
+
+If a React component's bundle exceeds ~50KB, consider splitting:
+
+1. Render the **static shell** as an Astro component (heading, layout, placeholder)
+2. Hydrate only the **interactive part** as a smaller React island
+
+```astro
+<!-- Instead of one large hydrated component -->
+<ProductPage client:load />
+
+<!-- Split into static + interactive -->
+<div class="product-layout">
+  <h1>{product.title}</h1>
+  <img src={product.image} alt={product.title} />
+  <p>{product.description}</p>
+  <!-- Only the interactive part hydrates -->
+  <AddToCartButton client:load productId={product.id} />
+</div>
+```
+
+### When `client:only` Is Actually Needed
+
+`client:only` skips SSR entirely — no HTML on first paint. This hurts SEO and perceived performance. Use it **only** when:
+- The component crashes during SSR (e.g., reads `window.innerWidth` at module scope)
+- A third-party library has no SSR support and no workaround
+- The component is purely decorative and non-essential (e.g., a confetti animation)
+
+If the component just needs `window` in an event handler, `client:load` works fine — `window` is available after hydration.
+
 ## Best Practices
 
 1. **Default to no directive** - Only hydrate what needs interactivity
