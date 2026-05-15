@@ -25,7 +25,7 @@ export const HOME_FAQS = [
   {
     question: '¿Dónde se puede ver online?',
     answer:
-      'Se podrá ver online, en directo y gratis, en el canal oficial de Ibai Llanos en Twitch: twitch.tv/ibai.',
+      'Se podrá ver online, en directo y gratis, en los canales oficiales de Ibai Llanos en Twitch, YouTube y TikTok.',
   },
   {
     question: '¿Cuáles son los combates confirmados?',
