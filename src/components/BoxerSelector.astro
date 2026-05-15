@@ -206,7 +206,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           />
           <img
             data-active-image
-            src={fallbackHero.png}
+            src={fallbackHero.fallback}
             alt={`Foto principal de ${fallback.name}`}
             class="boxer-portrait relative z-10 h-full max-h-full w-auto max-w-full object-contain object-bottom transition-opacity duration-300"
             decoding="async"
@@ -292,7 +292,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                       <source type="image/avif" srcset={selectImages.avif} />
                       <source type="image/webp" srcset={selectImages.webp} />
                       <img
-                        src={selectImages.png}
+                        src={selectImages.fallback}
                         alt=""
                         role="presentation"
                         loading="lazy"
@@ -353,7 +353,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                 data-name={boxer.name}
                 data-photo-avif={heroImages.avif}
                 data-photo-webp={heroImages.webp}
-                data-photo-png={heroImages.png}
+                data-photo-fallback={heroImages.fallback}
                 data-flag={flag}
                 data-country={countryName}
                 aria-label={`Ver perfil de ${boxer.name}`}
@@ -366,7 +366,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                   <source type="image/avif" srcset={selectImages.avif} />
                   <source type="image/webp" srcset={selectImages.webp} />
                   <img
-                    src={selectImages.png}
+                    src={selectImages.fallback}
                     alt=""
                     role="presentation"
                     loading="lazy"
@@ -1082,7 +1082,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   ): string | undefined {
     if (formats.avif && thumb.dataset.photoAvif) return thumb.dataset.photoAvif
     if (formats.webp && thumb.dataset.photoWebp) return thumb.dataset.photoWebp
-    return thumb.dataset.photoPng
+    return thumb.dataset.photoFallback
   }
 
   function setupMobileInfiniteSlider(root: HTMLElement) {
@@ -1225,15 +1225,15 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     /** Aplica el contenido (imagen, nombre, watermark, bandera, país) al
      *  panel del boxer. No toca el state ni las clases is-switching. */
     function applyBoxerContent(thumb: HTMLAnchorElement) {
-      const { name, photoAvif, photoWebp, photoPng, flag, country } =
+      const { name, photoAvif, photoWebp, photoFallback, flag, country } =
         thumb.dataset
-      if (!name || !photoPng) return
+      if (!name || !photoFallback) return
 
       // Actualizamos las sources del <picture> antes del src del <img>
       // para que el browser re-evalúe y use el mejor formato disponible.
       if (sourceAvif && photoAvif) sourceAvif.srcset = photoAvif
       if (sourceWebp && photoWebp) sourceWebp.srcset = photoWebp
-      image!.src = photoPng
+      image!.src = photoFallback
       image!.alt = `Foto principal de ${name}`
 
       nameNode!.textContent = name
@@ -1249,7 +1249,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       if (!image || !nameNode) return
 
       const { id, opponentId } = thumb.dataset
-      if (!id || !thumb.dataset.photoPng) return
+      if (!id || !thumb.dataset.photoFallback) return
 
       const wasDefault = root!.dataset.state === 'default'
 
