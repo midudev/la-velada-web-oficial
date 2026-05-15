@@ -1,4 +1,5 @@
 ---
+import SectionHeader from '@/components/SectionHeader.astro'
 import type { HomeFaqItem } from '@/consts/home-faq'
 
 interface Props {
@@ -28,26 +29,14 @@ const { faqs } = Astro.props
   </div>
 
   <div class="relative mx-auto flex max-w-4xl flex-col items-center">
-    <div class="mb-8 flex items-center gap-4 sm:mb-12" aria-hidden="true">
-      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-    </div>
-
-    <p class="mb-3 font-cinzel text-[0.6rem] font-bold tracking-[0.45em] text-theme-gold/80 sm:text-xs">
-      INFORMACIÓN OFICIAL
-    </p>
-    <h2
-      id="faq-title"
-      class="mb-4 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
-    >
-      PREGUNTAS FRECUENTES
-    </h2>
-    <p
-      class="mb-10 max-w-2xl text-center font-cinzel text-xs font-medium tracking-[0.2em] text-balance text-white/55 sm:mb-14 sm:text-sm"
-    >
-      Respuestas rápidas sobre fecha, sede, directo, combates, entradas y anuncios de La Velada del Año VI.
-    </p>
+    <SectionHeader
+      titleId="faq-title"
+      eyebrow="INFORMACIÓN OFICIAL"
+      title="PREGUNTAS FRECUENTES"
+      subtitle="Respuestas rápidas sobre fecha, sede, directo, combates, entradas y anuncios de La Velada del Año VI."
+      titleClass="mb-4"
+      subtitleClass="mb-10 max-w-2xl tracking-[0.2em] sm:mb-14 sm:text-sm"
+    />
 
     <ul class="w-full divide-y divide-white/10 border-y border-white/10">
       {

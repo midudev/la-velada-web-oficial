@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
+import SectionHeader from '@/components/SectionHeader.astro'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import ChevronRightIcon from '@/assets/svg/chevron-right.svg'
 import PlayIcon from '@/assets/svg/play.svg'
@@ -59,23 +60,12 @@ function formatRelative(date: Date) {
   aria-labelledby="podcast-title"
 >
   <div class="mx-auto flex max-w-7xl flex-col items-center">
-    <div class="mb-8 flex items-center gap-4 sm:mb-10" aria-hidden="true">
-      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-    </div>
-
-    <h2
-      id="podcast-title"
-      class="mb-3 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
-    >
-      EL PODCAST PIRATA
-    </h2>
-    <p
-      class="mb-10 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.25em] text-white/55 sm:text-sm"
-    >
-      Últimos episodios sobre La Velada del Año VI
-    </p>
+    <SectionHeader
+      titleId="podcast-title"
+      title="EL PODCAST PIRATA"
+      subtitle="Últimos episodios sobre La Velada del Año VI"
+      dividerClass="sm:mb-10"
+    />
 
     <div
       class="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-theme-navy/30 shadow-[0_25px_60px_-30px_rgba(0,0,0,0.8)]"
