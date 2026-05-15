@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro'
 
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import BoxerSocials from '@/components/BoxerSocials.astro'
 import { battles } from '@/consts/battles'
 import {
   BOXERS,
@@ -191,7 +192,7 @@ const breadcrumbJsonLd = {
       </a>
 
       <div class="boxer-detail-grid mt-8 grid gap-8 sm:mt-10 md:gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start lg:gap-12">
-        <div class="boxer-detail-portrait-wrap relative">
+        <div class="boxer-detail-portrait-wrap relative flex flex-col items-center">
           <span aria-hidden="true" class="boxer-detail-aura"></span>
 
           <picture class="boxer-detail-portrait-picture relative z-10 flex w-full items-start justify-center">
@@ -208,6 +209,10 @@ const breadcrumbJsonLd = {
               height="800"
             />
           </picture>
+
+          <div class="boxer-detail-socials relative z-10 mt-6 w-full">
+            <BoxerSocials boxer={boxer} />
+          </div>
         </div>
 
         <div class="boxer-detail-info relative flex flex-col items-start">
@@ -316,12 +321,6 @@ const breadcrumbJsonLd = {
   }
 
   [data-boxer-detail-bg] {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 60%,
-      transparent 100%
-    );
     mask-image: linear-gradient(
       to bottom,
       #000 0%,
@@ -558,12 +557,6 @@ const breadcrumbJsonLd = {
     );
     z-index: 0;
     pointer-events: none;
-    -webkit-mask-image: radial-gradient(
-      ellipse 70% 75% at 50% 38%,
-      black 0%,
-      black 55%,
-      transparent 100%
-    );
     mask-image: radial-gradient(
       ellipse 70% 75% at 50% 38%,
       black 0%,
@@ -574,13 +567,6 @@ const breadcrumbJsonLd = {
 
   .boxer-detail-portrait {
     max-height: 70vh;
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      black 0%,
-      black 78%,
-      color-mix(in srgb, black 60%, transparent) 90%,
-      transparent 100%
-    );
     mask-image: linear-gradient(
       to bottom,
       black 0%,
