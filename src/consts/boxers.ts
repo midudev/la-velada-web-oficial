@@ -108,7 +108,7 @@ export const BOXERS: Boxer[] = [
       socials: [
         { platform: 'tiktok', username: 'fabiana.sevillano', followers: 2_100_000 },
         { platform: 'instagram', username: 'fabiana.sevillano', followers: 1_000_000 },
-        { platform: 'youtube', username: 'FabianaSevillano', followers: 26_800 },
+        { platform: 'youtube', username: 'FabianaSevillano', followers: 183_000 },
       ],
     },
     {
