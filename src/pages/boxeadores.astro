@@ -147,7 +147,7 @@ const totalBoxers = BOXERS.length
       <div class="boxers-layout mt-8 w-full sm:mt-12">
       <form
         data-boxers-filters
-        class="boxer-filters-panel animate-fade-in-up animate-delay-300 relative w-full"
+        class="boxer-filters-panel animate-fade-in-up animate-delay-300 relative w-full sm:mr-10"
         aria-label="Filtros de boxeadores"
         onsubmit="return false"
       >
@@ -299,9 +299,10 @@ const totalBoxers = BOXERS.length
                     loading="lazy"
                     decoding="async"
                     transition:name={`boxer-hero-${b.id}`}
-                    class="boxer-card-img absolute inset-0 h-full w-full object-cover object-top"
+                    class="boxer-card-img absolute inset-0 h-full w-full lg:h-2/3 lg:w-2/3 lg:top-7 lg:mx-auto object-cover object-top"
                   />
                 </picture>
+
 
                 <span aria-hidden="true" class="boxer-card-veil pointer-events-none absolute inset-0" />
 
@@ -313,7 +314,7 @@ const totalBoxers = BOXERS.length
                 {b.battleNumber > 0 && (
                   <span
                     aria-hidden="true"
-                    class="boxer-card-number pointer-events-none absolute right-3 top-2.5 font-cinzel text-[0.5rem] font-bold tracking-[0.18em] text-theme-gold/90 sm:right-4 sm:top-3 sm:text-xs sm:tracking-[0.3em]"
+                    class="boxer-card-number m-1 pointer-events-none absolute right-3 top-2.5 font-cinzel text-[0.5rem] sm:text-xs sm:tracking-[0.3em] font-bold tracking-[0.18em] text-theme-gold/90 sm:right-4 sm:top-3"
                   >
                     COMBATE · {String(b.battleNumber).padStart(2, '0')}
                   </span>
@@ -686,7 +687,6 @@ const totalBoxers = BOXERS.length
       inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 26%, transparent),
       0 24px 60px rgba(0, 0, 0, 0.45),
       0 0 60px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
-    border-radius: 6px;
   }
 
   @media (max-width: 639px) {
