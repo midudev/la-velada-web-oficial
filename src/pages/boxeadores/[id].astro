@@ -4,6 +4,7 @@ import type { GetStaticPaths } from 'astro'
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import BoxerSocials from '@/components/BoxerSocials.astro'
+import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
 import { battles } from '@/consts/battles'
 import {
   BOXERS,
@@ -194,6 +195,14 @@ const breadcrumbJsonLd = {
       <div class="boxer-detail-grid mt-8 grid gap-8 sm:mt-10 md:gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start lg:gap-12">
         <div class="boxer-detail-portrait-wrap relative flex flex-col items-center">
           <span aria-hidden="true" class="boxer-detail-aura"></span>
+
+          <BoxerWinsBadge
+            wins={boxer.previousVeladaWins}
+            boxerName={boxer.name}
+            variant="detail"
+            defaultExpanded
+            class="boxer-detail-wins"
+          />
 
           <picture class="boxer-detail-portrait-picture relative z-10 flex w-full items-start justify-center">
             <source type="image/avif" srcset={heroImages.avif} />
@@ -543,6 +552,29 @@ const breadcrumbJsonLd = {
     display: flex;
     align-items: start;
     justify-content: center;
+  }
+
+  /* Badge de "Campeón previo" en la ficha individual: arriba a la
+     izquierda del retrato, por encima del aura dorada. El propio
+     componente ya es `position: absolute`. */
+  :global(.boxer-detail-wins) {
+    top: 0;
+    left: 0;
+    z-index: 20;
+  }
+
+  @media (min-width: 640px) {
+    :global(.boxer-detail-wins) {
+      top: 4px;
+      left: 8px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :global(.boxer-detail-wins) {
+      top: 8px;
+      left: 16px;
+    }
   }
 
   .boxer-detail-aura {
