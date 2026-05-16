@@ -1,0 +1,199 @@
+---
+import { EVENT_ZONED_ISO } from '@/consts/event'
+
+const tipId = 'event-local-time-tip'
+---
+
+<span class="event-local-time">
+  <time
+    datetime={EVENT_ZONED_ISO}
+    tabindex="0"
+    class="event-local-time__trigger cursor-help font-medium underline decoration-theme-gold/35 decoration-dotted underline-offset-[0.2em] transition-[text-decoration-color] duration-200 hover:decoration-theme-gold/80"
+  >
+    20:00H (españa peninsular)
+  </time>
+  <span id={tipId} popover="manual" role="tooltip" class="event-local-time__tooltip"></span>
+</span>
+
+<style is:global>
+  .event-local-time__trigger {
+    anchor-name: --event-local-time-trigger;
+  }
+
+  .event-local-time__tooltip {
+    --event-time-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+    position: fixed;
+    position-area: top;
+    position-anchor: --event-local-time-trigger;
+    position-try-fallbacks: flip-block, flip-inline;
+    inset: auto;
+    margin: 0;
+    min-width: 10rem;
+    max-width: min(20rem, 78vw);
+    padding: 0.65rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+    border-radius: 0.125rem;
+    background: color-mix(in srgb, var(--color-theme-midnight) 94%, transparent);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 32px color-mix(in srgb, black 45%, transparent);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-wrap: balance;
+    color: var(--color-theme-cream);
+    transform-origin: 100% 100%;
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.94);
+    pointer-events: none;
+    transition:
+      opacity 180ms var(--event-time-ease-out),
+      transform 180ms var(--event-time-ease-out),
+      overlay 180ms allow-discrete,
+      display 180ms allow-discrete;
+  }
+
+  .event-local-time__tooltip:popover-open {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    pointer-events: auto;
+  }
+
+  @starting-style {
+    .event-local-time__tooltip:popover-open {
+      opacity: 0;
+      transform: translate3d(0, 14px, 0) scale(0.94);
+    }
+  }
+
+  .event-local-time__tooltip.is-hiding {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.96);
+    pointer-events: none;
+    transition-duration: 140ms;
+  }
+
+  .event-local-time__tooltip.is-instant {
+    transition: none;
+  }
+
+  @media (min-width: 640px) {
+    .event-local-time__tooltip {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .event-local-time__tooltip {
+      transform: none;
+      transition: none;
+    }
+
+    .event-local-time__tooltip:popover-open,
+    .event-local-time__tooltip.is-hiding {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+  import { resolveEventLocalTime } from '@/lib/event-local-time'
+  import { afterTransition, prefersReducedMotion } from '@/lib/transition'
+
+  const TOOLTIP_EXIT_MS = 140
+
+  let eventTimeAbort: AbortController | undefined
+
+  function bindEventLocalTime(root: HTMLElement, signal: AbortSignal) {
+    const trigger = $('time', root)
+    const tooltip = $('.event-local-time__tooltip', root)
+    if (!trigger || !tooltip) return
+
+    let tooltipText: string
+    try {
+      tooltipText = resolveEventLocalTime().tooltip
+    } catch (error) {
+      console.error('[EventLocalTime] No se pudo calcular la hora local:', error)
+      return
+    }
+
+    tooltip.textContent = tooltipText
+    trigger.setAttribute('aria-describedby', tooltip.id)
+
+    let isOpen = false
+    let isHiding = false
+
+    const show = () => {
+      isHiding = false
+      tooltip.classList.remove('is-hiding')
+
+      if (!tooltip.matches(':popover-open')) {
+        tooltip.classList.remove('is-instant')
+        tooltip.showPopover()
+      }
+
+      isOpen = true
+    }
+
+    const hide = async () => {
+      if (!tooltip.matches(':popover-open')) return
+      if (isHiding) return
+
+      isOpen = false
+
+      if (prefersReducedMotion()) {
+        tooltip.hidePopover()
+        tooltip.classList.remove('is-hiding', 'is-instant')
+        return
+      }
+
+      isHiding = true
+      tooltip.classList.remove('is-instant')
+      tooltip.classList.add('is-hiding')
+      await afterTransition(tooltip, TOOLTIP_EXIT_MS)
+      tooltip.hidePopover()
+      tooltip.classList.remove('is-hiding')
+      isHiding = false
+    }
+
+    const hoverable = matchMedia('(hover: hover) and (pointer: fine)').matches
+
+    if (hoverable) {
+      trigger.addEventListener('mouseenter', show, { signal })
+      trigger.addEventListener('mouseleave', () => void hide(), { signal })
+    }
+
+    trigger.addEventListener('focus', show, { signal })
+    trigger.addEventListener('blur', () => void hide(), { signal })
+
+    if (!hoverable) {
+      trigger.addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault()
+          if (isOpen || tooltip.matches(':popover-open')) void hide()
+          else show()
+        },
+        { signal },
+      )
+    }
+  }
+
+  function setupEventLocalTimes() {
+    eventTimeAbort?.abort()
+    eventTimeAbort = new AbortController()
+
+    $$('.event-local-time').forEach((root) => {
+      bindEventLocalTime(root, eventTimeAbort!.signal)
+    })
+  }
+
+  document.addEventListener('astro:page-load', setupEventLocalTimes)
+  setupEventLocalTimes()
+</script>

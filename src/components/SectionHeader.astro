@@ -2,7 +2,7 @@
 interface Props {
   titleId: string
   title: string
-  subtitle: string
+  subtitle?: string
   eyebrow?: string
   dividerClass?: string
   titleClass?: string
@@ -51,11 +51,15 @@ const {
   {title}
 </h2>
 
-<p
-  class:list={[
-    'text-center font-cinzel text-xs font-medium text-balance text-white/55',
-    subtitleClass,
-  ]}
->
-  {subtitle}
-</p>
+{
+  subtitle && (
+    <p
+      class:list={[
+        'text-center font-cinzel text-xs font-medium text-balance text-white/55',
+        subtitleClass,
+      ]}
+    >
+      {subtitle}
+    </p>
+  )
+}

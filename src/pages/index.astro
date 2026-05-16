@@ -9,7 +9,8 @@ import FAQ from '@/sections/FAQ.astro'
 import Footer from '@/sections/Footer.astro'
 import { battles } from '@/consts/battles'
 import { BOXERS, BOXERS_BY_ID, COUNTRY_NAMES, getBoxerPhoto } from '@/consts/boxers'
-import { HOME_FAQS } from '@/consts/home-faq'
+import { EVENT_DATE, EVENT_ZONED_ISO } from '@/consts/event'
+import { getFaqAnswerText, HOME_FAQS } from '@/consts/home-faq'
 
 const SITE_URL = 'https://www.infolavelada.com'
 const title = 'La Velada del Año VI 2026 | Fecha, sede y combates'
@@ -17,8 +18,7 @@ const description =
   'Toda la información de La Velada del Año VI: fecha, sede, combates y participantes del evento de boxeo de Ibai Llanos en La Cartuja de Sevilla.'
 const canonical = `${SITE_URL}/`
 
-const EVENT_DATE = new Date('2026-07-25T20:00:00+02:00')
-const EVENT_ISO = EVENT_DATE.toISOString()
+const EVENT_ISO = EVENT_ZONED_ISO
 
 const sportsEventJsonLd = {
   '@context': 'https://schema.org',
@@ -107,12 +107,12 @@ const sportsEventJsonLd = {
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: HOME_FAQS.map(({ question, answer }) => ({
+  mainEntity: HOME_FAQS.map((faq) => ({
     '@type': 'Question',
-    name: question,
+    name: faq.question,
     acceptedAnswer: {
       '@type': 'Answer',
-      text: answer,
+      text: getFaqAnswerText(faq),
     },
   })),
 }

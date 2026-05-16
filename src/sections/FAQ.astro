@@ -1,5 +1,8 @@
 ---
+import EventLocalTime from '@/components/EventLocalTime.astro'
 import SectionHeader from '@/components/SectionHeader.astro'
+import VenueMap from '@/components/VenueMap.astro'
+import { EVENT_VENUE_LABEL, EVENT_VENUE_LAT, EVENT_VENUE_LNG } from '@/consts/event'
 import type { HomeFaqItem } from '@/consts/home-faq'
 
 interface Props {
@@ -11,7 +14,7 @@ const { faqs } = Astro.props
 
 <section
   id="faq"
-  class="relative w-full overflow-hidden px-4 py-20 sm:px-6 lg:py-28"
+  class="faq-section relative w-full overflow-x-hidden px-4 pt-6 pb-24 sm:px-6 sm:pt-8 sm:pb-28 lg:pt-10 lg:pb-32 xl:pt-12"
   aria-labelledby="faq-title"
   itemscope
   itemtype="https://schema.org/FAQPage"
@@ -28,60 +31,665 @@ const { faqs } = Astro.props
   >
   </div>
 
-  <div class="relative mx-auto flex max-w-4xl flex-col items-center">
-    <SectionHeader
-      titleId="faq-title"
-      eyebrow="INFORMACIÓN OFICIAL"
-      title="PREGUNTAS FRECUENTES"
-      subtitle="Respuestas rápidas sobre fecha, sede, directo, combates, entradas y anuncios de La Velada del Año VI."
-      titleClass="mb-4"
-      subtitleClass="mb-10 max-w-2xl tracking-[0.2em] sm:mb-14 sm:text-sm"
-    />
+  <div class="faq-layout relative mx-auto w-full max-w-7xl">
+    <header class="faq-title-row" aria-labelledby="faq-title">
+      <div class="faq-title-row__copy">
+        <SectionHeader
+          titleId="faq-title"
+          eyebrow="INFORMACIÓN OFICIAL"
+          title="PREGUNTAS FRECUENTES"
+          dividerClass="hidden"
+          eyebrowClass="whitespace-nowrap tracking-[0.32em] max-lg:mx-auto max-lg:text-center sm:tracking-[0.38em] lg:text-left"
+          titleClass="mb-0 max-w-[12ch] text-balance max-lg:mx-auto max-lg:text-center sm:max-w-[13ch] sm:text-4xl lg:mx-0 lg:max-w-[11ch] lg:text-left lg:text-[clamp(2.1rem,3.4vw,2.85rem)] lg:leading-[1.06] lg:tracking-[0.12em] xl:text-[clamp(2.35rem,3.6vw,3.1rem)]"
+        />
+      </div>
+    </header>
 
-    <ul class="w-full divide-y divide-white/10 border-y border-white/10">
+    <div class="faq-main">
+      <ul class="faq-list w-full border-b border-white/10">
       {
-        faqs.map(({ question, answer }, index) => (
-          <li>
-            <details
-              class="group bg-theme-midnight/35 transition duration-300 open:bg-theme-navy/35 hover:bg-theme-navy/25"
-              itemprop="mainEntity"
-              itemscope
-              itemtype="https://schema.org/Question"
-              open={index === 0}
+        faqs.map((faq, index) => {
+          const { question, answer, channels, battles, mainEventBattle, eventTime, venueMap } =
+            faq
+          return (
+            <li
+              class:list={[
+                'faq-item-wrap',
+                index === 0 && 'faq-item-wrap--active',
+                index === faqs.length - 1 && 'faq-item-wrap--last',
+              ]}
             >
-              <summary class="flex min-h-20 cursor-pointer list-none items-center justify-between gap-5 px-1 py-5 outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:min-h-24 sm:px-4 sm:py-6 [&::-webkit-details-marker]:hidden">
-                <h3
-                  itemprop="name"
-                  class="font-cinzel text-xl leading-tight font-bold tracking-[0.02em] text-balance text-theme-cream transition duration-300 group-open:text-theme-gold sm:text-2xl"
-                >
-                  {question}
-                </h3>
-                <span
-                  class="relative flex size-10 shrink-0 items-center justify-center rounded-full border border-theme-gold/30 bg-black/25 text-theme-gold transition duration-300 group-open:rotate-45 group-open:border-theme-gold/70 group-open:bg-theme-gold/15 sm:size-11"
-                  aria-hidden="true"
-                >
-                  <span class="absolute h-px w-4 bg-current"></span>
-                  <span class="absolute h-4 w-px bg-current"></span>
-                </span>
-              </summary>
-
-              <div
-                class="px-1 pb-6 pr-14 sm:px-4 sm:pr-20"
-                itemprop="acceptedAnswer"
+              <span class="faq-divider" aria-hidden="true">
+                <span class="faq-divider__gold"></span>
+              </span>
+              <details
+                class:list={[
+                  'faq-item group',
+                  index === 0 && 'faq-item--initial-open',
+                ]}
+                itemprop="mainEntity"
                 itemscope
-                itemtype="https://schema.org/Answer"
+                itemtype="https://schema.org/Question"
+                open={index === 0}
               >
-                <p
-                  itemprop="text"
-                  class="max-w-3xl text-base leading-7 text-pretty text-white/75 sm:text-lg sm:leading-8"
+                <summary class="faq-summary flex min-h-20 cursor-pointer list-none items-center justify-between gap-5 px-1 py-5 outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:min-h-24 sm:px-4 sm:py-6 [&::-webkit-details-marker]:hidden">
+                  <h3
+                    itemprop="name"
+                    class="max-w-[55ch] font-cinzel text-xl leading-tight font-bold tracking-[0.02em] text-balance text-theme-cream transition-[color] duration-200 ease-out group-open:text-theme-gold sm:text-2xl"
+                  >
+                    {question}
+                  </h3>
+                  <span
+                    class="faq-icon relative flex size-10 shrink-0 items-center justify-center rounded-full border border-theme-gold/30 bg-black/25 text-theme-gold group-open:border-theme-gold/70 group-open:bg-theme-gold/15 sm:size-11"
+                    data-faq-icon
+                    aria-hidden="true"
+                  >
+                    <span class="faq-icon__bar faq-icon__bar--h absolute h-px w-4 bg-current"></span>
+                    <span class="faq-icon__bar faq-icon__bar--v absolute h-4 w-px bg-current"></span>
+                  </span>
+                </summary>
+
+                <div
+                  class="faq-answer-shell"
+                  itemprop="acceptedAnswer"
+                  itemscope
+                  itemtype="https://schema.org/Answer"
                 >
-                  {answer}
-                </p>
-              </div>
-            </details>
-          </li>
-        ))
+                  <div class="faq-answer-panel">
+                    <div
+                      itemprop="text"
+                      class:list={[
+                        'faq-answer-body max-w-[55ch] px-1 pt-1 pr-14 pb-10 text-base leading-7 text-pretty text-white/75 sm:px-4 sm:pr-20 sm:pb-12 sm:text-lg sm:leading-8',
+                        channels && 'faq-answer-body--stream',
+                        battles && 'faq-answer-body--battles',
+                        mainEventBattle && 'faq-answer-body--main-event',
+                        venueMap && 'faq-answer-body--venue',
+                      ]}
+                    >
+                      {
+                        venueMap ? (
+                          <p class="faq-answer-lead">
+                            {answer}{' '}
+                            <a
+                              href={`https://www.google.com/maps/search/?api=1&query=${EVENT_VENUE_LAT},${EVENT_VENUE_LNG}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="faq-venue-link"
+                              data-venue-map-link
+                            >
+                              {EVENT_VENUE_LABEL}
+                            </a>
+                            .
+                          </p>
+                        ) : (
+                          <p
+                            class:list={[
+                              (channels || battles || mainEventBattle) && 'faq-answer-lead',
+                            ]}
+                          >
+                            {answer}
+                            {eventTime && (
+                              <>
+                                {' '}
+                                <EventLocalTime />.
+                              </>
+                            )}
+                          </p>
+                        )
+                      }
+                      {venueMap && <VenueMap />}
+                      {
+                        channels && (
+                          <ul class="faq-channels list-none pl-0">
+                            {channels.map(({ platform, href, label }) => (
+                              <li>
+                                <a
+                                  href={href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  aria-label={`Ver en ${platform}: ${label}`}
+                                  class="faq-channel-link inline-flex min-h-10 items-center py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold/70"
+                                >
+                                  <span class="faq-channel-handle text-[0.95em] font-medium tracking-normal text-theme-gold/90 sm:text-[1.05em]">
+                                    {label}
+                                  </span>
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        )
+                      }
+                      {
+                        battles && (
+                          <ol class="faq-battles list-none pl-0">
+                            {battles.map(({ number, title }) => (
+                              <li class="faq-battle-row">
+                                <span class="faq-battle-num" aria-hidden="true">
+                                  {number}
+                                </span>
+                                <span class="faq-battle-title">{title}</span>
+                              </li>
+                            ))}
+                          </ol>
+                        )
+                      }
+                      {
+                        mainEventBattle && (
+                          <p class="faq-main-event-name" aria-label={mainEventBattle.title}>
+                            {mainEventBattle.title}
+                          </p>
+                        )
+                      }
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </li>
+          )
+        })
       }
-    </ul>
+      </ul>
+
+      <div class="faq-section-buffer" aria-hidden="true"></div>
+    </div>
   </div>
 </section>
+
+<style>
+  .faq-section {
+    --faq-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --faq-title-width: 22rem;
+    --faq-gutter: 3rem;
+    --faq-title-row: 11rem;
+  }
+
+  .faq-layout {
+    display: grid;
+    gap: 2.75rem;
+  }
+
+  .faq-title-row__copy {
+    width: 100%;
+  }
+
+  .faq-title-row :global(#faq-title) {
+    text-align: left;
+    margin-inline: 0;
+  }
+
+  .faq-title-row :global(p) {
+    text-align: left;
+  }
+
+  @media (min-width: 1024px) {
+    .faq-layout {
+      grid-template-columns: var(--faq-title-width) minmax(0, 1fr);
+      grid-template-rows: var(--faq-title-row) auto;
+      column-gap: var(--faq-gutter);
+      row-gap: 0;
+      align-items: start;
+      width: 100%;
+    }
+
+    .faq-title-row {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      display: grid;
+      grid-template-columns: subgrid;
+      align-items: start;
+      align-content: start;
+      min-height: var(--faq-title-row);
+      margin: 0;
+      padding: 0;
+    }
+
+    .faq-title-row__copy {
+      grid-column: 1;
+      align-self: start;
+      max-width: var(--faq-title-width);
+      min-width: 0;
+    }
+
+    .faq-title-row :global(#faq-title) {
+      max-width: 11ch;
+    }
+
+    .faq-title-row :global(p) {
+      margin-bottom: 0.75rem;
+    }
+
+    .faq-main {
+      grid-column: 2;
+      grid-row: 2;
+      align-self: start;
+      width: 100%;
+      min-width: 0;
+      justify-self: stretch;
+      margin-top: 0;
+      overflow-x: clip;
+    }
+
+    .faq-list {
+      width: 100%;
+    }
+
+    .faq-summary {
+      gap: clamp(1.5rem, 3vw, 2.5rem);
+      padding-inline: 0;
+      padding-block: clamp(1.5rem, 2.5vw, 2rem);
+      min-height: 5.5rem;
+    }
+
+    .faq-answer-body {
+      padding-inline: 0;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .faq-section {
+      --faq-gutter: 3.5rem;
+      --faq-title-width: 23rem;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .faq-title-row {
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .faq-title-row__copy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .faq-title-row :global(#faq-title),
+    .faq-title-row :global(p) {
+      text-align: center;
+    }
+  }
+
+  .faq-section--height-lock {
+    overflow: hidden;
+  }
+
+  .faq-list {
+    overflow-anchor: none;
+  }
+
+  .faq-divider {
+    position: relative;
+    display: block;
+    height: 1px;
+    width: 100%;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: rgb(255 255 255 / 0.1);
+  }
+
+  .faq-divider__gold {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-theme-gold);
+    transform: scaleX(0);
+    transform-origin: center center;
+    transition: transform 180ms var(--faq-ease-out);
+  }
+
+  .faq-item-wrap--active .faq-divider__gold {
+    transform: scaleX(1);
+  }
+
+  .faq-item-wrap {
+    scroll-margin-block: 0.75rem;
+  }
+
+  .faq-summary {
+    scroll-margin-top: 5.5rem;
+    scroll-margin-bottom: 0.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .faq-summary {
+      scroll-margin-top: 6rem;
+    }
+  }
+
+  .faq-item[open] {
+    scroll-margin-bottom: 1.5rem;
+  }
+
+  .faq-section-buffer {
+    width: 100%;
+    height: clamp(2rem, 6vh, 4.5rem);
+    flex-shrink: 0;
+    transition: height var(--faq-panel-ms, 280ms) var(--faq-ease-out);
+  }
+
+  .faq-section:has(.faq-item-wrap--last-collapsed) .faq-section-buffer,
+  .faq-section:has(.faq-item-wrap--last .faq-item[open]) .faq-section-buffer {
+    height: 0;
+  }
+
+  .faq-item-wrap--last-collapsed {
+    padding-bottom: var(--faq-last-reserve, 0px);
+    transition: padding-bottom var(--faq-panel-ms, 280ms) var(--faq-ease-out);
+  }
+
+  .faq-item-wrap--measuring.faq-item-wrap--last-collapsed,
+  .faq-item-wrap--measuring .faq-answer-shell {
+    transition: none !important;
+  }
+
+  .faq-item-wrap--last .faq-item {
+    scroll-margin-bottom: clamp(2rem, 6vh, 4.5rem);
+  }
+
+  .faq-item-wrap--last .faq-answer-body {
+    padding-bottom: 3rem;
+  }
+
+  @media (min-width: 640px) {
+    .faq-item-wrap--last .faq-answer-body {
+      padding-bottom: 3.5rem;
+    }
+  }
+
+  .faq-summary:active {
+    transform: scale(0.97);
+    transition: transform 140ms var(--faq-ease-out);
+  }
+
+  .faq-icon {
+    transform-origin: center;
+    transition:
+      transform 220ms var(--faq-ease-out),
+      border-color 200ms ease-out,
+      background-color 200ms ease-out;
+  }
+
+  .faq-item--expanded .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-icon__bar {
+    transform-origin: center;
+  }
+
+  .faq-item {
+    background-color: transparent;
+    transition: background-color 200ms ease-out;
+  }
+
+  @media (hover: hover) {
+    .faq-item:hover {
+      background-color: color-mix(in srgb, var(--color-theme-navy) 25%, transparent);
+    }
+  }
+
+  .faq-item[open] {
+    background-color: transparent;
+  }
+
+  .faq-answer-shell {
+    display: grid;
+    grid-template-rows: 0fr;
+    align-content: start;
+    overflow-anchor: none;
+    transform-origin: top center;
+    transition: grid-template-rows var(--faq-panel-ms, 280ms) var(--faq-ease-out);
+  }
+
+  .faq-answer-shell--open {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-answer-panel {
+    transform-origin: top center;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .faq-answer-body {
+    transform-origin: top center;
+    opacity: 0;
+    transform: translate3d(0, -0.5rem, 0) scaleY(0.98);
+    transition:
+      opacity 220ms var(--faq-ease-out),
+      transform 220ms var(--faq-ease-out);
+  }
+
+  .faq-answer-shell--open .faq-answer-body {
+    opacity: 1;
+    transform: none;
+  }
+
+  .faq-item--initial-open[open] .faq-answer-shell,
+  .faq-item--initial-open[open] .faq-answer-body,
+  .faq-item--initial-open[open] .faq-icon {
+    transition: none;
+  }
+
+  .faq-item--initial-open[open] .faq-answer-body {
+    opacity: 1;
+    transform: none;
+  }
+
+  .faq-item--initial-open[open] .faq-answer-shell {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-item--initial-open[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-answer-body--stream .faq-answer-lead {
+    margin: 0;
+  }
+
+  .faq-answer-body--stream .faq-channels {
+    margin-top: 1.125rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .faq-answer-body--stream .faq-channels {
+      margin-top: 1.25rem;
+      gap: 1.125rem;
+    }
+  }
+
+  .faq-answer-body--stream .faq-channels li {
+    padding-block: 0.25rem;
+  }
+
+  .faq-channel-handle {
+    position: relative;
+    transition: color 200ms ease;
+  }
+
+  .faq-channel-link {
+    position: relative;
+  }
+
+  .faq-channel-link::before {
+    content: '';
+    position: absolute;
+    inset: -0.35rem -0.5rem;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+  }
+
+  .faq-channel-link:hover .faq-channel-handle,
+  .faq-channel-link:focus-visible .faq-channel-handle {
+    color: var(--color-theme-cream);
+  }
+
+  .faq-channel-handle::after {
+    content: '';
+    position: absolute;
+    bottom: -0.3rem;
+    left: 50%;
+    height: 1px;
+    width: 0;
+    transform: translateX(-50%);
+    background-color: var(--color-theme-gold);
+    transition: width 280ms var(--faq-ease-out);
+  }
+
+  .faq-channel-link:hover .faq-channel-handle::after,
+  .faq-channel-link:focus-visible .faq-channel-handle::after {
+    width: 100%;
+  }
+
+  .faq-answer-body--venue {
+    max-width: min(100%, 52rem);
+  }
+
+  .faq-venue-link {
+    font-weight: 500;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    text-decoration-style: dotted;
+    text-underline-offset: 0.2em;
+    transition:
+      color 200ms ease,
+      text-decoration-color 200ms ease;
+  }
+
+  .faq-venue-link:hover,
+  .faq-venue-link:focus-visible {
+    color: var(--color-theme-cream);
+    text-decoration-color: color-mix(in srgb, var(--color-theme-gold) 80%, transparent);
+    outline: none;
+  }
+
+  .faq-answer-body--battles {
+    max-width: none;
+    width: 100%;
+  }
+
+  .faq-answer-body--battles .faq-answer-lead {
+    max-width: 55ch;
+    text-align: left;
+    margin-inline: 0;
+  }
+
+  .faq-answer-body--battles .faq-battles {
+    --faq-battle-gap: 0.875rem;
+    --faq-battle-col-gap: clamp(1.75rem, 4vw, 2.5rem);
+    margin-top: var(--faq-battle-gap);
+    margin-inline: auto;
+    width: fit-content;
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: max-content;
+    justify-items: start;
+    gap: var(--faq-battle-gap);
+  }
+
+  @media (min-width: 640px) {
+    .faq-answer-body--battles .faq-battles {
+      grid-template-columns: max-content max-content;
+      column-gap: var(--faq-battle-col-gap);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .faq-answer-body--battles .faq-battles,
+    .faq-answer-body--main-event .faq-main-event-name {
+      margin-inline: 0;
+    }
+  }
+
+  .faq-battle-row {
+    display: grid;
+    width: max-content;
+    max-width: min(100%, 22rem);
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 0.75rem;
+    min-width: 0;
+    text-align: left;
+  }
+
+  .faq-battle-num {
+    font-size: 0.68rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.12em;
+    color: color-mix(in srgb, var(--color-theme-gold) 75%, transparent);
+  }
+
+  .faq-battle-title {
+    font-weight: 500;
+    line-height: 1.4;
+    text-wrap: balance;
+    color: color-mix(in srgb, var(--color-theme-cream) 95%, transparent);
+  }
+
+  .faq-answer-body--main-event .faq-main-event-name {
+    margin: 0.75rem auto 0;
+    max-width: min(100%, 40rem);
+    font-size: 1.125rem;
+    line-height: 1.4;
+    font-weight: 600;
+    text-wrap: balance;
+    color: color-mix(in srgb, var(--color-theme-cream) 92%, transparent);
+  }
+
+  @media (min-width: 640px) {
+    .faq-answer-body--main-event .faq-main-event-name {
+      margin-top: 0.875rem;
+      font-size: 1.25rem;
+    }
+  }
+
+  :global(footer) {
+    overflow-anchor: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-summary:active {
+      transform: none;
+    }
+
+    .faq-item-wrap--active .faq-divider__gold {
+      transform: scaleX(1);
+    }
+
+    .faq-item--expanded .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer-shell--open {
+      grid-template-rows: 1fr;
+    }
+
+    .faq-answer-shell--open .faq-answer-body {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  import { resetFaqAccordionQueue, setupFaqAccordion } from '@/lib/faq-accordion'
+
+  let faqAccordionAbort: AbortController | undefined
+
+  function mountFaqAccordion() {
+    faqAccordionAbort?.abort()
+    resetFaqAccordionQueue()
+    faqAccordionAbort = new AbortController()
+    setupFaqAccordion(faqAccordionAbort.signal)
+  }
+
+  document.addEventListener('astro:page-load', mountFaqAccordion)
+</script>

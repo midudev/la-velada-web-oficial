@@ -16,7 +16,9 @@
     "generate:character-images": "node scripts/convert-character-images.mjs",
     "db:init": "node scripts/init-predictions-db.mjs",
     "db:check": "node scripts/check-predictions-db.mjs",
-    "db:test": "node scripts/test-predictions.mjs"
+    "db:test": "node scripts/test-predictions.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.2",
@@ -29,11 +31,15 @@
     "astro": "6.3.1",
     "auth-astro": "4.2.0",
     "canvas-confetti": "1.9.4",
+    "leaflet": "^1.9.4",
     "tailwind-animations": "1.0.1",
-    "tailwindcss": "4.3.0"
+    "tailwindcss": "4.3.0",
+    "temporal-polyfill-lite": "^0.3.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@types/canvas-confetti": "1.9.0",
+    "@types/leaflet": "^1.9.21",
     "@typescript-eslint/parser": "8.59.3",
     "eslint": "10.3.0",
     "eslint-plugin-astro": "1.7.0",
