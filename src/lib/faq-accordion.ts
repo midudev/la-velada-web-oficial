@@ -1,12 +1,6 @@
 import { $, $$ } from '@/lib/dom-selector'
+import { resetFaqIconTurn, syncFaqIconTurn } from '@/lib/faq-icon-turn'
 import { getVenueMapUrl, openVenueInMaps } from '@/lib/open-venue-map'
-import {
-  isLastFaqDetails,
-  measureLastFaqReserve,
-  setLastFaqReserveCollapsed,
-  syncFaqSectionLastState,
-  syncLastFaqReserveState,
-} from '@/lib/faq-last-reserve'
 import { afterTransition, prefersReducedMotion } from '@/lib/transition'
 import { setVenueMapOpen } from '@/lib/venue-map-sync'
 
@@ -34,11 +28,24 @@ function getParts(details: HTMLDetailsElement): FaqParts | null {
   return { details, shell, summary }
 }
 
-function setExpanded(details: HTMLDetailsElement, expanded: boolean) {
+function setExpanded(
+  details: HTMLDetailsElement,
+  expanded: boolean,
+  options: { instantIcon?: boolean; reduceMotion?: boolean } = {},
+) {
   const wrap = details.closest('.faq-item-wrap')
-  details.classList.toggle('faq-item--expanded', expanded)
   wrap?.classList.toggle('faq-item-wrap--active', expanded)
   $('.faq-answer-shell', details)?.classList.toggle('faq-answer-shell--open', expanded)
+
+  const icon = $('.faq-icon', details)
+  if (!(icon instanceof HTMLElement)) return
+
+  if (options.reduceMotion) {
+    resetFaqIconTurn(icon, expanded)
+    return
+  }
+
+  syncFaqIconTurn(icon, expanded, { instant: options.instantIcon })
 }
 
 function syncVenueMap(details: HTMLDetailsElement, open: boolean) {
@@ -48,26 +55,6 @@ function syncVenueMap(details: HTMLDetailsElement, open: boolean) {
 
 function stripInitialOpen(details: HTMLDetailsElement) {
   details.classList.remove('faq-item--initial-open')
-}
-
-async function preserveScroll<T>(action: () => Promise<T>): Promise<T> {
-  const scrollX = window.scrollX
-  const scrollY = window.scrollY
-
-  const pin = () => {
-    if (window.scrollX !== scrollX || window.scrollY !== scrollY) {
-      window.scrollTo(scrollX, scrollY)
-    }
-  }
-
-  const interval = window.setInterval(pin, 16)
-
-  try {
-    return await action()
-  } finally {
-    window.clearInterval(interval)
-    pin()
-  }
 }
 
 async function runExclusive(details: HTMLDetailsElement, action: () => Promise<void>) {
@@ -87,33 +74,16 @@ async function closeItem(parts: FaqParts): Promise<void> {
   if (!details.open && !details.classList.contains('faq-item--closing')) return
 
   await runExclusive(details, async () => {
-    const lastItem = isLastFaqDetails(details)
+    details.classList.add('faq-item--closing')
+    stripInitialOpen(details)
+    summary.setAttribute('aria-expanded', 'false')
+    syncVenueMap(details, false)
+    setExpanded(details, false, { reduceMotion: prefersReducedMotion() })
 
-    const run = async () => {
-      details.classList.add('faq-item--closing')
-      stripInitialOpen(details)
-      summary.setAttribute('aria-expanded', 'false')
-      syncVenueMap(details, false)
+    await afterTransition(shell, PANEL_MS, 'grid-template-rows')
 
-      if (lastItem) {
-        syncFaqSectionLastState(true, true)
-        setLastFaqReserveCollapsed(true)
-      }
-
-      setExpanded(details, false)
-      await afterTransition(
-        shell,
-        PANEL_MS,
-        lastItem ? 'max-height' : 'grid-template-rows',
-      )
-
-      details.classList.remove('faq-item--closing')
-      details.removeAttribute('open')
-      syncLastFaqReserveState()
-    }
-
-    if (lastItem) await preserveScroll(run)
-    else await run()
+    details.classList.remove('faq-item--closing')
+    details.removeAttribute('open')
   })
 }
 
@@ -129,7 +99,6 @@ async function closeAllExcept(keep: HTMLDetailsElement) {
   }
 
   await Promise.all(jobs)
-  syncLastFaqReserveState()
 }
 
 async function openItem(parts: FaqParts) {
@@ -139,32 +108,15 @@ async function openItem(parts: FaqParts) {
   if (details.open) return
 
   await runExclusive(details, async () => {
-    const lastItem = isLastFaqDetails(details)
+    stripInitialOpen(details)
+    details.classList.remove('faq-item--closing')
 
-    const run = async () => {
-      stripInitialOpen(details)
-      details.classList.remove('faq-item--closing')
+    details.setAttribute('open', '')
+    summary.setAttribute('aria-expanded', 'true')
+    setExpanded(details, true, { reduceMotion: prefersReducedMotion() })
+    syncVenueMap(details, true)
 
-      details.setAttribute('open', '')
-      summary.setAttribute('aria-expanded', 'true')
-      setExpanded(details, true)
-      syncVenueMap(details, true)
-
-      if (lastItem) {
-        syncFaqSectionLastState(false, true)
-        setLastFaqReserveCollapsed(false)
-      }
-
-      await afterTransition(
-        shell,
-        PANEL_MS,
-        lastItem ? 'max-height' : 'grid-template-rows',
-      )
-      syncLastFaqReserveState()
-    }
-
-    if (lastItem) await preserveScroll(run)
-    else await run()
+    await afterTransition(shell, PANEL_MS, 'grid-template-rows')
   })
 }
 
@@ -187,18 +139,16 @@ function bindReducedMotion(items: HTMLDetailsElement[], signal: AbortSignal) {
       async () => {
         if (!details.open) {
           syncVenueMap(details, false)
-          setExpanded(details, false)
+          setExpanded(details, false, { reduceMotion: true })
           parts.summary.setAttribute('aria-expanded', 'false')
-          syncLastFaqReserveState()
           return
         }
 
         stripInitialOpen(details)
         await closeAllExcept(details)
-        setExpanded(details, true)
+        setExpanded(details, true, { reduceMotion: true })
         parts.summary.setAttribute('aria-expanded', 'true')
         syncVenueMap(details, true)
-        syncLastFaqReserveState()
       },
       { signal },
     )
@@ -235,17 +185,14 @@ export function setupFaqAccordion(signal: AbortSignal) {
     details.dataset.faqBound = 'true'
     parts.summary.setAttribute('aria-expanded', details.open ? 'true' : 'false')
 
-    if (details.open) setExpanded(details, true)
+    if (details.open) {
+      setExpanded(details, true, {
+        instantIcon: details.classList.contains('faq-item--initial-open'),
+        reduceMotion,
+      })
+    }
 
     if (reduceMotion) continue
-
-    parts.summary.addEventListener(
-      'mousedown',
-      (event) => {
-        if (isLastFaqDetails(details)) event.preventDefault()
-      },
-      { signal },
-    )
 
     parts.summary.addEventListener(
       'click',
@@ -261,10 +208,6 @@ export function setupFaqAccordion(signal: AbortSignal) {
     )
   }
 
-  measureLastFaqReserve()
-  void document.fonts?.ready.then(() => measureLastFaqReserve())
-  window.addEventListener('resize', () => measureLastFaqReserve(), { signal })
-
   if (reduceMotion) {
     bindReducedMotion(items, signal)
     return
@@ -275,10 +218,10 @@ export function setupFaqAccordion(signal: AbortSignal) {
     (event) => {
       if (event.key !== 'Escape') return
 
-      const openItem = $<HTMLDetailsElement>('.faq-item[open]')
-      if (!openItem) return
+      const openItemEl = $<HTMLDetailsElement>('.faq-item[open]')
+      if (!openItemEl) return
 
-      const parts = getParts(openItem)
+      const parts = getParts(openItemEl)
       if (parts) void schedule(() => closeItem(parts))
     },
     { signal },

@@ -82,7 +82,6 @@ const { faqs } = Astro.props
                   </h3>
                   <span
                     class="faq-icon relative flex size-10 shrink-0 items-center justify-center rounded-full border border-theme-gold/30 bg-black/25 text-theme-gold group-open:border-theme-gold/70 group-open:bg-theme-gold/15 sm:size-11"
-                    data-faq-icon
                     aria-hidden="true"
                   >
                     <span class="faq-icon__bar faq-icon__bar--h absolute h-px w-4 bg-current"></span>
@@ -185,18 +184,11 @@ const { faqs } = Astro.props
                   </div>
                 </div>
               </details>
-              {
-                index === faqs.length - 1 && (
-                  <div class="faq-last-spacer" aria-hidden="true"></div>
-                )
-              }
             </li>
           )
         })
       }
       </ul>
-
-      <div class="faq-section-buffer" aria-hidden="true"></div>
     </div>
   </div>
 </section>
@@ -349,12 +341,7 @@ const { faqs } = Astro.props
 
   .faq-list {
     overflow-anchor: none;
-    border-bottom: 1px solid rgb(255 255 255 / 0.1);
-    transition: border-color 180ms var(--faq-ease-out);
-  }
-
-  .faq-list:has(.faq-item-wrap--last.faq-item-wrap--active) {
-    border-bottom-color: var(--color-theme-gold);
+    border-bottom: none;
   }
 
   .faq-divider {
@@ -405,6 +392,12 @@ const { faqs } = Astro.props
     grid-column: 2;
     grid-row: 1;
     justify-self: end;
+    transform: rotate(var(--faq-icon-turn, 0deg));
+    transform-origin: center;
+    transition:
+      transform 400ms var(--faq-ease-out),
+      border-color 200ms ease-out,
+      background-color 200ms ease-out;
   }
 
   @media (min-width: 640px) {
@@ -423,54 +416,6 @@ const { faqs } = Astro.props
     scroll-margin-bottom: 1.5rem;
   }
 
-  .faq-section-buffer {
-    width: 100%;
-    height: clamp(2rem, 6vh, 4.5rem);
-    flex-shrink: 0;
-    transition: height var(--faq-panel-ms, 280ms) var(--faq-ease-out);
-  }
-
-  .faq-section--last-flush .faq-section-buffer {
-    height: 0;
-    transition: none;
-  }
-
-  .faq-item-wrap:has(+ .faq-item-wrap--last) .faq-item {
-    border-bottom: 1px solid rgb(255 255 255 / 10%);
-  }
-
-  .faq-last-spacer {
-    height: 0;
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-
-  .faq-item-wrap--last-collapsed .faq-last-spacer {
-    height: var(--faq-last-reserve, 0px);
-  }
-
-  .faq-item-wrap--measuring .faq-last-spacer {
-    height: var(--faq-last-reserve, 0px);
-  }
-
-  .faq-item-wrap--last .faq-answer-shell {
-    display: block;
-    grid-template-rows: none;
-    max-height: 0;
-    transition: max-height var(--faq-panel-ms, 280ms) var(--faq-ease-out);
-  }
-
-  .faq-item-wrap--last .faq-answer-shell--open {
-    grid-template-rows: none;
-    max-height: var(--faq-last-reserve, 480px);
-  }
-
-  .faq-item-wrap--measuring.faq-item-wrap--last-collapsed,
-  .faq-item-wrap--measuring .faq-answer-shell,
-  .faq-item-wrap--measuring.faq-item-wrap--last .faq-answer-shell {
-    transition: none !important;
-  }
-
   .faq-item-wrap--last .faq-item {
     scroll-margin-bottom: clamp(2rem, 6vh, 4.5rem);
   }
@@ -483,18 +428,6 @@ const { faqs } = Astro.props
     .faq-item-wrap--last .faq-answer-body {
       padding-bottom: 3.5rem;
     }
-  }
-
-  .faq-icon {
-    transform-origin: center;
-    transition:
-      transform 220ms var(--faq-ease-out),
-      border-color 200ms ease-out,
-      background-color 200ms ease-out;
-  }
-
-  .faq-item--expanded .faq-icon {
-    transform: rotate(45deg);
   }
 
   .faq-icon__bar {
@@ -566,7 +499,7 @@ const { faqs } = Astro.props
   }
 
   .faq-item--initial-open[open] .faq-icon {
-    transform: rotate(45deg);
+    --faq-icon-turn: 45deg;
   }
 
   .faq-answer-body--stream .faq-answer-lead {
@@ -739,14 +672,6 @@ const { faqs } = Astro.props
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .faq-item-wrap--active .faq-divider__gold {
-      transform: scaleX(1);
-    }
-
-    .faq-item--expanded .faq-icon {
-      transform: rotate(45deg);
-    }
-
     .faq-answer-shell--open {
       grid-template-rows: 1fr;
     }

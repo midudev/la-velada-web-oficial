@@ -1,32 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 
 const PANEL_MS = 280
-const MAX_FOOTER_SHIFT_PX = 4
-
-async function sampleLastFaqWrapHeight(page: Page) {
-  return page.evaluate(
-    () => document.querySelector('.faq-item-wrap--last')?.getBoundingClientRect().height ?? 0,
-  )
-}
-
-async function maxLastFaqWrapShiftDuring(page: Page, action: () => Promise<void>) {
-  const samples: number[] = []
-
-  const collect = async () => {
-    samples.push(await sampleLastFaqWrapHeight(page))
-  }
-
-  await collect()
-  await action()
-
-  for (let frame = 0; frame < 20; frame += 1) {
-    await page.waitForTimeout(16)
-    await collect()
-  }
-
-  if (samples.length < 2) return 0
-  return Math.max(...samples) - Math.min(...samples)
-}
 
 async function prepareLastFaqClosed(page: Page) {
   const first = page.locator('#faq .faq-item').first()
@@ -34,6 +8,12 @@ async function prepareLastFaqClosed(page: Page) {
     await first.locator('.faq-summary').click()
     await expect(first).not.toHaveAttribute('open', { timeout: 2_000 })
   }
+}
+
+async function waitForFaqBound(page: Page) {
+  await page.waitForFunction(
+    () => document.querySelector('.faq-item[data-faq-bound="true"]') != null,
+  )
 }
 
 test.describe('FAQ accordion (reduced motion)', () => {
@@ -88,6 +68,7 @@ test.describe('FAQ accordion (animated)', () => {
     await page.emulateMedia({ reducedMotion: 'no-preference' })
     await page.goto('/#faq')
     await page.locator('#faq').scrollIntoViewIfNeeded()
+    await waitForFaqBound(page)
   })
 
   test('opens and closes with custom click handler', async ({ page }) => {
@@ -115,77 +96,61 @@ test.describe('FAQ accordion (animated)', () => {
     await expect(page.locator('#faq .faq-item[open]')).toHaveCount(1, { timeout: 3_000 })
     await expect(page.locator('#faq .faq-answer-shell--open')).toHaveCount(1, { timeout: 3_000 })
   })
-})
 
-async function waitForLastFaqReserveReady(page: Page) {
-  await page.waitForFunction(() => {
-    const bound = document.querySelector('.faq-item[data-faq-bound="true"]')
-    const wrap = document.querySelector('.faq-item-wrap--last')
-    if (!bound || !wrap) return false
+  test('icon always turns clockwise on toggle', async ({ page }) => {
+    const icon = page.locator('#faq .faq-item').first().locator('.faq-icon')
+    const readDeg = () => icon.evaluate((el) => Number((el as HTMLElement).dataset.faqIconDeg ?? 0))
 
-    const value = getComputedStyle(wrap).getPropertyValue('--faq-last-reserve').trim()
-    const px = Number.parseFloat(value)
-    return (
-      wrap.classList.contains('faq-item-wrap--last-collapsed') &&
-      value.endsWith('px') &&
-      px > 24
-    )
-  })
-}
+    const openDeg = await readDeg()
+    expect(openDeg).toBeGreaterThan(0)
 
-test.describe('FAQ last item layout', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'no-preference' })
-    await page.goto('/#faq')
-    await page.locator('#faq').scrollIntoViewIfNeeded()
-    await page.waitForFunction(
-      () => document.querySelector('.faq-item[data-faq-bound="true"]') != null,
-    )
-    await prepareLastFaqClosed(page)
-    await waitForLastFaqReserveReady(page)
-  })
-
-  test('opening last item keeps footer position stable', async ({ page }) => {
-    const lastSummary = page.locator('.faq-item-wrap--last .faq-summary')
-    const wrapBefore = await sampleLastFaqWrapHeight(page)
-
-    const shift = await maxLastFaqWrapShiftDuring(page, async () => {
-      await lastSummary.click()
-      await expect(page.locator('.faq-item-wrap--last .faq-item')).toHaveAttribute('open', '', {
-        timeout: 2_000,
-      })
+    await page.locator('#faq .faq-item').first().locator('.faq-summary').click()
+    await expect(page.locator('#faq .faq-item').first()).not.toHaveAttribute('open', {
+      timeout: 2_000,
     })
 
-    const wrapAfter = await sampleLastFaqWrapHeight(page)
+    const afterCloseDeg = await readDeg()
+    expect(afterCloseDeg).toBeGreaterThan(openDeg)
 
-    expect(shift).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
-    expect(Math.abs(wrapAfter - wrapBefore)).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
-    await expect(page.locator('.faq-item-wrap--last')).not.toHaveClass(/faq-item-wrap--last-collapsed/)
+    await page.locator('#faq .faq-item').first().locator('.faq-summary').click()
+    await expect(page.locator('#faq .faq-item').first()).toHaveAttribute('open', {
+      timeout: 2_000,
+    })
+
+    const afterReopenDeg = await readDeg()
+    expect(afterReopenDeg).toBeGreaterThan(afterCloseDeg)
   })
 
-  test('closing last item keeps footer position stable', async ({ page }) => {
-    const lastSummary = page.locator('.faq-item-wrap--last .faq-summary')
+  test('each item has a top divider and the list has no bottom border', async ({ page }) => {
+    const wraps = page.locator('#faq .faq-item-wrap')
+    const count = await wraps.count()
 
-    await lastSummary.click()
+    for (let index = 0; index < count; index += 1) {
+      await expect(wraps.nth(index).locator('.faq-divider')).toHaveCount(1)
+    }
+
+    const borderBottomWidth = await page.locator('.faq-list').evaluate(
+      (el) => getComputedStyle(el).borderBottomWidth,
+    )
+    expect(borderBottomWidth).toBe('0px')
+  })
+
+  test('last item uses the same grid panel animation as other items', async ({ page }) => {
+    await prepareLastFaqClosed(page)
+
+    const shell = page.locator('.faq-item-wrap--last .faq-answer-shell')
+
+    await expect(shell).toHaveCSS('display', 'grid')
+    await expect(shell).not.toHaveClass(/faq-answer-shell--open/)
+
+    await page.locator('.faq-item-wrap--last .faq-summary').click()
     await expect(page.locator('.faq-item-wrap--last .faq-item')).toHaveAttribute('open', '', {
       timeout: 2_000,
     })
+    await expect(shell).toHaveClass(/faq-answer-shell--open/)
     await page.waitForTimeout(PANEL_MS + 80)
 
-    const wrapBefore = await sampleLastFaqWrapHeight(page)
-
-    const shift = await maxLastFaqWrapShiftDuring(page, async () => {
-      await lastSummary.click()
-      await expect(page.locator('.faq-item-wrap--last .faq-item')).not.toHaveAttribute('open', {
-        timeout: 2_000,
-      })
-    })
-
-    const wrapAfter = await sampleLastFaqWrapHeight(page)
-
-    expect(shift).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
-    expect(Math.abs(wrapAfter - wrapBefore)).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
-    await expect(page.locator('.faq-item-wrap--last')).toHaveClass(/faq-item-wrap--last-collapsed/)
+    const openRows = await shell.evaluate((el) => getComputedStyle(el).gridTemplateRows)
+    expect(Number.parseFloat(openRows)).toBeGreaterThan(10)
   })
-
 })
