@@ -778,10 +778,11 @@ const totalBoxers = BOXERS.length
       gap: 2rem;
     }
 
-    /* Título alineado con la columna de resultados (subgrid = mismas pistas que .boxers-layout). */
+    /* Título en la misma columna que el grid (f4e0c631: justify-self center, no stretch). */
     .boxers-page-header {
       display: grid;
-      grid-template-columns: subgrid;
+      grid-template-columns: var(--boxers-sidebar-width) minmax(0, 1fr);
+      column-gap: 2rem;
       grid-column: 1 / -1;
       grid-row: 1;
     }
@@ -808,6 +809,9 @@ const totalBoxers = BOXERS.length
       gap: 2.5rem;
     }
 
+    .boxers-page-header {
+      column-gap: 2.5rem;
+    }
   }
 
   /* Contenedor de resultados con animación al filtrar (queda atado al
