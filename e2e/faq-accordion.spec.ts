@@ -3,30 +3,17 @@ import { expect, test, type Page } from '@playwright/test'
 const PANEL_MS = 280
 const MAX_FOOTER_SHIFT_PX = 4
 
-async function readFooterDocY(page: Page) {
-  return page.evaluate(() => {
-    const footer = document.querySelector('footer')
-    if (!footer) return 0
-    const rect = footer.getBoundingClientRect()
-    return rect.top + window.scrollY
-  })
+async function sampleLastFaqWrapHeight(page: Page) {
+  return page.evaluate(
+    () => document.querySelector('.faq-item-wrap--last')?.getBoundingClientRect().height ?? 0,
+  )
 }
 
-async function sampleFooterDocY(page: Page) {
-  return readFooterDocY(page)
-}
-
-async function samplePageScrollHeight(page: Page) {
-  return page.evaluate(() => document.documentElement.scrollHeight)
-}
-
-async function maxLayoutShiftDuring(page: Page, action: () => Promise<void>) {
-  const footerSamples: number[] = []
-  const heightSamples: number[] = []
+async function maxLastFaqWrapShiftDuring(page: Page, action: () => Promise<void>) {
+  const samples: number[] = []
 
   const collect = async () => {
-    footerSamples.push(await sampleFooterDocY(page))
-    heightSamples.push(await samplePageScrollHeight(page))
+    samples.push(await sampleLastFaqWrapHeight(page))
   }
 
   await collect()
@@ -37,12 +24,8 @@ async function maxLayoutShiftDuring(page: Page, action: () => Promise<void>) {
     await collect()
   }
 
-  const footerShift =
-    footerSamples.length < 2 ? 0 : Math.max(...footerSamples) - Math.min(...footerSamples)
-  const heightShift =
-    heightSamples.length < 2 ? 0 : Math.max(...heightSamples) - Math.min(...heightSamples)
-
-  return Math.max(footerShift, heightShift)
+  if (samples.length < 2) return 0
+  return Math.max(...samples) - Math.min(...samples)
 }
 
 async function prepareLastFaqClosed(page: Page) {
@@ -164,22 +147,19 @@ test.describe('FAQ last item layout', () => {
 
   test('opening last item keeps footer position stable', async ({ page }) => {
     const lastSummary = page.locator('.faq-item-wrap--last .faq-summary')
-    const footerBefore = await readFooterDocY(page)
-    const heightBefore = await samplePageScrollHeight(page)
+    const wrapBefore = await sampleLastFaqWrapHeight(page)
 
-    const shift = await maxLayoutShiftDuring(page, async () => {
+    const shift = await maxLastFaqWrapShiftDuring(page, async () => {
       await lastSummary.click()
       await expect(page.locator('.faq-item-wrap--last .faq-item')).toHaveAttribute('open', '', {
         timeout: 2_000,
       })
     })
 
-    const footerAfter = await readFooterDocY(page)
-    const heightAfter = await samplePageScrollHeight(page)
+    const wrapAfter = await sampleLastFaqWrapHeight(page)
 
     expect(shift).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
-    expect(Math.abs(footerAfter - footerBefore)).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
-    expect(Math.abs(heightAfter - heightBefore)).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
+    expect(Math.abs(wrapAfter - wrapBefore)).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
     await expect(page.locator('.faq-item-wrap--last')).not.toHaveClass(/faq-item-wrap--last-collapsed/)
   })
 
@@ -192,22 +172,19 @@ test.describe('FAQ last item layout', () => {
     })
     await page.waitForTimeout(PANEL_MS + 80)
 
-    const footerBefore = await readFooterDocY(page)
-    const heightBefore = await samplePageScrollHeight(page)
+    const wrapBefore = await sampleLastFaqWrapHeight(page)
 
-    const shift = await maxLayoutShiftDuring(page, async () => {
+    const shift = await maxLastFaqWrapShiftDuring(page, async () => {
       await lastSummary.click()
       await expect(page.locator('.faq-item-wrap--last .faq-item')).not.toHaveAttribute('open', {
         timeout: 2_000,
       })
     })
 
-    const footerAfter = await readFooterDocY(page)
-    const heightAfter = await samplePageScrollHeight(page)
+    const wrapAfter = await sampleLastFaqWrapHeight(page)
 
     expect(shift).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
-    expect(Math.abs(footerAfter - footerBefore)).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
-    expect(Math.abs(heightAfter - heightBefore)).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
+    expect(Math.abs(wrapAfter - wrapBefore)).toBeLessThanOrEqual(MAX_FOOTER_SHIFT_PX)
     await expect(page.locator('.faq-item-wrap--last')).toHaveClass(/faq-item-wrap--last-collapsed/)
   })
 

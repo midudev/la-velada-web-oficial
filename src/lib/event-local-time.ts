@@ -5,7 +5,10 @@ import { EVENT_TIME_ZONE } from '@/consts/event'
 export interface EventLocalTimeView {
   sameLocalTime: boolean
   timeZoneId: string
-  tooltip: string
+  /** Primary line, e.g. "8:00 PM" or "Misma hora (España)" */
+  tooltipPrimary: string
+  /** Secondary line; null when same local time as Spain */
+  tooltipSecondary: string | null
 }
 
 function getUserTimeZoneId(): string {
@@ -41,7 +44,16 @@ function getWallClockDiffMinutes(
   return dayDiff * 24 * 60 + (local.hour - event.hour) * 60 + (local.minute - event.minute)
 }
 
-function formatLocalShort(
+function formatLocalTime12h(local: Temporal.ZonedDateTime, timeZoneId: string): string {
+  return new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: timeZoneId,
+  }).format(new Date(local.epochMilliseconds))
+}
+
+function formatLocalDateShort(
   local: Temporal.ZonedDateTime,
   event: Temporal.ZonedDateTime,
   timeZoneId: string,
@@ -49,18 +61,13 @@ function formatLocalShort(
   const sameDay =
     local.year === event.year && local.month === event.month && local.day === event.day
 
-  return new Intl.DateTimeFormat('es-ES', {
-    ...(sameDay
-      ? {}
-      : {
-          day: 'numeric',
-          month: 'short',
-        }),
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
+  if (sameDay) return ''
+
+  return `${new Intl.DateTimeFormat('es-ES', {
+    day: 'numeric',
+    month: 'short',
     timeZone: timeZoneId,
-  }).format(new Date(local.epochMilliseconds))
+  }).format(new Date(local.epochMilliseconds))} · `
 }
 
 function formatOffsetShort(diffMinutes: number): string {
@@ -89,15 +96,15 @@ export function resolveEventLocalTime(
   const diffMinutes = getWallClockDiffMinutes(event, local)
   const sameLocalTime = diffMinutes === 0
 
-  const localShort = formatLocalShort(local, event, timeZoneId)
-
-  const tooltip = sameLocalTime
-    ? 'Misma hora (España)'
-    : `${localShort} en tu zona · ${formatOffsetShort(diffMinutes)}`
+  const datePrefix = formatLocalDateShort(local, event, timeZoneId)
+  const localTime = formatLocalTime12h(local, timeZoneId)
 
   return {
     sameLocalTime,
     timeZoneId,
-    tooltip,
+    tooltipPrimary: sameLocalTime ? 'Misma hora (España)' : `${datePrefix}${localTime}`,
+    tooltipSecondary: sameLocalTime
+      ? null
+      : `En tu zona · ${formatOffsetShort(diffMinutes)}`,
   }
 }

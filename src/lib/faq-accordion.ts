@@ -4,6 +4,7 @@ import {
   isLastFaqDetails,
   measureLastFaqReserve,
   setLastFaqReserveCollapsed,
+  syncFaqSectionLastState,
   syncLastFaqReserveState,
 } from '@/lib/faq-last-reserve'
 import { afterTransition, prefersReducedMotion } from '@/lib/transition'
@@ -49,6 +50,26 @@ function stripInitialOpen(details: HTMLDetailsElement) {
   details.classList.remove('faq-item--initial-open')
 }
 
+async function preserveScroll<T>(action: () => Promise<T>): Promise<T> {
+  const scrollX = window.scrollX
+  const scrollY = window.scrollY
+
+  const pin = () => {
+    if (window.scrollX !== scrollX || window.scrollY !== scrollY) {
+      window.scrollTo(scrollX, scrollY)
+    }
+  }
+
+  const interval = window.setInterval(pin, 16)
+
+  try {
+    return await action()
+  } finally {
+    window.clearInterval(interval)
+    pin()
+  }
+}
+
 async function runExclusive(details: HTMLDetailsElement, action: () => Promise<void>) {
   const pending = running.get(details)
   if (pending) await pending
@@ -68,23 +89,31 @@ async function closeItem(parts: FaqParts): Promise<void> {
   await runExclusive(details, async () => {
     const lastItem = isLastFaqDetails(details)
 
-    details.classList.add('faq-item--closing')
-    stripInitialOpen(details)
-    summary.setAttribute('aria-expanded', 'false')
-    syncVenueMap(details, false)
+    const run = async () => {
+      details.classList.add('faq-item--closing')
+      stripInitialOpen(details)
+      summary.setAttribute('aria-expanded', 'false')
+      syncVenueMap(details, false)
 
-    if (lastItem) setLastFaqReserveCollapsed(true)
+      if (lastItem) {
+        syncFaqSectionLastState(true, true)
+        setLastFaqReserveCollapsed(true)
+      }
 
-    setExpanded(details, false)
-    await afterTransition(
-      shell,
-      PANEL_MS,
-      lastItem ? 'max-height' : 'grid-template-rows',
-    )
+      setExpanded(details, false)
+      await afterTransition(
+        shell,
+        PANEL_MS,
+        lastItem ? 'max-height' : 'grid-template-rows',
+      )
 
-    details.classList.remove('faq-item--closing')
-    details.removeAttribute('open')
-    syncLastFaqReserveState()
+      details.classList.remove('faq-item--closing')
+      details.removeAttribute('open')
+      syncLastFaqReserveState()
+    }
+
+    if (lastItem) await preserveScroll(run)
+    else await run()
   })
 }
 
@@ -111,30 +140,31 @@ async function openItem(parts: FaqParts) {
 
   await runExclusive(details, async () => {
     const lastItem = isLastFaqDetails(details)
-    const wrap = lastItem ? details.closest('.faq-item-wrap--last') : null
 
-    stripInitialOpen(details)
-    details.classList.remove('faq-item--closing')
+    const run = async () => {
+      stripInitialOpen(details)
+      details.classList.remove('faq-item--closing')
 
-    if (lastItem && wrap instanceof HTMLElement) {
-      wrap.classList.add('faq-item-wrap--swap-panel')
-      setLastFaqReserveCollapsed(false)
       details.setAttribute('open', '')
       summary.setAttribute('aria-expanded', 'true')
       setExpanded(details, true)
       syncVenueMap(details, true)
-      void shell.offsetHeight
-      wrap.classList.remove('faq-item-wrap--swap-panel')
+
+      if (lastItem) {
+        syncFaqSectionLastState(false, true)
+        setLastFaqReserveCollapsed(false)
+      }
+
+      await afterTransition(
+        shell,
+        PANEL_MS,
+        lastItem ? 'max-height' : 'grid-template-rows',
+      )
       syncLastFaqReserveState()
-      return
     }
 
-    details.setAttribute('open', '')
-    summary.setAttribute('aria-expanded', 'true')
-    setExpanded(details, true)
-    syncVenueMap(details, true)
-    await afterTransition(shell, PANEL_MS, 'grid-template-rows')
-    syncLastFaqReserveState()
+    if (lastItem) await preserveScroll(run)
+    else await run()
   })
 }
 
@@ -208,6 +238,14 @@ export function setupFaqAccordion(signal: AbortSignal) {
     if (details.open) setExpanded(details, true)
 
     if (reduceMotion) continue
+
+    parts.summary.addEventListener(
+      'mousedown',
+      (event) => {
+        if (isLastFaqDetails(details)) event.preventDefault()
+      },
+      { signal },
+    )
 
     parts.summary.addEventListener(
       'click',

@@ -1,5 +1,13 @@
 import { $ } from '@/lib/dom-selector'
 
+export function syncFaqSectionLastState(collapsed: boolean, open: boolean) {
+  const section = $('#faq')
+  if (!(section instanceof HTMLElement)) return
+
+  section.classList.toggle('faq-section--last-reserved', collapsed)
+  section.classList.toggle('faq-section--last-open', open)
+}
+
 export function isLastFaqDetails(details: HTMLDetailsElement) {
   return details.closest('.faq-item-wrap--last') != null
 }
@@ -20,7 +28,6 @@ export function setLastFaqReserveCollapsed(collapsed: boolean) {
   const wrap = getLastFaqWrap()
   if (!wrap) return
 
-  wrap.style.removeProperty('padding-bottom')
   wrap.classList.toggle('faq-item-wrap--last-collapsed', collapsed)
 }
 
@@ -28,10 +35,12 @@ export function syncLastFaqReserveState() {
   const details = getLastFaqDetails()
   if (!details) return
 
-  const collapsed =
-    !details.open && !details.classList.contains('faq-item--closing')
+  const closing = details.classList.contains('faq-item--closing')
+  const open = details.open && !closing
+  const collapsed = !open && !closing
 
   setLastFaqReserveCollapsed(collapsed)
+  syncFaqSectionLastState(collapsed, open)
 }
 
 export function measureLastFaqReserve() {

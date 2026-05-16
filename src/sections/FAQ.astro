@@ -14,7 +14,7 @@ const { faqs } = Astro.props
 
 <section
   id="faq"
-  class="faq-section relative w-full overflow-x-hidden px-4 pt-6 pb-24 sm:px-6 sm:pt-8 sm:pb-28 lg:pt-10 lg:pb-32 xl:pt-12"
+  class="faq-section relative w-full overflow-x-clip px-4 pt-20 pb-24 sm:px-6 sm:pb-28 lg:pt-28 lg:pb-32"
   aria-labelledby="faq-title"
   itemscope
   itemtype="https://schema.org/FAQPage"
@@ -46,7 +46,8 @@ const { faqs } = Astro.props
     </header>
 
     <div class="faq-main">
-      <ul class="faq-list w-full border-b border-white/10">
+      <div class="faq-sticky-trigger" aria-hidden="true"></div>
+      <ul class="faq-list w-full">
       {
         faqs.map((faq, index) => {
           const { question, answer, channels, battles, mainEventBattle, eventTime, venueMap } =
@@ -184,6 +185,11 @@ const { faqs } = Astro.props
                   </div>
                 </div>
               </details>
+              {
+                index === faqs.length - 1 && (
+                  <div class="faq-last-spacer" aria-hidden="true"></div>
+                )
+              }
             </li>
           )
         })
@@ -205,6 +211,7 @@ const { faqs } = Astro.props
     --faq-text-measure: 52ch;
     --faq-icon-col: 2.5rem;
     --faq-icon-gap: 1.25rem;
+    --faq-sticky-top: 5.5rem;
   }
 
   .faq-layout {
@@ -232,31 +239,38 @@ const { faqs } = Astro.props
 
     .faq-layout {
       grid-template-columns: var(--faq-title-width) minmax(0, 1fr);
-      grid-template-rows: var(--faq-title-row) auto;
+      grid-template-rows: auto;
       column-gap: var(--faq-gutter);
       row-gap: 0;
-      align-items: start;
+      align-items: stretch;
       width: 100%;
     }
 
     .faq-title-row {
-      grid-column: 1 / -1;
+      grid-column: 1;
       grid-row: 1;
-      display: grid;
-      grid-template-columns: var(--faq-title-width) minmax(0, 1fr);
-      column-gap: var(--faq-gutter);
-      align-items: start;
-      align-content: start;
-      min-height: var(--faq-title-row);
+      align-self: stretch;
+      min-height: 0;
       margin: 0;
       padding: 0;
     }
 
     .faq-title-row__copy {
-      grid-column: 1;
-      align-self: start;
       max-width: var(--faq-title-width);
       min-width: 0;
+    }
+
+    .faq-title-row__copy--pinned {
+      position: fixed;
+      top: var(--faq-sticky-top);
+      z-index: 2;
+      margin: 0;
+    }
+
+    .faq-title-row__placeholder {
+      display: block;
+      width: 100%;
+      pointer-events: none;
     }
 
     .faq-title-row :global(#faq-title) {
@@ -268,15 +282,30 @@ const { faqs } = Astro.props
     }
 
     .faq-main {
+      position: relative;
       grid-column: 2;
-      grid-row: 2;
+      grid-row: 1;
       align-self: start;
       width: min(100%, var(--faq-content-width));
       max-width: var(--faq-content-width);
       min-width: 0;
       justify-self: end;
       margin-top: 0;
+      padding-top: var(--faq-title-row);
       overflow-x: clip;
+    }
+
+    .faq-sticky-trigger {
+      position: absolute;
+      top: var(--faq-title-row);
+      left: 0;
+      width: 1px;
+      height: 1px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      pointer-events: none;
+      visibility: hidden;
     }
 
     .faq-list {
@@ -328,10 +357,6 @@ const { faqs } = Astro.props
     }
   }
 
-  .faq-section--height-lock {
-    overflow: hidden;
-  }
-
   .faq-list {
     overflow-anchor: none;
   }
@@ -370,6 +395,8 @@ const { faqs } = Astro.props
     align-items: center;
     scroll-margin-top: 5.5rem;
     scroll-margin-bottom: 0.25rem;
+    border-radius: 0.25rem;
+    transition: background-color 200ms ease-out;
   }
 
   .faq-summary__title {
@@ -388,6 +415,7 @@ const { faqs } = Astro.props
     .faq-section {
       --faq-icon-col: 2.75rem;
       --faq-text-measure: 56ch;
+      --faq-sticky-top: 6rem;
     }
 
     .faq-summary {
@@ -406,18 +434,36 @@ const { faqs } = Astro.props
     transition: height var(--faq-panel-ms, 280ms) var(--faq-ease-out);
   }
 
-  .faq-section:has(.faq-item-wrap--last-collapsed) .faq-section-buffer,
-  .faq-section:has(.faq-item-wrap--last .faq-item[open]) .faq-section-buffer {
+  .faq-section--last-reserved .faq-section-buffer,
+  .faq-section--last-open .faq-section-buffer {
     height: 0;
+    transition: none;
   }
 
-  .faq-item-wrap--last {
-    padding-bottom: 0;
-    transition: padding-bottom var(--faq-panel-ms, 280ms) var(--faq-ease-out);
+  .faq-item-wrap--last .faq-divider {
+    display: none;
   }
 
-  .faq-item-wrap--last-collapsed {
-    padding-bottom: var(--faq-last-reserve, 0px);
+  .faq-item-wrap:has(+ .faq-item-wrap--last) .faq-item {
+    border-bottom: 1px solid rgb(255 255 255 / 10%);
+  }
+
+  .faq-item-wrap:has(+ .faq-item-wrap--last.faq-item-wrap--active) .faq-item {
+    border-bottom-color: var(--color-theme-gold);
+  }
+
+  .faq-last-spacer {
+    height: 0;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .faq-item-wrap--last-collapsed .faq-last-spacer {
+    height: var(--faq-last-reserve, 0px);
+  }
+
+  .faq-item-wrap--measuring .faq-last-spacer {
+    height: var(--faq-last-reserve, 0px);
   }
 
   .faq-item-wrap--last .faq-answer-shell {
@@ -430,12 +476,6 @@ const { faqs } = Astro.props
   .faq-item-wrap--last .faq-answer-shell--open {
     grid-template-rows: none;
     max-height: var(--faq-last-reserve, 480px);
-  }
-
-  .faq-item-wrap--last.faq-item-wrap--swap-panel,
-  .faq-item-wrap--last.faq-item-wrap--swap-panel .faq-answer-shell,
-  .faq-item-wrap--last.faq-item-wrap--swap-panel .faq-answer-body {
-    transition: none !important;
   }
 
   .faq-item-wrap--measuring.faq-item-wrap--last-collapsed,
@@ -458,11 +498,6 @@ const { faqs } = Astro.props
     }
   }
 
-  .faq-summary:active {
-    transform: scale(0.97);
-    transition: transform 140ms var(--faq-ease-out);
-  }
-
   .faq-icon {
     transform-origin: center;
     transition:
@@ -481,17 +516,12 @@ const { faqs } = Astro.props
 
   .faq-item {
     background-color: transparent;
-    transition: background-color 200ms ease-out;
   }
 
   @media (hover: hover) {
-    .faq-item:hover {
+    .faq-summary:hover {
       background-color: color-mix(in srgb, var(--color-theme-navy) 25%, transparent);
     }
-  }
-
-  .faq-item[open] {
-    background-color: transparent;
   }
 
   .faq-answer-shell {
@@ -722,10 +752,6 @@ const { faqs } = Astro.props
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .faq-summary:active {
-      transform: none;
-    }
-
     .faq-item-wrap--active .faq-divider__gold {
       transform: scaleX(1);
     }
@@ -747,6 +773,7 @@ const { faqs } = Astro.props
 
 <script>
   import { resetFaqAccordionQueue, setupFaqAccordion } from '@/lib/faq-accordion'
+  import { setupFaqStickyTitle } from '@/lib/faq-sticky-title'
 
   let faqAccordionAbort: AbortController | undefined
 
@@ -755,6 +782,7 @@ const { faqs } = Astro.props
     resetFaqAccordionQueue()
     faqAccordionAbort = new AbortController()
     setupFaqAccordion(faqAccordionAbort.signal)
+    setupFaqStickyTitle(faqAccordionAbort.signal)
   }
 
   document.addEventListener('astro:page-load', mountFaqAccordion)
