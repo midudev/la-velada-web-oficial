@@ -155,15 +155,9 @@ const navItemId = (label: string) =>
                   href={item.href}
                   data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
                   data-mobile-menu-link
-                  class="group/nav relative flex items-center justify-center rounded-2xl border border-theme-gold/55 bg-theme-midnight/80 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 [@media(hover:hover)_and_(pointer:fine)]:hover:border-theme-gold [@media(hover:hover)_and_(pointer:fine)]:hover:bg-theme-midnight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+                  class="flex items-center justify-center rounded-2xl border border-theme-gold/55 bg-theme-midnight/80 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 active:border-theme-gold active:bg-theme-midnight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
                 >
-                  <span class="relative inline-flex items-center">
-                    <span
-                      aria-hidden="true"
-                      class="pointer-events-none absolute inset-x-0 -bottom-1.5 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-150 ease-out delay-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:scale-x-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:delay-125"
-                    />
-                    {item.label}
-                  </span>
+                  {item.label}
                 </a>
               </li>
             )
