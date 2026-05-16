@@ -47,6 +47,7 @@ for (const { boxerIds } of battles) {
 const positionedBoxers: Array<{
   boxer: Boxer
   opponentId: string
+  side: 'left' | 'right'
   colMobile: number
   rowMobile: number
   colTablet: number
@@ -86,6 +87,7 @@ const positionedBoxers: Array<{
     return {
       boxer: BOXERS_BY_ID[id]!,
       opponentId: opponentById[id]!,
+      side: (isFirstInPair ? 'left' : 'right') as const,
       colMobile,
       rowMobile,
       colTablet,
@@ -271,7 +273,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         <div class="boxer-mobile-track" data-mobile-track>
           {
             MOBILE_SLIDER_SETS.flatMap((setName) =>
-              positionedBoxers.map(({ boxer }, index) => {
+              positionedBoxers.map(({ boxer, side }, index) => {
                 const selectImages = getBoxerSelectImages(boxer)
                 const isAccessibleSet = setName === 'current'
 
@@ -285,6 +287,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                     aria-label={`Ver perfil de ${boxer.name}`}
                     aria-hidden={isAccessibleSet ? undefined : 'true'}
                     tabindex={isAccessibleSet ? undefined : -1}
+                    data-side={side}
                     class="boxer-mobile-slide group relative aspect-[3/4] shrink-0 snap-center overflow-hidden rounded-[1.1rem] border border-theme-gold/35 bg-theme-midnight outline-none"
                     style={`animation-delay: ${650 + index * 20}ms`}
                   >
@@ -331,6 +334,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
             {
               boxer,
               opponentId,
+              side,
               colMobile,
               rowMobile,
               colTablet,
@@ -357,6 +361,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                 data-country={countryName}
                 aria-label={`Ver perfil de ${boxer.name}`}
                 data-active="false"
+                data-side={side}
                 class="boxer-cell animate-fade-in group relative aspect-square cursor-pointer overflow-hidden focus-visible:outline-none"
                 style={`--col-mobile: ${colMobile}; --row-mobile: ${rowMobile}; --col-tablet: ${colTablet}; --row-tablet: ${rowTablet}; --col-desktop: ${colDesktop}; --row-desktop: ${rowDesktop}; animation-delay: ${1000 + index * 25}ms`}
                 tabindex={index === 0 ? 0 : -1}
@@ -747,6 +752,48 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       );
   }
 
+  /* Tinte de lado para el carrusel móvil: mismo concepto que el grid
+     de escritorio pero aplicado con un gradiente diagonal suave. */
+  .boxer-mobile-slide[data-side='left']::before {
+    background:
+      radial-gradient(
+        ellipse 80% 70% at 50% 22%,
+        color-mix(in srgb, var(--color-theme-gold) 45%, transparent) 0%,
+        transparent 64%
+      ),
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, #3b82f6 28%, transparent) 0%,
+        color-mix(in srgb, #3b82f6 10%, transparent) 55%,
+        transparent 100%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-theme-navy) 84%, black) 0%,
+        color-mix(in srgb, var(--color-theme-midnight) 96%, black) 100%
+      );
+  }
+
+  .boxer-mobile-slide[data-side='right']::before {
+    background:
+      radial-gradient(
+        ellipse 80% 70% at 50% 22%,
+        color-mix(in srgb, var(--color-theme-gold) 45%, transparent) 0%,
+        transparent 64%
+      ),
+      linear-gradient(
+        225deg,
+        color-mix(in srgb, #ef4444 28%, transparent) 0%,
+        color-mix(in srgb, #ef4444 10%, transparent) 55%,
+        transparent 100%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-theme-navy) 84%, black) 0%,
+        color-mix(in srgb, var(--color-theme-midnight) 96%, black) 100%
+      );
+  }
+
   .boxer-mobile-slide:focus-visible {
     border-color: color-mix(in srgb, var(--color-theme-gold) 80%, white);
     box-shadow:
@@ -803,6 +850,32 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
        Los box-shadows de celdas adyacentes se solapan formando las líneas
        internas del grid, y el contorno exterior del bloque completo. */
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+  }
+
+  /* Tinte de lado: un overlay muy sutil que distingue visualmente a cada
+     esquina del ring. Azul para los boxeadores del lado izquierdo y rojo
+     para los del lado derecho. Se aplica con un gradiente en el fondo de
+     la celda para que se funda suavemente con el color base. */
+  .boxer-cell[data-side='left'] {
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, #3b82f6 22%, transparent) 0%,
+        color-mix(in srgb, #3b82f6 10%, transparent) 50%,
+        transparent 100%
+      ),
+      color-mix(in srgb, var(--color-theme-midnight) 92%, var(--color-theme-navy));
+  }
+
+  .boxer-cell[data-side='right'] {
+    background:
+      linear-gradient(
+        225deg,
+        color-mix(in srgb, #ef4444 22%, transparent) 0%,
+        color-mix(in srgb, #ef4444 10%, transparent) 50%,
+        transparent 100%
+      ),
+      color-mix(in srgb, var(--color-theme-midnight) 92%, var(--color-theme-navy));
   }
 
   .boxer-thumb-img {
