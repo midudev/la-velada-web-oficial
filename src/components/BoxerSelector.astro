@@ -454,14 +454,21 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   .boxer-default-panel {
-    /* Lockup (logo + fechas) con aire superior; en desktop no pegado al nav. */
+    /* Lockup (logo + fechas): offset moderado; en viewports bajos evitamos
+       empujar el CTA + grid al borde inferior del hero. */
     padding-top: clamp(1rem, 3.5vh, 2rem);
     padding-bottom: 0;
   }
 
   @media (min-width: 768px) {
     .boxer-default-panel {
-      padding-top: clamp(1.5rem, 5.5vh, 3.25rem);
+      padding-top: clamp(1.25rem, 3.5vh, 2.25rem);
+    }
+  }
+
+  @media (min-width: 1024px) and (min-height: 950px) {
+    .boxer-default-panel {
+      padding-top: clamp(1.5rem, 5vh, 3rem);
     }
   }
 
@@ -472,9 +479,15 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
      y la imagen del hero, que vive dentro del stage, ya cubre ese
      espacio liberado visualmente. */
   .boxer-cta-bar {
-    padding-top: var(--hero-space-lg);
-    padding-bottom: var(--hero-space-snug);
+    padding-top: var(--hero-space-md);
+    padding-bottom: var(--hero-space-md);
     transition: opacity 350ms ease;
+  }
+
+  @media (min-width: 1024px) and (min-height: 950px) {
+    .boxer-cta-bar {
+      padding-top: var(--hero-space-lg);
+    }
   }
 
   [data-boxer-selector][data-state='boxer'] .boxer-cta-bar {
@@ -703,7 +716,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   .boxer-grid-frame {
     margin-inline: auto;
     max-width: 100%;
-    padding-top: var(--hero-space-snug);
+    padding-top: var(--hero-space-md);
   }
 
   @media (min-width: 768px) {
