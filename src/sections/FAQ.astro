@@ -75,7 +75,7 @@ const { faqs } = Astro.props
                 <summary class="faq-summary flex min-h-20 cursor-pointer list-none items-center justify-between gap-5 px-1 py-5 outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:min-h-24 sm:px-4 sm:py-6 [&::-webkit-details-marker]:hidden">
                   <h3
                     itemprop="name"
-                    class="max-w-[55ch] font-cinzel text-xl leading-tight font-bold tracking-[0.02em] text-balance text-theme-cream transition-[color] duration-200 ease-out group-open:text-theme-gold sm:text-2xl"
+                    class="max-w-[64ch] font-cinzel text-xl leading-tight font-bold tracking-[0.02em] text-balance text-theme-cream transition-[color] duration-200 ease-out group-open:text-theme-gold sm:text-2xl"
                   >
                     {question}
                   </h3>
@@ -99,7 +99,7 @@ const { faqs } = Astro.props
                     <div
                       itemprop="text"
                       class:list={[
-                        'faq-answer-body max-w-[55ch] px-1 pt-1 pr-14 pb-10 text-base leading-7 text-pretty text-white/75 sm:px-4 sm:pr-20 sm:pb-12 sm:text-lg sm:leading-8',
+                        'faq-answer-body max-w-[64ch] px-1 pt-1 pr-14 pb-10 text-base leading-7 text-pretty text-white/75 sm:px-4 sm:pr-20 sm:pb-12 sm:text-lg sm:leading-8',
                         channels && 'faq-answer-body--stream',
                         battles && 'faq-answer-body--battles',
                         mainEventBattle && 'faq-answer-body--main-event',
@@ -199,6 +199,7 @@ const { faqs } = Astro.props
   .faq-section {
     --faq-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --faq-title-width: 22rem;
+    --faq-content-width: 38rem;
     --faq-gutter: 3rem;
     --faq-title-row: 11rem;
   }
@@ -222,6 +223,10 @@ const { faqs } = Astro.props
   }
 
   @media (min-width: 1024px) {
+    .faq-section {
+      --faq-content-width: 40rem;
+    }
+
     .faq-layout {
       grid-template-columns: var(--faq-title-width) minmax(0, 1fr);
       grid-template-rows: var(--faq-title-row) auto;
@@ -235,7 +240,8 @@ const { faqs } = Astro.props
       grid-column: 1 / -1;
       grid-row: 1;
       display: grid;
-      grid-template-columns: subgrid;
+      grid-template-columns: var(--faq-title-width) minmax(0, 1fr);
+      column-gap: var(--faq-gutter);
       align-items: start;
       align-content: start;
       min-height: var(--faq-title-row);
@@ -262,9 +268,10 @@ const { faqs } = Astro.props
       grid-column: 2;
       grid-row: 2;
       align-self: start;
-      width: 100%;
+      width: min(100%, var(--faq-content-width));
+      max-width: var(--faq-content-width);
       min-width: 0;
-      justify-self: stretch;
+      justify-self: end;
       margin-top: 0;
       overflow-x: clip;
     }
@@ -289,6 +296,7 @@ const { faqs } = Astro.props
     .faq-section {
       --faq-gutter: 3.5rem;
       --faq-title-width: 23rem;
+      --faq-content-width: 42rem;
     }
   }
 
@@ -576,7 +584,7 @@ const { faqs } = Astro.props
   }
 
   .faq-answer-body--battles .faq-answer-lead {
-    max-width: 55ch;
+    max-width: 64ch;
     text-align: left;
     margin-inline: 0;
   }

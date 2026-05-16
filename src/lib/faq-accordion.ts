@@ -6,7 +6,7 @@ import {
   setLastFaqReserveCollapsed,
   syncLastFaqReserveState,
 } from '@/lib/faq-last-reserve'
-import { lockFaqSectionHeight, releaseFaqSectionHeight } from '@/lib/faq-section-lock'
+import { lockFaqMainHeight, releaseFaqMainHeight } from '@/lib/faq-section-lock'
 import { afterTransition, prefersReducedMotion } from '@/lib/transition'
 import { setVenueMapOpen } from '@/lib/venue-map-sync'
 
@@ -67,8 +67,8 @@ async function closeItem(parts: FaqParts): Promise<void> {
   if (!details.open && !details.classList.contains('faq-item--closing')) return
 
   await runExclusive(details, async () => {
-    const lockSection = isLastFaqDetails(details)
-    if (lockSection) lockFaqSectionHeight()
+    const lockMain = isLastFaqDetails(details)
+    if (lockMain) lockFaqMainHeight()
 
     try {
       details.classList.add('faq-item--closing')
@@ -76,7 +76,7 @@ async function closeItem(parts: FaqParts): Promise<void> {
       summary.setAttribute('aria-expanded', 'false')
       syncVenueMap(details, false)
 
-      if (lockSection) setLastFaqReserveCollapsed(true)
+      if (lockMain) setLastFaqReserveCollapsed(true)
 
       setExpanded(details, false)
       await afterTransition(shell, PANEL_MS, 'grid-template-rows')
@@ -85,7 +85,7 @@ async function closeItem(parts: FaqParts): Promise<void> {
       details.removeAttribute('open')
       syncLastFaqReserveState()
     } finally {
-      if (lockSection) await releaseFaqSectionHeight()
+      if (lockMain) releaseFaqMainHeight()
     }
   })
 }
@@ -112,14 +112,14 @@ async function openItem(parts: FaqParts) {
   if (details.open) return
 
   await runExclusive(details, async () => {
-    const lockSection = isLastFaqDetails(details)
-    if (lockSection) lockFaqSectionHeight()
+    const lockMain = isLastFaqDetails(details)
+    if (lockMain) lockFaqMainHeight()
 
     try {
       stripInitialOpen(details)
       details.classList.remove('faq-item--closing')
 
-      if (lockSection) setLastFaqReserveCollapsed(false)
+      if (lockMain) setLastFaqReserveCollapsed(false)
 
       details.setAttribute('open', '')
       summary.setAttribute('aria-expanded', 'true')
@@ -128,7 +128,7 @@ async function openItem(parts: FaqParts) {
       await afterTransition(shell, PANEL_MS, 'grid-template-rows')
       syncLastFaqReserveState()
     } finally {
-      if (lockSection) await releaseFaqSectionHeight()
+      if (lockMain) releaseFaqMainHeight()
     }
   })
 }
