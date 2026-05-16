@@ -3,6 +3,8 @@
 
 ## Type
 
+<!-- Select exactly one. Delete the rest. -->
+
 - [ ] feat
 - [ ] fix
 - [ ] refactor
