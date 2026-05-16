@@ -1,15 +1,17 @@
 ---
+import LogoHomeLink from '@/components/LogoHomeLink.tsx'
+
 const NAV_ITEMS = [
+  {
+    label: 'BOXEADORES',
+    href: '/boxeadores',
+    disabled: false,
+  },
   {
     label: 'COMBATES',
     href: '/#cartelera',
     disabled: true,
     note: 'PRÓXIMAMENTE',
-  },
-  {
-    label: 'BOXEADORES',
-    href: '/boxeadores',
-    disabled: false,
   },
   {
     label: 'PRONÓSTICOS',
@@ -21,72 +23,73 @@ const NAV_ITEMS = [
 
 const currentPath = Astro.url.pathname
 const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/boxeadores'
+
+const navColClass =
+  'flex flex-col items-center justify-center gap-1 px-3 sm:px-4'
+const navLabelClass =
+  'relative inline-flex items-center font-cinzel text-[0.65rem] font-bold leading-none tracking-[0.25em] sm:text-xs'
+const navNoteClass =
+  'inline-flex items-center whitespace-nowrap rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-2 py-0.5 font-cinzel text-[0.5rem] font-semibold leading-none tracking-[0.22em] text-theme-gold sm:text-[0.55rem]'
+
+const navItemId = (label: string) =>
+  label
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+
 ---
 
 <header
   data-header
   data-menu-open="false"
-  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent backdrop-blur-[0px] transition-[background-color,backdrop-filter,border-color] duration-500 ease-out data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md"
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent backdrop-blur-[0px] transition-[background-color,backdrop-filter,border-color] duration-500 ease-out data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:backdrop-saturate-150 data-[scrolled=true]:backdrop-contrast-125"
 >
   <div
     class="relative z-50 mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4"
   >
-    <a
-      href="/"
-      class="group flex items-center gap-3 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
-      aria-label="La Velada del Año VI - Inicio"
-    >
-      <img
-        src="/logo.svg"
-        alt=""
-        class="h-9 w-auto transition duration-500 group-hover:rotate-[-2deg] sm:h-10"
-        width="40"
-        height="40"
-        decoding="async"
-      />
+    <LogoHomeLink client:visible>
       <span
-        class="hidden font-cinzel text-[0.6rem] font-bold tracking-[0.32em] text-theme-cream/85 sm:inline-block sm:text-xs"
+        class="hidden font-cinzel text-[0.6rem] font-bold leading-none tracking-[0.32em] text-theme-cream/85 sm:inline sm:text-xs"
       >
         LA VELADA <span class="text-theme-gold">VI</span>
       </span>
-    </a>
+    </LogoHomeLink>
 
-    <nav class="hidden md:block" aria-label="Navegación principal">
-      <ul class="flex items-center gap-1 sm:gap-2">
+    <nav class="hidden md:block" aria-label="Navegación principal" data-testid="header-nav">
+      <ul class="flex items-stretch gap-1 sm:gap-2">
         {
-          NAV_ITEMS.map((item) =>
-            item.disabled ? (
-              <li>
-                <span
-                  role="link"
-                  aria-disabled="true"
-                  class="relative inline-flex select-none items-center px-3 py-2 font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-white/40 sm:px-4 sm:text-xs"
-                  title="Próximamente"
-                >
-                  {item.label}
-                  {item.note && (
-                    <span class="pointer-events-none absolute left-1/2 top-full hidden -translate-x-1/2 -translate-y-2 whitespace-nowrap rounded-full border border-theme-gold/40 bg-theme-gold/5 px-2 py-0.5 font-cinzel text-[0.5rem] font-semibold tracking-[0.22em] text-theme-gold/85 sm:inline-block sm:text-[0.55rem]">
-                      {item.note}
-                    </span>
-                  )}
-                </span>
-              </li>
-            ) : (
-              <li>
+          NAV_ITEMS.map((item) => (
+            <li class={navColClass} data-nav-item={navItemId(item.label)}>
+              {item.disabled ? (
+                <>
+                  <span
+                    role="link"
+                    aria-disabled="true"
+                    class:list={[navLabelClass, 'select-none text-white/40']}
+                    title="Próximamente"
+                  >
+                    {item.label}
+                  </span>
+                  {item.note && <span class={navNoteClass}>{item.note}</span>}
+                </>
+              ) : (
                 <a
                   href={item.href}
                   data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
-                  class="group relative inline-flex items-center px-3 py-2 font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-white/85 transition duration-300 outline-none hover:text-theme-cream focus-visible:text-theme-cream sm:px-4 sm:text-xs"
+                  class:list={[
+                    navLabelClass,
+                    'group/nav text-white/85 outline-none transition-colors duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:text-theme-cream [@media(hover:hover)_and_(pointer:fine)]:hover:delay-125 focus-visible:text-theme-cream',
+                  ]}
                 >
                   <span
                     aria-hidden="true"
-                    class="pointer-events-none absolute inset-x-3 -bottom-px h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100 sm:inset-x-4"
+                    class="pointer-events-none absolute inset-x-0 -bottom-1.5 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-150 ease-out delay-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:scale-x-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:delay-125"
                   />
                   {item.label}
                 </a>
-              </li>
-            )
-          )
+              )}
+            </li>
+          ))
         }
       </ul>
     </nav>
@@ -94,7 +97,7 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
     <button
       type="button"
       data-mobile-menu-button
-      class="group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] outline-none backdrop-blur-md transition duration-300 hover:border-theme-gold/50 hover:bg-theme-gold/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden"
+      class="group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] outline-none backdrop-blur-md backdrop-saturate-150 backdrop-contrast-125 transition duration-300 hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden"
       aria-controls="mobile-menu"
       aria-expanded="false"
       aria-label="Abrir menú"
@@ -120,11 +123,11 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
     data-mobile-menu
     aria-hidden="true"
     inert
-    class="fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl transition duration-300 ease-out pointer-events-none data-[open=true]:translate-y-0 data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto md:hidden"
+    class="fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl backdrop-saturate-150 backdrop-contrast-125 transition duration-300 ease-out pointer-events-none data-[open=true]:translate-y-0 data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto md:hidden"
   >
     <div
       aria-hidden="true"
-      class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_50%_0%,rgba(201,164,107,0.22),transparent_62%)]"
+      class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_50%_0%,color-mix(in_srgb,var(--color-theme-gold)_18%,transparent),transparent_62%)]"
     ></div>
     <nav aria-label="Menú principal móvil" class="relative w-full max-w-sm">
       <ul class="flex flex-col items-center gap-6">
@@ -140,7 +143,7 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
                 >
                   {item.label}
                   {item.note && (
-                    <span class="rounded-full border border-theme-gold/35 bg-theme-gold/10 px-3 py-1 text-[0.55rem] font-semibold tracking-[0.24em] text-theme-gold/80">
+                    <span class="rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-3 py-1 text-[0.55rem] font-semibold tracking-[0.24em] text-theme-gold">
                       {item.note}
                     </span>
                   )}
@@ -152,13 +155,15 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
                   href={item.href}
                   data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
                   data-mobile-menu-link
-                  class="group relative flex items-center justify-center rounded-2xl border border-theme-gold/35 bg-theme-gold/10 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+                  class="group/nav relative flex items-center justify-center rounded-2xl border border-theme-gold/55 bg-theme-midnight/80 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 [@media(hover:hover)_and_(pointer:fine)]:hover:border-theme-gold [@media(hover:hover)_and_(pointer:fine)]:hover:bg-theme-midnight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
                 >
-                  <span
-                    aria-hidden="true"
-                    class="pointer-events-none absolute inset-x-6 bottom-3 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
-                  />
-                  {item.label}
+                  <span class="relative inline-flex items-center">
+                    <span
+                      aria-hidden="true"
+                      class="pointer-events-none absolute inset-x-0 -bottom-1.5 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-150 ease-out delay-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:scale-x-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:delay-125"
+                    />
+                    {item.label}
+                  </span>
                 </a>
               </li>
             )
@@ -256,3 +261,4 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
     setupMobileMenu()
   })
 </script>
+
