@@ -300,15 +300,6 @@ const totalBoxers = BOXERS.length
         >
           <button
             type="button"
-            data-sort="combates"
-            aria-pressed="false"
-            aria-label="Ver combates emparejados"
-            class="boxer-filter-pill boxer-sort-pill"
-          >
-            <span class="boxer-filter-pill-label">Combates</span>
-          </button>
-          <button
-            type="button"
             data-sort="cartel"
             aria-pressed="true"
             class="boxer-filter-pill boxer-sort-pill"
@@ -1341,150 +1332,70 @@ const totalBoxers = BOXERS.length
     display: none;
   }
 
-  /* ---------- Modo «Combates» ---------- */
-  /* Cuando el modo combates está activo, el grid pasa a mostrar 1 o 2 grupos
-     (combates enteros) por fila. */
-  .boxers-grid[data-view='combates'] {
+  /* ---------- Modo «Agrupado» (Cartelera sin filtros) ---------- */
+  /* Cuando estamos en Cartelera y no hay filtros, agrupamos las parejas en
+     rectángulos dorados. */
+  .boxers-grid[data-view='grouped'] {
     grid-template-columns: minmax(0, 1fr) !important;
-    row-gap: 3rem;
+    gap: 2rem;
   }
 
   @media (min-width: 1024px) {
-    .boxers-grid[data-view='combates'] {
+    .boxers-grid[data-view='grouped'] {
       grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-      column-gap: 2.5rem;
-      row-gap: 3.5rem;
-      max-width: 64rem;
-      margin-inline: auto;
+      gap: 2rem;
     }
   }
 
-  @media (min-width: 1280px) {
-    .boxers-grid[data-view='combates'] {
-      column-gap: 4rem;
-      row-gap: 4.5rem;
-      max-width: 72rem;
-    }
-  }
-
-  /* Un combate agrupa su separador y sus dos cards. */
+  /* El rectángulo dorado agrupa a los dos boxeadores del combate. */
   :global(.combate-group) {
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  /* Las cards dentro del combate. */
-  :global(.combate-cards) {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-  }
-
-  @media (min-width: 640px) {
-    :global(.combate-cards) {
-      gap: 1rem;
-    }
-  }
-
-  /* Las cards se encogen un poco en combates para que la pareja no sea
-     gigante en pantallas medianas. */
-  .boxers-grid[data-view='combates'] .boxer-card-wrap {
-    width: 100%;
-    max-width: 16rem;
-    justify-self: center;
-  }
-
-  /* ---------- Separador de combate ---------- */
-  /* Divide cada pareja con una franja decorativa que incluye el número
-     de combate, raya dorada a ambos lados y un rombo central.
-
-     Se usa `:global()` porque estos elementos se crean dinámicamente
-     desde JS y NO reciben el atributo de scope de Astro. */
-  :global(.combate-separator) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.9rem;
-  }
-
-  :global(.combate-separator-line) {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      color-mix(in srgb, var(--color-theme-gold) 50%, transparent) 50%,
-      transparent 100%
+    flex-direction: row;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
+    border-radius: 12px;
+    background: radial-gradient(
+      ellipse at top,
+      color-mix(in srgb, var(--color-theme-gold) 15%, transparent) 0%,
+      transparent 70%
     );
-  }
-
-  :global(.combate-separator-label) {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-theme-gold) 10%, transparent);
     position: relative;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.4em;
-    color: color-mix(in srgb, var(--color-theme-gold) 90%, var(--color-theme-cream));
-    text-shadow:
-      0 1px 0 rgba(0, 0, 0, 0.7),
-      0 0 18px color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
   }
 
-  /* Rombos decorativos flanqueando la etiqueta del combate. */
-  :global(.combate-separator-label)::before,
-  :global(.combate-separator-label)::after {
-    content: '';
+  /* Etiqueta central de "VS" entre los boxeadores */
+  :global(.combate-group::after) {
+    content: 'VS';
     position: absolute;
     top: 50%;
-    width: 5px;
-    height: 5px;
-    background: color-mix(in srgb, var(--color-theme-gold) 80%, transparent);
-    transform: translateY(-50%) rotate(45deg);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-cinzel);
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--color-theme-gold);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    background: var(--color-theme-midnight);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+    z-index: 10;
   }
 
-  :global(.combate-separator-label)::before {
-    left: -1rem;
-  }
-
-  :global(.combate-separator-label)::after {
-    right: -1rem;
+  :global(.combate-group > .boxer-card-wrap) {
+    flex: 1;
+    min-width: 0;
   }
 
   @media (max-width: 639px) {
-    :global(.combate-separator) {
-      gap: 0.6rem;
+    :global(.combate-group) {
+      padding: 1rem;
+      gap: 0.75rem;
     }
-    :global(.combate-separator-label) {
-      font-size: 0.52rem;
-      letter-spacing: 0.28em;
+    :global(.combate-group::after) {
+      font-size: 1rem;
     }
-    :global(.combate-separator-label)::before {
-      left: -0.75rem;
-      width: 4px;
-      height: 4px;
-    }
-    :global(.combate-separator-label)::after {
-      right: -0.75rem;
-      width: 4px;
-      height: 4px;
-    }
-  }
-
-  @media (min-width: 640px) {
-    :global(.combate-separator-label) {
-      font-size: 0.72rem;
-    }
-  }
-
-  /* Panel de filtros deshabilitado y oculto en modo combates. */
-  .boxer-filters-panel[data-disabled='true'] {
-    display: none;
-  }
-
-  .boxer-filters-panel {
-    transition:
-      opacity 350ms ease,
-      filter 350ms ease;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1501,10 +1412,9 @@ const totalBoxers = BOXERS.length
 <script>
   import { $, $$ } from '@/lib/dom-selector'
 
-  type SortMode = 'cartel' | 'combates' | 'followers-desc' | 'followers-asc'
+  type SortMode = 'cartel' | 'followers-desc' | 'followers-asc'
 
   function setupBoxersFilters() {
-    const layout = $<HTMLElement>('.boxers-layout')
     const form = $<HTMLFormElement>('[data-boxers-filters]')
     const grid = $<HTMLElement>('[data-boxers-grid]')
     const empty = $<HTMLElement>('[data-boxers-empty]')
@@ -1521,38 +1431,30 @@ const totalBoxers = BOXERS.length
       : []
     let sortMode: SortMode = 'cartel'
 
-    // Separadores decorativos inyectados en el grid para el modo combates.
-    let combateSeparators: HTMLElement[] = []
-
-    function removeCombateSeparators() {
-      for (const sep of combateSeparators) sep.remove()
-      combateSeparators = []
+    // Estado de filtros: '' = "todos". Sólo un valor activo por grupo.
+    const state: { country: string; gender: string } = {
+      country: '',
+      gender: '',
     }
 
-    function createSeparator(battleNumber: number): HTMLElement {
-      const li = document.createElement('li')
-      li.className = 'combate-separator'
-      li.setAttribute('aria-hidden', 'true')
-      li.innerHTML = `
-        <span class="combate-separator-line"></span>
-        <span class="combate-separator-label font-cinzel">COMBATE ${String(battleNumber).padStart(2, '0')}</span>
-        <span class="combate-separator-line"></span>
-      `
-      return li
+    // Grupos decorativos inyectados en el grid para envolver los combates.
+    let combateGroups: HTMLElement[] = []
+
+    function removeCombateGroups() {
+      for (const group of combateGroups) group.remove()
+      combateGroups = []
     }
 
     // Reordena el DOM (no sólo CSS `order`) para que el orden de
     // tabulación coincida con el visual. Con 20 cards el coste es
     // despreciable y mantenemos la accesibilidad correcta.
     function applySort() {
-      removeCombateSeparators()
+      removeCombateGroups()
 
-      const isCombates = sortMode === 'combates'
-      gridEl.dataset.view = isCombates ? 'combates' : ''
-      if (layout) layout.dataset.view = isCombates ? 'combates' : ''
+      const hasActiveFilter = state.country !== '' || state.gender !== ''
+      const isGrouped = sortMode === 'cartel' && !hasActiveFilter
 
-      // Deshabilitar/habilitar filtros.
-      if (form) form.dataset.disabled = String(isCombates)
+      gridEl.dataset.view = isGrouped ? 'grouped' : ''
 
       const ordered = [...cards]
       if (sortMode === 'followers-desc') {
@@ -1576,8 +1478,8 @@ const totalBoxers = BOXERS.length
         )
       }
 
-      if (isCombates) {
-        // In combates mode: show all cards and wrap them into battle groups.
+      if (isGrouped) {
+        // En modo agrupado: mostrar todas las cards y agruparlas por combate en rectángulos dorados.
         for (const card of cards) card.dataset.hidden = 'false'
 
         let currentBattle = ''
@@ -1591,29 +1493,16 @@ const totalBoxers = BOXERS.length
             const groupLi = document.createElement('li')
             groupLi.className = 'combate-group'
             
-            const sep = createSeparator(Number(battle))
-            groupLi.appendChild(sep)
-            
-            const cardsContainer = document.createElement('div')
-            cardsContainer.className = 'combate-cards'
-            groupLi.appendChild(cardsContainer)
-            
             gridEl.appendChild(groupLi)
-            combateSeparators.push(groupLi)
+            combateGroups.push(groupLi)
             
-            currentGroup = cardsContainer
+            currentGroup = groupLi
           }
           if (currentGroup) currentGroup.appendChild(card)
         }
       } else {
         for (const card of ordered) gridEl.appendChild(card)
       }
-    }
-
-    // Estado de filtros: '' = "todos". Sólo un valor activo por grupo.
-    const state: { country: string; gender: string } = {
-      country: '',
-      gender: '',
     }
 
     // Cuenta cards que coinciden con un par (country, gender). Pasar '' en
@@ -1638,8 +1527,14 @@ const totalBoxers = BOXERS.length
     }
 
     function applyFilters() {
-      // In combates mode filters are blocked — show everything.
-      if (sortMode === 'combates') return
+      const hasActiveFilter = state.country !== '' || state.gender !== ''
+
+      // Actualizar agrupamiento si estamos en Cartelera y cambia el estado de los filtros.
+      const currentlyGrouped = gridEl.dataset.view === 'grouped'
+      const shouldBeGrouped = sortMode === 'cartel' && !hasActiveFilter
+      if (currentlyGrouped !== shouldBeGrouped) {
+        applySort()
+      }
 
       let visible = 0
       for (const card of cards) {
@@ -1657,7 +1552,6 @@ const totalBoxers = BOXERS.length
 
       // Mostramos el footer (con su separador) y los botones de reset
       // sólo cuando hay algún filtro activo.
-      const hasActiveFilter = state.country !== '' || state.gender !== ''
       if (footerBlock) footerBlock.hidden = !hasActiveFilter
       for (const btn of resetButtons) btn.hidden = !hasActiveFilter
 
@@ -1698,7 +1592,6 @@ const totalBoxers = BOXERS.length
 
     for (const btn of filterButtons) {
       btn.addEventListener('click', () => {
-        if (sortMode === 'combates') return
         const group = btn.dataset.filter as 'country' | 'gender' | undefined
         if (!group) return
         const value = btn.dataset.value ?? ''
@@ -1712,7 +1605,6 @@ const totalBoxers = BOXERS.length
 
     for (const btn of resetButtons) {
       btn.addEventListener('click', () => {
-        if (sortMode === 'combates') return
         state.country = ''
         state.gender = ''
         applyFilters()
@@ -1729,8 +1621,9 @@ const totalBoxers = BOXERS.length
         }
         applySort()
 
-        // When leaving combates mode, re-apply filters.
-        if (next !== 'combates') applyFilters()
+        // Siempre re-aplicamos filtros al cambiar de orden,
+        // esto también asegurará que los grupos dorados se formen o deshagan.
+        applyFilters()
       })
     }
 
