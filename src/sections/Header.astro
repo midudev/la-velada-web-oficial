@@ -41,8 +41,7 @@ const navItemId = (label: string) =>
 
 <header
   data-header
-  data-menu-open="false"
-  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent backdrop-blur-[0px] transition-[background-color,backdrop-filter,border-color] duration-500 ease-out data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:backdrop-saturate-150 data-[scrolled=true]:backdrop-contrast-125"
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent backdrop-blur-[0px] transition-[background-color,backdrop-filter,border-color] duration-500 ease-out data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:backdrop-frost"
 >
   <div
     class="relative z-50 mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4"
@@ -97,7 +96,7 @@ const navItemId = (label: string) =>
     <button
       type="button"
       data-mobile-menu-button
-      class="group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] outline-none backdrop-blur-md backdrop-saturate-150 backdrop-contrast-125 transition duration-300 hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden"
+      class="group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] outline-none backdrop-blur-md backdrop-frost transition duration-300 hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden"
       aria-controls="mobile-menu"
       aria-expanded="false"
       aria-label="Abrir menú"
@@ -123,7 +122,7 @@ const navItemId = (label: string) =>
     data-mobile-menu
     aria-hidden="true"
     inert
-    class="fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl backdrop-saturate-150 backdrop-contrast-125 transition duration-300 ease-out pointer-events-none data-[open=true]:translate-y-0 data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto md:hidden"
+    class="fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl backdrop-frost transition duration-300 ease-out pointer-events-none data-[open=true]:translate-y-0 data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto md:hidden"
   >
     <div
       aria-hidden="true"
@@ -171,88 +170,51 @@ const navItemId = (label: string) =>
 <script>
   import { $, $$ } from '@/lib/dom-selector'
 
-  const SCROLL_THRESHOLD = 24
+  let headerAbort: AbortController | null = null
 
-  let scrollAbortController: AbortController | null = null
-  let menuAbortController: AbortController | null = null
-
-  function setupHeaderScroll() {
-    const header = $<HTMLElement>('[data-header]')
-    if (!header) return
-
-    scrollAbortController?.abort()
-    scrollAbortController = new AbortController()
-
-    const update = () => {
-      const scrolled = window.scrollY > SCROLL_THRESHOLD
-      if (scrolled) {
-        header.setAttribute('data-scrolled', 'true')
-      } else {
-        header.removeAttribute('data-scrolled')
-      }
-    }
-
+  function setupHeaderScroll(header: HTMLElement, signal: AbortSignal) {
+    const update = () => header.toggleAttribute('data-scrolled', window.scrollY > 24)
     update()
-
-    window.addEventListener('scroll', update, {
-      passive: true,
-      signal: scrollAbortController.signal,
-    })
+    window.addEventListener('scroll', update, { passive: true, signal })
   }
 
-  function setupMobileMenu() {
-    const header = $<HTMLElement>('[data-header]')
+  function setupMobileMenu(signal: AbortSignal) {
     const menu = $<HTMLElement>('[data-mobile-menu]')
     const button = $<HTMLButtonElement>('[data-mobile-menu-button]')
     const links = $$<HTMLAnchorElement>('[data-mobile-menu-link]')
+    if (!menu || !button) return
 
-    if (!header || !menu || !button) return
-
-    menuAbortController?.abort()
-    menuAbortController = new AbortController()
-    const { signal } = menuAbortController
-
-    const setMenuOpen = (isOpen: boolean) => {
-      header.dataset.menuOpen = String(isOpen)
-      menu.dataset.open = String(isOpen)
-      button.dataset.open = String(isOpen)
-      menu.setAttribute('aria-hidden', String(!isOpen))
-      menu.inert = !isOpen
-      button.setAttribute('aria-expanded', String(isOpen))
-      button.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú')
+    const setMenuOpen = (open: boolean) => {
+      menu.dataset.open = String(open)
+      button.dataset.open = String(open)
+      menu.toggleAttribute('aria-hidden', !open)
+      menu.inert = !open
+      button.setAttribute('aria-expanded', String(open))
+      button.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú')
       const label = $<HTMLElement>('.sr-only', button)
-      if (label) label.textContent = isOpen ? 'Cerrar menú' : 'Abrir menú'
-      document.documentElement.classList.toggle('overflow-hidden', isOpen)
+      if (label) label.textContent = open ? 'Cerrar menú' : 'Abrir menú'
+      document.documentElement.classList.toggle('overflow-hidden', open)
     }
 
     setMenuOpen(false)
 
-    button.addEventListener(
-      'click',
-      () => {
-        setMenuOpen(button.getAttribute('aria-expanded') !== 'true')
-      },
-      { signal }
-    )
-
-    links.forEach((link) => {
-      link.addEventListener('click', () => setMenuOpen(false), {
-        signal,
-      })
+    button.addEventListener('click', () => setMenuOpen(button.ariaExpanded !== 'true'), {
+      signal,
     })
-
-    window.addEventListener(
-      'keydown',
-      (event) => {
-        if (event.key === 'Escape') setMenuOpen(false)
-      },
-      { signal }
-    )
+    links.forEach((link) => link.addEventListener('click', () => setMenuOpen(false), { signal }))
+    window.addEventListener('keydown', (e) => e.key === 'Escape' && setMenuOpen(false), {
+      signal,
+    })
   }
 
   document.addEventListener('astro:page-load', () => {
-    setupHeaderScroll()
-    setupMobileMenu()
+    headerAbort?.abort()
+    headerAbort = new AbortController()
+    const { signal } = headerAbort
+
+    const header = $<HTMLElement>('[data-header]')
+    if (header) setupHeaderScroll(header, signal)
+    setupMobileMenu(signal)
   })
 </script>
 

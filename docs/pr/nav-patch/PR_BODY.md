@@ -10,26 +10,29 @@ Desktop header polish: nav columns align as one block (label + PRÓXIMAMENTE), B
 | Labels misaligned vs logo / pill rows | Column centers line up; BOXEADORES vertically centered in the same height as COMBATES + pill |
 | — | Playwright asserts column height + center Y (±4px) |
 
-**Before:** `docs/pr/nav-patch/before/screenshots/01-header-default.png`  
-**After:** `docs/pr/nav-patch/after/screenshots/01-header-default.png`
+**Before:** `before/screenshots/01-header-default.png` · **After:** `after/screenshots/01-header-default.png`
 
-## Logo hover (after only)
+## Logo hover
 
-Replaces rotating `<img>` with `LogoHomeLink` (Motion): mask reveals OKLCH gradient along the X path; trace stroke on hover; holds while hovered; reverses on leave. `prefers-reduced-motion` → static cream fill.
+| | Before | After |
+| --- | --- | --- |
+| Mark | `03-logo-hover.png` (img) | `03-svg-logo-hover.png` + `03-logo-hover-framed.png` (9× zoom) |
+| Video | `logo-hover.webm` | SVG path draw visible |
 
-**Hover:** `03-logo-hover.png` · **Video:** `after/videos/header-demo.webm`
+After: Motion mask + gradient trace on the X. Before: rotating `<img>`.
 
-## Nav underline (desktop, fine pointer only)
+## Nav hover
 
-- 6px gap (`-bottom-1.5`) under label  
-- 150ms transform, **125ms delay** on hover in (no delay on hover out)  
-- Not used on mobile menu (tap cards + `active:` only)
+| | Before | After |
+| --- | --- | --- |
+| Nav cell | `04-nav-hover.png` | `04-nav-underline-hover.png` (6× zoom) |
+| Video | `nav-underline-hover.webm` | Underline expand visible |
 
-**Hover:** `04-boxeadores-hover.png`
+After only: 6px underline gap, 150ms + 125ms delay; mobile menu has no underline.
 
 ## Blur / glass
 
-No shared utilities — existing `backdrop-blur-*` plus `backdrop-saturate-150 backdrop-contrast-125` on the same elements (header scrolled, menu, play chips, etc.).
+`backdrop-blur-*` per surface + shared `backdrop-frost` utility (`saturate 1.5`, `contrast 1.25`) in `global.css`.
 
 ## Test plan
 
@@ -42,7 +45,7 @@ No shared utilities — existing `backdrop-blur-*` plus `backdrop-saturate-150 b
 
 | | Screenshots | Video |
 | --- | --- | --- |
-| Before (`30adca4e`) | `docs/pr/nav-patch/before/screenshots/` | `before/videos/header-demo.webm` |
-| After (this branch) | `docs/pr/nav-patch/after/screenshots/` | `after/videos/header-demo.webm` |
+| Before (`30adca4e`) | `before/screenshots/` | `before/videos/header-demo.webm` (+ `.mp4` if ffmpeg) |
+| After (this branch) | `after/screenshots/` | `after/videos/logo-hover.webm`, `nav-underline-hover.webm` (+ `.mp4`) |
 
-Captured with `pnpm capture:pr` (Playwright; plain scroll/hover, no effects). Install `ffmpeg` locally to convert webm → mp4 if needed.
+Captured with `pnpm capture:pr` (2560×1440, 2.5s hold, zoomed interaction tests). With `ffmpeg`: VP9 ~48 Mbit/s + H.264 ~40 Mbit/s for `logo-hover`, `nav-underline-hover`, and `overview` in each `videos/` folder.
