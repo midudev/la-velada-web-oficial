@@ -115,7 +115,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   <div class="boxer-stage relative w-full flex-1">
     <div
       data-default-panel
-      class="boxer-default-panel relative flex w-full flex-col items-center justify-center text-center"
+      class="boxer-default-panel relative flex w-full flex-col items-center justify-start text-center"
     >
       <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true"></div>
 
@@ -131,7 +131,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           <img
             src="/logo.webp"
             alt="La Velada del Año VI"
-            class="boxer-default-logo relative mx-auto h-auto w-[58vw] max-w-[min(17.5rem,58vw)]"
+            class="boxer-default-logo relative mx-auto h-auto w-(--size-hero-logo)"
             width="512"
             height="512"
             decoding="async"
@@ -141,7 +141,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       </div>
 
       <ul
-          class="boxer-default-info animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center gap-1 sm:gap-1.5"
+          class="boxer-default-info animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center gap-1"
       >
         <li class="flex items-baseline">
           <time
@@ -243,9 +243,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     </div>
   </div>
 
-  <div class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-fluid md:gap-fluid-lg">
+  <div class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-4 md:gap-6">
     <div
-      class="boxer-cta-bar relative z-20 flex w-full flex-col items-center gap-snug px-4 pt-fluid transition-opacity duration-ui ease-ui md:gap-fluid md:pt-fluid-lg"
+      class="boxer-cta-bar relative z-20 flex w-full flex-col items-center gap-3 px-4 pt-2 transition-opacity duration-300 ease-out md:gap-4 md:pt-4"
       aria-hidden="false"
     >
       <div
@@ -411,7 +411,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   .boxer-stage > [data-boxer-panel] {
     position: absolute;
     inset: 0;
-    transition: opacity var(--duration-ui) var(--ease-ui);
+    transition: opacity 350ms ease;
   }
 
   [data-boxer-selector][data-state='default'] [data-default-panel] {
@@ -462,18 +462,23 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     }
   }
 
-  @media (min-width: 1024px) and (max-height: 780px) {
-    .boxer-selector-foot {
-      gap: var(--spacing-fluid);
-    }
-  }
-
   /* Barra «¡SELECCIONA TU BOXEADOR O BOXEADORA!» + divider: el foot
-     (`gap-fluid`) separa CTA y grid; la barra solo se desvanece al
-     seleccionar boxer (el portrait del stage cubre ese hueco). */
+     separa CTA y grid; la barra solo se desvanece al seleccionar boxer. */
   [data-boxer-selector][data-state='boxer'] .boxer-cta-bar {
     opacity: 0;
     pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    .boxer-default-logo {
+      width: var(--size-hero-logo-md);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .boxer-default-logo {
+      width: var(--size-hero-logo-lg);
+    }
   }
 
   .boxer-default-logo {
@@ -502,11 +507,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       0 0 24px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
   }
 
-  .boxer-default-info li span,
-  .boxer-default-info li time {
-    text-wrap: balance;
-  }
-
   /* La cuadrícula del selector entra escalonada con un delay base de
      1000ms + 25ms por celda (ver `animation-delay` inline en el HTML).
      La última celda empieza a aparecer ~1475ms desde el inicio, así
@@ -517,7 +517,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   .boxer-default-cta {
-    text-wrap: balance;
     /* Mezcla de cream con dorado al fondo para que destaque sobre el
        background del hero (que puede tener mucho contraste) y un punto
        de pulso muy sutil para llamar la atención. */
