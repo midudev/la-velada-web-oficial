@@ -4,6 +4,7 @@
   "version": "0.0.2",
   "scripts": {
     "dev": "astro dev",
+    "dev:nav": "astro dev --port 4333 --host",
     "prebuild": "pnpm generate:blur-images",
     "build": "astro build",
     "preview": "astro preview",
@@ -15,9 +16,12 @@
     "generate:character-images": "node scripts/convert-character-images.mjs",
     "db:init": "node scripts/init-predictions-db.mjs",
     "db:check": "node scripts/check-predictions-db.mjs",
-    "db:test": "node scripts/test-predictions.mjs"
+    "db:test": "node scripts/test-predictions.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@astrojs/react": "^5.0.5",
     "@astrojs/sitemap": "3.7.2",
     "@astrojs/vercel": "10.0.6",
     "@auth/core": "0.40.0",
@@ -28,11 +32,17 @@
     "astro": "6.3.1",
     "auth-astro": "4.2.0",
     "canvas-confetti": "1.9.4",
+    "motion": "^12.38.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "tailwind-animations": "1.0.1",
     "tailwindcss": "4.3.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.52.0",
     "@types/canvas-confetti": "1.9.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@typescript-eslint/parser": "8.59.3",
     "eslint": "10.3.0",
     "eslint-plugin-astro": "1.7.0",
