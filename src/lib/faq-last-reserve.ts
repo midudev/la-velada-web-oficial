@@ -53,11 +53,16 @@ export function measureLastFaqReserve() {
 
   body.style.opacity = '1'
   body.style.transform = 'none'
+  shell.style.maxHeight = 'none'
 
   void body.offsetHeight
 
-  const height = Math.ceil(shell.getBoundingClientRect().height)
+  const height = Math.ceil(
+    Math.max(shell.scrollHeight, shell.getBoundingClientRect().height, body.scrollHeight),
+  )
   const reserve = `${Math.max(height, 1)}px`
+
+  shell.style.maxHeight = ''
 
   wrap.style.setProperty('--faq-last-reserve', reserve)
 

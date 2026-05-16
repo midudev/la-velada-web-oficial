@@ -6,7 +6,6 @@ import {
   setLastFaqReserveCollapsed,
   syncLastFaqReserveState,
 } from '@/lib/faq-last-reserve'
-import { lockFaqMainHeight, releaseFaqMainHeight } from '@/lib/faq-section-lock'
 import { afterTransition, prefersReducedMotion } from '@/lib/transition'
 import { setVenueMapOpen } from '@/lib/venue-map-sync'
 
@@ -67,26 +66,25 @@ async function closeItem(parts: FaqParts): Promise<void> {
   if (!details.open && !details.classList.contains('faq-item--closing')) return
 
   await runExclusive(details, async () => {
-    const lockMain = isLastFaqDetails(details)
-    if (lockMain) lockFaqMainHeight()
+    const lastItem = isLastFaqDetails(details)
 
-    try {
-      details.classList.add('faq-item--closing')
-      stripInitialOpen(details)
-      summary.setAttribute('aria-expanded', 'false')
-      syncVenueMap(details, false)
+    details.classList.add('faq-item--closing')
+    stripInitialOpen(details)
+    summary.setAttribute('aria-expanded', 'false')
+    syncVenueMap(details, false)
 
-      if (lockMain) setLastFaqReserveCollapsed(true)
+    if (lastItem) setLastFaqReserveCollapsed(true)
 
-      setExpanded(details, false)
-      await afterTransition(shell, PANEL_MS, 'grid-template-rows')
+    setExpanded(details, false)
+    await afterTransition(
+      shell,
+      PANEL_MS,
+      lastItem ? 'max-height' : 'grid-template-rows',
+    )
 
-      details.classList.remove('faq-item--closing')
-      details.removeAttribute('open')
-      syncLastFaqReserveState()
-    } finally {
-      if (lockMain) releaseFaqMainHeight()
-    }
+    details.classList.remove('faq-item--closing')
+    details.removeAttribute('open')
+    syncLastFaqReserveState()
   })
 }
 
@@ -112,24 +110,31 @@ async function openItem(parts: FaqParts) {
   if (details.open) return
 
   await runExclusive(details, async () => {
-    const lockMain = isLastFaqDetails(details)
-    if (lockMain) lockFaqMainHeight()
+    const lastItem = isLastFaqDetails(details)
+    const wrap = lastItem ? details.closest('.faq-item-wrap--last') : null
 
-    try {
-      stripInitialOpen(details)
-      details.classList.remove('faq-item--closing')
+    stripInitialOpen(details)
+    details.classList.remove('faq-item--closing')
 
-      if (lockMain) setLastFaqReserveCollapsed(false)
-
+    if (lastItem && wrap instanceof HTMLElement) {
+      wrap.classList.add('faq-item-wrap--swap-panel')
+      setLastFaqReserveCollapsed(false)
       details.setAttribute('open', '')
       summary.setAttribute('aria-expanded', 'true')
       setExpanded(details, true)
       syncVenueMap(details, true)
-      await afterTransition(shell, PANEL_MS, 'grid-template-rows')
+      void shell.offsetHeight
+      wrap.classList.remove('faq-item-wrap--swap-panel')
       syncLastFaqReserveState()
-    } finally {
-      if (lockMain) releaseFaqMainHeight()
+      return
     }
+
+    details.setAttribute('open', '')
+    summary.setAttribute('aria-expanded', 'true')
+    setExpanded(details, true)
+    syncVenueMap(details, true)
+    await afterTransition(shell, PANEL_MS, 'grid-template-rows')
+    syncLastFaqReserveState()
   })
 }
 
