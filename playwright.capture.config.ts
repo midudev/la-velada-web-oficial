@@ -14,7 +14,7 @@ export default defineConfig({
     trace: 'off',
     video: {
       mode: 'on',
-      size: { width: 1280, height: 720 },
+      size: { width: 2560, height: 1440 },
     },
   },
   projects: [

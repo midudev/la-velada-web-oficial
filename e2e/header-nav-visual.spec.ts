@@ -1,66 +1,144 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import fs from 'node:fs'
 import path from 'node:path'
 
 const phase = process.env.CAPTURE_PHASE === 'before' ? 'before' : 'after'
-const artifactRoot = path.join('docs', 'pr', 'nav-patch', phase)
-const screenshotDir = path.join(artifactRoot, 'screenshots')
+const isAfter = phase === 'after'
+const root = path.join('docs', 'pr', 'nav-patch', phase)
+const screenshotDir = path.join(root, 'screenshots')
+const videoDir = path.join(root, 'videos')
+const shot = (name: string) => path.join(screenshotDir, name)
 
-const DESKTOP = { width: 1280, height: 720 }
+const DESKTOP = { width: 2560, height: 1440 }
+const HOLD_MS = 2500
 
-test.describe.configure({ mode: 'serial' })
+async function goHome(page: Page) {
+  await page.setViewportSize(DESKTOP)
+  await page.goto('/')
+  await page.waitForLoadState('networkidle')
+  await page.evaluate(() => window.scrollTo(0, 0))
+}
+
+async function resetCaptureZoom(page: Page) {
+  await page.evaluate(() => {
+    document.querySelectorAll('[data-capture-zoom]').forEach((node) => {
+      const el = node as HTMLElement
+      el.removeAttribute('data-capture-zoom')
+      el.style.transform = ''
+      el.style.transformOrigin = ''
+    })
+    document.documentElement.style.overflow = ''
+  })
+}
+
+async function zoomCaptureTarget(page: Page, selector: string, scale: number, origin: string) {
+  await page.evaluate(
+    ({ sel, s, o }) => {
+      const el = document.querySelector(sel) as HTMLElement | null
+      if (!el) return
+      el.setAttribute('data-capture-zoom', 'true')
+      el.style.transform = `scale(${s})`
+      el.style.transformOrigin = o
+      document.documentElement.style.overflow = 'hidden'
+    },
+    { sel: selector, s: scale, o: origin },
+  )
+}
 
 test.describe(`header visuals (${phase})`, () => {
   test.beforeAll(() => {
     fs.mkdirSync(screenshotDir, { recursive: true })
+    fs.mkdirSync(videoDir, { recursive: true })
   })
 
-  test('capture header states', async ({ page }) => {
-    test.setTimeout(60_000)
+  test.afterEach(async ({ context }, testInfo) => {
+    const videoPath = testInfo.video?.path
+    if (videoPath) {
+      const slug = testInfo.title
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+      fs.copyFileSync(videoPath, path.join(videoDir, `${slug}-playwright.webm`))
+    }
+    await context.close()
+  })
 
-    await page.setViewportSize(DESKTOP)
-    await page.goto('/')
-    await page.waitForLoadState('networkidle')
+  test('overview', async ({ page }) => {
+    test.setTimeout(60_000)
+    await goHome(page)
 
     const header = page.locator('[data-header]')
     await expect(header).toBeVisible()
-
-    const desktopNav =
-      phase === 'after'
-        ? page.getByTestId('header-nav')
-        : page.getByRole('navigation', { name: 'Navegación principal' })
-
-    await expect(desktopNav).toBeVisible()
-
-    await header.screenshot({ path: path.join(screenshotDir, '01-header-default.png') })
+    await header.screenshot({ path: shot('01-header-default.png') })
 
     await page.evaluate(() => window.scrollTo(0, 80))
     await page.waitForTimeout(400)
-    await header.screenshot({ path: path.join(screenshotDir, '02-header-scrolled.png') })
-    await page.evaluate(() => window.scrollTo(0, 0))
-    await page.waitForTimeout(200)
+    await header.screenshot({ path: shot('02-header-scrolled.png') })
 
-    const logo = page.getByRole('link', { name: /la velada del año vi/i })
-    await logo.hover()
-    await page.waitForTimeout(phase === 'after' ? 650 : 400)
-    await header.screenshot({ path: path.join(screenshotDir, '03-logo-hover.png') })
+    if (!isAfter) return
+
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/')
+    await page.getByRole('button', { name: /abrir menú/i }).click()
+    await expect(page.locator('[data-mobile-menu][data-open="true"]')).toBeVisible()
+    await page.waitForTimeout(350)
+    await page.locator('[data-mobile-menu]').screenshot({ path: shot('05-mobile-menu.png') })
+  })
+
+  test('logo hover', async ({ page }) => {
+    test.setTimeout(60_000)
+    await goHome(page)
+
+    const logoLink = page.getByRole('link', { name: /la velada del año vi/i })
+    await expect(logoLink).toBeVisible()
+
+    await zoomCaptureTarget(
+      page,
+      'a[aria-label*="La Velada del Año"]',
+      isAfter ? 9 : 5,
+      'left center',
+    )
+    await page.waitForTimeout(150)
+    await logoLink.hover({ force: true })
+    await page.waitForTimeout(isAfter ? 750 : 400)
+
+    if (isAfter) {
+      await logoLink.locator('svg').screenshot({ path: shot('03-svg-logo-hover.png') })
+    } else {
+      await logoLink.locator('img').screenshot({ path: shot('03-logo-hover.png') })
+    }
+    await logoLink.screenshot({ path: shot('03-logo-hover-framed.png') })
+
+    await page.waitForTimeout(HOLD_MS)
+    await resetCaptureZoom(page)
+  })
+
+  test('nav underline hover', async ({ page }) => {
+    test.setTimeout(60_000)
+    await goHome(page)
 
     const boxeadores = page.getByRole('link', { name: /boxeadores/i }).first()
-    await boxeadores.hover()
-    await page.waitForTimeout(phase === 'after' ? 300 : 200)
-    await header.screenshot({ path: path.join(screenshotDir, '04-boxeadores-hover.png') })
+    await expect(boxeadores).toBeVisible()
 
-    if (phase === 'after') {
-      await page.setViewportSize({ width: 390, height: 844 })
-      await page.goto('/')
-      await page.getByRole('button', { name: /abrir menú/i }).click()
-      await expect(page.locator('[data-mobile-menu][data-open="true"]')).toBeVisible()
-      await page.waitForTimeout(350)
-      await page.locator('[data-mobile-menu]').screenshot({
-        path: path.join(screenshotDir, '05-mobile-menu.png'),
-      })
-    }
+    await zoomCaptureTarget(
+      page,
+      isAfter ? '[data-testid="header-nav"]' : 'nav[aria-label="Navegación principal"]',
+      isAfter ? 6 : 4,
+      'top center',
+    )
+    await page.waitForTimeout(150)
+    await boxeadores.hover({ force: true })
+    await page.waitForTimeout(isAfter ? 400 : 250)
 
-    await page.waitForTimeout(300)
+    const navCell = isAfter
+      ? page.locator('[data-nav-item="boxeadores"]')
+      : boxeadores
+    await navCell.screenshot({
+      path: shot(isAfter ? '04-nav-underline-hover.png' : '04-nav-hover.png'),
+    })
+
+    await page.waitForTimeout(HOLD_MS)
+    await resetCaptureZoom(page)
   })
 })
