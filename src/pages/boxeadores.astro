@@ -48,10 +48,15 @@ export const prerender = true
 // Mapa id-boxeador → combate, para enlazar cada card a su pelea y para
 // poder mostrar el número de combate como detalle decorativo.
 const battleByBoxer: Record<string, { number: number; battleId: string }> = {}
+// Mapa boxerId → lado del ring (izquierdo = primer contendiente,
+// derecho = segundo), para aplicar tintes azul/rojo en las cards.
+const sideByBoxer: Record<string, 'left' | 'right'> = {}
 for (const battle of battles) {
-  for (const id of battle.boxerIds) {
-    battleByBoxer[id] = { number: battle.number, battleId: battle.id }
-  }
+  const [first, second] = battle.boxerIds
+  battleByBoxer[first] = { number: battle.number, battleId: battle.id }
+  battleByBoxer[second] = { number: battle.number, battleId: battle.id }
+  sideByBoxer[first] = 'left'
+  sideByBoxer[second] = 'right'
 }
 
 const boxerCards = BOXERS.map((boxer) => {
@@ -70,6 +75,7 @@ const boxerCards = BOXERS.map((boxer) => {
     flag: COUNTRY_FLAGS[boxer.country] ?? '',
     countryName: COUNTRY_NAMES[boxer.country] ?? boxer.country,
     totalFollowers,
+    side: sideByBoxer[boxer.id] ?? ('left' as const),
   }
 })
 
@@ -347,6 +353,7 @@ const totalBoxers = BOXERS.length
             >
               <a
                 href={`/boxeadores/${b.id}`}
+                data-side={b.side}
                 class="boxer-card group relative block aspect-[3/4] w-full overflow-hidden rounded-md focus-visible:outline-none"
                 aria-label={`Ver ficha de ${b.name}`}
               >
@@ -487,6 +494,31 @@ const totalBoxers = BOXERS.length
       box-shadow 400ms ease,
       transform 400ms ease;
     will-change: transform;
+  }
+
+  /* Tinte de lado: gradiente azul (izquierdo) o rojo (derecho) muy
+     sutil que distingue visualmente la esquina del ring de cada
+     contendiente. El gradiente se mezcla con el fondo base de la card. */
+  .boxer-card[data-side='left'] {
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, #3b82f6 20%, transparent) 0%,
+        color-mix(in srgb, #3b82f6 8%, transparent) 45%,
+        transparent 100%
+      ),
+      linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
+  }
+
+  .boxer-card[data-side='right'] {
+    background:
+      linear-gradient(
+        225deg,
+        color-mix(in srgb, #ef4444 20%, transparent) 0%,
+        color-mix(in srgb, #ef4444 8%, transparent) 45%,
+        transparent 100%
+      ),
+      linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
   }
 
   .boxer-card:hover,
