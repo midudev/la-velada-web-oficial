@@ -37,11 +37,18 @@ const navItemId = (label: string) =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
 
+const frost = 'backdrop-saturate-150 backdrop-contrast-125'
+const scrolledBar =
+  'data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:backdrop-saturate-150 data-[scrolled=true]:backdrop-contrast-125'
+
 ---
 
 <header
   data-header
-  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent backdrop-blur-[0px] transition-[background-color,backdrop-filter,border-color] duration-500 ease-out data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:backdrop-frost"
+  class:list={[
+    'fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent transition-[background-color,backdrop-filter,border-color] duration-500 ease-out',
+    scrolledBar,
+  ]}
 >
   <div
     class="relative z-50 mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4"
@@ -96,7 +103,10 @@ const navItemId = (label: string) =>
     <button
       type="button"
       data-mobile-menu-button
-      class="group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] outline-none backdrop-blur-md backdrop-frost transition duration-300 hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden"
+      class:list={[
+        'group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] outline-none backdrop-blur-md transition duration-300 hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden',
+        frost,
+      ]}
       aria-controls="mobile-menu"
       aria-expanded="false"
       aria-label="Abrir menú"
@@ -122,7 +132,10 @@ const navItemId = (label: string) =>
     data-mobile-menu
     aria-hidden="true"
     inert
-    class="fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl backdrop-frost transition duration-300 ease-out pointer-events-none data-[open=true]:translate-y-0 data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto md:hidden"
+    class:list={[
+      'fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl transition duration-300 ease-out pointer-events-none data-[open=true]:translate-y-0 data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto md:hidden',
+      frost,
+    ]}
   >
     <div
       aria-hidden="true"
@@ -173,7 +186,10 @@ const navItemId = (label: string) =>
   let headerAbort: AbortController | null = null
 
   function setupHeaderScroll(header: HTMLElement, signal: AbortSignal) {
-    const update = () => header.toggleAttribute('data-scrolled', window.scrollY > 24)
+    const update = () => {
+      if (window.scrollY > 24) header.setAttribute('data-scrolled', 'true')
+      else header.removeAttribute('data-scrolled')
+    }
     update()
     window.addEventListener('scroll', update, { passive: true, signal })
   }

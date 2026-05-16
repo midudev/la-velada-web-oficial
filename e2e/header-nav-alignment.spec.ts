@@ -46,6 +46,15 @@ test.describe('header desktop nav alignment', () => {
     expect(Math.abs(centerY(boxeadoresBox!) - blockCenter)).toBeLessThanOrEqual(TOL)
   })
 
+  test('scrolled header keeps frosted backdrop', async ({ page }) => {
+    await page.evaluate(() => window.scrollTo(0, 80))
+    await page.waitForTimeout(300)
+    await expect(page.locator('[data-header]')).toHaveAttribute('data-scrolled', 'true')
+    const filter = await page.locator('[data-header]').evaluate((el) => getComputedStyle(el).backdropFilter)
+    expect(filter).toMatch(/blur/)
+    expect(filter).toMatch(/saturate/)
+  })
+
   test('logo row is vertically centered with the full nav block', async ({ page }) => {
     const logoBox = await page.getByRole('link', { name: /la velada del año vi/i }).boundingBox()
     const navBox = await page.getByTestId('header-nav').boundingBox()

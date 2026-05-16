@@ -32,7 +32,7 @@ After only: 6px underline gap, 150ms + 125ms delay; mobile menu has no underline
 
 ## Blur / glass
 
-`backdrop-blur-*` per surface + shared `backdrop-frost` utility (`saturate 1.5`, `contrast 1.25`) in `global.css`.
+`backdrop-blur-*` + `backdrop-saturate-150 backdrop-contrast-125` on the same node (Header DRY via `frost` const).
 
 ## Test plan
 
