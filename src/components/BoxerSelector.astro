@@ -140,7 +140,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       </div>
 
       <ul
-        class="boxer-default-info animate-fade-in-up animate-delay-500 -mt-8 flex flex-col items-center justify-center gap-1 px-4 sm:-mt-12 md:-mt-16"
+        class="boxer-default-info animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center px-4"
       >
         <li class="flex items-baseline">
           <time
@@ -242,7 +242,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   </div>
 
   <div
-    class="boxer-cta-bar relative z-20 mt-auto mb-1 flex w-full flex-col items-center px-4 pt-1 sm:mb-2 sm:pt-2"
+    class="boxer-cta-bar relative z-20 mt-auto flex w-full flex-col items-center px-4"
     aria-hidden="false"
   >
     <div
@@ -254,9 +254,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       <span class="h-px w-10 bg-linear-to-l from-transparent to-theme-gold/55 sm:w-20"></span>
     </div>
 
-    <p
-      class="boxer-default-cta mt-3 text-center font-cinzel text-sm font-bold tracking-[0.3em] text-theme-cream sm:mt-4 sm:text-base"
-    >
+    <p class="boxer-default-cta text-center font-cinzel text-sm font-bold tracking-[0.3em] text-theme-cream sm:text-base">
       ¡SELECCIONA TU BOXEADOR O BOXEADORA!
     </p>
   </div>
@@ -394,6 +392,14 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 </section>
 
 <style>
+  /* Ritmo vertical del hero (múltiplos de 0.875rem ≈ base del clamp de fechas). */
+  [data-boxer-selector] {
+    --hero-space-tight: 0.375rem;
+    --hero-space-snug: 0.5rem;
+    --hero-space-md: clamp(0.875rem, 2.8vw, 1.75rem);
+    --hero-space-lg: clamp(1.25rem, 3.6vw, 2.25rem);
+  }
+
   /* El stage es un rectángulo de altura controlada por `flex-1`. Los dos
      paneles (default y boxer) se apilan con `position: absolute` para que
      NO afecten al alto del stage: si fueran grid items, su min-content
@@ -448,20 +454,26 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   .boxer-default-panel {
-    /* El logo y la info quedan en su flujo normal dentro del panel
-       (que es `position: absolute inset: 0` sobre el stage). Como el
-       panel es `flex flex-col items-center`, los hijos se alinean a la
-       parte superior por defecto, justo donde queremos el logo. */
-    padding-block: 0;
+    /* Lockup (logo + fechas) con aire superior; en desktop no pegado al nav. */
+    padding-top: clamp(1rem, 3.5vh, 2rem);
+    padding-bottom: 0;
   }
 
-  /* Barra "¡SELECCIONA TU BOXEADOR O BOXEADORA!" + divider, situada
+  @media (min-width: 768px) {
+    .boxer-default-panel {
+      padding-top: clamp(1.5rem, 5.5vh, 3.25rem);
+    }
+  }
+
+  /* Barra «¡SELECCIONA TU BOXEADOR O BOXEADORA!» + divider, situada
      justo encima del grid. Reserva siempre su espacio físico (no
      colapsa), así la cuadrícula no se mueve al cambiar de estado:
      simplemente se desvanece con opacity cuando hay boxer seleccionado
      y la imagen del hero, que vive dentro del stage, ya cubre ese
      espacio liberado visualmente. */
   .boxer-cta-bar {
+    padding-top: var(--hero-space-lg);
+    padding-bottom: var(--hero-space-snug);
     transition: opacity 350ms ease;
   }
 
@@ -489,11 +501,24 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   .boxer-default-info {
+    gap: var(--hero-space-tight);
+    margin-top: var(--hero-space-md);
     text-shadow:
       0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
       0 1px 0 rgba(0, 0, 0, 0.7),
       0 2px 14px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
       0 0 24px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
+  }
+
+  @media (min-width: 640px) {
+    .boxer-default-info {
+      gap: var(--hero-space-snug);
+    }
+  }
+
+  .boxer-default-info li span,
+  .boxer-default-info li time {
+    text-wrap: balance;
   }
 
   /* La cuadrícula del selector entra escalonada con un delay base de
@@ -506,6 +531,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   .boxer-default-cta {
+    margin-top: var(--hero-space-md);
+    margin-bottom: var(--hero-space-snug);
+    text-wrap: balance;
     /* Mezcla de cream con dorado al fondo para que destaque sobre el
        background del hero (que puede tener mucho contraste) y un punto
        de pulso muy sutil para llamar la atención. */
@@ -675,6 +703,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   .boxer-grid-frame {
     margin-inline: auto;
     max-width: 100%;
+    padding-top: var(--hero-space-snug);
   }
 
   @media (min-width: 768px) {
@@ -918,20 +947,14 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   @media (max-width: 1023px) {
-    .boxer-cta-bar {
-      margin-bottom: 0.25rem;
-      padding-top: 0;
-    }
-
     .boxer-default-divider {
       transform: scaleX(0.75);
     }
 
     .boxer-default-cta {
-      margin-top: 0.625rem;
       font-size: clamp(0.7rem, 2.6vw, 0.9rem);
       letter-spacing: 0.24em;
-      line-height: 1.15;
+      line-height: 1.2;
     }
 
     .boxer-thumb-name {
