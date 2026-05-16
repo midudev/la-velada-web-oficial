@@ -119,19 +119,19 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     >
       <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true"></div>
 
-      <div class="boxer-default-lockup flex w-full max-w-full flex-col items-center gap-3 px-4 sm:gap-4">
+      <div class="boxer-default-lockup flex w-full max-w-full flex-col items-center px-4">
         <div
-          class="animate-blurred-fade-in animate-delay-300 relative"
+          class="animate-blurred-fade-in animate-delay-300 relative leading-none"
           role="img"
           aria-label="Logo de La Velada del Año VI"
         >
-        <picture>
+        <picture class="block">
           <source srcset="/logo.avif" type="image/avif" />
           <source srcset="/logo.webp" type="image/webp" />
           <img
             src="/logo.webp"
             alt="La Velada del Año VI"
-            class="boxer-default-logo relative h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
+            class="boxer-default-logo relative block h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
             width="512"
             height="512"
             decoding="async"
@@ -141,7 +141,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       </div>
 
       <ul
-          class="boxer-default-info animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center gap-1"
+          class="boxer-default-info animate-fade-in-up animate-delay-500 -mt-3 flex flex-col items-center justify-center gap-1 sm:-mt-4 md:-mt-5 lg:-mt-6"
       >
         <li class="flex items-baseline">
           <time
@@ -449,13 +449,15 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     }
   }
 
-  .boxer-default-panel {
-    padding-top: clamp(2rem, 11vh, 6rem);
-  }
-
   [data-boxer-selector][data-state='boxer'] .boxer-cta-bar {
     opacity: 0;
     pointer-events: none;
+  }
+
+  /* Lockup: eye-level offset here only. Logo → fechas: flex gap + Tailwind -mt on .boxer-default-info. */
+  .boxer-default-lockup {
+    gap: clamp(0.625rem, 2vw, 1.125rem);
+    padding-top: clamp(2.5rem, 11vh, 7rem);
   }
 
   .boxer-default-logo {
@@ -479,9 +481,19 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   .boxer-default-info {
     text-shadow:
       0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
-      0 1px 0 rgba(0, 0, 0, 0.7),
       0 2px 14px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
       0 0 24px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
+  }
+
+  @media (max-height: 920px) {
+    .boxer-default-lockup {
+      padding-top: clamp(2rem, 8vh, 4.25rem);
+      gap: 0.5rem;
+    }
+
+    .boxer-default-info {
+      margin-top: -0.5rem !important;
+    }
   }
 
   /* La cuadrícula del selector entra escalonada con un delay base de
@@ -499,7 +511,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
        de pulso muy sutil para llamar la atención. */
     text-shadow:
       0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
-      0 1px 0 rgba(0, 0, 0, 0.6),
       0 2px 12px color-mix(in srgb, var(--color-theme-gold) 55%, transparent),
       0 0 28px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
     opacity: 0;
