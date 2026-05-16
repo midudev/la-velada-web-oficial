@@ -179,7 +179,6 @@ const tipId = 'event-local-time-tip'
 
     trigger.setAttribute('aria-describedby', tooltip.id)
 
-    let isOpen = false
     let isHiding = false
 
     const show = () => {
@@ -190,15 +189,11 @@ const tipId = 'event-local-time-tip'
         tooltip.classList.remove('is-instant')
         tooltip.showPopover()
       }
-
-      isOpen = true
     }
 
     const hide = async () => {
       if (!tooltip.matches(':popover-open')) return
       if (isHiding) return
-
-      isOpen = false
 
       if (prefersReducedMotion()) {
         tooltip.hidePopover()
@@ -230,7 +225,7 @@ const tipId = 'event-local-time-tip'
         'click',
         (event) => {
           event.preventDefault()
-          if (isOpen || tooltip.matches(':popover-open')) void hide()
+          if (tooltip.matches(':popover-open')) void hide()
           else show()
         },
         { signal },

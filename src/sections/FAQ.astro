@@ -219,6 +219,10 @@ const { faqs } = Astro.props
     gap: 2.75rem;
   }
 
+  .faq-title-row__scroll-lead {
+    display: none;
+  }
+
   .faq-title-row__copy {
     width: 100%;
   }
@@ -321,10 +325,6 @@ const { faqs } = Astro.props
       --faq-content-width: 48rem;
       --faq-text-measure: 60ch;
     }
-  }
-
-  .faq-title-row__scroll-lead {
-    display: none;
   }
 
   @media (max-width: 1023px) {
@@ -430,8 +430,7 @@ const { faqs } = Astro.props
     transition: height var(--faq-panel-ms, 280ms) var(--faq-ease-out);
   }
 
-  .faq-section--last-reserved .faq-section-buffer,
-  .faq-section--last-open .faq-section-buffer {
+  .faq-section--last-flush .faq-section-buffer {
     height: 0;
     transition: none;
   }
@@ -507,7 +506,7 @@ const { faqs } = Astro.props
   }
 
   @media (hover: hover) {
-    .faq-summary:hover {
+    .faq-item:not([open]) .faq-summary:hover {
       background-color: color-mix(in srgb, var(--color-theme-navy) 25%, transparent);
     }
   }

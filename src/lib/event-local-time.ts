@@ -44,20 +44,16 @@ function getWallClockDiffMinutes(
   return dayDiff * 24 * 60 + (local.hour - event.hour) * 60 + (local.minute - event.minute)
 }
 
-function formatLocalTime12h(local: Temporal.ZonedDateTime, timeZoneId: string): string {
+function formatLocalTime12h(local: Temporal.ZonedDateTime): string {
   return new Intl.DateTimeFormat('en-US', {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
-    timeZone: timeZoneId,
+    timeZone: local.timeZoneId,
   }).format(new Date(local.epochMilliseconds))
 }
 
-function formatLocalDateShort(
-  local: Temporal.ZonedDateTime,
-  event: Temporal.ZonedDateTime,
-  timeZoneId: string,
-): string {
+function formatLocalDateShort(local: Temporal.ZonedDateTime, event: Temporal.ZonedDateTime): string {
   const sameDay =
     local.year === event.year && local.month === event.month && local.day === event.day
 
@@ -66,7 +62,7 @@ function formatLocalDateShort(
   return `${new Intl.DateTimeFormat('es-ES', {
     day: 'numeric',
     month: 'short',
-    timeZone: timeZoneId,
+    timeZone: local.timeZoneId,
   }).format(new Date(local.epochMilliseconds))} · `
 }
 
@@ -95,8 +91,8 @@ export function resolveEventLocalTime(
   const diffMinutes = getWallClockDiffMinutes(event, local)
   const sameLocalTime = diffMinutes === 0
 
-  const datePrefix = formatLocalDateShort(local, event, timeZoneId)
-  const localTime = formatLocalTime12h(local, timeZoneId)
+  const datePrefix = formatLocalDateShort(local, event)
+  const localTime = formatLocalTime12h(local)
 
   return {
     sameLocalTime,

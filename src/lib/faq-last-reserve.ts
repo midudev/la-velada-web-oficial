@@ -4,8 +4,7 @@ export function syncFaqSectionLastState(collapsed: boolean, open: boolean) {
   const section = $('#faq')
   if (!(section instanceof HTMLElement)) return
 
-  section.classList.toggle('faq-section--last-reserved', collapsed)
-  section.classList.toggle('faq-section--last-open', open)
+  section.classList.toggle('faq-section--last-flush', collapsed || open)
 }
 
 export function isLastFaqDetails(details: HTMLDetailsElement) {
