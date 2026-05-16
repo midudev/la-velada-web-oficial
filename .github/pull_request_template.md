@@ -3,7 +3,7 @@
 
 ## Type
 
-<!-- Select exactly one. Delete the rest. -->
+<!-- Select exactly one. -->
 
 - [ ] feat
 - [ ] fix
