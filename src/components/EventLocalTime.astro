@@ -27,12 +27,17 @@ const tipId = 'event-local-time-tip'
     --event-time-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 
     position: fixed;
-    position-area: top;
     position-anchor: --event-local-time-trigger;
-    position-try-fallbacks: flip-block, flip-inline;
+    position-try-fallbacks: none;
     inset: auto;
+    top: auto;
+    left: auto;
+    right: anchor(right);
+    bottom: anchor(top);
     margin: 0;
-    margin-block-end: 0.75rem;
+    width: max-content;
+    --event-time-tooltip-gap: 0.75rem;
+    translate: 0 calc(-100% - var(--event-time-tooltip-gap) - 6px);
     flex-direction: column;
     gap: 0.2rem;
     min-width: 10.5rem;
@@ -51,11 +56,12 @@ const tipId = 'event-local-time-tip'
     color: var(--color-theme-cream);
     transform-origin: 100% 100%;
     opacity: 0;
-    transform: translate3d(0, 6px, 0) scale(0.96);
+    transform: scale(0.96);
     pointer-events: none;
     transition:
       opacity 200ms var(--event-time-ease-out),
       transform 200ms var(--event-time-ease-out),
+      translate 200ms var(--event-time-ease-out),
       overlay 200ms allow-discrete,
       display 200ms allow-discrete;
   }
@@ -79,20 +85,23 @@ const tipId = 'event-local-time-tip'
   .event-local-time__tooltip:popover-open {
     display: flex;
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+    translate: 0 calc(-100% - var(--event-time-tooltip-gap));
+    transform: scale(1);
     pointer-events: auto;
   }
 
   @starting-style {
     .event-local-time__tooltip:popover-open {
       opacity: 0;
-      transform: translate3d(0, 6px, 0) scale(0.96);
+      translate: 0 calc(-100% - var(--event-time-tooltip-gap) - 6px);
+      transform: scale(0.96);
     }
   }
 
   .event-local-time__tooltip.is-hiding {
     opacity: 0;
-    transform: translate3d(0, 4px, 0) scale(0.97);
+    translate: 0 calc(-100% - var(--event-time-tooltip-gap) - 4px);
+    transform: scale(0.97);
     pointer-events: none;
     transition-duration: 160ms;
   }
@@ -103,7 +112,7 @@ const tipId = 'event-local-time-tip'
 
   @media (min-width: 640px) {
     .event-local-time__tooltip {
-      margin-block-end: 0.875rem;
+      --event-time-tooltip-gap: 0.875rem;
       gap: 0.25rem;
       padding: 0.65rem 1rem 0.75rem;
     }
@@ -119,12 +128,14 @@ const tipId = 'event-local-time-tip'
 
   @media (prefers-reduced-motion: reduce) {
     .event-local-time__tooltip {
+      translate: 0 calc(-100% - var(--event-time-tooltip-gap));
       transform: none;
       transition: none;
     }
 
     .event-local-time__tooltip:popover-open,
     .event-local-time__tooltip.is-hiding {
+      translate: 0 calc(-100% - var(--event-time-tooltip-gap));
       transform: none;
     }
   }

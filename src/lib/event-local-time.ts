@@ -71,21 +71,20 @@ function formatLocalDateShort(
 }
 
 function formatOffsetShort(diffMinutes: number): string {
+  const sign = diffMinutes > 0 ? '+' : '-'
   const abs = Math.abs(diffMinutes)
   const hours = Math.floor(abs / 60)
   const minutes = abs % 60
 
-  let amount = ''
-
   if (hours > 0 && minutes > 0) {
-    amount = `${hours} h ${minutes} min`
-  } else if (hours > 0) {
-    amount = `${hours} h`
-  } else {
-    amount = `${minutes} min`
+    return `${sign}${hours} HRS ${minutes} MIN de diferencia`
   }
 
-  return diffMinutes > 0 ? `${amount} después` : `${amount} antes`
+  if (hours > 0) {
+    return `${sign}${hours} HRS de diferencia`
+  }
+
+  return `${sign}${minutes} MIN de diferencia`
 }
 
 export function resolveEventLocalTime(

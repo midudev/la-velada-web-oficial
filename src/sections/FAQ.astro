@@ -14,7 +14,7 @@ const { faqs } = Astro.props
 
 <section
   id="faq"
-  class="faq-section relative w-full overflow-x-clip px-4 pt-20 pb-24 sm:px-6 sm:pb-28 lg:pt-28 lg:pb-32"
+  class="faq-section relative w-full px-4 pt-20 pb-24 sm:px-6 sm:pb-28 lg:pt-28 lg:pb-32"
   aria-labelledby="faq-title"
   itemscope
   itemtype="https://schema.org/FAQPage"
@@ -33,6 +33,7 @@ const { faqs } = Astro.props
 
   <div class="faq-layout relative mx-auto w-full max-w-7xl">
     <header class="faq-title-row" aria-labelledby="faq-title">
+      <div class="faq-title-row__scroll-lead" aria-hidden="true"></div>
       <div class="faq-title-row__copy">
         <SectionHeader
           titleId="faq-title"
@@ -46,7 +47,6 @@ const { faqs } = Astro.props
     </header>
 
     <div class="faq-main">
-      <div class="faq-sticky-trigger" aria-hidden="true"></div>
       <ul class="faq-list w-full">
       {
         faqs.map((faq, index) => {
@@ -247,6 +247,8 @@ const { faqs } = Astro.props
     }
 
     .faq-title-row {
+      display: flex;
+      flex-direction: column;
       grid-column: 1;
       grid-row: 1;
       align-self: stretch;
@@ -255,22 +257,20 @@ const { faqs } = Astro.props
       padding: 0;
     }
 
-    .faq-title-row__copy {
-      max-width: var(--faq-title-width);
-      min-width: 0;
+    .faq-title-row__scroll-lead {
+      display: block;
+      flex: 0 0 var(--faq-title-row);
+      height: var(--faq-title-row);
+      margin-block-end: calc(-1 * var(--faq-title-row));
     }
 
-    .faq-title-row__copy--pinned {
-      position: fixed;
+    .faq-title-row__copy {
+      position: sticky;
       top: var(--faq-sticky-top);
       z-index: 2;
-      margin: 0;
-    }
-
-    .faq-title-row__placeholder {
-      display: block;
-      width: 100%;
-      pointer-events: none;
+      flex: 0 0 auto;
+      max-width: var(--faq-title-width);
+      min-width: 0;
     }
 
     .faq-title-row :global(#faq-title) {
@@ -282,7 +282,6 @@ const { faqs } = Astro.props
     }
 
     .faq-main {
-      position: relative;
       grid-column: 2;
       grid-row: 1;
       align-self: start;
@@ -293,19 +292,6 @@ const { faqs } = Astro.props
       margin-top: 0;
       padding-top: var(--faq-title-row);
       overflow-x: clip;
-    }
-
-    .faq-sticky-trigger {
-      position: absolute;
-      top: var(--faq-title-row);
-      left: 0;
-      width: 1px;
-      height: 1px;
-      margin: 0;
-      padding: 0;
-      border: 0;
-      pointer-events: none;
-      visibility: hidden;
     }
 
     .faq-list {
@@ -337,6 +323,10 @@ const { faqs } = Astro.props
     }
   }
 
+  .faq-title-row__scroll-lead {
+    display: none;
+  }
+
   @media (max-width: 1023px) {
     .faq-title-row {
       margin-inline: auto;
@@ -359,6 +349,12 @@ const { faqs } = Astro.props
 
   .faq-list {
     overflow-anchor: none;
+    border-bottom: 1px solid rgb(255 255 255 / 0.1);
+    transition: border-color 180ms var(--faq-ease-out);
+  }
+
+  .faq-list:has(.faq-item-wrap--last.faq-item-wrap--active) {
+    border-bottom-color: var(--color-theme-gold);
   }
 
   .faq-divider {
@@ -440,16 +436,8 @@ const { faqs } = Astro.props
     transition: none;
   }
 
-  .faq-item-wrap--last .faq-divider {
-    display: none;
-  }
-
   .faq-item-wrap:has(+ .faq-item-wrap--last) .faq-item {
     border-bottom: 1px solid rgb(255 255 255 / 10%);
-  }
-
-  .faq-item-wrap:has(+ .faq-item-wrap--last.faq-item-wrap--active) .faq-item {
-    border-bottom-color: var(--color-theme-gold);
   }
 
   .faq-last-spacer {
@@ -773,7 +761,6 @@ const { faqs } = Astro.props
 
 <script>
   import { resetFaqAccordionQueue, setupFaqAccordion } from '@/lib/faq-accordion'
-  import { setupFaqStickyTitle } from '@/lib/faq-sticky-title'
 
   let faqAccordionAbort: AbortController | undefined
 
@@ -782,7 +769,6 @@ const { faqs } = Astro.props
     resetFaqAccordionQueue()
     faqAccordionAbort = new AbortController()
     setupFaqAccordion(faqAccordionAbort.signal)
-    setupFaqStickyTitle(faqAccordionAbort.signal)
   }
 
   document.addEventListener('astro:page-load', mountFaqAccordion)
