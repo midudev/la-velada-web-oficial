@@ -115,7 +115,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   <div class="boxer-stage relative w-full flex-1">
     <div
       data-default-panel
-      class="boxer-default-panel relative flex w-full flex-col items-center justify-start pt-lockup text-center md:pt-lockup-md"
+      class="boxer-default-panel relative flex w-full flex-col items-center justify-start text-center"
     >
       <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true"></div>
 
@@ -131,7 +131,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           <img
             src="/logo.webp"
             alt="La Velada del Año VI"
-            class="boxer-default-logo relative mx-auto h-auto w-hero-logo md:w-hero-logo-md lg:w-hero-logo-lg"
+            class="boxer-default-logo relative mx-auto h-auto w-(--size-hero-logo)"
             width="512"
             height="512"
             decoding="async"
@@ -449,11 +449,36 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     }
   }
 
+  .boxer-default-panel {
+    /* Lockup (logo + fechas): offset moderado; en viewports bajos evitamos
+       empujar el CTA + grid al borde inferior del hero. */
+    padding-top: var(--spacing-lockup);
+    padding-bottom: 0;
+  }
+
+  @media (min-width: 768px) {
+    .boxer-default-panel {
+      padding-top: var(--spacing-lockup-md);
+    }
+  }
+
   /* Barra «¡SELECCIONA TU BOXEADOR O BOXEADORA!» + divider: el foot
      separa CTA y grid; la barra solo se desvanece al seleccionar boxer. */
   [data-boxer-selector][data-state='boxer'] .boxer-cta-bar {
     opacity: 0;
     pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    .boxer-default-logo {
+      width: var(--size-hero-logo-md);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .boxer-default-logo {
+      width: var(--size-hero-logo-lg);
+    }
   }
 
   .boxer-default-logo {
