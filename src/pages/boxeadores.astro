@@ -765,7 +765,7 @@ const totalBoxers = BOXERS.length
   }
 
   @media (min-width: 1024px) {
-    .boxers-layout {
+    .boxers-layout:not([data-view='combates']) {
       grid-template-columns: 236px minmax(0, 1fr);
       align-items: start;
       gap: 2rem;
@@ -773,7 +773,7 @@ const totalBoxers = BOXERS.length
   }
 
   @media (min-width: 1280px) {
-    .boxers-layout {
+    .boxers-layout:not([data-view='combates']) {
       grid-template-columns: 252px minmax(0, 1fr);
       gap: 2.5rem;
     }
@@ -1342,61 +1342,70 @@ const totalBoxers = BOXERS.length
   }
 
   /* ---------- Modo «Combates» ---------- */
-  /* Cuando el modo combates está activo, el grid pasa a 2 columnas fijas
-     para mostrar cada pareja lado a lado. Se usa `!important` para vencer
-     a las clases responsive de Tailwind (md:grid-cols-3, xl:grid-cols-4)
-     que de lo contrario rompen el layout pareado. */
+  /* Cuando el modo combates está activo, el grid pasa a mostrar 1 o 2 grupos
+     (combates enteros) por fila. */
   .boxers-grid[data-view='combates'] {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    row-gap: 0;
-    column-gap: 0.75rem;
+    grid-template-columns: minmax(0, 1fr) !important;
+    row-gap: 3rem;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 1024px) {
     .boxers-grid[data-view='combates'] {
-      column-gap: 1rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      column-gap: 2.5rem;
+      row-gap: 3.5rem;
+      max-width: 64rem;
+      margin-inline: auto;
     }
   }
 
-  /* Las cards se encogen en combates para que la pareja quede compacta
-     y el separador tenga protagonismo visual. */
+  @media (min-width: 1280px) {
+    .boxers-grid[data-view='combates'] {
+      column-gap: 4rem;
+      row-gap: 4.5rem;
+      max-width: 72rem;
+    }
+  }
+
+  /* Un combate agrupa su separador y sus dos cards. */
+  :global(.combate-group) {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* Las cards dentro del combate. */
+  :global(.combate-cards) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    :global(.combate-cards) {
+      gap: 1rem;
+    }
+  }
+
+  /* Las cards se encogen un poco en combates para que la pareja no sea
+     gigante en pantallas medianas. */
   .boxers-grid[data-view='combates'] .boxer-card-wrap {
     width: 100%;
     max-width: 16rem;
     justify-self: center;
   }
 
-  @media (min-width: 768px) {
-    .boxers-grid[data-view='combates'] {
-      max-width: 34rem;
-      margin-inline: auto;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .boxers-grid[data-view='combates'] {
-      max-width: 38rem;
-    }
-  }
-
   /* ---------- Separador de combate ---------- */
   /* Divide cada pareja con una franja decorativa que incluye el número
-     de combate, raya dorada a ambos lados y un rombo central. El padding
-     vertical amplio aísla cada enfrentamiento visualmente.
+     de combate, raya dorada a ambos lados y un rombo central.
 
      Se usa `:global()` porque estos elementos se crean dinámicamente
      desde JS y NO reciben el atributo de scope de Astro. */
   :global(.combate-separator) {
-    grid-column: 1 / -1;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.9rem;
-    padding-block: 1.5rem;
-  }
-
-  :global(.combate-separator:first-child) {
-    padding-top: 0.25rem;
   }
 
   :global(.combate-separator-line) {
@@ -1444,10 +1453,6 @@ const totalBoxers = BOXERS.length
   @media (max-width: 639px) {
     :global(.combate-separator) {
       gap: 0.6rem;
-      padding-block: 1.1rem;
-    }
-    :global(.combate-separator:first-child) {
-      padding-top: 0.15rem;
     }
     :global(.combate-separator-label) {
       font-size: 0.52rem;
@@ -1466,22 +1471,14 @@ const totalBoxers = BOXERS.length
   }
 
   @media (min-width: 640px) {
-    :global(.combate-separator) {
-      padding-block: 1.8rem;
-    }
     :global(.combate-separator-label) {
       font-size: 0.72rem;
     }
   }
 
-  /* Panel de filtros deshabilitado en modo combates. */
+  /* Panel de filtros deshabilitado y oculto en modo combates. */
   .boxer-filters-panel[data-disabled='true'] {
-    opacity: 0.25;
-    pointer-events: none;
-    filter: grayscale(0.5) brightness(0.7);
-    transition:
-      opacity 350ms ease,
-      filter 350ms ease;
+    display: none;
   }
 
   .boxer-filters-panel {
@@ -1507,6 +1504,7 @@ const totalBoxers = BOXERS.length
   type SortMode = 'cartel' | 'combates' | 'followers-desc' | 'followers-asc'
 
   function setupBoxersFilters() {
+    const layout = $<HTMLElement>('.boxers-layout')
     const form = $<HTMLFormElement>('[data-boxers-filters]')
     const grid = $<HTMLElement>('[data-boxers-grid]')
     const empty = $<HTMLElement>('[data-boxers-empty]')
@@ -1551,6 +1549,7 @@ const totalBoxers = BOXERS.length
 
       const isCombates = sortMode === 'combates'
       gridEl.dataset.view = isCombates ? 'combates' : ''
+      if (layout) layout.dataset.view = isCombates ? 'combates' : ''
 
       // Deshabilitar/habilitar filtros.
       if (form) form.dataset.disabled = String(isCombates)
@@ -1578,19 +1577,33 @@ const totalBoxers = BOXERS.length
       }
 
       if (isCombates) {
-        // In combates mode: show all cards and insert separators between battles.
+        // In combates mode: show all cards and wrap them into battle groups.
         for (const card of cards) card.dataset.hidden = 'false'
 
         let currentBattle = ''
+        let currentGroup: HTMLElement | null = null
+        
         for (const card of ordered) {
           const battle = card.dataset.battle ?? ''
           if (battle !== currentBattle) {
             currentBattle = battle
+            
+            const groupLi = document.createElement('li')
+            groupLi.className = 'combate-group'
+            
             const sep = createSeparator(Number(battle))
-            gridEl.appendChild(sep)
-            combateSeparators.push(sep)
+            groupLi.appendChild(sep)
+            
+            const cardsContainer = document.createElement('div')
+            cardsContainer.className = 'combate-cards'
+            groupLi.appendChild(cardsContainer)
+            
+            gridEl.appendChild(groupLi)
+            combateSeparators.push(groupLi)
+            
+            currentGroup = cardsContainer
           }
-          gridEl.appendChild(card)
+          if (currentGroup) currentGroup.appendChild(card)
         }
       } else {
         for (const card of ordered) gridEl.appendChild(card)
