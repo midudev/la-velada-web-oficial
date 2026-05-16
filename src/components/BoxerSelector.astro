@@ -115,22 +115,23 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   <div class="boxer-stage relative w-full flex-1">
     <div
       data-default-panel
-      class="boxer-default-panel relative flex w-full flex-col items-center justify-center text-center md:justify-start"
+      class="boxer-default-panel relative flex w-full flex-col items-center justify-center text-center"
     >
       <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true"></div>
 
-      <div
-        class="animate-blurred-fade-in animate-delay-300 relative"
-        role="img"
-        aria-label="Logo de La Velada del Año VI"
-      >
+      <div class="boxer-default-lockup flex w-full max-w-full flex-col items-center gap-hero-logo-gap px-4">
+        <div
+          class="animate-blurred-fade-in animate-delay-300 relative"
+          role="img"
+          aria-label="Logo de La Velada del Año VI"
+        >
         <picture>
           <source srcset="/logo.avif" type="image/avif" />
           <source srcset="/logo.webp" type="image/webp" />
           <img
             src="/logo.webp"
             alt="La Velada del Año VI"
-            class="boxer-default-logo relative h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
+            class="boxer-default-logo relative mx-auto h-auto w-[58vw] max-w-[min(17.5rem,58vw)]"
             width="512"
             height="512"
             decoding="async"
@@ -140,7 +141,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       </div>
 
       <ul
-        class="boxer-default-info animate-fade-in-up animate-delay-500 mt-fluid flex flex-col items-center justify-center gap-1.5 px-4 sm:gap-2"
+          class="boxer-default-info animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center gap-1 sm:gap-1.5"
       >
         <li class="flex items-baseline">
           <time
@@ -165,7 +166,8 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
             ESTADIO DE LA CARTUJA, SEVILLA
           </span>
         </li>
-      </ul>
+        </ul>
+      </div>
 
     </div>
 
@@ -241,9 +243,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     </div>
   </div>
 
-  <div class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-fluid">
+  <div class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-fluid md:gap-fluid-lg">
     <div
-      class="boxer-cta-bar relative z-20 flex w-full flex-col items-center gap-fluid px-4 pt-fluid transition-opacity duration-ui ease-ui"
+      class="boxer-cta-bar relative z-20 flex w-full flex-col items-center gap-snug px-4 pt-fluid transition-opacity duration-ui ease-ui md:gap-fluid md:pt-fluid-lg"
       aria-hidden="false"
     >
       <div
@@ -460,19 +462,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     }
   }
 
-  @media (min-width: 1024px) and (min-height: 800px) and (max-height: 949px) {
-    .boxer-default-panel {
-      padding-top: var(--spacing-lockup-compact);
-    }
-  }
-
-  @media (min-width: 1024px) and (min-height: 950px) {
-    .boxer-default-panel {
-      padding-top: var(--spacing-lockup-tall);
-    }
-
-    .boxer-cta-bar {
-      padding-top: var(--spacing-fluid-lg);
+  @media (min-width: 1024px) and (max-height: 780px) {
+    .boxer-selector-foot {
+      gap: var(--spacing-fluid);
     }
   }
 
