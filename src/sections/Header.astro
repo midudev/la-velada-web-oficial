@@ -29,6 +29,11 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
   class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent backdrop-blur-[0px] transition-[background-color,backdrop-filter,border-color] duration-500 ease-out data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md"
 >
   <div
+    data-header-progress
+    class="absolute bottom-[-1px] left-0 h-[2px] w-0 bg-linear-to-r from-theme-gold/20 via-theme-gold to-theme-gold/20 transition-[width] duration-150 ease-out"
+    aria-hidden="true"
+  ></div>
+  <div
     class="relative z-50 mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4"
   >
     <a
@@ -85,7 +90,7 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
                   {item.label}
                 </a>
               </li>
-            )
+            ),
           )
         }
       </ul>
@@ -161,7 +166,7 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
                   {item.label}
                 </a>
               </li>
-            )
+            ),
           )
         }
       </ul>
@@ -184,12 +189,22 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
     scrollAbortController?.abort()
     scrollAbortController = new AbortController()
 
+    const progressBar = $<HTMLElement>('[data-header-progress]')
+
     const update = () => {
       const scrolled = window.scrollY > SCROLL_THRESHOLD
       if (scrolled) {
         header.setAttribute('data-scrolled', 'true')
       } else {
         header.removeAttribute('data-scrolled')
+      }
+
+      if (progressBar) {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop
+        const height =
+          document.documentElement.scrollHeight - document.documentElement.clientHeight
+        const scrolledPercent = (winScroll / height) * 100
+        progressBar.style.width = `${scrolledPercent}%`
       }
     }
 
@@ -233,8 +248,8 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
       () => {
         setMenuOpen(button.getAttribute('aria-expanded') !== 'true')
       },
-      { signal }
-    )
+      { signal },
+  )
 
     links.forEach((link) => {
       link.addEventListener('click', () => setMenuOpen(false), {
@@ -247,8 +262,8 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
       (event) => {
         if (event.key === 'Escape') setMenuOpen(false)
       },
-      { signal }
-    )
+      { signal },
+  )
   }
 
   document.addEventListener('astro:page-load', () => {

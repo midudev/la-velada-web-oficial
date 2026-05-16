@@ -1,12 +1,13 @@
 ---
 import { ClientRouter } from 'astro:transitions'
 import Analytics from '@vercel/analytics/astro'
+import BackToTop from '@/components/BackToTop.astro'
 
 import '@/styles/global.css'
 
 import { fixedTitle } from '@/consts/pageTitles'
+import { SITE_URL } from '@/consts/event'
 
-const SITE_URL = 'https://www.infolavelada.com'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og.jpg`
 const DEFAULT_OG_ALT = 'La Velada del Año VI — Evento de boxeo organizado por Ibai Llanos'
 
@@ -200,5 +201,6 @@ const organizationJsonLd = {
     <main id="main-content">
       <slot />
     </main>
+    <BackToTop />
   </body>
 </html>

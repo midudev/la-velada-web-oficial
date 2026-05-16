@@ -9,6 +9,19 @@ import {
   getBoxerSelectImages,
   type Boxer,
 } from '@/consts/boxers'
+import { EVENT_DATE } from '@/consts/event'
+
+const formattedDate = EVENT_DATE.toLocaleDateString('es-ES', {
+  day: 'numeric',
+  month: 'long',
+}).toUpperCase()
+
+const formattedTime =
+  EVENT_DATE.toLocaleTimeString('es-ES', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }) + 'H CET'
 
 // Posicionamos a cada boxeador en el grid de manera SIMÉTRICA respecto a su
 // contrincante: si el primero de la pareja está en la columna N, el segundo
@@ -123,6 +136,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         class="animate-blurred-fade-in animate-delay-300 relative"
         role="img"
         aria-label="Logo de La Velada del Año VI"
+        data-logo-wrapper
       >
         <picture>
           <source srcset="/logo.avif" type="image/avif" />
@@ -144,24 +158,22 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       >
         <li class="flex items-baseline">
           <time
-            datetime="2026-07-25"
+            datetime={EVENT_DATE.toISOString().split('T')[0]}
             class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
           >
-            25 DE JULIO
+            {formattedDate}
           </time>
         </li>
         <li class="flex items-baseline">
           <time
-            datetime="2026-07-25T20:00:00+02:00"
+            datetime={EVENT_DATE.toISOString()}
             class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
           >
-            20:00H CET
+            {formattedTime}
           </time>
         </li>
         <li class="flex items-baseline">
-          <span
-            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
-          >
+          <span class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm">
             ESTADIO DE LA CARTUJA, SEVILLA
           </span>
         </li>

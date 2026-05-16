@@ -1,8 +1,6 @@
 ---
 import BoxerSelector from '@/components/BoxerSelector.astro'
-
-const EVENT_DATE = new Date('2026-07-25T20:00:00+02:00')
-const timestamp = EVENT_DATE.getTime()
+import { EVENT_TIMESTAMP } from '@/consts/event'
 ---
 
 <section
@@ -59,7 +57,7 @@ const timestamp = EVENT_DATE.getTime()
       <div
         class="animate-fade-in-up animate-delay-1300 flex select-none items-center justify-center gap-3 sm:gap-5 md:gap-7"
         id="countdown-hero"
-        data-date={timestamp}
+        data-date={EVENT_TIMESTAMP}
         role="timer"
         aria-label="Cuenta atrás para La Velada del Año VI"
       >
@@ -134,6 +132,27 @@ const timestamp = EVENT_DATE.getTime()
       })
     }
 
+    function initLogoParallax(hero: HTMLElement) {
+      const wrapper = $<HTMLElement>('[data-logo-wrapper]', hero)
+      if (!wrapper) return
+
+      // Añadimos perspectiva al contenedor para el efecto 3D
+      wrapper.parentElement?.style.setProperty('perspective', '1000px')
+
+      const onMouseMove = (e: MouseEvent) => {
+        const { clientX, clientY } = e
+        const { innerWidth, innerHeight } = window
+
+        const x = (clientX - innerWidth / 2) / (innerWidth / 2)
+        const y = (clientY - innerHeight / 2) / (innerHeight / 2)
+
+        wrapper.style.transform = `translateY(${y * -12}px) rotateX(${y * -10}deg) rotateY(${x * 12}deg)`
+      }
+
+      window.addEventListener('mousemove', onMouseMove, { passive: true })
+      return () => window.removeEventListener('mousemove', onMouseMove)
+    }
+
     document.addEventListener('astro:page-load', () => {
       const hero = $<HTMLElement>('[data-hero]')
       if (!hero) return
@@ -142,6 +161,7 @@ const timestamp = EVENT_DATE.getTime()
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       if (!reduceMotion) {
+        initLogoParallax(hero)
         const controller = new AbortController()
         const { signal } = controller
 
@@ -172,4 +192,4 @@ const timestamp = EVENT_DATE.getTime()
         )
       }
     })
-  </script>
+  </script>

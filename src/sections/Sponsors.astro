@@ -19,6 +19,7 @@ interface Sponsor {
   Logo: typeof MaxibonLogo
   /** Tailwind classes para ajustar el tamaño óptico del logo dentro de la tarjeta. */
   logoClass: string
+  color: string
 }
 
 interface PromoBanner {
@@ -68,6 +69,7 @@ const SPONSORS: Sponsor[] = [
     label: 'Ir a la página web de Maxibon',
     Logo: MaxibonLogo,
     logoClass: 'w-[62%] max-w-[130px]',
+    color: '#0056b3',
   },
   {
     name: 'Coca-Cola',
@@ -75,6 +77,7 @@ const SPONSORS: Sponsor[] = [
     label: 'Ir a la página web de Coca-Cola',
     Logo: CocaColaLogo,
     logoClass: 'w-[72%] max-w-[155px]',
+    color: '#eb001b',
   },
   {
     name: 'Revolut',
@@ -82,6 +85,7 @@ const SPONSORS: Sponsor[] = [
     label: 'Ir a la página web de Revolut',
     Logo: RevolutLogo,
     logoClass: 'w-[74%] max-w-[160px]',
+    color: '#0075eb',
   },
   {
     name: 'Spotify',
@@ -89,6 +93,7 @@ const SPONSORS: Sponsor[] = [
     label: 'Ir a la página web de Spotify',
     Logo: SpotifyLogo,
     logoClass: 'w-[70%] max-w-[150px]',
+    color: '#1db954',
   },
   {
     name: 'InfoJobs',
@@ -96,6 +101,7 @@ const SPONSORS: Sponsor[] = [
     label: 'Ir a la página web de InfoJobs',
     Logo: InfojobsLogo,
     logoClass: 'w-[68%] max-w-[145px]',
+    color: '#ff7300',
   },
   {
     name: 'Mahou',
@@ -103,6 +109,7 @@ const SPONSORS: Sponsor[] = [
     label: 'Ir a la página web de Mahou',
     Logo: MahouLogo,
     logoClass: 'w-[54%] max-w-[95px]',
+    color: '#c41230',
   },
   {
     name: 'idealo',
@@ -110,6 +117,7 @@ const SPONSORS: Sponsor[] = [
     label: 'Ir a la página web de idealo',
     Logo: IdealoLogo,
     logoClass: 'w-[60%] max-w-[110px]',
+    color: '#ff6e00',
   },
   {
     name: "McDonald's",
@@ -117,6 +125,7 @@ const SPONSORS: Sponsor[] = [
     label: "Ir a la página web de McDonald's",
     Logo: McDonaldsLogo,
     logoClass: 'w-[32%] max-w-[60px]',
+    color: '#ffc72c',
   },
   {
     name: 'Grefusa',
@@ -124,6 +133,7 @@ const SPONSORS: Sponsor[] = [
     label: 'Ir a la página web de Grefusa',
     Logo: GrefusaLogo,
     logoClass: 'w-[50%] max-w-[90px]',
+    color: '#ed1c24',
   },
   {
     name: 'CeraVe',
@@ -131,6 +141,7 @@ const SPONSORS: Sponsor[] = [
     label: 'Ir a la página web de CeraVe',
     Logo: CeraveLogo,
     logoClass: 'w-[68%] max-w-[120px]',
+    color: '#0075be',
   },
   {
     name: 'Alsa',
@@ -138,6 +149,7 @@ const SPONSORS: Sponsor[] = [
     label: 'Ir a la página web de Alsa',
     Logo: AlsaLogo,
     logoClass: 'w-[60%] max-w-[110px]',
+    color: '#003057',
   },
 ]
 ---
@@ -183,7 +195,7 @@ const SPONSORS: Sponsor[] = [
               width,
               height,
             },
-            index
+            index,
           ) => (
             <a
               href={url}
@@ -210,7 +222,7 @@ const SPONSORS: Sponsor[] = [
                 />
               </picture>
             </a>
-          )
+          ),
         )
       }
     </div>
@@ -218,7 +230,7 @@ const SPONSORS: Sponsor[] = [
     <div class="relative w-full">
       <ul class="sponsors-grid" role="list">
         {
-          SPONSORS.map(({ name, url, label, Logo, logoClass }, index) => (
+          SPONSORS.map(({ name, url, label, Logo, logoClass, color }, index) => (
             <li class="animate-fade-in-up" style={`animation-delay:${1100 + index * 65}ms`}>
               <a
                 href={url}
@@ -226,29 +238,35 @@ const SPONSORS: Sponsor[] = [
                 rel="noopener noreferrer"
                 aria-label={label}
                 title={name}
-                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white outline-none transition duration-500 hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+                style={`--brand-color: ${color}`}
+                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white outline-none transition duration-500 hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-[var(--brand-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               >
+                <div
+                  aria-hidden="true"
+                  class="pointer-events-none absolute inset-0 -z-1 bg-[var(--brand-color)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-10 group-focus-visible:opacity-10"
+                >
+                </div>
                 <span
                   aria-hidden="true"
-                  class="pointer-events-none absolute top-1.5 left-1.5 size-2.5 border-t border-l border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:top-2 sm:left-2 sm:size-3"
+                  class="pointer-events-none absolute top-1.5 left-1.5 size-2.5 border-t border-l border-theme-gold/35 transition duration-500 group-hover:border-[var(--brand-color)] group-focus-visible:border-[var(--brand-color)] sm:top-2 sm:left-2 sm:size-3"
                 />
                 <span
                   aria-hidden="true"
-                  class="pointer-events-none absolute top-1.5 right-1.5 size-2.5 border-t border-r border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:top-2 sm:right-2 sm:size-3"
+                  class="pointer-events-none absolute top-1.5 right-1.5 size-2.5 border-t border-r border-theme-gold/35 transition duration-500 group-hover:border-[var(--brand-color)] group-focus-visible:border-[var(--brand-color)] sm:top-2 sm:right-2 sm:size-3"
                 />
                 <span
                   aria-hidden="true"
-                  class="pointer-events-none absolute bottom-1.5 left-1.5 size-2.5 border-b border-l border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:bottom-2 sm:left-2 sm:size-3"
+                  class="pointer-events-none absolute bottom-1.5 left-1.5 size-2.5 border-b border-l border-theme-gold/35 transition duration-500 group-hover:border-[var(--brand-color)] group-focus-visible:border-[var(--brand-color)] sm:bottom-2 sm:left-2 sm:size-3"
                 />
                 <span
                   aria-hidden="true"
-                  class="pointer-events-none absolute bottom-1.5 right-1.5 size-2.5 border-b border-r border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:bottom-2 sm:right-2 sm:size-3"
+                  class="pointer-events-none absolute bottom-1.5 right-1.5 size-2.5 border-b border-r border-theme-gold/35 transition duration-500 group-hover:border-[var(--brand-color)] group-focus-visible:border-[var(--brand-color)] sm:bottom-2 sm:right-2 sm:size-3"
                 />
 
                 <Logo
                   aria-hidden="true"
                   class:list={[
-                    'h-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)] transition duration-500 group-hover:scale-[1.04] group-hover:brightness-110 group-focus-visible:scale-[1.04] group-focus-visible:brightness-110',
+                    'h-auto grayscale opacity-70 drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)] transition duration-500 group-hover:scale-[1.04] group-hover:grayscale-0 group-hover:opacity-100 group-hover:brightness-110 group-focus-visible:scale-[1.04] group-focus-visible:grayscale-0 group-focus-visible:opacity-100 group-focus-visible:brightness-110',
                     logoClass,
                   ]}
                 />

@@ -1,0 +1,47 @@
+---
+import { ChevronUp } from '@lucide/astro'
+---
+
+<button
+  id="back-to-top"
+  class="fixed bottom-6 right-6 z-50 flex h-12 w-12 translate-y-20 items-center justify-center rounded-full border border-theme-gold/30 bg-theme-midnight/80 text-theme-gold opacity-0 shadow-lg backdrop-blur-md transition-all duration-500 hover:scale-110 hover:border-theme-gold hover:bg-theme-gold hover:text-theme-midnight focus:outline-none focus:ring-2 focus:ring-theme-gold focus:ring-offset-2 focus:ring-offset-theme-midnight aria-hidden:pointer-events-none"
+  aria-label="Volver arriba"
+  aria-hidden="true"
+>
+  <ChevronUp class="size-6" />
+</button>
+
+<script>
+  import { $ } from '@/lib/dom-selector'
+
+  function setupBackToTop() {
+    const button = $('#back-to-top')
+    if (!button) return
+
+    const update = () => {
+      const scrolled = window.scrollY > 300
+      if (scrolled) {
+        button.classList.remove('translate-y-20', 'opacity-0')
+        button.setAttribute('aria-hidden', 'false')
+      } else {
+        button.classList.add('translate-y-20', 'opacity-0')
+        button.setAttribute('aria-hidden', 'true')
+      }
+    }
+
+    button.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    })
+
+    window.addEventListener('scroll', update, { passive: true })
+    update()
+  }
+
+  document.addEventListener('astro:page-load', setupBackToTop)
+</script>
+
+<style>
+  #back-to-top {
+    box-shadow: 0 0 20px rgba(199, 168, 107, 0.2);
+  }
+</style>
