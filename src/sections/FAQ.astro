@@ -72,10 +72,10 @@ const { faqs } = Astro.props
                 itemtype="https://schema.org/Question"
                 open={index === 0}
               >
-                <summary class="faq-summary flex min-h-20 cursor-pointer list-none items-center justify-between gap-5 px-1 py-5 outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:min-h-24 sm:px-4 sm:py-6 [&::-webkit-details-marker]:hidden">
+                <summary class="faq-summary min-h-20 cursor-pointer list-none px-1 py-5 outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:min-h-24 sm:px-4 sm:py-6 [&::-webkit-details-marker]:hidden">
                   <h3
                     itemprop="name"
-                    class="w-full max-w-none font-cinzel text-xl leading-tight font-bold tracking-[0.02em] text-balance text-theme-cream transition-[color] duration-200 ease-out group-open:text-theme-gold sm:text-2xl"
+                    class="faq-summary__title font-cinzel text-xl leading-tight font-bold tracking-[0.02em] text-balance text-theme-cream transition-[color] duration-200 ease-out group-open:text-theme-gold sm:text-2xl"
                   >
                     {question}
                   </h3>
@@ -99,7 +99,7 @@ const { faqs } = Astro.props
                     <div
                       itemprop="text"
                       class:list={[
-                        'faq-answer-body w-full max-w-none px-1 pt-1 pr-14 pb-10 text-base leading-7 text-pretty text-white/75 sm:px-4 sm:pr-20 sm:pb-12 sm:text-lg sm:leading-8',
+                        'faq-answer-body px-1 pt-1 pb-10 text-base leading-7 text-pretty text-white/75 sm:px-4 sm:pb-12 sm:text-lg sm:leading-8',
                         channels && 'faq-answer-body--stream',
                         battles && 'faq-answer-body--battles',
                         mainEventBattle && 'faq-answer-body--main-event',
@@ -202,6 +202,9 @@ const { faqs } = Astro.props
     --faq-content-width: 42rem;
     --faq-gutter: 3rem;
     --faq-title-row: 11rem;
+    --faq-text-measure: 52ch;
+    --faq-icon-col: 2.5rem;
+    --faq-icon-gap: 1.25rem;
   }
 
   .faq-layout {
@@ -280,8 +283,12 @@ const { faqs } = Astro.props
       width: 100%;
     }
 
+    .faq-section {
+      --faq-text-measure: 58ch;
+    }
+
     .faq-summary {
-      gap: clamp(1.5rem, 3vw, 2.5rem);
+      --faq-icon-gap: clamp(1.5rem, 3vw, 2.5rem);
       padding-inline: 0;
       padding-block: clamp(1.5rem, 2.5vw, 2rem);
       min-height: 5.5rem;
@@ -297,6 +304,7 @@ const { faqs } = Astro.props
       --faq-gutter: 3.5rem;
       --faq-title-width: 23rem;
       --faq-content-width: 48rem;
+      --faq-text-measure: 60ch;
     }
   }
 
@@ -356,11 +364,32 @@ const { faqs } = Astro.props
   }
 
   .faq-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--faq-icon-col);
+    column-gap: var(--faq-icon-gap);
+    align-items: center;
     scroll-margin-top: 5.5rem;
     scroll-margin-bottom: 0.25rem;
   }
 
+  .faq-summary__title {
+    grid-column: 1;
+    min-width: 0;
+    max-width: var(--faq-text-measure);
+  }
+
+  .faq-icon {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+
   @media (min-width: 640px) {
+    .faq-section {
+      --faq-icon-col: 2.75rem;
+      --faq-text-measure: 56ch;
+    }
+
     .faq-summary {
       scroll-margin-top: 6rem;
     }
@@ -479,12 +508,18 @@ const { faqs } = Astro.props
   }
 
   .faq-answer-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--faq-icon-col);
+    column-gap: var(--faq-icon-gap);
     transform-origin: top center;
     min-height: 0;
     overflow: hidden;
   }
 
   .faq-answer-body {
+    grid-column: 1;
+    min-width: 0;
+    max-width: var(--faq-text-measure);
     transform-origin: top center;
     opacity: 0;
     transform: translate3d(0, -0.5rem, 0) scaleY(0.98);
@@ -607,7 +642,7 @@ const { faqs } = Astro.props
   }
 
   .faq-answer-body--battles .faq-answer-lead {
-    max-width: none;
+    max-width: var(--faq-text-measure);
     text-align: left;
     margin-inline: 0;
   }
