@@ -64,23 +64,23 @@ const timestamp = EVENT_DATE.getTime()
         aria-label="Cuenta atrás para La Velada del Año VI"
       >
         <div class="flex flex-col items-center gap-1">
-          <span data-days class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">---</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">DÍAS</span>
+          <span data-days data-countdown-digits="3" style="--countdown-digits: 3" class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">---</span>
+          <span class="countdown-label font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">DÍAS</span>
         </div>
         <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
         <div class="flex flex-col items-center gap-1">
-          <span data-hours class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">HORAS</span>
+          <span data-hours data-countdown-digits="2" style="--countdown-digits: 2" class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="countdown-label font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">HORAS</span>
         </div>
         <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
         <div class="flex flex-col items-center gap-1">
-          <span data-minutes class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">MIN</span>
+          <span data-minutes data-countdown-digits="2" style="--countdown-digits: 2" class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="countdown-label font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">MIN</span>
         </div>
         <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
         <div class="flex flex-col items-center gap-1">
-          <span data-seconds class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">SEG</span>
+          <span data-seconds data-countdown-digits="2" style="--countdown-digits: 2" class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="countdown-label font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">SEG</span>
         </div>
       </div>
     </div>
@@ -103,8 +103,31 @@ const timestamp = EVENT_DATE.getTime()
     }
 
     .countdown-digit {
+      display: inline-grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 1ch;
+      justify-content: end;
+      width: calc(var(--countdown-digits) * 1ch);
       text-shadow: 0 0 30px rgba(199, 168, 107, 0.2);
-      min-width: 1.8em;
+      line-height: 1;
+      text-align: center;
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings:
+        'tnum' 1,
+        'lnum' 1;
+    }
+
+    [data-countdown-slot] {
+      width: 1ch;
+    }
+
+    [data-countdown-slot][data-empty] {
+      color: transparent;
+      text-shadow: none;
+    }
+
+    .countdown-label {
+      padding-left: 0.3em;
       text-align: center;
     }
   </style>
@@ -123,12 +146,32 @@ const timestamp = EVENT_DATE.getTime()
       const $seconds = $('[data-seconds]', $countdown)
 
       const timestamp = Number($countdown.getAttribute('data-date') ?? 0)
+
+      const updateDigits = (node: Element | null, value: string) => {
+        if (!node) return
+        const slotCount = Number(node.getAttribute('data-countdown-digits') ?? value.length)
+        const digits = value.padStart(slotCount, ' ').slice(-slotCount)
+
+        node.setAttribute('aria-label', value)
+        node.replaceChildren(
+          ...Array.from(digits, (digit) => {
+            const slot = node.ownerDocument.createElement('span')
+            const isEmpty = digit === ' '
+            slot.setAttribute('data-countdown-slot', '')
+            slot.setAttribute('aria-hidden', 'true')
+            slot.textContent = isEmpty ? '0' : digit
+            slot.toggleAttribute('data-empty', isEmpty)
+            return slot
+          }),
+        )
+      }
+
       return createCountdown(timestamp, {
         onTick({ days, hours, minutes, seconds }: TimeParts) {
-          if ($days) $days.textContent = days
-          if ($hours) $hours.textContent = hours
-          if ($minutes) $minutes.textContent = minutes
-          if ($seconds) $seconds.textContent = seconds
+          updateDigits($days, days)
+          updateDigits($hours, hours)
+          updateDigits($minutes, minutes)
+          updateDigits($seconds, seconds)
         },
         onComplete() {},
       })
