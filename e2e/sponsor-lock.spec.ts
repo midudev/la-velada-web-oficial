@@ -14,7 +14,7 @@ test.describe('Sponsor cards hover lock effect', () => {
 
   test('logo scales down on hover', async ({ page }) => {
     const firstCard = page.locator('.sponsor-card').first()
-    const logo = firstCard.locator('svg').first()
+    const logo = firstCard.locator('svg[aria-hidden="true"]')
 
     const initialTransform = await logo.evaluate((el) =>
       window.getComputedStyle(el).transform
@@ -63,7 +63,7 @@ test.describe('Sponsor cards hover lock effect', () => {
 
   test('effects reverse on mouse leave', async ({ page }) => {
     const firstCard = page.locator('.sponsor-card').first()
-    const logo = firstCard.locator('svg').first()
+    const logo = firstCard.locator('svg[aria-hidden="true"]')
 
     await firstCard.hover()
     await page.waitForTimeout(400)
