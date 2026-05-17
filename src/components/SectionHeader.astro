@@ -8,6 +8,7 @@ interface Props {
   titleClass?: string
   subtitleClass?: string
   eyebrowClass?: string
+  hideDivider?: boolean
 }
 
 const {
@@ -19,14 +20,19 @@ const {
   titleClass = 'mb-3',
   subtitleClass = 'mb-10 max-w-xl tracking-[0.25em] sm:text-sm',
   eyebrowClass,
+  hideDivider,
 } = Astro.props
 ---
 
-<div class:list={['mb-8 flex items-center gap-4', dividerClass]} aria-hidden="true">
-  <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-  <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-  <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-</div>
+{
+  !hideDivider && (
+    <div class:list={['mb-8 flex items-center gap-4', dividerClass]} aria-hidden="true">
+      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
+      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
+      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
+    </div>
+  )
+}
 
 {
   eyebrow && (
