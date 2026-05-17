@@ -63,24 +63,24 @@ const timestamp = EVENT_DATE.getTime()
         role="timer"
         aria-label="Cuenta atrás para La Velada del Año VI"
       >
-        <div class="flex flex-col items-center gap-1">
-          <span data-days class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">---</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">DÍAS</span>
+        <div class="flex flex-col items-center gap-1 [--countdown-width:3ch]">
+          <span data-days class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">---</span>
+          <span class="w-full text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">DÍAS</span>
         </div>
-        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
-        <div class="flex flex-col items-center gap-1">
-          <span data-hours class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">HORAS</span>
+        <span class="countdown-separator font-cinzel text-2xl font-bold text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="flex flex-col items-center gap-1 [--countdown-width:2ch]">
+          <span data-hours class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="w-full text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">HORAS</span>
         </div>
-        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
-        <div class="flex flex-col items-center gap-1">
-          <span data-minutes class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">MIN</span>
+        <span class="countdown-separator font-cinzel text-2xl font-bold text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="flex flex-col items-center gap-1 [--countdown-width:2ch]">
+          <span data-minutes class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="w-full text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">MIN</span>
         </div>
-        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
-        <div class="flex flex-col items-center gap-1">
-          <span data-seconds class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">SEG</span>
+        <span class="countdown-separator font-cinzel text-2xl font-bold text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="flex flex-col items-center gap-1 [--countdown-width:2ch]">
+          <span data-seconds class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="w-full text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">SEG</span>
         </div>
       </div>
     </div>
@@ -103,15 +103,35 @@ const timestamp = EVENT_DATE.getTime()
     }
 
     .countdown-digit {
+      display: inline-flex;
+      justify-content: center;
+      width: var(--countdown-width);
       text-shadow: 0 0 30px rgba(199, 168, 107, 0.2);
-      min-width: 1.8em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .countdown-digit :global([data-countdown-slot]) {
+      width: 1ch;
       text-align: center;
+    }
+
+    .countdown-separator {
+      align-self: flex-start;
+      line-height: 1;
+      margin-top: 0.18em;
     }
   </style>
 
   <script>
-    import createCountdown, { type TimeParts } from '@/lib/countdown'
     import { $ } from '@/lib/dom-selector'
+
+    const SECOND = 1000
+    const MINUTE = SECOND * 60
+    const HOUR = MINUTE * 60
+    const DAY = HOUR * 24
+
+    const formatTime = (time: number) => Math.floor(time).toString().padStart(2, '0')
 
     function initCountdown() {
       const $countdown = $<HTMLElement>('#countdown-hero')
@@ -122,25 +142,68 @@ const timestamp = EVENT_DATE.getTime()
       const $minutes = $('[data-minutes]', $countdown)
       const $seconds = $('[data-seconds]', $countdown)
 
-      const timestamp = Number($countdown.getAttribute('data-date') ?? 0)
-      return createCountdown(timestamp, {
-        onTick({ days, hours, minutes, seconds }: TimeParts) {
-          if ($days) $days.textContent = days
-          if ($hours) $hours.textContent = hours
-          if ($minutes) $minutes.textContent = minutes
-          if ($seconds) $seconds.textContent = seconds
-        },
-        onComplete() {},
-      })
+      const timestamp = Number($countdown.dataset.date)
+      if (!Number.isFinite(timestamp)) return
+      const countdownParts = [
+        [$days, (diff: number) => diff / DAY],
+        [$hours, (diff: number) => (diff % DAY) / HOUR],
+        [$minutes, (diff: number) => (diff % HOUR) / MINUTE],
+        [$seconds, (diff: number) => (diff % MINUTE) / SECOND],
+      ] as const
+
+      const updateDigits = (node: Element | null, value: string) => {
+        if (!node || node.textContent === value) return
+
+        if (node.children.length !== value.length) {
+          node.replaceChildren(
+            ...Array.from(value, (digit) => {
+              const slot = node.ownerDocument.createElement('span')
+              slot.dataset.countdownSlot = ''
+              slot.textContent = digit
+              return slot
+            }),
+          )
+
+          return
+        }
+
+        for (let index = 0; index < value.length; index++) {
+          const slot = node.children[index]
+          const digit = value[index]
+          if (slot.textContent !== digit) slot.textContent = digit
+        }
+      }
+
+      const updateCountdown = (diff: number) => {
+        countdownParts.forEach(([node, resolveValue]) => {
+          updateDigits(node, formatTime(resolveValue(diff)))
+        })
+      }
+
+      let intervalId = 0
+
+      const tick = () => {
+        const diff = timestamp - Date.now()
+        if (diff <= 0) return window.clearInterval(intervalId)
+
+        updateCountdown(diff)
+      }
+
+      intervalId = window.setInterval(tick, SECOND)
+      tick()
+
+      return () => window.clearInterval(intervalId)
     }
 
     document.addEventListener('astro:page-load', () => {
       const hero = $<HTMLElement>('[data-hero]')
       if (!hero) return
 
-      initCountdown()?.start()
-
+      const cleanups: Array<() => void> = []
+      const stopCountdown = initCountdown()
+      if (stopCountdown) cleanups.push(stopCountdown)
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
       if (!reduceMotion) {
         const controller = new AbortController()
         const { signal } = controller
@@ -164,12 +227,13 @@ const timestamp = EVENT_DATE.getTime()
         update()
         window.addEventListener('scroll', onScroll, { passive: true, signal })
         window.addEventListener('resize', update, { passive: true, signal })
-
-        document.addEventListener(
-          'astro:before-preparation',
-          () => controller.abort(),
-          { once: true },
-        )
+        cleanups.push(() => controller.abort())
       }
+
+      document.addEventListener(
+        'astro:before-preparation',
+        () => cleanups.forEach((cleanup) => cleanup()),
+        { once: true },
+      )
     })
   </script>
