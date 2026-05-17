@@ -228,27 +228,15 @@ const SPONSORS: Sponsor[] = [
                 title={name}
                 class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white outline-none transition duration-500 hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               >
-                <span
-                  aria-hidden="true"
-                  class="pointer-events-none absolute top-1.5 left-1.5 size-2.5 border-t border-l border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:top-2 sm:left-2 sm:size-3"
-                />
-                <span
-                  aria-hidden="true"
-                  class="pointer-events-none absolute top-1.5 right-1.5 size-2.5 border-t border-r border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:top-2 sm:right-2 sm:size-3"
-                />
-                <span
-                  aria-hidden="true"
-                  class="pointer-events-none absolute bottom-1.5 left-1.5 size-2.5 border-b border-l border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:bottom-2 sm:left-2 sm:size-3"
-                />
-                <span
-                  aria-hidden="true"
-                  class="pointer-events-none absolute bottom-1.5 right-1.5 size-2.5 border-b border-r border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:bottom-2 sm:right-2 sm:size-3"
-                />
+                <svg class="corner-tl pointer-events-none absolute top-1.5 left-1.5 size-2.5 opacity-0 sm:top-2 sm:left-2 sm:size-3" viewBox="0 0 12 12"><path d="M 1 5 L 1 1 L 5 1" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
+                <svg class="corner-tr pointer-events-none absolute top-1.5 right-1.5 size-2.5 opacity-0 sm:top-2 sm:right-2 sm:size-3" viewBox="0 0 12 12"><path d="M 11 5 L 11 1 L 7 1" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
+                <svg class="corner-bl pointer-events-none absolute bottom-1.5 left-1.5 size-2.5 opacity-0 sm:bottom-2 sm:left-2 sm:size-3" viewBox="0 0 12 12"><path d="M 1 7 L 1 11 L 5 11" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
+                <svg class="corner-br pointer-events-none absolute bottom-1.5 right-1.5 size-2.5 opacity-0 sm:bottom-2 sm:right-2 sm:size-3" viewBox="0 0 12 12"><path d="M 11 7 L 11 11 L 7 11" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
 
                 <Logo
                   aria-hidden="true"
                   class:list={[
-                    'h-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)] transition duration-500 group-hover:scale-[1.04] group-hover:brightness-110 group-focus-visible:scale-[1.04] group-focus-visible:brightness-110',
+                    'h-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)] transition duration-500',
                     logoClass,
                   ]}
                 />
@@ -279,13 +267,6 @@ const SPONSORS: Sponsor[] = [
     }
   }
 
-  /**
-   * En desktop tenemos 11 patrocinadores. Usamos un grid de 30 columnas
-   * (mínimo común múltiplo de 5 y 6) para que la primera fila aloje
-   * 5 tarjetas (span 6 cada una = 30) y la segunda fila aloje 6
-   * (span 5 cada una = 30). Quedan dos filas perfectamente simétricas
-   * con todas las tarjetas en igualdad visual.
-   */
   @media (min-width: 1024px) {
     .sponsors-grid {
       grid-template-columns: repeat(30, minmax(0, 1fr));
@@ -324,3 +305,52 @@ const SPONSORS: Sponsor[] = [
     }
   }
 </style>
+
+<script>
+  import { animate, hover } from 'motion'
+  import { $ } from '@/lib/dom-selector'
+
+  const corners = [
+    ['.corner-tl', 6, 6],
+    ['.corner-tr', -6, 6],
+    ['.corner-bl', 6, -6],
+    ['.corner-br', -6, -6],
+  ]
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    hover('.sponsor-card', (card) => {
+      const logo = $('svg[aria-hidden="true"]', card)
+
+      corners.forEach(([sel, x, y]) => {
+        const el = $(sel, card)
+        if (!el) return
+        animate(el, { opacity: 1 }, { duration: 0.06, ease: [0.23, 1, 0.32, 1] })
+        animate(el, { x, y }, {
+          delay: 0.08,
+          type: 'spring',
+          bounce: 0,
+          duration: 0.3,
+        })
+      })
+
+      if (logo) {
+        animate(logo, { scale: 0.96 }, {
+          duration: 0.2,
+          delay: 0.08,
+          ease: 'ease-out',
+        })
+      }
+
+      return () => {
+        corners.forEach(([sel]) => {
+          const el = $(sel, card)
+          if (!el) return
+          animate(el, { opacity: 0, x: 0, y: 0 }, { duration: 0.12, ease: 'ease-out' })
+        })
+        if (logo) {
+          animate(logo, { scale: 1 }, { duration: 0.15, ease: 'ease-out' })
+        }
+      }
+    })
+  }
+</script>
