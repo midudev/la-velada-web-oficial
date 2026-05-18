@@ -1,120 +1,210 @@
 ---
-import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
-import CloseIcon from '@/assets/svg/close.svg'
-import PlayIcon from '@/assets/svg/play.svg'
+import { VIDEOS } from '@/consts/videos'
+import { existsSync } from 'node:fs'
 
-type Span = 'big' | 'small'
+const PANEL_MARK = '/logo.svg'
 
-interface Video {
-  id: string
-  title: string
-  videoId: string | null
-  poster: string | null
-  active: boolean
-  span: Span
+const publicAssetExists = (path: string | undefined) => {
+  if (!path?.startsWith('/')) return false
+  return existsSync(new URL(`../../public${path}`, import.meta.url))
 }
 
-const VIDEOS: Video[] = [
-  {
-    id: 'presentacion',
-    title: 'La Presentación',
-    videoId: 'h-jWhM3ne5U',
-    poster: '/videos/thumbnails/presentacion.webp',
-    active: true,
-    span: 'big',
-  },
-  {
-    id: 'pesaje',
-    title: 'El Pesaje',
-    videoId: null,
-    poster: null,
-    active: false,
-    span: 'small',
-  },
-  {
-    id: 'cara-a-cara',
-    title: 'Cara a Cara',
-    videoId: null,
-    poster: null,
-    active: false,
-    span: 'small',
-  },
-]
+const getTileStyle = (video: (typeof VIDEOS)[number]) => {
+  const poster = video.poster ?? '/logo-mark.png'
+  const hasPreviewSheet = publicAssetExists(video.previewSheet)
+  const previewSheet = hasPreviewSheet ? video.previewSheet : poster
+  const previewSize = hasPreviewSheet && video.preview
+    ? `${video.preview.columns * 100}% ${video.preview.rows * 100}%`
+    : 'cover'
+  const frameCount = hasPreviewSheet ? video.preview?.frameCount ?? 0 : 0
 
-const SPAN_CLASSES: Record<Span, string> = {
-  big: 'sm:col-span-2 lg:col-span-2 lg:row-span-2',
-  small: 'lg:col-span-1 lg:row-span-1',
+  return {
+    style: [
+      `--video-poster: url('${poster}')`,
+      `--video-preview-sheet: url('${previewSheet}')`,
+      `--video-preview-size: ${previewSize}`,
+    ].join(';'),
+    frameCount,
+  }
 }
 
+const mainVideo = VIDEOS.find((video) => video.status === 'available') ?? VIDEOS[0]
+const carouselVideos = [
+  VIDEOS.find((video) => video.id === 'cara-a-cara'),
+  mainVideo,
+  VIDEOS.find((video) => video.id === 'pesaje'),
+].filter((video): video is (typeof VIDEOS)[number] => Boolean(video))
+const getNavLabel = (video: (typeof VIDEOS)[number]) =>
+  video.id === 'pesaje' ? 'PESAJE' : video.title.toUpperCase()
+const getPanelStyle = (video: (typeof VIDEOS)[number]) =>
+  [
+    `--carousel-panel-poster: ${video.poster ? `url('${video.poster}')` : 'none'}`,
+    `--carousel-panel-mark: url('${PANEL_MARK}')`,
+  ].join(';')
+const activeVideoIndex = carouselVideos.findIndex((video) => video.status === 'available')
+const initialVideo = carouselVideos[activeVideoIndex] ?? mainVideo
+const initialPrevVideo = carouselVideos.at(activeVideoIndex - 1) ?? carouselVideos[0]
+const initialNextVideo =
+  carouselVideos.at((activeVideoIndex + 1) % carouselVideos.length) ?? carouselVideos[0]
+const initialTileStyle = getTileStyle(initialVideo)
+const getCarouselItem = (video: (typeof VIDEOS)[number]) => {
+  const tileStyle = getTileStyle(video)
+
+  return {
+    id: video.id,
+    title: video.title,
+    cta: video.cta,
+    status: video.status,
+    videoId: video.videoId,
+    duration: video.duration,
+    poster: video.poster ?? '/logo-mark.png',
+    previewVideo: video.previewVideo,
+    previewSheet: tileStyle.frameCount > 0 ? video.previewSheet : (video.poster ?? '/logo-mark.png'),
+    previewSize: video.preview && tileStyle.frameCount > 0
+      ? `${video.preview.columns * 100}% ${video.preview.rows * 100}%`
+      : 'cover',
+    frameCount: tileStyle.frameCount,
+    columns: video.preview?.columns ?? 0,
+    rows: video.preview?.rows ?? 0,
+    fps: video.preview?.fps ?? 0,
+  }
+}
+const carouselState = {
+  activeIndex: Math.max(activeVideoIndex, 0),
+  videos: carouselVideos.map(getCarouselItem),
+}
 ---
 
 <section
   id="videos"
-  class="relative w-full px-4 py-20 sm:px-6 lg:py-28"
+  class="videos-section relative flex min-h-[95svh] w-full overflow-hidden px-4 py-16 sm:px-6 lg:px-0 lg:py-6"
   aria-labelledby="videos-title"
+  data-videos-section
 >
-  <div class="mx-auto flex max-w-7xl flex-col items-center">
-    <div class="mb-8 flex items-center gap-4 sm:mb-12" aria-hidden="true">
-      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-    </div>
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(199,168,107,0.12),_transparent_58%),linear-gradient(180deg,_rgba(10,16,36,0)_0%,_rgba(10,16,36,0.92)_88%)]"
+    aria-hidden="true"
+  >
+  </div>
+  <div class="relative z-10 mx-auto flex w-full max-w-[100rem] flex-col justify-center">
+    <header class="videos-header mb-6 flex flex-col items-center gap-2 text-center lg:mb-4">
+      <div class="flex flex-col items-center gap-2">
+        <h2
+          id="videos-title"
+          class="font-cinzel text-xl font-bold tracking-[0.26em] text-theme-cream sm:text-2xl"
+        >
+          VÍDEOS
+        </h2>
+        <p class="max-w-xl font-cinzel text-[0.62rem] font-medium tracking-[0.25em] text-white/55 sm:text-xs">
+          Todo lo que rodea a La Velada del Año VI
+        </p>
+      </div>
+    </header>
 
-    <h2
-      id="videos-title"
-      class="mb-3 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
-    >
-      VÍDEOS
-    </h2>
-    <p
-      class="mb-10 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.25em] text-white/55 sm:mb-14 sm:text-sm"
-    >
-      Todo lo que rodea a La Velada del Año VI
-    </p>
+    <div class="videos-stage relative flex min-h-[64svh] w-full flex-col items-center justify-center gap-4 lg:min-h-[68svh]" data-video-stage>
+      <canvas class="video-carousel-canvas pointer-events-none absolute inset-0 z-[1] hidden h-full w-full lg:block" data-video-webgl aria-hidden="true"></canvas>
 
-    <div
-      class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:aspect-[24/9] lg:grid-cols-3 lg:grid-rows-2 lg:gap-4"
-    >
+      <button
+        type="button"
+        class="video-side-rail video-side-rail-left group relative order-2 flex min-h-16 w-full items-center justify-center px-4 py-5 text-center outline-none transition duration-500 focus-visible:ring-2 focus-visible:ring-theme-gold/45 lg:absolute lg:left-0 lg:top-1/2 lg:z-20 lg:h-[72svh] lg:w-[clamp(8rem,13vw,14rem)] lg:-translate-y-1/2 lg:px-0 lg:py-0"
+        data-video-nav
+        data-carousel-direction="prev"
+        aria-label="Ver vídeo anterior"
+      >
+        <span
+          class="video-nav-label video-nav-label-left font-cinzel text-2xl font-black tracking-[0.24em] text-theme-gold/70 transition duration-500 group-hover:text-theme-gold/90 group-focus-visible:text-theme-gold/90 sm:text-3xl lg:absolute lg:top-1/2 lg:whitespace-nowrap lg:text-[clamp(3.5rem,6.8vw,6.8rem)] lg:tracking-[0.12em]"
+          data-carousel-slot="prev"
+        >
+          {getNavLabel(carouselVideos.at(activeVideoIndex - 1) ?? carouselVideos[0])}
+        </span>
+      </button>
+
+      <button
+        type="button"
+        class="video-side-rail video-side-rail-right group relative order-2 flex min-h-16 w-full items-center justify-center px-4 py-5 text-center outline-none transition duration-500 focus-visible:ring-2 focus-visible:ring-theme-gold/45 lg:absolute lg:right-0 lg:top-1/2 lg:z-20 lg:h-[72svh] lg:w-[clamp(8rem,13vw,14rem)] lg:-translate-y-1/2 lg:px-0 lg:py-0"
+        data-video-nav
+        data-carousel-direction="next"
+        aria-label="Ver vídeo siguiente"
+      >
+        <span
+          class="video-nav-label video-nav-label-right font-cinzel text-2xl font-black tracking-[0.24em] text-theme-gold/70 transition duration-500 group-hover:text-theme-gold/90 group-focus-visible:text-theme-gold/90 sm:text-3xl lg:absolute lg:top-1/2 lg:whitespace-nowrap lg:text-[clamp(3.5rem,6.8vw,6.8rem)] lg:tracking-[0.12em]"
+          data-carousel-slot="next"
+        >
+          {getNavLabel(carouselVideos.at((activeVideoIndex + 1) % carouselVideos.length) ?? carouselVideos[0])}
+        </span>
+      </button>
+
       {
-        VIDEOS.map(({ title, videoId, poster, active, span }) => {
-          const Tag = active ? 'button' : 'div'
-          return (
-            <Tag
-              type={active ? 'button' : undefined}
-              data-video-tile={active ? '' : undefined}
-              data-video-id={active ? videoId : undefined}
-              data-video-title={active ? title : undefined}
-              aria-label={active ? `Reproducir vídeo: ${title}` : `${title}. Próximamente.`}
-              aria-disabled={active ? undefined : 'true'}
-              class:list={[
-                'group relative isolate flex aspect-video w-full overflow-hidden rounded-xl border text-left outline-none transition duration-500 lg:aspect-auto',
-                SPAN_CLASSES[span],
-                active
-                  ? 'cursor-pointer border-white/10 bg-theme-navy/40 hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight'
-                  : 'pointer-events-none cursor-not-allowed border-theme-gold/15 bg-theme-midnight/90',
-              ]}
-            >
-              {active && poster ? (
-                <img
-                  src={poster}
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                  decoding="async"
-                  class="absolute inset-0 -z-10 h-full w-full scale-105 object-cover brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110"
-                />
-              ) : (
-                <div
-                  aria-hidden="true"
-                  class="absolute inset-0 -z-10 bg-linear-to-br from-theme-navy via-theme-midnight to-black"
-                />
-              )}
+        (() => {
+          const video = initialVideo
+          const tileStyle = initialTileStyle
 
+          return (
+            <>
+            <div class="video-carousel-belt pointer-events-none absolute inset-x-0 top-1/2 z-0 hidden -translate-y-1/2 lg:block" aria-hidden="true">
               <div
-                aria-hidden="true"
-                class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
-              />
-              {!active && (
+                class="video-carousel-panel video-carousel-panel-prev"
+                data-carousel-panel="prev"
+                data-panel-status={initialPrevVideo.status}
+                style={getPanelStyle(initialPrevVideo)}
+              >
+                <span data-carousel-panel-title="prev">{getNavLabel(initialPrevVideo)}</span>
+                <small data-carousel-panel-cta="prev">{initialPrevVideo.cta}</small>
+              </div>
+              <div
+                class="video-carousel-panel video-carousel-panel-next"
+                data-carousel-panel="next"
+                data-panel-status={initialNextVideo.status}
+                style={getPanelStyle(initialNextVideo)}
+              >
+                <span data-carousel-panel-title="next">{getNavLabel(initialNextVideo)}</span>
+                <small data-carousel-panel-cta="next">{initialNextVideo.cta}</small>
+              </div>
+            </div>
+            <article
+              class="video-main-tile video-tile video-tile-active group relative order-1 isolate mx-auto flex aspect-video min-h-[22rem] w-full max-w-6xl overflow-hidden rounded-xl border border-theme-gold/45 bg-theme-navy/40 text-left outline-none transition duration-500 hover:border-theme-gold/70 focus-within:border-theme-gold/70 lg:z-10 lg:min-h-0 lg:w-[68%] lg:max-w-[70rem] xl:w-[66%]"
+              data-video-carousel
+              data-video-tile
+              data-video-status={video.status}
+              data-video-id={video.videoId}
+              data-video-title={video.title}
+              data-preview-frame-count={tileStyle.frameCount}
+              data-preview-columns={video.preview?.columns ?? 0}
+              data-preview-rows={video.preview?.rows ?? 0}
+              data-preview-fps={video.preview?.fps ?? 0}
+              aria-label={`Reproducir vídeo: ${video.title}`}
+              style={tileStyle.style}
+            >
+            <div class="video-preview absolute inset-0 -z-10">
+              {
+                video.previewVideo && (
+                  <video
+                    class="video-preview-motion absolute inset-0 h-full w-full object-cover opacity-0"
+                    data-video-preview-video
+                    src={video.previewVideo}
+                    poster={video.poster}
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    aria-hidden="true"
+                  />
+                )
+              }
+            </div>
+            <div
+              aria-hidden="true"
+              class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
+            />
+            <div aria-hidden="true" class="video-hover-wash absolute inset-0 -z-10"></div>
+            <div class="video-locked-layer absolute inset-0 z-30 flex items-center justify-center opacity-0 transition duration-500" data-video-locked-layer aria-hidden={video.status === 'available' ? 'true' : 'false'}>
+              <span class="rounded-full border border-theme-gold/35 bg-theme-midnight/65 px-4 py-2 font-cinzel text-[0.62rem] font-black tracking-[0.28em] text-theme-gold backdrop-blur">
+                PRÓXIMAMENTE
+              </span>
+            </div>
+
+            {
+              video.status === 'locked' && (
                 <>
                   <div
                     aria-hidden="true"
@@ -125,164 +215,462 @@ const SPAN_CLASSES: Record<Span, string> = {
                     class="pointer-events-none absolute inset-3 -z-10 rounded-lg border border-theme-gold/10"
                   />
                 </>
-              )}
-              <div
-                aria-hidden="true"
-                class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
-              />
+              )
+            }
 
-              {active && (
-                <span
-                  aria-hidden="true"
-                  class="absolute inset-0 -z-10 flex items-center justify-center"
+            <div data-video-frame class="absolute inset-0 z-20"></div>
+
+            <div class="relative z-30 flex h-full w-full items-center justify-center p-5 sm:p-6 lg:p-7">
+              <div class="relative flex flex-col items-center gap-4">
+                <button
+                  type="button"
+                  data-video-play
+                  aria-label={`Reproducir ${video.title}`}
+                  class="video-play-button flex size-18 items-center justify-center rounded-full border border-theme-cream/80 bg-black/35 text-theme-cream outline-none backdrop-blur-md transition duration-500 hover:scale-105 hover:border-theme-gold hover:bg-theme-gold/15 focus-visible:scale-105 focus-visible:border-theme-gold focus-visible:bg-theme-gold/15 focus-visible:ring-2 focus-visible:ring-theme-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:size-24"
                 >
-                  <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
-                    <PlayIcon
-                      class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
-                      aria-hidden="true"
-                    />
-                  </span>
-                </span>
-              )}
-
-              {active ? (
-                <div class="relative flex h-full w-full flex-col justify-end gap-1 p-5 sm:p-6 lg:p-7">
-                  <h3
-                    class:list={[
-                      'font-cinzel font-bold leading-tight tracking-[0.04em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream',
-                      span === 'big'
-                        ? 'text-2xl sm:text-3xl lg:text-4xl xl:text-5xl'
-                        : 'text-xl sm:text-2xl lg:text-3xl',
-                    ]}
-                  >
-                    {title}
-                  </h3>
-                  <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
-                    VER VÍDEO
-                    <ArrowRightIcon
-                      class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
-                      stroke-width="2.5"
-                      aria-hidden="true"
-                    />
-                  </span>
-                </div>
-              ) : (
-                <div class="relative flex h-full w-full flex-col items-center justify-center gap-3 px-6 py-8 text-center sm:gap-4 sm:px-8">
-                  <span
-                    aria-hidden="true"
-                    class="flex items-center gap-3 font-cinzel text-[0.55rem] font-semibold tracking-[0.45em] text-theme-gold/70 sm:text-[0.6rem]"
-                  >
-                    <span class="h-px w-8 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-12" />
-                    <span class="size-1 rotate-45 bg-theme-gold/60" />
-                    <span class="h-px w-8 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-12" />
-                  </span>
-
-                  <h3
-                    class:list={[
-                      'font-cinzel font-bold leading-tight tracking-[0.08em] text-theme-cream/85 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)]',
-                      span === 'big'
-                        ? 'text-2xl sm:text-3xl lg:text-4xl xl:text-5xl'
-                        : 'text-xl sm:text-2xl lg:text-[1.75rem]',
-                    ]}
-                  >
-                    {title}
-                  </h3>
-
-                  <span class="inline-flex items-center gap-2 font-cinzel text-[0.55rem] font-semibold tracking-[0.4em] text-theme-gold/80 sm:text-[0.65rem]">
-                    <span class="size-1 rotate-45 bg-theme-gold/70" aria-hidden="true" />
-                    PRÓXIMAMENTE
-                    <span class="size-1 rotate-45 bg-theme-gold/70" aria-hidden="true" />
-                  </span>
-                </div>
-              )}
-            </Tag>
+                  <span class="video-button-glyph" aria-hidden="true"></span>
+                </button>
+                {
+                  video.duration && (
+                    <span class="rounded-full border border-theme-gold/35 bg-black/45 px-3 py-1 font-cinzel text-[0.62rem] font-bold tracking-[0.24em] text-theme-cream backdrop-blur sm:text-xs" data-video-duration>
+                      {video.duration}
+                    </span>
+                  )
+                }
+              </div>
+            </div>
+            </article>
+            </>
           )
-        })
+        })()
       }
     </div>
-  </div>
 
-  <dialog
-    id="video-dialog"
-    aria-labelledby="video-dialog-title"
-    class="m-0 w-screen max-w-none bg-transparent p-0 backdrop:bg-black/85 backdrop:backdrop-blur-sm open:flex open:h-screen open:items-center open:justify-center"
-  >
-    <div class="relative mx-4 w-full max-w-5xl">
-      <div class="mb-4 flex items-center justify-between gap-4">
-        <h3
-          id="video-dialog-title"
-          data-video-dialog-title
-          class="font-cinzel text-base font-bold tracking-[0.18em] text-theme-cream sm:text-xl"
-        >
-        </h3>
-        <button
-          type="button"
-          data-video-dialog-close
-          aria-label="Cerrar vídeo"
-          class="inline-flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white outline-none transition hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
-        >
-          <CloseIcon class="size-5" aria-hidden="true" />
-        </button>
-      </div>
-      <div
-        class="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]"
-      >
-        <div data-video-dialog-frame class="absolute inset-0 h-full w-full"></div>
-      </div>
-    </div>
-  </dialog>
+  </div>
+  <script type="application/json" data-video-carousel-json set:html={JSON.stringify(carouselState)} />
 </section>
 
 <script>
-  import { $, $$ } from '@/lib/dom-selector'
+  import { initVideoPreview } from '@/lib/video-preview'
 
-  function initVideoDialog() {
-    const dialog = $<HTMLDialogElement>('#video-dialog')
-    if (!dialog) return
+  document.addEventListener('astro:page-load', () => initVideoPreview())
+</script>
 
-    const tiles = $$<HTMLElement>('[data-video-tile]')
-    const closeBtn = $<HTMLButtonElement>('[data-video-dialog-close]', dialog)
-    const titleEl = $<HTMLElement>('[data-video-dialog-title]', dialog)
-    const frame = $<HTMLElement>('[data-video-dialog-frame]', dialog)
-    if (!frame) return
-
-    function openVideo(videoId: string, title: string) {
-      if (titleEl) titleEl.textContent = title
-      const iframe = document.createElement('iframe')
-      iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&playsinline=1`
-      iframe.allow =
-        'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen'
-      iframe.setAttribute('allowfullscreen', '')
-      iframe.title = title
-      iframe.className = 'h-full w-full border-0'
-      frame!.replaceChildren(iframe)
-      dialog!.showModal()
-    }
-
-    function closeVideo() {
-      if (!dialog!.open) return
-      dialog!.close()
-    }
-
-    tiles.forEach((tile) => {
-      tile.addEventListener('click', () => {
-        const videoId = tile.getAttribute('data-video-id')
-        const title = tile.getAttribute('data-video-title') ?? ''
-        if (!videoId) return
-        openVideo(videoId, title)
-      })
-    })
-
-    closeBtn?.addEventListener('click', closeVideo)
-
-    dialog.addEventListener('click', (event) => {
-      if (event.target === dialog) closeVideo()
-    })
-
-    dialog.addEventListener('close', () => {
-      frame.replaceChildren()
-    })
+<style>
+  .videos-section {
+    background:
+      radial-gradient(ellipse at 50% 10%, rgba(199, 168, 107, 0.08), transparent 50%),
+      var(--color-theme-midnight);
   }
 
-  document.addEventListener('astro:page-load', initVideoDialog)
-</script>
+  .videos-section::before,
+  .videos-section::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    width: min(32vw, 30rem);
+    pointer-events: none;
+    content: '';
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+
+  .videos-section::before {
+    left: 0;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-theme-midnight) 92%, transparent) 0%,
+      color-mix(in srgb, var(--color-theme-gold) 13%, transparent) 42%,
+      transparent 100%
+    );
+  }
+
+  .videos-section::after {
+    right: 0;
+    background: linear-gradient(
+      270deg,
+      color-mix(in srgb, var(--color-theme-midnight) 92%, transparent) 0%,
+      color-mix(in srgb, var(--color-theme-gold) 13%, transparent) 42%,
+      transparent 100%
+    );
+  }
+
+  .videos-section:has(.video-side-rail-left:hover)::before,
+  .videos-section:has(.video-side-rail-left:focus-visible)::before,
+  .videos-section:has(.video-side-rail-right:hover)::after,
+  .videos-section:has(.video-side-rail-right:focus-visible)::after {
+    opacity: 1;
+  }
+
+  .videos-stage {
+    min-height: min(68svh, 48rem);
+    perspective: 1600px;
+    transform-style: preserve-3d;
+  }
+
+  .video-carousel-belt {
+    left: 50%;
+    width: min(54vw, 44rem);
+    height: min(76svh, 52rem);
+    transform: translate3d(-50%, -50%, -260px);
+    transform-style: preserve-3d;
+  }
+
+  .video-carousel-panel {
+    position: absolute;
+    left: 50%;
+    width: clamp(10rem, 13vw, 15rem);
+    aspect-ratio: 9 / 14;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 54%, transparent);
+    border-radius: 0.75rem;
+    background:
+      linear-gradient(180deg, rgba(4, 6, 14, 0.08), rgba(4, 6, 14, 0.92)),
+      var(--carousel-panel-poster),
+      radial-gradient(
+        ellipse at 50% 26%,
+        color-mix(in srgb, var(--color-theme-gold) 24%, transparent),
+        transparent 48%
+      ),
+      linear-gradient(135deg, rgba(199, 168, 107, 0.16), rgba(4, 6, 14, 0.94) 72%);
+    background-position: center;
+    background-size: cover, cover, cover, cover;
+    box-shadow: 0 24px 60px -48px rgba(0, 0, 0, 0.98);
+    color: var(--color-theme-cream);
+    opacity: 0.5;
+    padding: 1.25rem;
+    transform-style: preserve-3d;
+    transition:
+      opacity 0.42s ease,
+      transform 0.78s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.5s ease;
+    will-change: transform, opacity;
+  }
+
+  .video-carousel-panel::before {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background:
+      linear-gradient(180deg, rgba(244, 228, 201, 0.08), transparent 36%),
+      repeating-linear-gradient(
+        0deg,
+        color-mix(in srgb, var(--color-theme-gold) 10%, transparent) 0 1px,
+        transparent 1px 18px
+      );
+    opacity: 0.22;
+  }
+
+  .video-carousel-panel[data-panel-status='locked'] {
+    background:
+      radial-gradient(
+        ellipse at 50% 28%,
+        color-mix(in srgb, var(--color-theme-gold) 24%, transparent),
+        transparent 44%
+      ),
+      linear-gradient(160deg, rgba(199, 168, 107, 0.2), rgba(4, 6, 14, 0.94) 56%),
+      linear-gradient(180deg, rgba(8, 11, 21, 0.92), rgba(2, 4, 10, 0.98));
+    filter: none;
+  }
+
+  .video-carousel-panel[data-panel-status='locked']::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background:
+      linear-gradient(180deg, transparent 0%, rgba(4, 6, 14, 0.88) 100%),
+      var(--carousel-panel-mark);
+    background-position:
+      center,
+      center 28%;
+    background-repeat: no-repeat;
+    background-size:
+      cover,
+      58% auto;
+    opacity: 0.72;
+  }
+
+  .video-carousel-panel span,
+  .video-carousel-panel small {
+    position: relative;
+    z-index: 2;
+    font-family: var(--font-cinzel);
+    text-transform: uppercase;
+  }
+
+  .video-carousel-panel span {
+    max-width: 8ch;
+    font-size: clamp(1.35rem, 2.35vw, 2.65rem);
+    font-weight: 900;
+    line-height: 0.88;
+    letter-spacing: 0.04em;
+  }
+
+  .video-carousel-panel small {
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    color: var(--color-theme-gold);
+  }
+
+  .video-carousel-panel-prev {
+    top: 0;
+    transform: translate3d(-50%, -18%, -180px) rotateX(-44deg) rotateZ(-4deg);
+    transform-origin: center bottom;
+  }
+
+  .video-carousel-panel-next {
+    top: 100%;
+    align-items: flex-start;
+    transform: translate3d(-50%, -82%, -180px) rotateX(44deg) rotateZ(4deg);
+    transform-origin: center top;
+  }
+
+  .videos-stage:has(.video-side-rail-left:hover) .video-carousel-panel-prev,
+  .videos-stage:has(.video-side-rail-left:focus-visible) .video-carousel-panel-prev,
+  .videos-stage:has(.video-side-rail-right:hover) .video-carousel-panel-next,
+  .videos-stage:has(.video-side-rail-right:focus-visible) .video-carousel-panel-next {
+    opacity: 0.82;
+  }
+
+  .videos-stage[data-carousel-moving='true'] .video-carousel-panel {
+    transition:
+      opacity 0.34s ease,
+      transform 0.46s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.34s ease;
+  }
+
+  .videos-stage[data-carousel-direction='next'][data-carousel-phase='exit'] .video-carousel-panel-next {
+    opacity: 0.96;
+    transform: translate3d(-50%, -118%, -24px) rotateX(6deg) rotateZ(1deg) scale(1.04);
+  }
+
+  .videos-stage[data-carousel-direction='next'][data-carousel-phase='exit'] .video-carousel-panel-prev {
+    opacity: 0.14;
+    transform: translate3d(-50%, -48%, -340px) rotateX(-64deg) rotateZ(-6deg) scale(0.82);
+  }
+
+  .videos-stage[data-carousel-direction='prev'][data-carousel-phase='exit'] .video-carousel-panel-prev {
+    opacity: 0.9;
+    transform: translate3d(-50%, 18%, -24px) rotateX(-6deg) rotateZ(-1deg) scale(1.04);
+  }
+
+  .videos-stage[data-carousel-direction='prev'][data-carousel-phase='exit'] .video-carousel-panel-next {
+    opacity: 0.14;
+    transform: translate3d(-50%, -52%, -340px) rotateX(64deg) rotateZ(6deg) scale(0.82);
+  }
+
+  .videos-stage[data-carousel-direction='next'][data-carousel-phase='enter'] .video-carousel-panel-prev {
+    opacity: 0.9;
+    transform: translate3d(-50%, 10%, -72px) rotateX(-18deg) rotateZ(-1deg);
+  }
+
+  .videos-stage[data-carousel-direction='next'][data-carousel-phase='enter'] .video-carousel-panel-next {
+    opacity: 0.38;
+    transform: translate3d(-50%, -98%, -240px) rotateX(52deg) rotateZ(5deg) scale(0.94);
+  }
+
+  .videos-stage[data-carousel-direction='prev'][data-carousel-phase='enter'] .video-carousel-panel-prev {
+    opacity: 0.38;
+    transform: translate3d(-50%, -2%, -240px) rotateX(-52deg) rotateZ(-5deg) scale(0.94);
+  }
+
+  .videos-stage[data-carousel-direction='prev'][data-carousel-phase='enter'] .video-carousel-panel-next {
+    opacity: 0.9;
+    transform: translate3d(-50%, -110%, -72px) rotateX(18deg) rotateZ(1deg);
+  }
+
+  .video-preview {
+    overflow: hidden;
+    background-image:
+      linear-gradient(to top, rgba(0, 0, 0, 0.66), rgba(0, 0, 0, 0.08)),
+      var(--video-poster);
+    background-position:
+      center,
+      center;
+    background-repeat: no-repeat;
+    background-size:
+      cover,
+      cover;
+    contain: paint;
+    filter: saturate(0.95) brightness(0.9);
+    transform: scale(1.03);
+    transition:
+      filter 0.7s ease,
+      transform 0.7s ease;
+  }
+
+  .video-preview::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background-image:
+      linear-gradient(to top, rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.04)),
+      var(--video-preview-sheet);
+    background-position:
+      center,
+      var(--video-preview-position, 0% 0%);
+    background-repeat: no-repeat;
+    background-size:
+      cover,
+      var(--video-preview-size);
+    opacity: 0;
+    transition: opacity 0.26s ease;
+    will-change: opacity;
+  }
+
+  .video-tile[data-previewing='true'] .video-preview::after {
+    opacity: 1;
+  }
+
+  .video-preview-motion {
+    filter: saturate(1.08) brightness(1.08);
+    transition: opacity 0.22s ease;
+  }
+
+  .video-tile[data-previewing='true'] .video-preview-motion {
+    opacity: 1;
+  }
+
+  .video-carousel-canvas {
+    mix-blend-mode: screen;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.45s ease,
+      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .videos-stage[data-carousel-moving='true'] .video-carousel-canvas,
+  .videos-stage[data-unwrapping='true'] .video-carousel-canvas {
+    opacity: 0.46;
+    transform: scaleX(1.035);
+  }
+
+  .video-tile[data-unwrapping='true'] {
+    transform: perspective(1400px) rotateX(0deg) scale(1.018);
+  }
+
+  .video-tile[data-video-status='locked'] .video-locked-layer {
+    opacity: 1;
+  }
+
+  .video-tile[data-video-status='locked'] .video-play-button,
+  .video-tile[data-video-status='locked'] [data-video-duration] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .video-tile-active:hover .video-preview,
+  .video-tile-active:focus-within .video-preview,
+  .video-tile-active[data-previewing='true'] .video-preview {
+    filter: saturate(1.16) brightness(1.12);
+    transform: scale(1);
+  }
+
+  .video-hover-wash {
+    background:
+      radial-gradient(
+        ellipse at center,
+        color-mix(in srgb, var(--color-theme-gold) 20%, transparent),
+        transparent 42%
+      ),
+      linear-gradient(
+        180deg,
+        transparent 0%,
+        color-mix(in srgb, var(--color-theme-gold) 12%, transparent) 100%
+      );
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+
+  .video-tile-active:hover .video-hover-wash,
+  .video-tile-active:focus-within .video-hover-wash {
+    opacity: 0.68;
+  }
+
+  .video-side-rail {
+    cursor: pointer;
+    opacity: 1;
+  }
+
+  .video-nav-label {
+    opacity: 0.52;
+    text-shadow: none;
+  }
+
+  .video-nav-label-left {
+    --video-label-nudge: 0.45rem;
+    --video-label-rotation: 180deg;
+    left: clamp(0.5rem, 1.2vw, 1.25rem);
+    transform: translateY(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+  }
+
+  .video-nav-label-right {
+    --video-label-nudge: 0.45rem;
+    --video-label-rotation: 0deg;
+    right: clamp(0.5rem, 1.2vw, 1.25rem);
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+  }
+
+  .video-side-rail:hover .video-nav-label,
+  .video-side-rail:focus-visible .video-nav-label {
+    opacity: 1;
+    transform: translateY(-50%) translateX(var(--video-label-nudge, 0)) rotate(var(--video-label-rotation, 0deg));
+  }
+
+  .video-main-tile {
+    box-shadow: 0 18px 70px -42px rgba(0, 0, 0, 0.95);
+  }
+
+  .video-tile-locked::after {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    content: '';
+    background: repeating-linear-gradient(
+      135deg,
+      transparent 0 14px,
+      rgba(255, 255, 255, 0.035) 14px 16px
+    );
+  }
+
+  .video-button-glyph {
+    width: 0;
+    height: 0;
+    margin-left: 0.2rem;
+    border-top: 0.78rem solid transparent;
+    border-bottom: 0.78rem solid transparent;
+    border-left: 1.05rem solid currentColor;
+  }
+
+  .video-tile[data-video-ready='true'] .video-button-glyph {
+    width: 1rem;
+    height: 1.25rem;
+    margin-left: 0;
+    border: 0;
+    background: linear-gradient(
+      to right,
+      currentColor 0 34%,
+      transparent 34% 66%,
+      currentColor 66% 100%
+    );
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .video-preview,
+    .video-play-button,
+    .video-tile,
+    .video-side-rail {
+      transition: opacity 0.2s ease !important;
+      transform: none !important;
+    }
+  }
+</style>
