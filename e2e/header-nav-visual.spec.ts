@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Locator, type Page } from '@playwright/test'
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -30,6 +30,55 @@ async function resetCaptureZoom(page: Page) {
       el.style.transformOrigin = ''
     })
     document.documentElement.style.overflow = ''
+  })
+}
+
+type ClipBox = { x: number; y: number; width: number; height: number }
+
+function clipScaledElement(
+  box: ClipBox,
+  scale: number,
+  origin: 'left center' | 'top center',
+  viewport: { width: number; height: number },
+  pad = 32,
+): ClipBox {
+  let x: number
+  let y: number
+  let width: number
+  let height: number
+
+  if (origin === 'left center') {
+    width = box.width * scale + pad * 2
+    height = box.height * scale + pad * 2
+    x = box.x - pad
+    y = box.y + box.height / 2 - (box.height * scale) / 2 - pad
+  } else {
+    width = box.width * scale + pad * 2
+    height = box.height * scale + pad * 2
+    x = box.x + box.width / 2 - (box.width * scale) / 2 - pad
+    y = box.y - pad
+  }
+
+  x = Math.max(0, Math.floor(x))
+  y = Math.max(0, Math.floor(y))
+  width = Math.min(Math.ceil(width), viewport.width - x)
+  height = Math.min(Math.ceil(height), viewport.height - y)
+  return { x, y, width, height }
+}
+
+async function screenshotScaledHover(
+  page: Page,
+  target: Locator,
+  path: string,
+  scale: number,
+  origin: 'left center' | 'top center',
+) {
+  const box = await target.boundingBox()
+  expect(box).not.toBeNull()
+  const viewport = page.viewportSize() ?? DESKTOP
+  await page.screenshot({
+    path,
+    clip: clipScaledElement(box!, scale, origin, viewport),
   })
 }
 
@@ -101,17 +150,18 @@ test.describe(`header visuals (${phase})`, () => {
     const logoLink = page.getByRole('link', { name: /la velada del año vi/i })
     await expect(logoLink).toBeVisible()
 
+    const logoScale = isAfter ? 5 : 3
     await zoomCaptureTarget(
       page,
       'a[aria-label*="La Velada del Año"]',
-      isAfter ? 9 : 5,
+      logoScale,
       'left center',
     )
     await page.waitForTimeout(150)
     await logoLink.hover({ force: true })
     await page.waitForTimeout(isAfter ? 750 : 400)
 
-    await logoLink.screenshot({ path: shot('03-logo-hover-framed.png') })
+    await screenshotScaledHover(page, logoLink, shot('03-logo-hover-framed.png'), logoScale, 'left center')
     if (isAfter) {
       await logoLink.locator('svg').screenshot({ path: shot('03-svg-logo-hover.png') })
     } else {
@@ -129,17 +179,16 @@ test.describe(`header visuals (${phase})`, () => {
     const boxeadores = page.getByRole('link', { name: /boxeadores/i }).first()
     await expect(boxeadores).toBeVisible()
 
-    await zoomCaptureTarget(
-      page,
+    const navScale = isAfter ? 4 : 3
+    const nav = page.locator(
       isAfter ? '[data-testid="header-nav"]' : 'nav[aria-label="Navegación principal"]',
-      isAfter ? 6 : 4,
-      'top center',
     )
+    await zoomCaptureTarget(page, isAfter ? '[data-testid="header-nav"]' : 'nav[aria-label="Navegación principal"]', navScale, 'top center')
     await page.waitForTimeout(150)
     await boxeadores.hover({ force: true })
     await page.waitForTimeout(isAfter ? 400 : 250)
 
-    await page.locator('[data-header]').screenshot({ path: shot('04-header-nav-hover.png') })
+    await screenshotScaledHover(page, nav, shot('04-header-nav-hover.png'), navScale, 'top center')
 
     const navCell = isAfter
       ? page.locator('[data-nav-item="boxeadores"]')
