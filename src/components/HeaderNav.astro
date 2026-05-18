@@ -1,0 +1,99 @@
+---
+import { shouldReloadNavItem, type NavItem } from '@/consts/navigation'
+
+interface Props {
+  currentPath: string
+  items: readonly NavItem[]
+  variant: 'desktop' | 'mobile'
+}
+
+const { currentPath, items, variant } = Astro.props
+const isDesktop = variant === 'desktop'
+
+const navItemId = (label: string) =>
+  label
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+
+const desktopColClass = 'flex flex-col items-center justify-center gap-1 px-3 sm:px-4'
+const desktopLabelClass =
+  'relative inline-flex items-center font-cinzel text-[0.65rem] font-bold leading-none tracking-[0.25em] sm:text-xs'
+const desktopNoteClass =
+  'inline-flex items-center whitespace-nowrap rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-2 py-0.5 font-cinzel text-[0.5rem] font-semibold leading-none tracking-[0.22em] text-theme-gold sm:text-[0.55rem]'
+const desktopLinkClass =
+  'group/nav text-white/85 outline-none transition-colors duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:text-theme-cream [@media(hover:hover)_and_(pointer:fine)]:hover:delay-125 focus-visible:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold'
+const desktopUnderlineClass =
+  'pointer-events-none absolute inset-x-0 -bottom-1.5 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-150 ease-out delay-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:scale-x-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:delay-125 group-focus-visible/nav:scale-x-100'
+
+const mobileDisabledClass =
+  'flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-white/35'
+const mobileNoteClass =
+  'rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-3 py-1 text-[0.55rem] font-semibold tracking-[0.24em] text-theme-gold'
+const mobileLinkClass =
+  'flex items-center justify-center rounded-2xl border border-theme-gold/55 bg-theme-midnight/80 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 active:border-theme-gold active:bg-theme-midnight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold'
+---
+
+{
+  isDesktop ? (
+    <nav class="hidden md:block" aria-label="Navegación principal">
+      <ul class="flex items-stretch gap-1 sm:gap-2">
+        {items.map((item) => (
+          <li class={desktopColClass} data-nav-item={navItemId(item.label)}>
+            {item.disabled ? (
+              <>
+                <span
+                  role="link"
+                  aria-disabled="true"
+                  class:list={[desktopLabelClass, 'select-none text-white/40']}
+                  title="Próximamente"
+                >
+                  {item.label}
+                </span>
+                {item.note && <span class={desktopNoteClass}>{item.note}</span>}
+              </>
+            ) : (
+              <a
+                href={item.href}
+                data-astro-reload={shouldReloadNavItem(currentPath, item.href) ? true : undefined}
+                class:list={[desktopLabelClass, desktopLinkClass]}
+              >
+                <span aria-hidden="true" class={desktopUnderlineClass} />
+                {item.label}
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  ) : (
+    <nav aria-label="Menú principal móvil" class="relative w-full max-w-sm">
+      <ul class="flex flex-col items-center gap-6">
+        {items.map((item) => (
+          <li class="w-full">
+            {item.disabled ? (
+              <span
+                role="link"
+                aria-disabled="true"
+                class={mobileDisabledClass}
+                title="Próximamente"
+              >
+                {item.label}
+                {item.note && <span class={mobileNoteClass}>{item.note}</span>}
+              </span>
+            ) : (
+              <a
+                href={item.href}
+                data-astro-reload={shouldReloadNavItem(currentPath, item.href) ? true : undefined}
+                data-mobile-menu-link
+                class={mobileLinkClass}
+              >
+                {item.label}
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
