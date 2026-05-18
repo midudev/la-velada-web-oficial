@@ -61,7 +61,7 @@ const scrolledBar =
       </span>
     </LogoHomeLink>
 
-    <nav class="hidden md:block" aria-label="Navegación principal" data-testid="header-nav">
+    <nav class="hidden md:block" aria-label="Navegación principal">
       <ul class="flex items-stretch gap-1 sm:gap-2">
         {
           NAV_ITEMS.map((item) => (
@@ -181,7 +181,6 @@ const scrolledBar =
 </header>
 
 <script>
-  import { HEADER_MOBILE_MENU_OPEN_ATTR, HEADER_SELECTOR } from '@/components/LogoHomeLink.tsx'
   import { $, $$ } from '@/lib/dom-selector'
 
   let headerAbort: AbortController | null = null
@@ -201,7 +200,7 @@ const scrolledBar =
     const links = $$<HTMLAnchorElement>('[data-mobile-menu-link]')
     if (!menu || !button) return
 
-    const header = $<HTMLElement>(HEADER_SELECTOR)
+    const header = $<HTMLElement>('[data-header]')
 
     const setMenuOpen = (open: boolean) => {
       menu.dataset.open = String(open)
@@ -214,8 +213,8 @@ const scrolledBar =
       if (label) label.textContent = open ? 'Cerrar menú' : 'Abrir menú'
       document.documentElement.classList.toggle('overflow-hidden', open)
       if (header) {
-        if (open) header.setAttribute(HEADER_MOBILE_MENU_OPEN_ATTR, 'true')
-        else header.removeAttribute(HEADER_MOBILE_MENU_OPEN_ATTR)
+        if (open) header.setAttribute('data-mobile-menu-open', 'true')
+        else header.removeAttribute('data-mobile-menu-open')
       }
     }
 
@@ -235,7 +234,7 @@ const scrolledBar =
     headerAbort = new AbortController()
     const { signal } = headerAbort
 
-    const header = $<HTMLElement>(HEADER_SELECTOR)
+    const header = $<HTMLElement>('[data-header]')
     if (header) setupHeaderScroll(header, signal)
     setupMobileMenu(signal)
   })
