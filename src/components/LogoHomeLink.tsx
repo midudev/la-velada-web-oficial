@@ -7,10 +7,6 @@ import {
   type Transition,
   type Variants,
 } from 'motion/react'
-import {
-  HEADER_MOBILE_MENU_TOGGLE_EVENT,
-  type HeaderMobileMenuToggleEvent,
-} from '@/consts/header-contract'
 
 const crest = {
   viewBox: '0 0 303 303',
@@ -59,16 +55,18 @@ const fillFade: Variants = {
   tap: { opacity: 0 },
 }
 
+const mobileMenuToggleEvent = 'header:mobile-menu-toggle'
+
 function useMobileMenuOpen() {
   return useSyncExternalStore(
     (onStoreChange) => {
       const handleToggle = (event: Event) => {
-        mobileMenuOpen = (event as HeaderMobileMenuToggleEvent).detail.open
+        mobileMenuOpen = (event as CustomEvent<{ open: boolean }>).detail.open
         onStoreChange()
       }
 
-      document.addEventListener(HEADER_MOBILE_MENU_TOGGLE_EVENT, handleToggle)
-      return () => document.removeEventListener(HEADER_MOBILE_MENU_TOGGLE_EVENT, handleToggle)
+      document.addEventListener(mobileMenuToggleEvent, handleToggle)
+      return () => document.removeEventListener(mobileMenuToggleEvent, handleToggle)
     },
     getMobileMenuOpenSnapshot,
     () => false,

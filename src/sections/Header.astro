@@ -74,9 +74,9 @@ const scrolledBar =
 
 <script>
   import { $, $$ } from '@/lib/dom-selector'
-  import { HEADER_MOBILE_MENU_TOGGLE_EVENT } from '@/consts/header-contract'
 
   let headerAbort: AbortController | null = null
+  const mobileMenuToggleEvent = 'header:mobile-menu-toggle'
 
   function setupHeaderScroll(header: HTMLElement, signal: AbortSignal) {
     const update = () => {
@@ -103,9 +103,7 @@ const scrolledBar =
       const label = $<HTMLElement>('.sr-only', button)
       if (label) label.textContent = open ? 'Cerrar menú' : 'Abrir menú'
       document.documentElement.classList.toggle('overflow-hidden', open)
-      document.dispatchEvent(
-        new CustomEvent(HEADER_MOBILE_MENU_TOGGLE_EVENT, { detail: { open } }),
-      )
+      document.dispatchEvent(new CustomEvent(mobileMenuToggleEvent, { detail: { open } }))
     }
 
     setMenuOpen(false)
