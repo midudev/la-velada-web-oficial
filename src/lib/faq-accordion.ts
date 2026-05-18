@@ -181,7 +181,7 @@ export async function openOnce(parts: FaqParts): Promise<void> {
     shell,
     { gridTemplateRows: ['0fr', '1fr'] },
     { duration: PANEL_MS / 1000, ease: EASE },
-  ).finished
+  )
 }
 
 export async function closeOnce(parts: FaqParts): Promise<void> {
@@ -213,7 +213,7 @@ export async function closeOnce(parts: FaqParts): Promise<void> {
     shell,
     { gridTemplateRows: ['1fr', '0fr'] },
     { duration: PANEL_MS / 1000, ease: EASE },
-  ).finished
+  )
 
   details.classList.remove('faq-item--closing')
   details.removeAttribute('open')

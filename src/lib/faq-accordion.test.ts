@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('motion', () => ({
-  animate: vi.fn(() => ({ finished: Promise.resolve() })),
+  animate: vi.fn().mockResolvedValue(undefined),
 }))
 
 vi.mock('@/lib/dom-selector', () => ({
@@ -247,11 +247,11 @@ describe('closeOnce()', () => {
 
   it('removes [open] only after animation finishes', async () => {
     let resolveFn!: () => void
-    vi.mocked(animate).mockReturnValueOnce({
-      finished: new Promise<void>((r) => {
+    vi.mocked(animate).mockReturnValueOnce(
+      new Promise<void>((r) => {
         resolveFn = r
-      }),
-    } as ReturnType<typeof animate>)
+      }) as ReturnType<typeof animate>,
+    )
 
     const parts = buildParts(true)
     parts.shell.classList.add('faq-answer-shell--open')
