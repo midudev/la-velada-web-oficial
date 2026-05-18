@@ -207,7 +207,7 @@ const SPONSORS: Sponsor[] = [
                   height={height}
                   loading="lazy"
                   decoding="async"
-                  class="block h-auto w-full origin-center scale-[1.01] transition-transform duration-300 group-hover:scale-100 group-hover:brightness-110 group-focus-visible:scale-100 group-focus-visible:brightness-110"
+                  class="block h-auto w-full origin-center scale-[1.01] transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-100 group-focus-visible:scale-100"
                 />
               </picture>
             </a>
@@ -320,24 +320,30 @@ const SPONSORS: Sponsor[] = [
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
   const smQuery = window.matchMedia('(min-width: 640px)')
-  const corners = [
-    document.querySelector('.corner-tl'),
-    document.querySelector('.corner-tr'),
-    document.querySelector('.corner-bl'),
-    document.querySelector('.corner-br'),
-  ]
   const grid = document.querySelector('.sponsors-grid')?.parentElement
 
   if (!reducedMotion.matches && grid) {
+    const corners = [
+      document.querySelector('.corner-tl'),
+      document.querySelector('.corner-tr'),
+      document.querySelector('.corner-bl'),
+      document.querySelector('.corner-br'),
+    ]
+
     let activeCard = null
     let fadeTimer = null
+    let cornerAnims = [null, null, null, null]
+    let logoAnim = null
+
+    function stopAnims() {
+      cornerAnims.forEach((a) => a?.stop())
+      logoAnim?.stop()
+    }
 
     hover('.sponsor-card', (card) => {
-      if (fadeTimer) {
-        clearTimeout(fadeTimer)
-        fadeTimer = null
-      }
+      if (fadeTimer) { clearTimeout(fadeTimer); fadeTimer = null }
       activeCard = card
+      stopAnims()
 
       const gridRect = grid.getBoundingClientRect()
       const cardRect = card.getBoundingClientRect()
@@ -355,7 +361,7 @@ const SPONSORS: Sponsor[] = [
       corners.forEach((corner, i) => {
         if (!corner) return
         corner.style.opacity = '1'
-        animate(corner, { x: coords[i][0], y: coords[i][1] }, {
+        cornerAnims[i] = animate(corner, { x: coords[i][0], y: coords[i][1] }, {
           type: 'spring',
           bounce: 0,
           duration: 0.2,
@@ -363,16 +369,17 @@ const SPONSORS: Sponsor[] = [
       })
 
       const logo = card.querySelector('svg[aria-hidden="true"]')
-      if (logo) animate(logo, { scale: 0.96 }, { duration: 0.05, ease: 'ease-out' })
+      if (logo) logoAnim = animate(logo, { scale: 0.96 }, { duration: 0.05, ease: 'ease-out' })
 
       return () => {
-        if (logo) animate(logo, { scale: 1 }, { duration: 0.04, ease: 'ease-out' })
+        if (logo) logoAnim = animate(logo, { scale: 1 }, { duration: 0.04, ease: 'ease-out' })
 
         fadeTimer = setTimeout(() => {
           if (activeCard !== card) return
-          corners.forEach((corner) => {
+          stopAnims()
+          corners.forEach((corner, i) => {
             if (!corner) return
-            animate(corner, { opacity: 0, x: 0, y: 0 }, { duration: 0.15, ease: 'ease-out' })
+            cornerAnims[i] = animate(corner, { opacity: 0, x: 0, y: 0 }, { duration: 0.15, ease: 'ease-out' })
           })
           fadeTimer = null
         }, 100)
