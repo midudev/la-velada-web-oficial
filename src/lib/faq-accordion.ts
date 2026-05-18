@@ -1,19 +1,63 @@
+import { animate } from 'motion'
 import { $, $$ } from '@/lib/dom-selector'
-import { resetFaqIconTurn, syncFaqIconTurn } from '@/lib/faq-icon-turn'
-import { getVenueMapUrl, openVenueInMaps } from '@/lib/open-venue-map'
-import { afterTransition, prefersReducedMotion } from '@/lib/transition'
-import { setVenueMapOpen } from '@/lib/venue-map-sync'
+import {
+  EVENT_VENUE_LAT,
+  EVENT_VENUE_LNG,
+  EVENT_VENUE_MAP_URL,
+  EVENT_VENUE_NAME,
+  FAQ_PANEL_TOGGLE,
+} from '@/consts/event'
 
 const PANEL_MS = 280
+const EASE = [0.23, 1, 0.32, 1] as [number, number, number, number]
+const ICON_OPEN_DELTA_DEG = 405
+const ICON_CLOSE_DELTA_DEG = 315
+const MAX_SYNC_LOOPS = 4
 
-type FaqParts = {
+export function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function isAppleDevice() {
+  return /iPhone|iPad|iPod|Macintosh|Mac OS X/.test(navigator.userAgent)
+}
+
+function isAndroidDevice() {
+  return /Android/.test(navigator.userAgent)
+}
+
+function getVenueMapUrl(): string {
+  const label = encodeURIComponent(EVENT_VENUE_NAME)
+  const coords = `${EVENT_VENUE_LAT},${EVENT_VENUE_LNG}`
+
+  if (isAppleDevice()) {
+    return `https://maps.apple.com/?ll=${coords}&q=${label}`
+  }
+
+  if (isAndroidDevice()) {
+    return `geo:${coords}?q=${coords}(${label})`
+  }
+
+  return `https://www.google.com/maps/search/?api=1&query=${coords}`
+}
+
+function openVenueInMaps() {
+  const url = getVenueMapUrl()
+
+  try {
+    window.open(url, '_blank', 'noopener,noreferrer')
+  } catch {
+    window.location.assign(EVENT_VENUE_MAP_URL)
+  }
+}
+
+export type FaqParts = {
   details: HTMLDetailsElement
   shell: HTMLElement
   summary: HTMLElement
 }
 
 let actionQueue: Promise<void> = Promise.resolve()
-const running = new WeakMap<HTMLDetailsElement, Promise<void>>()
 
 function schedule(action: () => Promise<void>) {
   actionQueue = actionQueue.then(action).catch((error) => {
@@ -21,70 +65,176 @@ function schedule(action: () => Promise<void>) {
   })
 }
 
-function getParts(details: HTMLDetailsElement): FaqParts | null {
+export function getParts(details: HTMLDetailsElement): FaqParts | null {
   const shell = $('.faq-answer-shell', details)
   const summary = $('.faq-summary', details)
   if (!shell || !summary) return null
   return { details, shell, summary }
 }
 
-function setExpanded(
-  details: HTMLDetailsElement,
-  expanded: boolean,
-  options: { instantIcon?: boolean; reduceMotion?: boolean } = {},
-) {
-  const wrap = details.closest('.faq-item-wrap')
-  wrap?.classList.toggle('faq-item-wrap--active', expanded)
-  $('.faq-answer-shell', details)?.classList.toggle('faq-answer-shell--open', expanded)
+export function isAchieved(details: HTMLDetailsElement, shell: HTMLElement): boolean {
+  const wantOpen = details.dataset.faqTargetOpen === '1'
+  const isOpen =
+    details.hasAttribute('open') &&
+    shell.classList.contains('faq-answer-shell--open') &&
+    !details.classList.contains('faq-item--closing')
+  return wantOpen === isOpen
+}
 
-  const icon = $('.faq-icon', details)
-  if (!(icon instanceof HTMLElement)) return
+export function readIconDeg(icon: HTMLElement): number {
+  const value = Number(icon.dataset.faqIconDeg ?? 0)
+  return Number.isFinite(value) ? value : 0
+}
 
-  if (options.reduceMotion) {
-    resetFaqIconTurn(icon, expanded)
+export function applyIconTurn(icon: HTMLElement, opening: boolean, instant = false) {
+  const current = readIconDeg(icon)
+  const next = current + (opening ? ICON_OPEN_DELTA_DEG : ICON_CLOSE_DELTA_DEG)
+  icon.dataset.faqIconDeg = String(next)
+
+  if (instant) {
+    icon.style.transition = 'none'
+    icon.style.setProperty('--faq-icon-turn', `${next}deg`)
+    void icon.offsetHeight
+    icon.style.transition = ''
     return
   }
 
-  syncFaqIconTurn(icon, expanded, { instant: options.instantIcon })
+  icon.style.setProperty('--faq-icon-turn', `${next}deg`)
 }
 
-function syncVenueMap(details: HTMLDetailsElement, open: boolean) {
-  const root = $('[data-venue-map]', details)
-  if (root) setVenueMapOpen(root, open)
+export function applyIconInstant(icon: HTMLElement, expanded: boolean) {
+  const next = expanded ? 45 : 0
+  icon.dataset.faqIconDeg = String(next)
+  icon.style.setProperty('--faq-icon-turn', expanded ? '45deg' : '0deg')
+}
+
+function notifyVenueMapPanel(details: HTMLDetailsElement, open: boolean) {
+  if (!$('[data-venue-map]', details)) return
+  details.dispatchEvent(
+    new CustomEvent(FAQ_PANEL_TOGGLE, { bubbles: true, detail: { open } }),
+  )
 }
 
 function stripInitialOpen(details: HTMLDetailsElement) {
   details.classList.remove('faq-item--initial-open')
 }
 
-async function runExclusive(details: HTMLDetailsElement, action: () => Promise<void>) {
-  const pending = running.get(details)
-  if (pending) await pending
-
-  const promise = action()
-  running.set(details, promise)
-  await promise.finally(() => {
-    if (running.get(details) === promise) running.delete(details)
-  })
+export function setPanelShellOpen(shell: HTMLElement, open: boolean) {
+  shell.classList.toggle('faq-answer-shell--open', open)
 }
 
-async function closeItem(parts: FaqParts): Promise<void> {
+function forceSync(parts: FaqParts) {
   const { details, shell, summary } = parts
+  const wantOpen = details.dataset.faqTargetOpen === '1'
+  const rm = prefersReducedMotion()
+
+  details.classList.remove('faq-item--closing')
+
+  if (wantOpen) {
+    details.setAttribute('open', '')
+    summary.setAttribute('aria-expanded', 'true')
+    setPanelShellOpen(shell, true)
+    const icon = getIconInner(details)
+    if (icon) {
+      if (rm) applyIconInstant(icon, true)
+      else applyIconTurn(icon, true, true)
+    }
+    notifyVenueMapPanel(details, true)
+    return
+  }
+
+  summary.setAttribute('aria-expanded', 'false')
+  setPanelShellOpen(shell, false)
+  const icon = getIconInner(details)
+  if (icon) {
+    if (rm) applyIconInstant(icon, false)
+    else applyIconTurn(icon, false, true)
+  }
+  notifyVenueMapPanel(details, false)
+  details.removeAttribute('open')
+}
+
+export async function openOnce(parts: FaqParts): Promise<void> {
+  const { details, shell, summary } = parts
+  const rm = prefersReducedMotion()
+
+  stripInitialOpen(details)
+  details.classList.remove('faq-item--closing')
+
+  if (!details.hasAttribute('open')) {
+    details.setAttribute('open', '')
+  }
+
+  summary.setAttribute('aria-expanded', 'true')
+  setPanelShellOpen(shell, true)
+
+  const icon = getIconInner(details)
+  if (icon) {
+    if (rm) applyIconInstant(icon, true)
+    else applyIconTurn(icon, true)
+  }
+
+  notifyVenueMapPanel(details, true)
+
+  if (rm) return
+  await animate(
+    shell,
+    { gridTemplateRows: ['0fr', '1fr'] },
+    { duration: PANEL_MS / 1000, ease: EASE },
+  ).finished
+}
+
+export async function closeOnce(parts: FaqParts): Promise<void> {
+  const { details, shell, summary } = parts
+  const rm = prefersReducedMotion()
 
   if (!details.open && !details.classList.contains('faq-item--closing')) return
 
-  await runExclusive(details, async () => {
-    details.classList.add('faq-item--closing')
-    stripInitialOpen(details)
-    summary.setAttribute('aria-expanded', 'false')
-    syncVenueMap(details, false)
-    setExpanded(details, false, { reduceMotion: prefersReducedMotion() })
+  details.classList.add('faq-item--closing')
+  stripInitialOpen(details)
+  summary.setAttribute('aria-expanded', 'false')
+  setPanelShellOpen(shell, false)
 
-    await afterTransition(shell, PANEL_MS, 'grid-template-rows')
+  const icon = getIconInner(details)
+  if (icon) {
+    if (rm) applyIconInstant(icon, false)
+    else applyIconTurn(icon, false)
+  }
 
+  notifyVenueMapPanel(details, false)
+
+  if (rm) {
     details.classList.remove('faq-item--closing')
     details.removeAttribute('open')
-  })
+    return
+  }
+
+  await animate(
+    shell,
+    { gridTemplateRows: ['1fr', '0fr'] },
+    { duration: PANEL_MS / 1000, ease: EASE },
+  ).finished
+
+  details.classList.remove('faq-item--closing')
+  details.removeAttribute('open')
+}
+
+async function syncToTarget(parts: FaqParts, loop = 0): Promise<void> {
+  const { details, shell } = parts
+
+  if (isAchieved(details, shell)) return
+  if (loop >= MAX_SYNC_LOOPS) {
+    forceSync(parts)
+    return
+  }
+
+  const wantOpen = details.dataset.faqTargetOpen === '1'
+  if (wantOpen) await openOnce(parts)
+  else await closeOnce(parts)
+
+  if (!isAchieved(details, shell)) {
+    await syncToTarget(parts, loop + 1)
+  }
 }
 
 async function closeAllExcept(keep: HTMLDetailsElement) {
@@ -92,67 +242,44 @@ async function closeAllExcept(keep: HTMLDetailsElement) {
 
   for (const other of $$<HTMLDetailsElement>('.faq-item')) {
     if (other === keep) continue
-    if (!other.open && !other.classList.contains('faq-item--closing')) continue
+    other.dataset.faqTargetOpen = '0'
 
     const otherParts = getParts(other)
-    if (otherParts) jobs.push(closeItem(otherParts))
+    if (!otherParts) continue
+    if (isAchieved(other, otherParts.shell)) continue
+
+    jobs.push(syncToTarget(otherParts))
   }
 
   await Promise.all(jobs)
 }
 
-async function openItem(parts: FaqParts) {
+function mountInitialState(parts: FaqParts) {
   const { details, shell, summary } = parts
+  const open = details.open
 
-  await closeAllExcept(details)
-  if (details.open) return
+  details.dataset.faqTargetOpen = open ? '1' : '0'
+  summary.setAttribute('aria-expanded', open ? 'true' : 'false')
 
-  await runExclusive(details, async () => {
-    stripInitialOpen(details)
-    details.classList.remove('faq-item--closing')
+  if (!open) return
 
-    details.setAttribute('open', '')
-    summary.setAttribute('aria-expanded', 'true')
-    setExpanded(details, true, { reduceMotion: prefersReducedMotion() })
-    syncVenueMap(details, true)
+  setPanelShellOpen(shell, true)
 
-    await afterTransition(shell, PANEL_MS, 'grid-template-rows')
-  })
-}
+  const icon = $('.faq-icon__inner', details)
+  if (!(icon instanceof HTMLElement)) return
 
-async function toggleItem(parts: FaqParts) {
-  if (parts.details.open) {
-    await closeItem(parts)
+  const instant = details.classList.contains('faq-item--initial-open')
+  if (prefersReducedMotion() || instant) {
+    applyIconInstant(icon, true)
     return
   }
 
-  await openItem(parts)
+  applyIconTurn(icon, true, instant)
 }
 
-function bindReducedMotion(items: HTMLDetailsElement[], signal: AbortSignal) {
-  for (const details of items) {
-    const parts = getParts(details)
-    if (!parts) continue
-
-    details.addEventListener(
-      'toggle',
-      async () => {
-        if (!details.open) {
-          syncVenueMap(details, false)
-          setExpanded(details, false, { reduceMotion: true })
-          parts.summary.setAttribute('aria-expanded', 'false')
-          return
-        }
-
-        stripInitialOpen(details)
-        await closeAllExcept(details)
-        setExpanded(details, true, { reduceMotion: true })
-        parts.summary.setAttribute('aria-expanded', 'true')
-        syncVenueMap(details, true)
-      },
-      { signal },
-    )
-  }
+function getIconInner(details: HTMLDetailsElement): HTMLElement | null {
+  const icon = $('.faq-icon__inner', details)
+  return icon instanceof HTMLElement ? icon : null
 }
 
 export function setupFaqAccordion(signal: AbortSignal) {
@@ -161,8 +288,6 @@ export function setupFaqAccordion(signal: AbortSignal) {
   for (const details of items) {
     delete details.dataset.faqBound
   }
-
-  const reduceMotion = prefersReducedMotion()
 
   for (const link of $$<HTMLAnchorElement>('[data-venue-map-link]')) {
     link.href = getVenueMapUrl()
@@ -183,34 +308,24 @@ export function setupFaqAccordion(signal: AbortSignal) {
     if (!parts) continue
 
     details.dataset.faqBound = 'true'
-    parts.summary.setAttribute('aria-expanded', details.open ? 'true' : 'false')
-
-    if (details.open) {
-      setExpanded(details, true, {
-        instantIcon: details.classList.contains('faq-item--initial-open'),
-        reduceMotion,
-      })
-    }
-
-    if (reduceMotion) continue
+    mountInitialState(parts)
 
     parts.summary.addEventListener(
       'click',
       (event) => {
         event.preventDefault()
 
+        const nextOpen = details.dataset.faqTargetOpen !== '1'
+        details.dataset.faqTargetOpen = nextOpen ? '1' : '0'
+
         void schedule(async () => {
           stripInitialOpen(details)
-          await toggleItem(parts)
+          if (nextOpen) await closeAllExcept(details)
+          await syncToTarget(parts)
         })
       },
       { signal },
     )
-  }
-
-  if (reduceMotion) {
-    bindReducedMotion(items, signal)
-    return
   }
 
   document.addEventListener(
@@ -218,11 +333,16 @@ export function setupFaqAccordion(signal: AbortSignal) {
     (event) => {
       if (event.key !== 'Escape') return
 
-      const openItemEl = $<HTMLDetailsElement>('.faq-item[open]')
-      if (!openItemEl) return
+      const openItems = $$<HTMLDetailsElement>('.faq-item[open]')
+      if (openItems.length === 0) return
 
-      const parts = getParts(openItemEl)
-      if (parts) void schedule(() => closeItem(parts))
+      void schedule(async () => {
+        for (const details of openItems) {
+          details.dataset.faqTargetOpen = '0'
+          const parts = getParts(details)
+          if (parts) await syncToTarget(parts)
+        }
+      })
     },
     { signal },
   )

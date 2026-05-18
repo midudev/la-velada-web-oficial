@@ -2,7 +2,7 @@
 import EventLocalTime from '@/components/EventLocalTime.astro'
 import SectionHeader from '@/components/SectionHeader.astro'
 import VenueMap from '@/components/VenueMap.astro'
-import { EVENT_VENUE_LABEL, EVENT_VENUE_LAT, EVENT_VENUE_LNG } from '@/consts/event'
+import { EVENT_VENUE_LABEL, EVENT_VENUE_MAP_URL } from '@/consts/event'
 import type { HomeFaqItem } from '@/consts/home-faq'
 
 interface Props {
@@ -56,7 +56,6 @@ const { faqs } = Astro.props
             <li
               class:list={[
                 'faq-item-wrap',
-                index === 0 && 'faq-item-wrap--active',
                 index === faqs.length - 1 && 'faq-item-wrap--last',
               ]}
             >
@@ -76,21 +75,23 @@ const { faqs } = Astro.props
                 <summary class="faq-summary min-h-20 cursor-pointer list-none px-1 py-5 outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:min-h-24 sm:px-4 sm:py-6 [&::-webkit-details-marker]:hidden">
                   <h3
                     itemprop="name"
-                    class="faq-summary__title font-cinzel text-xl leading-tight font-bold tracking-[0.02em] text-balance text-theme-cream transition-[color] duration-200 ease-out group-open:text-theme-gold sm:text-2xl"
+                    class="faq-summary__title font-cinzel text-xl leading-tight font-bold tracking-[0.02em] text-balance text-theme-cream transition-[color] duration-200 ease-out sm:text-2xl"
                   >
                     {question}
                   </h3>
                   <span
-                    class="faq-icon relative flex size-10 shrink-0 items-center justify-center rounded-full border border-theme-gold/30 bg-black/25 text-theme-gold group-open:border-theme-gold/70 group-open:bg-theme-gold/15 sm:size-11"
+                    class="faq-icon relative size-10 shrink-0 sm:size-11"
                     aria-hidden="true"
                   >
-                    <span class="faq-icon__bar faq-icon__bar--h absolute h-px w-4 bg-current"></span>
-                    <span class="faq-icon__bar faq-icon__bar--v absolute h-4 w-px bg-current"></span>
+                    <span class="faq-icon__inner relative flex size-full items-center justify-center rounded-full border border-theme-gold/30 bg-black/25 text-theme-gold">
+                      <span class="faq-icon__bar faq-icon__bar--h absolute h-px w-4 bg-current"></span>
+                      <span class="faq-icon__bar faq-icon__bar--v absolute h-4 w-px bg-current"></span>
+                    </span>
                   </span>
                 </summary>
 
                 <div
-                  class="faq-answer-shell"
+                  class:list={['faq-answer-shell', index === 0 && 'faq-answer-shell--open']}
                   itemprop="acceptedAnswer"
                   itemscope
                   itemtype="https://schema.org/Answer"
@@ -111,7 +112,7 @@ const { faqs } = Astro.props
                           <p class="faq-answer-lead">
                             {answer}{' '}
                             <a
-                              href={`https://www.google.com/maps/search/?api=1&query=${EVENT_VENUE_LAT},${EVENT_VENUE_LNG}`}
+                              href={EVENT_VENUE_MAP_URL}
                               target="_blank"
                               rel="noopener noreferrer"
                               class="faq-venue-link"
@@ -204,6 +205,12 @@ const { faqs } = Astro.props
     --faq-icon-col: 2.5rem;
     --faq-icon-gap: 1.25rem;
     --faq-sticky-top: 5.5rem;
+  }
+
+  .faq-section,
+  .faq-main,
+  .faq-list {
+    overflow-anchor: none;
   }
 
   .faq-layout {
@@ -340,7 +347,6 @@ const { faqs } = Astro.props
   }
 
   .faq-list {
-    overflow-anchor: none;
     border-bottom: none;
   }
 
@@ -363,12 +369,44 @@ const { faqs } = Astro.props
     transition: transform 180ms var(--faq-ease-out);
   }
 
-  .faq-item-wrap--active .faq-divider__gold {
+  .faq-item-wrap:has(.faq-answer-shell--open) .faq-divider__gold {
     transform: scaleX(1);
+  }
+
+  .faq-item-wrap:has(.faq-answer-shell--open) .faq-summary__title {
+    color: var(--color-theme-gold);
+  }
+
+  .faq-item-wrap:has(.faq-answer-shell--open) .faq-icon__inner {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
+    background-color: color-mix(in srgb, var(--color-theme-gold) 15%, transparent);
   }
 
   .faq-item-wrap {
     scroll-margin-block: 0.75rem;
+  }
+
+  .faq-item-wrap--last {
+    padding-bottom: clamp(2rem, 6vh, 4.5rem);
+    overflow-anchor: none;
+    contain: layout;
+  }
+
+  .faq-item-wrap--last .faq-item {
+    overflow-anchor: none;
+  }
+
+  .faq-item.faq-item--closing {
+    overflow-anchor: none;
+  }
+
+  .faq-item-wrap--last .faq-summary {
+    scroll-margin-top: 0;
+    scroll-margin-bottom: 0;
+  }
+
+  .faq-item-wrap--last:has(.faq-item--closing) {
+    overflow-anchor: none;
   }
 
   .faq-summary {
@@ -392,6 +430,11 @@ const { faqs } = Astro.props
     grid-column: 2;
     grid-row: 1;
     justify-self: end;
+    contain: layout size style;
+    overflow: hidden;
+  }
+
+  .faq-icon__inner {
     transform: rotate(var(--faq-icon-turn, 0deg));
     transform-origin: center;
     transition:
@@ -409,24 +452,6 @@ const { faqs } = Astro.props
 
     .faq-summary {
       scroll-margin-top: 6rem;
-    }
-  }
-
-  .faq-item[open] {
-    scroll-margin-bottom: 1.5rem;
-  }
-
-  .faq-item-wrap--last .faq-item {
-    scroll-margin-bottom: clamp(2rem, 6vh, 4.5rem);
-  }
-
-  .faq-item-wrap--last .faq-answer-body {
-    padding-bottom: 3rem;
-  }
-
-  @media (min-width: 640px) {
-    .faq-item-wrap--last .faq-answer-body {
-      padding-bottom: 3.5rem;
     }
   }
 
@@ -448,9 +473,9 @@ const { faqs } = Astro.props
     display: grid;
     grid-template-rows: 0fr;
     align-content: start;
+    overflow: hidden;
     overflow-anchor: none;
     transform-origin: top center;
-    transition: grid-template-rows var(--faq-panel-ms, 280ms) var(--faq-ease-out);
   }
 
   .faq-answer-shell--open {
@@ -470,35 +495,29 @@ const { faqs } = Astro.props
     grid-column: 1;
     min-width: 0;
     max-width: var(--faq-text-measure);
-    transform-origin: top center;
     opacity: 0;
-    transform: translate3d(0, -0.5rem, 0) scaleY(0.98);
-    transition:
-      opacity 220ms var(--faq-ease-out),
-      transform 220ms var(--faq-ease-out);
+    transition: opacity 220ms var(--faq-ease-out);
   }
 
   .faq-answer-shell--open .faq-answer-body {
     opacity: 1;
-    transform: none;
   }
 
   .faq-item--initial-open[open] .faq-answer-shell,
   .faq-item--initial-open[open] .faq-answer-body,
-  .faq-item--initial-open[open] .faq-icon {
+  .faq-item--initial-open[open] .faq-icon__inner {
     transition: none;
   }
 
   .faq-item--initial-open[open] .faq-answer-body {
     opacity: 1;
-    transform: none;
   }
 
   .faq-item--initial-open[open] .faq-answer-shell {
     grid-template-rows: 1fr;
   }
 
-  .faq-item--initial-open[open] .faq-icon {
+  .faq-item--initial-open[open] .faq-icon__inner {
     --faq-icon-turn: 45deg;
   }
 
@@ -678,7 +697,6 @@ const { faqs } = Astro.props
 
     .faq-answer-shell--open .faq-answer-body {
       opacity: 1;
-      transform: none;
     }
   }
 </style>
