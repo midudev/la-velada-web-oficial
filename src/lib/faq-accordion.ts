@@ -132,33 +132,23 @@ function isViewportNearBottom(): boolean {
 }
 
 /**
- * Tracks the actual DOM height shrinkage each frame and scrolls by the same
- * delta so the footer stays pinned at its current viewport Y while the panel
- * collapses. Returns a cleanup function that stops the loop and does a final sync.
+ * Animates a proxy value from 0 → panelHeight using motion's JS engine (not
+ * WAAPI) with the same duration/ease as the grid collapse. The onUpdate callback
+ * adjusts window.scrollY each frame so the footer stays pinned at its current
+ * viewport Y as the document shrinks.
  *
- * Motion drives the animation; we just observe `scrollHeight` changes — the
- * compensation automatically follows any easing curve without duplicating it.
+ * No RAF, no cleanup function — motion owns the lifecycle. Pair with
+ * Promise.all alongside the grid animation so both settle together.
  */
-function startScrollCompensation(): () => void {
-  const startDocHeight = document.documentElement.scrollHeight
+function animateScrollCompensation(panelHeight: number): ReturnType<typeof animate> {
   const startScrollY = window.scrollY
-  let frame = 0
+  const proxy = { v: 0 }
 
-  const sync = () => {
-    const shrunk = startDocHeight - document.documentElement.scrollHeight
-    const target = Math.max(0, startScrollY - shrunk)
-    if (Math.abs(window.scrollY - target) > 0.5) window.scrollTo(0, target)
-    frame = requestAnimationFrame(sync)
-  }
-
-  sync()
-  frame = requestAnimationFrame(sync)
-
-  return () => {
-    cancelAnimationFrame(frame)
-    const shrunk = startDocHeight - document.documentElement.scrollHeight
-    window.scrollTo(0, Math.max(0, startScrollY - shrunk))
-  }
+  return animate(proxy, { v: panelHeight }, {
+    duration: PANEL_MS / 1000,
+    ease: EASE,
+    onUpdate: () => window.scrollTo(0, Math.max(0, startScrollY - proxy.v)),
+  })
 }
 
 function forceSync(parts: FaqParts) {
@@ -228,9 +218,16 @@ export async function closeOnce(parts: FaqParts): Promise<void> {
 
   if (!details.open && !details.classList.contains('faq-item--closing')) return
 
+  // Measure height NOW — getBoundingClientRect forces a sync reflow while the
+  // shell is still at 1fr (full height). Calling it after setPanelShellOpen
+  // would return 0 because the CSS collapses to 0fr immediately.
+  const needsScrollFix = !rm && isLastFaqItem(details) && isViewportNearBottom()
+  const panelHeight = needsScrollFix ? shell.getBoundingClientRect().height : 0
+
   details.classList.add('faq-item--closing')
   stripInitialOpen(details)
   summary.setAttribute('aria-expanded', 'false')
+  if (needsScrollFix) summary.blur()
   setPanelShellOpen(shell, false)
 
   const icon = getIconInner(details)
@@ -247,24 +244,13 @@ export async function closeOnce(parts: FaqParts): Promise<void> {
     return
   }
 
-  // When closing the last item with the viewport near the bottom, the document
-  // shrinks as the panel collapses and the footer moves up — compensate by
-  // tracking scrollHeight delta each frame. Motion owns the animation lifecycle;
-  // we cancel the RAF loop in finally so it always stops, even on rapid clicks.
-  const stopScrollSync =
-    isLastFaqItem(details) && isViewportNearBottom()
-      ? (summary.blur(), startScrollCompensation())
-      : undefined
-
-  try {
-    await animate(
-      shell,
-      { gridTemplateRows: ['1fr', '0fr'] },
-      { duration: PANEL_MS / 1000, ease: EASE },
-    )
-  } finally {
-    stopScrollSync?.()
-  }
+  // Run grid collapse and scroll compensation in parallel — both use the same
+  // duration/ease so they stay in sync. animateScrollCompensation uses motion's
+  // JS engine (not WAAPI) with onUpdate, no RAF or cleanup needed.
+  await Promise.all([
+    animate(shell, { gridTemplateRows: ['1fr', '0fr'] }, { duration: PANEL_MS / 1000, ease: EASE }),
+    needsScrollFix ? animateScrollCompensation(panelHeight) : Promise.resolve(),
+  ])
 
   details.classList.remove('faq-item--closing')
   details.removeAttribute('open')
