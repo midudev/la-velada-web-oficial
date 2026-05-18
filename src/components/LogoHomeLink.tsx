@@ -6,7 +6,8 @@ import { $ } from '@/lib/dom-selector'
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const
 const EASE_FILM = [0.77, 0, 0.175, 1] as const
-const EXIT: Transition = { duration: 0.22, ease: EASE_OUT }
+/** Draw along the path — slow ease-in so the trace reads as deliberate, not a snap. */
+const EASE_DRAW = [0.42, 0, 0.18, 1] as const
 
 const LINK_CLASS =
   'flex items-center gap-3 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold [@media(hover:hover)_and_(pointer:fine)]:transition-[filter] [@media(hover:hover)_and_(pointer:fine)]:duration-500 [@media(hover:hover)_and_(pointer:fine)]:hover:drop-shadow-[0_0_18px_oklch(0.72_0.07_56/0.42)]'
@@ -30,39 +31,71 @@ function useMobileMenuOpen() {
   )
 }
 
-function strokeDraw(springSec: number, bounce: number, delaySec = 0): Variants {
+type StrokeDrawOpts = {
+  enterSec: number
+  enterDelay?: number
+  exitSec: number
+  exitDelay?: number
+}
+
+/** Mask/trace use tweened pathLength (not spring) so enter/exit stay readable and in sync on leave. */
+function strokeDraw({
+  enterSec,
+  enterDelay = 0,
+  exitSec,
+  exitDelay = 0,
+}: StrokeDrawOpts): Variants {
   return {
     rest: {
       pathLength: 0,
       opacity: 0,
-      transition: { pathLength: EXIT, opacity: { duration: 0.16, ease: EASE_OUT } },
+      transition: {
+        pathLength: { duration: exitSec, ease: EASE_FILM, delay: exitDelay },
+        opacity: { duration: exitSec * 0.9, ease: EASE_OUT, delay: exitDelay },
+      },
     },
     hover: {
       pathLength: 1,
       opacity: 1,
       transition: {
-        pathLength: { type: 'spring', duration: springSec, bounce, delay: delaySec },
-        opacity: { duration: 0.28, ease: EASE_OUT, delay: delaySec * 0.35 },
+        pathLength: { duration: enterSec, ease: EASE_DRAW, delay: enterDelay },
+        opacity: {
+          duration: Math.min(enterSec * 0.55, 0.5),
+          ease: EASE_OUT,
+          delay: enterDelay + 0.06,
+        },
       },
     },
     tap: { pathLength: 1, opacity: 1 },
   }
 }
 
+const CREST_EXIT: Transition = { duration: 0.45, ease: EASE_FILM }
+const CREST_SPRING: Transition = {
+  type: 'spring',
+  stiffness: 165,
+  damping: 20,
+  bounce: 0.08,
+}
+
 const crestMotion: Variants = {
-  rest: { scale: 1, transition: EXIT },
-  hover: { scale: 1.05, transition: { type: 'spring', duration: 0.62, bounce: 0.16 } },
-  tap: { scale: 1.02, transition: { duration: 0.12, ease: EASE_OUT } },
+  rest: { scale: 1, transition: CREST_EXIT },
+  hover: { scale: 1.05, transition: CREST_SPRING },
+  tap: { scale: 1.02, transition: { duration: 0.14, ease: EASE_OUT } },
 }
 
 const flatFill: Variants = {
-  rest: { opacity: 1, transition: EXIT },
-  hover: { opacity: 0, transition: { duration: 0.4, ease: EASE_FILM, delay: 0.06 } },
+  rest: { opacity: 1, transition: { duration: 0.4, ease: EASE_OUT } },
+  hover: {
+    opacity: 0,
+    transition: { duration: 0.48, ease: EASE_FILM, delay: 0.18 },
+  },
   tap: { opacity: 0 },
 }
 
-const maskDraw = strokeDraw(0.78, 0.14)
-const traceDraw = strokeDraw(0.7, 0.1, 0.14)
+/** Enter: mask draws, then trace. Exit: same duration, no stagger — collapses together. */
+const maskDraw = strokeDraw({ enterSec: 0.82, exitSec: 0.5 })
+const traceDraw = strokeDraw({ enterSec: 0.72, enterDelay: 0.22, exitSec: 0.5 })
 
 /** Parent carrier so `whileHover` drives child `crestMotion` / stroke variants. */
 const linkVariants: Variants = { rest: {}, hover: {}, tap: {} }
@@ -88,11 +121,18 @@ function Crest({ gradId, maskId }: CrestProps) {
             strokeWidth={22}
             strokeLinecap="butt"
             strokeLinejoin="round"
+            initial={false}
             variants={maskDraw}
           />
         </mask>
       </defs>
-      <motion.path fillRule="evenodd" d={path} fill={restFill} variants={flatFill} />
+      <motion.path
+        fillRule="evenodd"
+        d={path}
+        fill={restFill}
+        initial={false}
+        variants={flatFill}
+      />
       <path fillRule="evenodd" d={path} fill={`url(#${gradId})`} mask={`url(#${maskId})`} />
       <motion.path
         d={path}
@@ -102,6 +142,7 @@ function Crest({ gradId, maskId }: CrestProps) {
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
+        initial={false}
         variants={traceDraw}
       />
     </motion.svg>
