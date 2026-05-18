@@ -1,6 +1,4 @@
 import { battles } from '@/consts/battles'
-import { EVENT_VENUE_LABEL, EVENT_VENUE_MAP_URL } from '@/consts/event'
-
 export interface HomeFaqStreamChannel {
   platform: string
   href: string
@@ -30,40 +28,6 @@ export const HOME_FAQ_BATTLES: readonly HomeFaqBattleItem[] = battles.map((battl
 const mainEventBattle = HOME_FAQ_BATTLES[HOME_FAQ_BATTLES.length - 1]
 if (!mainEventBattle) {
   throw new Error('No hay combates definidos para el FAQ de la home')
-}
-
-export function getFaqAnswerText({
-  answer,
-  channels,
-  battles: battleItems,
-  mainEventBattle: mainEvent,
-  eventTime,
-  venueMap,
-}: HomeFaqItem): string {
-  const timeSuffix = eventTime
-    ? ' 20:00h (horario de España peninsular).'
-    : ''
-
-  if (venueMap) {
-    return `${answer} ${EVENT_VENUE_LABEL}. ${EVENT_VENUE_MAP_URL}`
-  }
-
-  if (mainEvent) {
-    return `${answer} ${mainEvent.title}.`
-  }
-
-  if (battleItems?.length) {
-    const battleLines = battleItems
-      .map(({ number, title }) => `${number}. ${title}`)
-      .join('; ')
-    return `${answer} ${battleLines}.`
-  }
-
-  if (!channels?.length) return `${answer}${timeSuffix}`
-
-  const channelLines = channels.map(({ label, href }) => `${label} (${href})`).join('; ')
-
-  return `${answer}${timeSuffix} ${channelLines}`
 }
 
 export const HOME_FAQS = [

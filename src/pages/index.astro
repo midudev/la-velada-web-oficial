@@ -10,7 +10,7 @@ import Footer from '@/sections/Footer.astro'
 import { battles } from '@/consts/battles'
 import { BOXERS, BOXERS_BY_ID, COUNTRY_NAMES, getBoxerPhoto } from '@/consts/boxers'
 import { EVENT_DATE, EVENT_ZONED_ISO } from '@/consts/event'
-import { getFaqAnswerText, HOME_FAQS } from '@/consts/home-faq'
+import { HOME_FAQS } from '@/consts/home-faq'
 
 const SITE_URL = 'https://www.infolavelada.com'
 const title = 'La Velada del Año VI 2026 | Fecha, sede y combates'
@@ -104,19 +104,6 @@ const sportsEventJsonLd = {
   }),
 }
 
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: HOME_FAQS.map((faq) => ({
-    '@type': 'Question',
-    name: faq.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: getFaqAnswerText(faq),
-    },
-  })),
-}
-
 export const prerender = true
 ---
 
@@ -125,12 +112,6 @@ export const prerender = true
     type="application/ld+json"
     is:inline
     set:html={JSON.stringify(sportsEventJsonLd)}
-    slot="head"
-  />
-  <script
-    type="application/ld+json"
-    is:inline
-    set:html={JSON.stringify(faqJsonLd)}
     slot="head"
   />
 

@@ -24,20 +24,18 @@ const tipId = 'event-local-time-tip'
   }
 
   .event-local-time__tooltip {
-    --event-time-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-
     position: fixed;
     position-anchor: --event-local-time-trigger;
     position-try-fallbacks: none;
     inset: auto;
     top: auto;
-    left: auto;
-    right: anchor(right);
+    right: auto;
+    left: anchor(left);
     bottom: anchor(top);
     margin: 0;
     width: max-content;
-    --event-time-tooltip-gap: 0.75rem;
-    translate: 0 calc(-100% - var(--event-time-tooltip-gap) - 6px);
+    translate: 0 calc(-100% - 6px);
+    display: none;
     flex-direction: column;
     gap: 0.2rem;
     min-width: 10.5rem;
@@ -51,19 +49,13 @@ const tipId = 'event-local-time-tip'
       0 4px 12px color-mix(in srgb, black 28%, transparent),
       0 12px 28px color-mix(in srgb, black 38%, transparent);
     font-family: inherit;
-    text-align: center;
+    text-align: left;
     text-wrap: balance;
     color: var(--color-theme-cream);
-    transform-origin: 100% 100%;
+    transform-origin: 0 100%;
     opacity: 0;
     transform: scale(0.96);
     pointer-events: none;
-    transition:
-      opacity 200ms var(--event-time-ease-out),
-      transform 200ms var(--event-time-ease-out),
-      translate 200ms var(--event-time-ease-out),
-      overlay 200ms allow-discrete,
-      display 200ms allow-discrete;
   }
 
   .event-local-time__tooltip-primary {
@@ -85,7 +77,6 @@ const tipId = 'event-local-time-tip'
   .event-local-time__tooltip:popover-open {
     display: flex;
     opacity: 1;
-    translate: 0 calc(-100% - var(--event-time-tooltip-gap));
     transform: scale(1);
     pointer-events: auto;
   }
@@ -93,26 +84,12 @@ const tipId = 'event-local-time-tip'
   @starting-style {
     .event-local-time__tooltip:popover-open {
       opacity: 0;
-      translate: 0 calc(-100% - var(--event-time-tooltip-gap) - 6px);
       transform: scale(0.96);
     }
   }
 
-  .event-local-time__tooltip.is-hiding {
-    opacity: 0;
-    translate: 0 calc(-100% - var(--event-time-tooltip-gap) - 4px);
-    transform: scale(0.97);
-    pointer-events: none;
-    transition-duration: 160ms;
-  }
-
-  .event-local-time__tooltip.is-instant {
-    transition: none;
-  }
-
   @media (min-width: 640px) {
     .event-local-time__tooltip {
-      --event-time-tooltip-gap: 0.875rem;
       gap: 0.25rem;
       padding: 0.65rem 1rem 0.75rem;
     }
@@ -128,15 +105,23 @@ const tipId = 'event-local-time-tip'
 
   @media (prefers-reduced-motion: reduce) {
     .event-local-time__tooltip {
-      translate: 0 calc(-100% - var(--event-time-tooltip-gap));
       transform: none;
-      transition: none;
     }
 
-    .event-local-time__tooltip:popover-open,
-    .event-local-time__tooltip.is-hiding {
-      translate: 0 calc(-100% - var(--event-time-tooltip-gap));
+    .event-local-time__tooltip:popover-open {
       transform: none;
+    }
+  }
+
+  @supports not (anchor-name: --x) {
+    .event-local-time__tooltip {
+      position: fixed;
+      left: 50%;
+      bottom: auto;
+      top: 50%;
+      translate: -50% -50%;
+      transform: none;
+      text-align: center;
     }
   }
 </style>
@@ -144,11 +129,20 @@ const tipId = 'event-local-time-tip'
 <script>
   import { $, $$ } from '@/lib/dom-selector'
   import { resolveEventLocalTime } from '@/lib/event-local-time'
-  import { afterTransition, prefersReducedMotion } from '@/lib/transition'
+  import { animate } from 'motion'
 
-  const TOOLTIP_EXIT_MS = 160
+  function prefersReducedMotion(): boolean {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }
+
+  const TOOLTIP_EXIT_MS = 200
+  const TOOLTIP_EASE = [0.23, 1, 0.32, 1] as const
 
   let eventTimeAbort: AbortController | undefined
+
+  function supportsAnchorPosition(): boolean {
+    return CSS.supports('anchor-name', '--x')
+  }
 
   function bindEventLocalTime(root: HTMLElement, signal: AbortSignal) {
     const trigger = $('time', root)
@@ -179,34 +173,58 @@ const tipId = 'event-local-time-tip'
 
     trigger.setAttribute('aria-describedby', tooltip.id)
 
+    const useMotion = supportsAnchorPosition() && !prefersReducedMotion()
+    let hidePlayback: { cancel: () => void; finished: Promise<unknown> } | null = null
     let isHiding = false
 
     const show = () => {
       isHiding = false
-      tooltip.classList.remove('is-hiding')
+      hidePlayback?.cancel()
+      hidePlayback = null
 
       if (!tooltip.matches(':popover-open')) {
-        tooltip.classList.remove('is-instant')
         tooltip.showPopover()
       }
+
+      if (!useMotion) return
+
+      void animate(
+        tooltip,
+        { opacity: [0, 1], scale: [0.96, 1] },
+        { duration: 0.2, ease: TOOLTIP_EASE },
+      )
     }
 
     const hide = async () => {
       if (!tooltip.matches(':popover-open')) return
       if (isHiding) return
 
-      if (prefersReducedMotion()) {
+      if (!useMotion) {
         tooltip.hidePopover()
-        tooltip.classList.remove('is-hiding', 'is-instant')
         return
       }
 
       isHiding = true
-      tooltip.classList.remove('is-instant')
-      tooltip.classList.add('is-hiding')
-      await afterTransition(tooltip, TOOLTIP_EXIT_MS)
+      hidePlayback?.cancel()
+
+      const opacity = Number.parseFloat(getComputedStyle(tooltip).opacity) || 1
+      hidePlayback = animate(
+        tooltip,
+        { opacity: [opacity, 0], scale: [1, 0.96] },
+        { duration: 0.16, ease: TOOLTIP_EASE },
+      )
+
+      await Promise.race([
+        hidePlayback.finished,
+        new Promise<void>((resolve) => {
+          window.setTimeout(resolve, TOOLTIP_EXIT_MS)
+        }),
+      ])
+
       tooltip.hidePopover()
-      tooltip.classList.remove('is-hiding')
+      tooltip.style.opacity = ''
+      tooltip.style.transform = ''
+      hidePlayback = null
       isHiding = false
     }
 

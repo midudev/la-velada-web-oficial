@@ -133,9 +133,7 @@ const { mapId = 'faq-venue-map' } = Astro.props
 <script>
   import L from 'leaflet'
   import { $, $$ } from '@/lib/dom-selector'
-  import { EVENT_VENUE_LAT, EVENT_VENUE_LNG } from '@/consts/event'
-  import { afterTransition } from '@/lib/transition'
-  import { registerVenueMapSync } from '@/lib/venue-map-sync'
+  import { EVENT_VENUE_LAT, EVENT_VENUE_LNG, FAQ_PANEL_TOGGLE } from '@/consts/event'
 
   const TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
   const TILE_ATTRIBUTION =
@@ -146,6 +144,37 @@ const { mapId = 'faq-venue-map' } = Astro.props
 
   let venueMapAbort: AbortController | undefined
   const mapInstances = new WeakMap<HTMLElement, L.Map>()
+
+  function afterTransition(
+    element: HTMLElement,
+    ms: number,
+    property?: string,
+  ): Promise<void> {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return Promise.resolve()
+    }
+
+    return new Promise((resolve) => {
+      let settled = false
+
+      const finish = () => {
+        if (settled) return
+        settled = true
+        element.removeEventListener('transitionend', onEnd)
+        window.clearTimeout(timer)
+        resolve()
+      }
+
+      const onEnd = (event: TransitionEvent) => {
+        if (event.target !== element) return
+        if (property && event.propertyName !== property) return
+        finish()
+      }
+
+      element.addEventListener('transitionend', onEnd)
+      const timer = window.setTimeout(finish, ms + 40)
+    })
+  }
 
   function initLeafletMap(canvas: HTMLElement) {
     if (mapInstances.has(canvas)) return
@@ -198,11 +227,23 @@ const { mapId = 'faq-venue-map' } = Astro.props
     teardownLeafletMap(canvas)
   }
 
+  function onFaqPanelToggle(event: Event) {
+    if (!(event instanceof CustomEvent)) return
+    const details = event.target
+    if (!(details instanceof HTMLDetailsElement)) return
+
+    const root = $('[data-venue-map]', details)
+    if (!root) return
+
+    void syncVenueMap(root, Boolean(event.detail?.open))
+  }
+
   function setupVenueMaps() {
     venueMapAbort?.abort()
     venueMapAbort = new AbortController()
+    const { signal } = venueMapAbort
 
-    registerVenueMapSync(syncVenueMap)
+    document.addEventListener(FAQ_PANEL_TOGGLE, onFaqPanelToggle, { signal })
 
     for (const root of $$('[data-venue-map]')) {
       if (root.closest('details')?.open) {

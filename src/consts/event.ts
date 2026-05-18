@@ -1,3 +1,6 @@
+/** Dispatched on `.faq-item` when panel open state changes (VenueMap listens). */
+export const FAQ_PANEL_TOGGLE = 'faq-panel-toggle'
+
 /** La Velada VI — 25 jul 2026, 20:00 hora peninsular española */
 export const EVENT_ZONED_ISO = '2026-07-25T20:00:00+02:00'
 export const EVENT_TIME_ZONE = 'Europe/Madrid'
