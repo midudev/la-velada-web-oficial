@@ -123,6 +123,44 @@ export function setPanelShellOpen(shell: HTMLElement, open: boolean) {
   shell.classList.toggle('faq-answer-shell--open', open)
 }
 
+function isLastFaqItem(details: HTMLDetailsElement): boolean {
+  return details.closest('.faq-item-wrap--last') != null
+}
+
+function isViewportNearBottom(): boolean {
+  return window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 72
+}
+
+/**
+ * Tracks the actual DOM height shrinkage each frame and scrolls by the same
+ * delta so the footer stays pinned at its current viewport Y while the panel
+ * collapses. Returns a cleanup function that stops the loop and does a final sync.
+ *
+ * Motion drives the animation; we just observe `scrollHeight` changes — the
+ * compensation automatically follows any easing curve without duplicating it.
+ */
+function startScrollCompensation(): () => void {
+  const startDocHeight = document.documentElement.scrollHeight
+  const startScrollY = window.scrollY
+  let frame = 0
+
+  const sync = () => {
+    const shrunk = startDocHeight - document.documentElement.scrollHeight
+    const target = Math.max(0, startScrollY - shrunk)
+    if (Math.abs(window.scrollY - target) > 0.5) window.scrollTo(0, target)
+    frame = requestAnimationFrame(sync)
+  }
+
+  sync()
+  frame = requestAnimationFrame(sync)
+
+  return () => {
+    cancelAnimationFrame(frame)
+    const shrunk = startDocHeight - document.documentElement.scrollHeight
+    window.scrollTo(0, Math.max(0, startScrollY - shrunk))
+  }
+}
+
 function forceSync(parts: FaqParts) {
   const { details, shell, summary } = parts
   const wantOpen = details.dataset.faqTargetOpen === '1'
@@ -209,11 +247,24 @@ export async function closeOnce(parts: FaqParts): Promise<void> {
     return
   }
 
-  await animate(
-    shell,
-    { gridTemplateRows: ['1fr', '0fr'] },
-    { duration: PANEL_MS / 1000, ease: EASE },
-  )
+  // When closing the last item with the viewport near the bottom, the document
+  // shrinks as the panel collapses and the footer moves up — compensate by
+  // tracking scrollHeight delta each frame. Motion owns the animation lifecycle;
+  // we cancel the RAF loop in finally so it always stops, even on rapid clicks.
+  const stopScrollSync =
+    isLastFaqItem(details) && isViewportNearBottom()
+      ? (summary.blur(), startScrollCompensation())
+      : undefined
+
+  try {
+    await animate(
+      shell,
+      { gridTemplateRows: ['1fr', '0fr'] },
+      { duration: PANEL_MS / 1000, ease: EASE },
+    )
+  } finally {
+    stopScrollSync?.()
+  }
 
   details.classList.remove('faq-item--closing')
   details.removeAttribute('open')
