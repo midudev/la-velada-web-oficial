@@ -1,20 +1,19 @@
 ---
-import { shouldReloadNavItem, type NavItem } from '@/consts/navigation'
-
 interface Props {
-  currentPath: string
-  items: readonly NavItem[]
   variant: 'desktop' | 'mobile'
 }
 
-const { currentPath, items, variant } = Astro.props
+const { variant } = Astro.props
+const currentPath = Astro.url.pathname
 const isDesktop = variant === 'desktop'
 
-const navItemId = (label: string) =>
-  label
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
+const NAV_ITEMS = [
+  { label: 'BOXEADORES', href: '/boxeadores', disabled: false },
+  { label: 'COMBATES', href: '/#cartelera', disabled: true, note: 'PRÓXIMAMENTE' },
+  { label: 'PRONÓSTICOS', href: '/pronosticos', disabled: true, note: 'PRÓXIMAMENTE' },
+] as const
+
+const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/boxeadores'
 
 const desktopColClass = 'flex flex-col items-center justify-center gap-1 px-3 sm:px-4'
 const desktopLabelClass =
@@ -38,8 +37,8 @@ const mobileLinkClass =
   isDesktop ? (
     <nav class="hidden md:block" aria-label="Navegación principal">
       <ul class="flex items-stretch gap-1 sm:gap-2">
-        {items.map((item) => (
-          <li class={desktopColClass} data-nav-item={navItemId(item.label)}>
+        {NAV_ITEMS.map((item) => (
+          <li class={desktopColClass}>
             {item.disabled ? (
               <>
                 <span
@@ -55,7 +54,7 @@ const mobileLinkClass =
             ) : (
               <a
                 href={item.href}
-                data-astro-reload={shouldReloadNavItem(currentPath, item.href) ? true : undefined}
+                data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
                 class:list={[desktopLabelClass, desktopLinkClass]}
               >
                 <span aria-hidden="true" class={desktopUnderlineClass} />
@@ -69,7 +68,7 @@ const mobileLinkClass =
   ) : (
     <nav aria-label="Menú principal móvil" class="relative w-full max-w-sm">
       <ul class="flex flex-col items-center gap-6">
-        {items.map((item) => (
+        {NAV_ITEMS.map((item) => (
           <li class="w-full">
             {item.disabled ? (
               <span
@@ -84,7 +83,7 @@ const mobileLinkClass =
             ) : (
               <a
                 href={item.href}
-                data-astro-reload={shouldReloadNavItem(currentPath, item.href) ? true : undefined}
+                data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
                 data-mobile-menu-link
                 class={mobileLinkClass}
               >
