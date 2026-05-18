@@ -200,6 +200,8 @@ const scrolledBar =
     const links = $$<HTMLAnchorElement>('[data-mobile-menu-link]')
     if (!menu || !button) return
 
+    const header = $<HTMLElement>('[data-header]')
+
     const setMenuOpen = (open: boolean) => {
       menu.dataset.open = String(open)
       button.dataset.open = String(open)
@@ -210,6 +212,10 @@ const scrolledBar =
       const label = $<HTMLElement>('.sr-only', button)
       if (label) label.textContent = open ? 'Cerrar menú' : 'Abrir menú'
       document.documentElement.classList.toggle('overflow-hidden', open)
+      if (header) {
+        if (open) header.setAttribute('data-mobile-menu-open', 'true')
+        else header.removeAttribute('data-mobile-menu-open')
+      }
     }
 
     setMenuOpen(false)

@@ -1,9 +1,25 @@
-import type { ReactNode } from 'react'
+import { useId, useSyncExternalStore, type ReactNode } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 
+function useMobileMenuOpen() {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      const header = document.querySelector('[data-header]')
+      if (!header) return () => {}
+      const observer = new MutationObserver(onStoreChange)
+      observer.observe(header, {
+        attributes: true,
+        attributeFilter: ['data-mobile-menu-open'],
+      })
+      return () => observer.disconnect()
+    },
+    () =>
+      document.querySelector('[data-header]')?.getAttribute('data-mobile-menu-open') === 'true',
+    () => false,
+  )
+}
+
 const VIEW_BOX = '0 0 303 303'
-const GRAD_ID = 'logo-home-grad'
-const MASK_ID = 'logo-home-mask'
 const ARIA = 'La Velada del Año VI - Inicio'
 
 const LOGO_PATH =
@@ -40,16 +56,18 @@ const traceStroke = {
 
 type Props = { children: ReactNode }
 
-function CrestSvg() {
+type CrestProps = { gradId: string; maskId: string }
+
+function CrestSvg({ gradId, maskId }: CrestProps) {
   return (
     <motion.svg viewBox={VIEW_BOX} className={svgClass} aria-hidden>
       <defs>
-        <linearGradient id={GRAD_ID} x1="15%" y1="5%" x2="90%" y2="95%">
+        <linearGradient id={gradId} x1="15%" y1="5%" x2="90%" y2="95%">
           <stop offset="0%" stopColor="oklch(0.84 0.05 56)" />
           <stop offset="48%" stopColor="oklch(0.66 0.085 56.5)" />
           <stop offset="100%" stopColor="oklch(0.42 0.038 56)" />
         </linearGradient>
-        <mask id={MASK_ID}>
+        <mask id={maskId}>
           <motion.path
             d={LOGO_PATH}
             fill="none"
@@ -62,11 +80,11 @@ function CrestSvg() {
         </mask>
       </defs>
       <path fillRule="evenodd" d={LOGO_PATH} fill={REST_FILL} />
-      <path fillRule="evenodd" d={LOGO_PATH} fill={`url(#${GRAD_ID})`} mask={`url(#${MASK_ID})`} />
+      <path fillRule="evenodd" d={LOGO_PATH} fill={`url(#${gradId})`} mask={`url(#${maskId})`} />
       <motion.path
         d={LOGO_PATH}
         fill="none"
-        stroke={`url(#${GRAD_ID})`}
+        stroke={`url(#${gradId})`}
         strokeWidth={1.15}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -79,6 +97,10 @@ function CrestSvg() {
 
 export default function LogoHomeLink({ children }: Props) {
   const reduceMotion = useReducedMotion()
+  const mobileMenuOpen = useMobileMenuOpen()
+  const uid = useId().replace(/:/g, '')
+  const gradId = `logo-home-grad-${uid}`
+  const maskId = `logo-home-mask-${uid}`
 
   if (reduceMotion) {
     return (
@@ -97,11 +119,12 @@ export default function LogoHomeLink({ children }: Props) {
       className={linkClass}
       aria-label={ARIA}
       initial="rest"
+      animate={mobileMenuOpen ? 'hover' : 'rest'}
       whileHover="hover"
       whileFocus="hover"
       whileTap="tap"
     >
-      <CrestSvg />
+      <CrestSvg gradId={gradId} maskId={maskId} />
       {children}
     </motion.a>
   )
