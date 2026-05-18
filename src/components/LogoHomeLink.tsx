@@ -7,9 +7,7 @@ import {
   type Transition,
   type Variants,
 } from 'motion/react'
-import { $ } from '@/lib/dom-selector'
 import {
-  HEADER_MOBILE_MENU_OPEN_ATTR,
   HEADER_MOBILE_MENU_TOGGLE_EVENT,
   type HeaderMobileMenuToggleEvent,
 } from '@/consts/header-contract'
@@ -65,7 +63,6 @@ function useMobileMenuOpen() {
   return useSyncExternalStore(
     (onStoreChange) => {
       const handleToggle = (event: Event) => {
-        hasMobileMenuEventSnapshot = true
         mobileMenuOpen = (event as HeaderMobileMenuToggleEvent).detail.open
         onStoreChange()
       }
@@ -79,12 +76,8 @@ function useMobileMenuOpen() {
 }
 
 let mobileMenuOpen = false
-let hasMobileMenuEventSnapshot = false
 
-function getMobileMenuOpenSnapshot() {
-  if (hasMobileMenuEventSnapshot) return mobileMenuOpen
-  return $(`[${HEADER_MOBILE_MENU_OPEN_ATTR}]`) !== null
-}
+const getMobileMenuOpenSnapshot = () => mobileMenuOpen
 
 export default function LogoHomeLink({ children }: { children: ReactNode }) {
   const reduceMotion = useReducedMotion()

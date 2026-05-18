@@ -1,9 +1,6 @@
 ---
 import LogoHomeLink from '@/components/LogoHomeLink.tsx'
 import HeaderNav from '@/components/HeaderNav.astro'
-import { NAV_ITEMS } from '@/consts/navigation'
-
-const currentPath = Astro.url.pathname
 
 const frost = 'backdrop-saturate-150 backdrop-contrast-125'
 const scrolledBar =
@@ -28,7 +25,7 @@ const scrolledBar =
       </span>
     </LogoHomeLink>
 
-    <HeaderNav currentPath={currentPath} items={NAV_ITEMS} variant="desktop" />
+    <HeaderNav variant="desktop" />
 
     <button
       type="button"
@@ -71,16 +68,13 @@ const scrolledBar =
       aria-hidden="true"
       class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_50%_0%,color-mix(in_srgb,var(--color-theme-gold)_18%,transparent),transparent_62%)]"
     ></div>
-    <HeaderNav currentPath={currentPath} items={NAV_ITEMS} variant="mobile" />
+    <HeaderNav variant="mobile" />
   </div>
 </header>
 
 <script>
   import { $, $$ } from '@/lib/dom-selector'
-  import {
-    HEADER_MOBILE_MENU_OPEN_ATTR,
-    HEADER_MOBILE_MENU_TOGGLE_EVENT,
-  } from '@/consts/header-contract'
+  import { HEADER_MOBILE_MENU_TOGGLE_EVENT } from '@/consts/header-contract'
 
   let headerAbort: AbortController | null = null
 
@@ -99,8 +93,6 @@ const scrolledBar =
     const links = $$<HTMLAnchorElement>('[data-mobile-menu-link]')
     if (!menu || !button) return
 
-    const header = $<HTMLElement>('[data-header]')
-
     const setMenuOpen = (open: boolean) => {
       menu.dataset.open = String(open)
       button.dataset.open = String(open)
@@ -111,10 +103,6 @@ const scrolledBar =
       const label = $<HTMLElement>('.sr-only', button)
       if (label) label.textContent = open ? 'Cerrar menú' : 'Abrir menú'
       document.documentElement.classList.toggle('overflow-hidden', open)
-      if (header) {
-        if (open) header.setAttribute(HEADER_MOBILE_MENU_OPEN_ATTR, 'true')
-        else header.removeAttribute(HEADER_MOBILE_MENU_OPEN_ATTR)
-      }
       document.dispatchEvent(
         new CustomEvent(HEADER_MOBILE_MENU_TOGGLE_EVENT, { detail: { open } }),
       )
