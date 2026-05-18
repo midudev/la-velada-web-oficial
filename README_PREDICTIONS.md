@@ -1,6 +1,6 @@
-# 🥊 Sistema de Predicciones - La Velada del Año V
+# 🥊 Sistema de Predicciones - La Velada del Año VI
 
-Este documento te guía paso a paso para configurar y usar el sistema de predicciones para La Velada del Año V.
+Este documento te guía paso a paso para configurar y usar el sistema de predicciones para La Velada del Año VI.
 
 ## 🚀 Configuración Inicial
 
@@ -254,4 +254,4 @@ Si encuentras algún problema:
 
 ---
 
-¡El sistema de predicciones está listo para La Velada del Año V! 🥊✨
+¡El sistema de predicciones está listo para La Velada del Año VI! 🥊✨
