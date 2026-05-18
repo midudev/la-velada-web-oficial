@@ -192,7 +192,7 @@ const SPONSORS: Sponsor[] = [
               rel="sponsored noopener noreferrer"
               aria-label={label}
               title={name}
-               class="promo-banner group relative block w-full overflow-hidden rounded-md ring-1 ring-theme-gold/25 outline-none transition duration-500 animate-fade-in-up hover:ring-theme-gold/45 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+               class="promo-banner group relative block w-full overflow-hidden rounded-md ring-1 ring-theme-gold/25 outline-none transition duration-300 animate-fade-in-up hover:ring-theme-gold/45 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               style={`animation-delay:${850 + index * 90}ms`}
             >
               <picture>
@@ -207,7 +207,7 @@ const SPONSORS: Sponsor[] = [
                   height={height}
                   loading="lazy"
                   decoding="async"
-                  class="block h-auto w-full origin-center scale-[1.01] transition duration-500 group-hover:scale-100 group-hover:brightness-110 group-focus-visible:scale-100 group-focus-visible:brightness-110"
+                  class="block h-auto w-full origin-center scale-[1.01] transition-transform duration-300 group-hover:scale-100 group-hover:brightness-110 group-focus-visible:scale-100 group-focus-visible:brightness-110"
                 />
               </picture>
             </a>
@@ -227,12 +227,12 @@ const SPONSORS: Sponsor[] = [
                 rel="noopener noreferrer"
                 aria-label={label}
                 title={name}
-                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white outline-none transition duration-500 hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white outline-none transition-transform duration-300 hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               >
                 <Logo
                   aria-hidden="true"
                   class:list={[
-                    'h-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)] transition duration-500',
+                    'h-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)] transition-transform duration-300',
                     logoClass,
                   ]}
                 />
@@ -306,6 +306,13 @@ const SPONSORS: Sponsor[] = [
       transform: none !important;
     }
   }
+
+  @media (hover: none) and (pointer: coarse) {
+    .sponsor-card:hover,
+    .sponsor-card:focus-visible {
+      transform: none;
+    }
+  }
 </style>
 
 <script>
@@ -352,7 +359,7 @@ const SPONSORS: Sponsor[] = [
         animate(el, { x: pos.x, y: pos.y }, {
           type: 'spring',
           bounce: 0,
-          duration: 0.25,
+          duration: 0.2,
         })
       })
 
@@ -365,7 +372,7 @@ const SPONSORS: Sponsor[] = [
 
       return () => {
         if (logo) {
-          animate(logo, { scale: 1 }, { duration: 0.05, ease: 'ease-out' })
+          animate(logo, { scale: 1 }, { duration: 0.04, ease: 'ease-out' })
         }
 
         fadeOutTimeout = setTimeout(() => {
