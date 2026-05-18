@@ -82,7 +82,7 @@ function formatRelative(date: Date) {
           </span>
           <div class="flex flex-col">
             <span
-              class="font-cinzel text-xs font-black tracking-[0.2em] text-theme-cream sm:text-sm"
+              class="font-cinzel text-xs font-black tracking-[0.16em] text-theme-cream sm:text-sm"
             >
               EL PODCAST PIRATA DE LA VELADA 6
             </span>
@@ -90,7 +90,7 @@ function formatRelative(date: Date) {
               href={CHANNEL_URL}
               target="_blank"
               rel="noopener noreferrer"
-              class="font-cinzel text-[0.6rem] tracking-[0.25em] text-white/50 transition hover:text-theme-gold focus-visible:text-theme-gold sm:text-[0.65rem]"
+              class="font-cinzel text-[0.6rem] tracking-[0.16em] text-white/50 transition hover:text-theme-gold focus-visible:text-theme-gold sm:text-[0.65rem]"
             >
               VER CANAL EN YOUTUBE
             </a>
@@ -98,7 +98,7 @@ function formatRelative(date: Date) {
         </div>
 
         <span
-          class="hidden font-cinzel text-[0.6rem] tracking-[0.25em] text-white/45 sm:inline-block"
+          class="hidden font-cinzel text-[0.6rem] tracking-[0.16em] text-white/45 sm:inline-block"
         >
           {episodes.length} EPISODIO{episodes.length === 1 ? '' : 'S'}
         </span>
@@ -106,7 +106,7 @@ function formatRelative(date: Date) {
 
       {
         episodes.length === 0 ? (
-          <div class="flex h-[28rem] items-center justify-center px-6 text-center font-cinzel text-xs tracking-[0.2em] text-white/55 sm:h-[32rem] sm:text-sm">
+          <div class="flex h-[28rem] items-center justify-center px-6 text-center font-cinzel text-xs tracking-[0.16em] text-white/55 sm:h-[32rem] sm:text-sm">
             No hay episodios publicados en los últimos 2 meses.
           </div>
         ) : (
@@ -150,7 +150,7 @@ function formatRelative(date: Date) {
                 />
 
                 <span
-                  class="absolute top-5 right-5 z-10 rounded-full border border-theme-gold/35 bg-black/35 px-3 py-1 font-cinzel text-[0.58rem] font-black tracking-[0.24em] text-theme-gold backdrop-blur"
+                  class="absolute top-5 right-5 z-10 rounded-full border border-theme-gold/35 bg-black/35 px-3 py-1 font-cinzel text-[0.58rem] font-black tracking-[0.16em] text-theme-gold backdrop-blur"
                   aria-hidden="true"
                 >
                   ÚLTIMO EPISODIO
@@ -172,14 +172,14 @@ function formatRelative(date: Date) {
                   <time
                     datetime={featuredEpisode.published.toISOString()}
                     title={dateFormatter.format(featuredEpisode.published)}
-                    class="font-cinzel text-[0.65rem] font-black tracking-[0.3em] text-theme-gold"
+                    class="font-cinzel text-[0.65rem] font-black tracking-[0.16em] text-theme-gold"
                   >
                     {formatRelative(featuredEpisode.published)}
                   </time>
                   <h3 class="max-w-2xl font-cinzel text-2xl leading-tight font-black tracking-[0.05em] text-balance text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl">
                     {featuredEpisode.title}
                   </h3>
-                  <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-black tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
+                  <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
                     VER EPISODIO
                     <ArrowRightIcon
                       class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
@@ -231,7 +231,7 @@ function formatRelative(date: Date) {
 
                       <div class="flex min-w-0 flex-col justify-between gap-3">
                         <span class="flex items-start justify-between gap-3">
-                          <span class="font-cinzel text-[0.62rem] font-black tracking-[0.22em] text-theme-gold/75">
+                          <span class="font-cinzel text-[0.62rem] font-black tracking-[0.16em] text-theme-gold/75">
                             E{String(secondaryEpisodes.length - index).padStart(2, '0')}
                           </span>
                           <ChevronRightIcon
@@ -247,7 +247,7 @@ function formatRelative(date: Date) {
                           <time
                             datetime={episode.published.toISOString()}
                             title={dateFormatter.format(episode.published)}
-                            class="font-cinzel text-[0.58rem] tracking-[0.24em] text-white/45"
+                            class="font-cinzel text-[0.58rem] tracking-[0.16em] text-white/45"
                           >
                             {formatRelative(episode.published)}
                           </time>
