@@ -181,6 +181,7 @@ const scrolledBar =
 </header>
 
 <script>
+  import { HEADER_MOBILE_MENU_OPEN_ATTR, HEADER_SELECTOR } from '@/consts/header-dom'
   import { $, $$ } from '@/lib/dom-selector'
 
   let headerAbort: AbortController | null = null
@@ -200,7 +201,7 @@ const scrolledBar =
     const links = $$<HTMLAnchorElement>('[data-mobile-menu-link]')
     if (!menu || !button) return
 
-    const header = $<HTMLElement>('[data-header]')
+    const header = $<HTMLElement>(HEADER_SELECTOR)
 
     const setMenuOpen = (open: boolean) => {
       menu.dataset.open = String(open)
@@ -213,8 +214,8 @@ const scrolledBar =
       if (label) label.textContent = open ? 'Cerrar menú' : 'Abrir menú'
       document.documentElement.classList.toggle('overflow-hidden', open)
       if (header) {
-        if (open) header.setAttribute('data-mobile-menu-open', 'true')
-        else header.removeAttribute('data-mobile-menu-open')
+        if (open) header.setAttribute(HEADER_MOBILE_MENU_OPEN_ATTR, 'true')
+        else header.removeAttribute(HEADER_MOBILE_MENU_OPEN_ATTR)
       }
     }
 
@@ -234,7 +235,7 @@ const scrolledBar =
     headerAbort = new AbortController()
     const { signal } = headerAbort
 
-    const header = $<HTMLElement>('[data-header]')
+    const header = $<HTMLElement>(HEADER_SELECTOR)
     if (header) setupHeaderScroll(header, signal)
     setupMobileMenu(signal)
   })

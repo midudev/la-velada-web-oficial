@@ -1,126 +1,125 @@
 import { useId, useSyncExternalStore, type ReactNode } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotion, type Transition, type Variants } from 'motion/react'
+import { HEADER_MOBILE_MENU_OPEN_ATTR, HEADER_SELECTOR } from '@/consts/header-dom'
+import { LOGO_CREST, LOGO_HOME_ARIA } from '@/consts/logo-crest'
 import { $ } from '@/lib/dom-selector'
+
+const EASE_OUT = [0.23, 1, 0.32, 1] as const
+const EASE_FILM = [0.77, 0, 0.175, 1] as const
+const EXIT: Transition = { duration: 0.22, ease: EASE_OUT }
+
+const LINK_CLASS =
+  'flex items-center gap-3 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold [@media(hover:hover)_and_(pointer:fine)]:transition-[filter] [@media(hover:hover)_and_(pointer:fine)]:duration-500 [@media(hover:hover)_and_(pointer:fine)]:hover:drop-shadow-[0_0_18px_oklch(0.72_0.07_56/0.42)]'
+
+const SVG_CLASS = 'block h-9 w-auto shrink-0 origin-center sm:h-10'
 
 function useMobileMenuOpen() {
   return useSyncExternalStore(
     (onStoreChange) => {
-      const header = $('[data-header]')
+      const header = $(HEADER_SELECTOR)
       if (!header) return () => {}
       const observer = new MutationObserver(onStoreChange)
       observer.observe(header, {
         attributes: true,
-        attributeFilter: ['data-mobile-menu-open'],
+        attributeFilter: [HEADER_MOBILE_MENU_OPEN_ATTR],
       })
       return () => observer.disconnect()
     },
-    () => $('[data-header]')?.getAttribute('data-mobile-menu-open') === 'true',
+    () => $(HEADER_SELECTOR)?.getAttribute(HEADER_MOBILE_MENU_OPEN_ATTR) === 'true',
     () => false,
   )
 }
 
-const VIEW_BOX = '0 0 303 303'
-const ARIA = 'La Velada del Año VI - Inicio'
-
-const LOGO_PATH =
-  'm188.1 150.2l90.6 137.4-34.9-16c-7.7-3.5-15.1-7.7-21.9-12.3-15.3-10.4-29-25.3-39.6-43.1l-17.8-30.2-12 18.2-12-18.2-17.7 30.2c-10.6 17.8-24.4 32.7-39.7 43.1-6.8 4.6-14.2 8.8-21.9 12.3l-34.9 16 90.6-137.4-90.6-137.4 34.9 16c7.7 3.5 15.1 7.7 21.9 12.3 15.3 10.4 29.1 25.3 39.7 43.1l17.7 30.2 12-18.2 12 18.2 17.8-30.2c10.6-17.8 24.3-32.7 39.6-43.1 6.8-4.6 14.2-8.8 21.9-12.3l34.9-16zm-21-31.8l18.4 27.9 81.3-123.3-21.2 9.7c-7.5 3.5-14.7 7.5-21.3 12-14.8 10-28 24.5-38.3 41.8zm-128.9-95.4l81.2 123.2 18.4-27.8-18.8-32c-10.3-17.3-23.6-31.7-38.4-41.8-6.6-4.5-13.8-8.5-21.3-11.9zm147.3 131.1l-23.5-35.6-9.5-14.5-9.6 14.5-23.4 35.6-81.3 123.2 21.2-9.7c7.5-3.4 14.6-7.4 21.2-11.9 14.8-10.1 28.1-24.5 38.4-41.8l19.5-33.1 14-23.7 13.9 23.7 19.5 33.1c10.3 17.3 23.6 31.7 38.4 41.8 6.6 4.5 13.8 8.5 21.3 11.9l21.1 9.7zm-23.4 27.8l-9.6-16.2-9.5 16.2 9.5 14.4z'
-
-const ease = [0.23, 1, 0.32, 1] as const
-const pathLength = { duration: 0.5, ease }
-const REST_FILL = 'oklch(0.765 0.038 55.5)'
-
-const linkClass =
-  'flex items-center gap-3 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold'
-
-const svgClass = 'block h-9 w-auto shrink-0 sm:h-10'
-
-const maskReveal = {
-  rest: {
-    pathLength: 0,
-    opacity: 0,
-    transition: {
-      pathLength,
-      opacity: { duration: 0.12, ease },
+function strokeDraw(springSec: number, bounce: number, delaySec = 0): Variants {
+  return {
+    rest: {
+      pathLength: 0,
+      opacity: 0,
+      transition: { pathLength: EXIT, opacity: { duration: 0.16, ease: EASE_OUT } },
     },
-  },
-  hover: {
-    pathLength: 1,
-    opacity: 1,
-    transition: {
-      pathLength,
-      opacity: { duration: 0.15, ease, delay: 0 },
+    hover: {
+      pathLength: 1,
+      opacity: 1,
+      transition: {
+        pathLength: { type: 'spring', duration: springSec, bounce, delay: delaySec },
+        opacity: { duration: 0.28, ease: EASE_OUT, delay: delaySec * 0.35 },
+      },
     },
-  },
-  tap: { pathLength: 1, opacity: 1 },
+    tap: { pathLength: 1, opacity: 1 },
+  }
 }
 
-const traceStroke = {
-  rest: {
-    pathLength: 0,
-    opacity: 0,
-    transition: { pathLength, opacity: { duration: 0.2, ease } },
-  },
-  hover: {
-    pathLength: 1,
-    opacity: 0.85,
-    transition: { pathLength, opacity: { duration: 0.15, ease } },
-  },
-  tap: { pathLength: 1, opacity: 0.85 },
+const crestMotion: Variants = {
+  rest: { scale: 1, transition: EXIT },
+  hover: { scale: 1.05, transition: { type: 'spring', duration: 0.62, bounce: 0.16 } },
+  tap: { scale: 1.02, transition: { duration: 0.12, ease: EASE_OUT } },
 }
 
-type Props = { children: ReactNode }
+const flatFill: Variants = {
+  rest: { opacity: 1, transition: EXIT },
+  hover: { opacity: 0, transition: { duration: 0.4, ease: EASE_FILM, delay: 0.06 } },
+  tap: { opacity: 0 },
+}
+
+const maskDraw = strokeDraw(0.78, 0.14)
+const traceDraw = strokeDraw(0.7, 0.1, 0.14)
+
+/** Parent carrier so `whileHover` drives child `crestMotion` / stroke variants. */
+const linkVariants: Variants = { rest: {}, hover: {}, tap: {} }
 
 type CrestProps = { gradId: string; maskId: string }
 
-function CrestSvg({ gradId, maskId }: CrestProps) {
+function Crest({ gradId, maskId }: CrestProps) {
+  const { viewBox, path, restFill } = LOGO_CREST
+
   return (
-    <motion.svg viewBox={VIEW_BOX} className={svgClass} aria-hidden>
+    <motion.svg viewBox={viewBox} className={SVG_CLASS} aria-hidden variants={crestMotion}>
       <defs>
         <linearGradient id={gradId} x1="15%" y1="5%" x2="90%" y2="95%">
-          <stop offset="0%" stopColor="oklch(0.84 0.05 56)" />
-          <stop offset="48%" stopColor="oklch(0.66 0.085 56.5)" />
-          <stop offset="100%" stopColor="oklch(0.42 0.038 56)" />
+          <stop offset="0%" stopColor="oklch(0.88 0.055 56)" />
+          <stop offset="42%" stopColor="oklch(0.7 0.09 56.5)" />
+          <stop offset="100%" stopColor="oklch(0.38 0.04 56)" />
         </linearGradient>
         <mask id={maskId}>
           <motion.path
-            d={LOGO_PATH}
+            d={path}
             fill="none"
             stroke="white"
-            strokeWidth={20}
+            strokeWidth={22}
             strokeLinecap="butt"
             strokeLinejoin="round"
-            variants={maskReveal}
+            variants={maskDraw}
           />
         </mask>
       </defs>
-      <path fillRule="evenodd" d={LOGO_PATH} fill={REST_FILL} />
-      <path fillRule="evenodd" d={LOGO_PATH} fill={`url(#${gradId})`} mask={`url(#${maskId})`} />
+      <motion.path fillRule="evenodd" d={path} fill={restFill} variants={flatFill} />
+      <path fillRule="evenodd" d={path} fill={`url(#${gradId})`} mask={`url(#${maskId})`} />
       <motion.path
-        d={LOGO_PATH}
+        d={path}
         fill="none"
         stroke={`url(#${gradId})`}
-        strokeWidth={1.15}
+        strokeWidth={1.25}
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
-        variants={traceStroke}
+        variants={traceDraw}
       />
     </motion.svg>
   )
 }
 
-export default function LogoHomeLink({ children }: Props) {
+export default function LogoHomeLink({ children }: { children: ReactNode }) {
   const reduceMotion = useReducedMotion()
-  const mobileMenuOpen = useMobileMenuOpen()
+  const menuOpen = useMobileMenuOpen()
   const uid = useId().replace(/:/g, '')
-  const gradId = `logo-home-grad-${uid}`
-  const maskId = `logo-home-mask-${uid}`
+  const gradId = `logo-grad-${uid}`
+  const maskId = `logo-mask-${uid}`
 
   if (reduceMotion) {
     return (
-      <a href="/" className={linkClass} aria-label={ARIA}>
-        <svg viewBox={VIEW_BOX} className={svgClass} aria-hidden>
-          <path fillRule="evenodd" d={LOGO_PATH} fill={REST_FILL} />
+      <a href="/" className={LINK_CLASS} aria-label={LOGO_HOME_ARIA}>
+        <svg viewBox={LOGO_CREST.viewBox} className={SVG_CLASS} aria-hidden>
+          <path fillRule="evenodd" d={LOGO_CREST.path} fill={LOGO_CREST.restFill} />
         </svg>
         {children}
       </a>
@@ -130,15 +129,16 @@ export default function LogoHomeLink({ children }: Props) {
   return (
     <motion.a
       href="/"
-      className={linkClass}
-      aria-label={ARIA}
+      className={LINK_CLASS}
+      aria-label={LOGO_HOME_ARIA}
+      variants={linkVariants}
       initial="rest"
-      animate={mobileMenuOpen ? 'hover' : 'rest'}
+      animate={menuOpen ? 'hover' : 'rest'}
       whileHover="hover"
       whileFocus="hover"
       whileTap="tap"
     >
-      <CrestSvg gradId={gradId} maskId={maskId} />
+      <Crest gradId={gradId} maskId={maskId} />
       {children}
     </motion.a>
   )
