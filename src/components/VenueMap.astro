@@ -139,40 +139,29 @@ const { mapId = 'faq-venue-map' } = Astro.props
   const TILE_ATTRIBUTION =
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
 
-  const MAP_OPEN_MS = 320
-  const MAP_CLOSE_MS = 220
+  const MAP_TRANSITION_MS = 320
 
   let venueMapAbort: AbortController | undefined
   const mapInstances = new WeakMap<HTMLElement, L.Map>()
 
-  function afterTransition(
-    element: HTMLElement,
-    ms: number,
-    property?: string,
-  ): Promise<void> {
+  function waitForMapReveal(reveal: HTMLElement): Promise<void> {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return Promise.resolve()
     }
 
     return new Promise((resolve) => {
-      let settled = false
-
       const finish = () => {
-        if (settled) return
-        settled = true
-        element.removeEventListener('transitionend', onEnd)
+        reveal.removeEventListener('transitionend', onEnd)
         window.clearTimeout(timer)
         resolve()
       }
 
       const onEnd = (event: TransitionEvent) => {
-        if (event.target !== element) return
-        if (property && event.propertyName !== property) return
-        finish()
+        if (event.target === reveal && event.propertyName === 'clip-path') finish()
       }
 
-      element.addEventListener('transitionend', onEnd)
-      const timer = window.setTimeout(finish, ms + 40)
+      const timer = window.setTimeout(finish, MAP_TRANSITION_MS + 40)
+      reveal.addEventListener('transitionend', onEnd, { once: true })
     })
   }
 
@@ -213,26 +202,26 @@ const { mapId = 'faq-venue-map' } = Astro.props
     const canvas = $('.venue-map__canvas', root)
     const reveal = $('.venue-map__reveal', root)
     if (!canvas || !reveal) return
+    if (reveal.classList.contains('venue-map__reveal--open') === open) return
 
     if (open) {
       initLeafletMap(canvas)
       reveal.classList.add('venue-map__reveal--open')
-      await afterTransition(reveal, MAP_OPEN_MS, 'clip-path')
+      await waitForMapReveal(reveal)
       mapInstances.get(canvas)?.invalidateSize()
       return
     }
 
     reveal.classList.remove('venue-map__reveal--open')
-    await afterTransition(reveal, MAP_CLOSE_MS, 'clip-path')
+    await waitForMapReveal(reveal)
     teardownLeafletMap(canvas)
   }
 
   function onFaqPanelToggle(event: Event) {
     if (!(event instanceof CustomEvent)) return
-    const details = event.target
-    if (!(details instanceof HTMLDetailsElement)) return
+    if (!(event.target instanceof HTMLDetailsElement)) return
 
-    const root = $('[data-venue-map]', details)
+    const root = $('[data-venue-map]', event.target)
     if (!root) return
 
     void syncVenueMap(root, Boolean(event.detail?.open))

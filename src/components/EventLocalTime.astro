@@ -1,7 +1,5 @@
 ---
 import { EVENT_ZONED_ISO } from '@/consts/event'
-
-const tipId = 'event-local-time-tip'
 ---
 
 <span class="event-local-time">
@@ -12,7 +10,7 @@ const tipId = 'event-local-time-tip'
   >
     20:00H (españa peninsular)
   </time>
-  <span id={tipId} popover="manual" role="tooltip" class="event-local-time__tooltip">
+  <span popover="manual" role="tooltip" class="event-local-time__tooltip">
     <span class="event-local-time__tooltip-primary"></span>
     <span class="event-local-time__tooltip-secondary" hidden></span>
   </span>
@@ -29,12 +27,12 @@ const tipId = 'event-local-time-tip'
     position-try-fallbacks: none;
     inset: auto;
     top: auto;
-    right: auto;
-    left: anchor(left);
+    right: anchor(right);
+    left: auto;
     bottom: anchor(top);
     margin: 0;
     width: max-content;
-    translate: 0 calc(-100% - 6px);
+    translate: 0 -0.35rem;
     display: none;
     flex-direction: column;
     gap: 0.2rem;
@@ -52,7 +50,7 @@ const tipId = 'event-local-time-tip'
     text-align: left;
     text-wrap: balance;
     color: var(--color-theme-cream);
-    transform-origin: 0 100%;
+    transform-origin: 100% 100%;
     opacity: 0;
     transform: scale(0.96);
     pointer-events: none;
@@ -103,6 +101,15 @@ const tipId = 'event-local-time-tip'
     }
   }
 
+  @media (max-width: 639px) {
+    .event-local-time__tooltip {
+      right: auto;
+      left: anchor(left);
+      max-width: calc(100vw - 2rem);
+      transform-origin: 0 100%;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .event-local-time__tooltip {
       transform: none;
@@ -117,10 +124,12 @@ const tipId = 'event-local-time-tip'
     .event-local-time__tooltip {
       position: fixed;
       left: 50%;
+      right: auto;
       bottom: auto;
       top: 50%;
       translate: -50% -50%;
       transform: none;
+      transform-origin: 50% 50%;
       text-align: center;
     }
   }
@@ -129,29 +138,198 @@ const tipId = 'event-local-time-tip'
 <script>
   import { $, $$ } from '@/lib/dom-selector'
   import { resolveEventLocalTime } from '@/lib/event-local-time'
+  import type { EventLocalTimeView } from '@/lib/event-local-time'
   import { animate } from 'motion'
 
-  function prefersReducedMotion(): boolean {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  }
-
+  const ROOT_SELECTOR = '.event-local-time'
+  const TOOLTIP_ID_PREFIX = 'event-local-time-tip'
+  const TRIGGER_SELECTOR = 'time'
+  const TOOLTIP_SELECTOR = '.event-local-time__tooltip'
+  const PRIMARY_SELECTOR = '.event-local-time__tooltip-primary'
+  const SECONDARY_SELECTOR = '.event-local-time__tooltip-secondary'
+  const TOOLTIP_LINE_SELECTOR = '.event-local-time__tooltip > span:not([hidden])'
+  const POPOVER_OPEN_SELECTOR = ':popover-open'
+  const HOVER_SELECTOR = ':hover'
   const TOOLTIP_EXIT_MS = 200
   const TOOLTIP_EASE = [0.23, 1, 0.32, 1] as const
+  const SHOW_TOOLTIP_ANIMATION = { duration: 0.18, ease: TOOLTIP_EASE }
+  const HIDE_TOOLTIP_ANIMATION = { duration: 0.16, ease: TOOLTIP_EASE }
+  const TEXT_STAGGER_MS = 40
+  const ANCHOR_POSITION_SUPPORTED = CSS.supports('anchor-name', '--x')
+  const REDUCED_MOTION_QUERY = matchMedia('(prefers-reduced-motion: reduce)')
+  const HOVER_QUERY = matchMedia('(hover: hover) and (pointer: fine)')
 
   let eventTimeAbort: AbortController | undefined
 
-  function supportsAnchorPosition(): boolean {
-    return CSS.supports('anchor-name', '--x')
+  function canAnimateTooltip(): boolean {
+    return ANCHOR_POSITION_SUPPORTED && !REDUCED_MOTION_QUERY.matches
   }
 
-  function bindEventLocalTime(root: HTMLElement, signal: AbortSignal) {
-    const trigger = $('time', root)
-    const tooltip = $('.event-local-time__tooltip', root)
-    const primary = $('.event-local-time__tooltip-primary', tooltip)
-    const secondary = $('.event-local-time__tooltip-secondary', tooltip)
-    if (!trigger || !tooltip || !primary) return
+  function canHover(): boolean {
+    return HOVER_QUERY.matches
+  }
 
-    let view: ReturnType<typeof resolveEventLocalTime>
+  function isPopoverOpen(tooltip: HTMLElement): boolean {
+    return tooltip.matches(POPOVER_OPEN_SELECTOR)
+  }
+
+  function isTouchPointer(event: PointerEvent): boolean {
+    return event.pointerType === 'touch'
+  }
+
+  function waitForTooltipExit(playback: ReturnType<typeof animate>) {
+    return Promise.race([
+      playback.finished.catch(() => undefined),
+      new Promise<void>((resolve) => window.setTimeout(resolve, TOOLTIP_EXIT_MS)),
+    ])
+  }
+
+  function bindEventLocalTime(
+    root: HTMLElement,
+    view: EventLocalTimeView,
+    index: number,
+    signal: AbortSignal,
+  ) {
+    const trigger = $(TRIGGER_SELECTOR, root)
+    const tooltip = $(TOOLTIP_SELECTOR, root)
+    const primary = $(PRIMARY_SELECTOR, tooltip)
+    const secondary = $(SECONDARY_SELECTOR, tooltip)
+    if (!trigger || !tooltip || !primary) return
+    tooltip.id ||= `${TOOLTIP_ID_PREFIX}-${index}`
+
+    primary.textContent = view.tooltipPrimary
+
+    if (secondary) {
+      secondary.textContent = view.tooltipSecondary ?? ''
+      secondary.hidden = !view.tooltipSecondary
+    }
+
+    trigger.setAttribute('aria-describedby', tooltip.id)
+
+    let hidePlayback: ReturnType<typeof animate> | null = null
+    let hideToken = 0
+
+    const show = () => {
+      hideToken += 1
+      hidePlayback?.cancel()
+      hidePlayback = null
+
+      if (!isPopoverOpen(tooltip)) {
+        tooltip.showPopover()
+      }
+
+      if (!canAnimateTooltip()) return
+
+      void animate(
+        tooltip,
+        { opacity: [0, 1], scale: [0.96, 1] },
+        SHOW_TOOLTIP_ANIMATION,
+      )
+
+      const lines = $$<HTMLElement>(TOOLTIP_LINE_SELECTOR, tooltip)
+      lines.forEach((line, index) => {
+        void animate(
+          line,
+          { opacity: [0, 1], transform: ['translateY(0.25rem)', 'translateY(0)'] },
+          {
+            duration: 0.18,
+            delay: (index * TEXT_STAGGER_MS) / 1000,
+            ease: TOOLTIP_EASE,
+          },
+        )
+      })
+    }
+
+    const hide = async () => {
+      if (!isPopoverOpen(tooltip)) return
+
+      if (!canAnimateTooltip()) {
+        tooltip.hidePopover()
+        return
+      }
+
+      const token = hideToken + 1
+      hideToken = token
+      hidePlayback?.cancel()
+
+      const opacity = Number.parseFloat(getComputedStyle(tooltip).opacity) || 1
+      hidePlayback = animate(
+        tooltip,
+        { opacity: [opacity, 0], scale: [1, 0.96] },
+        HIDE_TOOLTIP_ANIMATION,
+      )
+
+      await waitForTooltipExit(hidePlayback)
+
+      if (hideToken !== token) return
+
+      tooltip.hidePopover()
+      tooltip.style.opacity = ''
+      tooltip.style.transform = ''
+      hidePlayback = null
+    }
+
+    const hideAfterPointerSettles = () => {
+      window.requestAnimationFrame(() => {
+        if (trigger.matches(HOVER_SELECTOR) || tooltip.matches(HOVER_SELECTOR)) return
+        void hide()
+      })
+    }
+
+    trigger.addEventListener(
+      'pointerenter',
+      (event) => {
+        if (!isTouchPointer(event)) show()
+      },
+      { signal },
+    )
+    trigger.addEventListener(
+      'pointerleave',
+      (event) => {
+        if (!isTouchPointer(event)) hideAfterPointerSettles()
+      },
+      { signal },
+    )
+
+    trigger.addEventListener(
+      'focus',
+      () => {
+        if (canHover()) show()
+      },
+      { signal },
+    )
+    trigger.addEventListener(
+      'blur',
+      () => {
+        if (canHover()) void hide()
+      },
+      { signal },
+    )
+    trigger.addEventListener(
+      'click',
+      (event) => {
+        const touchClick = event instanceof PointerEvent && isTouchPointer(event)
+        if (canHover() && !touchClick) {
+          return
+        }
+
+        event.preventDefault()
+        if (isPopoverOpen(tooltip)) void hide()
+        else show()
+      },
+      { signal },
+    )
+  }
+
+  function setupEventLocalTimes() {
+    eventTimeAbort?.abort()
+    eventTimeAbort = new AbortController()
+    const signal = eventTimeAbort.signal
+
+    const roots = $$(ROOT_SELECTOR)
+    if (roots.length === 0) return
+
+    let view: EventLocalTimeView
     try {
       view = resolveEventLocalTime()
     } catch (error) {
@@ -159,104 +337,8 @@ const tipId = 'event-local-time-tip'
       return
     }
 
-    primary.textContent = view.tooltipPrimary
-
-    if (secondary) {
-      if (view.tooltipSecondary) {
-        secondary.textContent = view.tooltipSecondary
-        secondary.hidden = false
-      } else {
-        secondary.textContent = ''
-        secondary.hidden = true
-      }
-    }
-
-    trigger.setAttribute('aria-describedby', tooltip.id)
-
-    const useMotion = supportsAnchorPosition() && !prefersReducedMotion()
-    let hidePlayback: { cancel: () => void; finished: Promise<unknown> } | null = null
-    let isHiding = false
-
-    const show = () => {
-      isHiding = false
-      hidePlayback?.cancel()
-      hidePlayback = null
-
-      if (!tooltip.matches(':popover-open')) {
-        tooltip.showPopover()
-      }
-
-      if (!useMotion) return
-
-      void animate(
-        tooltip,
-        { opacity: [0, 1], scale: [0.96, 1] },
-        { duration: 0.2, ease: TOOLTIP_EASE },
-      )
-    }
-
-    const hide = async () => {
-      if (!tooltip.matches(':popover-open')) return
-      if (isHiding) return
-
-      if (!useMotion) {
-        tooltip.hidePopover()
-        return
-      }
-
-      isHiding = true
-      hidePlayback?.cancel()
-
-      const opacity = Number.parseFloat(getComputedStyle(tooltip).opacity) || 1
-      hidePlayback = animate(
-        tooltip,
-        { opacity: [opacity, 0], scale: [1, 0.96] },
-        { duration: 0.16, ease: TOOLTIP_EASE },
-      )
-
-      await Promise.race([
-        hidePlayback.finished,
-        new Promise<void>((resolve) => {
-          window.setTimeout(resolve, TOOLTIP_EXIT_MS)
-        }),
-      ])
-
-      tooltip.hidePopover()
-      tooltip.style.opacity = ''
-      tooltip.style.transform = ''
-      hidePlayback = null
-      isHiding = false
-    }
-
-    const hoverable = matchMedia('(hover: hover) and (pointer: fine)').matches
-
-    if (hoverable) {
-      trigger.addEventListener('mouseenter', show, { signal })
-      trigger.addEventListener('mouseleave', () => void hide(), { signal })
-    }
-
-    trigger.addEventListener('focus', show, { signal })
-    trigger.addEventListener('blur', () => void hide(), { signal })
-
-    if (!hoverable) {
-      trigger.addEventListener(
-        'click',
-        (event) => {
-          event.preventDefault()
-          if (tooltip.matches(':popover-open')) void hide()
-          else show()
-        },
-        { signal },
-      )
-    }
-  }
-
-  function setupEventLocalTimes() {
-    eventTimeAbort?.abort()
-    eventTimeAbort = new AbortController()
-
-    $$('.event-local-time').forEach((root) => {
-      bindEventLocalTime(root, eventTimeAbort!.signal)
+    roots.forEach((root, index) => {
+      bindEventLocalTime(root, view, index, signal)
     })
   }
 

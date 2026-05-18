@@ -65,12 +65,10 @@ const { faqs } = Astro.props
               <details
                 class:list={[
                   'faq-item group',
-                  index === 0 && 'faq-item--initial-open',
                 ]}
                 itemprop="mainEntity"
                 itemscope
                 itemtype="https://schema.org/Question"
-                open={index === 0}
               >
                 <summary class="faq-summary min-h-20 cursor-pointer list-none px-1 py-5 outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:min-h-24 sm:px-4 sm:py-6 [&::-webkit-details-marker]:hidden">
                   <h3
@@ -91,97 +89,95 @@ const { faqs } = Astro.props
                 </summary>
 
                 <div
-                  class:list={['faq-answer-shell', index === 0 && 'faq-answer-shell--open']}
+                  class="faq-answer-shell"
                   itemprop="acceptedAnswer"
                   itemscope
                   itemtype="https://schema.org/Answer"
                 >
-                  <div class="faq-answer-panel">
-                    <div
-                      itemprop="text"
-                      class:list={[
-                        'faq-answer-body px-1 pt-1 pb-10 text-base leading-7 text-pretty text-white/75 sm:px-4 sm:pb-12 sm:text-lg sm:leading-8',
-                        channels && 'faq-answer-body--stream',
-                        battles && 'faq-answer-body--battles',
-                        mainEventBattle && 'faq-answer-body--main-event',
-                        venueMap && 'faq-answer-body--venue',
-                      ]}
-                    >
-                      {
-                        venueMap ? (
-                          <p class="faq-answer-lead">
-                            {answer}{' '}
-                            <a
-                              href={EVENT_VENUE_MAP_URL}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              class="faq-venue-link"
-                              data-venue-map-link
-                            >
-                              {EVENT_VENUE_LABEL}
-                            </a>
-                            .
-                          </p>
-                        ) : (
-                          <p
-                            class:list={[
-                              (channels || battles || mainEventBattle) && 'faq-answer-lead',
-                            ]}
+                  <div
+                    itemprop="text"
+                    class:list={[
+                      'faq-answer-body px-1 pt-1 pb-10 text-base leading-7 text-pretty text-white/75 sm:px-4 sm:pb-12 sm:text-lg sm:leading-8',
+                      channels && 'faq-answer-body--stream',
+                      battles && 'faq-answer-body--battles',
+                      mainEventBattle && 'faq-answer-body--main-event',
+                      venueMap && 'faq-answer-body--venue',
+                    ]}
+                  >
+                    {
+                      venueMap ? (
+                        <p class="faq-answer-lead">
+                          {answer}{' '}
+                          <a
+                            href={EVENT_VENUE_MAP_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="faq-venue-link"
+                            data-venue-map-link
                           >
-                            {answer}
-                            {eventTime && (
-                              <>
-                                {' '}
-                                <EventLocalTime />.
-                              </>
-                            )}
-                          </p>
-                        )
-                      }
-                      {venueMap && <VenueMap />}
-                      {
-                        channels && (
-                          <ul class="faq-channels list-none pl-0">
-                            {channels.map(({ platform, href, label }) => (
-                              <li>
-                                <a
-                                  href={href}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  aria-label={`Ver en ${platform}: ${label}`}
-                                  class="faq-channel-link inline-flex min-h-10 items-center py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold/70"
-                                >
-                                  <span class="faq-channel-handle text-[0.95em] font-medium tracking-normal text-theme-gold/90 sm:text-[1.05em]">
-                                    {label}
-                                  </span>
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        )
-                      }
-                      {
-                        battles && (
-                          <ol class="faq-battles list-none pl-0">
-                            {battles.map(({ number, title }) => (
-                              <li class="faq-battle-row">
-                                <span class="faq-battle-num" aria-hidden="true">
-                                  {number}
+                            {EVENT_VENUE_LABEL}
+                          </a>
+                          .
+                        </p>
+                      ) : (
+                        <p
+                          class:list={[
+                            (channels || battles || mainEventBattle) && 'faq-answer-lead',
+                          ]}
+                        >
+                          {answer}
+                          {eventTime && (
+                            <>
+                              {' '}
+                              <EventLocalTime />.
+                            </>
+                          )}
+                        </p>
+                      )
+                    }
+                    {venueMap && <VenueMap />}
+                    {
+                      channels && (
+                        <ul class="faq-channels list-none pl-0">
+                          {channels.map(({ platform, href, label }) => (
+                            <li>
+                              <a
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`Ver en ${platform}: ${label}`}
+                                class="faq-channel-link inline-flex min-h-10 items-center py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold/70"
+                              >
+                                <span class="faq-channel-handle text-[0.95em] font-medium tracking-normal text-theme-gold/90 sm:text-[1.05em]">
+                                  {label}
                                 </span>
-                                <span class="faq-battle-title">{title}</span>
-                              </li>
-                            ))}
-                          </ol>
-                        )
-                      }
-                      {
-                        mainEventBattle && (
-                          <p class="faq-main-event-name" aria-label={mainEventBattle.title}>
-                            {mainEventBattle.title}
-                          </p>
-                        )
-                      }
-                    </div>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )
+                    }
+                    {
+                      battles && (
+                        <ol class="faq-battles list-none pl-0">
+                          {battles.map(({ number, title }) => (
+                            <li class="faq-battle-row">
+                              <span class="faq-battle-num" aria-hidden="true">
+                                {number}
+                              </span>
+                              <span class="faq-battle-title">{title}</span>
+                            </li>
+                          ))}
+                        </ol>
+                      )
+                    }
+                    {
+                      mainEventBattle && (
+                        <p class="faq-main-event-name" aria-label={mainEventBattle.title}>
+                          {mainEventBattle.title}
+                        </p>
+                      )
+                    }
                   </div>
                 </div>
               </details>
@@ -472,6 +468,8 @@ const { faqs } = Astro.props
   .faq-answer-shell {
     display: grid;
     grid-template-rows: 0fr;
+    grid-template-columns: minmax(0, 1fr) var(--faq-icon-col);
+    column-gap: var(--faq-icon-gap);
     align-content: start;
     overflow: hidden;
     overflow-anchor: none;
@@ -482,43 +480,18 @@ const { faqs } = Astro.props
     grid-template-rows: 1fr;
   }
 
-  .faq-answer-panel {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) var(--faq-icon-col);
-    column-gap: var(--faq-icon-gap);
-    transform-origin: top center;
-    min-height: 0;
-    overflow: hidden;
-  }
-
   .faq-answer-body {
     grid-column: 1;
     min-width: 0;
+    min-height: 0;
     max-width: var(--faq-text-measure);
+    overflow: hidden;
     opacity: 0;
     transition: opacity 220ms var(--faq-ease-out);
   }
 
   .faq-answer-shell--open .faq-answer-body {
     opacity: 1;
-  }
-
-  .faq-item--initial-open[open] .faq-answer-shell,
-  .faq-item--initial-open[open] .faq-answer-body,
-  .faq-item--initial-open[open] .faq-icon__inner {
-    transition: none;
-  }
-
-  .faq-item--initial-open[open] .faq-answer-body {
-    opacity: 1;
-  }
-
-  .faq-item--initial-open[open] .faq-answer-shell {
-    grid-template-rows: 1fr;
-  }
-
-  .faq-item--initial-open[open] .faq-icon__inner {
-    --faq-icon-turn: 45deg;
   }
 
   .faq-answer-body--stream .faq-answer-lead {
