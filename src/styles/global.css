@@ -1,66 +1,272 @@
-@import "tailwindcss";
-@plugin "@midudev/tailwind-animations";
+@import 'tailwindcss';
+@import 'tailwind-animations';
 
 @theme {
-  --color-dark-magenta: #2a1f26;
-  --font-fallback: "Adjusted Arial Fallback", system-ui, -apple-system, blinkmacsystemfont, "Segoe UI",
-    "Noto Sans", helvetica, arial, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji";
-  --font-primary: "Anisette";
+  --font-fallback:
+    'Cinzel Fallback', georgia, 'Times New Roman', times, serif, 'Apple Color Emoji',
+    'Segoe UI Emoji';
+  --font-primary: 'Cinzel';
+  --font-cinzel: 'Cinzel';
+  --font-fantasy: 'Fantasy Magist';
 
-  /* Velada V Custom Colors */
-  --color-theme-french-mauve:oklch(67.65% 0.1539 329.18);
-  --color-theme-raisin-black:oklch(25.53% 0.0209 340.25);
-  --color-theme-tickle-me-pink:oklch(75.65% 0.143 355.9);
-  --color-theme-seashell:oklch(95.25% 0.0147 33.07);
-  --color-theme-turquoise:oklch(82.97% 0.148864 181.7442);
+  --color-velada-cream: #f4e4c9;
+  --color-velada-gold: #c7a86b;
+  --color-velada-maroon: #480f0e;
+  --color-velada-forest: #1d3524;
+  --color-velada-navy: #142346;
+  --color-velada-midnight: #0a1024;
+
+  --color-theme-cream: var(--color-velada-cream);
+  --color-theme-gold: var(--color-velada-gold);
+  --color-theme-maroon: var(--color-velada-maroon);
+  --color-theme-forest: var(--color-velada-forest);
+  --color-theme-navy: var(--color-velada-navy);
+  --color-theme-midnight: var(--color-velada-midnight);
+}
+
+@layer base {
+  html,
+  body {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    /* Disable overscroll behavior */
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+  }
+
+  html {
+    scrollbar-gutter: stable;
+    background: var(--color-theme-midnight);
+    font-family: 'Cinzel', var(--font-fallback);
+    font-kerning: normal;
+    font-synthesis: none;
+    text-rendering: auto;
+    text-transform: uppercase;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--color-theme-midnight);
+  }
+
+  h1,
+  h2,
+  h3,
+  .display-text {
+    text-rendering: optimizeLegibility;
+  }
+
+  html[data-skip-boxers-enter] .boxers-page .animate-fade-in-up {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Webkit Browsers (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-theme-midnight);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-theme-gold);
+    border-radius: 5px;
+    border: 2px solid color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-theme-cream);
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-color: var(--color-theme-gold) var(--color-theme-midnight);
+    scrollbar-width: thin;
+  }
+}
+
+@layer utilities {
+  /* Efecto neón sutil solo para el texto */
+  .neon-text {
+    color: #fff;
+    text-shadow:
+      0 4px 18px rgba(0, 0, 0, 1),
+      0 0 2px #00aba5,
+      0 0 4px #ff4f9f;
+    animation: neon-flicker 2.2s infinite both;
+    transition: text-shadow 0.3s;
+  }
+
+  @keyframes neon-flicker {
+    0%,
+    100% {
+      opacity: 1;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 2px #00aba5,
+        0 0 4px #ff4f9f;
+    }
+    10% {
+      opacity: 0.95;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 3px #00aba5,
+        0 0 6px #ff4f9f;
+    }
+    18% {
+      opacity: 0.85;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 1px #00aba5,
+        0 0 2px #ff4f9f;
+    }
+    20% {
+      opacity: 0.95;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 3px #00aba5,
+        0 0 6px #ff4f9f;
+    }
+    25% {
+      opacity: 0.9;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 1px #00aba5,
+        0 0 2px #ff4f9f;
+    }
+    30% {
+      opacity: 1;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 2px #00aba5,
+        0 0 4px #ff4f9f;
+    }
+    70% {
+      opacity: 0.97;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 2px #00aba5,
+        0 0 4px #ff4f9f;
+    }
+    80% {
+      opacity: 0.85;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 1px #00aba5,
+        0 0 2px #ff4f9f;
+    }
+    90% {
+      opacity: 1;
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1),
+        0 0 2px #00aba5,
+        0 0 4px #ff4f9f;
+    }
+  }
+
+  .neon-text:hover {
+    text-shadow:
+      0 2px 8px rgba(0, 0, 0, 1),
+      0 0 4px #00aba5,
+      0 0 8px #ff4f9f;
+    animation: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .min-h-screen {
+    min-height: 100svh;
+  }
+
+  .h-screen {
+    height: 100svh;
+  }
+
+  @media (min-width: 768px) {
+    .min-h-screen {
+      min-height: 100vh;
+    }
+
+    .h-screen {
+      height: 100vh;
+    }
+  }
 }
 
 @font-face {
-  font-family: "Adjusted Arial Fallback";
-  src: local(Arial);
-  size-adjust: 112%;
-  ascent-override: 74%;
-  descent-override: normal;
-  line-gap-override: normal;
+  font-family: 'Cinzel Fallback';
+  src: local('Georgia');
+  size-adjust: 103%;
+  ascent-override: 92%;
+  descent-override: 22%;
+  line-gap-override: 0%;
 }
 
 @font-face {
-  font-family: "Anisette";
-  src: url("/fonts/anisette-medium.woff2") format("woff2");
+  font-family: 'Cinzel';
+  src: url('/fonts/cinzel-regular.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Anisette";
-  src: url("/fonts/anisette-light.woff2") format("woff2");
-  font-weight: 300;
+  font-family: 'Cinzel';
+  src: url('/fonts/cinzel-medium.woff2') format('woff2');
+  font-weight: 500;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Anisette";
-  src: url("/fonts/anisette-bold.woff2") format("woff2");
-  font-weight: 600;
+  font-family: 'Cinzel';
+  src: url('/fonts/cinzel-bold.woff2') format('woff2');
+  font-weight: 700;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Anisette";
-  src: url("/fonts/anisette-black.woff2") format("woff2");
+  font-family: 'Cinzel';
+  src: url('/fonts/cinzel-black.woff2') format('woff2');
   font-weight: 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fantasy Magist';
+  src: url('/fonts/fantasy-magist.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
-html {
-  font-family: "Anisette", var(--font-fallback);
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: 'Fantasy Magist';
+  src: url('/fonts/fantasy-magist-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
 }
 
 @utility mask-fade-bottom {
   mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+@utility mask-fade-bottom-quick {
+  mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
 }
