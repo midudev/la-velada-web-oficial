@@ -12,6 +12,20 @@ test.describe('Sponsor cards hover lock effect', () => {
     await expect(cards.first()).toBeVisible()
   })
 
+  test('all sponsor cards finish their intro animation promptly', async ({ page }) => {
+    await page.locator('#sponsors').scrollIntoViewIfNeeded()
+    await page.waitForTimeout(1200)
+
+    const opacities = await page.locator('#sponsors .sponsors-grid li').evaluateAll((els) =>
+      els.map((el) => Number(window.getComputedStyle(el).opacity))
+    )
+
+    expect(opacities).toHaveLength(11)
+    for (const opacity of opacities) {
+      expect(opacity).toBeGreaterThan(0.95)
+    }
+  })
+
   test('logo scales down on hover', async ({ page }) => {
     const firstCard = page.locator('.sponsor-card').first()
     const logo = firstCard.locator('svg[aria-hidden="true"]')
@@ -42,7 +56,7 @@ test.describe('Sponsor cards hover lock effect', () => {
   test('corner clips appear on hover', async ({ page }) => {
     const firstCard = page.locator('.sponsor-card').first()
 
-    const corners = page.locator('#sponsors [class*="corner-"]')
+    const corners = page.locator('#sponsors .corner-grid svg')
     await expect(corners).toHaveCount(4)
 
     const initialOpacities = await corners.evaluateAll((els) =>
@@ -59,6 +73,82 @@ test.describe('Sponsor cards hover lock effect', () => {
     for (let i = 0; i < 4; i++) {
       expect(hoverOpacities[i]).toBeGreaterThan(initialOpacities[i])
     }
+  })
+
+  test('corner clips recover after rapid hover changes', async ({ page }) => {
+    const cards = page.locator('.sponsor-card')
+    const corners = page.locator('#sponsors .corner-grid svg')
+
+    for (let i = 0; i < 8; i++) {
+      const box = await cards.nth(i % 4).boundingBox()
+      expect(box).not.toBeNull()
+
+      if (box) {
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+      }
+    }
+
+    await cards.nth(4).hover()
+    await page.waitForTimeout(400)
+
+    const opacities = await corners.evaluateAll((els) =>
+      els.map((el) => Number(window.getComputedStyle(el).opacity))
+    )
+
+    for (const opacity of opacities) {
+      expect(opacity).toBeGreaterThan(0.85)
+    }
+  })
+
+  test('corner clips stay visible while moving between sponsor cards', async ({ page }) => {
+    const cards = page.locator('.sponsor-card')
+    const corners = page.locator('#sponsors .corner-grid svg')
+
+    await cards.first().hover()
+    await page.waitForTimeout(400)
+    await cards.nth(1).hover()
+    await page.waitForTimeout(40)
+
+    const opacities = await corners.evaluateAll((els) =>
+      els.map((el) => Number(window.getComputedStyle(el).opacity))
+    )
+
+    for (const opacity of opacities) {
+      expect(opacity).toBeGreaterThan(0.85)
+    }
+  })
+
+  test('corner clips lock again after moving to another sponsor card', async ({ page }) => {
+    const cards = page.locator('.sponsor-card')
+    const corner = page.locator('#sponsors .corner-grid svg').first()
+    const grid = page.locator('#sponsors [data-corner-grid]')
+
+    await cards.first().hover()
+    await page.waitForTimeout(400)
+    await cards.nth(1).hover()
+    await page.waitForTimeout(25)
+
+    const earlyBox = await corner.boundingBox()
+    const cardBox = await cards.nth(1).boundingBox()
+    const gridBox = await grid.boundingBox()
+
+    expect(earlyBox).not.toBeNull()
+    expect(cardBox).not.toBeNull()
+    expect(gridBox).not.toBeNull()
+
+    await page.waitForTimeout(300)
+
+    const lockedBox = await corner.boundingBox()
+    expect(lockedBox).not.toBeNull()
+
+    if (!earlyBox || !lockedBox || !cardBox || !gridBox) return
+
+    const targetX = cardBox.x - gridBox.x + 6
+    const targetY = cardBox.y - gridBox.y + 6
+    const earlyDistance = Math.hypot(earlyBox.x - gridBox.x - targetX, earlyBox.y - gridBox.y - targetY)
+    const lockedDistance = Math.hypot(lockedBox.x - gridBox.x - targetX, lockedBox.y - gridBox.y - targetY)
+
+    expect(lockedDistance).toBeLessThan(earlyDistance)
   })
 
   test('effects reverse on mouse leave', async ({ page }) => {
