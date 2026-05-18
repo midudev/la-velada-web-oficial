@@ -10,7 +10,9 @@ const videoDir = path.join(root, 'videos')
 const shot = (name: string) => path.join(screenshotDir, name)
 
 const DESKTOP = { width: 2560, height: 1440 }
+const MOBILE = { width: 390, height: 844 }
 const HOLD_MS = 2500
+const MOBILE_MENU_LOGO_MS = 700
 
 async function goHome(page: Page) {
   await page.setViewportSize(DESKTOP)
@@ -82,13 +84,14 @@ test.describe(`header visuals (${phase})`, () => {
 
     if (!isAfter) return
 
-    await page.setViewportSize({ width: 390, height: 844 })
+    await page.setViewportSize(MOBILE)
     await page.goto('/')
     await page.getByRole('button', { name: /abrir menú/i }).click()
     await expect(page.locator('[data-mobile-menu][data-open="true"]')).toBeVisible()
-    await page.waitForTimeout(350)
-    await page.locator('[data-mobile-menu]').screenshot({ path: shot('05-mobile-menu.png') })
-    await page.locator('[data-header]').screenshot({ path: shot('06-header-menu-open.png') })
+    await page.waitForTimeout(MOBILE_MENU_LOGO_MS)
+
+    await page.screenshot({ path: shot('05-mobile-menu-open.png') })
+    await page.locator('[data-header] > div.mx-auto').screenshot({ path: shot('06-mobile-header-logo.png') })
   })
 
   test('logo hover', async ({ page }) => {

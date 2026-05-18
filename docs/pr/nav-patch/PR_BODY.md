@@ -40,7 +40,13 @@ Equal-height columns (`items-stretch`), label + pill stacked with `gap-1`, boxea
 
 Opening the menu sets `data-mobile-menu-open` on the header; the logo animates to the same hover draw state.
 
-<img src="https://github.com/tonyblu331/la-velada-web-oficial/releases/download/pr-nav-patch-visuals/after-header-menu-open.png" width="100%" alt="mobile menu open with logo crest" />
+Full viewport (390×844):
+
+<img src="https://github.com/tonyblu331/la-velada-web-oficial/releases/download/pr-nav-patch-visuals/after-mobile-menu-open.png" alt="mobile menu open" />
+
+Header bar with logo crest (full row, not clipped):
+
+<img src="https://github.com/tonyblu331/la-velada-web-oficial/releases/download/pr-nav-patch-visuals/after-mobile-header-logo.png" alt="mobile header logo crest" />
 
 ---
 
@@ -55,12 +61,6 @@ Underline: 6px gap, 150ms + 125ms delay; fine pointer only — not on mobile men
 | | Before | After |
 | --- | --- | --- |
 | Video | [before-nav-hover.webm](https://github.com/tonyblu331/la-velada-web-oficial/releases/download/pr-nav-patch-visuals/before-nav-hover.webm) | [after-nav-hover.webm](https://github.com/tonyblu331/la-velada-web-oficial/releases/download/pr-nav-patch-visuals/after-nav-hover.webm) |
-
-### Mobile menu panel
-
-<img src="https://github.com/tonyblu331/la-velada-web-oficial/releases/download/pr-nav-patch-visuals/after-mobile-menu.png" width="420" alt="mobile menu" />
-
----
 
 ## Frost
 
