@@ -22,6 +22,13 @@ Closes #
 
 - `src/...`: what changed and why
 
+## Dependencies
+
+<!-- New or removed packages. "None" if not applicable. -->
+
+- Added:
+- Removed:
+
 ## Screenshots
 
 <!-- Delete if not applicable. -->
