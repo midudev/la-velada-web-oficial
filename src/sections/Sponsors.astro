@@ -243,13 +243,13 @@ const SPONSORS: Sponsor[] = [
           ))
         }
       </ul>
-    </div>
 
-    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-      <svg class="corner-tl absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 1 9 L 1 1 L 9 1" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
-      <svg class="corner-tr absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 11 9 L 11 1 L 3 1" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
-      <svg class="corner-bl absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 1 3 L 1 11 L 9 11" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
-      <svg class="corner-br absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 11 3 L 11 11 L 3 11" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <svg class="corner-tl absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 1 9 L 1 1 L 9 1" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
+        <svg class="corner-tr absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 11 9 L 11 1 L 3 1" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
+        <svg class="corner-bl absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 1 3 L 1 11 L 9 11" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
+        <svg class="corner-br absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 11 3 L 11 11 L 3 11" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
+      </div>
     </div>
 
   </div>
@@ -324,16 +324,17 @@ const SPONSORS: Sponsor[] = [
 
       currentCard = card
 
-      const section = card.closest('#sponsors')
-      const sectionRect = section.getBoundingClientRect()
+      const grid = card.closest('.sponsors-grid')?.parentElement
+      if (!grid) return
+      const gridRect = grid.getBoundingClientRect()
       const cardRect = card.getBoundingClientRect()
 
       const isSm = window.matchMedia('(min-width: 640px)').matches
       const inset = isSm ? 6 : 4
       const cornerSize = isSm ? 16 : 12
 
-      const relativeLeft = cardRect.left - sectionRect.left
-      const relativeTop = cardRect.top - sectionRect.top
+      const relativeLeft = cardRect.left - gridRect.left
+      const relativeTop = cardRect.top - gridRect.top
 
       const positions = {
         tl: { x: relativeLeft + inset, y: relativeTop + inset },
