@@ -1,6 +1,18 @@
 import { useId, useSyncExternalStore, type ReactNode } from 'react'
-import { motion, useReducedMotion, type Transition, type Variants } from 'motion/react'
+import {
+  LazyMotion,
+  domAnimation,
+  m,
+  useReducedMotion,
+  type Transition,
+  type Variants,
+} from 'motion/react'
 import { $ } from '@/lib/dom-selector'
+import {
+  HEADER_MOBILE_MENU_OPEN_ATTR,
+  HEADER_MOBILE_MENU_TOGGLE_EVENT,
+  type HeaderMobileMenuToggleEvent,
+} from '@/consts/header-contract'
 
 const crest = {
   viewBox: '0 0 303 303',
@@ -52,18 +64,26 @@ const fillFade: Variants = {
 function useMobileMenuOpen() {
   return useSyncExternalStore(
     (onStoreChange) => {
-      const header = $('[data-header]')
-      if (!header) return () => {}
-      const observer = new MutationObserver(onStoreChange)
-      observer.observe(header, {
-        attributes: true,
-        attributeFilter: ['data-mobile-menu-open'],
-      })
-      return () => observer.disconnect()
+      const handleToggle = (event: Event) => {
+        hasMobileMenuEventSnapshot = true
+        mobileMenuOpen = (event as HeaderMobileMenuToggleEvent).detail.open
+        onStoreChange()
+      }
+
+      document.addEventListener(HEADER_MOBILE_MENU_TOGGLE_EVENT, handleToggle)
+      return () => document.removeEventListener(HEADER_MOBILE_MENU_TOGGLE_EVENT, handleToggle)
     },
-    () => $('[data-header]')?.hasAttribute('data-mobile-menu-open') ?? false,
+    getMobileMenuOpenSnapshot,
     () => false,
   )
+}
+
+let mobileMenuOpen = false
+let hasMobileMenuEventSnapshot = false
+
+function getMobileMenuOpenSnapshot() {
+  if (hasMobileMenuEventSnapshot) return mobileMenuOpen
+  return $(`[${HEADER_MOBILE_MENU_OPEN_ATTR}]`) !== null
 }
 
 export default function LogoHomeLink({ children }: { children: ReactNode }) {
@@ -85,56 +105,63 @@ export default function LogoHomeLink({ children }: { children: ReactNode }) {
   }
 
   return (
-    <motion.a
-      href="/"
-      className={linkClass}
-      aria-label="La Velada del Año VI - Inicio"
-      variants={states}
-      initial="rest"
-      animate={menuOpen ? 'hover' : 'rest'}
-      whileHover="hover"
-      whileFocus="hover"
-      whileTap="tap"
-    >
-      <motion.svg viewBox={crest.viewBox} className={svgClass} aria-hidden variants={crestVariants}>
-        <defs>
-          <linearGradient id={gradId} x1="15%" y1="5%" x2="90%" y2="95%">
-            <stop offset="0%" stopColor="oklch(0.88 0.055 56)" />
-            <stop offset="42%" stopColor="oklch(0.7 0.09 56.5)" />
-            <stop offset="100%" stopColor="oklch(0.38 0.04 56)" />
-          </linearGradient>
-          <mask id={maskId}>
-            <motion.path
-              d={crest.path}
-              fill="none"
-              stroke="white"
-              strokeWidth={18}
-              strokeLinecap="butt"
-              initial={false}
-              variants={pathDraw}
-            />
-          </mask>
-        </defs>
-        <motion.path
-          fillRule="evenodd"
-          d={crest.path}
-          fill={crest.fill}
-          initial={false}
-          variants={fillFade}
-        />
-        <path fillRule="evenodd" d={crest.path} fill={`url(#${gradId})`} mask={`url(#${maskId})`} />
-        <motion.path
-          d={crest.path}
-          fill="none"
-          stroke={`url(#${gradId})`}
-          strokeWidth={1.25}
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-          initial={false}
-          variants={pathTrace}
-        />
-      </motion.svg>
-      {children}
-    </motion.a>
+    <LazyMotion features={domAnimation}>
+      <m.a
+        href="/"
+        className={linkClass}
+        aria-label="La Velada del Año VI - Inicio"
+        variants={states}
+        initial="rest"
+        animate={menuOpen ? 'hover' : 'rest'}
+        whileHover="hover"
+        whileFocus="hover"
+        whileTap="tap"
+      >
+        <m.svg viewBox={crest.viewBox} className={svgClass} aria-hidden variants={crestVariants}>
+          <defs>
+            <linearGradient id={gradId} x1="15%" y1="5%" x2="90%" y2="95%">
+              <stop offset="0%" stopColor="oklch(0.88 0.055 56)" />
+              <stop offset="42%" stopColor="oklch(0.7 0.09 56.5)" />
+              <stop offset="100%" stopColor="oklch(0.38 0.04 56)" />
+            </linearGradient>
+            <mask id={maskId}>
+              <m.path
+                d={crest.path}
+                fill="none"
+                stroke="white"
+                strokeWidth={18}
+                strokeLinecap="butt"
+                initial={false}
+                variants={pathDraw}
+              />
+            </mask>
+          </defs>
+          <m.path
+            fillRule="evenodd"
+            d={crest.path}
+            fill={crest.fill}
+            initial={false}
+            variants={fillFade}
+          />
+          <path
+            fillRule="evenodd"
+            d={crest.path}
+            fill={`url(#${gradId})`}
+            mask={`url(#${maskId})`}
+          />
+          <m.path
+            d={crest.path}
+            fill="none"
+            stroke={`url(#${gradId})`}
+            strokeWidth={1.25}
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+            initial={false}
+            variants={pathTrace}
+          />
+        </m.svg>
+        {children}
+      </m.a>
+    </LazyMotion>
   )
 }
