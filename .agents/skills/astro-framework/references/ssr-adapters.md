@@ -227,32 +227,61 @@ if (!user) {
 ---
 ```
 
-## Server Islands (Experimental)
+## Server Islands
 
-Defer rendering of specific components to the server:
-
-```javascript
-// astro.config.mjs
-export default defineConfig({
-  experimental: {
-    serverIslands: true,
-  },
-});
-```
+Defer rendering of specific Astro components to the server. Each island loads independently, keeping main content fast. No experimental flag needed in Astro 5+.
 
 ```astro
 ---
 import UserProfile from '../components/UserProfile.astro';
+import ProductReviews from '../components/ProductReviews.astro';
 ---
 
-<!-- Static content -->
+<!-- Static content renders immediately -->
 <h1>Welcome</h1>
 
 <!-- Server-rendered on each request -->
 <UserProfile server:defer>
   <p slot="fallback">Loading profile...</p>
 </UserProfile>
+
+<!-- Multiple islands load in parallel -->
+<ProductReviews server:defer productId="abc-123">
+  <div slot="fallback">Loading reviews...</div>
+</ProductReviews>
 ```
+
+Key points:
+- Requires an adapter (same as SSR)
+- Props must be serializable (no functions)
+- Use `Referer` header to access page URL inside island
+- See [references/server-islands.md](server-islands.md) for full details
+
+## Sessions
+
+Server-side session storage for on-demand rendered pages (Astro 5.7+):
+
+```javascript
+// astro.config.mjs
+import { defineConfig, sessionDrivers } from 'astro/config';
+
+export default defineConfig({
+  adapter: node({ mode: 'standalone' }),
+  session: {
+    driver: sessionDrivers.redis({ url: process.env.REDIS_URL }),
+  },
+});
+```
+
+```astro
+---
+export const prerender = false;
+const cart = await Astro.session?.get('cart');
+await Astro.session?.set('lastVisit', new Date());
+---
+```
+
+See [references/sessions.md](sessions.md) for full details.
 
 ## API Endpoints
 

@@ -5,9 +5,11 @@ import Hero from '@/sections/Hero.astro'
 import Videos from '@/sections/Videos.astro'
 import Podcast from '@/sections/Podcast.astro'
 import Sponsors from '@/sections/Sponsors.astro'
+import FAQ from '@/sections/FAQ.astro'
 import Footer from '@/sections/Footer.astro'
 import { battles } from '@/consts/battles'
 import { BOXERS, BOXERS_BY_ID, COUNTRY_NAMES, getBoxerPhoto } from '@/consts/boxers'
+import { HOME_FAQS } from '@/consts/home-faq'
 
 const SITE_URL = 'https://www.infolavelada.com'
 const title = 'La Velada del Año VI 2026 | Fecha, sede y combates'
@@ -26,7 +28,7 @@ const sportsEventJsonLd = {
   alternateName: ['La Velada VI', 'La Velada del Año 6'],
   description,
   url: canonical,
-  image: [`${SITE_URL}/og.jpg`, `${SITE_URL}/logo.png`],
+  image: [`${SITE_URL}/og.jpg`, `${SITE_URL}/logo.webp`],
   sport: 'Boxing',
   startDate: EVENT_ISO,
   endDate: new Date(EVENT_DATE.getTime() + 5 * 60 * 60 * 1000).toISOString(),
@@ -105,56 +107,14 @@ const sportsEventJsonLd = {
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: '¿Cuándo es La Velada del Año VI?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'La Velada del Año VI se celebra el sábado 25 de julio de 2026 a partir de las 20:00h (horario de España peninsular).',
-      },
+  mainEntity: HOME_FAQS.map(({ question, answer }) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: answer,
     },
-    {
-      '@type': 'Question',
-      name: '¿Dónde se celebra La Velada del Año VI?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'La sexta edición de La Velada del Año tiene lugar en el Estadio de La Cartuja, en Sevilla (España).',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: '¿Quién organiza La Velada del Año VI?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'La Velada del Año VI está organizada por el streamer Ibai Llanos, que la retransmite en directo a través de su canal de Twitch.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: '¿Cómo se puede ver La Velada del Año VI?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'El evento se podrá seguir en directo y de manera gratuita en el canal oficial de Ibai Llanos en Twitch: twitch.tv/ibai.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: '¿Cuántos combates hay en La Velada del Año VI?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: `La cartelera de La Velada VI cuenta con ${battles.length} combates de boxeo amateur entre ${BOXERS.length} streamers y creadores de contenido de habla hispana.`,
-      },
-    },
-    {
-      '@type': 'Question',
-      name: '¿Quiénes son los boxeadores de La Velada del Año VI?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: `Los ${BOXERS.length} contendientes son: ${BOXERS.map((b) => b.name).join(', ')}.`,
-      },
-    },
-  ],
+  })),
 }
 
 export const prerender = true
@@ -234,5 +194,6 @@ export const prerender = true
     </ul>
   </aside>
 
+  <FAQ faqs={HOME_FAQS} />
   <Footer />
 </Layout>

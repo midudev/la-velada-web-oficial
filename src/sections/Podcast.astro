@@ -1,9 +1,10 @@
 ---
 import { getCollection } from 'astro:content'
+import SectionHeader from '@/components/SectionHeader.astro'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import ChevronRightIcon from '@/assets/svg/chevron-right.svg'
 import PlayIcon from '@/assets/svg/play.svg'
-import YoutubeBrandIcon from '@/assets/svg/youtube-brand.svg'
+import YoutubeIcon from '@/assets/svg/youtube.svg'
 
 const CHANNEL_URL = 'https://www.youtube.com/@PodcastdeLuzu'
 
@@ -11,9 +12,10 @@ interface PodcastEpisode {
   videoId: string
   title: string
   published: Date
-  thumbnail: string
-  thumbnailHighRes: string
-  thumbnailFallback: string
+  thumbnail: {
+    avif: string
+    webp: string
+  }
 }
 
 const rawEpisodes = await getCollection('podcast')
@@ -22,9 +24,10 @@ const episodes: PodcastEpisode[] = rawEpisodes
     videoId: data.videoId,
     title: data.title,
     published: new Date(data.published),
-    thumbnail: `https://i.ytimg.com/vi/${data.videoId}/mqdefault.jpg`,
-    thumbnailHighRes: `https://i.ytimg.com/vi/${data.videoId}/maxresdefault.jpg`,
-    thumbnailFallback: `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`,
+    thumbnail: {
+      avif: `/podcast/thumbnails/${data.videoId}.avif`,
+      webp: `/podcast/thumbnails/${data.videoId}.webp`,
+    },
   }))
   .sort((a, b) => b.published.getTime() - a.published.getTime())
 
@@ -57,23 +60,12 @@ function formatRelative(date: Date) {
   aria-labelledby="podcast-title"
 >
   <div class="mx-auto flex max-w-7xl flex-col items-center">
-    <div class="mb-8 flex items-center gap-4 sm:mb-10" aria-hidden="true">
-      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-    </div>
-
-    <h2
-      id="podcast-title"
-      class="mb-3 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
-    >
-      EL PODCAST PIRATA
-    </h2>
-    <p
-      class="mb-10 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.25em] text-white/55 sm:text-sm"
-    >
-      Últimos episodios sobre La Velada del Año VI
-    </p>
+    <SectionHeader
+      titleId="podcast-title"
+      title="EL PODCAST PIRATA"
+      subtitle="Últimos episodios sobre La Velada del Año VI"
+      dividerClass="sm:mb-10"
+    />
 
     <div
       class="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-theme-navy/30 shadow-[0_25px_60px_-30px_rgba(0,0,0,0.8)]"
@@ -86,7 +78,7 @@ function formatRelative(date: Date) {
             class="flex size-8 items-center justify-center rounded-full bg-theme-gold/15 text-theme-gold sm:size-9"
             aria-hidden="true"
           >
-            <YoutubeBrandIcon class="size-4 sm:size-5" aria-hidden="true" />
+            <YoutubeIcon class="size-4 sm:size-5" aria-hidden="true" />
           </span>
           <div class="flex flex-col">
             <span
@@ -126,153 +118,146 @@ function formatRelative(date: Date) {
                 : 'lg:grid-cols-1',
             ]}
           >
-            {
-              featuredEpisode && (
-                <button
-                  type="button"
-                  data-video-tile
-                  data-video-id={featuredEpisode.videoId}
-                  data-video-title={featuredEpisode.title}
-                  aria-label={`Reproducir episodio destacado: ${featuredEpisode.title}`}
-                  class="group relative isolate flex aspect-video w-full cursor-pointer self-start overflow-hidden border border-white/10 bg-theme-navy/40 text-left outline-none transition duration-500 hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 lg:h-[31.5cqw] lg:aspect-auto"
-                >
+            {featuredEpisode && (
+              <button
+                type="button"
+                data-video-tile
+                data-video-id={featuredEpisode.videoId}
+                data-video-title={featuredEpisode.title}
+                aria-label={`Reproducir episodio destacado: ${featuredEpisode.title}`}
+                class="group relative isolate flex aspect-video w-full cursor-pointer self-start overflow-hidden border border-white/10 bg-theme-navy/40 text-left transition duration-500 outline-none hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 lg:aspect-auto lg:h-[31.5cqw]"
+              >
+                <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
+                  <source srcset={featuredEpisode.thumbnail.avif} type="image/avif" />
+                  <source srcset={featuredEpisode.thumbnail.webp} type="image/webp" />
                   <img
-                    src={featuredEpisode.thumbnail}
+                    src={featuredEpisode.thumbnail.webp}
                     alt=""
                     aria-hidden="true"
-                    loading="eager"
-                    decoding="async"
-                    class="absolute inset-0 -z-10 h-full w-full scale-105 object-cover brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110"
-                  />
-                  <img
-                    src={featuredEpisode.thumbnailHighRes}
-                    alt=""
                     loading="eager"
                     decoding="async"
                     fetchpriority="high"
-                    data-podcast-featured-image
-                    data-fallback={featuredEpisode.thumbnailFallback}
-                    class="podcast-featured-image absolute inset-0 -z-10 h-full w-full scale-105 object-cover opacity-0 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110"
+                    class="h-full w-full object-cover"
                   />
-                  <div
-                    aria-hidden="true"
-                    class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
-                  />
-                  <div
-                    aria-hidden="true"
-                    class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
-                  />
+                </picture>
+                <div
+                  aria-hidden="true"
+                  class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
+                />
+                <div
+                  aria-hidden="true"
+                  class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
+                />
 
-                  <span
-                    class="absolute right-5 top-5 z-10 rounded-full border border-theme-gold/35 bg-black/35 px-3 py-1 font-cinzel text-[0.58rem] font-bold tracking-[0.24em] text-theme-gold backdrop-blur backdrop-saturate-150 backdrop-contrast-125"
-                    aria-hidden="true"
-                  >
-                    ÚLTIMO EPISODIO
-                  </span>
-
-                  <span
-                    aria-hidden="true"
-                    class="absolute inset-0 -z-10 flex items-center justify-center"
-                  >
-                    <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md backdrop-saturate-150 backdrop-contrast-125 transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
-                      <PlayIcon
-                        class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </span>
-
-                  <div class="relative mt-auto flex w-full flex-col gap-2 p-5 sm:p-8">
-                    <time
-                      datetime={featuredEpisode.published.toISOString()}
-                      title={dateFormatter.format(featuredEpisode.published)}
-                      class="font-cinzel text-[0.65rem] font-bold tracking-[0.3em] text-theme-gold"
-                    >
-                      {formatRelative(featuredEpisode.published)}
-                    </time>
-                    <h3 class="max-w-2xl text-balance font-cinzel text-2xl font-bold leading-tight tracking-[0.05em] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl">
-                      {featuredEpisode.title}
-                    </h3>
-                    <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
-                      VER EPISODIO
-                      <ArrowRightIcon
-                        class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
-                        stroke-width="2.5"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </div>
-                </button>
-              )
-            }
-
-            {
-              secondaryEpisodes.length > 0 && (
-                <ul
-                  class="podcast-scroll grid max-h-[34rem] gap-px overflow-y-auto sm:grid-cols-2 lg:max-h-[31.5cqw] lg:grid-cols-1"
-                  data-podcast-list
+                <span
+                  class="absolute top-5 right-5 z-10 rounded-full border border-theme-gold/35 bg-black/35 px-3 py-1 font-cinzel text-[0.58rem] font-bold tracking-[0.24em] text-theme-gold backdrop-blur backdrop-saturate-150 backdrop-contrast-125"
+                  aria-hidden="true"
                 >
-                  {secondaryEpisodes.map((episode, index) => (
-                    <li>
-                      <button
-                        type="button"
-                        data-video-tile
-                        data-video-id={episode.videoId}
-                        data-video-title={episode.title}
-                        aria-label={`Reproducir episodio: ${episode.title}`}
-                        class="group grid h-full w-full grid-cols-[5rem_1fr] gap-3 bg-theme-midnight/60 p-3 text-left outline-none transition duration-300 hover:bg-theme-navy/55 focus-visible:bg-theme-navy/55 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-theme-gold/60 sm:grid-cols-[6rem_1fr] sm:p-4 lg:grid-cols-[7.5rem_1fr]"
-                      >
-                        <span class="relative block aspect-video overflow-hidden rounded-lg border border-white/10 bg-black/30">
+                  ÚLTIMO EPISODIO
+                </span>
+
+                <span
+                  aria-hidden="true"
+                  class="absolute inset-0 -z-10 flex items-center justify-center"
+                >
+                  <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md backdrop-saturate-150 backdrop-contrast-125 transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
+                    <PlayIcon
+                      class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </span>
+
+                <div class="relative mt-auto flex w-full flex-col gap-2 p-5 sm:p-8">
+                  <time
+                    datetime={featuredEpisode.published.toISOString()}
+                    title={dateFormatter.format(featuredEpisode.published)}
+                    class="font-cinzel text-[0.65rem] font-bold tracking-[0.3em] text-theme-gold"
+                  >
+                    {formatRelative(featuredEpisode.published)}
+                  </time>
+                  <h3 class="max-w-2xl font-cinzel text-2xl leading-tight font-bold tracking-[0.05em] text-balance text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl">
+                    {featuredEpisode.title}
+                  </h3>
+                  <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
+                    VER EPISODIO
+                    <ArrowRightIcon
+                      class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                      stroke-width="2.5"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </div>
+              </button>
+            )}
+
+            {secondaryEpisodes.length > 0 && (
+              <ul
+                class="podcast-scroll grid max-h-[34rem] gap-px overflow-y-auto sm:grid-cols-2 lg:max-h-[31.5cqw] lg:grid-cols-1"
+                data-podcast-list
+              >
+                {secondaryEpisodes.map((episode, index) => (
+                  <li>
+                    <button
+                      type="button"
+                      data-video-tile
+                      data-video-id={episode.videoId}
+                      data-video-title={episode.title}
+                      aria-label={`Reproducir episodio: ${episode.title}`}
+                      class="group grid h-full w-full grid-cols-[5rem_1fr] gap-3 bg-theme-midnight/60 p-3 text-left transition duration-300 outline-none hover:bg-theme-navy/55 focus-visible:bg-theme-navy/55 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-inset sm:grid-cols-[6rem_1fr] sm:p-4 lg:grid-cols-[7.5rem_1fr]"
+                    >
+                      <span class="relative block aspect-video overflow-hidden rounded-lg border border-white/10 bg-black/30">
+                        <picture class="absolute inset-0 transition duration-500 group-hover:scale-105 group-focus-visible:scale-105">
+                          <source srcset={episode.thumbnail.avif} type="image/avif" />
+                          <source srcset={episode.thumbnail.webp} type="image/webp" />
                           <img
-                            src={episode.thumbnail}
+                            src={episode.thumbnail.webp}
                             alt=""
+                            aria-hidden="true"
                             loading="lazy"
                             decoding="async"
-                            class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105 group-focus-visible:scale-105"
+                            class="h-full w-full object-cover"
                           />
-                          <span
-                            aria-hidden="true"
-                            class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
-                          >
-                            <span class="flex size-7 items-center justify-center rounded-full bg-theme-gold/90 text-theme-midnight">
-                              <PlayIcon
-                                class="size-3.5 translate-x-[1px]"
-                                aria-hidden="true"
-                              />
-                            </span>
+                        </picture>
+                        <span
+                          aria-hidden="true"
+                          class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+                        >
+                          <span class="flex size-7 items-center justify-center rounded-full bg-theme-gold/90 text-theme-midnight">
+                            <PlayIcon class="size-3.5 translate-x-[1px]" aria-hidden="true" />
                           </span>
                         </span>
+                      </span>
 
-                        <div class="flex min-w-0 flex-col justify-between gap-3">
-                          <span class="flex items-start justify-between gap-3">
-                            <span class="font-cinzel text-[0.62rem] font-bold tracking-[0.22em] text-theme-gold/75">
-                              E{String(secondaryEpisodes.length - index).padStart(2, '0')}
-                            </span>
-                            <ChevronRightIcon
-                              aria-hidden="true"
-                              class="size-4 shrink-0 text-white/30 transition duration-300 group-hover:translate-x-1 group-hover:text-theme-gold group-focus-visible:translate-x-1 group-focus-visible:text-theme-gold"
-                            />
+                      <div class="flex min-w-0 flex-col justify-between gap-3">
+                        <span class="flex items-start justify-between gap-3">
+                          <span class="font-cinzel text-[0.62rem] font-bold tracking-[0.22em] text-theme-gold/75">
+                            E{String(secondaryEpisodes.length - index).padStart(2, '0')}
                           </span>
+                          <ChevronRightIcon
+                            aria-hidden="true"
+                            class="size-4 shrink-0 text-white/30 transition duration-300 group-hover:translate-x-1 group-hover:text-theme-gold group-focus-visible:translate-x-1 group-focus-visible:text-theme-gold"
+                          />
+                        </span>
 
-                          <div class="flex flex-col gap-1">
-                            <h3 class="line-clamp-2 text-balance font-cinzel text-sm font-bold leading-tight tracking-[0.04em] text-white transition duration-300 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-base">
-                              {episode.title}
-                            </h3>
-                            <time
-                              datetime={episode.published.toISOString()}
-                              title={dateFormatter.format(episode.published)}
-                              class="font-cinzel text-[0.58rem] tracking-[0.24em] text-white/45"
-                            >
-                              {formatRelative(episode.published)}
-                            </time>
-                          </div>
+                        <div class="flex flex-col gap-1">
+                          <h3 class="line-clamp-2 font-cinzel text-sm leading-tight font-bold tracking-[0.04em] text-balance text-white transition duration-300 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-base">
+                            {episode.title}
+                          </h3>
+                          <time
+                            datetime={episode.published.toISOString()}
+                            title={dateFormatter.format(episode.published)}
+                            class="font-cinzel text-[0.58rem] tracking-[0.24em] text-white/45"
+                          >
+                            {formatRelative(episode.published)}
+                          </time>
                         </div>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )
-            }
+                      </div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         )
       }
@@ -280,51 +265,7 @@ function formatRelative(date: Date) {
   </div>
 </section>
 
-<script>
-  import { $ } from '@/lib/dom-selector'
-
-  const featuredImage = $<HTMLImageElement>('[data-podcast-featured-image]')
-
-  if (featuredImage) {
-    const reveal = () => featuredImage.classList.add('is-loaded')
-
-    const fallback = featuredImage.dataset.fallback
-    let triedFallback = false
-
-    const handleLoad = () => {
-      // YouTube responds with a 120x90 placeholder when maxresdefault is missing.
-      const isPlaceholder = featuredImage.naturalWidth === 120 && featuredImage.naturalHeight === 90
-      if (isPlaceholder && fallback && !triedFallback) {
-        triedFallback = true
-        featuredImage.src = fallback
-        return
-      }
-      reveal()
-    }
-
-    const handleError = () => {
-      if (fallback && !triedFallback) {
-        triedFallback = true
-        featuredImage.src = fallback
-        return
-      }
-      reveal()
-    }
-
-    if (featuredImage.complete && featuredImage.naturalWidth > 0) {
-      handleLoad()
-    } else {
-      featuredImage.addEventListener('load', handleLoad)
-      featuredImage.addEventListener('error', handleError)
-    }
-  }
-</script>
-
 <style>
-  .podcast-featured-image.is-loaded {
-    opacity: 1;
-  }
-
   .podcast-scroll {
     scrollbar-width: thin;
     scrollbar-color: var(--color-theme-gold) transparent;

@@ -2,20 +2,24 @@
 description: Rules for content collections and type-safe content
 globs:
   - "src/content/**/*"
+  - "src/content.config.ts"
   - "src/content/config.ts"
+  - "src/live.config.ts"
 ---
 
 # Content Collections Rules
 
-## Collection Configuration
+## Collection Configuration (Astro 5+)
 
-Always define schemas in `src/content/config.ts`:
+Define schemas in `src/content.config.ts` using loaders:
 
 ```typescript
-import { defineCollection, z, reference } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
+import { glob, file } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const blog = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
   schema: ({ image }) => z.object({
     title: z.string(),
     description: z.string().max(160),
@@ -31,6 +35,8 @@ const blog = defineCollection({
 
 export const collections = { blog };
 ```
+
+> **Migration note:** Astro 5+ uses `src/content.config.ts` (not `src/content/config.ts`), `loader` (not `type`), `import { z } from 'astro/zod'` (not `from 'astro:content'`), and `import { render } from 'astro:content'` for rendering.
 
 ## MUST DO
 
@@ -70,7 +76,10 @@ const author = await getEntry(post.data.author);
 
 ```astro
 ---
-const { Content, headings } = await post.render();
+import { getEntry, render } from 'astro:content';
+
+const post = await getEntry('blog', 'my-post');
+const { Content, headings } = await render(post);
 ---
 
 <article>
@@ -89,28 +98,30 @@ const { Content, headings } = await post.render();
 ```astro
 ---
 // src/pages/blog/[...slug].astro
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map(post => ({
-    params: { slug: post.slug },
+    params: { slug: post.id },
     props: { post },
   }));
 }
 
 const { post } = Astro.props;
+const { Content } = await render(post);
 ---
 ```
 
 ## File Organization
 
 ```
-src/content/
-├── config.ts           # Required: collection schemas
-├── blog/
-│   ├── post-1.md
-│   └── post-2.mdx
-└── authors/
-    └── john.json
+src/
+├── content.config.ts    # Required: collection schemas (Astro 5+)
+├── content/
+│   ├── blog/
+│   │   ├── post-1.md
+│   │   └── post-2.mdx
+│   └── authors/
+│       └── john.json
 ```

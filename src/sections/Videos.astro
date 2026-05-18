@@ -1,4 +1,5 @@
 ---
+import SectionHeader from '@/components/SectionHeader.astro'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import CloseIcon from '@/assets/svg/close.svg'
 import PlayIcon from '@/assets/svg/play.svg'
@@ -9,7 +10,10 @@ interface Video {
   id: string
   title: string
   videoId: string | null
-  poster: string | null
+  poster: {
+    avif: string
+    webp: string
+  } | null
   active: boolean
   span: Span
 }
@@ -19,7 +23,10 @@ const VIDEOS: Video[] = [
     id: 'presentacion',
     title: 'La Presentación',
     videoId: 'h-jWhM3ne5U',
-    poster: '/videos/thumbnails/presentacion.webp',
+    poster: {
+      avif: '/videos/thumbnails/presentacion.avif',
+      webp: '/videos/thumbnails/presentacion.webp',
+    },
     active: true,
     span: 'big',
   },
@@ -45,7 +52,6 @@ const SPAN_CLASSES: Record<Span, string> = {
   big: 'sm:col-span-2 lg:col-span-2 lg:row-span-2',
   small: 'lg:col-span-1 lg:row-span-1',
 }
-
 ---
 
 <section
@@ -54,23 +60,12 @@ const SPAN_CLASSES: Record<Span, string> = {
   aria-labelledby="videos-title"
 >
   <div class="mx-auto flex max-w-7xl flex-col items-center">
-    <div class="mb-8 flex items-center gap-4 sm:mb-12" aria-hidden="true">
-      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-    </div>
-
-    <h2
-      id="videos-title"
-      class="mb-3 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
-    >
-      VÍDEOS
-    </h2>
-    <p
-      class="mb-10 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.25em] text-white/55 sm:mb-14 sm:text-sm"
-    >
-      Todo lo que rodea a La Velada del Año VI
-    </p>
+    <SectionHeader
+      titleId="videos-title"
+      title="VÍDEOS"
+      subtitle="Todo lo que rodea a La Velada del Año VI"
+      subtitleClass="mb-10 max-w-xl tracking-[0.25em] sm:mb-14 sm:text-sm"
+    />
 
     <div
       class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:aspect-[24/9] lg:grid-cols-3 lg:grid-rows-2 lg:gap-4"
@@ -87,7 +82,7 @@ const SPAN_CLASSES: Record<Span, string> = {
               aria-label={active ? `Reproducir vídeo: ${title}` : `${title}. Próximamente.`}
               aria-disabled={active ? undefined : 'true'}
               class:list={[
-                'group relative isolate flex aspect-video w-full overflow-hidden rounded-xl border text-left outline-none transition duration-500 lg:aspect-auto',
+                'group relative isolate flex aspect-video w-full overflow-hidden rounded-xl border text-left transition duration-500 outline-none lg:aspect-auto',
                 SPAN_CLASSES[span],
                 active
                   ? 'cursor-pointer border-white/10 bg-theme-navy/40 hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight'
@@ -95,14 +90,18 @@ const SPAN_CLASSES: Record<Span, string> = {
               ]}
             >
               {active && poster ? (
-                <img
-                  src={poster}
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                  decoding="async"
-                  class="absolute inset-0 -z-10 h-full w-full scale-105 object-cover brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110"
-                />
+                <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
+                  <source srcset={poster.avif} type="image/avif" />
+                  <source srcset={poster.webp} type="image/webp" />
+                  <img
+                    src={poster.webp}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover"
+                  />
+                </picture>
               ) : (
                 <div
                   aria-hidden="true"
@@ -149,7 +148,7 @@ const SPAN_CLASSES: Record<Span, string> = {
                 <div class="relative flex h-full w-full flex-col justify-end gap-1 p-5 sm:p-6 lg:p-7">
                   <h3
                     class:list={[
-                      'font-cinzel font-bold leading-tight tracking-[0.04em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream',
+                      'font-cinzel leading-tight font-bold tracking-[0.04em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream',
                       span === 'big'
                         ? 'text-2xl sm:text-3xl lg:text-4xl xl:text-5xl'
                         : 'text-xl sm:text-2xl lg:text-3xl',
@@ -179,7 +178,7 @@ const SPAN_CLASSES: Record<Span, string> = {
 
                   <h3
                     class:list={[
-                      'font-cinzel font-bold leading-tight tracking-[0.08em] text-theme-cream/85 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)]',
+                      'font-cinzel leading-tight font-bold tracking-[0.08em] text-theme-cream/85 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)]',
                       span === 'big'
                         ? 'text-2xl sm:text-3xl lg:text-4xl xl:text-5xl'
                         : 'text-xl sm:text-2xl lg:text-[1.75rem]',
@@ -219,7 +218,7 @@ const SPAN_CLASSES: Record<Span, string> = {
           type="button"
           data-video-dialog-close
           aria-label="Cerrar vídeo"
-          class="inline-flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white outline-none transition hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
+          class="inline-flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white transition outline-none hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
         >
           <CloseIcon class="size-5" aria-hidden="true" />
         </button>

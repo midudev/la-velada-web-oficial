@@ -1,4 +1,5 @@
 ---
+import SectionHeader from '@/components/SectionHeader.astro'
 import AlsaLogo from '@/assets/sponsors/alsa.svg'
 import CeraveLogo from '@/assets/sponsors/cerave.svg'
 import CocaColaLogo from '@/assets/sponsors/cocacola.svg'
@@ -19,6 +20,46 @@ interface Sponsor {
   /** Tailwind classes para ajustar el tamaño óptico del logo dentro de la tarjeta. */
   logoClass: string
 }
+
+interface PromoBanner {
+  name: string
+  url: string
+  label: string
+  alt: string
+  avifSrc: string
+  webpSrc: string
+  mobileAvifSrc: string
+  mobileWebpSrc: string
+  width: number
+  height: number
+}
+
+const PROMO_BANNERS: PromoBanner[] = [
+  {
+    name: 'Revolut',
+    url: 'https://www.revolut.com/en-ES/velada-6-web-velada/',
+    label: 'Ir al sorteo de entradas de La Velada VI con Revolut',
+    alt: 'Únete a Revolut y entra en el sorteo de 4 entradas y 1.000 euros',
+    avifSrc: '/sponsor-banners/revolut-la-velada-vi.avif',
+    webpSrc: '/sponsor-banners/revolut-la-velada-vi.webp',
+    mobileAvifSrc: '/sponsor-banners/revolut-la-velada-vi-mobile.avif',
+    mobileWebpSrc: '/sponsor-banners/revolut-la-velada-vi-mobile.webp',
+    width: 1024,
+    height: 151,
+  },
+  {
+    name: 'Alsa',
+    url: 'https://buslavelada.alsa.es/',
+    label: 'Comprar buses directos a La Velada VI con Alsa',
+    alt: 'Buses directos a La Velada VI con Alsa',
+    avifSrc: '/sponsor-banners/alsa-la-velada-vi.avif',
+    webpSrc: '/sponsor-banners/alsa-la-velada-vi.webp',
+    mobileAvifSrc: '/sponsor-banners/alsa-la-velada-vi-mobile.avif',
+    mobileWebpSrc: '/sponsor-banners/alsa-la-velada-vi-mobile.webp',
+    width: 1024,
+    height: 104,
+  },
+]
 
 const SPONSORS: Sponsor[] = [
   {
@@ -119,23 +160,60 @@ const SPONSORS: Sponsor[] = [
   </div>
 
   <div class="relative mx-auto flex max-w-6xl flex-col items-center">
-    <div class="mb-8 flex items-center gap-4 sm:mb-12" aria-hidden="true">
-      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-    </div>
+    <SectionHeader
+      titleId="sponsors-title"
+      title="PATROCINADORES"
+      subtitle="Las marcas que hacen posible La Velada del Año VI"
+      subtitleClass="mb-10 max-w-xl tracking-[0.25em] sm:mb-12 sm:text-sm"
+    />
 
-    <h2
-      id="sponsors-title"
-      class="mb-3 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
-    >
-      PATROCINADORES
-    </h2>
-    <p
-      class="mb-12 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.25em] text-balance text-white/55 sm:mb-16 sm:text-sm"
-    >
-      Las marcas que hacen posible La Velada del Año VI
-    </p>
+    <div class="mb-12 flex w-full max-w-[760px] flex-col gap-3 sm:mb-16">
+      {
+        PROMO_BANNERS.map(
+          (
+            {
+              name,
+              url,
+              label,
+              alt,
+              avifSrc,
+              webpSrc,
+              mobileAvifSrc,
+              mobileWebpSrc,
+              width,
+              height,
+            },
+            index
+          ) => (
+            <a
+              href={url}
+              target="_blank"
+              rel="sponsored noopener noreferrer"
+              aria-label={label}
+              title={name}
+              class="promo-banner group relative block w-full overflow-hidden rounded-md bg-black shadow-[0_14px_40px_rgba(0,0,0,0.3)] ring-1 ring-white/10 outline-none transition duration-500 animate-fade-in-up hover:-translate-y-1 hover:ring-theme-gold/45 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+              style={`animation-delay:${850 + index * 90}ms`}
+            >
+              <picture>
+                <source srcset={mobileAvifSrc} media="(max-width: 639px)" type="image/avif" />
+                <source srcset={mobileWebpSrc} media="(max-width: 639px)" type="image/webp" />
+                <source srcset={avifSrc} type="image/avif" />
+                <source srcset={webpSrc} type="image/webp" />
+                <img
+                  src={webpSrc}
+                  alt={alt}
+                  width={width}
+                  height={height}
+                  loading="lazy"
+                  decoding="async"
+                  class="block h-auto w-full transition duration-500 group-hover:scale-[1.01] group-hover:brightness-105 group-focus-visible:scale-[1.01] group-focus-visible:brightness-105"
+                />
+              </picture>
+            </a>
+          )
+        )
+      }
+    </div>
 
     <div class="relative w-full">
       <ul class="sponsors-grid" role="list">
@@ -224,10 +302,16 @@ const SPONSORS: Sponsor[] = [
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .promo-banner,
+    .promo-banner img,
     .sponsor-card {
       transition: none;
     }
 
+    .promo-banner:hover,
+    .promo-banner:focus-visible,
+    .promo-banner:hover img,
+    .promo-banner:focus-visible img,
     .sponsor-card:hover,
     .sponsor-card:focus-visible {
       transform: none;
