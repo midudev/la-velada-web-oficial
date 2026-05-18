@@ -47,12 +47,15 @@ test.describe('header desktop nav alignment', () => {
   })
 
   test('scrolled header keeps frosted backdrop', async ({ page }) => {
+    const header = page.locator('[data-header]')
     await page.evaluate(() => window.scrollTo(0, 80))
-    await page.waitForTimeout(300)
-    await expect(page.locator('[data-header]')).toHaveAttribute('data-scrolled', 'true')
-    const filter = await page.locator('[data-header]').evaluate((el) => getComputedStyle(el).backdropFilter)
-    expect(filter).toMatch(/blur/)
-    expect(filter).toMatch(/saturate/)
+    await expect(header).toHaveAttribute('data-scrolled', 'true')
+    await expect
+      .poll(() => header.evaluate((el) => getComputedStyle(el).backdropFilter))
+      .toMatch(/blur\([^)]+\)/)
+    await expect
+      .poll(() => header.evaluate((el) => getComputedStyle(el).backdropFilter))
+      .toMatch(/saturate/)
   })
 
   test('logo row is vertically centered with the full nav block', async ({ page }) => {
@@ -62,5 +65,26 @@ test.describe('header desktop nav alignment', () => {
     expect(logoBox).not.toBeNull()
     expect(navBox).not.toBeNull()
     expect(Math.abs(centerY(logoBox!) - centerY(navBox!))).toBeLessThanOrEqual(TOL)
+  })
+})
+
+test.describe('header mobile menu', () => {
+  test('opening menu drives logo into hover crest state', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/')
+    const header = page.locator('[data-header]')
+    const logo = page.getByRole('link', { name: /la velada del año vi/i })
+    const maskPath = logo.locator('svg mask path')
+
+    await page.getByRole('button', { name: /abrir menú/i }).click()
+    await expect(header).toHaveAttribute('data-mobile-menu-open', 'true')
+    await expect
+      .poll(() =>
+        maskPath.evaluate((el) => {
+          const { strokeDashoffset, opacity } = getComputedStyle(el)
+          return strokeDashoffset === '0px' || Number.parseFloat(strokeDashoffset) < 1
+        }),
+      )
+      .toBe(true)
   })
 })

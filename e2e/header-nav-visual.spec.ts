@@ -71,6 +71,10 @@ test.describe(`header visuals (${phase})`, () => {
     const header = page.locator('[data-header]')
     await expect(header).toBeVisible()
     await header.screenshot({ path: shot('01-header-default.png') })
+    await page.screenshot({
+      path: shot('01-header-context.png'),
+      clip: { x: 0, y: 0, width: DESKTOP.width, height: 160 },
+    })
 
     await page.evaluate(() => window.scrollTo(0, 80))
     await page.waitForTimeout(400)
@@ -84,6 +88,7 @@ test.describe(`header visuals (${phase})`, () => {
     await expect(page.locator('[data-mobile-menu][data-open="true"]')).toBeVisible()
     await page.waitForTimeout(350)
     await page.locator('[data-mobile-menu]').screenshot({ path: shot('05-mobile-menu.png') })
+    await page.locator('[data-header]').screenshot({ path: shot('06-header-menu-open.png') })
   })
 
   test('logo hover', async ({ page }) => {
@@ -103,12 +108,12 @@ test.describe(`header visuals (${phase})`, () => {
     await logoLink.hover({ force: true })
     await page.waitForTimeout(isAfter ? 750 : 400)
 
+    await logoLink.screenshot({ path: shot('03-logo-hover-framed.png') })
     if (isAfter) {
       await logoLink.locator('svg').screenshot({ path: shot('03-svg-logo-hover.png') })
     } else {
       await logoLink.locator('img').screenshot({ path: shot('03-logo-hover.png') })
     }
-    await logoLink.screenshot({ path: shot('03-logo-hover-framed.png') })
 
     await page.waitForTimeout(HOLD_MS)
     await resetCaptureZoom(page)
@@ -130,6 +135,8 @@ test.describe(`header visuals (${phase})`, () => {
     await page.waitForTimeout(150)
     await boxeadores.hover({ force: true })
     await page.waitForTimeout(isAfter ? 400 : 250)
+
+    await page.locator('[data-header]').screenshot({ path: shot('04-header-nav-hover.png') })
 
     const navCell = isAfter
       ? page.locator('[data-nav-item="boxeadores"]')
