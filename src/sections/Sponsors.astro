@@ -352,9 +352,7 @@ const SPONSORS: Sponsor[] = [
 
       corners.forEach((corner, i) => {
         if (!corner) return
-        corner.style.opacity = '1'
-        corner.style.transform = ''
-        animate(corner, { x: coords[i][0], y: coords[i][1] }, {
+        animate(corner, { opacity: 1, x: coords[i][0], y: coords[i][1] }, {
           type: 'spring',
           bounce: 0,
           duration: 0.2,
@@ -371,7 +369,7 @@ const SPONSORS: Sponsor[] = [
           if (activeCard !== card) return
           corners.forEach((corner) => {
             if (!corner) return
-            animate(corner, { opacity: 0, x: 0, y: 0 }, { duration: 0.15, ease: 'ease-out' })
+            animate(corner, { opacity: 0 }, { duration: 0.15, ease: 'ease-out' })
           })
           fadeTimer = null
         }, 100)
