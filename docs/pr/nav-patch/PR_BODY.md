@@ -74,3 +74,16 @@ Underline: 6px gap, 150ms + 125ms delay; fine pointer only — not on mobile men
 - [ ] desktop: logo draw + boxeadores underline
 - [ ] mobile: open menu → logo crest + no link underline
 - [ ] scroll → frosted bar
+
+---
+
+## Regenerating assets
+
+No Playwright (no CSS zoom — avoids layout shift). Puppeteer screenshots + ffmpeg frame sequences:
+
+```bash
+pnpm capture:pr:chrome   # once
+pnpm capture:pr
+pnpm capture:pr:stage
+gh release upload pr-nav-patch-visuals .pr-assets-staging/* --repo tonyblu331/la-velada-web-oficial --clobber
+```
