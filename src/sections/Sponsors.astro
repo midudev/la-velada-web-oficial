@@ -317,65 +317,66 @@ const SPONSORS: Sponsor[] = [
 
 <script>
   import { animate, hover } from 'motion'
-  import { $ } from '@/lib/dom-selector'
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
   const smQuery = window.matchMedia('(min-width: 640px)')
+  const corners = [
+    document.querySelector('.corner-tl'),
+    document.querySelector('.corner-tr'),
+    document.querySelector('.corner-bl'),
+    document.querySelector('.corner-br'),
+  ]
+  const grid = document.querySelector('.sponsors-grid')?.parentElement
 
-  if (!reducedMotion.matches) {
-    const corners = {
-      tl: $('.corner-tl'),
-      tr: $('.corner-tr'),
-      bl: $('.corner-bl'),
-      br: $('.corner-br'),
-    }
+  if (!reducedMotion.matches && grid) {
+    let activeCard = null
+    let fadeTimer = null
 
-    const grid = document.querySelector('.sponsors-grid')?.parentElement
+    hover('.sponsor-card', (card) => {
+      if (fadeTimer) {
+        clearTimeout(fadeTimer)
+        fadeTimer = null
+      }
+      activeCard = card
 
-    if (grid) {
-      let activeCard = null
-      let fadeTimer = null
+      const gridRect = grid.getBoundingClientRect()
+      const cardRect = card.getBoundingClientRect()
+      const sm = smQuery.matches
+      const inset = sm ? 6 : 4
+      const size = sm ? 16 : 12
 
-      hover('.sponsor-card', (card) => {
-        if (fadeTimer) {
-          clearTimeout(fadeTimer)
-          fadeTimer = null
-        }
-        activeCard = card
+      const x0 = cardRect.left - gridRect.left + inset
+      const y0 = cardRect.top - gridRect.top + inset
+      const x1 = cardRect.right - gridRect.left - inset - size
+      const y1 = cardRect.bottom - gridRect.top - inset - size
 
-        const gridRect = grid.getBoundingClientRect()
-        const cardRect = card.getBoundingClientRect()
-        const sm = smQuery.matches
-        const inset = sm ? 6 : 4
-        const size = sm ? 16 : 12
+      const coords = [[x0, y0], [x1, y0], [x0, y1], [x1, y1]]
 
-        const x0 = cardRect.left - gridRect.left + inset
-        const y0 = cardRect.top - gridRect.top + inset
-        const x1 = cardRect.right - gridRect.left - inset - size
-        const y1 = cardRect.bottom - gridRect.top - inset - size
-
-        if (corners.tl) { corners.tl.style.opacity = '1'; animate(corners.tl, { x: x0, y: y0 }, { type: 'spring', bounce: 0, duration: 0.2 }) }
-        if (corners.tr) { corners.tr.style.opacity = '1'; animate(corners.tr, { x: x1, y: y0 }, { type: 'spring', bounce: 0, duration: 0.2 }) }
-        if (corners.bl) { corners.bl.style.opacity = '1'; animate(corners.bl, { x: x0, y: y1 }, { type: 'spring', bounce: 0, duration: 0.2 }) }
-        if (corners.br) { corners.br.style.opacity = '1'; animate(corners.br, { x: x1, y: y1 }, { type: 'spring', bounce: 0, duration: 0.2 }) }
-
-        const logo = $('svg[aria-hidden="true"]', card)
-        if (logo) animate(logo, { scale: 0.96 }, { duration: 0.05, ease: 'ease-out' })
-
-        return () => {
-          if (logo) animate(logo, { scale: 1 }, { duration: 0.04, ease: 'ease-out' })
-
-          fadeTimer = setTimeout(() => {
-            if (activeCard === card) {
-              corners.tl?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, fill: 'forwards' })
-              corners.tr?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, fill: 'forwards' })
-              corners.bl?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, fill: 'forwards' })
-              corners.br?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, fill: 'forwards' })
-            }
-            fadeTimer = null
-          }, 100)
-        }
+      corners.forEach((corner, i) => {
+        if (!corner) return
+        corner.style.opacity = '1'
+        animate(corner, { x: coords[i][0], y: coords[i][1] }, {
+          type: 'spring',
+          bounce: 0,
+          duration: 0.2,
+        })
       })
-    }
+
+      const logo = card.querySelector('svg[aria-hidden="true"]')
+      if (logo) animate(logo, { scale: 0.96 }, { duration: 0.05, ease: 'ease-out' })
+
+      return () => {
+        if (logo) animate(logo, { scale: 1 }, { duration: 0.04, ease: 'ease-out' })
+
+        fadeTimer = setTimeout(() => {
+          if (activeCard !== card) return
+          corners.forEach((corner) => {
+            if (!corner) return
+            animate(corner, { opacity: 0, x: 0, y: 0 }, { duration: 0.15, ease: 'ease-out' })
+          })
+          fadeTimer = null
+        }, 100)
+      }
+    })
   }
 </script>
