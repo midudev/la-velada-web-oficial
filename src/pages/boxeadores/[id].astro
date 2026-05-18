@@ -3,6 +3,8 @@ import type { GetStaticPaths } from 'astro'
 
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import BoxerSocials from '@/components/BoxerSocials.astro'
+import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
 import { battles } from '@/consts/battles'
 import {
   BOXERS,
@@ -191,14 +193,22 @@ const breadcrumbJsonLd = {
       </a>
 
       <div class="boxer-detail-grid mt-8 grid gap-8 sm:mt-10 md:gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start lg:gap-12">
-        <div class="boxer-detail-portrait-wrap relative">
+        <div class="boxer-detail-portrait-wrap relative flex flex-col items-center">
           <span aria-hidden="true" class="boxer-detail-aura"></span>
+
+          <BoxerWinsBadge
+            wins={boxer.previousVeladaWins}
+            boxerName={boxer.name}
+            variant="detail"
+            defaultExpanded
+            class="boxer-detail-wins"
+          />
 
           <picture class="boxer-detail-portrait-picture relative z-10 flex w-full items-start justify-center">
             <source type="image/avif" srcset={heroImages.avif} />
             <source type="image/webp" srcset={heroImages.webp} />
             <img
-              src={heroImages.png}
+              src={heroImages.webp}
               alt={`Foto principal de ${boxer.name}`}
               transition:name={`boxer-hero-${boxer.id}`}
               class="boxer-detail-portrait relative z-10 h-auto w-auto max-w-full object-contain object-top"
@@ -208,6 +218,10 @@ const breadcrumbJsonLd = {
               height="800"
             />
           </picture>
+
+          <div class="boxer-detail-socials relative z-10 mt-6 w-full">
+            <BoxerSocials boxer={boxer} />
+          </div>
         </div>
 
         <div class="boxer-detail-info relative flex flex-col items-start">
@@ -248,7 +262,7 @@ const breadcrumbJsonLd = {
                   <source type="image/avif" srcset={opponentSelectImages.avif} />
                   <source type="image/webp" srcset={opponentSelectImages.webp} />
                   <img
-                    src={opponentSelectImages.png}
+                    src={opponentSelectImages.webp}
                     alt=""
                     role="presentation"
                     decoding="async"
@@ -316,12 +330,6 @@ const breadcrumbJsonLd = {
   }
 
   [data-boxer-detail-bg] {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 60%,
-      transparent 100%
-    );
     mask-image: linear-gradient(
       to bottom,
       #000 0%,
@@ -546,41 +554,49 @@ const breadcrumbJsonLd = {
     justify-content: center;
   }
 
+  /* Badge de "Campeón previo" en la ficha individual: arriba a la
+     izquierda del retrato, por encima del aura dorada. El propio
+     componente ya es `position: absolute`. */
+  :global(.boxer-detail-wins) {
+    top: 0;
+    left: 0;
+    z-index: 20;
+  }
+
+  @media (min-width: 640px) {
+    :global(.boxer-detail-wins) {
+      top: 4px;
+      left: 8px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :global(.boxer-detail-wins) {
+      top: 8px;
+      left: 16px;
+    }
+  }
+
   .boxer-detail-aura {
     position: absolute;
-    inset: -8% -35% auto -35%;
-    height: 90%;
+    top: -22%;
+    left: 50%;
+    width: min(180vw, 64rem);
+    height: 125%;
+    transform: translateX(-50%);
+    border-radius: 9999px;
     background: radial-gradient(
-      ellipse 55% 60% at 50% 38%,
+      ellipse 42% 42% at 50% 50%,
       color-mix(in srgb, var(--color-theme-gold) 38%, transparent) 0%,
-      color-mix(in srgb, var(--color-theme-gold) 12%, transparent) 45%,
-      transparent 75%
+      color-mix(in srgb, var(--color-theme-gold) 12%, transparent) 32%,
+      transparent 62%
     );
     z-index: 0;
     pointer-events: none;
-    -webkit-mask-image: radial-gradient(
-      ellipse 70% 75% at 50% 38%,
-      black 0%,
-      black 55%,
-      transparent 100%
-    );
-    mask-image: radial-gradient(
-      ellipse 70% 75% at 50% 38%,
-      black 0%,
-      black 55%,
-      transparent 100%
-    );
   }
 
   .boxer-detail-portrait {
     max-height: 70vh;
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      black 0%,
-      black 78%,
-      color-mix(in srgb, black 60%, transparent) 90%,
-      transparent 100%
-    );
     mask-image: linear-gradient(
       to bottom,
       black 0%,

@@ -10,13 +10,14 @@ export interface Boxer {
   followersUpdatedAt: string
   socials: { platform: string; username: string; followers: number; monthlyListeners?: number }[]
   country: string
+  previousVeladaWins: number[]
   youtubeChannelId?: string
 }
 
 /**
  * Los `id` coinciden exactamente con:
- *  - `/public/character-select/{id}.png` (miniatura del selector)
- *  - `/public/character-hero/{id}.png` (recorte grande mostrado en el
+ *  - `/public/character-select/{id}.webp` (miniatura del selector)
+ *  - `/public/character-hero/{id}.webp` (recorte grande mostrado en el
  *    hero al hacer hover sobre la miniatura del selector)
  *  - `/public/photos/{id}/01.webp` (foto principal usada en la ficha
  *    del combate)
@@ -30,6 +31,7 @@ export const BOXERS: Boxer[] = [
       gender: 'f',
       realName: 'Alondra Michelle',
       country: 'pr',
+      previousVeladaWins: [],
       birthDate: '2001-10-30',
       age: 24,
       youtubeChannelId: 'UCMhJtoft9mSZ_T1FEV__LXA',
@@ -49,6 +51,7 @@ export const BOXERS: Boxer[] = [
       gender: 'f',
       realName: 'Angie Rocío Velasco',
       country: 'ar',
+      previousVeladaWins: [],
       birthDate: '1998-10-30',
       age: 27,
       youtubeChannelId: 'UC2rScBVAJSkL4qXn-27t80A',
@@ -64,6 +67,7 @@ export const BOXERS: Boxer[] = [
       name: 'Clersss',
       realName: 'Clara Merino',
       country: 'es',
+      previousVeladaWins: [],
       birthDate: null,
       gender: 'f',
       age: null,
@@ -80,6 +84,7 @@ export const BOXERS: Boxer[] = [
       name: 'Edu Aguirre',
       realName: 'Eduardo Aguirre',
       country: 'es',
+      previousVeladaWins: [],
       gender: 'm',
       birthDate: '1988-01-14',
       age: 38,
@@ -94,6 +99,7 @@ export const BOXERS: Boxer[] = [
       name: 'Fabiana Sevillano',
       realName: 'Fabiana Sevillano',
       country: 'es',
+      previousVeladaWins: [],
       gender: 'f',
       birthDate: '2002-08-08',
       age: 23,
@@ -102,7 +108,7 @@ export const BOXERS: Boxer[] = [
       socials: [
         { platform: 'tiktok', username: 'fabiana.sevillano', followers: 2_100_000 },
         { platform: 'instagram', username: 'fabiana.sevillano', followers: 1_000_000 },
-        { platform: 'youtube', username: 'FabianaSevillano', followers: 26_800 },
+        { platform: 'youtube', username: 'FabianaSevillano', followers: 183_000 },
       ],
     },
     {
@@ -111,6 +117,7 @@ export const BOXERS: Boxer[] = [
       gender: 'm',
       realName: 'Luis Fernando Flores Alvarado',
       country: 'sv',
+      previousVeladaWins: [],
       birthDate: '1993-07-07',
       age: 32,
       youtubeChannelId: 'UCV4xOVpbcV8SdueDCOxLXtQ',
@@ -127,6 +134,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Gastón Edul',
       gender: 'm',
       country: 'ar',
+      previousVeladaWins: [],
       birthDate: '1995-12-31',
       age: 30,
       followersUpdatedAt: '2026-05-14',
@@ -142,6 +150,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Gerónimo Arias',
       gender: 'm',
       country: 'ar',
+      previousVeladaWins: [],
       birthDate: '2003-04-01',
       age: 23,
       youtubeChannelId: 'UClYcutwIFo-UoNRw2_3Kwaw',
@@ -158,6 +167,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Juan Alberto García Gámez',
       gender: 'm',
       country: 'es',
+      previousVeladaWins: [],
       birthDate: '1994-06-22',
       age: 31,
       youtubeChannelId: 'UCKvoBRFqMNqvuSvFBiNadgw',
@@ -175,6 +185,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Padua Keoma Salas Sánchez',
       gender: 'm',
       country: 'es',
+      previousVeladaWins: [],
       birthDate: '1995-09-27',
       age: 30,
       youtubeChannelId: 'UCBCD1nIuiH-d10_l6Q-8rRg',
@@ -193,6 +204,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Valeria',
       gender: 'f',
       country: 'co',
+      previousVeladaWins: [],
       birthDate: '2002-06-18',
       age: 23,
       youtubeChannelId: 'UCpkHmV8jZGISRr18KrJgR_A',
@@ -211,6 +223,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Mauro Román Monzón',
       gender: 'm',
       country: 'ar',
+      previousVeladaWins: [],
       birthDate: '1999-10-04',
       age: 26,
       youtubeChannelId: 'UCExVswmCLmkkoBkjBp3Ta9Q',
@@ -228,6 +241,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Marta Díaz García',
       gender: 'f',
       country: 'es',
+      previousVeladaWins: [],
       birthDate: '2000-10-30',
       age: 25,
       youtubeChannelId: 'UCF1h4Bry3S9fL12D15H5P7Q',
@@ -244,6 +258,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Natalia García',
       gender: 'f',
       country: 'mx',
+      previousVeladaWins: [],
       birthDate: null,
       age: null,
       youtubeChannelId: 'UCLmWjPj5qLmqSCcoL1FNf1Q',
@@ -261,6 +276,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Daniel Alonso Góndez',
       gender: 'm',
       country: 'es',
+      previousVeladaWins: [2024],
       birthDate: null,
       age: 24,
       youtubeChannelId: 'UCl8bYBm0XAP23mReE11IBOA',
@@ -277,6 +293,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Rocío López Bueno',
       gender: 'f',
       country: 'es',
+      previousVeladaWins: [],
       birthDate: '2002-03-01',
       age: 24,
       youtubeChannelId: 'UCrzySRaber8_-52PPh0GG2g',
@@ -293,6 +310,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Samantha Guadalupe Rivera Treviño',
       gender: 'f',
       country: 'mx',
+      previousVeladaWins: [2023],
       birthDate: '1998-08-20',
       age: 27,
       youtubeChannelId: 'UCW3bX8K5LuQHw8cKc3U8iUg',
@@ -311,6 +329,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Tatiana Käer',
       gender: 'f',
       country: 'es',
+      previousVeladaWins: [],
       birthDate: '2004',
       age: 21,
       youtubeChannelId: 'UCZh4XmGTOxSJAsjZLDkZArA',
@@ -327,6 +346,7 @@ export const BOXERS: Boxer[] = [
       realName: 'David Cánovas Martínez',
       gender: 'm',
       country: 'es',
+      previousVeladaWins: [2025],
       birthDate: '1997-04-24',
       age: 29,
       youtubeChannelId: 'UCCEmjNPpJYhGDgaEqeeA4HA',
@@ -344,6 +364,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Víctor Mélida Cambra',
       gender: 'm',
       country: 'es',
+      previousVeladaWins: [2022, 2024, 2025],
       birthDate: '1992-05-01',
       age: 34,
       youtubeChannelId: 'UCvGiJYBPgVP7W1ypE3DKOqA',
@@ -363,7 +384,6 @@ export const BOXERS: Boxer[] = [
 export interface BoxerImageVariants {
   avif: string
   webp: string
-  png: string
 }
 
 /** Variantes de la miniatura del selector (carpeta `character-select`). */
@@ -371,14 +391,13 @@ export function getBoxerSelectImages(boxer: Boxer): BoxerImageVariants {
   return {
     avif: `/character-select/${boxer.id}.avif`,
     webp: `/character-select/${boxer.id}.webp`,
-    png: `/character-select/${boxer.id}.png`,
   }
 }
 
 /** Devuelve la ruta a la imagen de selección (miniatura) de un boxeador,
- *  formato PNG. Para mejor rendimiento, prefiere `getBoxerSelectImages`. */
+ *  formato WebP. Para mejor rendimiento, prefiere `getBoxerSelectImages`. */
 export function getBoxerSelectImage(boxer: Boxer): string {
-  return getBoxerSelectImages(boxer).png
+  return getBoxerSelectImages(boxer).webp
 }
 
 /** Variantes del recorte grande para el hero (carpeta `character-hero`). */
@@ -386,17 +405,16 @@ export function getBoxerHeroImages(boxer: Boxer): BoxerImageVariants {
   return {
     avif: `/character-hero/${boxer.id}.avif`,
     webp: `/character-hero/${boxer.id}.webp`,
-    png: `/character-hero/${boxer.id}.png`,
   }
 }
 
 /**
  * Devuelve la ruta al recorte grande del boxeador usado en el hero al
- * hacer hover sobre la miniatura del selector, formato PNG. Para mejor
+ * hacer hover sobre la miniatura del selector, formato WebP. Para mejor
  * rendimiento, prefiere `getBoxerHeroImages`.
  */
 export function getBoxerHeroImage(boxer: Boxer): string {
-  return getBoxerHeroImages(boxer).png
+  return getBoxerHeroImages(boxer).webp
 }
 
 /** Devuelve la ruta a la foto principal del boxeador (01.webp). */

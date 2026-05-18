@@ -128,7 +128,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           <source srcset="/logo.avif" type="image/avif" />
           <source srcset="/logo.webp" type="image/webp" />
           <img
-            src="/logo.png"
+            src="/logo.webp"
             alt="La Velada del Año VI"
             class="boxer-default-logo relative h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
             width="512"
@@ -206,7 +206,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           />
           <img
             data-active-image
-            src={fallbackHero.png}
+            src={fallbackHero.webp}
             alt={`Foto principal de ${fallback.name}`}
             class="boxer-portrait relative z-10 h-full max-h-full w-auto max-w-full object-contain object-bottom transition-opacity duration-300"
             decoding="async"
@@ -292,7 +292,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                       <source type="image/avif" srcset={selectImages.avif} />
                       <source type="image/webp" srcset={selectImages.webp} />
                       <img
-                        src={selectImages.png}
+                        src={selectImages.webp}
                         alt=""
                         role="presentation"
                         loading="lazy"
@@ -353,7 +353,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                 data-name={boxer.name}
                 data-photo-avif={heroImages.avif}
                 data-photo-webp={heroImages.webp}
-                data-photo-png={heroImages.png}
                 data-flag={flag}
                 data-country={countryName}
                 aria-label={`Ver perfil de ${boxer.name}`}
@@ -366,7 +365,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                   <source type="image/avif" srcset={selectImages.avif} />
                   <source type="image/webp" srcset={selectImages.webp} />
                   <img
-                    src={selectImages.png}
+                    src={selectImages.webp}
                     alt=""
                     role="presentation"
                     loading="lazy"
@@ -487,7 +486,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         transparent 70%
       );
     mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   }
 
   .boxer-default-info {
@@ -575,13 +573,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       0 0 24px color-mix(in srgb, var(--color-theme-gold) 14%, transparent),
       0 1px 0 color-mix(in srgb, var(--color-theme-cream) 3%, transparent);
 
-    -webkit-mask-image: linear-gradient(
-      180deg,
-      transparent 0%,
-      #000 28%,
-      #000 65%,
-      transparent 100%
-    );
     mask-image: linear-gradient(
       180deg,
       transparent 0%,
@@ -672,13 +663,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
      para que el recorte de la silueta se funda visualmente con el nombre
      y la bandera que aparecen justo debajo. */
   .boxer-portrait {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      black 0%,
-      black 82%,
-      rgba(0, 0, 0, 0.65) 94%,
-      transparent 100%
-    );
     mask-image: linear-gradient(
       to bottom,
       black 0%,
@@ -1082,7 +1066,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   ): string | undefined {
     if (formats.avif && thumb.dataset.photoAvif) return thumb.dataset.photoAvif
     if (formats.webp && thumb.dataset.photoWebp) return thumb.dataset.photoWebp
-    return thumb.dataset.photoPng
+    return thumb.dataset.photoWebp
   }
 
   function setupMobileInfiniteSlider(root: HTMLElement) {
@@ -1225,15 +1209,14 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     /** Aplica el contenido (imagen, nombre, watermark, bandera, país) al
      *  panel del boxer. No toca el state ni las clases is-switching. */
     function applyBoxerContent(thumb: HTMLAnchorElement) {
-      const { name, photoAvif, photoWebp, photoPng, flag, country } =
-        thumb.dataset
-      if (!name || !photoPng) return
+      const { name, photoAvif, photoWebp, flag, country } = thumb.dataset
+      if (!name || !photoWebp) return
 
       // Actualizamos las sources del <picture> antes del src del <img>
       // para que el browser re-evalúe y use el mejor formato disponible.
       if (sourceAvif && photoAvif) sourceAvif.srcset = photoAvif
       if (sourceWebp && photoWebp) sourceWebp.srcset = photoWebp
-      image!.src = photoPng
+      image!.src = photoWebp
       image!.alt = `Foto principal de ${name}`
 
       nameNode!.textContent = name
@@ -1249,7 +1232,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       if (!image || !nameNode) return
 
       const { id, opponentId } = thumb.dataset
-      if (!id || !thumb.dataset.photoPng) return
+      if (!id || !thumb.dataset.photoWebp) return
 
       const wasDefault = root!.dataset.state === 'default'
 
