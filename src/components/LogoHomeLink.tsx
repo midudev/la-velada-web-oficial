@@ -1,10 +1,11 @@
 import { useId, useSyncExternalStore, type ReactNode } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
+import { $ } from '@/lib/dom-selector'
 
 function useMobileMenuOpen() {
   return useSyncExternalStore(
     (onStoreChange) => {
-      const header = document.querySelector('[data-header]')
+      const header = $('[data-header]')
       if (!header) return () => {}
       const observer = new MutationObserver(onStoreChange)
       observer.observe(header, {
@@ -13,8 +14,7 @@ function useMobileMenuOpen() {
       })
       return () => observer.disconnect()
     },
-    () =>
-      document.querySelector('[data-header]')?.getAttribute('data-mobile-menu-open') === 'true',
+    () => $('[data-header]')?.getAttribute('data-mobile-menu-open') === 'true',
     () => false,
   )
 }
@@ -35,9 +35,23 @@ const linkClass =
 const svgClass = 'block h-9 w-auto shrink-0 sm:h-10'
 
 const maskReveal = {
-  rest: { pathLength: 0, transition: { pathLength } },
-  hover: { pathLength: 1, transition: { pathLength } },
-  tap: { pathLength: 1 },
+  rest: {
+    pathLength: 0,
+    opacity: 0,
+    transition: {
+      pathLength,
+      opacity: { duration: 0.12, ease },
+    },
+  },
+  hover: {
+    pathLength: 1,
+    opacity: 1,
+    transition: {
+      pathLength,
+      opacity: { duration: 0.15, ease, delay: 0 },
+    },
+  },
+  tap: { pathLength: 1, opacity: 1 },
 }
 
 const traceStroke = {
@@ -73,7 +87,7 @@ function CrestSvg({ gradId, maskId }: CrestProps) {
             fill="none"
             stroke="white"
             strokeWidth={20}
-            strokeLinecap="round"
+            strokeLinecap="butt"
             strokeLinejoin="round"
             variants={maskReveal}
           />

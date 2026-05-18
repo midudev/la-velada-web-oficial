@@ -205,7 +205,7 @@ const scrolledBar =
     const setMenuOpen = (open: boolean) => {
       menu.dataset.open = String(open)
       button.dataset.open = String(open)
-      menu.toggleAttribute('aria-hidden', !open)
+      menu.setAttribute('aria-hidden', open ? 'false' : 'true')
       menu.inert = !open
       button.setAttribute('aria-expanded', String(open))
       button.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú')
