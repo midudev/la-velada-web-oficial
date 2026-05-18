@@ -132,22 +132,19 @@ function isViewportNearBottom(): boolean {
 }
 
 /**
- * Animates a proxy value from 0 → panelHeight using motion's JS engine (not
- * WAAPI) with the same duration/ease as the grid collapse. The onUpdate callback
- * adjusts window.scrollY each frame so the footer stays pinned at its current
- * viewport Y as the document shrinks.
+ * Animates a number from 0 → panelHeight using motion's JS engine (not WAAPI).
+ * onUpdate fires each frame with the latest value — no proxy object, no RAF.
  *
- * No RAF, no cleanup function — motion owns the lifecycle. Pair with
- * Promise.all alongside the grid animation so both settle together.
+ * ScrollTimeline drives animation FROM scroll position (wrong direction here).
+ * smooth scroll has browser-controlled duration (can't sync with 280ms).
+ * This is the minimal motion-native approach: value animation + onUpdate.
  */
 function animateScrollCompensation(panelHeight: number): ReturnType<typeof animate> {
   const startScrollY = window.scrollY
-  const proxy = { v: 0 }
-
-  return animate(proxy, { v: panelHeight }, {
+  return animate(0, panelHeight, {
     duration: PANEL_MS / 1000,
     ease: EASE,
-    onUpdate: () => window.scrollTo(0, Math.max(0, startScrollY - proxy.v)),
+    onUpdate: (v) => window.scrollTo(0, Math.max(0, startScrollY - v)),
   })
 }
 
