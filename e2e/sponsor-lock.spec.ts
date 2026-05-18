@@ -42,7 +42,7 @@ test.describe('Sponsor cards hover lock effect', () => {
   test('corner clips appear on hover', async ({ page }) => {
     const firstCard = page.locator('.sponsor-card').first()
 
-    const corners = firstCard.locator('[class*="corner-"]')
+    const corners = page.locator('#sponsors [class*="corner-"]')
     await expect(corners).toHaveCount(4)
 
     const initialOpacities = await corners.evaluateAll((els) =>

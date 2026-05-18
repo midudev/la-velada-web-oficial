@@ -229,11 +229,6 @@ const SPONSORS: Sponsor[] = [
                 title={name}
                 class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white outline-none transition duration-500 hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               >
-                <svg class="corner-tl pointer-events-none absolute top-1 left-1 size-3 opacity-0 sm:top-1.5 sm:left-1.5 sm:size-4" viewBox="0 0 12 12"><path d="M 1 9 L 1 1 L 9 1" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
-                <svg class="corner-tr pointer-events-none absolute top-1 right-1 size-3 opacity-0 sm:top-1.5 sm:right-1.5 sm:size-4" viewBox="0 0 12 12"><path d="M 11 9 L 11 1 L 3 1" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
-                <svg class="corner-bl pointer-events-none absolute bottom-1 left-1 size-3 opacity-0 sm:bottom-1.5 sm:left-1.5 sm:size-4" viewBox="0 0 12 12"><path d="M 1 3 L 1 11 L 9 11" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
-                <svg class="corner-br pointer-events-none absolute bottom-1 right-1 size-3 opacity-0 sm:bottom-1.5 sm:right-1.5 sm:size-4" viewBox="0 0 12 12"><path d="M 11 3 L 11 11 L 3 11" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
-
                 <Logo
                   aria-hidden="true"
                   class:list={[
@@ -248,6 +243,13 @@ const SPONSORS: Sponsor[] = [
           ))
         }
       </ul>
+    </div>
+
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <svg class="corner-tl absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 1 9 L 1 1 L 9 1" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
+      <svg class="corner-tr absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 11 9 L 11 1 L 3 1" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
+      <svg class="corner-bl absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 1 3 L 1 11 L 9 11" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
+      <svg class="corner-br absolute size-3 opacity-0 sm:size-4" viewBox="0 0 12 12" style="left: 0; top: 0;"><path d="M 11 3 L 11 11 L 3 11" fill="none" stroke="#c7a86b" stroke-width="1.5" stroke-linecap="square" /></svg>
     </div>
 
   </div>
@@ -310,26 +312,46 @@ const SPONSORS: Sponsor[] = [
   import { animate, hover } from 'motion'
   import { $ } from '@/lib/dom-selector'
 
-  const corners = [
-    ['.corner-tl', 6, 6],
-    ['.corner-tr', -6, 6],
-    ['.corner-bl', 6, -6],
-    ['.corner-br', -6, -6],
-  ]
+  let currentCard = null
+  let fadeOutTimeout = null
 
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     hover('.sponsor-card', (card) => {
+      if (fadeOutTimeout) {
+        clearTimeout(fadeOutTimeout)
+        fadeOutTimeout = null
+      }
+
+      currentCard = card
+
+      const section = card.closest('#sponsors')
+      const sectionRect = section.getBoundingClientRect()
+      const cardRect = card.getBoundingClientRect()
+
+      const isSm = window.matchMedia('(min-width: 640px)').matches
+      const inset = isSm ? 6 : 4
+      const cornerSize = isSm ? 16 : 12
+
+      const relativeLeft = cardRect.left - sectionRect.left
+      const relativeTop = cardRect.top - sectionRect.top
+
+      const positions = {
+        tl: { x: relativeLeft + inset, y: relativeTop + inset },
+        tr: { x: relativeLeft + cardRect.width - inset - cornerSize, y: relativeTop + inset },
+        bl: { x: relativeLeft + inset, y: relativeTop + cardRect.height - inset - cornerSize },
+        br: { x: relativeLeft + cardRect.width - inset - cornerSize, y: relativeTop + cardRect.height - inset - cornerSize },
+      }
+
       const logo = $('svg[aria-hidden="true"]', card)
 
-      corners.forEach(([sel, x, y]) => {
-        const el = $(sel, card)
+      Object.entries(positions).forEach(([key, pos]) => {
+        const el = $(`.corner-${key}`)
         if (!el) return
-        animate(el, { opacity: 1 }, { duration: 0.04, ease: [0.23, 1, 0.32, 1] })
-        animate(el, { x, y }, {
-          delay: 0.04,
+        animate(el, { opacity: 1 }, { duration: 0.06, ease: 'ease-out' })
+        animate(el, { x: pos.x, y: pos.y }, {
           type: 'spring',
           bounce: 0,
-          duration: 0.2,
+          duration: 0.25,
         })
       })
 
@@ -341,14 +363,20 @@ const SPONSORS: Sponsor[] = [
       }
 
       return () => {
-        corners.forEach(([sel]) => {
-          const el = $(sel, card)
-          if (!el) return
-          animate(el, { opacity: 0, x: 0, y: 0 }, { duration: 0.08, ease: 'ease-out' })
-        })
         if (logo) {
           animate(logo, { scale: 1 }, { duration: 0.05, ease: 'ease-out' })
         }
+
+        fadeOutTimeout = setTimeout(() => {
+          if (currentCard === card) {
+            Object.entries(positions).forEach(([key]) => {
+              const el = $(`.corner-${key}`)
+              if (!el) return
+              animate(el, { opacity: 0 }, { duration: 0.15 })
+            })
+          }
+          fadeOutTimeout = null
+        }, 100)
       }
     })
   }
