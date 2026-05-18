@@ -5,6 +5,7 @@ import Analytics from '@vercel/analytics/astro'
 import '@/styles/global.css'
 
 import { fixedTitle } from '@/consts/pageTitles'
+import Header from '@/sections/Header.astro'
 
 const SITE_URL = 'https://www.infolavelada.com'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og.jpg`
@@ -19,6 +20,8 @@ interface Props {
   ogImageAlt?: string
   ogUrl?: string
   ogType?: 'website' | 'article' | 'profile'
+  /** Site chrome; disable on full-bleed routes (e.g. combate detail). */
+  showHeader?: boolean
 }
 
 const {
@@ -30,6 +33,7 @@ const {
   ogImageAlt = DEFAULT_OG_ALT,
   ogUrl = canonical ?? SITE_URL,
   ogType = 'website',
+  showHeader = true,
 } = Astro.props
 
 // Datos estructurados globales (válidos para todas las páginas).
@@ -197,6 +201,7 @@ const organizationJsonLd = {
     <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-black focus:outline-none">
       Saltar al contenido principal
     </a>
+    {showHeader && <Header />}
     <main id="main-content">
       <slot />
     </main>
