@@ -2,7 +2,6 @@ import { defineCollection, z } from 'astro:content'
 
 const CHANNEL_ID = 'UC20NE0K97l6AsBeGKsAYtaA'
 const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
-const MAX_AGE_DAYS = 60
 
 interface ParsedEntry {
   videoId: string
@@ -50,9 +49,8 @@ const podcast = defineCollection({
         return []
       }
       const xml = await response.text()
-      const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000
       return parseFeed(xml)
-        .filter((entry) => new Date(entry.published).getTime() >= cutoff)
+        .filter((entry) => new Date(entry.published).getFullYear() === 2026)
         .map((entry) => ({
           id: entry.videoId,
           videoId: entry.videoId,

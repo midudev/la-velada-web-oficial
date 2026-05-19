@@ -8,7 +8,6 @@ const PUBLIC_DIR = path.join(__dirname, '../public')
 
 const CHANNEL_ID = 'UC20NE0K97l6AsBeGKsAYtaA'
 const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
-const MAX_AGE_DAYS = 60
 const PODCAST_THUMBNAILS_DIR = path.join(PUBLIC_DIR, 'podcast/thumbnails')
 
 const STATIC_THUMBNAILS = ['videos/thumbnails/presentacion.webp']
@@ -111,9 +110,7 @@ async function getRecentPodcastEpisodes() {
   }
 
   const xml = await response.text()
-  const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000
-
-  return parseFeed(xml).filter((entry) => new Date(entry.published).getTime() >= cutoff)
+  return parseFeed(xml).filter((entry) => new Date(entry.published).getFullYear() === 2026)
 }
 
 async function generatePodcastThumbnails() {

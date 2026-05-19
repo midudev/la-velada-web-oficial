@@ -99,168 +99,171 @@ function formatRelative(date: Date) {
 
         <span
           class="hidden font-cinzel text-[0.6rem] tracking-[0.25em] text-white/45 sm:inline-block"
+          data-podcast-count
         >
           {episodes.length} EPISODIO{episodes.length === 1 ? '' : 'S'}
         </span>
       </header>
 
-      {
-        episodes.length === 0 ? (
-          <div class="flex h-[28rem] items-center justify-center px-6 text-center font-cinzel text-xs tracking-[0.2em] text-white/55 sm:h-[32rem] sm:text-sm">
-            No hay episodios publicados en los últimos 2 meses.
-          </div>
-        ) : (
-          <div
-            class:list={[
-              '@container grid gap-px bg-white/10',
-              secondaryEpisodes.length > 0
-                ? 'lg:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)]'
-                : 'lg:grid-cols-1',
-            ]}
-          >
-            {featuredEpisode && (
-              <button
-                type="button"
-                data-video-tile
-                data-video-id={featuredEpisode.videoId}
-                data-video-title={featuredEpisode.title}
-                aria-label={`Reproducir episodio destacado: ${featuredEpisode.title}`}
-                class="group relative isolate flex aspect-video w-full cursor-pointer self-start overflow-hidden border border-white/10 bg-theme-navy/40 text-left transition duration-500 outline-none hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 lg:aspect-auto lg:h-[31.5cqw]"
-              >
-                <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
-                  <source srcset={featuredEpisode.thumbnail.avif} type="image/avif" />
-                  <source srcset={featuredEpisode.thumbnail.webp} type="image/webp" />
-                  <img
-                    src={featuredEpisode.thumbnail.webp}
-                    alt=""
+      <div data-podcast-content-wrapper data-static-ids={JSON.stringify(episodes.map(e => e.videoId))}>
+        {
+          episodes.length === 0 ? (
+            <div class="flex h-[28rem] items-center justify-center px-6 text-center font-cinzel text-xs tracking-[0.2em] text-white/55 sm:h-[32rem] sm:text-sm">
+              No hay episodios publicados en los últimos 2 meses.
+            </div>
+          ) : (
+            <div
+              class:list={[
+                '@container grid gap-px bg-white/10',
+                secondaryEpisodes.length > 0
+                  ? 'lg:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)]'
+                  : 'lg:grid-cols-1',
+              ]}
+            >
+              {featuredEpisode && (
+                <button
+                  type="button"
+                  data-video-tile
+                  data-video-id={featuredEpisode.videoId}
+                  data-video-title={featuredEpisode.title}
+                  aria-label={`Reproducir episodio destacado: ${featuredEpisode.title}`}
+                  class="group relative isolate flex aspect-video w-full cursor-pointer self-start overflow-hidden border border-white/10 bg-theme-navy/40 text-left transition duration-500 outline-none hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 lg:aspect-auto lg:h-[31.5cqw]"
+                >
+                  <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
+                    <source srcset={featuredEpisode.thumbnail.avif} type="image/avif" />
+                    <source srcset={featuredEpisode.thumbnail.webp} type="image/webp" />
+                    <img
+                      src={featuredEpisode.thumbnail.webp}
+                      alt=""
+                      aria-hidden="true"
+                      loading="eager"
+                      decoding="async"
+                      fetchpriority="high"
+                      class="h-full w-full object-cover"
+                    />
+                  </picture>
+                  <div
                     aria-hidden="true"
-                    loading="eager"
-                    decoding="async"
-                    fetchpriority="high"
-                    class="h-full w-full object-cover"
+                    class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
                   />
-                </picture>
-                <div
-                  aria-hidden="true"
-                  class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
-                />
-                <div
-                  aria-hidden="true"
-                  class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
-                />
-
-                <span
-                  class="absolute top-5 right-5 z-10 rounded-full border border-theme-gold/35 bg-black/35 px-3 py-1 font-cinzel text-[0.58rem] font-bold tracking-[0.24em] text-theme-gold backdrop-blur"
-                  aria-hidden="true"
-                >
-                  ÚLTIMO EPISODIO
-                </span>
-
-                <span
-                  aria-hidden="true"
-                  class="absolute inset-0 -z-10 flex items-center justify-center"
-                >
-                  <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
-                    <PlayIcon
-                      class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
-                      aria-hidden="true"
-                    />
-                  </span>
-                </span>
-
-                <div class="relative mt-auto flex w-full flex-col gap-2 p-5 sm:p-8">
-                  <time
-                    datetime={featuredEpisode.published.toISOString()}
-                    title={dateFormatter.format(featuredEpisode.published)}
-                    class="font-cinzel text-[0.65rem] font-bold tracking-[0.3em] text-theme-gold"
+                  <div
+                    aria-hidden="true"
+                    class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
+                  />
+  
+                  <span
+                    class="absolute top-5 right-5 z-10 rounded-full border border-theme-gold/35 bg-black/35 px-3 py-1 font-cinzel text-[0.58rem] font-bold tracking-[0.24em] text-theme-gold backdrop-blur"
+                    aria-hidden="true"
                   >
-                    {formatRelative(featuredEpisode.published)}
-                  </time>
-                  <h3 class="max-w-2xl font-cinzel text-2xl leading-tight font-bold tracking-[0.05em] text-balance text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl">
-                    {featuredEpisode.title}
-                  </h3>
-                  <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
-                    VER EPISODIO
-                    <ArrowRightIcon
-                      class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
-                      stroke-width="2.5"
-                      aria-hidden="true"
-                    />
+                    ÚLTIMO EPISODIO
                   </span>
-                </div>
-              </button>
-            )}
-
-            {secondaryEpisodes.length > 0 && (
-              <ul
-                class="podcast-scroll grid max-h-[34rem] gap-px overflow-y-auto sm:grid-cols-2 lg:max-h-[31.5cqw] lg:grid-cols-1"
-                data-podcast-list
-              >
-                {secondaryEpisodes.map((episode, index) => (
-                  <li>
-                    <button
-                      type="button"
-                      data-video-tile
-                      data-video-id={episode.videoId}
-                      data-video-title={episode.title}
-                      aria-label={`Reproducir episodio: ${episode.title}`}
-                      class="group grid h-full w-full grid-cols-[5rem_1fr] gap-3 bg-theme-midnight/60 p-3 text-left transition duration-300 outline-none hover:bg-theme-navy/55 focus-visible:bg-theme-navy/55 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-inset sm:grid-cols-[6rem_1fr] sm:p-4 lg:grid-cols-[7.5rem_1fr]"
+  
+                  <span
+                    aria-hidden="true"
+                    class="absolute inset-0 -z-10 flex items-center justify-center"
+                  >
+                    <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
+                      <PlayIcon
+                        class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </span>
+  
+                  <div class="relative mt-auto flex w-full flex-col gap-2 p-5 sm:p-8">
+                    <time
+                      datetime={featuredEpisode.published.toISOString()}
+                      title={dateFormatter.format(featuredEpisode.published)}
+                      class="font-cinzel text-[0.65rem] font-bold tracking-[0.3em] text-theme-gold"
                     >
-                      <span class="relative block aspect-video overflow-hidden rounded-lg border border-white/10 bg-black/30">
-                        <picture class="absolute inset-0 transition duration-500 group-hover:scale-105 group-focus-visible:scale-105">
-                          <source srcset={episode.thumbnail.avif} type="image/avif" />
-                          <source srcset={episode.thumbnail.webp} type="image/webp" />
-                          <img
-                            src={episode.thumbnail.webp}
-                            alt=""
+                      {formatRelative(featuredEpisode.published)}
+                    </time>
+                    <h3 class="max-w-2xl font-cinzel text-2xl leading-tight font-bold tracking-[0.05em] text-balance text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl">
+                      {featuredEpisode.title}
+                    </h3>
+                    <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
+                      VER EPISODIO
+                      <ArrowRightIcon
+                        class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                        stroke-width="2.5"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </div>
+                </button>
+              )}
+  
+              {secondaryEpisodes.length > 0 && (
+                <ul
+                  class="podcast-scroll grid max-h-[34rem] gap-px overflow-y-auto sm:grid-cols-2 lg:max-h-[31.5cqw] lg:grid-cols-1"
+                  data-podcast-list
+                >
+                  {secondaryEpisodes.map((episode, index) => (
+                    <li>
+                      <button
+                        type="button"
+                        data-video-tile
+                        data-video-id={episode.videoId}
+                        data-video-title={episode.title}
+                        aria-label={`Reproducir episodio: ${episode.title}`}
+                        class="group grid h-full w-full grid-cols-[5rem_1fr] gap-3 bg-theme-midnight/60 p-3 text-left transition duration-300 outline-none hover:bg-theme-navy/55 focus-visible:bg-theme-navy/55 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-inset sm:grid-cols-[6rem_1fr] sm:p-4 lg:grid-cols-[7.5rem_1fr]"
+                      >
+                        <span class="relative block aspect-video overflow-hidden rounded-lg border border-white/10 bg-black/30">
+                          <picture class="absolute inset-0 transition duration-500 group-hover:scale-105 group-focus-visible:scale-105">
+                            <source srcset={episode.thumbnail.avif} type="image/avif" />
+                            <source srcset={episode.thumbnail.webp} type="image/webp" />
+                            <img
+                              src={episode.thumbnail.webp}
+                              alt=""
+                              aria-hidden="true"
+                              loading="lazy"
+                              decoding="async"
+                              class="h-full w-full object-cover"
+                            />
+                          </picture>
+                          <span
                             aria-hidden="true"
-                            loading="lazy"
-                            decoding="async"
-                            class="h-full w-full object-cover"
-                          />
-                        </picture>
-                        <span
-                          aria-hidden="true"
-                          class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
-                        >
-                          <span class="flex size-7 items-center justify-center rounded-full bg-theme-gold/90 text-theme-midnight">
-                            <PlayIcon class="size-3.5 translate-x-[1px]" aria-hidden="true" />
-                          </span>
-                        </span>
-                      </span>
-
-                      <div class="flex min-w-0 flex-col justify-between gap-3">
-                        <span class="flex items-start justify-between gap-3">
-                          <span class="font-cinzel text-[0.62rem] font-bold tracking-[0.22em] text-theme-gold/75">
-                            E{String(secondaryEpisodes.length - index).padStart(2, '0')}
-                          </span>
-                          <ChevronRightIcon
-                            aria-hidden="true"
-                            class="size-4 shrink-0 text-white/30 transition duration-300 group-hover:translate-x-1 group-hover:text-theme-gold group-focus-visible:translate-x-1 group-focus-visible:text-theme-gold"
-                          />
-                        </span>
-
-                        <div class="flex flex-col gap-1">
-                          <h3 class="line-clamp-2 font-cinzel text-sm leading-tight font-bold tracking-[0.04em] text-balance text-white transition duration-300 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-base">
-                            {episode.title}
-                          </h3>
-                          <time
-                            datetime={episode.published.toISOString()}
-                            title={dateFormatter.format(episode.published)}
-                            class="font-cinzel text-[0.58rem] tracking-[0.24em] text-white/45"
+                            class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
                           >
-                            {formatRelative(episode.published)}
-                          </time>
+                            <span class="flex size-7 items-center justify-center rounded-full bg-theme-gold/90 text-theme-midnight">
+                              <PlayIcon class="size-3.5 translate-x-[1px]" aria-hidden="true" />
+                            </span>
+                          </span>
+                        </span>
+  
+                        <div class="flex min-w-0 flex-col justify-between gap-3">
+                          <span class="flex items-start justify-between gap-3">
+                            <span class="font-cinzel text-[0.62rem] font-bold tracking-[0.22em] text-theme-gold/75">
+                              E{String(secondaryEpisodes.length - index).padStart(2, '0')}
+                            </span>
+                            <ChevronRightIcon
+                              aria-hidden="true"
+                              class="size-4 shrink-0 text-white/30 transition duration-300 group-hover:translate-x-1 group-hover:text-theme-gold group-focus-visible:translate-x-1 group-focus-visible:text-theme-gold"
+                            />
+                          </span>
+  
+                          <div class="flex flex-col gap-1">
+                            <h3 class="line-clamp-2 font-cinzel text-sm leading-tight font-bold tracking-[0.04em] text-balance text-white transition duration-300 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-base">
+                              {episode.title}
+                            </h3>
+                            <time
+                              datetime={episode.published.toISOString()}
+                              title={dateFormatter.format(episode.published)}
+                              class="font-cinzel text-[0.58rem] tracking-[0.24em] text-white/45"
+                            >
+                              {formatRelative(episode.published)}
+                            </time>
+                          </div>
                         </div>
-                      </div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )
-      }
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )
+        }
+      </div>
     </div>
   </div>
 </section>
@@ -292,3 +295,283 @@ function formatRelative(date: Date) {
     background-color: var(--color-theme-cream);
   }
 </style>
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  interface PodcastEpisode {
+    videoId: string
+    title: string
+    published: string
+  }
+
+  function escapeHtml(text: string): string {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;')
+  }
+
+  async function updatePodcastFeed() {
+    const wrapper = $<HTMLElement>('[data-podcast-content-wrapper]')
+    const countEl = $<HTMLElement>('[data-podcast-count]')
+    if (!wrapper) return
+
+    try {
+      const response = await fetch('/api/podcast')
+      if (!response.ok) return
+
+      const fetchedEpisodes: PodcastEpisode[] = await response.json()
+      const staticIds: string[] = JSON.parse(wrapper.dataset.staticIds || '[]')
+      const fetchedIds = fetchedEpisodes.map((e) => e.videoId)
+
+      // If the list is identical, do nothing to prevent layout shift and unnecessary re-renders
+      if (JSON.stringify(staticIds) === JSON.stringify(fetchedIds)) {
+        return
+      }
+
+      if (fetchedEpisodes.length === 0) {
+        wrapper.innerHTML = `
+          <div class="flex h-[28rem] items-center justify-center px-6 text-center font-cinzel text-xs tracking-[0.2em] text-white/55 sm:h-[32rem] sm:text-sm">
+            No hay episodios publicados en los últimos 2 meses.
+          </div>
+        `
+        if (countEl) countEl.textContent = '0 EPISODIOS'
+        return
+      }
+
+      const [featured, ...secondaries] = fetchedEpisodes
+
+      const rtf = new Intl.RelativeTimeFormat('es', { numeric: 'auto' })
+      const dateFormatter = new Intl.DateTimeFormat('es', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      })
+
+      function formatRelativeClient(date: Date) {
+        const diffMs = date.getTime() - Date.now()
+        const diffHours = Math.round(diffMs / (1000 * 60 * 60))
+        const diffDays = Math.round(diffHours / 24)
+        if (Math.abs(diffHours) < 24) {
+          return rtf.format(diffHours, 'hour')
+        }
+        if (Math.abs(diffDays) < 30) {
+          return rtf.format(diffDays, 'day')
+        }
+        return rtf.format(Math.round(diffDays / 30), 'month')
+      }
+
+      function getThumbnailSources(videoId: string) {
+        if (staticIds.includes(videoId)) {
+          return `
+            <source srcset="/podcast/thumbnails/${videoId}.avif" type="image/avif" />
+            <source srcset="/podcast/thumbnails/${videoId}.webp" type="image/webp" />
+            <img
+              src="/podcast/thumbnails/${videoId}.webp"
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover"
+            />
+          `
+        } else {
+          return `
+            <source srcset="https://i.ytimg.com/vi_webp/${videoId}/maxresdefault.webp" type="image/webp" />
+            <img
+              src="https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg"
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover"
+            />
+          `
+        }
+      }
+
+      let html = `
+        <div class="@container grid gap-px bg-white/10 ${
+          secondaries.length > 0
+            ? 'lg:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)]'
+            : 'lg:grid-cols-1'
+        }">
+      `
+
+      if (featured) {
+        const publishedDate = new Date(featured.published)
+        const isoString = publishedDate.toISOString()
+        const formattedTitle = dateFormatter.format(publishedDate)
+        const relativeTime = formatRelativeClient(publishedDate)
+
+        html += `
+          <button
+            type="button"
+            data-video-tile
+            data-video-id="${featured.videoId}"
+            data-video-title="${escapeHtml(featured.title)}"
+            aria-label="Reproducir episodio destacado: ${escapeHtml(featured.title)}"
+            class="group relative isolate flex aspect-video w-full cursor-pointer self-start overflow-hidden border border-white/10 bg-theme-navy/40 text-left transition duration-500 outline-none hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 lg:aspect-auto lg:h-[31.5cqw]"
+          >
+            <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
+              ${getThumbnailSources(featured.videoId).replace('loading="lazy"', 'loading="eager" fetchpriority="high"')}
+            </picture>
+            <div
+              aria-hidden="true"
+              class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
+            />
+            <div
+              aria-hidden="true"
+              class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
+            />
+
+            <span
+              class="absolute top-5 right-5 z-10 rounded-full border border-theme-gold/35 bg-black/35 px-3 py-1 font-cinzel text-[0.58rem] font-bold tracking-[0.24em] text-theme-gold backdrop-blur"
+              aria-hidden="true"
+            >
+              ÚLTIMO EPISODIO
+            </span>
+
+            <span
+              aria-hidden="true"
+              class="absolute inset-0 -z-10 flex items-center justify-center"
+            >
+              <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
+                <svg class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" /></svg>
+              </span>
+            </span>
+
+            <div class="relative mt-auto flex w-full flex-col gap-2 p-5 sm:p-8">
+              <time
+                datetime="${isoString}"
+                title="${formattedTitle}"
+                class="font-cinzel text-[0.65rem] font-bold tracking-[0.3em] text-theme-gold"
+              >
+                ${relativeTime}
+              </time>
+              <h3 class="max-w-2xl font-cinzel text-2xl leading-tight font-bold tracking-[0.05em] text-balance text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl">
+                ${escapeHtml(featured.title)}
+              </h3>
+              <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
+                VER EPISODIO
+                <svg class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+              </span>
+            </div>
+          </button>
+        `
+      }
+
+      if (secondaries.length > 0) {
+        html += `
+          <ul
+            class="podcast-scroll grid max-h-[34rem] gap-px overflow-y-auto sm:grid-cols-2 lg:max-h-[31.5cqw] lg:grid-cols-1"
+            data-podcast-list
+          >
+        `
+
+        secondaries.forEach((episode, index) => {
+          const publishedDate = new Date(episode.published)
+          const isoString = publishedDate.toISOString()
+          const formattedTitle = dateFormatter.format(publishedDate)
+          const relativeTime = formatRelativeClient(publishedDate)
+          const episodeNum = String(secondaries.length - index).padStart(2, '0')
+
+          html += `
+            <li>
+              <button
+                type="button"
+                data-video-tile
+                data-video-id="${episode.videoId}"
+                data-video-title="${escapeHtml(episode.title)}"
+                aria-label="Reproducir episodio: ${escapeHtml(episode.title)}"
+                class="group grid h-full w-full grid-cols-[5rem_1fr] gap-3 bg-theme-midnight/60 p-3 text-left transition duration-300 outline-none hover:bg-theme-navy/55 focus-visible:bg-theme-navy/55 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-inset sm:grid-cols-[6rem_1fr] sm:p-4 lg:grid-cols-[7.5rem_1fr]"
+              >
+                <span class="relative block aspect-video overflow-hidden rounded-lg border border-white/10 bg-black/30">
+                  <picture class="absolute inset-0 transition duration-500 group-hover:scale-105 group-focus-visible:scale-105">
+                    ${getThumbnailSources(episode.videoId)}
+                  </picture>
+                  <span
+                    aria-hidden="true"
+                    class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+                  >
+                    <span class="flex size-7 items-center justify-center rounded-full bg-theme-gold/90 text-theme-midnight">
+                      <svg class="size-3.5 translate-x-[1px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" /></svg>
+                    </span>
+                  </span>
+                </span>
+
+                <div class="flex min-w-0 flex-col justify-between gap-3">
+                  <span class="flex items-start justify-between gap-3">
+                    <span class="font-cinzel text-[0.62rem] font-bold tracking-[0.22em] text-theme-gold/75">
+                      E${episodeNum}
+                    </span>
+                    <svg aria-hidden="true" class="size-4 shrink-0 text-white/30 transition duration-300 group-hover:translate-x-1 group-hover:text-theme-gold group-focus-visible:translate-x-1 group-focus-visible:text-theme-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                  </span>
+
+                  <div class="flex flex-col gap-1">
+                    <h3 class="line-clamp-2 font-cinzel text-sm leading-tight font-bold tracking-[0.04em] text-balance text-white transition duration-300 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-base">
+                      ${escapeHtml(episode.title)}
+                    </h3>
+                    <time
+                      datetime="${isoString}"
+                      title="${formattedTitle}"
+                      class="font-cinzel text-[0.58rem] tracking-[0.24em] text-white/45"
+                    >
+                      ${relativeTime}
+                    </time>
+                  </div>
+                </div>
+              </button>
+            </li>
+          `
+        })
+
+        html += `</ul>`
+      }
+
+      html += `</div>`
+
+      wrapper.innerHTML = html
+
+      if (countEl) {
+        countEl.textContent = `${fetchedEpisodes.length} EPISODIO${fetchedEpisodes.length === 1 ? '' : 'S'}`
+      }
+
+      // Re-bind video tiles click listener for dynamic elements
+      const newTiles = $$('[data-video-tile]', wrapper)
+      newTiles.forEach((tile) => {
+        tile.addEventListener('click', () => {
+          const dialog = $<HTMLDialogElement>('#video-dialog')
+          if (!dialog) return
+
+          const titleEl = $('[data-video-dialog-title]', dialog)
+          const frame = $('[data-video-dialog-frame]', dialog)
+          if (!frame) return
+
+          const videoId = tile.getAttribute('data-video-id')
+          const title = tile.getAttribute('data-video-title') ?? ''
+          if (!videoId) return
+
+          if (titleEl) titleEl.textContent = title
+          const iframe = document.createElement('iframe')
+          iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&playsinline=1`
+          iframe.allow =
+            'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+          iframe.setAttribute('allowfullscreen', '')
+          iframe.title = title
+          iframe.className = 'h-full w-full border-0'
+          frame.replaceChildren(iframe)
+          dialog.showModal()
+        })
+      })
+    } catch (error) {
+      console.error('[podcast script] Error actualizando feed del podcast:', error)
+    }
+  }
+
+  document.addEventListener('astro:page-load', updatePodcastFeed)
+</script>
+
