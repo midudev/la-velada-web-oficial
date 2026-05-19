@@ -26,8 +26,6 @@ const linkClass =
 
 const svgClass = 'block h-9 w-auto shrink-0 origin-center sm:h-10'
 
-const states: Variants = { rest: {}, hover: {}, tap: {} }
-
 const pathDraw: Variants = {
   rest: { pathLength: 0, transition: { pathLength: springPath } },
   hover: { pathLength: 1, transition: { pathLength: springPath } },
@@ -68,14 +66,12 @@ function useMobileMenuOpen() {
       document.addEventListener(mobileMenuToggleEvent, handleToggle)
       return () => document.removeEventListener(mobileMenuToggleEvent, handleToggle)
     },
-    getMobileMenuOpenSnapshot,
+    () => mobileMenuOpen,
     () => false,
   )
 }
 
 let mobileMenuOpen = false
-
-const getMobileMenuOpenSnapshot = () => mobileMenuOpen
 
 export default function LogoHomeLink({ children }: { children: ReactNode }) {
   const reduceMotion = useReducedMotion()
@@ -101,7 +97,6 @@ export default function LogoHomeLink({ children }: { children: ReactNode }) {
         href="/"
         className={linkClass}
         aria-label="La Velada del Año VI - Inicio"
-        variants={states}
         initial="rest"
         animate={menuOpen ? 'hover' : 'rest'}
         whileHover="hover"
