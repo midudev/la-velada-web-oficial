@@ -3,6 +3,7 @@ import TikTokIcon from '@/assets/svg/tiktok.svg'
 import TwitchIcon from '@/assets/svg/twitch.svg'
 import YoutubeIcon from '@/assets/svg/youtube.svg'
 import InfojobsLogo from '@/assets/sponsors/infojobs.svg'
+import { withUtm } from '@/lib/utm'
 
 const PREVIOUS_EDITIONS = [
   {
@@ -14,6 +15,11 @@ const PREVIOUS_EDITIONS = [
     url: 'https://2024.infolavelada.com/',
   },
 ]
+
+const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
+  medium: 'footer_link',
+  content: 'infojobs',
+})
 ---
 
 <footer class="relative isolate w-full px-4 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16">
@@ -141,9 +147,9 @@ const PREVIOUS_EDITIONS = [
       <div class="flex items-center gap-x-3 text-white/75">
         <span class="font-cinzel tracking-[0.25em] text-white/55">WEB PATROCINADA POR</span>
         <a
-          href="https://www.infojobs.net/"
+          href={INFOJOBS_FOOTER_URL}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="sponsored noopener noreferrer"
           aria-label="Ir a la página web de InfoJobs"
           style="--brand: #167db7;"
           class="group inline-flex items-center text-white transition duration-300 hover:-translate-y-0.5 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand)]"
