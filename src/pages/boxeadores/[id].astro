@@ -5,11 +5,11 @@ import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import BoxerSocials from '@/components/BoxerSocials.astro'
 import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
+import CountryFlag from '@/components/CountryFlag.astro'
 import { battles } from '@/consts/battles'
 import {
   BOXERS,
   BOXERS_BY_ID,
-  COUNTRY_FLAGS,
   COUNTRY_NAMES,
   GENDER_LABELS,
   getBoxerHeroImages,
@@ -41,7 +41,6 @@ if (!boxer) return Astro.redirect('/404')
 
 const heroImages = getBoxerHeroImages(boxer)
 const photo = getBoxerPhoto(boxer)
-const flag = COUNTRY_FLAGS[boxer.country] ?? ''
 const countryName = COUNTRY_NAMES[boxer.country] ?? boxer.country
 const genderLabel = GENDER_LABELS[boxer.gender]
 
@@ -232,7 +231,12 @@ const breadcrumbJsonLd = {
               </span>
             )}
             <span class="boxer-detail-chip">
-              <span aria-hidden="true">{flag}</span>
+              <CountryFlag
+                country={boxer.country}
+                size={16}
+                decorative
+                class="boxer-detail-chip-flag"
+              />
               {countryName}
             </span>
             <span class="boxer-detail-chip">{genderLabel}</span>
@@ -377,6 +381,12 @@ const breadcrumbJsonLd = {
       font-size: 0.65rem;
       padding: 0.45rem 0.95rem;
     }
+  }
+
+  :global(.boxer-detail-chip-flag) {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
   }
 
   .boxer-detail-chip-strong {

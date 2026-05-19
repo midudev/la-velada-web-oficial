@@ -1,9 +1,10 @@
 ---
+import CountryFlag from '@/components/CountryFlag.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 import { battles } from '@/consts/battles'
 import {
   BOXERS,
   BOXERS_BY_ID,
-  COUNTRY_FLAGS,
   COUNTRY_NAMES,
   getBoxerHeroImages,
   getBoxerSelectImages,
@@ -101,7 +102,6 @@ const positionedBoxers: Array<{
 // no dejar el panel vacío antes de que el JS reaccione a una interacción).
 const fallback = BOXERS[0]
 const fallbackHero = getBoxerHeroImages(fallback)
-const fallbackFlag = COUNTRY_FLAGS[fallback.country] ?? ''
 const fallbackCountry = COUNTRY_NAMES[fallback.country] ?? fallback.country
 const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 ---
@@ -230,11 +230,15 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           class="boxer-country mt-1 flex items-center gap-x-2 font-cinzel text-[0.6rem] font-bold tracking-[0.3em] text-theme-cream sm:mt-1.5 sm:text-[0.7rem] md:mt-2 md:text-xs"
           aria-live="polite"
         >
-          <span
-            class="boxer-country-flag text-sm leading-none sm:text-base md:text-lg"
-            aria-hidden="true"
+          <img
             data-active-flag
-          >{fallbackFlag}</span>
+            src={`/flags/${fallback.country}.svg`}
+            alt=""
+            aria-hidden="true"
+            width="20"
+            height="20"
+            class="boxer-country-flag"
+          />
           <span data-active-country-name>{fallbackCountry}</span>
         </p>
       </div>
@@ -245,14 +249,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     class="boxer-cta-bar relative z-20 mt-auto mb-1 flex w-full flex-col items-center px-4 pt-1 sm:mb-2 sm:pt-2"
     aria-hidden="false"
   >
-    <div
-      class="boxer-default-divider flex items-center justify-center gap-3 sm:gap-4"
-      aria-hidden="true"
-    >
-      <span class="h-px w-10 bg-linear-to-r from-transparent to-theme-gold/55 sm:w-20"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/85"></span>
-      <span class="h-px w-10 bg-linear-to-l from-transparent to-theme-gold/55 sm:w-20"></span>
-    </div>
+    <SectionDivider class="boxer-default-divider" />
 
     <p
       class="boxer-default-cta mt-3 text-center font-cinzel text-sm font-bold tracking-[0.3em] text-theme-cream sm:mt-4 sm:text-base"
@@ -340,7 +337,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
             },
             index,
           ) => {
-            const flag = COUNTRY_FLAGS[boxer.country] ?? ''
             const countryName = COUNTRY_NAMES[boxer.country] ?? boxer.country
             const selectImages = getBoxerSelectImages(boxer)
             const heroImages = getBoxerHeroImages(boxer)
@@ -353,7 +349,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                 data-name={boxer.name}
                 data-photo-avif={heroImages.avif}
                 data-photo-webp={heroImages.webp}
-                data-flag={flag}
+                data-country-code={boxer.country}
                 data-country={countryName}
                 aria-label={`Ver perfil de ${boxer.name}`}
                 data-active="false"
@@ -640,7 +636,24 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   .boxer-country-flag {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+  }
+
+  @media (min-width: 640px) {
+    .boxer-country-flag {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .boxer-country-flag {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
   }
 
   .boxer-portrait-layer {
@@ -1156,7 +1169,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     const watermarkTexts = Array.from(
       $$<HTMLElement>('[data-active-watermark-text]', root),
     )
-    const flagNode = $<HTMLElement>('[data-active-flag]', root)
+    const flagNode = $<HTMLImageElement>('[data-active-flag]', root)
     const countryNode = $<HTMLElement>('[data-active-country-name]', root)
     const defaultPanel = $<HTMLElement>('[data-default-panel]', root)
     const boxerPanel = $<HTMLElement>('[data-boxer-panel]', root)
@@ -1209,7 +1222,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     /** Aplica el contenido (imagen, nombre, watermark, bandera, país) al
      *  panel del boxer. No toca el state ni las clases is-switching. */
     function applyBoxerContent(thumb: HTMLAnchorElement) {
-      const { name, photoAvif, photoWebp, flag, country } = thumb.dataset
+      const { name, photoAvif, photoWebp, countryCode, country } = thumb.dataset
       if (!name || !photoWebp) return
 
       // Actualizamos las sources del <picture> antes del src del <img>
@@ -1224,7 +1237,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         node.textContent = name
       })
 
-      if (flagNode && flag) flagNode.textContent = flag
+      if (flagNode && countryCode) flagNode.src = `/flags/${countryCode}.svg`
       if (countryNode && country) countryNode.textContent = country
     }
 
