@@ -1,4 +1,6 @@
 ---
+import SectionDivider from '@/components/SectionDivider.astro'
+
 interface Props {
   titleId: string
   title: string
@@ -26,11 +28,7 @@ const {
 
 {
   !hideDivider && (
-    <div class:list={['mb-8 flex items-center gap-4', dividerClass]} aria-hidden="true">
-      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-    </div>
+    <SectionDivider class:list={['mb-8', dividerClass]} />
   )
 }
 
