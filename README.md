@@ -40,7 +40,7 @@ La Velada VI es una competición de boxeo que enfrenta a streamers, creadores de
 
 ### Capturas de pantalla de la web de La Velada VI
 
-![Captura de pantalla de la home de La Velada VI](https://github.com/tonyblu331/la-velada-web-oficial/releases/download/readme-homepage-vi-assets/readme-homepage-vi.png)
+![Captura de pantalla de la home de La Velada VI](https://github.com/midudev/la-velada-web-oficial/releases/download/readme-homepage-vi-assets/readme-homepage-vi.png)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
