@@ -8,21 +8,21 @@
 [![Issues][issues-shield]][issues-url]
 
 <a href="https://www.infolavelada.com/" target="_blank" rel="noopener noreferrer">
-  <img width="300px" src="https://github.com/user-attachments/assets/9cb3d500-8b37-400a-a983-6a6d1a9356a2" alt="Logo" width="800" />
+  <img width="300px" src="./public/logo.webp" alt="Logo de La Velada del Año VI" />
 </a>
 
-## Web oficial de La Velada V
+## Web oficial de La Velada VI
 
-La Velada V es una competición de boxeo que enfrenta a streamers, creadores de contenido y otras celebridades sobre un ring· [Reportar error](https://github.com/midudev/la-velada-web-oficial/issues) · [Sugerir algo](https://github.com/midudev/la-velada-web-oficial/issues)
+La Velada VI es una competición de boxeo que enfrenta a streamers, creadores de contenido y otras celebridades sobre un ring. [Reportar error](https://github.com/midudev/la-velada-web-oficial/issues) · [Sugerir algo](https://github.com/midudev/la-velada-web-oficial/issues)
 
 </div>
 
 <details>
 <summary>Tabla de contenidos</summary>
 
-- [Web oficial de La Velada V](#web-oficial-de-la-velada-v)
+- [Web oficial de La Velada VI](#web-oficial-de-la-velada-vi)
 - [Características principales](#características-principales)
-  - [Capturas de pantalla de la web de La Velada V](#capturas-de-pantalla-de-la-web-de-la-velada-v)
+  - [Capturas de pantalla de la web de La Velada VI](#capturas-de-pantalla-de-la-web-de-la-velada-vi)
 - [Para empezar](#para-empezar)
   - [Prerequisitos](#prerequisitos)
   - [Instalación](#instalación)
@@ -38,9 +38,9 @@ La Velada V es una competición de boxeo que enfrenta a streamers, creadores de 
 - **Compra de boletos**: Permite a los usuarios dirigirlos a la compra de boletos fácilmente.
 - **Redes sociales**: Conoce las redes oficiales donde podrás informarte sobre el evento.
 
-### Capturas de pantalla de la web de La Velada V
+### Capturas de pantalla de la web de La Velada VI
 
-![Captura de pantalla](https://github.com/user-attachments/assets/9c63299b-db80-49e5-a566-2b99405230e3)
+![Captura de pantalla de la home de La Velada VI](https://github.com/tonyblu331/la-velada-web-oficial/releases/download/readme-homepage-vi-assets/readme-homepage-vi.png)
 
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
