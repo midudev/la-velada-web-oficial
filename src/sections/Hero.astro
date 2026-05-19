@@ -36,16 +36,6 @@ const timestamp = EVENT_DATE.getTime()
 
     <div class="absolute inset-0 z-1 bg-linear-to-b from-black/40 via-transparent to-theme-midnight/80" aria-hidden="true"></div>
 
-    {/*
-      El "hero principal" (logo + selector + CTA + grid) ocupa siempre
-      AL MENOS 100vh. El countdown vive como hermano debajo, así que
-      cuando el contenido del header crece más allá del viewport sigue
-      siendo cómodo y no queda apretado contra el countdown.
-
-      Padding inferior reducido (`pb-3 lg:pb-5`) para que la cuadrícula
-      de boxers, anclada al bottom del hero, quede más cerca del
-      countdown sin pegarse al borde.
-    */}
     <header class="relative z-10 flex min-h-screen w-full flex-col items-center justify-start px-4 pt-14 pb-3 text-center sm:pt-16 lg:pb-5">
       <h1 class="sr-only">
         La Velada del Año VI — Evento de boxeo amateur entre streamers organizado por Ibai
@@ -64,22 +54,22 @@ const timestamp = EVENT_DATE.getTime()
         aria-label="Cuenta atrás para La Velada del Año VI"
       >
         <div class="flex flex-col items-center gap-1 [--countdown-width:3ch]">
-          <span data-days class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">---</span>
+          <span data-days class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl"><span></span><span></span><span></span></span>
           <span class="w-full text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">DÍAS</span>
         </div>
         <span class="countdown-separator font-cinzel text-2xl font-bold text-theme-cream sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
         <div class="flex flex-col items-center gap-1 [--countdown-width:2ch]">
-          <span data-hours class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span data-hours class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl"><span></span><span></span></span>
           <span class="w-full text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">HORAS</span>
         </div>
         <span class="countdown-separator font-cinzel text-2xl font-bold text-theme-cream sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
         <div class="flex flex-col items-center gap-1 [--countdown-width:2ch]">
-          <span data-minutes class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span data-minutes class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl"><span></span><span></span></span>
           <span class="w-full text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">MIN</span>
         </div>
         <span class="countdown-separator font-cinzel text-2xl font-bold text-theme-cream sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
         <div class="flex flex-col items-center gap-1 [--countdown-width:2ch]">
-          <span data-seconds class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span data-seconds class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl"><span></span><span></span></span>
           <span class="w-full text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">SEG</span>
         </div>
       </div>
@@ -103,12 +93,15 @@ const timestamp = EVENT_DATE.getTime()
     }
 
     .countdown-digit {
-      display: inline-flex;
-      justify-content: center;
       width: var(--countdown-width);
       text-shadow: 0 0 30px rgba(199, 168, 107, 0.2);
       line-height: 1;
-      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .countdown-digit span {
+      display: inline-block;
+      width: 1ch;
+      text-align: center;
     }
 
     .countdown-separator {
@@ -125,7 +118,7 @@ const timestamp = EVENT_DATE.getTime()
       const hero = $<HTMLElement>('[data-hero]')
       if (!hero) return
 
-      let stopCountdown: (() => void) | null = null
+      let intervalId = 0
       const countdown = $<HTMLElement>('#countdown-hero')
       if (countdown) {
         const days = $('[data-days]', countdown)
@@ -135,43 +128,41 @@ const timestamp = EVENT_DATE.getTime()
         const target = Number(countdown.dataset.date)
 
         if (Number.isFinite(target)) {
-          const pad = (n: number) => String(Math.floor(n)).padStart(2, '0')
           const tick = () => {
             const ms = target - Date.now()
-            if (ms <= 0) return clearInterval(id)
-            if (days) days.textContent = pad(ms / 86400000)
-            if (hours) hours.textContent = pad((ms % 86400000) / 3600000)
-            if (minutes) minutes.textContent = pad((ms % 3600000) / 60000)
-            if (seconds) seconds.textContent = pad((ms % 60000) / 1000)
+            if (ms <= 0) return clearInterval(intervalId)
+            const d = String(Math.floor(ms / 86400000))
+            const h = String(Math.floor((ms % 86400000) / 3600000)).padStart(2, '0')
+            const m = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0')
+            const s = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')
+            if (days) for (let i = 0; i < 3; i++) days.children[i].textContent = d[i] ?? ''
+            if (hours) for (let i = 0; i < 2; i++) hours.children[i].textContent = h[i]
+            if (minutes) for (let i = 0; i < 2; i++) minutes.children[i].textContent = m[i]
+            if (seconds) for (let i = 0; i < 2; i++) seconds.children[i].textContent = s[i]
           }
-          const id = window.setInterval(tick, 1000)
+
+          intervalId = window.setInterval(tick, 1000)
           tick()
-          stopCountdown = () => clearInterval(id)
         }
       }
 
-      let abortParallax: (() => void) | null = null
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      if (!reduceMotion) {
-        const controller = new AbortController()
-        const { signal } = controller
-        abortParallax = () => controller.abort()
-
+      let onScroll = () => {}
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         const MAX_SCALE = 0.18
-        const update = () => {
-          const heroHeight = hero.offsetHeight || window.innerHeight
-          const progress = Math.min(Math.max(window.scrollY / heroHeight, 0), 1)
-          hero.style.setProperty('--hero-bg-scale', String(1 + progress * MAX_SCALE))
+        onScroll = () => {
+          const h = hero.offsetHeight || window.innerHeight
+          const p = Math.min(Math.max(window.scrollY / h, 0), 1)
+          hero.style.setProperty('--hero-bg-scale', String(1 + p * MAX_SCALE))
         }
-
-        update()
-        window.addEventListener('scroll', update, { passive: true, signal })
-        window.addEventListener('resize', update, { passive: true, signal })
+        onScroll()
+        window.addEventListener('scroll', onScroll, { passive: true })
+        window.addEventListener('resize', onScroll, { passive: true })
       }
 
       document.addEventListener('astro:before-preparation', () => {
-        stopCountdown?.()
-        abortParallax?.()
+        clearInterval(intervalId)
+        window.removeEventListener('scroll', onScroll)
+        window.removeEventListener('resize', onScroll)
       }, { once: true })
     })
   </script>
