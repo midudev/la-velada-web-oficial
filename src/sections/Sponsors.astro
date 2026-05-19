@@ -405,62 +405,62 @@ const SPONSORS: Sponsor[] = [
   const sponsorItems = $$('.sponsors-grid li')
   const corners = $$<SVGElement>('.corner-grid svg')
 
-  if (reducedMotion.matches) return
+  if (!reducedMotion.matches) {
+    section?.classList.add('motion-ready')
 
-  section?.classList.add('motion-ready')
-
-  const reveal = (elements: Element[], delayStep = 0.05) => {
-    elements.forEach((el, i) => {
-      animate(el, { opacity: [0, 1], y: [20, 0] }, { duration: 0.6, delay: i * delayStep, ease: 'ease-out' })
-    })
-  }
-
-  if (header) {
-    inView(header, (el) => {
-      animate(el, { opacity: [0, 1], y: [16, 0] }, { duration: 0.7, ease: 'ease-out' })
-    })
-  }
-
-  inView('.sponsors-promos', () => reveal(promoBanners, 0.08))
-  inView('.sponsors-grid', () => reveal(sponsorItems, 0.045))
-
-  if (grid) {
-    hover('.sponsor-card', (card) => {
-      const gridRect = grid.getBoundingClientRect()
-      const cardRect = card.getBoundingClientRect()
-      const offset = 4
-      const size = 12
-
-      const positions = [
-        [cardRect.left - gridRect.left + offset, cardRect.top - gridRect.top + offset],
-        [cardRect.right - gridRect.left - offset - size, cardRect.top - gridRect.top + offset],
-        [cardRect.left - gridRect.left + offset, cardRect.bottom - gridRect.top - offset - size],
-        [cardRect.right - gridRect.left - offset - size, cardRect.bottom - gridRect.top - offset - size],
-      ]
-
-      corners.forEach((corner, i) => {
-        if (corner) animate(corner, { x: positions[i][0], y: positions[i][1], opacity: 1 }, { type: 'spring', stiffness: 400, damping: 25 })
+    const reveal = (elements: Element[], delayStep = 0.05) => {
+      elements.forEach((el, i) => {
+        animate(el, { opacity: [0, 1], y: [20, 0] }, { duration: 0.6, delay: i * delayStep, ease: 'ease-out' })
       })
+    }
 
-      const logo = $('[data-sponsor-logo]', card)
-      if (logo) animate(logo, { scale: 0.96 }, { duration: 0.2 })
+    if (header) {
+      inView(header, (el) => {
+        animate(el, { opacity: [0, 1], y: [16, 0] }, { duration: 0.7, ease: 'ease-out' })
+      })
+    }
+
+    inView('.sponsors-promos', () => reveal(promoBanners, 0.08))
+    inView('.sponsors-grid', () => reveal(sponsorItems, 0.045))
+
+    if (grid) {
+      hover('.sponsor-card', (card) => {
+        const gridRect = grid.getBoundingClientRect()
+        const cardRect = card.getBoundingClientRect()
+        const offset = 4
+        const size = 12
+
+        const positions = [
+          [cardRect.left - gridRect.left + offset, cardRect.top - gridRect.top + offset],
+          [cardRect.right - gridRect.left - offset - size, cardRect.top - gridRect.top + offset],
+          [cardRect.left - gridRect.left + offset, cardRect.bottom - gridRect.top - offset - size],
+          [cardRect.right - gridRect.left - offset - size, cardRect.bottom - gridRect.top - offset - size],
+        ]
+
+        corners.forEach((corner, i) => {
+          if (corner) animate(corner, { x: positions[i][0], y: positions[i][1], opacity: 1 }, { type: 'spring', stiffness: 400, damping: 25 })
+        })
+
+        const logo = $('[data-sponsor-logo]', card)
+        if (logo) animate(logo, { scale: 0.96 }, { duration: 0.2 })
+
+        return () => {
+          if (logo) animate(logo, { scale: 1 }, { duration: 0.2 })
+          corners.forEach((corner) => {
+            if (corner) animate(corner, { opacity: 0 }, { duration: 0.15 })
+          })
+        }
+      })
+    }
+
+    hover('.promo-banner', (banner) => {
+      const img = $<HTMLImageElement>('.banner-img', banner)
+      if (!img) return
+      animate(img, { scale: 1 }, { duration: 0.3 })
 
       return () => {
-        if (logo) animate(logo, { scale: 1 }, { duration: 0.2 })
-        corners.forEach((corner) => {
-          if (corner) animate(corner, { opacity: 0 }, { duration: 0.15 })
-        })
+        animate(img, { scale: 1.02 }, { duration: 0.3 })
       }
     })
   }
-
-  hover('.promo-banner', (banner) => {
-    const img = $<HTMLImageElement>('.banner-img', banner)
-    if (!img) return
-    animate(img, { scale: 1 }, { duration: 0.3 })
-
-    return () => {
-      animate(img, { scale: 1.02 }, { duration: 0.3 })
-    }
-  })
 </script>
