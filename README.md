@@ -92,14 +92,13 @@ La Velada V es una competición de boxeo que enfrenta a streamers, creadores de 
   ```
 
   </details>
-
-	- PNPM (es nuestra recomendación por su eficiencia y rapidez)
+  - PNPM (es nuestra recomendación por su eficiencia y rapidez)
 
   ```sh
   npm install -g pnpm
   ```
 
-	- o NPM
+  - o NPM
 
   ```sh
   npm install npm@latest -g
@@ -120,7 +119,6 @@ La Velada V es una competición de boxeo que enfrenta a streamers, creadores de 
    ```
 
 3. Ejecuta el proyecto
-
    - Base de datos remota (necesario linkear con proyecto de Astro Studio)
 
    ```sh
@@ -157,7 +155,7 @@ Aquí tienes una guía rápida:
 6. Haz Push a la Rama (`git push origin feature/CaracteristicaIncreible`)
 7. Abre una [_pull request_](https://github.com/midudev/la-velada-web-oficial/pulls)
 
-Por favor, consulta nuestra [guía de contribución](https://github.com/midudev/la-velada-web-oficial/blob/master/CONTRIBUTING.md) para saber cómo puedes empezar de la mejor manera y siguiendo [buenas prácticas](https://github.com/midudev/la-velada-web-oficial/blob/main/CONTRIBUTING.md#buenas-prácticas-).
+Por favor, consulta nuestra [guía de contribución](https://github.com/midudev/la-velada-web-oficial/blob/main/CONTRIBUTING.md) para saber cómo puedes empezar de la mejor manera y siguiendo [buenas prácticas](https://github.com/midudev/la-velada-web-oficial/blob/main/CONTRIBUTING.md#buenas-prácticas-).
 
 ### Contribuir desde Stackblitz
 
