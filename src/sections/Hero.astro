@@ -53,8 +53,8 @@ const timestamp = EVENT_DATE.getTime()
         role="timer"
         aria-label="Cuenta atrás para La Velada del Año VI"
       >
-        <div class="flex flex-col items-center gap-1 [--countdown-width:3ch]">
-          <span data-days class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl"><span></span><span></span><span></span></span>
+        <div class="flex flex-col items-center gap-1 [--countdown-width:4ch]">
+          <span data-days class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl"><span></span><span></span><span></span><span></span></span>
           <span class="w-full text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">DÍAS</span>
         </div>
         <span class="countdown-separator font-cinzel text-2xl font-bold text-theme-cream sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
@@ -135,7 +135,7 @@ const timestamp = EVENT_DATE.getTime()
             const h = String(Math.floor((ms % 86400000) / 3600000)).padStart(2, '0')
             const m = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0')
             const s = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')
-            if (days) for (let i = 0; i < 3; i++) days.children[i].textContent = d[i] ?? ''
+            if (days) for (let i = 0; i < 4; i++) days.children[i].textContent = d[i] ?? ''
             if (hours) for (let i = 0; i < 2; i++) hours.children[i].textContent = h[i]
             if (minutes) for (let i = 0; i < 2; i++) minutes.children[i].textContent = m[i]
             if (seconds) for (let i = 0; i < 2; i++) seconds.children[i].textContent = s[i]
