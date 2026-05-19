@@ -179,9 +179,13 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="edition-link inline-flex min-h-8 items-center justify-center px-1 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+                    class="group/edition relative inline-flex min-h-8 items-center justify-center px-1 outline-none transition-colors duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:text-theme-cream [@media(hover:hover)_and_(pointer:fine)]:hover:delay-[125ms] focus-visible:text-theme-cream focus-visible:delay-[125ms] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
                     aria-label={`Ir a la web de La Velada del Año ${year}`}
                   >
+                    <span
+                      aria-hidden="true"
+                      class="pointer-events-none absolute inset-x-1 bottom-1 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-150 ease-out delay-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover/edition:scale-x-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover/edition:delay-[125ms] group-focus-visible/edition:scale-x-100 group-focus-visible/edition:delay-[125ms]"
+                    />
                     {year}
                   </a>
                 </li>
@@ -225,43 +229,5 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
   .footer-noise {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
     mask-image: linear-gradient(to bottom, transparent 0%, #000 100%);
-  }
-
-  .edition-link {
-    position: relative;
-    transition: color 150ms ease-out;
-  }
-
-  .edition-link::after {
-    content: '';
-    position: absolute;
-    inset-inline: 0.25rem;
-    bottom: 0.25rem;
-    height: 1px;
-    background: var(--color-theme-gold);
-    transform: scaleX(0);
-    transition: transform 150ms ease-out;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .edition-link:hover {
-      color: var(--color-theme-cream);
-      transition-delay: 125ms;
-    }
-
-    .edition-link:hover::after {
-      transform: scaleX(1);
-      transition-delay: 125ms;
-    }
-  }
-
-  .edition-link:focus-visible {
-    color: var(--color-theme-cream);
-    transition-delay: 125ms;
-  }
-
-  .edition-link:focus-visible::after {
-    transform: scaleX(1);
-    transition-delay: 125ms;
   }
 </style>
