@@ -5,7 +5,6 @@ import {
   m,
   useReducedMotion,
   type Transition,
-  type Variants,
 } from 'motion/react'
 
 const crest = {
@@ -14,9 +13,6 @@ const crest = {
   fill: 'oklch(0.765 0.038 55.5)',
 } as const
 
-const easeOut = [0.23, 1, 0.32, 1] as const
-
-/** Same spring on draw-in and draw-out (pathLength). */
 const springPath: Transition = { type: 'spring', stiffness: 260, damping: 32, bounce: 0 }
 const springScale: Transition = { type: 'spring', stiffness: 180, damping: 28, bounce: 0.04 }
 const springPress: Transition = { type: 'spring', stiffness: 480, damping: 34, bounce: 0 }
@@ -26,30 +22,31 @@ const linkClass =
 
 const svgClass = 'block h-9 w-auto shrink-0 origin-center sm:h-10'
 
-const pathDraw: Variants = {
-  rest: { pathLength: 0, transition: { pathLength: springPath } },
+// Shared path animation states (mask draw + stroke trace share rest/tap)
+const pathRest = { pathLength: 0, transition: { pathLength: springPath } }
+const pathTap = { pathLength: 1 }
+
+const pathDraw = {
+  rest: pathRest,
   hover: { pathLength: 1, transition: { pathLength: springPath } },
-  tap: { pathLength: 1 },
+  tap: pathTap,
 }
 
-const pathTrace: Variants = {
-  rest: pathDraw.rest,
-  hover: {
-    pathLength: 1,
-    transition: { pathLength: { ...springPath, delay: 0.16 } },
-  },
-  tap: { pathLength: 1 },
+const pathTrace = {
+  rest: pathRest,
+  hover: { pathLength: 1, transition: { pathLength: { ...springPath, delay: 0.16 } } },
+  tap: pathTap,
 }
 
-const crestVariants: Variants = {
+const crestVariants = {
   rest: { scale: 1, transition: springScale },
   hover: { scale: 1.03, transition: springScale },
   tap: { scale: 0.98, transition: springPress },
 }
 
-const fillFade: Variants = {
-  rest: { opacity: 1, transition: { duration: 0.35, ease: easeOut } },
-  hover: { opacity: 0, transition: { duration: 0.38, ease: easeOut, delay: 0.45 } },
+const fillFade = {
+  rest: { opacity: 1, transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] } },
+  hover: { opacity: 0, transition: { duration: 0.38, ease: [0.23, 1, 0.32, 1], delay: 0.45 } },
   tap: { opacity: 0 },
 }
 
