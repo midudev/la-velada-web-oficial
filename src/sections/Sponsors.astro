@@ -445,14 +445,14 @@ const SPONSORS: Sponsor[] = [
           const [x, y] = positions[i]
 
           if (cornersVisible) {
-            animate(corner, { x, y, opacity: 1 }, { type: 'spring', stiffness: 700, damping: 60, restDelta: 0.001 })
+            animate(corner, { x, y, opacity: 1 }, { type: 'spring', stiffness: 700, damping: 60 })
           } else {
             const [ox, oy] = OUTWARD[i]
-            animate(corner, { x: x + ox, y: y + oy, opacity: 0 }, { duration: 0 })
-            animate(corner, { x, y, opacity: 1 }, {
-              type: 'spring', stiffness: 700, damping: 60, restDelta: 0.001,
-              delay: 0.05 + i * 0.04,
-            })
+            animate(corner, {
+              x: [x + ox, x],
+              y: [y + oy, y],
+              opacity: [0, 1],
+            }, { type: 'spring', stiffness: 700, damping: 60 })
           }
         })
 
