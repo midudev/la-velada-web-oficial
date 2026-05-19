@@ -19,7 +19,6 @@ interface Sponsor {
   url: string
   label: string
   Logo: typeof MaxibonLogo
-  /** Tailwind classes para ajustar el tamaño óptico del logo dentro de la tarjeta. */
   logoClass: string
 }
 
@@ -163,12 +162,18 @@ const SPONSORS: Sponsor[] = [
   class="relative w-full overflow-hidden px-4 py-20 sm:px-6 lg:py-28"
   aria-labelledby="sponsors-title"
 >
-  <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-theme-gold/30 to-transparent" />
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-theme-gold/30 to-transparent"
+  />
 
-  <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-72 bg-[radial-gradient(ellipse_at_top,_#c7a86b_0%,_transparent_70%)] opacity-[0.05]" />
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-72 bg-[radial-gradient(ellipse_at_top,_var(--color-theme-gold)_0%,_transparent_70%)] opacity-[0.05]"
+  />
 
   <div class="relative mx-auto flex max-w-6xl flex-col items-center">
-    <div class="sponsors-header">
+    <div class="sponsors-header motion-hidden">
       <SectionHeader
         titleId="sponsors-title"
         title="PATROCINADORES"
@@ -203,7 +208,8 @@ const SPONSORS: Sponsor[] = [
               rel="sponsored noopener noreferrer"
               aria-label={label}
               title={name}
-              class="promo-banner group relative block w-full overflow-hidden rounded-md ring-1 ring-theme-gold/25 outline-none hover:ring-theme-gold/45 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+              class="promo-banner motion-hidden group relative block w-full overflow-hidden rounded-md ring-1 ring-theme-gold/25 outline-none hover:ring-theme-gold/45 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+              style={`animation-delay:${850 + index * 90}ms`}
             >
               <picture>
                 <source srcset={mobileAvifSrc} media="(max-width: 639px)" type="image/avif" />
@@ -230,7 +236,7 @@ const SPONSORS: Sponsor[] = [
       <ul class="sponsors-grid" role="list">
         {
           SPONSORS.map(({ name, slug, url, label, Logo, logoClass }, index) => (
-            <li class="animate-fade-in-up" style={`animation-delay:${1100 + index * 65}ms`}>
+            <li class="motion-hidden" style={`animation-delay:${1100 + index * 65}ms`}>
               <a
                 href={withUtm(url, { medium: 'sponsor_card', content: slug })}
                 target="_blank"
@@ -252,13 +258,20 @@ const SPONSORS: Sponsor[] = [
       </ul>
 
       <div class="corner-grid" aria-hidden="true">
-        <svg class="corner-tl" viewBox="0 0 12 12"><path d="M 1 9 L 1 1 L 9 1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" /></svg>
-        <svg class="corner-tr" viewBox="0 0 12 12"><path d="M 11 9 L 11 1 L 3 1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" /></svg>
-        <svg class="corner-bl" viewBox="0 0 12 12"><path d="M 1 3 L 1 11 L 9 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" /></svg>
-        <svg class="corner-br" viewBox="0 0 12 12"><path d="M 11 3 L 11 11 L 3 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" /></svg>
+        <svg class="corner-tl" viewBox="0 0 12 12">
+          <path d="M 1 9 L 1 1 L 9 1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+        </svg>
+        <svg class="corner-tr" viewBox="0 0 12 12">
+          <path d="M 11 9 L 11 1 L 3 1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+        </svg>
+        <svg class="corner-bl" viewBox="0 0 12 12">
+          <path d="M 1 3 L 1 11 L 9 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+        </svg>
+        <svg class="corner-br" viewBox="0 0 12 12">
+          <path d="M 11 3 L 11 11 L 3 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+        </svg>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -267,22 +280,9 @@ const SPONSORS: Sponsor[] = [
     scale: 1.02;
   }
 
-  .sponsors-motion-ready .sponsors-header {
-    opacity: 0;
-    transform: translateY(16px);
-    filter: blur(10px);
-  }
-
-  .sponsors-motion-ready .sponsors-promos .promo-banner {
-    opacity: 0;
-    transform: translateY(24px);
-    filter: blur(12px);
-  }
-
-  .sponsors-motion-ready .sponsors-grid li {
+  .motion-hidden {
     opacity: 0;
     transform: translateY(20px);
-    filter: blur(10px);
   }
 
   .sponsor-card {
@@ -299,12 +299,12 @@ const SPONSORS: Sponsor[] = [
     transition: transform 300ms;
   }
 
-  .sponsor-card:hover {
+  .sponsor-card:hover,
+  .sponsor-card:focus-visible {
     transform: translateY(-0.25rem);
   }
 
   .sponsor-card:focus-visible {
-    transform: translateY(-0.25rem);
     box-shadow:
       0 0 0 2px color-mix(in srgb, var(--color-theme-gold) 60%, transparent),
       0 0 0 4px var(--color-theme-midnight);
@@ -379,10 +379,7 @@ const SPONSORS: Sponsor[] = [
       transform: none;
     }
 
-    .sponsors-header,
-    .sponsors-promos .promo-banner,
-    .sponsors-grid li {
-      filter: none;
+    .motion-hidden {
       opacity: 1;
       transform: none;
     }
@@ -401,7 +398,6 @@ const SPONSORS: Sponsor[] = [
   import { animate, hover, inView } from 'motion'
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-  const smQuery = window.matchMedia('(min-width: 640px)')
   const section = $('#sponsors')
   const grid = $('[data-corner-grid]')
   const header = $('.sponsors-header')
@@ -409,154 +405,62 @@ const SPONSORS: Sponsor[] = [
   const sponsorItems = $$('.sponsors-grid li')
   const corners = $$<SVGElement>('.corner-grid svg')
 
-  if (!reducedMotion.matches) {
-    section?.classList.add('sponsors-motion-ready')
+  if (reducedMotion.matches) return
 
-    const EASE_OUT = [0.16, 1, 0.3, 1]
-    const REVEAL_VIEWPORT = { amount: 0.42, margin: '0px 0px -18% 0px' } as const
-    const OUTWARD = [[-4, -16], [4, -16], [-4, 16], [4, 16]]
+  section?.classList.add('motion-ready')
 
-    if (header) {
-      inView(header, (el) => {
-        animate(el, { opacity: [0, 1], y: [18, 0], filter: ['blur(10px)', 'blur(0px)'] }, {
-          duration: 0.8,
-          ease: EASE_OUT,
-        })
-      }, REVEAL_VIEWPORT)
-    }
+  const reveal = (elements: Element[], delayStep = 0.05) => {
+    elements.forEach((el, i) => {
+      animate(el, { opacity: [0, 1], y: [20, 0] }, { duration: 0.6, delay: i * delayStep, ease: 'ease-out' })
+    })
+  }
 
-    inView('.sponsors-promos', () => {
-      promoBanners.forEach((banner, index) => {
-        animate(banner, { opacity: [0, 1], y: [28, 0], filter: ['blur(12px)', 'blur(0px)'] }, {
-          duration: 0.75,
-          ease: EASE_OUT,
-          delay: index * 0.08,
-        })
+  if (header) {
+    inView(header, (el) => {
+      animate(el, { opacity: [0, 1], y: [16, 0] }, { duration: 0.7, ease: 'ease-out' })
+    })
+  }
+
+  inView('.sponsors-promos', () => reveal(promoBanners, 0.08))
+  inView('.sponsors-grid', () => reveal(sponsorItems, 0.045))
+
+  if (grid) {
+    hover('.sponsor-card', (card) => {
+      const gridRect = grid.getBoundingClientRect()
+      const cardRect = card.getBoundingClientRect()
+      const offset = 4
+      const size = 12
+
+      const positions = [
+        [cardRect.left - gridRect.left + offset, cardRect.top - gridRect.top + offset],
+        [cardRect.right - gridRect.left - offset - size, cardRect.top - gridRect.top + offset],
+        [cardRect.left - gridRect.left + offset, cardRect.bottom - gridRect.top - offset - size],
+        [cardRect.right - gridRect.left - offset - size, cardRect.bottom - gridRect.top - offset - size],
+      ]
+
+      corners.forEach((corner, i) => {
+        if (corner) animate(corner, { x: positions[i][0], y: positions[i][1], opacity: 1 }, { type: 'spring', stiffness: 400, damping: 25 })
       })
-    }, REVEAL_VIEWPORT)
 
-    inView('.sponsors-grid', () => {
-      sponsorItems.forEach((item, index) => {
-        animate(item, { opacity: [0, 1], y: [26, 0], filter: ['blur(10px)', 'blur(0px)'] }, {
-          duration: 0.65,
-          ease: EASE_OUT,
-          delay: index * 0.045,
-        })
-      })
-    }, REVEAL_VIEWPORT)
-
-    if (grid) {
-      let activeCard: Element | null = null
-      let hoverId = 0
-      let cornersVisible = false
-      let hideTimer: ReturnType<typeof setTimeout> | null = null
-      const lockTimers: ReturnType<typeof setTimeout>[] = []
-      const revealFrames: number[] = []
-
-      hover('.sponsor-card', (card) => {
-        const currentHoverId = ++hoverId
-        activeCard = card
-        if (hideTimer) {
-          clearTimeout(hideTimer)
-          hideTimer = null
-        }
-        lockTimers.forEach(clearTimeout)
-        lockTimers.length = 0
-        revealFrames.forEach(cancelAnimationFrame)
-        revealFrames.length = 0
-
-        const gridRect = grid.getBoundingClientRect()
-        const cardRect = card.getBoundingClientRect()
-        const sm = smQuery.matches
-        const inset = sm ? 6 : 4
-        const size = sm ? 16 : 12
-
-        const x0 = cardRect.left - gridRect.left + inset
-        const y0 = cardRect.top - gridRect.top + inset
-        const x1 = cardRect.right - gridRect.left - inset - size
-        const y1 = cardRect.bottom - gridRect.top - inset - size
-
-        for (let i = 0; i < 4; i++) {
-          const corner = corners[i]
-          if (!corner) continue
-          const x = (i % 2 === 0 ? x0 : x1)
-          const y = (i < 2 ? y0 : y1)
-          const originX = x + OUTWARD[i][0]
-          const originY = y + OUTWARD[i][1]
-
-          if (cornersVisible) {
-            animate(corner, { opacity: 1 }, { duration: 0 })
-            animate(corner, { x: originX, y: originY }, {
-              type: 'spring', stiffness: 700, damping: 60, restDelta: 0.001,
-            })
-          } else {
-            animate(corner, { x: originX, y: originY, opacity: 0 }, { duration: 0 })
-
-            const frame = requestAnimationFrame(() => {
-              if (activeCard !== card || currentHoverId !== hoverId) return
-              animate(corner, { opacity: 1 }, {
-                duration: 0.14,
-                ease: 'ease-out',
-              })
-            })
-            revealFrames.push(frame)
-
-          }
-
-          lockTimers.push(setTimeout(() => {
-            if (activeCard !== card || currentHoverId !== hoverId) return
-            cornersVisible = true
-            animate(corner, { x, y }, {
-              type: 'spring', stiffness: 700, damping: 60, restDelta: 0.001,
-            })
-          }, 50 + i * 40))
-        }
-
-        const logo = $('[data-sponsor-logo]', card)
-        if (logo) animate(logo, { scale: 0.96 }, {
-          type: 'spring', stiffness: 500, damping: 60, restDelta: 0.001,
-        })
-
-        return () => {
-          if (logo) animate(logo, { scale: 1 }, {
-            type: 'spring', stiffness: 500, damping: 60, restDelta: 0.001,
-          })
-
-          if (activeCard !== card) return
-
-          activeCard = null
-          hoverId++
-          const exitHoverId = hoverId
-          lockTimers.forEach(clearTimeout)
-          lockTimers.length = 0
-          revealFrames.forEach(cancelAnimationFrame)
-          revealFrames.length = 0
-
-          hideTimer = setTimeout(() => {
-            if (activeCard || exitHoverId !== hoverId) return
-
-            for (let i = 0; i < 4; i++) {
-              const corner = corners[i]
-              if (corner) animate(corner, { opacity: 0 }, { duration: 0.08, ease: 'ease-out' })
-            }
-
-            hideTimer = setTimeout(() => {
-              if (!activeCard && exitHoverId === hoverId) cornersVisible = false
-              hideTimer = null
-            }, 90)
-          }, 180)
-        }
-      })
-    }
-
-    hover('.promo-banner', (banner) => {
-      const img = $<HTMLImageElement>('.banner-img', banner)
-      if (!img) return
-      animate(img, { scale: 1 }, { type: 'spring', stiffness: 500, damping: 60, restDelta: 0.001 })
+      const logo = $('[data-sponsor-logo]', card)
+      if (logo) animate(logo, { scale: 0.96 }, { duration: 0.2 })
 
       return () => {
-        animate(img, { scale: 1.02 }, { type: 'spring', stiffness: 500, damping: 60, restDelta: 0.001 })
+        if (logo) animate(logo, { scale: 1 }, { duration: 0.2 })
+        corners.forEach((corner) => {
+          if (corner) animate(corner, { opacity: 0 }, { duration: 0.15 })
+        })
       }
     })
   }
+
+  hover('.promo-banner', (banner) => {
+    const img = $<HTMLImageElement>('.banner-img', banner)
+    if (!img) return
+    animate(img, { scale: 1 }, { duration: 0.3 })
+
+    return () => {
+      animate(img, { scale: 1.02 }, { duration: 0.3 })
+    }
+  })
 </script>
