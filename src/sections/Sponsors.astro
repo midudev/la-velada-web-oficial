@@ -424,6 +424,9 @@ const SPONSORS: Sponsor[] = [
     inView('.sponsors-grid', () => reveal(sponsorItems, 0.045))
 
     if (grid) {
+      const OUTWARD = [[-4, -16], [4, -16], [-4, 16], [4, 16]]
+      let cornersVisible = false
+
       hover('.sponsor-card', (card) => {
         const gridRect = grid.getBoundingClientRect()
         const cardRect = card.getBoundingClientRect()
@@ -438,16 +441,32 @@ const SPONSORS: Sponsor[] = [
         ]
 
         corners.forEach((corner, i) => {
-          if (corner) animate(corner, { x: positions[i][0], y: positions[i][1], opacity: 1 }, { type: 'spring', stiffness: 400, damping: 25 })
+          if (!corner) return
+          const [x, y] = positions[i]
+
+          if (cornersVisible) {
+            animate(corner, { x, y, opacity: 1 }, { type: 'spring', stiffness: 700, damping: 60, restDelta: 0.001 })
+          } else {
+            const [ox, oy] = OUTWARD[i]
+            animate(corner, { x: x + ox, y: y + oy, opacity: 0 }, { duration: 0 })
+            animate(corner, { x, y, opacity: 1 }, {
+              type: 'spring', stiffness: 700, damping: 60, restDelta: 0.001,
+              delay: 0.05 + i * 0.04,
+            })
+          }
         })
 
+        cornersVisible = true
+
         const logo = $('[data-sponsor-logo]', card)
-        if (logo) animate(logo, { scale: 0.96 }, { duration: 0.2 })
+        if (logo) animate(logo, { scale: 0.96 }, { type: 'spring', stiffness: 500, damping: 60 })
 
         return () => {
-          if (logo) animate(logo, { scale: 1 }, { duration: 0.2 })
+          if (logo) animate(logo, { scale: 1 }, { type: 'spring', stiffness: 500, damping: 60 })
+
+          cornersVisible = false
           corners.forEach((corner) => {
-            if (corner) animate(corner, { opacity: 0 }, { duration: 0.15 })
+            if (corner) animate(corner, { opacity: 0 }, { duration: 0.08, ease: 'ease-out' })
           })
         }
       })
