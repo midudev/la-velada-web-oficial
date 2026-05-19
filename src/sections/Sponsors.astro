@@ -493,13 +493,13 @@ const SPONSORS: Sponsor[] = [
             if (activeCard || exitHoverId !== hoverId) return
             for (let i = 0; i < 4; i++) {
               const c = corners[i]
-              if (c) animate(c, { opacity: 0 }, { duration: 0.12, ease: 'ease-out' })
+              if (c) animate(c, { opacity: 0 }, { duration: 0.08, ease: 'ease-out' })
             }
             hideTimer = setTimeout(() => {
               if (!activeCard && exitHoverId === hoverId) cornersVisible = false
               hideTimer = null
-            }, 100)
-          }, 250)
+            }, 60)
+          }, 150)
         }
       })
     }
