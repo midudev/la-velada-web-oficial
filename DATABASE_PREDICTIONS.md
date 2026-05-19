@@ -1,6 +1,6 @@
-# Base de Datos de Predicciones - La Velada del Año V
+# Base de Datos de Predicciones - La Velada del Año VI
 
-Esta documentación describe la configuración y uso de la base de datos de predicciones para La Velada del Año V.
+Esta documentación describe la configuración y uso de la base de datos de predicciones para La Velada del Año VI.
 
 ## Configuración
 

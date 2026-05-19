@@ -1,8 +1,8 @@
 # CONTRIBUTING.md
 
-## Bienvenido a 'La velada del año 5' 🌌
+## Bienvenido a 'La Velada del Año VI' 🌌
 
-¡Estamos encantados de que estés interesado en contribuir a nuestro proyecto! Este documento te guiará a través de los pasos necesarios para aportar tu valioso trabajo a 'La velada del año 5', un proyecto desarrollado con Astro. Queremos hacer de este proceso algo sencillo y transparente, así que aquí tienes una guía paso a paso.
+¡Estamos encantados de que estés interesado en contribuir a nuestro proyecto! Este documento te guiará a través de los pasos necesarios para aportar tu valioso trabajo a 'La Velada del Año VI', un proyecto desarrollado con Astro. Queremos hacer de este proceso algo sencillo y transparente, así que aquí tienes una guía paso a paso.
 
 ### Primeros pasos 🚀
 
@@ -35,7 +35,7 @@
 
 - **Commit de tus cambios**: Una vez estés satisfecho con tus cambios, haz commit de ellos con un mensaje claro y descriptivo.
 - **Push a tu fork**: Haz push de tu rama con los cambios a tu fork en GitHub utilizando `git push origin nombre-de-tu-rama`.
-- **Crea un Pull Request (PR)**: En GitHub, ve a tu fork de 'La velada del año 5' y haz clic en "Pull request" para iniciar uno. Asegúrate de describir claramente qué cambios has realizado y por qué son necesarios o útiles para el proyecto.
+- **Crea un Pull Request (PR)**: En GitHub, ve a tu fork de 'La Velada del Año VI' y haz clic en "Pull request" para iniciar uno. Asegúrate de describir claramente qué cambios has realizado y por qué son necesarios o útiles para el proyecto.
 
 ### Buenas prácticas 🌟
 
@@ -51,4 +51,4 @@
 
 Si tienes alguna pregunta o necesitas ayuda, no dudes en abrir un "issue" en el repositorio. Nuestro equipo y la comunidad estarán encantados de ayudarte.
 
-¡Gracias por contribuir a 'La velada del año 5'! Juntos estamos construyendo algo increíble. 🚀
+¡Gracias por contribuir a 'La Velada del Año VI'! Juntos estamos construyendo algo increíble. 🚀
