@@ -1,5 +1,5 @@
 ---
-import VeladaLogo from '@/assets/svg/logo.svg'
+import SectionDivider from '@/components/SectionDivider.astro'
 
 interface Props {
   titleId: string
@@ -24,11 +24,7 @@ const {
 } = Astro.props
 ---
 
-<div class:list={['mb-8 flex items-center gap-4', dividerClass]} aria-hidden="true">
-  <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-  <VeladaLogo class="h-[1.125rem] w-[1.125rem] shrink-0 text-theme-gold [&_path]:stroke-current [&_path]:stroke-[9] [&_path]:stroke-linejoin-round" />
-  <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-</div>
+<SectionDivider class:list={['mb-8', dividerClass]} />
 
 {
   eyebrow && (
