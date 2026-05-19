@@ -1,0 +1,57 @@
+---
+import VeladaLogo from '@/assets/svg/logo.svg'
+
+type Size = 'sm' | 'md' | 'lg'
+
+interface Props {
+  size?: Size
+  class?: string
+}
+
+const { size = 'md', class: className } = Astro.props
+
+// Estilos por variante. Mantenemos la proporción "línea + icono" que ya
+// se usaba en SectionHeader, y derivamos versiones más compactas (sm)
+// y más amplias (lg) para hero/section titles del resto del sitio.
+const sizes: Record<Size, { line: string; icon: string; gap: string }> = {
+  sm: {
+    line: 'w-8 sm:w-16',
+    icon: 'h-3 w-3',
+    gap: 'gap-2 sm:gap-3',
+  },
+  md: {
+    line: 'w-12 sm:w-24',
+    icon: 'h-[1.125rem] w-[1.125rem]',
+    gap: 'gap-3 sm:gap-4',
+  },
+  lg: {
+    line: 'w-16 sm:w-28',
+    icon: 'h-5 w-5',
+    gap: 'gap-4 sm:gap-5',
+  },
+}
+
+const config = sizes[size]
+---
+
+<div
+  class:list={['flex items-center justify-center', config.gap, className]}
+  aria-hidden="true"
+>
+  <span
+    class:list={[
+      'h-px bg-linear-to-r from-transparent to-theme-gold/45',
+      config.line,
+    ]}></span>
+  <VeladaLogo
+    class:list={[
+      config.icon,
+      'shrink-0 text-theme-gold [&_path]:stroke-current [&_path]:stroke-[3] [&_path]:stroke-linejoin-round',
+    ]}
+  />
+  <span
+    class:list={[
+      'h-px bg-linear-to-l from-transparent to-theme-gold/45',
+      config.line,
+    ]}></span>
+</div>
