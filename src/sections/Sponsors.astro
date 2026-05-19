@@ -448,11 +448,11 @@ const SPONSORS: Sponsor[] = [
             animate(corner, { x, y, opacity: 1 }, { type: 'spring', stiffness: 700, damping: 60 })
           } else {
             const [ox, oy] = OUTWARD[i]
-            animate(corner, {
-              x: [x + ox, x],
-              y: [y + oy, y],
-              opacity: [0, 1],
-            }, { type: 'spring', stiffness: 700, damping: 60 })
+            animate(corner, { x: x + ox, y: y + oy, opacity: 0 }, { duration: 0 })
+            requestAnimationFrame(() => {
+              animate(corner, { opacity: 1 }, { duration: 0.14, ease: 'ease-out' })
+              animate(corner, { x, y }, { type: 'spring', stiffness: 700, damping: 60 })
+            })
           }
         })
 
