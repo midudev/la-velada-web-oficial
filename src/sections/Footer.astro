@@ -3,6 +3,7 @@ import TikTokIcon from '@/assets/svg/tiktok.svg'
 import TwitchIcon from '@/assets/svg/twitch.svg'
 import YoutubeIcon from '@/assets/svg/youtube.svg'
 import InfojobsLogo from '@/assets/sponsors/infojobs.svg'
+import { withUtm } from '@/lib/utm'
 
 const PREVIOUS_EDITIONS = [
   {
@@ -14,6 +15,11 @@ const PREVIOUS_EDITIONS = [
     url: 'https://2024.infolavelada.com/',
   },
 ]
+
+const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
+  medium: 'footer_link',
+  content: 'infojobs',
+})
 ---
 
 <footer class="relative isolate w-full px-4 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16">
@@ -62,15 +68,9 @@ const PREVIOUS_EDITIONS = [
   </div>
 
   <div class="relative z-10 flex flex-col items-center justify-center">
-    <div class="animate-fade-in animate-delay-1100 mb-10 flex items-center gap-4 sm:mb-14" aria-hidden="true">
-      <span class="h-px w-16 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-28"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-      <span class="h-px w-16 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-28"></span>
-    </div>
-
     <div class="mb-12 flex w-full flex-row items-center justify-center sm:mb-14">
       <nav
-        class="animate-fade-in animate-delay-1100 relative z-10 mx-auto grid w-full max-w-4xl grid-cols-1 gap-3 py-6 sm:grid-cols-3 sm:gap-6 lg:gap-10"
+        class="relative z-10 mx-auto grid w-full max-w-4xl grid-cols-1 gap-3 py-6 sm:grid-cols-3 sm:gap-6 lg:gap-10"
         aria-label="Redes sociales de Ibai Llanos"
       >
         <a
@@ -142,14 +142,14 @@ const PREVIOUS_EDITIONS = [
     </div>
 
     <div
-      class="animate-fade-in animate-delay-1100 mb-10 flex flex-col items-center gap-6 text-xs sm:mb-14 sm:flex-row sm:gap-10 sm:text-sm"
+      class="mb-10 flex flex-col items-center gap-6 text-xs sm:mb-14 sm:flex-row sm:gap-10 sm:text-sm"
     >
       <div class="flex items-center gap-x-3 text-white/75">
         <span class="font-cinzel tracking-[0.25em] text-white/55">WEB PATROCINADA POR</span>
         <a
-          href="https://www.infojobs.net/"
+          href={INFOJOBS_FOOTER_URL}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="sponsored noopener noreferrer"
           aria-label="Ir a la página web de InfoJobs"
           style="--brand: #167db7;"
           class="group inline-flex items-center text-white transition duration-300 hover:-translate-y-0.5 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand)]"

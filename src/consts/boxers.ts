@@ -427,16 +427,6 @@ export const BOXERS_BY_ID: Record<string, Boxer> = Object.fromEntries(
   BOXERS.map((boxer) => [boxer.id, boxer]),
 )
 
-/** Emoji de bandera por código de país (alpha-2 ISO 3166-1). */
-export const COUNTRY_FLAGS: Record<string, string> = {
-  es: '🇪🇸',
-  mx: '🇲🇽',
-  co: '🇨🇴',
-  ar: '🇦🇷',
-  sv: '🇸🇻',
-  pr: '🇵🇷',
-}
-
 /** Nombre legible por código de país. */
 export const COUNTRY_NAMES: Record<string, string> = {
   es: 'España',
