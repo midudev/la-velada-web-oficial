@@ -214,6 +214,7 @@ const { mapId = 'faq-venue-map' } = Astro.props
 
     reveal.classList.remove('venue-map__reveal--open')
     await waitForMapReveal(reveal)
+    if (reveal.classList.contains('venue-map__reveal--open')) return
     teardownLeafletMap(canvas)
   }
 
