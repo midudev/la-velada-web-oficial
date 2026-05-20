@@ -1,10 +1,11 @@
-import { createClient } from '@libsql/client/web'
+import { createClient } from '@libsql/client'
 import { COMBATS } from '../src/consts/combats.js'
 import { FIGHTERS } from '../src/consts/fighters.js'
+import { getBoxerById } from '../src/lib/boxers.js'
 
 // Configuración de la base de datos
 const turso = createClient({
-  url: process.env.TURSO_DATABASE_URL,
+  url: process.env.TURSO_DATABASE_URL || 'file:local.db',
   authToken: process.env.TURSO_AUTH_TOKEN,
 })
 
@@ -38,6 +39,17 @@ async function initPredictionsDatabase() {
         UNIQUE(combat_id, user_id)
       )
     `)
+
+    // Crear tabla combat_results (ignora si ya existe)
+    console.log('🏆 Verificando tabla combat_results...')
+    await turso.execute(`
+      CREATE TABLE IF NOT EXISTS combat_results (
+        combat_id TEXT PRIMARY KEY,
+        winner_id TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
 
     // Insertar registros iniciales para todos los combates
     console.log('🥊 Insertando registros iniciales para todos los combates...')

@@ -1,10 +1,10 @@
-import { createClient } from '@libsql/client/web'
+import { createClient } from '@libsql/client'
 import { COMBATS } from '../src/consts/combats.js'
-import { getBoxerById } from '@/lib/boxers.js'
+import { getBoxerById } from '../src/lib/boxers.js'
 
 // Configuración de la base de datos
 const turso = createClient({
-  url: process.env.TURSO_DATABASE_URL,
+  url: process.env.TURSO_DATABASE_URL || 'file:local.db',
   authToken: process.env.TURSO_AUTH_TOKEN,
 })
 

@@ -397,3 +397,61 @@ export async function getUserVotes(userId: string): Promise<
     throw new Error('Error al obtener votos del usuario')
   }
 }
+
+/**
+ * Obtiene los resultados oficiales de los combates (combatId -> winnerId)
+ */
+export async function getCombatResults(): Promise<Record<string, string>> {
+  try {
+    const result = await turso.execute({
+      sql: 'SELECT combat_id, winner_id FROM combat_results',
+    })
+    const results: Record<string, string> = {}
+    result.rows.forEach((row) => {
+      results[row.combat_id as string] = row.winner_id as string
+    })
+    return results
+  } catch (error) {
+    console.error('Error al obtener resultados de los combates:', error)
+    throw new Error('Error al obtener resultados de los combates')
+  }
+}
+
+/**
+ * Declara el ganador oficial de un combate
+ */
+export async function setCombatResult(combatId: string, winnerId: string): Promise<void> {
+  try {
+    if (!winnerId || winnerId === 'none' || winnerId === 'Ninguno') {
+      await turso.execute({
+        sql: 'DELETE FROM combat_results WHERE combat_id = ?',
+        args: [combatId],
+      })
+      return
+    }
+
+    const combatExists = COMBATS.find((combat) => combat.id === combatId)
+    if (!combatExists) {
+      throw new Error('El combate especificado no existe')
+    }
+
+    if (!combatExists.fighters.includes(winnerId)) {
+      throw new Error('El luchador no forma parte de este combate')
+    }
+
+    await turso.execute({
+      sql: `
+        INSERT INTO combat_results (combat_id, winner_id, created_at)
+        VALUES (?, ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(combat_id) DO UPDATE SET 
+          winner_id = EXCLUDED.winner_id,
+          created_at = CURRENT_TIMESTAMP
+      `,
+      args: [combatId, winnerId],
+    })
+  } catch (error) {
+    console.error('Error al establecer resultado de combate:', error)
+    throw new Error('Error al establecer resultado de combate')
+  }
+}
+

@@ -1,11 +1,10 @@
-import { createClient } from '@libsql/client/web'
+import { createClient } from '@libsql/client'
 import { COMBATS } from '../src/consts/combats.js'
-import { FIGHTERS } from '../src/consts/fighters.js'
-import { getBoxerById } from '@/lib/boxers.js'
+import { getBoxerById } from '../src/lib/boxers.js'
 
 // Configuración de la base de datos
 const turso = createClient({
-  url: process.env.TURSO_DATABASE_URL,
+  url: process.env.TURSO_DATABASE_URL || 'file:local.db',
   authToken: process.env.TURSO_AUTH_TOKEN,
 })
 
@@ -25,16 +24,16 @@ async function simulateVotes() {
 
     // Simular votos para diferentes combates
     const testVotes = [
-      { combatId: '1-peereira-vs-rivaldios', fighterId: 'peereira', userId: 'user1@test.com' },
-      { combatId: '1-peereira-vs-rivaldios', fighterId: 'rivaldios', userId: 'user2@test.com' },
-      { combatId: '1-peereira-vs-rivaldios', fighterId: 'peereira', userId: 'user3@test.com' },
-      { combatId: '2-perxitaa-vs-gaspi', fighterId: 'perxitaa', userId: 'user1@test.com' },
-      { combatId: '2-perxitaa-vs-gaspi', fighterId: 'gaspi', userId: 'user2@test.com' },
-      { combatId: '3-abby-vs-roro', fighterId: 'abby', userId: 'user1@test.com' },
-      { combatId: '3-abby-vs-roro', fighterId: 'roro', userId: 'user4@test.com' },
-      { combatId: '7-grefg-vs-westcol', fighterId: 'grefg', userId: 'user1@test.com' },
-      { combatId: '7-grefg-vs-westcol', fighterId: 'westcol', userId: 'user5@test.com' },
-      { combatId: '7-grefg-vs-westcol', fighterId: 'grefg', userId: 'user2@test.com' },
+      { combatId: 'edu-aguirre-vs-gaston-edul', fighterId: 'edu-aguirre', userId: 'user1@test.com' },
+      { combatId: 'edu-aguirre-vs-gaston-edul', fighterId: 'gaston-edul', userId: 'user2@test.com' },
+      { combatId: 'edu-aguirre-vs-gaston-edul', fighterId: 'edu-aguirre', userId: 'user3@test.com' },
+      { combatId: 'la-parce-vs-fabiana-sevillano', fighterId: 'la-parce', userId: 'user1@test.com' },
+      { combatId: 'la-parce-vs-fabiana-sevillano', fighterId: 'fabiana-sevillano', userId: 'user2@test.com' },
+      { combatId: 'samy-rivers-vs-roro', fighterId: 'samy-rivers', userId: 'user1@test.com' },
+      { combatId: 'samy-rivers-vs-roro', fighterId: 'roro', userId: 'user4@test.com' },
+      { combatId: 'illojuan-vs-thegrefg', fighterId: 'illojuan', userId: 'user1@test.com' },
+      { combatId: 'illojuan-vs-thegrefg', fighterId: 'thegrefg', userId: 'user5@test.com' },
+      { combatId: 'illojuan-vs-thegrefg', fighterId: 'illojuan', userId: 'user2@test.com' },
     ]
 
     console.log('📝 Registrando votos de prueba...')

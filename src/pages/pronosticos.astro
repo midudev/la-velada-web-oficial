@@ -1,68 +1,771 @@
 ---
+export const prerender = false
+
 import Layout from '@/layouts/Layout.astro'
 import Header from '@/sections/Header.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
+import CountryFlag from '@/components/CountryFlag.astro'
+import { COMBATS } from '@/consts/combats'
+import { getBoxerById } from '@/lib/boxers'
+import { getAllPredictions, getUserVotes, getCombatResults } from '@/lib/predictions'
+import { getSession } from 'auth-astro/server'
 
+let session = null
+try {
+  session = await getSession(Astro.request)
+} catch (e) {
+  // auth-astro throws MissingSecret when AUTH_SECRET is not configured
+  console.warn('getSession failed (auth not configured):', (e as Error).message)
+}
+let user = null
+
+if (session?.user) {
+  const email = session.user.email
+  const name = session.user.name || 'Twitch User'
+  const id = email || `twitch-${name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`
+  user = { id, name, type: 'twitch' }
+} else {
+  // Check cookie de mock user
+  const cookieHeader = Astro.request.headers.get('cookie') || ''
+  const mockUserMatch = cookieHeader.match(/mock_user=([^;]+)/)
+  if (mockUserMatch) {
+    const name = decodeURIComponent(mockUserMatch[1]).trim()
+    if (name) {
+      const id = `mock-${name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`
+      user = { id, name, type: 'mock' }
+    }
+  }
+}
+
+// Límite de votación: 25 de julio de 2026 a las 20:00 CEST
+const EVENT_START_DATE = new Date('2026-07-25T20:00:00+02:00')
+const simulateLocked = Astro.url.searchParams.get('simulate_locked') === 'true'
+const isLocked = simulateLocked || (Date.now() >= EVENT_START_DATE.getTime())
+
+// Votos de usuario
+let votesMap: Record<string, string> = {}
+if (user) {
+  try {
+    const userVotes = await getUserVotes(user.id)
+    userVotes.forEach((v) => {
+      votesMap[v.combat_id] = v.fighter_id
+    })
+  } catch (error) {
+    console.error('Error fetching user votes:', error)
+  }
+}
+
+// Resultados oficiales
+let combatResults: Record<string, string> = {}
+try {
+  combatResults = await getCombatResults()
+} catch (error) {
+  console.error('Error fetching combat results:', error)
+}
+
+// Predicciones agregadas
+let predictionsList = []
+try {
+  predictionsList = await getAllPredictions()
+} catch (error) {
+  console.error('Error fetching all predictions:', error)
+}
+
+// Mapear predicciones a un mapa rápido para consulta por combat_id
+const predictionsMap: Record<string, any> = {}
+predictionsList.forEach((p) => {
+  predictionsMap[p.combat_id] = p
+})
+
+// Enlazar boxeadores a cada combate
+const combatsWithFighters = COMBATS.map((combat, index) => {
+  const f1_id = combat.fighters[0]
+  const f2_id = combat.fighters[1]
+  
+  const b1 = getBoxerById(f1_id)
+  const b2 = getBoxerById(f2_id)
+  
+  // Voto del usuario para este combate
+  const userVote = votesMap[combat.id]
+  
+  // Ganador oficial
+  const officialWinner = combatResults[combat.id]
+  
+  // Evaluar acierto
+  let status: 'correct' | 'incorrect' | 'unvoted' | 'none' = 'none'
+  if (officialWinner) {
+    if (userVote) {
+      status = userVote === officialWinner ? 'correct' : 'incorrect'
+    } else {
+      status = 'unvoted'
+    }
+  }
+  
+  // Predicciones agregadas
+  const cp = predictionsMap[combat.id]
+  const totalVotes = cp?.total_votes || 2
+  
+  const p1 = cp?.predictions.find((p: any) => p.fighter_id === f1_id)
+  const p2 = cp?.predictions.find((p: any) => p.fighter_id === f2_id)
+  
+  const v1 = p1?.votes || 1
+  const v2 = p2?.votes || 1
+  
+  const pct1 = Math.round((v1 / (v1 + v2)) * 100)
+  const pct2 = 100 - pct1
+  
+  return {
+    ...combat,
+    number: index + 1,
+    boxer1: {
+      id: f1_id,
+      name: b1?.name || f1_id,
+      image: `/character-select/${f1_id}.webp`,
+      heroImage: `/character-hero/${f1_id}.webp`,
+      country: b1?.country || 'es',
+      votes: v1,
+      percentage: pct1,
+    },
+    boxer2: {
+      id: f2_id,
+      name: b2?.name || f2_id,
+      image: `/character-select/${f2_id}.webp`,
+      heroImage: `/character-hero/${f2_id}.webp`,
+      country: b2?.country || 'es',
+      votes: v2,
+      percentage: pct2,
+    },
+    userVote,
+    officialWinner,
+    status,
+    totalVotes: v1 + v2,
+  }
+})
+
+// Estadísticas de predicciones del usuario
+const totalCombats = COMBATS.length
+const votedCount = combatsWithFighters.filter(c => c.userVote).length
+const evaluatedCount = Object.keys(combatResults).length
+const correctCount = combatsWithFighters.filter(c => c.status === 'correct').length
+const hitRate = evaluatedCount > 0 ? Math.round((correctCount / evaluatedCount) * 100) : 0
+
+const SITE_URL = 'https://www.infolavelada.com'
 const title = 'Pronósticos - La Velada del Año VI'
-const description =
-  'La página de pronósticos de La Velada del Año VI estará disponible más adelante para votar los resultados de los combates.'
-const canonical = 'https://www.infolavelada.com/pronosticos'
-
-export const prerender = true
+const description = 'Haz tus predicciones de los combates oficiales de La Velada del Año VI y comprueba tus aciertos y fallos en tiempo real con toda la comunidad.'
+const canonical = `${SITE_URL}/pronosticos`
 ---
 
-<Layout
-  title={title}
-  description={description}
-  canonical={canonical}
-  robots="noindex, nofollow"
->
+<Layout title={title} description={description} canonical={canonical} robots="index, follow">
   <Header />
-  <section
-    class="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-24 text-center text-theme-cream sm:px-6"
-  >
-    <div
-      aria-hidden="true"
-      class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_50%_20%,rgba(199,168,107,0.24),transparent_32%),linear-gradient(180deg,var(--color-theme-midnight)_0%,#050816_100%)]"
-    >
-    </div>
-    <div
-      aria-hidden="true"
-      class="absolute left-1/2 top-1/2 -z-10 size-[22rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-theme-gold/20 shadow-[0_0_80px_rgba(199,168,107,0.14)] sm:size-[34rem]"
-    >
-    </div>
 
-    <div class="mx-auto flex w-full max-w-3xl flex-col items-center">
-      <p class="mb-5 text-xs font-bold tracking-[0.45em] text-theme-gold/85 sm:text-sm">
-        PRÓXIMAMENTE
-      </p>
-      <h1
-        class="font-fantasy text-6xl leading-[0.88] tracking-wide text-theme-cream drop-shadow-[0_12px_35px_rgba(0,0,0,0.55)] sm:text-8xl md:text-9xl"
-      >
-        Pronósticos
-      </h1>
-      <p class="mt-7 max-w-2xl text-balance text-base leading-7 tracking-wide text-white/75 sm:text-lg">
-        Estamos preparando una página para que puedas votar tus predicciones de los combates.
-        Por ahora la votación está desactivada.
-      </p>
+  <section class="predictions-page relative isolate w-full overflow-x-clip bg-theme-midnight px-4 pb-20 pt-24 text-theme-cream sm:px-6 sm:pb-24 sm:pt-32 md:pt-36">
+    <div aria-hidden="true" class="predictions-bg absolute inset-0 -z-20"></div>
+    <div aria-hidden="true" class="predictions-grain pointer-events-none absolute inset-0 -z-10"></div>
 
-      <div
-        class="mt-10 rounded-2xl border border-theme-gold/25 bg-theme-midnight/70 px-6 py-5 shadow-[0_18px_60px_rgba(0,0,0,0.28)] backdrop-blur sm:px-8"
-      >
-        <p class="text-sm font-semibold tracking-[0.28em] text-theme-gold/90">
-          EL RING TODAVÍA ESTÁ CERRADO
+    <div class="mx-auto flex w-full max-w-5xl flex-col items-center">
+      
+      <!-- Encabezado de la Sección -->
+      <div class="flex w-full flex-col items-center text-center">
+        <SectionDivider class="w-full" />
+        <h1 class="animate-fade-in-up mt-4 font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl">
+          PRONÓSTICOS
+        </h1>
+        <p class="animate-fade-in-up animate-delay-200 mt-3 max-w-2xl text-balance font-cinzel text-xs font-medium tracking-[0.16em] text-white/55 sm:text-sm sm:tracking-[0.25em]">
+          Vota tus favoritos y comprueba tus aciertos de La Velada VI
         </p>
       </div>
 
-      <a
-        href="/"
-        class="mt-10 inline-flex min-h-12 items-center justify-center rounded-lg bg-theme-cream px-8 py-4 text-sm font-bold tracking-widest text-theme-midnight transition-all duration-300 ease-out hover:rotate-[2deg] hover:bg-white active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
-      >
-        Volver al inicio
-      </a>
+      <!-- Sección de Autenticación / Estadísticas -->
+      <div class="w-full max-w-3xl mt-10 animate-fade-in-up animate-delay-300">
+        {user ? (
+          /* PANEL DE USUARIO CONECTADO */
+          <div class="user-profile-panel relative rounded-2xl p-6 md:p-8 backdrop-blur border border-theme-gold/25 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <span aria-hidden="true" class="panel-corner panel-corner-tl"></span>
+            <span aria-hidden="true" class="panel-corner panel-corner-tr"></span>
+            <span aria-hidden="true" class="panel-corner panel-corner-bl"></span>
+            <span aria-hidden="true" class="panel-corner panel-corner-br"></span>
+
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div>
+                <div class="flex items-center gap-3">
+                  <div class="size-2 rounded-full bg-green-500 animate-pulse"></div>
+                  <span class="font-cinzel text-xs font-bold tracking-widest text-theme-gold">SESIÓN ACTIVA</span>
+                </div>
+                <h2 class="font-cinzel text-xl font-bold uppercase tracking-wider text-theme-cream mt-1">
+                  Bienvenido, {user.name} {user.type === 'mock' && <span class="text-xs text-theme-gold/70 lowercase font-sans">({user.type})</span>}
+                </h2>
+                <p class="text-xs text-white/50 mt-1 font-sans">
+                  Tus predicciones se guardan automáticamente en tiempo real.
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-4 items-center">
+                <button
+                  type="button"
+                  id="btn-logout"
+                  class="px-4 py-2 rounded border border-red-500/30 bg-red-950/20 text-red-400 font-cinzel text-[0.65rem] font-bold tracking-widest transition-all duration-300 hover:bg-red-950/50 hover:border-red-500"
+                >
+                  CERRAR SESIÓN
+                </button>
+              </div>
+            </div>
+
+            <!-- Estadísticas del Usuario -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-white/10 text-center">
+              <div class="flex flex-col items-center">
+                <span class="text-xs font-cinzel text-white/40 tracking-wider">PRONÓSTICOS</span>
+                <span class="text-2xl font-cinzel font-bold text-theme-gold mt-1" id="user-voted-count">
+                  {votedCount} / {totalCombats}
+                </span>
+                <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden mt-2">
+                  <div class="h-full bg-theme-gold rounded-full" id="user-voted-progress" style={`width: ${(votedCount / totalCombats) * 100}%`}></div>
+                </div>
+              </div>
+
+              <div class="flex flex-col items-center">
+                <span class="text-xs font-cinzel text-white/40 tracking-wider">ACIERTOS</span>
+                <span class="text-2xl font-cinzel font-bold text-green-400 mt-1">
+                  {evaluatedCount > 0 ? `${correctCount} de ${evaluatedCount}` : '—'}
+                </span>
+                <span class="text-[0.6rem] font-sans text-white/40 mt-1">
+                  {evaluatedCount > 0 ? 'combates terminados' : 'esperando resultados oficiales'}
+                </span>
+              </div>
+
+              <div class="col-span-2 md:col-span-1 flex flex-col items-center justify-center border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0">
+                <span class="text-xs font-cinzel text-white/40 tracking-wider">EFECTIVIDAD</span>
+                <span class="text-3xl font-cinzel font-bold text-theme-cream mt-1">
+                  {evaluatedCount > 0 ? `${hitRate}%` : '—'}
+                </span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* PANEL DE INICIO DE SESIÓN */
+          <div class="login-panel relative rounded-2xl p-6 md:p-8 backdrop-blur border border-theme-gold/20 bg-theme-midnight/40 shadow-[0_15px_45px_rgba(0,0,0,0.4)]">
+            <span aria-hidden="true" class="panel-corner panel-corner-tl"></span>
+            <span aria-hidden="true" class="panel-corner panel-corner-tr"></span>
+            <span aria-hidden="true" class="panel-corner panel-corner-bl"></span>
+            <span aria-hidden="true" class="panel-corner panel-corner-br"></span>
+
+            <div class="text-center max-w-xl mx-auto">
+              <h2 class="font-cinzel text-lg font-bold tracking-widest text-theme-gold">REGISTRA TUS VOTOS</h2>
+              <p class="text-sm text-white/70 mt-2 font-sans">
+                Para guardar y comparar tus pronósticos necesitas iniciar sesión. Puedes identificarte con tu cuenta de Twitch o con un nombre de invitado.
+              </p>
+
+              <!-- Formularios de Acceso -->
+              <div class="flex flex-col sm:flex-row items-stretch justify-center gap-4 mt-6">
+                <!-- Login Twitch -->
+                <button
+                  type="button"
+                  id="btn-login-twitch"
+                  class="flex items-center justify-center gap-3 px-6 py-4 rounded bg-[#6441a5] text-white font-cinzel text-xs font-bold tracking-widest transition-all duration-300 hover:bg-[#7d5bbe] active:scale-95 shadow-[0_0_15px_rgba(100,65,165,0.4)]"
+                >
+                  <svg class="size-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+                  </svg>
+                  ACCEDER CON TWITCH
+                </button>
+
+                <div class="flex items-center justify-center py-2 sm:py-0 font-cinzel text-xs text-white/30 tracking-widest">Ó</div>
+
+                <!-- Login Invitado -->
+                <form id="form-login-mock" class="flex flex-1 max-w-md items-stretch gap-2">
+                  <input
+                    type="text"
+                    id="mock-username"
+                    required
+                    placeholder="Tu nombre de invitado..."
+                    class="flex-1 px-4 py-3 rounded bg-black/40 border border-theme-gold/30 text-theme-cream placeholder-white/30 text-sm focus:outline-none focus:border-theme-gold focus:ring-1 focus:ring-theme-gold/30"
+                  />
+                  <button
+                    type="submit"
+                    class="px-5 py-3 rounded bg-theme-cream text-theme-midnight font-cinzel text-xs font-bold tracking-widest transition-all duration-300 hover:bg-white active:scale-95"
+                  >
+                    ENTRAR
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- Alerta si las votaciones están cerradas -->
+      {isLocked && (
+        <div class="w-full max-w-3xl mt-6 rounded-xl border border-red-500/20 bg-red-950/15 p-4 text-center backdrop-blur shadow-[0_5px_15px_rgba(239,68,68,0.1)]">
+          <p class="text-sm font-cinzel font-bold tracking-widest text-red-400 flex items-center justify-center gap-2">
+            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            VOTACIONES CERRADAS
+          </p>
+          <p class="text-xs text-white/60 mt-1 font-sans">
+            El evento oficial de La Velada del Año VI ha comenzado (25 de julio de 2026, 20:00 CEST). Las predicciones se han bloqueado y no pueden modificarse.
+          </p>
+        </div>
+      )}
+
+      <!-- Listado de Combates -->
+      <div class="w-full mt-12 flex flex-col gap-8 max-w-3xl">
+        {combatsWithFighters.map((combat) => {
+          return (
+            <article
+              class={`combat-prediction-card relative rounded-2xl border bg-theme-midnight/40 backdrop-blur transition-all duration-500 shadow-[0_10px_35px_rgba(0,0,0,0.3)]
+                ${combat.status === 'correct' ? 'border-green-500/50 shadow-[0_0_25px_rgba(34,197,94,0.15)] bg-green-950/5' : ''}
+                ${combat.status === 'incorrect' ? 'border-red-500/40 shadow-[0_0_20px_rgba(239,68,68,0.1)] bg-red-950/5' : ''}
+                ${combat.status === 'none' ? 'border-theme-gold/20 hover:border-theme-gold/45' : ''}
+                ${combat.status === 'unvoted' ? 'border-gray-500/30' : ''}
+              `}
+              data-combat-id={combat.id}
+            >
+              <span aria-hidden="true" class="card-decor-line absolute top-0 inset-x-6 h-px bg-gradient-to-r from-transparent via-theme-gold/20 to-transparent"></span>
+              
+              <!-- Esquinas decorativas -->
+              <span aria-hidden="true" class="card-corner card-corner-tl"></span>
+              <span aria-hidden="true" class="card-corner card-corner-tr"></span>
+              <span aria-hidden="true" class="card-corner card-corner-bl"></span>
+              <span aria-hidden="true" class="card-corner card-corner-br"></span>
+
+              <div class="p-6 md:p-8 flex flex-col items-center">
+                
+                <!-- Encabezado del combate -->
+                <div class="flex flex-col items-center text-center mb-6">
+                  <span class="font-cinzel text-[0.6rem] font-bold tracking-[0.25em] text-theme-gold">
+                    COMBATE · {String(combat.number).padStart(2, '0')}
+                  </span>
+                  <h3 class="font-fantasy text-xl sm:text-2xl mt-1 tracking-wider text-theme-cream">
+                    {combat.title}
+                  </h3>
+
+                  <!-- Banner Evaluador de Aciertos/Fallos -->
+                  {combat.status === 'correct' && (
+                    <span class="mt-2 inline-flex items-center gap-1.5 rounded-full border border-green-500/30 bg-green-950/30 px-3 py-1 font-cinzel text-[0.6rem] font-bold tracking-widest text-green-400 animate-pulse">
+                      ¡PRONÓSTICO ACERTADO! +1
+                    </span>
+                  )}
+                  {combat.status === 'incorrect' && (
+                    <span class="mt-2 inline-flex items-center gap-1.5 rounded-full border border-red-500/30 bg-red-950/30 px-3 py-1 font-cinzel text-[0.6rem] font-bold tracking-widest text-red-400">
+                      PRONÓSTICO FALLADO
+                    </span>
+                  )}
+                  {combat.status === 'unvoted' && (
+                    <span class="mt-2 inline-flex items-center gap-1.5 rounded-full border border-gray-500/30 bg-gray-950/30 px-3 py-1 font-cinzel text-[0.6rem] font-bold tracking-widest text-gray-400">
+                      SIN VOTO EVALUADO
+                    </span>
+                  )}
+                </div>
+
+                <!-- Cara a cara (Fighters Faceoff) -->
+                <div class="w-full flex items-center justify-between gap-2 sm:gap-6 relative">
+                  
+                  <!-- Boxeador 1 (Izquierda) -->
+                  <div class="flex-1 flex flex-col items-center text-center group">
+                    <div class="relative rounded-xl overflow-hidden aspect-square size-20 sm:size-24 md:size-28 border border-white/10 bg-black/40 shadow-inner transition-transform duration-300 group-hover:scale-105">
+                      <img
+                        src={combat.boxer1.image}
+                        alt={combat.boxer1.name}
+                        loading="lazy"
+                        class={`size-full object-cover object-top transition duration-500 group-hover:saturate-120
+                          ${combat.officialWinner === combat.boxer1.id ? 'border-2 border-theme-gold brightness-110' : ''}
+                        `}
+                      />
+                      {combat.officialWinner === combat.boxer1.id && (
+                        <div class="absolute inset-0 bg-theme-gold/5 flex items-center justify-center">
+                          <span class="absolute top-1 left-1 size-5 bg-theme-gold rounded-full flex items-center justify-center text-[0.5rem] font-fantasy text-theme-midnight font-bold shadow-lg" title="Ganador oficial">👑</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <h4 class="font-cinzel text-xs sm:text-sm font-bold tracking-wider mt-3 text-white leading-tight">
+                      {combat.boxer1.name}
+                    </h4>
+                    <p class="flex items-center gap-1 font-cinzel text-[0.5rem] text-white/50 tracking-widest mt-1">
+                      <CountryFlag country={combat.boxer1.country} size={10} decorative />
+                    </p>
+
+                    <!-- Botón Voto Boxeador 1 -->
+                    <button
+                      type="button"
+                      data-action="vote"
+                      data-combat-id={combat.id}
+                      data-fighter-id={combat.boxer1.id}
+                      disabled={isLocked || !user}
+                      class={`btn-vote mt-4 inline-flex items-center justify-center gap-1 rounded px-3 py-2 text-[0.6rem] font-cinzel font-bold tracking-widest transition-all duration-300 w-full max-w-[130px]
+                        ${combat.userVote === combat.boxer1.id
+                          ? 'bg-theme-gold text-theme-midnight font-black shadow-[0_0_15px_rgba(199,168,107,0.4)] border border-theme-gold'
+                          : 'bg-white/[0.03] text-white/60 hover:text-theme-cream hover:bg-white/[0.08] border border-white/10'
+                        }
+                        disabled:opacity-50 disabled:cursor-not-allowed
+                      `}
+                    >
+                      {combat.userVote === combat.boxer1.id ? '✓ VOTADO' : 'VOTAR'}
+                    </button>
+                  </div>
+
+                  <!-- VS Emblem (Centro) -->
+                  <div class="flex flex-col items-center justify-center z-10 py-4">
+                    <div class="size-9 sm:size-12 rounded-full border border-theme-gold/30 bg-theme-midnight/90 flex items-center justify-center shadow-lg">
+                      <span class="font-fantasy text-xs sm:text-sm tracking-wide text-theme-gold animate-pulse">VS</span>
+                    </div>
+                  </div>
+
+                  <!-- Boxeador 2 (Derecha) -->
+                  <div class="flex-1 flex flex-col items-center text-center group">
+                    <div class="relative rounded-xl overflow-hidden aspect-square size-20 sm:size-24 md:size-28 border border-white/10 bg-black/40 shadow-inner transition-transform duration-300 group-hover:scale-105">
+                      <img
+                        src={combat.boxer2.image}
+                        alt={combat.boxer2.name}
+                        loading="lazy"
+                        class={`size-full object-cover object-top transition duration-500 group-hover:saturate-120
+                          ${combat.officialWinner === combat.boxer2.id ? 'border-2 border-theme-gold brightness-110' : ''}
+                        `}
+                      />
+                      {combat.officialWinner === combat.boxer2.id && (
+                        <div class="absolute inset-0 bg-theme-gold/5 flex items-center justify-center">
+                          <span class="absolute top-1 left-1 size-5 bg-theme-gold rounded-full flex items-center justify-center text-[0.5rem] font-fantasy text-theme-midnight font-bold shadow-lg" title="Ganador oficial">👑</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <h4 class="font-cinzel text-xs sm:text-sm font-bold tracking-wider mt-3 text-white leading-tight">
+                      {combat.boxer2.name}
+                    </h4>
+                    <p class="flex items-center gap-1 font-cinzel text-[0.5rem] text-white/50 tracking-widest mt-1">
+                      <CountryFlag country={combat.boxer2.country} size={10} decorative />
+                    </p>
+
+                    <!-- Botón Voto Boxeador 2 -->
+                    <button
+                      type="button"
+                      data-action="vote"
+                      data-combat-id={combat.id}
+                      data-fighter-id={combat.boxer2.id}
+                      disabled={isLocked || !user}
+                      class={`btn-vote mt-4 inline-flex items-center justify-center gap-1 rounded px-3 py-2 text-[0.6rem] font-cinzel font-bold tracking-widest transition-all duration-300 w-full max-w-[130px]
+                        ${combat.userVote === combat.boxer2.id
+                          ? 'bg-theme-gold text-theme-midnight font-black shadow-[0_0_15px_rgba(199,168,107,0.4)] border border-theme-gold'
+                          : 'bg-white/[0.03] text-white/60 hover:text-theme-cream hover:bg-white/[0.08] border border-white/10'
+                        }
+                        disabled:opacity-50 disabled:cursor-not-allowed
+                      `}
+                    >
+                      {combat.userVote === combat.boxer2.id ? '✓ VOTADO' : 'VOTAR'}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Barra de Predicciones Comunitarias -->
+                <div class="w-full mt-8">
+                  <div class="flex justify-between items-center text-xs font-cinzel tracking-wider text-white/70 mb-1.5">
+                    <span id={`pct-label-${combat.id}-${combat.boxer1.id}`}>{combat.boxer1.percentage}%</span>
+                    <span class="text-[0.6rem] text-white/40 tracking-[0.2em]">PRONÓSTICOS COMUNIDAD</span>
+                    <span id={`pct-label-${combat.id}-${combat.boxer2.id}`}>{combat.boxer2.percentage}%</span>
+                  </div>
+
+                  <!-- Barra bicolor -->
+                  <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden flex">
+                    <div
+                      id={`bar-${combat.id}-${combat.boxer1.id}`}
+                      class="h-full bg-gradient-to-r from-[#d97706]/70 to-[#eab308]/70 transition-all duration-700 ease-out"
+                      style={`width: ${combat.boxer1.percentage}%`}
+                    ></div>
+                    <div
+                      id={`bar-${combat.id}-${combat.boxer2.id}`}
+                      class="h-full bg-gradient-to-r from-slate-400/60 to-slate-200/60 transition-all duration-700 ease-out"
+                      style={`width: ${combat.boxer2.percentage}%`}
+                    ></div>
+                  </div>
+                  <div class="flex justify-between text-[0.55rem] font-sans text-white/30 mt-1">
+                    <span id={`votes-label-${combat.id}-${combat.boxer1.id}`}>{combat.boxer1.votes} votos</span>
+                    <span id={`votes-label-${combat.id}-${combat.boxer2.id}`}>{combat.boxer2.votes} votos</span>
+                  </div>
+                </div>
+
+              </div>
+            </article>
+          )
+        })}
+      </div>
+
     </div>
   </section>
+
   <Sponsors />
   <Footer />
 </Layout>
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  // Configurar listeners de autenticación
+  function setupAuth() {
+    // Login con Twitch
+    const btnTwitch = $<HTMLButtonElement>('#btn-login-twitch')
+    if (btnTwitch) {
+      btnTwitch.addEventListener('click', async () => {
+        try {
+          const { signIn } = await import('auth-astro/client')
+          signIn('twitch')
+        } catch (err) {
+          console.error('Error signing in with Twitch:', err)
+        }
+      })
+    }
+
+    // Login Invitado (Mock)
+    const formMock = $<HTMLFormElement>('#form-login-mock')
+    if (formMock) {
+      formMock.addEventListener('submit', (e) => {
+        e.preventDefault()
+        const input = $<HTMLInputElement>('#mock-username')
+        if (input) {
+          const name = input.value.trim()
+          if (name) {
+            document.cookie = `mock_user=${encodeURIComponent(name)}; path=/; max-age=31536000`
+            window.location.reload()
+          }
+        }
+      })
+    }
+
+    // Cerrar sesión
+    const btnLogout = $<HTMLButtonElement>('#btn-logout')
+    if (btnLogout) {
+      btnLogout.addEventListener('click', async () => {
+        // Borrar cookie mock
+        document.cookie = 'mock_user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        
+        // Intentar logout en Twitch si aplica
+        try {
+          const { signOut } = await import('auth-astro/client')
+          await signOut()
+        } catch (e) {
+          // Ignorar error si no hay sesión oficial
+        }
+
+        window.location.reload()
+      })
+    }
+  }
+
+  // Configurar Votación Interactiva
+  function setupVoting() {
+    const voteButtons = $$<HTMLButtonElement>('button[data-action="vote"]')
+    
+    voteButtons.forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const combatId = btn.dataset.combatId
+        const fighterId = btn.dataset.fighterId
+        
+        if (!combatId || !fighterId) return
+
+        // Estado visual de carga
+        btn.disabled = true
+        const originalText = btn.textContent || ''
+        btn.textContent = 'ENVIANDO...'
+
+        try {
+          const response = await fetch('/api/predictions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ combat_id: combatId, fighter_id: fighterId }),
+          })
+
+          if (!response.ok) {
+            const data = await response.json()
+            throw new Error(data.error || 'Error al enviar predicción')
+          }
+
+          const result = await response.json()
+          console.log('Prediction registered:', result)
+
+          // Actualizar estado de los botones en la tarjeta
+          const card = $<HTMLElement>(`article[data-combat-id="${combatId}"]`)
+          if (card) {
+            const cardButtons = $$<HTMLButtonElement>('button[data-action="vote"]', card)
+            cardButtons.forEach((b) => {
+              const matchesSelected = b.dataset.fighterId === fighterId
+              b.textContent = matchesSelected ? '✓ VOTADO' : 'VOTAR'
+              
+              // Ajustar clases
+              if (matchesSelected) {
+                b.className = 'btn-vote mt-4 inline-flex items-center justify-center gap-1 rounded px-3 py-2 text-[0.6rem] font-cinzel font-bold tracking-widest transition-all duration-300 w-full max-w-[130px] bg-theme-gold text-theme-midnight font-black shadow-[0_0_15px_rgba(199,168,107,0.4)] border border-theme-gold'
+              } else {
+                b.className = 'btn-vote mt-4 inline-flex items-center justify-center gap-1 rounded px-3 py-2 text-[0.6rem] font-cinzel font-bold tracking-widest transition-all duration-300 w-full max-w-[130px] bg-white/[0.03] text-white/60 hover:text-theme-cream hover:bg-white/[0.08] border border-white/10'
+              }
+              b.disabled = false
+            })
+          }
+
+          // Volver a pedir porcentajes para actualizar las barras con animación fluida
+          await refreshPercentages(combatId)
+          await refreshUserMetrics()
+
+        } catch (error: any) {
+          console.error(error)
+          alert(error.message || 'Ocurrió un error inesperado al registrar tu voto.')
+          btn.disabled = false
+          btn.textContent = originalText
+        }
+      })
+    })
+  }
+
+  // Refrescar porcentajes de votos de un combate
+  async function refreshPercentages(combatId: string) {
+    try {
+      const response = await fetch(`/api/predictions?combat_id=${combatId}`)
+      if (!response.ok) return
+
+      const data = await response.json()
+      
+      const p1 = data.predictions[0]
+      const p2 = data.predictions[1]
+
+      if (!p1 || !p2) return
+
+      const totalVotes = p1.votes + p2.votes
+      const pct1 = totalVotes > 0 ? Math.round((p1.votes / totalVotes) * 100) : 50
+      const pct2 = 100 - pct1
+
+      // Modificar elementos de la UI
+      const l1 = $<HTMLElement>(`#pct-label-${combatId}-${p1.fighter_id}`)
+      const l2 = $<HTMLElement>(`#pct-label-${combatId}-${p2.fighter_id}`)
+      
+      const bar1 = $<HTMLElement>(`#bar-${combatId}-${p1.fighter_id}`)
+      const bar2 = $<HTMLElement>(`#bar-${combatId}-${p2.fighter_id}`)
+
+      const vl1 = $<HTMLElement>(`#votes-label-${combatId}-${p1.fighter_id}`)
+      const vl2 = $<HTMLElement>(`#votes-label-${combatId}-${p2.fighter_id}`)
+
+      if (l1) l1.textContent = `${pct1}%`
+      if (l2) l2.textContent = `${pct2}%`
+
+      if (bar1) bar1.style.width = `${pct1}%`
+      if (bar2) bar2.style.width = `${pct2}%`
+
+      if (vl1) vl1.textContent = `${p1.votes} votos`
+      if (vl2) vl2.textContent = `${p2.votes} votos`
+
+    } catch (e) {
+      console.warn('Error refreshing percentages:', e)
+    }
+  }
+
+  // Refrescar métricas del panel superior
+  async function refreshUserMetrics() {
+    try {
+      // Podemos consultar cuántos botones marcados como "✓ VOTADO" hay en la página
+      const allVoted = $$<HTMLButtonElement>('button[data-action="vote"]')
+      const uniqueCombatsVoted = new Set()
+      
+      allVoted.forEach((b) => {
+        if (b.textContent?.includes('VOTADO')) {
+          uniqueCombatsVoted.add(b.dataset.combatId)
+        }
+      })
+
+      const count = uniqueCombatsVoted.size
+      const total = 10
+
+      const label = $<HTMLElement>('#user-voted-count')
+      const progress = $<HTMLElement>('#user-voted-progress')
+
+      if (label) label.textContent = `${count} / ${total}`
+      if (progress) progress.style.width = `${(count / total) * 100}%`
+
+    } catch (e) {
+      console.warn('Error updating user metrics UI:', e)
+    }
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    setupAuth()
+    setupVoting()
+  })
+</script>
+
+<style>
+  .predictions-page {
+    min-height: 100svh;
+  }
+
+  .predictions-bg {
+    background:
+      radial-gradient(
+        ellipse 70% 45% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 16%, transparent) 0%,
+        transparent 65%
+      ),
+      linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
+  }
+
+  .predictions-grain {
+    background-image: radial-gradient(
+      rgba(199, 168, 107, 0.05) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+    mask-image: radial-gradient(
+      ellipse at center,
+      black 30%,
+      transparent 85%
+    );
+  }
+
+  /* Paneles glassmórficos con esquinas doradas */
+  .user-profile-panel, .login-panel, .combat-prediction-card {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-velada-navy) 20%, var(--color-theme-midnight)) 0%,
+      color-mix(in srgb, var(--color-theme-midnight) 85%, black) 100%
+    );
+  }
+
+  .panel-corner, .card-corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
+    transition: all 400ms ease;
+  }
+
+  .panel-corner-tl, .card-corner-tl { top: 8px; left: 8px; border-right-width: 0; border-bottom-width: 0; }
+  .panel-corner-tr, .card-corner-tr { top: 8px; right: 8px; border-left-width: 0; border-bottom-width: 0; }
+  .panel-corner-bl, .card-corner-bl { bottom: 8px; left: 8px; border-right-width: 0; border-top-width: 0; }
+  .panel-corner-br, .card-corner-br { bottom: 8px; right: 8px; border-left-width: 0; border-top-width: 0; }
+
+  .combat-prediction-card:hover .card-corner {
+    width: 20px;
+    height: 20px;
+    border-color: var(--color-theme-gold);
+  }
+
+  /* Estilos interactivos de voto */
+  .btn-vote {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+
+  .btn-vote:not(:disabled):hover {
+    transform: scale(1.03) translateY(-1px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.05);
+  }
+
+  .btn-vote:not(:disabled):active {
+    transform: scale(0.97);
+  }
+
+  /* Animación de carga de cards */
+  .combat-prediction-card {
+    will-change: transform, border-color;
+  }
+</style>

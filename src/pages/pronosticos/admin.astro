@@ -1,0 +1,365 @@
+---
+export const prerender = false
+
+import Layout from '@/layouts/Layout.astro'
+import Header from '@/sections/Header.astro'
+import Footer from '@/sections/Footer.astro'
+import Sponsors from '@/sections/Sponsors.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
+import { COMBATS } from '@/consts/combats'
+import { getBoxerById } from '@/lib/boxers'
+import { getCombatResults } from '@/lib/predictions'
+
+const ADMIN_SECRET = process.env.ADMIN_SECRET || import.meta.env.ADMIN_SECRET || 'velada-admin-secret'
+
+// Verificar si está autenticado mediante cookie
+const cookieHeader = Astro.request.headers.get('cookie') || ''
+const secretMatch = cookieHeader.match(/admin_secret=([^;]+)/)
+const providedSecret = secretMatch ? decodeURIComponent(secretMatch[1]).trim() : ''
+
+const isAuthenticated = providedSecret === ADMIN_SECRET
+
+let combatResults: Record<string, string> = {}
+let errorLoading = ''
+
+if (isAuthenticated) {
+  try {
+    combatResults = await getCombatResults()
+  } catch (error: any) {
+    errorLoading = 'Error al cargar los resultados oficiales.'
+    console.error(error)
+  }
+}
+
+const combatsWithBoxers = COMBATS.map((combat, index) => {
+  const b1 = getBoxerById(combat.fighters[0])
+  const b2 = getBoxerById(combat.fighters[1])
+  
+  return {
+    ...combat,
+    number: index + 1,
+    boxer1: {
+      id: combat.fighters[0],
+      name: b1?.name || combat.fighters[0],
+    },
+    boxer2: {
+      id: combat.fighters[1],
+      name: b2?.name || combat.fighters[1],
+    },
+    currentWinner: combatResults[combat.id] || 'none',
+  }
+})
+
+const title = 'Panel de Administración de Resultados - La Velada VI'
+const description = 'Portal oficial para declarar ganadores de los combates de La Velada del Año VI.'
+---
+
+<Layout title={title} description={description} canonical="https://www.infolavelada.com/pronosticos/admin" robots="noindex, nofollow">
+  <Header />
+
+  <section class="admin-page relative isolate w-full overflow-x-clip bg-theme-midnight px-4 pb-20 pt-24 text-theme-cream sm:px-6 sm:pb-24 sm:pt-32 md:pt-36">
+    <div aria-hidden="true" class="admin-bg absolute inset-0 -z-20"></div>
+    <div aria-hidden="true" class="admin-grain pointer-events-none absolute inset-0 -z-10"></div>
+
+    <div class="mx-auto flex w-full max-w-4xl flex-col items-center">
+      
+      <!-- Encabezado de la Sección -->
+      <div class="flex w-full flex-col items-center text-center">
+        <SectionDivider class="w-full" />
+        <h1 class="animate-fade-in-up mt-4 font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-5xl">
+          ADMINISTRACIÓN
+        </h1>
+        <p class="animate-fade-in-up animate-delay-200 mt-3 max-w-2xl text-balance font-cinzel text-xs font-medium tracking-[0.16em] text-white/55 sm:text-sm sm:tracking-[0.25em]">
+          Declara los ganadores oficiales de los 10 combates
+        </p>
+      </div>
+
+      <div class="w-full mt-10 max-w-2xl animate-fade-in-up animate-delay-300">
+        {!isAuthenticated ? (
+          /* PANTALLA DE BLOQUEO (AUTH) */
+          <div class="lock-panel relative rounded-2xl p-6 md:p-8 backdrop-blur border border-theme-gold/20 bg-theme-midnight/40 shadow-[0_15px_45px_rgba(0,0,0,0.5)]">
+            <span aria-hidden="true" class="panel-corner panel-corner-tl"></span>
+            <span aria-hidden="true" class="panel-corner panel-corner-tr"></span>
+            <span aria-hidden="true" class="panel-corner panel-corner-bl"></span>
+            <span aria-hidden="true" class="panel-corner panel-corner-br"></span>
+
+            <div class="text-center max-w-md mx-auto py-4">
+              <div class="size-16 rounded-full border border-theme-gold/30 bg-theme-gold/5 flex items-center justify-center mx-auto mb-4">
+                <svg class="size-8 text-theme-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+              </div>
+              
+              <h2 class="font-cinzel text-lg font-bold tracking-widest text-theme-cream uppercase">SISTEMA RESTRINGIDO</h2>
+              <p class="text-xs text-white/60 mt-2 font-sans">
+                Por favor, ingresa el token de seguridad de administración oficial para acceder al cuadro de asignación de resultados.
+              </p>
+
+              <form id="form-admin-auth" class="mt-6 flex flex-col gap-3">
+                <input
+                  type="password"
+                  id="admin-secret-input"
+                  required
+                  placeholder="Escribe la clave secreta..."
+                  class="px-4 py-3 rounded bg-black/40 border border-theme-gold/30 text-theme-cream placeholder-white/30 text-sm focus:outline-none focus:border-theme-gold focus:ring-1 focus:ring-theme-gold/30 text-center"
+                />
+                <button
+                  type="submit"
+                  class="px-6 py-3 rounded bg-theme-gold text-theme-midnight font-cinzel text-xs font-black tracking-widest transition-all duration-300 hover:bg-white hover:shadow-[0_0_15px_rgba(199,168,107,0.4)] active:scale-95"
+                >
+                  VALIDAR CREDENCIALES
+                </button>
+              </form>
+            </div>
+          </div>
+        ) : (
+          /* PANEL ACTIVO DE ADMINISTRACIÓN */
+          <div class="flex flex-col gap-6">
+            
+            {/* Header del Panel */}
+            <div class="flex justify-between items-center bg-black/30 border border-white/10 rounded-xl p-4">
+              <div>
+                <span class="text-[0.6rem] font-cinzel text-theme-gold font-bold tracking-widest">CONECTADO</span>
+                <p class="text-sm font-sans text-white/80 font-semibold">Administrador Oficial de La Velada VI</p>
+              </div>
+              <button
+                type="button"
+                id="btn-admin-logout"
+                class="px-3 py-1.5 rounded border border-white/20 text-white/60 hover:text-white hover:border-white font-cinzel text-[0.6rem] font-bold tracking-wider transition duration-300"
+              >
+                SALIR
+              </button>
+            </div>
+
+            {errorLoading && (
+              <div class="bg-red-950/20 border border-red-500/30 rounded-xl p-4 text-center text-red-400 font-sans text-xs">
+                {errorLoading}
+              </div>
+            )}
+
+            {/* Listado de Combates para Declarar */}
+            <div class="flex flex-col gap-6">
+              {combatsWithBoxers.map((combat) => {
+                return (
+                  <article class="relative rounded-2xl p-6 backdrop-blur border border-theme-gold/15 bg-theme-midnight/40" data-combat-id={combat.id}>
+                    <span aria-hidden="true" class="panel-corner panel-corner-tl"></span>
+                    <span aria-hidden="true" class="panel-corner panel-corner-tr"></span>
+                    <span aria-hidden="true" class="panel-corner panel-corner-bl"></span>
+                    <span aria-hidden="true" class="panel-corner panel-corner-br"></span>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div>
+                        <span class="font-cinzel text-[0.55rem] font-bold tracking-[0.2em] text-theme-gold">
+                          COMBATE {combat.number}
+                        </span>
+                        <h3 class="font-fantasy text-lg text-theme-cream tracking-wide">
+                          {combat.title}
+                        </h3>
+                        <p class="text-[0.65rem] text-white/40 mt-0.5">
+                          ID: <span class="font-mono">{combat.id}</span>
+                        </p>
+                      </div>
+
+                      {/* Selector de Ganador */}
+                      <form data-action="declare-winner" data-combat-id={combat.id} class="flex items-center gap-2">
+                        <select
+                          name="winner_id"
+                          class="px-3 py-2 rounded bg-black/50 border border-theme-gold/30 text-theme-cream text-xs focus:outline-none focus:border-theme-gold"
+                        >
+                          <option value="none" selected={combat.currentWinner === 'none'}>Ninguno (No disputado)</option>
+                          <option value={combat.boxer1.id} selected={combat.currentWinner === combat.boxer1.id}>
+                            Ganador: {combat.boxer1.name}
+                          </option>
+                          <option value={combat.boxer2.id} selected={combat.currentWinner === combat.boxer2.id}>
+                            Ganador: {combat.boxer2.name}
+                          </option>
+                        </select>
+
+                        <button
+                          type="submit"
+                          class="px-4 py-2 rounded bg-theme-cream text-theme-midnight font-cinzel text-[0.65rem] font-bold tracking-widest transition duration-300 hover:bg-white active:scale-95"
+                        >
+                          GUARDAR
+                        </button>
+                      </form>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
+                      <span class="text-[0.6rem] font-sans text-white/30">Estado actual:</span>
+                      <span class={`text-[0.65rem] font-cinzel font-bold tracking-widest
+                        ${combat.currentWinner === 'none' ? 'text-amber-500/70' : 'text-green-400'}
+                      `}>
+                        {combat.currentWinner === 'none' ? '🟡 PENDIENTE DE DECLARACIÓN' : `🟢 OFICIAL: ${getBoxerById(combat.currentWinner)?.name || combat.currentWinner}`}
+                      </span>
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+
+          </div>
+        )}
+      </div>
+
+    </div>
+  </section>
+
+  <Sponsors />
+  <Footer />
+</Layout>
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  // Configurar autenticación del panel
+  function setupAdminAuth() {
+    const formAuth = $<HTMLFormElement>('#form-admin-auth')
+    if (formAuth) {
+      formAuth.addEventListener('submit', (e) => {
+        e.preventDefault()
+        const input = $<HTMLInputElement>('#admin-secret-input')
+        if (input) {
+          const secret = input.value.trim()
+          if (secret) {
+            // Guardar clave en cookie
+            document.cookie = `admin_secret=${encodeURIComponent(secret)}; path=/; max-age=86400`
+            window.location.reload()
+          }
+        }
+      })
+    }
+
+    const btnLogout = $<HTMLButtonElement>('#btn-admin-logout')
+    if (btnLogout) {
+      btnLogout.addEventListener('click', () => {
+        document.cookie = 'admin_secret=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        window.location.reload()
+      })
+    }
+  }
+
+  // Configurar asignación de ganadores
+  function setupResultDeclaration() {
+    const forms = $$<HTMLFormElement>('form[data-action="declare-winner"]')
+    
+    forms.forEach((form) => {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const combatId = form.dataset.combatId
+        const select = $<HTMLSelectElement>('select[name="winner_id"]', form)
+        const submitBtn = $<HTMLButtonElement>('button[type="submit"]', form)
+
+        if (!combatId || !select || !submitBtn) return
+
+        const winnerId = select.value
+        const originalText = submitBtn.textContent || ''
+        
+        submitBtn.disabled = true
+        submitBtn.textContent = 'GUARDANDO...'
+
+        // Obtener admin secret de la cookie
+        const adminSecret = document.cookie
+          .split('; ')
+          .find((row) => row.startsWith('admin_secret='))
+          ?.split('=')[1]
+
+        try {
+          const response = await fetch('/api/admin/results', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              combat_id: combatId,
+              winner_id: winnerId,
+              admin_secret: adminSecret ? decodeURIComponent(adminSecret) : '',
+            }),
+          })
+
+          if (!response.ok) {
+            const data = await response.json()
+            throw new Error(data.error || 'Error al guardar resultado')
+          }
+
+          const result = await response.json()
+          console.log('Result declared successfully:', result)
+
+          // Feedback visual de éxito temporal
+          submitBtn.textContent = '¡GUARDADO!'
+          submitBtn.className = 'px-4 py-2 rounded bg-green-500 text-white font-cinzel text-[0.65rem] font-bold tracking-widest transition duration-300'
+          
+          setTimeout(() => {
+            submitBtn.disabled = false
+            submitBtn.textContent = originalText
+            submitBtn.className = 'px-4 py-2 rounded bg-theme-cream text-theme-midnight font-cinzel text-[0.65rem] font-bold tracking-widest transition duration-300 hover:bg-white active:scale-95'
+            
+            // Recargar para refrescar el estado textual
+            window.location.reload()
+          }, 1000)
+
+        } catch (error: any) {
+          console.error(error)
+          alert(error.message || 'Error al declarar el ganador.')
+          submitBtn.disabled = false
+          submitBtn.textContent = originalText
+        }
+      })
+    })
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    setupAdminAuth()
+    setupResultDeclaration()
+  })
+</script>
+
+<style>
+  .admin-page {
+    min-height: 100svh;
+  }
+
+  .admin-bg {
+    background:
+      radial-gradient(
+        ellipse 70% 45% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 16%, transparent) 0%,
+        transparent 65%
+      ),
+      linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
+  }
+
+  .admin-grain {
+    background-image: radial-gradient(
+      rgba(199, 168, 107, 0.05) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+    mask-image: radial-gradient(
+      ellipse at center,
+      black 30%,
+      transparent 85%
+    );
+  }
+
+  .lock-panel, article {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-velada-navy) 20%, var(--color-theme-midnight)) 0%,
+      color-mix(in srgb, var(--color-theme-midnight) 85%, black) 100%
+    );
+  }
+
+  .panel-corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
+  }
+
+  .panel-corner-tl { top: 8px; left: 8px; border-right-width: 0; border-bottom-width: 0; }
+  .panel-corner-tr { top: 8px; right: 8px; border-left-width: 0; border-bottom-width: 0; }
+  .panel-corner-bl { bottom: 8px; left: 8px; border-right-width: 0; border-top-width: 0; }
+  .panel-corner-br { bottom: 8px; right: 8px; border-left-width: 0; border-top-width: 0; }
+</style>
