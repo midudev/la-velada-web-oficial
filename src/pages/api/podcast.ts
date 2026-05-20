@@ -1,69 +1,11 @@
 export const prerender = false
 
 import type { APIRoute } from 'astro'
-
-const CHANNEL_ID = 'UC20NE0K97l6AsBeGKsAYtaA'
-const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
-
-interface ParsedEntry {
-  videoId: string
-  title: string
-  published: string
-}
-
-function decodeHtmlEntities(value: string): string {
-  return value
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&apos;/g, "'")
-}
-
-function parseFeed(xml: string): ParsedEntry[] {
-  const entries: ParsedEntry[] = []
-  const entryRegex = /<entry>([\s\S]*?)<\/entry>/g
-  let match: RegExpExecArray | null
-  while ((match = entryRegex.exec(xml)) !== null) {
-    const entry = match[1]
-    const videoId = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1]
-    const rawTitle = entry.match(/<title>([^<]+)<\/title>/)?.[1]
-    const published = entry.match(/<published>([^<]+)<\/published>/)?.[1]
-    if (!videoId || !rawTitle || !published) continue
-    entries.push({
-      videoId,
-      title: decodeHtmlEntities(rawTitle),
-      published,
-    })
-  }
-  return entries
-}
+import { fetchPodcastEpisodes } from '@/lib/podcast-fetcher'
 
 export const GET: APIRoute = async () => {
   try {
-    const response = await fetch(FEED_URL)
-    if (!response.ok) {
-      return new Response(
-        JSON.stringify({ error: `Feed responded with ${response.status} ${response.statusText}` }),
-        {
-          status: 500,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
-    }
-
-    const xml = await response.text()
-    const episodes = parseFeed(xml)
-      .filter((entry) => new Date(entry.published).getFullYear() === 2026)
-      .map((entry) => ({
-        videoId: entry.videoId,
-        title: entry.title,
-        published: entry.published,
-      }))
-      .sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime())
+    const episodes = await fetchPodcastEpisodes()
 
     return new Response(JSON.stringify(episodes), {
       status: 200,
