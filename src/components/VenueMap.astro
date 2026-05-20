@@ -214,6 +214,8 @@ const { mapId = 'faq-venue-map' } = Astro.props
 
     reveal.classList.remove('venue-map__reveal--open')
     await waitForMapReveal(reveal)
+    // Guard against close→await→reopen interleaving: the reopen path reuses the
+    // existing Leaflet instance, so a stale close must not tear it down.
     if (reveal.classList.contains('venue-map__reveal--open')) return
     teardownLeafletMap(canvas)
   }
