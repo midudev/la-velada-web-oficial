@@ -1507,8 +1507,11 @@ const totalBoxers = BOXERS.length
       btn.addEventListener('click', () => {
         state.country = ''
         state.gender = ''
-        // Limpiamos los filtros de la URL.
-        window.history.pushState({}, '', window.location.pathname)
+        // Limpiamos solo los parámetros de filtro, preservando otros (ej: UTM).
+        const currentURL = new URL(window.location.href)
+        currentURL.searchParams.delete('country')
+        currentURL.searchParams.delete('gender')
+        window.history.pushState({}, '', currentURL)
         applyFilters()
       })
     }
