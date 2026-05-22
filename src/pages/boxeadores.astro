@@ -1398,10 +1398,11 @@ const totalBoxers = BOXERS.length
       for (const card of ordered) gridEl.appendChild(card)
     }
 
-    // Estado de filtros: '' = "todos". Sólo un valor activo por grupo.
+    // Estado de filtros: '' = "todos". Sólo un valor activo por grupo. Lee la URL primero, si no hay nada, usa ''
+    const params = new URLSearchParams(window.location.search)
     const state: { country: string; gender: string } = {
-      country: '',
-      gender: '',
+      country: params.get('country') || '',
+      gender: params.get('gender') || '',
     }
 
     // Cuenta cards que coinciden con un par (country, gender). Pasar '' en
@@ -1490,6 +1491,14 @@ const totalBoxers = BOXERS.length
         // "todos"; mantenemos la UX simple: una activa siempre por grupo.
         if (state[group] === value) return
         state[group] = value
+        // Actualizamos la URL para guardar los filtros.
+        const currentURL = new URL(window.location.href)
+        if (value === '') {
+          currentURL.searchParams.delete(group)
+        } else {
+          currentURL.searchParams.set(group, value)
+        }
+        window.history.pushState({}, '', currentURL)
         applyFilters()
       })
     }
@@ -1498,6 +1507,8 @@ const totalBoxers = BOXERS.length
       btn.addEventListener('click', () => {
         state.country = ''
         state.gender = ''
+        // Limpiamos los filtros de la URL.
+        window.history.pushState({}, '', window.location.pathname)
         applyFilters()
       })
     }
