@@ -1,0 +1,53 @@
+name: Update podcast
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-podcast:
+    name: Fetch episodes & thumbnails
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch new podcast episodes
+        run: node scripts/fetch-podcast-episodes.mjs
+
+      - name: Generate podcast thumbnails
+        run: node scripts/generate-thumbnails.mjs
+
+      - name: Commit & push changes (if any)
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/podcast-episodes.json public/podcast/thumbnails/
+          if git diff --cached --quiet; then
+            echo "Sin cambios, nada que commitear."
+          else
+            git commit -m "chore: actualizar episodios y miniaturas del podcast [skip ci]"
+            git push
+            echo "Cambios pusheados → Vercel redeploy en curso."
+          fi
