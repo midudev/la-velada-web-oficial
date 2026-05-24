@@ -1,46 +1,15 @@
 import fs from 'node:fs/promises'
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const PUBLIC_DIR = path.join(__dirname, '../public')
-
-const CHANNEL_ID = 'UC20NE0K97l6AsBeGKsAYtaA'
-const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
-const MAX_AGE_DAYS = 60
+const DATA_FILE = path.join(__dirname, '../src/data/podcast-episodes.json')
 const PODCAST_THUMBNAILS_DIR = path.join(PUBLIC_DIR, 'podcast/thumbnails')
 
 const STATIC_THUMBNAILS = ['videos/thumbnails/presentacion.webp']
-
-function decodeHtmlEntities(value) {
-  return value
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&apos;/g, "'")
-}
-
-function parseFeed(xml) {
-  const entries = []
-  const entryRegex = /<entry>([\s\S]*?)<\/entry>/g
-  let match
-  while ((match = entryRegex.exec(xml)) !== null) {
-    const entry = match[1]
-    const videoId = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1]
-    const rawTitle = entry.match(/<title>([^<]+)<\/title>/)?.[1]
-    const published = entry.match(/<published>([^<]+)<\/published>/)?.[1]
-    if (!videoId || !rawTitle || !published) continue
-    entries.push({
-      videoId,
-      title: decodeHtmlEntities(rawTitle),
-      published,
-    })
-  }
-  return entries
-}
 
 async function fileExists(filePath) {
   return fs.access(filePath).then(
@@ -104,16 +73,13 @@ async function fetchThumbnail(videoId) {
   throw new Error(`No se pudo descargar una miniatura válida para ${videoId}`)
 }
 
-async function getRecentPodcastEpisodes() {
-  const response = await fetch(FEED_URL)
-  if (!response.ok) {
-    throw new Error(`El feed respondió con ${response.status} ${response.statusText}`)
+function readEpisodesFromJson() {
+  try {
+    return JSON.parse(readFileSync(DATA_FILE, 'utf-8'))
+  } catch {
+    console.warn('  No se pudo leer el histórico de episodios, se omiten las miniaturas del podcast')
+    return []
   }
-
-  const xml = await response.text()
-  const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000
-
-  return parseFeed(xml).filter((entry) => new Date(entry.published).getTime() >= cutoff)
 }
 
 async function generatePodcastThumbnails() {
@@ -121,9 +87,9 @@ async function generatePodcastThumbnails() {
 
   await fs.mkdir(PODCAST_THUMBNAILS_DIR, { recursive: true })
 
-  const episodes = await getRecentPodcastEpisodes()
+  const episodes = readEpisodesFromJson()
   if (episodes.length === 0) {
-    console.log('  No hay episodios recientes')
+    console.log('  No hay episodios en el histórico')
     return
   }
 
