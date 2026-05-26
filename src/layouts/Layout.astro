@@ -23,14 +23,19 @@ interface Props {
 
 const {
   title = fixedTitle,
-  description = 'La Velada del Año VI: evento de boxeo amateur entre streamers y creadores de contenido, organizado por Ibai Llanos el 25 de julio de 2026 en el Estadio de La Cartuja de Sevilla.',
+  description = 'La Velada del Año VI: evento de boxeo amateur de Ibai Llanos. Toda la información sobre fecha, combates y participantes en Sevilla el 25 de julio de 2026.',
   canonical,
   robots,
   ogImage = DEFAULT_OG_IMAGE,
   ogImageAlt = DEFAULT_OG_ALT,
-  ogUrl = canonical ?? SITE_URL,
+  ogUrl,
   ogType = 'website',
 } = Astro.props
+
+const cleanPathname = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/$/, '')
+const canonicalURL = canonical ?? `${SITE_URL}${cleanPathname}`
+const finalOgUrl = ogUrl ?? canonicalURL
+const finalRobots = robots ?? 'index, follow'
 
 // Datos estructurados globales (válidos para todas las páginas).
 // El SportsEvent específico vive en la home para evitar duplicar JSON-LD
@@ -117,10 +122,10 @@ const organizationJsonLd = {
     <meta name="description" content={description} />
     <meta name="author" content="Ibai Llanos" />
     <meta name="theme-color" content="#0a1024" />
-    {canonical && <link rel="canonical" href={canonical} />}
-    {robots && <meta name="robots" content={robots} />}
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="robots" content={finalRobots} />
 
-    <meta property="og:url" content={ogUrl} />
+    <meta property="og:url" content={finalOgUrl} />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
