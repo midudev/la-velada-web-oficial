@@ -1,6 +1,8 @@
 ---
 import ResetIcon from '@/assets/svg/reset.svg'
 import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
+import CountryFlag from '@/components/CountryFlag.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 import Layout from '@/layouts/Layout.astro'
 import Header from '@/sections/Header.astro'
 import Footer from '@/sections/Footer.astro'
@@ -8,7 +10,6 @@ import Sponsors from '@/sections/Sponsors.astro'
 import { battles } from '@/consts/battles'
 import {
   BOXERS,
-  COUNTRY_FLAGS,
   COUNTRY_NAMES,
   GENDER_LABELS,
   getBoxerHeroImages,
@@ -16,8 +17,9 @@ import {
 } from '@/consts/boxers'
 
 const SITE_URL = 'https://www.infolavelada.com'
-const title = `Boxeadores y boxeadoras de La Velada del Año VI (${BOXERS.length} contendientes)`
-const description = `Conoce a los ${BOXERS.length} boxeadores y boxeadoras que se subirán al ring en La Velada del Año VI el 25 de julio de 2026 en el Estadio de La Cartuja de Sevilla: nombre, nacionalidad y combate asignado.`
+const title = 'Boxeadores y boxeadoras | La Velada del Año VI'
+const description =
+  'Descubre a los boxeadores y boxeadoras de La Velada del Año VI. Conoce los participantes, combates y países del evento de Ibai Llanos en Sevilla.'
 const canonical = `${SITE_URL}/boxeadores`
 
 const breadcrumbJsonLd = {
@@ -67,7 +69,6 @@ const boxerCards = BOXERS.map((boxer) => {
     heroImages: getBoxerHeroImages(boxer),
     battleNumber: battle?.number ?? 0,
     battleId: battle?.battleId ?? '',
-    flag: COUNTRY_FLAGS[boxer.country] ?? '',
     countryName: COUNTRY_NAMES[boxer.country] ?? boxer.country,
     totalFollowers,
   }
@@ -89,7 +90,6 @@ const countryFilters = Array.from(countryCounts.entries())
     code,
     count,
     name: COUNTRY_NAMES[code] ?? code,
-    flag: COUNTRY_FLAGS[code] ?? '',
   }))
   .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, 'es'))
 
@@ -132,25 +132,26 @@ const totalBoxers = BOXERS.length
 
     <div class="boxers-layout mx-auto w-full max-w-7xl">
       <header class="boxers-page-header">
-          <div
+        <div
             class="boxers-page-header-ornament mb-8 flex w-full items-center justify-center gap-4 sm:mb-12"
             aria-hidden="true"
           >
             <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
             <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
             <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-          </div>
-          <h1
+        </div>
+        <h1
             class="boxers-page-title mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
           >
             BOXEADORES
-          </h1>
-          <p
+        </h1>
+        <p
             class="boxers-page-lead mb-8 animate-fade-in-up animate-delay-200 text-balance font-cinzel text-xs font-medium tracking-[0.16em] text-white/55 sm:mb-12 sm:text-sm sm:tracking-[0.25em]"
           >
             Los {totalBoxers} contendientes de La Velada del Año VI
-          </p>
-        </header>
+        </p>
+      </header>
+
       <form
         data-boxers-filters
         class="boxer-filters-panel animate-fade-in-up animate-delay-300 relative w-full"
@@ -195,7 +196,7 @@ const totalBoxers = BOXERS.length
                 <span class="boxer-filter-pill-count" aria-hidden="true">{totalBoxers}</span>
               </button>
               {
-                countryFilters.map(({ code, name, flag, count }) => (
+                countryFilters.map(({ code, name, count }) => (
                   <button
                     type="button"
                     data-filter="country"
@@ -204,9 +205,12 @@ const totalBoxers = BOXERS.length
                     aria-label={`Filtrar por ${name}`}
                     class="boxer-filter-pill"
                   >
-                    <span class="boxer-filter-pill-flag" aria-hidden="true">
-                      {flag}
-                    </span>
+                    <CountryFlag
+                      country={code}
+                      size={16}
+                      decorative
+                      class="boxer-filter-pill-flag"
+                    />
                     <span class="boxer-filter-pill-label">{name}</span>
                     <span class="boxer-filter-pill-count" aria-hidden="true">
                       {count}
@@ -395,9 +399,12 @@ const totalBoxers = BOXERS.length
                     {b.name}
                   </h2>
                   <p class="boxer-card-country flex max-w-full items-center gap-1 font-cinzel text-[0.5rem] font-semibold tracking-[0.18em] text-theme-cream/80 sm:gap-1.5 sm:text-[0.65rem] sm:tracking-[0.32em]">
-                    <span class="text-xs leading-none sm:text-sm" aria-hidden="true">
-                      {b.flag}
-                    </span>
+                    <CountryFlag
+                      country={b.country}
+                      size={14}
+                      decorative
+                      class="boxer-card-flag"
+                    />
                     <span class="boxer-card-country-name">{b.countryName}</span>
                   </p>
                 </div>
@@ -412,11 +419,7 @@ const totalBoxers = BOXERS.length
         class="mx-auto mt-16 hidden max-w-md flex-col items-center gap-4 text-center"
         role="status"
       >
-        <div class="flex items-center justify-center gap-3" aria-hidden="true">
-          <span class="h-px w-10 bg-linear-to-r from-transparent to-theme-gold/60"></span>
-          <span class="size-1.5 rotate-45 bg-theme-gold/85"></span>
-          <span class="h-px w-10 bg-linear-to-l from-transparent to-theme-gold/60"></span>
-        </div>
+        <SectionDivider size="sm" />
         <p
           class="font-cinzel text-base font-bold tracking-[0.18em] text-theme-cream sm:text-lg"
         >
@@ -1269,15 +1272,29 @@ const totalBoxers = BOXERS.length
       inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
   }
 
-  .boxer-filter-pill-flag {
-    font-size: 0.95rem;
-    line-height: 1;
-    filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.4));
+  :global(.boxer-filter-pill-flag) {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
   }
 
   @media (max-width: 639px) {
-    .boxer-filter-pill-flag {
-      font-size: 0.85rem;
+    :global(.boxer-filter-pill-flag) {
+      width: 0.875rem;
+      height: 0.875rem;
+    }
+  }
+
+  :global(.boxer-card-flag) {
+    width: 0.9rem;
+    height: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 640px) {
+    :global(.boxer-card-flag) {
+      width: 1rem;
+      height: 1rem;
     }
   }
 

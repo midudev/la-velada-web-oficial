@@ -1,9 +1,10 @@
 ---
+import CountryFlag from '@/components/CountryFlag.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 import { battles } from '@/consts/battles'
 import {
   BOXERS,
   BOXERS_BY_ID,
-  COUNTRY_FLAGS,
   COUNTRY_NAMES,
   getBoxerHeroImages,
   getBoxerSelectImages,
@@ -101,7 +102,6 @@ const positionedBoxers: Array<{
 // no dejar el panel vacío antes de que el JS reaccione a una interacción).
 const fallback = BOXERS[0]
 const fallbackHero = getBoxerHeroImages(fallback)
-const fallbackFlag = COUNTRY_FLAGS[fallback.country] ?? ''
 const fallbackCountry = COUNTRY_NAMES[fallback.country] ?? fallback.country
 const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 ---
@@ -120,28 +120,24 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true"></div>
 
       <div class="boxer-default-lockup flex w-full max-w-full flex-col items-center px-4">
-        <div
-          class="animate-blurred-fade-in animate-delay-300 relative leading-none"
-          role="img"
-          aria-label="Logo de La Velada del Año VI"
-        >
-        <picture class="block">
-          <source srcset="/logo.avif" type="image/avif" />
-          <source srcset="/logo.webp" type="image/webp" />
-          <img
-            src="/logo.webp"
-            alt="La Velada del Año VI"
-            class="boxer-default-logo relative block h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
-            width="512"
-            height="512"
-            decoding="async"
-            fetchpriority="high"
-          />
-        </picture>
-      </div>
+        <div class="animate-blurred-fade-in animate-delay-300 relative leading-none">
+          <picture class="block">
+            <source srcset="/logo.avif" type="image/avif" />
+            <source srcset="/logo.webp" type="image/webp" />
+            <img
+              src="/logo.webp"
+              alt="Logo de La Velada del Año VI"
+              class="boxer-default-logo relative block h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
+              width="512"
+              height="512"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </picture>
+        </div>
 
       <ul
-          class="boxer-default-info animate-fade-in-up animate-delay-500 -mt-3 flex flex-col items-center justify-center gap-1 sm:-mt-4 md:-mt-5 lg:-mt-6"
+        class="boxer-default-info boxer-default-info-spacing animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center gap-1"
       >
         <li class="flex items-baseline">
           <time
@@ -232,11 +228,15 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           class="boxer-country mt-1 flex items-center gap-x-2 font-cinzel text-[0.6rem] font-bold tracking-[0.3em] text-theme-cream sm:mt-1.5 sm:text-[0.7rem] md:mt-2 md:text-xs"
           aria-live="polite"
         >
-          <span
-            class="boxer-country-flag text-sm leading-none sm:text-base md:text-lg"
-            aria-hidden="true"
+          <img
             data-active-flag
-          >{fallbackFlag}</span>
+            src={`/flags/${fallback.country}.svg`}
+            alt=""
+            aria-hidden="true"
+            width="20"
+            height="20"
+            class="boxer-country-flag"
+          />
           <span data-active-country-name>{fallbackCountry}</span>
         </p>
       </div>
@@ -246,7 +246,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   <div class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-4 md:gap-6">
     <div
       class="boxer-cta-bar relative z-20 flex w-full flex-col items-center gap-3 px-4 pt-2 transition-opacity duration-300 ease-out md:gap-4 md:pt-4"
-      aria-hidden="false"
     >
       <div
         class="boxer-default-divider flex items-center justify-center gap-3 sm:gap-4"
@@ -341,7 +340,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
             },
             index,
           ) => {
-            const flag = COUNTRY_FLAGS[boxer.country] ?? ''
             const countryName = COUNTRY_NAMES[boxer.country] ?? boxer.country
             const selectImages = getBoxerSelectImages(boxer)
             const heroImages = getBoxerHeroImages(boxer)
@@ -354,7 +352,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                 data-name={boxer.name}
                 data-photo-avif={heroImages.avif}
                 data-photo-webp={heroImages.webp}
-                data-flag={flag}
+                data-country-code={boxer.country}
                 data-country={countryName}
                 aria-label={`Ver perfil de ${boxer.name}`}
                 data-active="false"
@@ -454,7 +452,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     pointer-events: none;
   }
 
-  /* Lockup: eye-level offset here only. Logo → fechas: flex gap + Tailwind -mt on .boxer-default-info. */
+  /* Lockup: eye-level offset here only. Logo → fechas: flex gap + .boxer-default-info-spacing. */
   .boxer-default-lockup {
     gap: clamp(0.625rem, 2vw, 1.125rem);
     padding-top: clamp(2.5rem, 11vh, 7rem);
@@ -478,6 +476,28 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   }
 
+  .boxer-default-info-spacing {
+    margin-top: -0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .boxer-default-info-spacing {
+      margin-top: -1rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .boxer-default-info-spacing {
+      margin-top: -1.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .boxer-default-info-spacing {
+      margin-top: -1.5rem;
+    }
+  }
+
   .boxer-default-info {
     text-shadow:
       0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
@@ -491,8 +511,8 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       gap: 0.5rem;
     }
 
-    .boxer-default-info {
-      margin-top: -0.5rem !important;
+    .boxer-default-info-spacing {
+      margin-top: -0.5rem;
     }
   }
 
@@ -639,7 +659,24 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   .boxer-country-flag {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+  }
+
+  @media (min-width: 640px) {
+    .boxer-country-flag {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .boxer-country-flag {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
   }
 
   .boxer-portrait-layer {
@@ -1149,7 +1186,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     const watermarkTexts = Array.from(
       $$<HTMLElement>('[data-active-watermark-text]', root),
     )
-    const flagNode = $<HTMLElement>('[data-active-flag]', root)
+    const flagNode = $<HTMLImageElement>('[data-active-flag]', root)
     const countryNode = $<HTMLElement>('[data-active-country-name]', root)
     const defaultPanel = $<HTMLElement>('[data-default-panel]', root)
     const boxerPanel = $<HTMLElement>('[data-boxer-panel]', root)
@@ -1202,7 +1239,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     /** Aplica el contenido (imagen, nombre, watermark, bandera, país) al
      *  panel del boxer. No toca el state ni las clases is-switching. */
     function applyBoxerContent(thumb: HTMLAnchorElement) {
-      const { name, photoAvif, photoWebp, flag, country } = thumb.dataset
+      const { name, photoAvif, photoWebp, countryCode, country } = thumb.dataset
       if (!name || !photoWebp) return
 
       // Actualizamos las sources del <picture> antes del src del <img>
@@ -1217,7 +1254,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         node.textContent = name
       })
 
-      if (flagNode && flag) flagNode.textContent = flag
+      if (flagNode && countryCode) flagNode.src = `/flags/${countryCode}.svg`
       if (countryNode && country) countryNode.textContent = country
     }
 
