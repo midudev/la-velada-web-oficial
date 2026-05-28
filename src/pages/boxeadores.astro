@@ -1370,7 +1370,10 @@ const totalBoxers = BOXERS.length
     const sortButtons = sortBar
       ? Array.from($$<HTMLButtonElement>('[data-sort]', sortBar))
       : []
-    let sortMode: SortMode = 'cartel'
+    // Estado inicial desde la URL (debe ir antes de sortMode)
+    const urlState = getStateFromURL()
+    const state: { country: string; gender: string } = urlState
+    let sortMode: SortMode = urlState.sort
 
     // Reordena el DOM (no sólo CSS `order`) para que el orden de
     // tabulación coincida con el visual. Con 20 cards el coste es
@@ -1399,10 +1402,25 @@ const totalBoxers = BOXERS.length
       for (const card of ordered) gridEl.appendChild(card)
     }
 
-    // Estado de filtros: '' = "todos". Sólo un valor activo por grupo.
-    const state: { country: string; gender: string } = {
-      country: '',
-      gender: '',
+    // Lee el estado inicial desde la URL
+    function getStateFromURL() {
+      const params = new URLSearchParams(window.location.search)
+      const sort = params.get('sort') as SortMode | null
+      return {
+        country: params.get('country') ?? '',
+        gender: params.get('gender') ?? '',
+        sort: sort && ['cartel', 'followers-desc', 'followers-asc'].includes(sort) ? sort : 'cartel',
+      }
+    }
+
+    function syncStateToURL() {
+      const params = new URLSearchParams()
+      if (state.country) params.set('country', state.country)
+      if (state.gender) params.set('gender', state.gender)
+      if (sortMode !== 'cartel') params.set('sort', sortMode)
+      const qs = params.toString()
+      const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname
+      window.history.replaceState(null, '', url)
     }
 
     // Cuenta cards que coinciden con un par (country, gender). Pasar '' en
@@ -1492,6 +1510,7 @@ const totalBoxers = BOXERS.length
         if (state[group] === value) return
         state[group] = value
         applyFilters()
+        syncStateToURL()
       })
     }
 
@@ -1500,6 +1519,7 @@ const totalBoxers = BOXERS.length
         state.country = ''
         state.gender = ''
         applyFilters()
+        syncStateToURL()
       })
     }
 
@@ -1512,10 +1532,17 @@ const totalBoxers = BOXERS.length
           b.setAttribute('aria-pressed', String(b.dataset.sort === sortMode))
         }
         applySort()
+        syncStateToURL()
       })
     }
 
+    // Sincroniza aria-pressed en los botones de ordenación al cargar
+    for (const b of sortButtons) {
+      b.setAttribute('aria-pressed', String(b.dataset.sort === sortMode))
+    }
+
     applyFilters()
+    applySort()
   }
 
   document.addEventListener('astro:page-load', setupBoxersFilters)
