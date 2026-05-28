@@ -1371,7 +1371,7 @@ const totalBoxers = BOXERS.length
       ? Array.from($$<HTMLButtonElement>('[data-sort]', sortBar))
       : []
     // Estado inicial desde la URL (debe ir antes de sortMode)
-    const urlState = getStateFromURL()
+    const urlState = getStateFromURL(filterButtons)
     const state: { country: string; gender: string } = urlState
     let sortMode: SortMode = urlState.sort
 
@@ -1403,12 +1403,16 @@ const totalBoxers = BOXERS.length
     }
 
     // Lee el estado inicial desde la URL
-    function getStateFromURL() {
+    function getStateFromURL(buttons: HTMLButtonElement[]) {
+      const validCountries = new Set(buttons.filter(b => b.dataset.filter === 'country').map(b => b.dataset.value ?? ''))
+      const validGenders = new Set(buttons.filter(b => b.dataset.filter === 'gender').map(b => b.dataset.value ?? ''))
       const params = new URLSearchParams(window.location.search)
+      const rawCountry = params.get('country') ?? ''
+      const rawGender = params.get('gender') ?? ''
       const sort = params.get('sort') as SortMode | null
       return {
-        country: params.get('country') ?? '',
-        gender: params.get('gender') ?? '',
+        country: validCountries.has(rawCountry) ? rawCountry : '',
+        gender: validGenders.has(rawGender) ? rawGender : '',
         sort: sort && ['cartel', 'followers-desc', 'followers-asc'].includes(sort) ? sort : 'cartel',
       }
     }
