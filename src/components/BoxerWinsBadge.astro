@@ -1,0 +1,264 @@
+---
+interface Props {
+  wins: number[]
+  boxerName?: string
+  /** Variante visual: `card` (compacto, sobre la tarjeta) o `detail`
+   *  (más grande, para la ficha individual). */
+  variant?: 'card' | 'detail'
+  /** Si `true`, los años se muestran siempre desplegados (sin hover).
+   *  Útil para pantallas donde el badge es la pieza principal y no
+   *  queremos esconder información. */
+  defaultExpanded?: boolean
+  /** Clases extra que se aplican al contenedor (típicamente para
+   *  posicionar el badge en el contenedor padre). */
+  class?: string
+}
+
+const {
+  wins = [],
+  boxerName,
+  variant = 'card',
+  defaultExpanded = false,
+  class: className = '',
+} = Astro.props
+
+if (wins.length === 0) return null
+
+// Más reciente primero: el último triunfo es el "trofeo activo" y
+// llama más la atención cuando está visible arriba.
+const sortedWins = [...wins].sort((a, b) => b - a)
+
+const yearsLabel =
+  sortedWins.length === 1
+    ? `${sortedWins[0]}`
+    : `${sortedWins.slice(0, -1).join(', ')} y ${sortedWins.at(-1)}`
+
+const ariaLabel = boxerName
+  ? `${boxerName}, campeón/a de La Velada en ${yearsLabel}`
+  : `Campeón/a de La Velada en ${yearsLabel}`
+---
+
+<div
+  class:list={['wins-badge', `wins-badge--${variant}`, className]}
+  data-wins-count={sortedWins.length}
+  data-expanded={defaultExpanded ? 'true' : undefined}
+  role="img"
+  aria-label={ariaLabel}
+>
+  {
+    sortedWins.map((year, index) => (
+      <span class="win-pill" style={`--win-delay: ${index * 70}ms`}>
+        <svg
+          class="win-icon"
+          viewBox="0 0 36 22"
+          aria-hidden="true"
+          focusable="false"
+        >
+          {/* Correa izquierda */}
+          <path
+            d="M0.5 8 H12 V14 H0.5 Z"
+            fill="#1a1024"
+            stroke="currentColor"
+            stroke-width="0.5"
+            opacity="0.9"
+          />
+          {/* Correa derecha */}
+          <path
+            d="M24 8 H35.5 V14 H24 Z"
+            fill="#1a1024"
+            stroke="currentColor"
+            stroke-width="0.5"
+            opacity="0.9"
+          />
+          {/* Placa central del cinturón */}
+          <circle cx="18" cy="11" r="8" fill="currentColor" />
+          <circle
+            cx="18"
+            cy="11"
+            r="6.4"
+            fill="none"
+            stroke="#1a1024"
+            stroke-width="0.5"
+          />
+          {/* Estrella del campeón */}
+          <path
+            d="M18 6.7 L19.2 9.5 L22.1 9.8 L19.8 11.8 L20.6 14.8 L18 13.2 L15.4 14.8 L16.2 11.8 L13.9 9.8 L16.8 9.5 Z"
+            fill="#1a1024"
+          />
+        </svg>
+        <span class="win-year">
+          <span class="win-year-value">{year}</span>
+        </span>
+      </span>
+    ))
+  }
+</div>
+
+<style>
+  .wins-badge {
+    /* Siempre posicionado de forma absoluta para no ocupar espacio en
+       el flujo del contenedor padre (que debe ser `position: relative`).
+       La posición concreta (top/left) se controla desde el padre con
+       la clase pasada por prop. */
+    position: absolute;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--color-theme-gold);
+    /* Nos aseguramos de que el badge esté por encima del veil y la
+       imagen, pero permitimos que el clic siga llegando al <a> padre
+       (el badge captura hover pero el click viaja al ancestor link). */
+    z-index: 5;
+  }
+
+  .win-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    padding: 3px 4px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-theme-gold) 92%, white) 0%,
+      var(--color-theme-gold) 55%,
+      color-mix(in srgb, var(--color-theme-gold) 70%, black) 100%
+    );
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.55),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
+      0 0 14px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    transform-origin: left center;
+    transition:
+      box-shadow 350ms ease,
+      transform 350ms ease,
+      padding 380ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  .win-icon {
+    width: 14px;
+    height: 9px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.35));
+  }
+
+  /* El "chip de año" empieza colapsado: ancho cero y opacidad 0.
+     Cuando se expande (hover/focus o data-attribute) crece a la
+     derecha y aparece el texto con un pequeño retardo en cascada. */
+  .win-year {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    color: var(--color-theme-midnight);
+    font-family: 'Cinzel', var(--font-fallback);
+    line-height: 1;
+    transition:
+      max-width 420ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 240ms ease,
+      margin-left 380ms cubic-bezier(0.16, 1, 0.3, 1),
+      margin-right 380ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .win-year-value {
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Auto-expansión por hover/focus sobre el propio badge. */
+  .wins-badge:hover .win-year,
+  .wins-badge:focus-within .win-year,
+  .wins-badge[data-expanded='true'] .win-year {
+    max-width: 3rem;
+    opacity: 1;
+    margin-left: 4px;
+    margin-right: 4px;
+    /* En el estado expandido aplicamos un delay en cascada para que
+       las píldoras "asomen" una detrás de otra. Al volver al estado
+       colapsado no hay delay → se cierran todas a la vez. */
+    transition-delay: var(--win-delay, 0ms);
+  }
+
+  .wins-badge:hover .win-pill,
+  .wins-badge:focus-within .win-pill,
+  .wins-badge[data-expanded='true'] .win-pill {
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.6),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
+      0 0 22px color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    transition-delay: var(--win-delay, 0ms);
+  }
+
+  /* ---------- Variante `card` (listing y tarjetas) ---------- */
+  /* La variante `card` ya cubre tamaños compactos por defecto, no
+     necesita overrides aquí. */
+
+  /* ---------- Variante `detail` (página de ficha) ---------- */
+  .wins-badge--detail .win-pill {
+    padding: 5px 6px;
+  }
+
+  .wins-badge--detail .win-icon {
+    width: 20px;
+    height: 13px;
+  }
+
+  .wins-badge--detail .win-year-value {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+  }
+
+  .wins-badge--detail:hover .win-year,
+  .wins-badge--detail:focus-within .win-year,
+  .wins-badge--detail[data-expanded='true'] .win-year {
+    max-width: 4rem;
+    margin-left: 6px;
+    margin-right: 6px;
+  }
+
+  /* ---------- Responsive (cards más pequeñas en mobile) ---------- */
+  @media (max-width: 639px) {
+    .wins-badge--card {
+      gap: 3px;
+    }
+
+    .wins-badge--card .win-pill {
+      padding: 2px 3px;
+    }
+
+    .wins-badge--card .win-icon {
+      width: 11px;
+      height: 7px;
+    }
+
+    .wins-badge--card .win-year-value {
+      font-size: 0.46rem;
+    }
+
+    .wins-badge--card:hover .win-year,
+    .wins-badge--card:focus-within .win-year,
+    .wins-badge--card[data-expanded='true'] .win-year {
+      max-width: 2.5rem;
+      margin-left: 3px;
+      margin-right: 3px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .win-pill,
+    .win-year {
+      transition: none;
+    }
+
+    .wins-badge:hover .win-year,
+    .wins-badge:focus-within .win-year,
+    .wins-badge[data-expanded='true'] .win-year {
+      transition-delay: 0ms;
+    }
+  }
+</style>

@@ -1,6 +1,7 @@
 import { turso } from '@/lib/database'
 import { FIGHTERS } from '@/consts/fighters'
 import { COMBATS } from '@/consts/combats'
+import { getBoxerById } from './boxers'
 
 // Caché en memoria con timestamp de 30 segundos
 interface CacheEntry<T> {
@@ -250,7 +251,7 @@ export async function registerVote(
     }
 
     // Verificar que el luchador existe
-    const fighterExists = FIGHTERS.find((fighter) => fighter.id === fighterId)
+    const fighterExists = getBoxerById(fighterId)
     if (!fighterExists) {
       throw new Error('El luchador especificado no existe')
     }

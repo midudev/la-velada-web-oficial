@@ -1,218 +1,258 @@
 ---
-const { pathname } = Astro.url
+const NAV_ITEMS = [
+  {
+    label: 'COMBATES',
+    href: '/#cartelera',
+    disabled: true,
+    note: 'PRÓXIMAMENTE',
+  },
+  {
+    label: 'BOXEADORES',
+    href: '/boxeadores',
+    disabled: false,
+  },
+  {
+    label: 'PRONÓSTICOS',
+    href: '/pronosticos',
+    disabled: true,
+    note: 'PRÓXIMAMENTE',
+  },
+] as const
 
-// Lista de rutas donde NO debe aparecer el logo
-const hideLogoRoutes = ['/']
-const shouldShowLogo = !hideLogoRoutes.includes(pathname)
-
-// Comprueba si la ruta actual está activa
-const isActive = (path: string) => pathname === path
+const currentPath = Astro.url.pathname
+const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/boxeadores'
 ---
 
-<div class="fixed right-8 top-8 z-[100] md:hidden">
-  <button
-    id="menuButton"
-    aria-expanded="false"
-    aria-controls="menuMobileContent"
-    class="hamburgerButton group relative flex h-[20px] w-6 cursor-pointer flex-col items-center justify-between transition duration-300 hover:scale-110 lg:hidden"
-    aria-label="Abrir menú de navegación"
-  >
-    <span
-      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:translate-y-2 group-[.open]:rotate-45"
-    ></span>
-    <span
-      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:opacity-0"
-    ></span>
-    <span
-      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:opacity-0"
-    ></span>
-    <span
-      class="ease h-[2px] w-6 transform bg-gray-300 transition duration-300 group-[.open]:-translate-y-[0.6rem] group-[.open]:-rotate-45"
-    ></span>
-  </button>
-</div>
-
 <header
-  class="fixed top-0 z-50 mx-auto flex h-20 w-full select-none items-center text-white md:overflow-hidden"
+  data-header
+  data-menu-open="false"
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent backdrop-blur-[0px] transition-[background-color,backdrop-filter,border-color] duration-500 ease-out data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md"
 >
-  <div class="relative flex justify-between px-6 py-4 md:w-full">
-    <a href="/" class="cursor-pointer transition duration-300 hover:scale-110 md:hidden">
-      <img src="/favicon.svg" alt="logo" class="h-auto w-7" />
+  <div
+    class="relative z-50 mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4"
+  >
+    <a
+      href="/"
+      class="group flex items-center gap-3 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+      aria-label="La Velada del Año VI - Inicio"
+    >
+      <img
+        src="/logo.svg"
+        alt=""
+        class="h-9 w-auto transition duration-500 group-hover:rotate-[-2deg] sm:h-10"
+        width="40"
+        height="40"
+        decoding="async"
+      />
+      <span
+        class="hidden font-cinzel text-[0.6rem] font-bold tracking-[0.32em] text-theme-cream/85 sm:inline-block sm:text-xs"
+      >
+        LA VELADA <span class="text-theme-gold">VI</span>
+      </span>
     </a>
 
+    <nav class="hidden md:block" aria-label="Navegación principal">
+      <ul class="flex items-center gap-1 sm:gap-2">
+        {
+          NAV_ITEMS.map((item) =>
+            item.disabled ? (
+              <li>
+                <span
+                  role="link"
+                  aria-disabled="true"
+                  class="relative inline-flex select-none items-center px-3 py-2 font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-white/40 sm:px-4 sm:text-xs"
+                  title="Próximamente"
+                >
+                  {item.label}
+                  {item.note && (
+                    <span class="pointer-events-none absolute left-1/2 top-full hidden -translate-x-1/2 -translate-y-2 whitespace-nowrap rounded-full border border-theme-gold/40 bg-theme-gold/5 px-2 py-0.5 font-cinzel text-[0.5rem] font-semibold tracking-[0.22em] text-theme-gold/85 sm:inline-block sm:text-[0.55rem]">
+                      {item.note}
+                    </span>
+                  )}
+                </span>
+              </li>
+            ) : (
+              <li>
+                <a
+                  href={item.href}
+                  data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
+                  class="group relative inline-flex items-center px-3 py-2 font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-white/85 transition duration-300 outline-none hover:text-theme-cream focus-visible:text-theme-cream sm:px-4 sm:text-xs"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="pointer-events-none absolute inset-x-3 -bottom-px h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100 sm:inset-x-4"
+                  />
+                  {item.label}
+                </a>
+              </li>
+            )
+          )
+        }
+      </ul>
+    </nav>
+
+    <button
+      type="button"
+      data-mobile-menu-button
+      class="group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] outline-none backdrop-blur-md transition duration-300 hover:border-theme-gold/50 hover:bg-theme-gold/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      aria-label="Abrir menú"
+    >
+      <span class="sr-only">Abrir menú</span>
+      <span
+        aria-hidden="true"
+        class="absolute h-px w-5 -translate-y-1.5 bg-current transition duration-300 group-data-[open=true]:translate-y-0 group-data-[open=true]:rotate-45"
+      ></span>
+      <span
+        aria-hidden="true"
+        class="absolute h-px w-5 bg-current transition duration-300 group-data-[open=true]:opacity-0"
+      ></span>
+      <span
+        aria-hidden="true"
+        class="absolute h-px w-5 translate-y-1.5 bg-current transition duration-300 group-data-[open=true]:translate-y-0 group-data-[open=true]:-rotate-45"
+      ></span>
+    </button>
+  </div>
+
+  <div
+    id="mobile-menu"
+    data-mobile-menu
+    aria-hidden="true"
+    inert
+    class="fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl transition duration-300 ease-out pointer-events-none data-[open=true]:translate-y-0 data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto md:hidden"
+  >
     <div
-      id="overlay-menu"
-      class="bg-theme-raisin-black/50 fixed inset-0 hidden h-[100vh] md:hidden"
-    >
-    </div>
-    <nav
-      id="navContent"
-      class="bg-theme-french-mauve/90 invisible fixed right-0 top-0 mx-auto h-[100vh] max-w-6xl translate-x-full items-center justify-between space-y-2 px-6 pt-14 text-xs font-light backdrop-blur-2xl md:visible md:relative md:flex md:!h-fit md:w-full md:translate-x-0 md:space-y-0 md:bg-transparent md:py-4 md:backdrop-blur-none lg:text-sm"
-    >
-      <div
-        class:list={[
-          'flex flex-col justify-start space-y-2 md:flex-row md:gap-8 md:space-y-0',
-          shouldShowLogo ? 'md:w-1/3' : 'md:flex-grow',
-        ]}
-      >
-        <a
-          href="/2024"
-          class="group relative inline-block w-fit py-1 leading-relaxed tracking-wider"
-        >
-          <span class="text-theme-seashell py-1">EDICIÓN 2024</span>
-          <div class="relative mt-1 h-[2px] w-full overflow-hidden">
-            <div
-              class:list={[
-                'absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out',
-                isActive('/2024') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
-              ]}
-            >
-            </div>
-            <div
-              class:list={[
-                'absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out',
-                isActive('/2024') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
-              ]}
-            >
-            </div>
-          </div>
-        </a>
-        <a
-          href="/combates"
-          class="group relative inline-block w-fit py-1 leading-relaxed tracking-wider"
-        >
-          <span class="text-theme-seashell py-1">VER COMBATES</span>
-          <div class="relative mt-1 h-[2px] w-full overflow-hidden">
-            <div
-              class:list={[
-                'absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out',
-                isActive('/combates') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
-              ]}
-            >
-            </div>
-            <div
-              class:list={[
-                'absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out',
-                isActive('/combates') ? 'w-[51%]' : 'w-0 group-hover:w-[51%]',
-              ]}
-            >
-            </div>
-          </div>
-        </a>
-      </div>
-
-      {
-        shouldShowLogo && (
-          <a
-            href="/"
-            class="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 transition duration-500 hover:scale-110 md:inline-block"
-          >
-            <img
-              class="h-10"
-              src="/favicon.svg"
-              fetchpriority="high"
-              alt="La Velada del Año V"
-              decoding="async"
-            />
-          </a>
-        )
-      }
-
-      <div>
-        <a
-          href="https://www.youtube.com/watch?v=YE2Tmktpp50"
-          class:list={[
-            'w-fut group relative flex-col items-end py-1 leading-relaxed tracking-wider md:text-right',
-            shouldShowLogo ? 'md:w-1/3' : 'md:flex-grow',
-          ]}
-          rel="noopener noreferrer"
-          target="_blank"
-          title="Comprar entradas para La Velada V"
-        >
-          <span id="buy-tickets" class="text-theme-seashell neon-text relative inline-block"
-            >VER LA VELADA V
-          </span>
-          <div class="relative h-[2px] w-full overflow-hidden">
-            <div
-              class:list={[
-                'absolute bottom-0 left-0 h-full bg-[color:var(--color-theme-tickle-me-pink)] transition-all duration-300 ease-out',
-                'w-0 group-hover:w-[51%]',
-              ]}
-            >
-            </div>
-            <div
-              class:list={[
-                'absolute bottom-0 right-0 h-full bg-[color:var(--color-theme-turquoise)] transition-all duration-300 ease-out',
-                'w-0 group-hover:w-[51%]',
-              ]}
-            >
-            </div>
-          </div>
-        </a>
-      </div>
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_50%_0%,rgba(201,164,107,0.22),transparent_62%)]"
+    ></div>
+    <nav aria-label="Menú principal móvil" class="relative w-full max-w-sm">
+      <ul class="flex flex-col items-center gap-6">
+        {
+          NAV_ITEMS.map((item) =>
+            item.disabled ? (
+              <li class="w-full">
+                <span
+                  role="link"
+                  aria-disabled="true"
+                  class="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-white/35"
+                  title="Próximamente"
+                >
+                  {item.label}
+                  {item.note && (
+                    <span class="rounded-full border border-theme-gold/35 bg-theme-gold/10 px-3 py-1 text-[0.55rem] font-semibold tracking-[0.24em] text-theme-gold/80">
+                      {item.note}
+                    </span>
+                  )}
+                </span>
+              </li>
+            ) : (
+              <li class="w-full">
+                <a
+                  href={item.href}
+                  data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
+                  data-mobile-menu-link
+                  class="group relative flex items-center justify-center rounded-2xl border border-theme-gold/35 bg-theme-gold/10 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="pointer-events-none absolute inset-x-6 bottom-3 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                  />
+                  {item.label}
+                </a>
+              </li>
+            )
+          )
+        }
+      </ul>
     </nav>
   </div>
 </header>
 
-<style>
-  header {
-    background: transparent;
-    animation: header-blur-scroll 0.3s linear both;
-    animation-timeline: scroll();
-    animation-range: 0 250px;
-    border-bottom: 1px solid transparent;
-  }
-
-  @keyframes header-blur-scroll {
-    0% {
-      backdrop-filter: blur(0px);
-      background: transparent;
-    }
-
-    100% {
-      backdrop-filter: blur(10px);
-      background: rgba(0, 0, 0, 0.5);
-      padding-bottom: var(--spacing-6);
-      border-bottom-color: black;
-    }
-  }
-
-  #navContent {
-    transition:
-      translate 0.3s ease-in-out,
-      visibility 0.3s 0.3s;
-  }
-
-  #navContent.showing {
-    visibility: visible;
-    translate: 0 0;
-    transition:
-      translate 0.3s ease-in-out,
-      visibility 0.3s;
-  }
-</style>
-
 <script>
-  import { $ } from '@/lib/dom-selector'
+  import { $, $$ } from '@/lib/dom-selector'
+
+  const SCROLL_THRESHOLD = 24
+
+  let scrollAbortController: AbortController | null = null
+  let menuAbortController: AbortController | null = null
+
+  function setupHeaderScroll() {
+    const header = $<HTMLElement>('[data-header]')
+    if (!header) return
+
+    scrollAbortController?.abort()
+    scrollAbortController = new AbortController()
+
+    const update = () => {
+      const scrolled = window.scrollY > SCROLL_THRESHOLD
+      if (scrolled) {
+        header.setAttribute('data-scrolled', 'true')
+      } else {
+        header.removeAttribute('data-scrolled')
+      }
+    }
+
+    update()
+
+    window.addEventListener('scroll', update, {
+      passive: true,
+      signal: scrollAbortController.signal,
+    })
+  }
+
+  function setupMobileMenu() {
+    const header = $<HTMLElement>('[data-header]')
+    const menu = $<HTMLElement>('[data-mobile-menu]')
+    const button = $<HTMLButtonElement>('[data-mobile-menu-button]')
+    const links = $$<HTMLAnchorElement>('[data-mobile-menu-link]')
+
+    if (!header || !menu || !button) return
+
+    menuAbortController?.abort()
+    menuAbortController = new AbortController()
+    const { signal } = menuAbortController
+
+    const setMenuOpen = (isOpen: boolean) => {
+      header.dataset.menuOpen = String(isOpen)
+      menu.dataset.open = String(isOpen)
+      button.dataset.open = String(isOpen)
+      menu.setAttribute('aria-hidden', String(!isOpen))
+      menu.inert = !isOpen
+      button.setAttribute('aria-expanded', String(isOpen))
+      button.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú')
+      const label = $<HTMLElement>('.sr-only', button)
+      if (label) label.textContent = isOpen ? 'Cerrar menú' : 'Abrir menú'
+      document.documentElement.classList.toggle('overflow-hidden', isOpen)
+    }
+
+    setMenuOpen(false)
+
+    button.addEventListener(
+      'click',
+      () => {
+        setMenuOpen(button.getAttribute('aria-expanded') !== 'true')
+      },
+      { signal }
+    )
+
+    links.forEach((link) => {
+      link.addEventListener('click', () => setMenuOpen(false), {
+        signal,
+      })
+    })
+
+    window.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key === 'Escape') setMenuOpen(false)
+      },
+      { signal }
+    )
+  }
 
   document.addEventListener('astro:page-load', () => {
-    function toggleMenu(
-      menuBtn: Element | null,
-      navContent: Element | null,
-      overlayMenu: Element | null,
-    ) {
-      menuBtn?.classList.toggle('open')
-      navContent?.classList.toggle('showing')
-      tickets?.classList.toggle('neon-text')
-      overlayMenu?.classList.toggle('hidden')
-    }
-
-    const navContent = $('#navContent')
-    const menuButton = $('#menuButton')
-    const overlayMenu = $('#overlay-menu')
-    const tickets = $('#buy-tickets')
-
-    menuButton?.addEventListener('click', () => toggleMenu(menuButton, navContent, overlayMenu))
-    overlayMenu?.addEventListener('click', () => toggleMenu(menuButton, navContent, overlayMenu))
+    setupHeaderScroll()
+    setupMobileMenu()
   })
 </script>
