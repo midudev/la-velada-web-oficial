@@ -1,0 +1,287 @@
+---
+import SectionHeader from '@/components/SectionHeader.astro'
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import CloseIcon from '@/assets/svg/close.svg'
+import PlayIcon from '@/assets/svg/play.svg'
+
+type Span = 'big' | 'small'
+
+interface Video {
+  id: string
+  title: string
+  videoId: string | null
+  poster: {
+    avif: string
+    webp: string
+  } | null
+  active: boolean
+  span: Span
+}
+
+const VIDEOS: Video[] = [
+  {
+    id: 'presentacion',
+    title: 'La Presentación',
+    videoId: 'h-jWhM3ne5U',
+    poster: {
+      avif: '/videos/thumbnails/presentacion.avif',
+      webp: '/videos/thumbnails/presentacion.webp',
+    },
+    active: true,
+    span: 'big',
+  },
+  {
+    id: 'pesaje',
+    title: 'El Pesaje',
+    videoId: null,
+    poster: null,
+    active: false,
+    span: 'small',
+  },
+  {
+    id: 'cara-a-cara',
+    title: 'Cara a Cara',
+    videoId: null,
+    poster: null,
+    active: false,
+    span: 'small',
+  },
+]
+
+const SPAN_CLASSES: Record<Span, string> = {
+  big: 'sm:col-span-2 lg:col-span-2 lg:row-span-2',
+  small: 'lg:col-span-1 lg:row-span-1',
+}
+---
+
+<section
+  id="videos"
+  class="relative w-full px-4 py-20 sm:px-6 lg:py-28"
+  aria-labelledby="videos-title"
+>
+  <div class="mx-auto flex max-w-7xl flex-col items-center">
+    <SectionHeader
+      titleId="videos-title"
+      title="VÍDEOS"
+      subtitle="Todo lo que rodea a La Velada del Año VI"
+      subtitleClass="mb-10 max-w-xl tracking-[0.25em] sm:mb-14 sm:text-sm"
+    />
+
+    <div
+      class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:aspect-[24/9] lg:grid-cols-3 lg:grid-rows-2 lg:gap-4"
+    >
+      {
+        VIDEOS.map(({ title, videoId, poster, active, span }) => {
+          const Tag = active ? 'button' : 'div'
+          return (
+            <Tag
+              type={active ? 'button' : undefined}
+              data-video-tile={active ? '' : undefined}
+              data-video-id={active ? videoId : undefined}
+              data-video-title={active ? title : undefined}
+              aria-label={active ? `Reproducir vídeo: ${title}` : `${title}. Próximamente.`}
+              aria-disabled={active ? undefined : 'true'}
+              class:list={[
+                'group relative isolate flex aspect-video w-full overflow-hidden rounded-xl border text-left transition duration-500 outline-none lg:aspect-auto',
+                SPAN_CLASSES[span],
+                active
+                  ? 'cursor-pointer border-white/10 bg-theme-navy/40 hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight'
+                  : 'pointer-events-none cursor-not-allowed border-theme-gold/15 bg-theme-midnight/90',
+              ]}
+            >
+              {active && poster ? (
+                <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
+                  <source srcset={poster.avif} type="image/avif" />
+                  <source srcset={poster.webp} type="image/webp" />
+                  <img
+                    src={poster.webp}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover"
+                  />
+                </picture>
+              ) : (
+                <div
+                  aria-hidden="true"
+                  class="absolute inset-0 -z-10 bg-linear-to-br from-theme-navy via-theme-midnight to-black"
+                />
+              )}
+
+              <div
+                aria-hidden="true"
+                class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
+              />
+              {!active && (
+                <>
+                  <div
+                    aria-hidden="true"
+                    class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_rgba(199,168,107,0.08),_transparent_60%)]"
+                  />
+                  <div
+                    aria-hidden="true"
+                    class="pointer-events-none absolute inset-3 -z-10 rounded-lg border border-theme-gold/10"
+                  />
+                </>
+              )}
+              <div
+                aria-hidden="true"
+                class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
+              />
+
+              {active && (
+                <span
+                  aria-hidden="true"
+                  class="absolute inset-0 -z-10 flex items-center justify-center"
+                >
+                  <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
+                    <PlayIcon
+                      class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </span>
+              )}
+
+              {active ? (
+                <div class="relative flex h-full w-full flex-col justify-end gap-1 p-5 sm:p-6 lg:p-7">
+                  <h3
+                    class:list={[
+                      'font-cinzel leading-tight font-bold tracking-[0.04em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream',
+                      span === 'big'
+                        ? 'text-2xl sm:text-3xl lg:text-4xl xl:text-5xl'
+                        : 'text-xl sm:text-2xl lg:text-3xl',
+                    ]}
+                  >
+                    {title}
+                  </h3>
+                  <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
+                    VER VÍDEO
+                    <ArrowRightIcon
+                      class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                      stroke-width="2.5"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </div>
+              ) : (
+                <div class="relative flex h-full w-full flex-col items-center justify-center gap-3 px-6 py-8 text-center sm:gap-4 sm:px-8">
+                  <span
+                    aria-hidden="true"
+                    class="flex items-center gap-3 font-cinzel text-[0.55rem] font-semibold tracking-[0.45em] text-theme-gold/70 sm:text-[0.6rem]"
+                  >
+                    <span class="h-px w-8 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-12" />
+                    <span class="size-1 rotate-45 bg-theme-gold/60" />
+                    <span class="h-px w-8 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-12" />
+                  </span>
+
+                  <h3
+                    class:list={[
+                      'font-cinzel leading-tight font-bold tracking-[0.08em] text-theme-cream/85 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)]',
+                      span === 'big'
+                        ? 'text-2xl sm:text-3xl lg:text-4xl xl:text-5xl'
+                        : 'text-xl sm:text-2xl lg:text-[1.75rem]',
+                    ]}
+                  >
+                    {title}
+                  </h3>
+
+                  <span class="inline-flex items-center gap-2 font-cinzel text-[0.55rem] font-semibold tracking-[0.4em] text-theme-gold/80 sm:text-[0.65rem]">
+                    <span class="size-1 rotate-45 bg-theme-gold/70" aria-hidden="true" />
+                    PRÓXIMAMENTE
+                    <span class="size-1 rotate-45 bg-theme-gold/70" aria-hidden="true" />
+                  </span>
+                </div>
+              )}
+            </Tag>
+          )
+        })
+      }
+    </div>
+  </div>
+
+  <dialog
+    id="video-dialog"
+    aria-labelledby="video-dialog-title"
+    class="m-0 w-screen max-w-none bg-transparent p-0 backdrop:bg-black/85 backdrop:backdrop-blur-sm open:flex open:h-screen open:items-center open:justify-center"
+  >
+    <div class="relative mx-4 w-full max-w-5xl">
+      <div class="mb-4 flex items-center justify-between gap-4">
+        <h3
+          id="video-dialog-title"
+          data-video-dialog-title
+          class="font-cinzel text-base font-bold tracking-[0.18em] text-theme-cream sm:text-xl"
+        >
+        </h3>
+        <button
+          type="button"
+          data-video-dialog-close
+          aria-label="Cerrar vídeo"
+          class="inline-flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white transition outline-none hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
+        >
+          <CloseIcon class="size-5" aria-hidden="true" />
+        </button>
+      </div>
+      <div
+        class="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]"
+      >
+        <div data-video-dialog-frame class="absolute inset-0 h-full w-full"></div>
+      </div>
+    </div>
+  </dialog>
+</section>
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  function initVideoDialog() {
+    const dialog = $<HTMLDialogElement>('#video-dialog')
+    if (!dialog) return
+
+    const tiles = $$<HTMLElement>('[data-video-tile]')
+    const closeBtn = $<HTMLButtonElement>('[data-video-dialog-close]', dialog)
+    const titleEl = $<HTMLElement>('[data-video-dialog-title]', dialog)
+    const frame = $<HTMLElement>('[data-video-dialog-frame]', dialog)
+    if (!frame) return
+
+    function openVideo(videoId: string, title: string) {
+      if (titleEl) titleEl.textContent = title
+      const iframe = document.createElement('iframe')
+      iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&playsinline=1`
+      iframe.allow =
+        'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+      iframe.setAttribute('allowfullscreen', '')
+      iframe.title = title
+      iframe.className = 'h-full w-full border-0'
+      frame!.replaceChildren(iframe)
+      dialog!.showModal()
+    }
+
+    function closeVideo() {
+      if (!dialog!.open) return
+      dialog!.close()
+    }
+
+    tiles.forEach((tile) => {
+      tile.addEventListener('click', () => {
+        const videoId = tile.getAttribute('data-video-id')
+        const title = tile.getAttribute('data-video-title') ?? ''
+        if (!videoId) return
+        openVideo(videoId, title)
+      })
+    })
+
+    closeBtn?.addEventListener('click', closeVideo)
+
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) closeVideo()
+    })
+
+    dialog.addEventListener('close', () => {
+      frame.replaceChildren()
+    })
+  }
+
+  document.addEventListener('astro:page-load', initVideoDialog)
+</script>

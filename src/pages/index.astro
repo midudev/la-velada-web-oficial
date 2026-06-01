@@ -1,27 +1,215 @@
 ---
-import Hero from '@/sections/Hero.astro'
-import Entradas from '@/sections/Entradas.astro'
-import Artists from '@/sections/Artists.astro'
 import Layout from '@/layouts/Layout.astro'
+
 import Presentation from '@/sections/Presentation.astro'
 import FAQ from '@/components/FAQ.astro'
 import PorraHome from '@/sections/PorraHome.astro'
 import Fotosboxeadoresartis from '@/sections/Fotosboxeadoresartis.astro'
 
-const title = 'La Velada del Año V - Evento de boxeo de Ibai Llanos con creadores de contenido'
+import Header from '@/sections/Header.astro'
+import Hero from '@/sections/Hero.astro'
+import Videos from '@/sections/Videos.astro'
+import Podcast from '@/sections/Podcast.astro'
+import Sponsors from '@/sections/Sponsors.astro'
+import FAQ from '@/sections/FAQ.astro'
+import Footer from '@/sections/Footer.astro'
+import { battles } from '@/consts/battles'
+import { BOXERS, BOXERS_BY_ID, COUNTRY_NAMES, getBoxerPhoto } from '@/consts/boxers'
+import { HOME_FAQS } from '@/consts/home-faq'
+
+
+const SITE_URL = 'https://www.infolavelada.com'
+const title = 'La Velada del Año VI 2026 | Fecha, sede y combates'
 const description =
-  'El mayor evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos. Descubre combates, participantes y cómo ver el evento en directo.'
-const canonical = 'https://www.infolavelada.com/'
+  'Toda la información de La Velada del Año VI: fecha, sede, combates y participantes del evento de boxeo de Ibai Llanos en La Cartuja de Sevilla.'
+const canonical = `${SITE_URL}/`
+
+const EVENT_DATE = new Date('2026-07-25T20:00:00+02:00')
+const EVENT_ISO = EVENT_DATE.toISOString()
+
+const sportsEventJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  '@id': `${SITE_URL}/#event`,
+  name: 'La Velada del Año VI',
+  alternateName: ['La Velada VI', 'La Velada del Año 6'],
+  description,
+  url: canonical,
+  image: [`${SITE_URL}/og.jpg`, `${SITE_URL}/logo.webp`],
+  sport: 'Boxing',
+  startDate: EVENT_ISO,
+  endDate: new Date(EVENT_DATE.getTime() + 5 * 60 * 60 * 1000).toISOString(),
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+  inLanguage: 'es-ES',
+  location: [
+    {
+      '@type': 'Place',
+      name: 'Estadio de La Cartuja',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Sevilla',
+        addressRegion: 'Andalucía',
+        addressCountry: 'ES',
+      },
+    },
+    {
+      '@type': 'VirtualLocation',
+      url: 'https://www.twitch.tv/ibai',
+    },
+  ],
+  organizer: {
+    '@type': 'Person',
+    name: 'Ibai Llanos',
+    url: 'https://www.twitch.tv/ibai',
+  },
+  performer: BOXERS.map((boxer) => ({
+    '@type': 'Person',
+    name: boxer.name,
+    url: `${SITE_URL}/boxeadores/${boxer.id}`,
+    nationality: {
+      '@type': 'Country',
+      name: COUNTRY_NAMES[boxer.country] ?? boxer.country,
+    },
+  })),
+  subEvent: battles.map((battle) => {
+    const [a, b] = battle.boxerIds
+    const boxer1 = BOXERS_BY_ID[a]
+    const boxer2 = BOXERS_BY_ID[b]
+    return {
+      '@type': 'SportsEvent',
+      name: battle.title,
+      url: `${SITE_URL}${battle.url}`,
+      sport: 'Boxing',
+      startDate: EVENT_ISO,
+      eventStatus: 'https://schema.org/EventScheduled',
+      eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+      location: {
+        '@type': 'Place',
+        name: 'Estadio de La Cartuja',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Sevilla',
+          addressCountry: 'ES',
+        },
+      },
+      competitor: [
+        {
+          '@type': 'Person',
+          name: boxer1.name,
+          image: `${SITE_URL}${getBoxerPhoto(boxer1)}`,
+          url: `${SITE_URL}/boxeadores/${boxer1.id}`,
+        },
+        {
+          '@type': 'Person',
+          name: boxer2.name,
+          image: `${SITE_URL}${getBoxerPhoto(boxer2)}`,
+          url: `${SITE_URL}/boxeadores/${boxer2.id}`,
+        },
+      ],
+    }
+  }),
+}
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: HOME_FAQS.map(({ question, answer }) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: answer,
+    },
+  })),
+}
 
 export const prerender = true
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(sportsEventJsonLd)}
+    slot="head"
+  />
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(faqJsonLd)}
+    slot="head"
+  />
+
+  <Header />
   <Hero />
+
   <PorraHome />
   <Entradas />
   <Artists />
- <Fotosboxeadoresartis />
+<Fotosboxeadoresartis />
   <Presentation />
   <FAQ />
+
+  <Sponsors />
+  <Videos />
+  <Podcast />
+
+  {/*
+    Bloque informativo accesible (lectores de pantalla) y rastreable por
+    motores de búsqueda. Aporta el texto completo del evento que el resto
+    de la home expresa visualmente con imágenes (logo, selector, fondos).
+  */}
+  <aside class="sr-only" aria-labelledby="event-details-title">
+    <h2 id="event-details-title">Información de La Velada del Año VI</h2>
+    <p>
+      La Velada del Año VI es la sexta edición del mayor evento de boxeo
+      amateur entre streamers y creadores de contenido en habla hispana,
+      organizado por el streamer Ibai Llanos. El evento se celebra el sábado
+      25 de julio de 2026 a partir de las 20:00 horas (horario peninsular
+      español) en el Estadio de La Cartuja de Sevilla, España, y se retransmite
+      en directo y de forma gratuita en el canal oficial de Ibai Llanos en
+      Twitch.
+    </p>
+
+    <h3>Cartelera de combates</h3>
+    <p>
+      Esta edición cuenta con {battles.length} combates de boxeo entre {BOXERS.length}
+      contendientes procedentes de España, México, Argentina, Colombia, El
+      Salvador y Puerto Rico.
+    </p>
+    <ol>
+      {
+        battles.map((battle) => {
+          const [aId, bId] = battle.boxerIds
+          const a = BOXERS_BY_ID[aId]
+          const b = BOXERS_BY_ID[bId]
+          return (
+            <li>
+              Combate {battle.number}:{' '}
+              <a href={`/boxeadores/${a.id}`}>{a.name}</a> ({COUNTRY_NAMES[a.country] ?? a.country})
+              {' vs '}
+              <a href={`/boxeadores/${b.id}`}>{b.name}</a> ({COUNTRY_NAMES[b.country] ?? b.country})
+            </li>
+          )
+        })
+      }
+    </ol>
+
+    <h3>Boxeadores y boxeadoras</h3>
+    <ul>
+      {
+        BOXERS.map((boxer) => (
+          <li>
+            <a href={`/boxeadores/${boxer.id}`}>{boxer.name}</a> —{' '}
+            {COUNTRY_NAMES[boxer.country] ?? boxer.country}
+          </li>
+        ))
+      }
+    </ul>
+  </aside>
+
+  <FAQ faqs={HOME_FAQS} />
+  <Footer />
+
 </Layout>

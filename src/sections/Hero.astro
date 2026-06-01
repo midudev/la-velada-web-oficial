@@ -1,320 +1,175 @@
 ---
-import { FIGHTERS } from '@/consts/fighters'
-import SelectYourBoxer from '@/components/Boxers/SelectYourBoxer.astro'
+import BoxerSelector from '@/components/BoxerSelector.astro'
 
-const selectedBoxerId = Astro.url.searchParams.get('luchador') ?? FIGHTERS[0].id
-const selectedBoxer = FIGHTERS.find((boxer) => boxer.id === selectedBoxerId) ?? FIGHTERS[0]
+const EVENT_DATE = new Date('2026-07-25T20:00:00+02:00')
+const timestamp = EVENT_DATE.getTime()
 ---
 
-<section class="relative flex min-h-screen w-full">
-  <div class="mask-fade-bottom absolute inset-0 w-full bg-black opacity-10"></div>
+<section
+    data-hero
+    class="relative w-full overflow-hidden bg-theme-midnight"
+    aria-label="Presentación de La Velada del Año VI"
+  >
+    <picture data-hero-background class="absolute inset-0 z-0">
+      <source
+        type="image/avif"
+        srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
+        sizes="100vw"
+      />
+      <source
+        type="image/webp"
+        srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+        sizes="100vw"
+      />
+      <img
+        data-bg
+        src="/background.webp"
+        srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+        sizes="100vw"
+        alt=""
+        role="presentation"
+        class="h-full w-full object-cover object-center will-change-transform"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
 
-  <div class="relative flex w-full flex-col items-center p-8 text-center">
-    <div id="landing" class="absolute top-0 flex w-full flex-col items-center py-16">
-      <h3
-        class="text-theme-seashell animate-fade-in animate-delay-300 tracking mt-4 text-xs font-medium leading-[100%] sm:text-base"
+    <div class="absolute inset-0 z-1 bg-linear-to-b from-black/40 via-transparent to-theme-midnight/80" aria-hidden="true"></div>
+
+    {/*
+      El "hero principal" (logo + selector + CTA + grid) ocupa siempre
+      AL MENOS 100vh. El countdown vive como hermano debajo, así que
+      cuando el contenido del header crece más allá del viewport sigue
+      siendo cómodo y no queda apretado contra el countdown.
+
+      Padding inferior reducido (`pb-3 lg:pb-5`) para que la cuadrícula
+      de boxers, anclada al bottom del hero, quede más cerca del
+      countdown sin pegarse al borde.
+    */}
+    <header class="relative z-10 flex min-h-screen w-full flex-col items-center justify-start px-4 pt-14 pb-3 text-center sm:pt-16 lg:pb-5">
+      <h1 class="sr-only">
+        La Velada del Año VI — Evento de boxeo amateur entre streamers organizado por Ibai
+        Llanos el sábado 25 de julio de 2026 en el Estadio de La Cartuja de Sevilla
+      </h1>
+
+      <BoxerSelector />
+    </header>
+
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pt-1 pb-6">
+      <div
+        class="animate-fade-in-up animate-delay-1300 flex select-none items-center justify-center gap-3 sm:gap-5 md:gap-7"
+        id="countdown-hero"
+        data-date={timestamp}
+        role="timer"
+        aria-label="Cuenta atrás para La Velada del Año VI"
       >
-        26 DE <br />JULIO
-      </h3>
-      <figure class="animate-fade-in relative">
-        <img
-          class="relative z-20 h-auto w-48 sm:w-72 md:w-80 lg:w-96"
-          src="/images/logo.webp"
-          fetchpriority="high"
-          alt="La Velada del Año V"
-          decoding="async"
-        />
-        <div
-          class="absolute left-1/2 top-1/2 z-0 size-64 -translate-x-1/2 -translate-y-1/2 bg-pink-400/80 blur-2xl"
-        >
+        <div class="flex flex-col items-center gap-1">
+          <span data-days class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">---</span>
+          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">DÍAS</span>
         </div>
-      </figure>
-
-      <div class="relative z-10">
-        <h3 class="text-theme-seashell animate-fade-in animate-delay-500 z-0 mt-0 font-medium">
-          <a
-            href="https://maps.app.goo.gl/RVUArf48FwuvqJjD6"
-            rel="noopener noreferrer"
-            target="_blank"
-            class="animate-fade-in animate-dalay-700 hover:scale-115 z-50 inline-block text-xs font-medium leading-tight tracking-wider transition sm:text-base"
-          >
-            Estadio<br />La Cartuja,<br />Sevilla
-          </a>
-        </h3>
-        <div class="absolute -inset-2 -z-10 h-full w-full bg-pink-400/80 blur-2xl"></div>
-        <a
-          href="https://twitch.tv/ibai"
-          rel="noopener noreferrer"
-          target="_blank"
-          class="animate-fade-in animate-delay-700 z-10 mt-3 inline-block text-xs font-medium leading-tight tracking-wider transition hover:scale-125 sm:text-base"
-        >
-          twitch.tv<br />Ibai
-        </a>
+        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="flex flex-col items-center gap-1">
+          <span data-hours class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">HORAS</span>
+        </div>
+        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="flex flex-col items-center gap-1">
+          <span data-minutes class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">MIN</span>
+        </div>
+        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="flex flex-col items-center gap-1">
+          <span data-seconds class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
+          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">SEG</span>
+        </div>
       </div>
     </div>
-    <SelectYourBoxer boxers={FIGHTERS} selectedBoxer={selectedBoxer} />
-  </div>
-</section>
+  </section>
 
-<style>
-  .mask-fade-text {
-    mask-image: linear-gradient(to bottom, transparent 5%, black 6%, black 95%, transparent 100%);
-  }
-
-  @keyframes fighter-select {
-    from {
-      opacity: 0.5;
-      border-color: rgba(255, 20, 147, 1);
+  <style>
+    [data-hero-background] {
+      mask-image: linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%);
     }
-    to {
-      opacity: 1;
-      border-color: rgba(255, 20, 147, 0.5);
+
+    [data-bg] {
+      transform-origin: center center;
+      transform: scale(var(--hero-bg-scale, 1));
     }
-  }
-</style>
 
-<script>
-  import { $ } from '@/lib/dom-selector'
-
-  document.addEventListener('astro:page-load', () => {
-    const $landing = $('#landing')
-    let isMobile = window.matchMedia('(max-width: 768px)').matches
-
-    // Para que cuando cambie el tamaño de la ventana cambie el estado de si es mobile
-    // por si alguien al hacer resize ve que no funciona bien el cambio
-    // Los cambios estan pensandos para que se apliquen al entrar con un dispositivo u otro
-    window.addEventListener('resize', () => {
-      isMobile = window.matchMedia('(max-width: 768px)').matches
-      const $fighterSelector = $('#selectorFighter')
-      if (isMobile && $fighterSelector !== null) {
-        $fighterSelector.remove()
+    @media (prefers-reduced-motion: reduce) {
+      [data-bg] {
+        transform: none;
       }
-    })
+    }
 
-    let currentFighterId: string | null = null
-    let hideFighterTimer: ReturnType<typeof setTimeout>
+    .countdown-digit {
+      text-shadow: 0 0 30px rgba(199, 168, 107, 0.2);
+      min-width: 1.8em;
+      text-align: center;
+    }
+  </style>
 
-    document.addEventListener('boxer-card-exit', () => {
-      let showFighter = false
+  <script>
+    import createCountdown, { type TimeParts } from '@/lib/countdown'
+    import { $ } from '@/lib/dom-selector'
 
-      if (!currentFighterId) return
+    function initCountdown() {
+      const $countdown = $<HTMLElement>('#countdown-hero')
+      if (!$countdown) return
 
-      if (isMobile) {
-        for (const card of boxerCards) {
-          if (card.getAttribute('data-id') === currentFighterId) {
-            if (card.getAttribute('data-selected') === 'true') {
-              showFighter = true
-              break
-            }
-          }
+      const $days = $('[data-days]', $countdown)
+      const $hours = $('[data-hours]', $countdown)
+      const $minutes = $('[data-minutes]', $countdown)
+      const $seconds = $('[data-seconds]', $countdown)
+
+      const timestamp = Number($countdown.getAttribute('data-date') ?? 0)
+      return createCountdown(timestamp, {
+        onTick({ days, hours, minutes, seconds }: TimeParts) {
+          if ($days) $days.textContent = days
+          if ($hours) $hours.textContent = hours
+          if ($minutes) $minutes.textContent = minutes
+          if ($seconds) $seconds.textContent = seconds
+        },
+        onComplete() {},
+      })
+    }
+
+    document.addEventListener('astro:page-load', () => {
+      const hero = $<HTMLElement>('[data-hero]')
+      if (!hero) return
+
+      initCountdown()?.start()
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!reduceMotion) {
+        const controller = new AbortController()
+        const { signal } = controller
+
+        const MAX_SCALE = 0.18
+        let ticking = false
+
+        const update = () => {
+          ticking = false
+          const heroHeight = hero.offsetHeight || window.innerHeight
+          const progress = Math.min(Math.max(window.scrollY / heroHeight, 0), 1)
+          hero.style.setProperty('--hero-bg-scale', String(1 + progress * MAX_SCALE))
         }
 
-        if (showFighter) return
-      }
-      $landing?.classList.remove('hidden')
-
-      const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
-      const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
-      const heroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
-
-      if (heroText && heroImage) {
-        heroText.classList.remove('animate-zoom-int')
-        heroImage.classList.remove('animate-slide-up-fade')
-
-        heroText.classList.add('animate-zoom-out')
-        heroImage.classList.add('animate-fade-out-down')
-
-        heroMaskFadeText?.classList.remove('translate-x-full')
-        heroMaskFadeText?.classList.add('-translate-x-full')
-
-        hideFighterTimer = setTimeout(() => {
-          heroText.classList.add('hidden')
-          heroImage.classList.add('hidden')
-          currentFighterId = null
-        }, 500)
-      }
-    })
-
-    document.addEventListener('boxer-card-hovered', (event: Event) => {
-      if (currentFighterId) {
-        // si ya hay un luchador visible, lo ocultamos
-        clearTimeout(hideFighterTimer)
-
-        const heroText = $(`[data-id="hero-text-${currentFighterId}"]`)
-        const heroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
-        const heroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
-
-        heroText?.classList.add('hidden')
-        heroImage?.classList.add('hidden')
-        heroMaskFadeText?.classList.remove('translate-x-full')
-        heroMaskFadeText?.classList.add('-translate-x-full')
-        currentFighterId = null
-      }
-
-      const customEvent = event as CustomEvent<{ id: string }>
-      const id = customEvent.detail.id
-
-      const heroText = $(`[data-id="hero-text-${id}"]`)
-      const heroImage = $(`[data-id="hero-image-${id}"]`)
-      const heroMaskFadeText = $(`#mask-fade-text-${id}`)
-
-      if (heroText && heroImage) {
-        heroText.classList.remove('animate-zoom-out')
-        heroImage.classList.remove('animate-fade-out-down')
-      }
-
-      // si el luchador que entras es el mismo que ya se muestra
-      // entonces no hacemos nada
-      if (currentFighterId === id) return
-
-      // si ya estamos mostrando un luchador, tenemos que ocultarlo
-      if (currentFighterId) {
-        const currentHeroText = $(`[data-id="hero-text-${currentFighterId}"]`)
-        const currentHeroImage = $(`[data-id="hero-image-${currentFighterId}"]`)
-        const currentHeroMaskFadeText = $(`#mask-fade-text-${currentFighterId}`)
-
-        if (currentHeroText && currentHeroMaskFadeText && currentHeroImage) {
-          currentHeroText.classList.add('hidden')
-          currentHeroImage.classList.add('hidden')
-
-          currentHeroText.classList.remove('animate-zoom-in')
-          currentHeroImage.classList.remove('animate-slide-up-fade')
-          currentHeroMaskFadeText?.classList.remove('translate-x-full')
-          currentHeroMaskFadeText?.classList.add('-translate-x-full')
+        const onScroll = () => {
+          if (ticking) return
+          ticking = true
+          requestAnimationFrame(update)
         }
+
+        update()
+        window.addEventListener('scroll', onScroll, { passive: true, signal })
+        window.addEventListener('resize', update, { passive: true, signal })
+
+        document.addEventListener(
+          'astro:before-preparation',
+          () => controller.abort(),
+          { once: true },
+        )
       }
-
-      $landing?.classList.add('hidden')
-
-      // mostramos el luchador que quiere ver el usuario
-      heroText?.classList.remove('hidden')
-      heroText?.classList.add('animate-zoom-in')
-      heroImage?.classList.remove('hidden')
-      heroImage?.classList.add('animate-slide-up-fade')
-      heroMaskFadeText?.classList.remove('-translate-x-full')
-      heroMaskFadeText?.classList.add('translate-x-full')
-
-      currentFighterId = id
     })
-
-    const $fighterSelector = document.createElement('div')
-    $fighterSelector.id = 'selectorFighter'
-
-    $fighterSelector.style.position = 'absolute'
-    $fighterSelector.style.width = 'var(--selector--width)'
-    $fighterSelector.style.height = 'var(--selector--height)'
-    $fighterSelector.style.top = 'var(--selector--top)'
-    $fighterSelector.style.left = 'var(--selector--left)'
-    $fighterSelector.style.transitionDuration = '500ms'
-    $fighterSelector.style.transitionTimingFunction = 'cubic-bezier(0.4, 0, 0.2, 1)'
-    $fighterSelector.style.transitionProperty = 'all'
-    $fighterSelector.style.opacity = '0'
-    $fighterSelector.style.zIndex = '40'
-    $fighterSelector.style.pointerEvents = 'none'
-    $fighterSelector.style.animation = 'fighter-select 0.5s infinite alternate'
-
-    const beforeElement = document.createElement('div')
-    beforeElement.style.position = 'absolute'
-    beforeElement.style.inset = '-4px'
-    beforeElement.style.background = 'transparent'
-    beforeElement.style.borderRadius = '8px'
-    beforeElement.style.opacity = '1'
-    beforeElement.style.zIndex = '30'
-    beforeElement.style.animation = 'fighter-select 0.5s infinite alternate'
-
-    const afterElement = document.createElement('div')
-    afterElement.style.position = 'absolute'
-    afterElement.style.inset = '-4px'
-    afterElement.style.zIndex = '30'
-    afterElement.style.opacity = '1'
-    afterElement.style.background = `
-      linear-gradient(to right, #fff 4px, transparent 4px) top left,
-      linear-gradient(to bottom, #fff 4px, transparent 4px) top left,
-      linear-gradient(to left, #fff 4px, transparent 4px) top right,
-      linear-gradient(to bottom, #fff 4px, transparent 4px) top right,
-      linear-gradient(to right, #fff 4px, transparent 4px) bottom left,
-      linear-gradient(to top, #fff 4px, transparent 4px) bottom left,
-      linear-gradient(to left, #fff 4px, transparent 4px) bottom right,
-      linear-gradient(to top, #fff 4px, transparent 4px) bottom right`
-    afterElement.style.backgroundRepeat = 'no-repeat'
-    afterElement.style.backgroundSize = '25px 25px'
-    afterElement.style.borderRadius = '8px'
-    afterElement.style.animation = 'fighter-select 0.5s infinite alternate'
-
-    $fighterSelector.appendChild(beforeElement)
-    $fighterSelector.appendChild(afterElement)
-
-    const $fightersContainer = document.getElementById(
-      'fighters-selection-container',
-    ) as HTMLElement
-    if (!isMobile) {
-      $fightersContainer.appendChild($fighterSelector)
-    } else {
-      if ($fighterSelector) {
-        $fighterSelector.remove()
-      }
-    }
-
-    if (isMobile) {
-      // Quitamos `data-selected` cuando el usuario hace click en el contenedor
-      $fightersContainer.addEventListener('click', (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        boxerCards.forEach((card) => {
-          card.removeAttribute('data-selected')
-          card.classList.remove('selected')
-        })
-        $landing?.classList.remove('hidden')
-      })
-    }
-
-    const boxerCards = document.querySelectorAll('.boxer-card')
-
-    boxerCards.forEach((card, cardIndex) => {
-      if (isMobile) {
-        // Agregamos `data-selected` cuando el usuario hace click en el card
-        card.addEventListener('click', (event) => {
-          event.preventDefault()
-          event.stopPropagation()
-          // Si no tiene `data-selected` entonces lo agregamos
-          if (card.getAttribute('data-selected') === null) {
-            card.setAttribute('data-selected', 'true')
-            card.classList.add('selected')
-            // Aseguramos que solo se selecciona el luchador que se hizo click
-            boxerCards.forEach((selectedCard, idx) => {
-              if (selectedCard.getAttribute('data-selected') === null || idx === cardIndex) return
-              selectedCard.removeAttribute('data-selected')
-              selectedCard.classList.remove('selected')
-            })
-            return
-          }
-          // Si ya tiene `data-selected` entonces lo quitamos y vamos a la url
-          card.removeAttribute('data-selected')
-          window.location.href = `/luchador/${card.getAttribute('data-id')}`
-        })
-      }
-      card.addEventListener('mouseenter', () => {
-        const { width, height, left, top } = card.getBoundingClientRect()
-        const { left: leftFighterContainer, top: topFighterContainer } =
-          $fightersContainer.getBoundingClientRect()
-
-        $fighterSelector.style.setProperty('--selector--left', `${left - leftFighterContainer}px`)
-        $fighterSelector.style.setProperty('--selector--top', `${top - topFighterContainer}px`)
-        $fighterSelector.style.setProperty('--selector--width', `${width}px`)
-        $fighterSelector.style.setProperty('--selector--height', `${height}px`)
-        $fighterSelector.style.transform = card.classList.contains('boxer-left')
-          ? 'skew(2deg) scale(1.05)'
-          : 'skew(-2deg) scale(1.05)'
-
-        $fighterSelector.style.opacity = '1'
-        $fighterSelector.style.visibility = 'visible'
-      })
-
-      card.addEventListener('mouseleave', () => {
-        $fighterSelector.style.transform = 'scale(1)'
-        $fighterSelector.style.opacity = '0'
-        $fighterSelector.style.visibility = 'hidden'
-      })
-    })
-  })
-</script>
+  </script>

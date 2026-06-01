@@ -1,0 +1,1442 @@
+---
+import CountryFlag from '@/components/CountryFlag.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
+import { battles } from '@/consts/battles'
+import {
+  BOXERS,
+  BOXERS_BY_ID,
+  COUNTRY_NAMES,
+  getBoxerHeroImages,
+  getBoxerSelectImages,
+  type Boxer,
+} from '@/consts/boxers'
+
+// Posicionamos a cada boxeador en el grid de manera SIMÉTRICA respecto a su
+// contrincante: si el primero de la pareja está en la columna N, el segundo
+// está en la columna opuesta de la misma fila (espejo horizontal).
+//
+//   Móvil (4 cols / 5 filas):
+//     Fila 1 → par A cols 1 y 4, par B cols 2 y 3
+//     Fila 2 → par C cols 1 y 4, par D cols 2 y 3
+//     ... 10 parejas en 5 filas
+//
+//   Tablet (8 cols / 3 filas):
+//     La fila incompleta queda arriba para que el hueco central no cierre
+//     visualmente la parrilla por abajo.
+//
+//   Desktop (10 cols / 2 filas):
+//     Fila 1 → 5 parejas, par k en cols k y 11-k
+//     Fila 2 → otras 5 parejas con el mismo patrón
+const MOBILE_COLS = 4
+const TABLET_COLS = 8
+const DESKTOP_COLS = 10
+
+// IDs de boxeadores cuya miniatura está mirando hacia el lado contrario
+// al de su contrincante en el grid; se voltean horizontalmente para que
+// "miren" al rival.
+const MIRRORED_BOXER_IDS = new Set<string>(['clersss', 'alondrissa'])
+
+// Mapa boxerId → id del contrincante, usado para iluminar el rival al hacer
+// hover sobre una miniatura.
+const opponentById: Record<string, string> = {}
+for (const { boxerIds } of battles) {
+  const [a, b] = boxerIds
+  opponentById[a] = b
+  opponentById[b] = a
+}
+
+const positionedBoxers: Array<{
+  boxer: Boxer
+  opponentId: string
+  colMobile: number
+  rowMobile: number
+  colTablet: number
+  rowTablet: number
+  colDesktop: number
+  rowDesktop: number
+}> = battles.flatMap(({ boxerIds }, pairIndex) =>
+  boxerIds.map((id, indexInPair) => {
+    const isFirstInPair = indexInPair === 0
+
+    // Móvil
+    const pairsPerRowMobile = MOBILE_COLS / 2
+    const rowMobile = Math.floor(pairIndex / pairsPerRowMobile) + 1
+    const pairInRowMobile = pairIndex % pairsPerRowMobile
+    const colMobileLeft = pairInRowMobile + 1
+    const colMobileRight = MOBILE_COLS - pairInRowMobile
+    const colMobile = isFirstInPair ? colMobileLeft : colMobileRight
+
+    // Tablet
+    const pairsPerRowTablet = TABLET_COLS / 2
+    const tabletRows = Math.ceil(battles.length / pairsPerRowTablet)
+    const naturalRowTablet = Math.floor(pairIndex / pairsPerRowTablet) + 1
+    const rowTablet = naturalRowTablet === tabletRows ? 1 : naturalRowTablet + 1
+    const pairInRowTablet = pairIndex % pairsPerRowTablet
+    const colTabletLeft = pairInRowTablet + 1
+    const colTabletRight = TABLET_COLS - pairInRowTablet
+    const colTablet = isFirstInPair ? colTabletLeft : colTabletRight
+
+    // Desktop
+    const pairsPerRowDesktop = DESKTOP_COLS / 2
+    const rowDesktop = Math.floor(pairIndex / pairsPerRowDesktop) + 1
+    const pairInRowDesktop = pairIndex % pairsPerRowDesktop
+    const colDesktopLeft = pairInRowDesktop + 1
+    const colDesktopRight = DESKTOP_COLS - pairInRowDesktop
+    const colDesktop = isFirstInPair ? colDesktopLeft : colDesktopRight
+
+    return {
+      boxer: BOXERS_BY_ID[id]!,
+      opponentId: opponentById[id]!,
+      colMobile,
+      rowMobile,
+      colTablet,
+      rowTablet,
+      colDesktop,
+      rowDesktop,
+    }
+  }),
+)
+
+// Primer boxeador usado como contenido pre-renderizado del panel del boxeador
+// (sirve para que la primera imagen ya esté cargada en el primer hover y para
+// no dejar el panel vacío antes de que el JS reaccione a una interacción).
+const fallback = BOXERS[0]
+const fallbackHero = getBoxerHeroImages(fallback)
+const fallbackCountry = COUNTRY_NAMES[fallback.country] ?? fallback.country
+const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
+---
+
+<section
+  data-boxer-selector
+  data-state="default"
+  class="relative mx-auto flex w-full max-w-7xl flex-1 flex-col items-center"
+  aria-label="Selector de boxeadores de La Velada del Año VI"
+>
+  <div class="boxer-stage relative w-full flex-1">
+    <div
+      data-default-panel
+      class="boxer-default-panel relative flex w-full flex-col items-center justify-center text-center md:justify-start"
+    >
+      <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true"></div>
+
+      <div
+        class="animate-blurred-fade-in animate-delay-300 relative"
+        role="img"
+        aria-label="Logo de La Velada del Año VI"
+      >
+        <picture>
+          <source srcset="/logo.avif" type="image/avif" />
+          <source srcset="/logo.webp" type="image/webp" />
+          <img
+            src="/logo.webp"
+            alt="La Velada del Año VI"
+            class="boxer-default-logo relative h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
+            width="512"
+            height="512"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </picture>
+      </div>
+
+      <ul
+        class="boxer-default-info animate-fade-in-up animate-delay-500 -mt-8 flex flex-col items-center justify-center gap-1 px-4 sm:-mt-12 md:-mt-16"
+      >
+        <li class="flex items-baseline">
+          <time
+            datetime="2026-07-25"
+            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
+          >
+            25 DE JULIO
+          </time>
+        </li>
+        <li class="flex items-baseline">
+          <time
+            datetime="2026-07-25T20:00:00+02:00"
+            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
+          >
+            20:00H CET
+          </time>
+        </li>
+        <li class="flex items-baseline">
+          <span
+            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
+          >
+            <a
+              href="https://maps.app.goo.gl/73mfDNVvhK3Y5Kq66"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="relative inline-block
+                        after:content-[''] after:absolute after:left-0 after:-bottom-1
+                        after:h-[1px] after:w-full after:bg-current
+                        after:scale-x-0 after:origin-left
+                        after:transition-transform after:duration-300
+                        hover:after:scale-x-100 focus-visible:after:scale-x-100"
+            >
+              ESTADIO DE LA CARTUJA, SEVILLA
+            </a>
+          </span>
+        </li>
+      </ul>
+
+    </div>
+
+    <div
+      data-boxer-panel
+      aria-hidden="true"
+      class="boxer-panel relative flex w-full flex-col items-center -mb-10"
+    >
+      <span
+        aria-hidden="true"
+        data-active-watermark
+        class="boxer-watermark pointer-events-none absolute left-1/2 top-2 z-0 w-screen -translate-x-1/2 select-none overflow-hidden font-cinzel text-[18vw] font-black leading-[0.85] tracking-[-0.04em] text-theme-cream sm:text-[14vw] md:top-4 md:text-[11rem] lg:text-[13rem]"
+      >
+        <span class="boxer-watermark-track">
+          {
+            [0, 1].map(() => (
+              <span class="boxer-watermark-set">
+                <span data-active-watermark-text>{fallback.name}</span>
+                <span data-active-watermark-text>{fallback.name}</span>
+                <span data-active-watermark-text>{fallback.name}</span>
+              </span>
+            ))
+          }
+        </span>
+      </span>
+
+      <div class="boxer-portrait-layer pointer-events-none relative z-10 flex min-h-0 w-full flex-1 items-end justify-center">
+        <picture class="boxer-portrait-wrap relative block h-full">
+          <source
+            data-active-source-avif
+            type="image/avif"
+            srcset={fallbackHero.avif}
+          />
+          <source
+            data-active-source-webp
+            type="image/webp"
+            srcset={fallbackHero.webp}
+          />
+          <img
+            data-active-image
+            src={fallbackHero.webp}
+            alt={`Foto principal de ${fallback.name}`}
+            class="boxer-portrait relative z-10 h-full max-h-full w-auto max-w-full object-contain object-bottom transition-opacity duration-300"
+            decoding="async"
+            fetchpriority="high"
+          />
+          {/*
+            La capa de la imagen se posiciona por CSS como absolute para
+            poder extenderse por debajo del stage, hasta la franja de
+            selección, sin mover el resto de elementos del panel.
+          */}
+        </picture>
+      </div>
+
+      <div class="relative z-20 -mt-4 flex flex-col items-center sm:-mt-6 md:-mt-8 lg:-mt-10">
+        <h2
+          data-active-name
+          class="boxer-name relative font-cinzel text-3xl font-black leading-none tracking-[0.08em] text-theme-cream sm:text-5xl md:text-6xl lg:text-7xl"
+        >{fallback.name}</h2>
+
+        <p
+          class="boxer-country mt-1 flex items-center gap-x-2 font-cinzel text-[0.6rem] font-bold tracking-[0.3em] text-theme-cream sm:mt-1.5 sm:text-[0.7rem] md:mt-2 md:text-xs"
+          aria-live="polite"
+        >
+          <img
+            data-active-flag
+            src={`/flags/${fallback.country}.svg`}
+            alt=""
+            aria-hidden="true"
+            width="20"
+            height="20"
+            class="boxer-country-flag"
+          />
+          <span data-active-country-name>{fallbackCountry}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="boxer-cta-bar relative z-20 mt-auto mb-1 flex w-full flex-col items-center px-4 pt-1 sm:mb-2 sm:pt-2"
+    aria-hidden="false"
+  >
+    <SectionDivider class="boxer-default-divider" />
+
+    <p
+      class="boxer-default-cta mt-3 text-center font-cinzel text-sm font-bold tracking-[0.3em] text-theme-cream sm:mt-4 sm:text-base"
+    >
+      ¡SELECCIONA TU BOXEADOR O BOXEADORA!
+    </p>
+  </div>
+
+  <div class="boxer-grid-frame relative z-10 w-full">
+    <div class="boxer-mobile-slider-shell md:hidden">
+      <div
+        class="boxer-mobile-slider"
+        data-mobile-slider
+        aria-label="Carrusel de boxeadores. Desliza horizontalmente y pulsa uno para ver su perfil"
+      >
+        <div class="boxer-mobile-track" data-mobile-track>
+          {
+            MOBILE_SLIDER_SETS.flatMap((setName) =>
+              positionedBoxers.map(({ boxer }, index) => {
+                const selectImages = getBoxerSelectImages(boxer)
+                const isAccessibleSet = setName === 'current'
+
+                return (
+                  <a
+                    href={`/boxeadores/${boxer.id}`}
+                    data-mobile-thumb
+                    data-mobile-slide
+                    data-mobile-set={setName}
+                    data-id={boxer.id}
+                    aria-label={`Ver perfil de ${boxer.name}`}
+                    aria-hidden={isAccessibleSet ? undefined : 'true'}
+                    tabindex={isAccessibleSet ? undefined : -1}
+                    class="boxer-mobile-slide group relative aspect-[3/4] shrink-0 snap-center overflow-hidden rounded-[1.1rem] border border-theme-gold/35 bg-theme-midnight outline-none"
+                    style={`animation-delay: ${650 + index * 20}ms`}
+                  >
+                    <picture>
+                      <source type="image/avif" srcset={selectImages.avif} />
+                      <source type="image/webp" srcset={selectImages.webp} />
+                      <img
+                        src={selectImages.webp}
+                        alt=""
+                        role="presentation"
+                        loading="lazy"
+                        decoding="async"
+                        width="180"
+                        height="240"
+                        data-mirrored={MIRRORED_BOXER_IDS.has(boxer.id) ? 'true' : 'false'}
+                        class="boxer-mobile-slide-img absolute inset-0 h-full w-full object-cover object-top transition duration-500 group-active:scale-[1.03]"
+                      />
+                    </picture>
+                    <span
+                      aria-hidden="true"
+                      class="boxer-mobile-slide-name-bar pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-center px-2 pb-2.5 pt-10"
+                    >
+                      <span class="boxer-mobile-slide-name font-cinzel text-[0.66rem] font-bold uppercase leading-[1.05] tracking-[0.16em] text-theme-cream text-balance">
+                        {boxer.name}
+                      </span>
+                    </span>
+                  </a>
+                )
+              }),
+            )
+          }
+        </div>
+      </div>
+    </div>
+
+    <div
+      data-boxer-grid
+      class="boxer-grid hidden md:grid md:grid-cols-8 md:grid-rows-3 lg:grid-cols-10 lg:grid-rows-2"
+      aria-label="Lista de boxeadores. Pulsa uno para ver su perfil"
+    >
+      {
+        positionedBoxers.map(
+          (
+            {
+              boxer,
+              opponentId,
+              colMobile,
+              rowMobile,
+              colTablet,
+              rowTablet,
+              colDesktop,
+              rowDesktop,
+            },
+            index,
+          ) => {
+            const countryName = COUNTRY_NAMES[boxer.country] ?? boxer.country
+            const selectImages = getBoxerSelectImages(boxer)
+            const heroImages = getBoxerHeroImages(boxer)
+            return (
+              <a
+                href={`/boxeadores/${boxer.id}`}
+                data-thumb
+                data-id={boxer.id}
+                data-opponent-id={opponentId}
+                data-name={boxer.name}
+                data-photo-avif={heroImages.avif}
+                data-photo-webp={heroImages.webp}
+                data-country-code={boxer.country}
+                data-country={countryName}
+                aria-label={`Ver perfil de ${boxer.name}`}
+                data-active="false"
+                class="boxer-cell animate-fade-in group relative aspect-square cursor-pointer overflow-hidden focus-visible:outline-none"
+                style={`--col-mobile: ${colMobile}; --row-mobile: ${rowMobile}; --col-tablet: ${colTablet}; --row-tablet: ${rowTablet}; --col-desktop: ${colDesktop}; --row-desktop: ${rowDesktop}; animation-delay: ${1000 + index * 25}ms`}
+                tabindex={index === 0 ? 0 : -1}
+              >
+                <picture>
+                  <source type="image/avif" srcset={selectImages.avif} />
+                  <source type="image/webp" srcset={selectImages.webp} />
+                  <img
+                    src={selectImages.webp}
+                    alt=""
+                    role="presentation"
+                    loading="lazy"
+                    decoding="async"
+                    width="160"
+                    height="160"
+                    data-mirrored={MIRRORED_BOXER_IDS.has(boxer.id) ? 'true' : 'false'}
+                    class="boxer-thumb-img absolute inset-0 h-full w-full object-cover object-top group-hover:scale-[1.05] group-focus-visible:scale-[1.05]"
+                  />
+                </picture>
+                <span
+                  aria-hidden="true"
+                  class="boxer-thumb-name-bar pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-center px-1 pb-1 pt-4 sm:px-1.5 sm:pb-1.5 sm:pt-5"
+                >
+                  <span class="boxer-thumb-name font-cinzel text-[0.5rem] font-bold uppercase leading-[1.05] tracking-[0.14em] text-theme-cream text-balance sm:text-[0.6rem] md:text-[0.7rem]">
+                    {boxer.name}
+                  </span>
+                </span>
+              </a>
+            )
+          },
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* El stage es un rectángulo de altura controlada por `flex-1`. Los dos
+     paneles (default y boxer) se apilan con `position: absolute` para que
+     NO afecten al alto del stage: si fueran grid items, su min-content
+     (en particular la imagen `h-full` del boxer) empujaría al stage muy
+     por debajo del espacio que le toca, sacando la cuadrícula fuera del
+     viewport. Con absolute, el stage respeta exactamente el alto que le
+     da el flex container del BoxerSelector. */
+  .boxer-stage {
+    position: relative;
+  }
+
+  .boxer-stage > [data-default-panel],
+  .boxer-stage > [data-boxer-panel] {
+    position: absolute;
+    inset: 0;
+    transition: opacity 350ms ease;
+  }
+
+  [data-boxer-selector][data-state='default'] [data-default-panel] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  [data-boxer-selector][data-state='default'] [data-boxer-panel] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  [data-boxer-selector][data-state='boxer'] [data-default-panel] {
+    opacity: 0;
+    pointer-events: none;
+  }
+  [data-boxer-selector][data-state='boxer'] [data-boxer-panel] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 767px) {
+    [data-boxer-selector][data-state='boxer'] [data-default-panel] {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    [data-boxer-selector][data-state='boxer'] [data-boxer-panel] {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    [data-boxer-selector][data-state='boxer'] .boxer-cta-bar {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  .boxer-default-panel {
+    /* El logo y la info quedan en su flujo normal dentro del panel
+       (que es `position: absolute inset: 0` sobre el stage). Como el
+       panel es `flex flex-col items-center`, los hijos se alinean a la
+       parte superior por defecto, justo donde queremos el logo. */
+    padding-block: 0;
+  }
+
+  /* Barra "¡SELECCIONA TU BOXEADOR O BOXEADORA!" + divider, situada
+     justo encima del grid. Reserva siempre su espacio físico (no
+     colapsa), así la cuadrícula no se mueve al cambiar de estado:
+     simplemente se desvanece con opacity cuando hay boxer seleccionado
+     y la imagen del hero, que vive dentro del stage, ya cubre ese
+     espacio liberado visualmente. */
+  .boxer-cta-bar {
+    transition: opacity 350ms ease;
+  }
+
+  [data-boxer-selector][data-state='boxer'] .boxer-cta-bar {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .boxer-default-logo {
+    filter:
+      drop-shadow(0 12px 30px color-mix(in srgb, var(--color-theme-gold) 22%, transparent))
+      drop-shadow(0 2px 0 rgba(0, 0, 0, 0.25));
+    animation: boxer-default-logo-float 6s ease-in-out infinite;
+  }
+
+  .boxer-default-aura {
+    /* Halo dorado sutil detrás del logo, en línea con el del boxeador */
+    background:
+      radial-gradient(
+        ellipse 55% 45% at 50% 38%,
+        color-mix(in srgb, var(--color-theme-gold) 22%, transparent) 0%,
+        transparent 70%
+      );
+    mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+  }
+
+  .boxer-default-info {
+    text-shadow:
+      0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
+      0 1px 0 rgba(0, 0, 0, 0.7),
+      0 2px 14px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
+      0 0 24px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
+  }
+
+  /* La cuadrícula del selector entra escalonada con un delay base de
+     1000ms + 25ms por celda (ver `animation-delay` inline en el HTML).
+     La última celda empieza a aparecer ~1475ms desde el inicio, así
+     que sincronizamos el divider y el CTA con ese momento. */
+  .boxer-default-divider {
+    opacity: 0;
+    animation: boxer-default-cta-fade-in 600ms ease-out 1350ms forwards;
+  }
+
+  .boxer-default-cta {
+    /* Mezcla de cream con dorado al fondo para que destaque sobre el
+       background del hero (que puede tener mucho contraste) y un punto
+       de pulso muy sutil para llamar la atención. */
+    text-shadow:
+      0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
+      0 1px 0 rgba(0, 0, 0, 0.6),
+      0 2px 12px color-mix(in srgb, var(--color-theme-gold) 55%, transparent),
+      0 0 28px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
+    opacity: 0;
+    animation:
+      boxer-default-cta-fade-in 700ms cubic-bezier(0.16, 1, 0.3, 1) 1500ms
+        forwards,
+      boxer-default-cta-pulse 2.4s ease-in-out 2300ms infinite;
+  }
+
+  @keyframes boxer-default-cta-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes boxer-default-cta-pulse {
+    0%, 100% {
+      filter: brightness(1);
+    }
+    50% {
+      filter: brightness(1.2);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boxer-default-divider,
+    .boxer-default-cta {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes boxer-default-logo-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .boxer-watermark {
+    text-transform: uppercase;
+    color: transparent;
+
+    background-image: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-cream) 14%, transparent) 0%,
+      color-mix(in srgb, var(--color-theme-gold) 10%, transparent) 55%,
+      transparent 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    text-shadow:
+      0 0 24px color-mix(in srgb, var(--color-theme-gold) 14%, transparent),
+      0 1px 0 color-mix(in srgb, var(--color-theme-cream) 3%, transparent);
+
+    mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      #000 28%,
+      #000 65%,
+      transparent 100%
+    );
+
+    transition: opacity 400ms ease;
+  }
+
+  .boxer-watermark-track {
+    display: flex;
+    width: max-content;
+    animation: boxer-watermark-marquee 32s linear infinite;
+    will-change: transform;
+  }
+
+  .boxer-watermark-set {
+    display: flex;
+    align-items: center;
+    gap: 0.22em;
+    padding-right: 0.22em;
+    white-space: nowrap;
+  }
+
+  @keyframes boxer-watermark-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .boxer-name {
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+    text-shadow:
+      0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
+      0 2px 18px color-mix(in srgb, var(--color-theme-gold) 55%, transparent),
+      0 6px 40px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
+    filter:
+      drop-shadow(0 2px 2px rgba(0, 0, 0, 0.78))
+      drop-shadow(0 0 10px rgba(0, 0, 0, 0.58));
+    background: linear-gradient(
+      180deg,
+      var(--color-theme-cream) 0%,
+      var(--color-theme-cream) 45%,
+      color-mix(in srgb, var(--color-theme-gold) 95%, var(--color-theme-cream)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: opacity 400ms ease;
+  }
+
+  /* País del boxer: una sombra suave para garantizar contraste sobre
+     la cuadrícula de cards sin que se sienta exagerado. */
+  .boxer-country {
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.55),
+      0 2px 16px rgba(0, 0, 0, 0.35);
+    transition: opacity 400ms ease;
+  }
+
+  .boxer-country-flag {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+  }
+
+  @media (min-width: 640px) {
+    .boxer-country-flag {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .boxer-country-flag {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+  }
+
+  .boxer-portrait-layer {
+    --boxer-portrait-drop: clamp(3.25rem, 8vh, 5.5rem);
+  }
+
+  .boxer-portrait-wrap {
+    position: absolute;
+    left: 50%;
+    bottom: calc(-1 * var(--boxer-portrait-drop));
+    height: calc(100% + var(--boxer-portrait-drop));
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 100%;
+  }
+
+  /* La imagen del boxer ocupa todo el espacio vertical disponible del
+     stage (mediante `flex-1` en el wrapper) para verse lo más grande
+     posible. Aplicamos un fade hacia transparente en el extremo inferior
+     para que el recorte de la silueta se funda visualmente con el nombre
+     y la bandera que aparecen justo debajo. */
+  .boxer-portrait {
+    mask-image: linear-gradient(
+      to bottom,
+      black 0%,
+      black 82%,
+      rgba(0, 0, 0, 0.65) 94%,
+      transparent 100%
+    );
+  }
+
+  .boxer-grid-frame {
+    margin-inline: auto;
+    max-width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .boxer-grid-frame {
+      max-width: min(100%, 44rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .boxer-grid-frame {
+      max-width: 64rem;
+    }
+  }
+
+  .boxer-mobile-slider-shell {
+    --mobile-slide-width: clamp(7.25rem, 34vw, 9.25rem);
+    --mobile-slider-gap: 0.625rem;
+    position: relative;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+  }
+
+  .boxer-mobile-slider {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-block: 0.25rem 0.6rem;
+  }
+
+  .boxer-mobile-slider::-webkit-scrollbar {
+    display: none;
+  }
+
+  .boxer-mobile-track {
+    display: flex;
+    width: max-content;
+    gap: var(--mobile-slider-gap);
+  }
+
+  .boxer-mobile-slide {
+    width: var(--mobile-slide-width);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
+      0 12px 28px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    animation: boxer-mobile-slide-in 520ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .boxer-mobile-slide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.32;
+    background:
+      radial-gradient(
+        ellipse 80% 70% at 50% 22%,
+        color-mix(in srgb, var(--color-theme-gold) 45%, transparent) 0%,
+        transparent 64%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-theme-navy) 84%, black) 0%,
+        color-mix(in srgb, var(--color-theme-midnight) 96%, black) 100%
+      );
+  }
+
+  .boxer-mobile-slide:focus-visible {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 80%, white);
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--color-theme-cream) 82%, transparent),
+      0 0 22px color-mix(in srgb, var(--color-theme-gold) 60%, transparent);
+  }
+
+  .boxer-mobile-slide-img {
+    z-index: 1;
+    filter: saturate(1.04) contrast(1.02);
+  }
+
+  .boxer-mobile-slide-img[data-mirrored='true'] {
+    transform: scaleX(-1);
+  }
+
+  .boxer-mobile-slide-name-bar {
+    z-index: 2;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.94) 0%,
+      rgba(0, 0, 0, 0.72) 46%,
+      transparent 100%
+    );
+  }
+
+  .boxer-mobile-slide-name {
+    text-shadow:
+      0 0 2px rgba(0, 0, 0, 0.95),
+      0 1px 2px rgba(0, 0, 0, 0.9),
+      0 2px 10px rgba(0, 0, 0, 0.72);
+  }
+
+  @keyframes boxer-mobile-slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .boxer-grid {
+    gap: 0;
+    background: transparent;
+  }
+
+  .boxer-cell {
+    background: color-mix(in srgb, var(--color-theme-midnight) 92%, var(--color-theme-navy));
+    /* Cada celda lleva su propio borde dorado para que, al estar opacity:0
+       durante el cascade inicial, no quede ningún "bloque" visible debajo.
+       Los box-shadows de celdas adyacentes se solapan formando las líneas
+       internas del grid, y el contorno exterior del bloque completo. */
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+  }
+
+  .boxer-thumb-img {
+    transition:
+      opacity 500ms ease,
+      filter 500ms ease,
+      transform 500ms ease,
+      scale 500ms ease;
+  }
+
+  /* Flip horizontal puntual para las miniaturas cuya imagen original mira
+     hacia el lado contrario al de su contrincante en el grid. Usamos
+     `transform` (no la propiedad `scale`) para no entrar en conflicto con
+     el `scale-[1.05]` del hover, que sí usa la propiedad `scale`. */
+  .boxer-thumb-img[data-mirrored='true'] {
+    transform: scaleX(-1);
+  }
+
+  /* Posicionamiento simétrico: cada celda usa sus propias variables CSS
+     (definidas inline desde el render) para situarse en el grid de modo
+     que cada pareja quede en columnas opuestas de la misma fila. */
+  .boxer-cell {
+    grid-column-start: var(--col-mobile);
+    grid-row-start: var(--row-mobile);
+  }
+
+  @media (min-width: 768px) {
+    .boxer-cell {
+      grid-column-start: var(--col-tablet);
+      grid-row-start: var(--row-tablet);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .boxer-cell {
+      grid-column-start: var(--col-desktop);
+      grid-row-start: var(--row-desktop);
+    }
+  }
+
+  /* La celda transita box-shadow y transform; los acentos de color
+     (dorado y rojo) se aplican vía pseudo-elementos con opacity para
+     que la transición sea suave (los radial-gradients no se interpolan,
+     pero la opacity sí). */
+  .boxer-cell {
+    transition:
+      box-shadow 500ms ease,
+      transform 500ms ease;
+  }
+
+  .boxer-cell::before,
+  .boxer-cell::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 500ms ease;
+  }
+
+  .boxer-cell::before {
+    /* Acento dorado: visible cuando el boxer está activo, en hover o en
+       focus-visible. */
+    background: radial-gradient(
+      ellipse 90% 90% at 50% 35%,
+      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
+      var(--color-theme-gold) 45%,
+      color-mix(in srgb, var(--color-theme-gold) 55%, var(--color-theme-midnight)) 100%
+    );
+  }
+
+  .boxer-cell::after {
+    /* Acento rojo sangre: visible cuando este boxer es el contrincante
+       del activo. */
+    background: radial-gradient(
+      ellipse 90% 90% at 50% 35%,
+      #c63030 0%,
+      #9c1f1f 50%,
+      #5a1414 100%
+    );
+  }
+
+  /* La imagen va sobre los pseudo-elementos para que el recorte del
+     boxer no quede tapado por el acento de color. */
+  .boxer-thumb-img {
+    z-index: 1;
+  }
+
+  /* Barra inferior con el nombre del boxeador sobre cada miniatura.
+     Sube bastante la opacidad para garantizar contraste con el texto
+     cream incluso cuando el cell se ilumina en dorado o rojo. */
+  .boxer-thumb-name-bar {
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.92) 0%,
+      rgba(0, 0, 0, 0.7) 45%,
+      transparent 95%
+    );
+    z-index: 2;
+  }
+
+  /* Color y sombras del nombre. Lo dejamos siempre cream con varias
+     capas de sombra negra para que sea legible sobre cualquier estado
+     (base oscuro, dorado del hover/activo o rojo del contrincante)
+     sin tener que animar el color del texto. */
+  .boxer-thumb-name {
+    color: var(--color-theme-cream);
+    text-shadow:
+      0 0 2px rgba(0, 0, 0, 0.95),
+      0 1px 2px rgba(0, 0, 0, 0.9),
+      0 2px 8px rgba(0, 0, 0, 0.65);
+  }
+
+  @media (max-width: 1023px) {
+    .boxer-cta-bar {
+      margin-bottom: 0.25rem;
+      padding-top: 0;
+    }
+
+    .boxer-default-divider {
+      transform: scaleX(0.75);
+    }
+
+    .boxer-default-cta {
+      margin-top: 0.625rem;
+      font-size: clamp(0.7rem, 2.6vw, 0.9rem);
+      letter-spacing: 0.24em;
+      line-height: 1.15;
+    }
+
+    .boxer-thumb-name {
+      font-size: clamp(0.48rem, 1.8vw, 0.62rem);
+      letter-spacing: 0.12em;
+    }
+  }
+
+  @media (max-width: 639px) and (max-height: 680px) {
+    .boxer-mobile-slider-shell {
+      --mobile-slide-width: clamp(6.75rem, 31vw, 8.25rem);
+    }
+  }
+
+  @media (max-width: 639px) and (max-height: 560px) {
+    .boxer-mobile-slider-shell {
+      --mobile-slide-width: clamp(6rem, 28vw, 7.25rem);
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 767px) and (max-height: 820px) {
+    .boxer-mobile-slider-shell {
+      --mobile-slide-width: clamp(7rem, 27vw, 8.75rem);
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 767px) and (max-height: 680px) {
+    .boxer-mobile-slider-shell {
+      --mobile-slide-width: clamp(6.25rem, 24vw, 7.75rem);
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) and (max-height: 820px) {
+    .boxer-grid-frame {
+      max-width: min(100%, 40rem);
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) and (max-height: 680px) {
+    .boxer-grid-frame {
+      max-width: min(100%, 34rem);
+    }
+  }
+
+  /* Boxeador seleccionado / hover / focus: activamos el acento dorado
+     del pseudo ::before, levantamos el z-index y reforzamos el glow. */
+  .boxer-cell[data-active='true'],
+  .boxer-cell:hover:not([data-active='true']),
+  .boxer-cell:focus-visible:not([data-active='true']) {
+    z-index: 3;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 70%, transparent),
+      0 0 18px 0 color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+  }
+
+  .boxer-cell[data-active='true']::before,
+  .boxer-cell:hover:not([data-active='true'])::before,
+  .boxer-cell:focus-visible:not([data-active='true'])::before {
+    opacity: 1;
+  }
+
+  /* Contrincante del boxer seleccionado: activamos el acento rojo del
+     pseudo ::after. */
+  .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(:focus-visible) {
+    z-index: 2;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, #c63030 55%, transparent),
+      0 0 14px 0 color-mix(in srgb, #c63030 45%, transparent);
+  }
+
+  .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(:focus-visible)::after {
+    opacity: 1;
+  }
+
+  .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(:focus-visible) .boxer-thumb-img {
+    opacity: 1;
+    filter: saturate(1.05);
+  }
+
+  .boxer-cell:not([data-active='true']):not([data-opponent='true']):not(:hover):not(:focus-visible) .boxer-thumb-img {
+    opacity: 0.85;
+  }
+
+  /* Cuando hay un boxeador seleccionado/hover, atenuamos los thumbs que no
+     son ni el activo ni el contrincante para resaltar el combate. */
+  [data-boxer-selector][data-state='boxer'] .boxer-cell:not([data-active='true']):not([data-opponent='true']):not(:hover):not(:focus-visible) .boxer-thumb-img {
+    opacity: 0.55;
+  }
+
+  [data-active-image].is-switching,
+  [data-active-name].is-switching,
+  [data-active-watermark].is-switching {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boxer-portrait,
+    .boxer-name,
+    .boxer-watermark,
+    .boxer-watermark-track,
+    .boxer-default-logo {
+      transition: none;
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  // Data URIs muy pequeñas (2×2) usadas para detectar soporte de cada
+  // formato en el browser. Si la imagen carga sin error, el browser
+  // soporta ese formato.
+  const AVIF_TEST =
+    'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgANogQEAwgMg8f8D///8WfhwB8+ErK42A='
+  const WEBP_TEST =
+    'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA='
+
+  function detectFormat(dataUrl: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      const img = new Image()
+      img.onload = () => resolve(img.naturalWidth > 0)
+      img.onerror = () => resolve(false)
+      img.src = dataUrl
+    })
+  }
+
+  /** Devuelve la URL del mejor formato soportado para un thumb. */
+  function pickPhoto(
+    thumb: HTMLAnchorElement,
+    formats: { avif: boolean; webp: boolean },
+  ): string | undefined {
+    if (formats.avif && thumb.dataset.photoAvif) return thumb.dataset.photoAvif
+    if (formats.webp && thumb.dataset.photoWebp) return thumb.dataset.photoWebp
+    return thumb.dataset.photoWebp
+  }
+
+  function setupMobileInfiniteSlider(root: HTMLElement) {
+    const slider = $<HTMLElement>('[data-mobile-slider]', root)
+    const track = $<HTMLElement>('[data-mobile-track]', root)
+    if (!slider || !track || slider.dataset.initialized === 'true') return
+
+    const slides = Array.from($$<HTMLElement>('[data-mobile-slide]', track))
+    const realSlideCount = slides.filter(
+      (slide) => slide.dataset.mobileSet === 'current',
+    ).length
+    if (slides.length < 2 || realSlideCount === 0) return
+
+    slider.dataset.initialized = 'true'
+
+    const getSetWidth = () => {
+      const pitch = slides[1].offsetLeft - slides[0].offsetLeft
+      return pitch > 0 ? pitch * realSlideCount : track.scrollWidth / 3
+    }
+
+    // Coloca al usuario en el set central conservando el offset relativo
+    // dentro del set. Como los 3 sets son idénticos, el salto es invisible.
+    const moveToMiddleSet = () => {
+      const setWidth = getSetWidth()
+      if (setWidth <= 0) return
+      const offsetInSet = ((slider.scrollLeft % setWidth) + setWidth) % setWidth
+      slider.scrollLeft = setWidth + offsetInSet
+    }
+
+    // Reposiciona al usuario al set central cuando ha cruzado el umbral.
+    // CLAVE: solo lo hacemos cuando el scroll YA ha parado, no durante el
+    // momentum. Reasignar `scrollLeft` mientras hay inercia en iOS la corta
+    // bruscamente y se percibe como un parpadeo/reset.
+    const normalize = () => {
+      const setWidth = getSetWidth()
+      if (setWidth <= 0) return
+
+      if (slider.scrollLeft < setWidth * 0.5) {
+        slider.scrollLeft += setWidth
+      } else if (slider.scrollLeft >= setWidth * 1.5) {
+        slider.scrollLeft -= setWidth
+      }
+    }
+
+    requestAnimationFrame(moveToMiddleSet)
+
+    // `scrollend` está disponible en Safari iOS 18.2+, Chrome 114+ y
+    // Firefox 109+. Cuando exista, normalizamos solo cuando todo el scroll
+    // (incluido el snap) ha terminado, evitando cualquier corte visual.
+    // Como fallback, debounce manual: ejecutamos `normalize` ~160ms después
+    // del último evento de scroll, tiempo de sobra para que termine el snap.
+    const supportsScrollEnd = 'onscrollend' in window
+    if (supportsScrollEnd) {
+      slider.addEventListener('scrollend', normalize, { passive: true })
+    } else {
+      let scrollEndTimer: ReturnType<typeof setTimeout> | null = null
+      slider.addEventListener(
+        'scroll',
+        () => {
+          if (scrollEndTimer) clearTimeout(scrollEndTimer)
+          scrollEndTimer = setTimeout(normalize, 160)
+        },
+        { passive: true },
+      )
+    }
+
+    window.addEventListener('resize', () => requestAnimationFrame(moveToMiddleSet))
+  }
+
+  function initBoxerSelector() {
+    const root = $<HTMLElement>('[data-boxer-selector]')
+    if (!root) return
+
+    setupMobileInfiniteSlider(root)
+
+    const image = $<HTMLImageElement>('[data-active-image]', root)
+    const sourceAvif = $<HTMLSourceElement>(
+      '[data-active-source-avif]',
+      root,
+    )
+    const sourceWebp = $<HTMLSourceElement>(
+      '[data-active-source-webp]',
+      root,
+    )
+    const nameNode = $<HTMLElement>('[data-active-name]', root)
+    const watermark = $<HTMLElement>('[data-active-watermark]', root)
+    const watermarkTexts = Array.from(
+      $$<HTMLElement>('[data-active-watermark-text]', root),
+    )
+    const flagNode = $<HTMLImageElement>('[data-active-flag]', root)
+    const countryNode = $<HTMLElement>('[data-active-country-name]', root)
+    const defaultPanel = $<HTMLElement>('[data-default-panel]', root)
+    const boxerPanel = $<HTMLElement>('[data-boxer-panel]', root)
+    const grid = $<HTMLElement>('[data-boxer-grid]', root)
+    const thumbs = Array.from($$<HTMLAnchorElement>('[data-thumb]', root))
+    const mobileThumbs = Array.from($$<HTMLAnchorElement>('[data-mobile-thumb]', root))
+    if (!image || !nameNode || !grid || thumbs.length === 0) return
+
+    // Detección de formato + precarga en segundo plano. No bloqueamos
+    // el atado de listeners (un hover inmediato debe funcionar aunque
+    // todavía no sepamos qué formato usar para la precarga).
+    const idle =
+      (window as Window & { requestIdleCallback?: (cb: () => void) => number })
+        .requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 800))
+    void (async () => {
+      const [avifOk, webpOk] = await Promise.all([
+        detectFormat(AVIF_TEST),
+        detectFormat(WEBP_TEST),
+      ])
+      const formats = { avif: avifOk, webp: webpOk }
+      idle(() => {
+        thumbs.forEach((btn) => {
+          const url = pickPhoto(btn, formats)
+          if (!url) return
+          const img = new Image()
+          img.decoding = 'async'
+          img.src = url
+        })
+      })
+    })()
+
+    const thumbsById = new Map<string, HTMLAnchorElement>()
+    thumbs.forEach((btn) => {
+      const id = btn.dataset.id
+      if (id) thumbsById.set(id, btn)
+    })
+
+    function showDefault() {
+      if (root!.dataset.state === 'default') return
+      root!.dataset.state = 'default'
+      delete root!.dataset.activeId
+      thumbs.forEach((btn) => {
+        btn.dataset.active = 'false'
+        btn.dataset.opponent = 'false'
+      })
+      defaultPanel?.setAttribute('aria-hidden', 'false')
+      boxerPanel?.setAttribute('aria-hidden', 'true')
+    }
+
+    /** Aplica el contenido (imagen, nombre, watermark, bandera, país) al
+     *  panel del boxer. No toca el state ni las clases is-switching. */
+    function applyBoxerContent(thumb: HTMLAnchorElement) {
+      const { name, photoAvif, photoWebp, countryCode, country } = thumb.dataset
+      if (!name || !photoWebp) return
+
+      // Actualizamos las sources del <picture> antes del src del <img>
+      // para que el browser re-evalúe y use el mejor formato disponible.
+      if (sourceAvif && photoAvif) sourceAvif.srcset = photoAvif
+      if (sourceWebp && photoWebp) sourceWebp.srcset = photoWebp
+      image!.src = photoWebp
+      image!.alt = `Foto principal de ${name}`
+
+      nameNode!.textContent = name
+      watermarkTexts.forEach((node) => {
+        node.textContent = name
+      })
+
+      if (flagNode && countryCode) flagNode.src = `/flags/${countryCode}.svg`
+      if (countryNode && country) countryNode.textContent = country
+    }
+
+    function select(thumb: HTMLAnchorElement) {
+      if (!image || !nameNode) return
+
+      const { id, opponentId } = thumb.dataset
+      if (!id || !thumb.dataset.photoWebp) return
+
+      const wasDefault = root!.dataset.state === 'default'
+
+      const opponentThumb = opponentId ? thumbsById.get(opponentId) : null
+
+      thumbs.forEach((btn) => {
+        const isActive = btn === thumb
+        const isOpponent = btn === opponentThumb
+        btn.dataset.active = String(isActive)
+        btn.dataset.opponent = String(isOpponent)
+        btn.tabIndex = isActive ? 0 : -1
+      })
+
+      // Si veníamos del estado por defecto, aplicamos el contenido
+      // ANTES de hacer visible el panel para evitar el "flash" del
+      // boxer pre-renderizado (fallback Alondrissa). Como no hay nada
+      // visible que sustituir, tampoco usamos el efecto is-switching.
+      if (wasDefault) {
+        if (root!.dataset.activeId !== id) {
+          applyBoxerContent(thumb)
+          root!.dataset.activeId = id
+        }
+        root!.dataset.state = 'boxer'
+        defaultPanel?.setAttribute('aria-hidden', 'true')
+        boxerPanel?.setAttribute('aria-hidden', 'false')
+        return
+      }
+
+      // Ya estábamos en estado 'boxer'. Reaseguramos el panel visible
+      // (puede haberse perdido si se reseteó a default entre eventos).
+      root!.dataset.state = 'boxer'
+      defaultPanel?.setAttribute('aria-hidden', 'true')
+      boxerPanel?.setAttribute('aria-hidden', 'false')
+
+      if (root!.dataset.activeId === id) return
+      root!.dataset.activeId = id
+
+      // Cross-fade clásico entre boxers: fade out → swap → fade in.
+      image.classList.add('is-switching')
+      nameNode!.classList.add('is-switching')
+      watermark?.classList.add('is-switching')
+
+      const swap = () => {
+        applyBoxerContent(thumb)
+
+        const onLoaded = () => {
+          image.classList.remove('is-switching')
+          nameNode!.classList.remove('is-switching')
+          watermark?.classList.remove('is-switching')
+        }
+        if (image.complete && image.naturalHeight > 0) {
+          requestAnimationFrame(onLoaded)
+        } else {
+          image.addEventListener('load', onLoaded, { once: true })
+          image.addEventListener('error', onLoaded, { once: true })
+        }
+      }
+      setTimeout(swap, 140)
+    }
+
+    // El click en cada thumb lo gestiona nativamente el <a> (navegación
+    // a /boxeadores/<id>). Aquí solo enganchamos hover/focus para que se
+    // actualice el preview del hero antes de que el usuario decida.
+    //
+    // En `click` además marcamos con `view-transition-name` el elemento
+    // que será origen del morph hacia el retrato grande del perfil:
+    //   - Desktop (≥1024px): la imagen grande del hero, que en este
+    //     breakpoint ya está visible por el hover/focus previo. El
+    //     morph es de retrato a retrato.
+    //   - Mobile/tablet (<1024px): la miniatura clicada, porque el
+    //     panel del hero suele estar oculto al pulsar sin hover previo
+    //     y necesitamos un origen visible que la View Transitions API
+    //     pueda capturar como snapshot.
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('mouseenter', () => select(thumb))
+      thumb.addEventListener('focus', () => select(thumb))
+      thumb.addEventListener('click', () => {
+        const id = thumb.dataset.id
+        if (!id) return
+        const isDesktop = window.matchMedia('(min-width: 1024px)').matches
+
+        if (isDesktop && image) {
+          // Saltamos el cross-fade pendiente para que la imagen del hero
+          // refleje al boxeador clicado en el momento del snapshot.
+          image.classList.remove('is-switching')
+          nameNode?.classList.remove('is-switching')
+          watermark?.classList.remove('is-switching')
+          applyBoxerContent(thumb)
+          image.style.viewTransitionName = `boxer-hero-${id}`
+          return
+        }
+
+        const thumbImg = $<HTMLImageElement>(
+          '.boxer-thumb-img',
+          thumb,
+        )
+        if (thumbImg) {
+          thumbImg.style.viewTransitionName = `boxer-hero-${id}`
+        }
+      })
+    })
+
+    mobileThumbs.forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        const id = thumb.dataset.id
+        if (!id) return
+
+        const thumbImg = $<HTMLImageElement>(
+          '.boxer-mobile-slide-img',
+          thumb,
+        )
+        if (thumbImg) {
+          thumbImg.style.viewTransitionName = `boxer-hero-${id}`
+        }
+      })
+    })
+
+    // Al salir con el ratón del grid, volvemos al estado por defecto,
+    // salvo que haya un thumb con foco de teclado.
+    grid.addEventListener('mouseleave', () => {
+      const keyboardFocused = $<HTMLElement>(
+        '[data-thumb]:focus-visible',
+        root,
+      )
+      if (keyboardFocused) return
+      showDefault()
+    })
+
+    // Al perder el foco de teclado (tab fuera del selector) volvemos al
+    // estado por defecto si tampoco hay hover.
+    grid.addEventListener('focusout', () => {
+      // Esperamos al siguiente frame para que document.activeElement esté ya
+      // actualizado al nuevo elemento que recibe el foco.
+      requestAnimationFrame(() => {
+        const stillInside = root!.contains(document.activeElement)
+        const hovering = grid.matches(':hover')
+        if (!stillInside && !hovering) showDefault()
+      })
+    })
+
+    // Tap/click fuera de la sección (especialmente útil en móvil/táctil):
+    // resetea al estado por defecto.
+    document.addEventListener('pointerdown', (event) => {
+      const target = event.target as Node | null
+      if (target && root!.contains(target)) return
+      showDefault()
+    })
+
+    root.addEventListener('keydown', (event) => {
+      const target = event.target as HTMLElement | null
+      if (!target?.matches('[data-thumb]')) return
+
+      const currentIndex = thumbs.indexOf(target as HTMLAnchorElement)
+      if (currentIndex < 0) return
+
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        target.blur()
+        showDefault()
+        return
+      }
+
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        event.preventDefault()
+        const next = thumbs[(currentIndex + 1) % thumbs.length]
+        next.focus()
+      } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        event.preventDefault()
+        const prev = thumbs[(currentIndex - 1 + thumbs.length) % thumbs.length]
+        prev.focus()
+      } else if (event.key === 'Home') {
+        event.preventDefault()
+        thumbs[0].focus()
+      } else if (event.key === 'End') {
+        event.preventDefault()
+        thumbs[thumbs.length - 1].focus()
+      }
+    })
+  }
+
+  document.addEventListener('astro:page-load', initBoxerSelector)
+</script>
