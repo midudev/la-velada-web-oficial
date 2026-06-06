@@ -17,6 +17,7 @@ import {
   getBoxerSelectImages,
 } from '@/consts/boxers'
 import Layout from '@/layouts/Layout.astro'
+import { fetchVeladaVideos } from '@/lib/youtube/velada'
 import Header from '@/sections/Header.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
@@ -49,6 +50,8 @@ const battle = battles.find((b) => b.boxerIds.includes(boxer.id))
 const opponentId = battle?.boxerIds.find((id) => id !== boxer.id)
 const opponent = opponentId ? BOXERS_BY_ID[opponentId] : null
 const opponentSelectImages = opponent ? getBoxerSelectImages(opponent) : null
+
+const veladaVideos = await fetchVeladaVideos(boxer.youtubeChannelId)
 
 const SITE_URL = 'https://www.infolavelada.com'
 const canonical = `${SITE_URL}/boxeadores/${boxer.id}`
@@ -323,6 +326,55 @@ const breadcrumbJsonLd = {
       </div>
     </div>
   </section>
+
+  {veladaVideos.length > 0 && (
+    <section
+      class="boxer-videos relative isolate w-full bg-theme-midnight px-4 py-16 text-theme-cream sm:px-6 sm:py-20"
+      aria-labelledby="boxer-videos-title"
+    >
+      <div class="boxer-videos-inner mx-auto w-full max-w-6xl">
+        <header class="boxer-videos-header">
+          <p class="boxer-videos-eyebrow font-cinzel" aria-hidden="true">
+            Vídeos recientes
+          </p>
+          <h2 id="boxer-videos-title" class="boxer-videos-title font-cinzel">
+            {boxer.name} en La Velada
+          </h2>
+        </header>
+
+        <ul class="boxer-videos-grid">
+          {veladaVideos.map((video) => (
+            <li class="boxer-videos-card">
+              <a
+                href={video.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="boxer-videos-link"
+                aria-label={`Ver "${video.title}" en YouTube`}
+              >
+                <span class="boxer-videos-thumb">
+                  <img
+                    src={video.thumbnail}
+                    alt=""
+                    role="presentation"
+                    loading="lazy"
+                    decoding="async"
+                    width="320"
+                    height="180"
+                  />
+                  <span class="boxer-videos-play" aria-hidden="true">▶</span>
+                </span>
+                <span class="boxer-videos-meta">
+                  <span class="boxer-videos-channel">{video.channelTitle}</span>
+                  <span class="boxer-videos-vtitle">{video.title}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
 
   <Sponsors />
   <Footer />
@@ -630,6 +682,153 @@ const breadcrumbJsonLd = {
     .boxer-detail-versus-photo,
     .boxer-detail-versus-arrow {
       animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* ---------- Vídeos recientes de La Velada ---------- */
+  .boxer-videos-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .boxer-videos-eyebrow {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 85%, transparent);
+  }
+
+  .boxer-videos-title {
+    margin-top: 0.6rem;
+    font-size: 1.5rem;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+  }
+
+  @media (min-width: 640px) {
+    .boxer-videos-title {
+      font-size: 1.875rem;
+    }
+  }
+
+  .boxer-videos-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .boxer-videos-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .boxer-videos-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .boxer-videos-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+    transition: transform 250ms ease;
+  }
+
+  .boxer-videos-link:hover,
+  .boxer-videos-link:focus-visible {
+    outline: none;
+    transform: translateY(-2px);
+  }
+
+  .boxer-videos-thumb {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--color-theme-midnight) 70%, black);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
+  }
+
+  .boxer-videos-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 400ms ease;
+  }
+
+  .boxer-videos-link:hover .boxer-videos-thumb img,
+  .boxer-videos-link:focus-visible .boxer-videos-thumb img {
+    transform: scale(1.04);
+  }
+
+  .boxer-videos-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--color-theme-midnight) 70%, black);
+    color: var(--color-theme-gold);
+    font-size: 0.95rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+    transition:
+      background-color 250ms ease,
+      color 250ms ease;
+  }
+
+  .boxer-videos-link:hover .boxer-videos-play,
+  .boxer-videos-link:focus-visible .boxer-videos-play {
+    background: var(--color-theme-gold);
+    color: var(--color-theme-midnight);
+  }
+
+  .boxer-videos-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .boxer-videos-channel {
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 80%, transparent);
+  }
+
+  .boxer-videos-vtitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: color-mix(in srgb, var(--color-theme-cream) 92%, transparent);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boxer-videos-link,
+    .boxer-videos-thumb img,
+    .boxer-videos-play {
       transition: none !important;
     }
   }
