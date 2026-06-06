@@ -161,41 +161,9 @@ const organizationJsonLd = {
     <ClientRouter />
     <Analytics />
     <script>
-      type AstroNavigationEvent = Event & {
-        from: URL
-        to: URL
-      }
+      import { registerBoxersTransitionFlags } from '@/lib/view-transitions/boxers'
 
-      type AstroBeforeSwapEvent = AstroNavigationEvent & {
-        newDocument: Document
-      }
-
-      const SKIP_BOXERS_ENTER_ATTR = 'data-skip-boxers-enter'
-      const BOXERS_INDEX_PATH = '/boxeadores'
-      const BOXER_DETAIL_PATH_RE = /^\/boxeadores\/[^/]+$/
-
-      const getNormalizedPathname = (url: URL | string) => {
-        const pathname =
-          url instanceof URL ? url.pathname : new URL(url, window.location.href).pathname
-        return pathname === '/' ? pathname : pathname.replace(/\/$/, '')
-      }
-
-      const isReturningFromBoxerDetail = (event: AstroNavigationEvent) => {
-        const fromPath = getNormalizedPathname(event.from)
-        const toPath = getNormalizedPathname(event.to)
-
-        return toPath === BOXERS_INDEX_PATH && BOXER_DETAIL_PATH_RE.test(fromPath)
-      }
-
-      document.addEventListener('astro:before-swap', (event) => {
-        const transitionEvent = event as AstroBeforeSwapEvent
-        const shouldSkipBoxersEnter = isReturningFromBoxerDetail(transitionEvent)
-
-        transitionEvent.newDocument.documentElement.toggleAttribute(
-          SKIP_BOXERS_ENTER_ATTR,
-          shouldSkipBoxersEnter,
-        )
-      })
+      registerBoxersTransitionFlags()
     </script>
   </head>
   <body>
