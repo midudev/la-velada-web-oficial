@@ -45,9 +45,18 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
         decoding="async"
       />
       <span
-        class="hidden font-cinzel text-[0.6rem] font-bold tracking-[0.32em] text-theme-cream/85 sm:inline-block sm:text-xs"
+        class="header-brand-slot hidden font-cinzel text-[0.6rem] font-bold tracking-[0.32em] text-theme-cream/85 sm:inline-grid sm:text-xs"
+        aria-live="polite"
       >
-        LA VELADA <span class="text-theme-gold">VI</span>
+        <span class="header-brand-default whitespace-nowrap">
+          LA VELADA&nbsp;<span class="text-theme-gold">VI</span>
+        </span>
+        <span class="header-brand-context whitespace-nowrap" aria-hidden="true">
+          <span
+            data-header-context-title
+            class="header-brand-context-title text-theme-cream"
+          ></span>
+        </span>
       </span>
     </a>
 
@@ -168,6 +177,54 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
     </nav>
   </div>
 </header>
+
+<style>
+  .header-brand-slot {
+    grid-template: 1fr / 1fr;
+    align-items: center;
+    overflow: hidden;
+    line-height: 1.4;
+  }
+
+  .header-brand-default,
+  .header-brand-context {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    transition:
+      transform 360ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+  }
+
+  .header-brand-default {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .header-brand-context {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+
+  [data-header][data-context-active='true'] .header-brand-default {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+
+  [data-header][data-context-active='true'] .header-brand-context {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .header-brand-default,
+    .header-brand-context {
+      transition: opacity 200ms ease;
+      transform: none;
+    }
+  }
+</style>
 
 <script>
   import { $, $$ } from '@/lib/dom-selector'
