@@ -115,32 +115,29 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   <div class="boxer-stage relative w-full flex-1">
     <div
       data-default-panel
-      class="boxer-default-panel relative flex w-full flex-col items-center justify-center text-center md:justify-start"
+      class="boxer-default-panel relative flex w-full flex-col items-center justify-start text-center"
     >
       <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true"></div>
 
-      <div
-        class="animate-blurred-fade-in animate-delay-300 relative"
-        role="img"
-        aria-label="Logo de La Velada del Año VI"
-      >
-        <picture>
-          <source srcset="/logo.avif" type="image/avif" />
-          <source srcset="/logo.webp" type="image/webp" />
-          <img
-            src="/logo.webp"
-            alt="La Velada del Año VI"
-            class="boxer-default-logo relative h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
-            width="512"
-            height="512"
-            decoding="async"
-            fetchpriority="high"
-          />
-        </picture>
-      </div>
+      <div class="boxer-default-lockup flex w-full max-w-full flex-col items-center px-4">
+        <div class="animate-blurred-fade-in animate-delay-300 relative leading-none">
+          <picture class="block">
+            <source srcset="/logo.avif" type="image/avif" />
+            <source srcset="/logo.webp" type="image/webp" />
+            <img
+              src="/logo.webp"
+              alt="Logo de La Velada del Año VI"
+              class="boxer-default-logo relative block h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
+              width="512"
+              height="512"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </picture>
+        </div>
 
       <ul
-        class="boxer-default-info animate-fade-in-up animate-delay-500 -mt-8 flex flex-col items-center justify-center gap-1 px-4 sm:-mt-12 md:-mt-16"
+        class="boxer-default-info boxer-default-info-spacing animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center gap-1"
       >
         <li class="flex items-baseline">
           <time
@@ -162,10 +159,23 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           <span
             class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
           >
-            ESTADIO DE LA CARTUJA, SEVILLA
+            <a
+              href="https://maps.app.goo.gl/73mfDNVvhK3Y5Kq66"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="relative inline-block
+                        after:content-[''] after:absolute after:left-0 after:-bottom-1
+                        after:h-[1px] after:w-full after:bg-current
+                        after:scale-x-0 after:origin-left
+                        after:transition-transform after:duration-300
+                        hover:after:scale-x-100 focus-visible:after:scale-x-100"
+            >
+              ESTADIO DE LA CARTUJA, SEVILLA
+            </a>
           </span>
         </li>
-      </ul>
+        </ul>
+      </div>
 
     </div>
 
@@ -245,20 +255,25 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     </div>
   </div>
 
-  <div
-    class="boxer-cta-bar relative z-20 mt-auto mb-1 flex w-full flex-col items-center px-4 pt-1 sm:mb-2 sm:pt-2"
-    aria-hidden="false"
-  >
-    <SectionDivider class="boxer-default-divider" />
-
-    <p
-      class="boxer-default-cta mt-3 text-center font-cinzel text-sm font-bold tracking-[0.3em] text-theme-cream sm:mt-4 sm:text-base"
+  <div class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-4 md:gap-6">
+    <div
+      class="boxer-cta-bar relative z-20 flex w-full flex-col items-center gap-3 px-4 pt-2 transition-opacity duration-300 ease-out md:gap-4 md:pt-4"
     >
-      ¡SELECCIONA TU BOXEADOR O BOXEADORA!
-    </p>
-  </div>
+      <div
+        class="boxer-default-divider flex items-center justify-center gap-3 sm:gap-4"
+        aria-hidden="true"
+      >
+        <span class="h-px w-10 bg-linear-to-r from-transparent to-theme-gold/55 sm:w-20"></span>
+        <span class="size-1.5 rotate-45 bg-theme-gold/85"></span>
+        <span class="h-px w-10 bg-linear-to-l from-transparent to-theme-gold/55 sm:w-20"></span>
+      </div>
 
-  <div class="boxer-grid-frame relative z-10 w-full">
+      <p class="boxer-default-cta mb-2 text-center font-cinzel text-sm font-bold tracking-[0.3em] text-theme-cream sm:text-base">
+        ¡SELECCIONA TU BOXEADOR O BOXEADORA!
+      </p>
+    </div>
+
+    <div class="boxer-grid-frame relative z-10 w-full">
     <div class="boxer-mobile-slider-shell md:hidden">
       <div
         class="boxer-mobile-slider"
@@ -386,6 +401,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         )
       }
     </div>
+    </div>
   </div>
 </section>
 
@@ -443,27 +459,15 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     }
   }
 
-  .boxer-default-panel {
-    /* El logo y la info quedan en su flujo normal dentro del panel
-       (que es `position: absolute inset: 0` sobre el stage). Como el
-       panel es `flex flex-col items-center`, los hijos se alinean a la
-       parte superior por defecto, justo donde queremos el logo. */
-    padding-block: 0;
-  }
-
-  /* Barra "¡SELECCIONA TU BOXEADOR O BOXEADORA!" + divider, situada
-     justo encima del grid. Reserva siempre su espacio físico (no
-     colapsa), así la cuadrícula no se mueve al cambiar de estado:
-     simplemente se desvanece con opacity cuando hay boxer seleccionado
-     y la imagen del hero, que vive dentro del stage, ya cubre ese
-     espacio liberado visualmente. */
-  .boxer-cta-bar {
-    transition: opacity 350ms ease;
-  }
-
   [data-boxer-selector][data-state='boxer'] .boxer-cta-bar {
     opacity: 0;
     pointer-events: none;
+  }
+
+  /* Lockup: eye-level offset here only. Logo → fechas: flex gap + .boxer-default-info-spacing. */
+  .boxer-default-lockup {
+    gap: clamp(0.625rem, 2vw, 1.125rem);
+    padding-top: clamp(2.5rem, 11vh, 7rem);
   }
 
   .boxer-default-logo {
@@ -484,12 +488,44 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   }
 
+  .boxer-default-info-spacing {
+    margin-top: -0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .boxer-default-info-spacing {
+      margin-top: -1rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .boxer-default-info-spacing {
+      margin-top: -1.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .boxer-default-info-spacing {
+      margin-top: -1.5rem;
+    }
+  }
+
   .boxer-default-info {
     text-shadow:
       0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
-      0 1px 0 rgba(0, 0, 0, 0.7),
       0 2px 14px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
       0 0 24px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
+  }
+
+  @media (max-height: 920px) {
+    .boxer-default-lockup {
+      padding-top: clamp(2rem, 8vh, 4.25rem);
+      gap: 0.5rem;
+    }
+
+    .boxer-default-info-spacing {
+      margin-top: -0.5rem;
+    }
   }
 
   /* La cuadrícula del selector entra escalonada con un delay base de
@@ -507,7 +543,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
        de pulso muy sutil para llamar la atención. */
     text-shadow:
       0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
-      0 1px 0 rgba(0, 0, 0, 0.6),
       0 2px 12px color-mix(in srgb, var(--color-theme-gold) 55%, transparent),
       0 0 28px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
     opacity: 0;
@@ -931,20 +966,14 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   @media (max-width: 1023px) {
-    .boxer-cta-bar {
-      margin-bottom: 0.25rem;
-      padding-top: 0;
-    }
-
     .boxer-default-divider {
       transform: scaleX(0.75);
     }
 
     .boxer-default-cta {
-      margin-top: 0.625rem;
       font-size: clamp(0.7rem, 2.6vw, 0.9rem);
       letter-spacing: 0.24em;
-      line-height: 1.15;
+      line-height: 1.2;
     }
 
     .boxer-thumb-name {
