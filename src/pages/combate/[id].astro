@@ -1,10 +1,10 @@
 ---
 import type { GetStaticPaths } from 'astro'
 
+import CountryFlag from '@/components/CountryFlag.astro'
 import { battles, battlesById } from '@/consts/battles'
 import {
   BOXERS_BY_ID,
-  COUNTRY_FLAGS,
   COUNTRY_NAMES,
   getBoxerPhoto,
 } from '@/consts/boxers'
@@ -24,7 +24,7 @@ const boxer2 = BOXERS_BY_ID[boxer2Id]
 const country1 = COUNTRY_NAMES[boxer1.country] ?? boxer1.country
 const country2 = COUNTRY_NAMES[boxer2.country] ?? boxer2.country
 const title = `${battle.title} — Combate ${String(battle.number).padStart(2, '0')} de La Velada del Año VI`
-const description = `Toda la información del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} (${country1}) contra ${boxer2.name} (${country2}). 25 de julio de 2026 en el Estadio de La Cartuja de Sevilla.`
+const description = `Toda la información del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} contra ${boxer2.name}. Fecha, horario y detalles en Sevilla.`
 const canonical = `${SITE_URL}${battle.url}`
 
 const sportsEventJsonLd = {
@@ -136,13 +136,15 @@ export const prerender = true
           <img
             src={getBoxerPhoto(boxer1)}
             alt={`Foto principal de ${boxer1.name}`}
+            width="1440"
+            height="2160"
             class="h-[22rem] max-w-full object-contain object-bottom"
             fetchpriority="high"
             decoding="async"
           />
           <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer1.name}</h2>
-          <p class="mt-2 text-sm font-semibold tracking-[0.25em] text-white/60">
-            <span aria-hidden="true">{COUNTRY_FLAGS[boxer1.country]}</span>
+          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
+            <CountryFlag country={boxer1.country} size={18} decorative />
             {COUNTRY_NAMES[boxer1.country]}
           </p>
         </article>
@@ -155,13 +157,15 @@ export const prerender = true
           <img
             src={getBoxerPhoto(boxer2)}
             alt={`Foto principal de ${boxer2.name}`}
+            width="1440"
+            height="2160"
             class="h-[22rem] max-w-full object-contain object-bottom"
             fetchpriority="high"
             decoding="async"
           />
           <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer2.name}</h2>
-          <p class="mt-2 text-sm font-semibold tracking-[0.25em] text-white/60">
-            <span aria-hidden="true">{COUNTRY_FLAGS[boxer2.country]}</span>
+          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
+            <CountryFlag country={boxer2.country} size={18} decorative />
             {COUNTRY_NAMES[boxer2.country]}
           </p>
         </article>
