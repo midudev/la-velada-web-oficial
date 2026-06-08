@@ -36,6 +36,9 @@
     overscroll-behavior-y: none;
   }
 
+  
+
+
   html {
     scrollbar-gutter: stable;
     background: var(--color-theme-midnight);
@@ -239,4 +242,30 @@
 
 @utility mask-fade-bottom-quick {
   mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
+}
+
+
+body:has(dialog[open]) {
+    overflow: hidden;
+
+      .overlay{
+          display: block;
+      }
+ }
+
+
+dialog {
+    scale: 0;
+
+    transition: scale .4s ease, display .4s ease allow-discrete;
+
+    &[open] {
+        scale: 1;
+        display: flex;
+
+        @starting-style {
+            scale: 0;
+        }
+    }
+  
 }
