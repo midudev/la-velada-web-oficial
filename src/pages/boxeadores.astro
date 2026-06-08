@@ -130,22 +130,28 @@ const totalBoxers = BOXERS.length
     <div aria-hidden="true" class="boxers-bg absolute inset-0 -z-20"></div>
     <div aria-hidden="true" class="boxers-grain pointer-events-none absolute inset-0 -z-10"></div>
 
-    <div class="mx-auto flex max-w-7xl flex-col items-center">
-      <div class="flex w-full flex-col items-center text-center">
-        <SectionDivider class="w-full" />
+    <div class="boxers-layout mx-auto w-full max-w-7xl">
+      <header class="boxers-page-header">
+        <div
+            class="boxers-page-header-ornament mb-8 flex w-full items-center justify-center gap-4 sm:mb-12"
+            aria-hidden="true"
+          >
+            <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
+            <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
+            <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
+        </div>
         <h1
-          class="animate-fade-in-up mt-4 font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
-        >
-          BOXEADORES
+            class="boxers-page-title mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
+          >
+            BOXEADORES
         </h1>
         <p
-          class="animate-fade-in-up animate-delay-200 mt-3 max-w-2xl text-balance font-cinzel text-xs font-medium tracking-[0.16em] text-white/55 sm:text-sm sm:tracking-[0.25em]"
-        >
-          Los {totalBoxers} contendientes de La Velada del Año VI
+            class="boxers-page-lead mb-8 animate-fade-in-up animate-delay-200 text-balance font-cinzel text-xs font-medium tracking-[0.16em] text-white/55 sm:mb-12 sm:text-sm sm:tracking-[0.25em]"
+          >
+            Los {totalBoxers} contendientes de La Velada del Año VI
         </p>
-      </div>
+      </header>
 
-      <div class="boxers-layout mt-8 w-full sm:mt-12">
       <form
         data-boxers-filters
         class="boxer-filters-panel animate-fade-in-up animate-delay-300 relative w-full"
@@ -434,7 +440,6 @@ const totalBoxers = BOXERS.length
         </button>
       </div>
       </div>
-      </div>
     </div>
   </section>
 
@@ -445,6 +450,25 @@ const totalBoxers = BOXERS.length
 <style>
   .boxers-page {
     min-height: 100svh;
+  }
+
+  .boxers-page-header {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .boxers-page-header-ornament,
+  .boxers-page-title,
+  .boxers-page-lead {
+    width: 100%;
+    text-align: center;
+  }
+
+  .boxers-page-lead {
+    max-width: 42rem;
+    margin-inline: auto;
   }
 
   /* Fondo de la página: un radial dorado sutil en la cabecera + un
@@ -739,29 +763,58 @@ const totalBoxers = BOXERS.length
      las pills del filtro con scroll horizontal no rompan el ancho del
      documento entero en mobile). */
   .boxers-layout {
+    --boxers-sidebar-width: 236px;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 1.75rem;
+    gap: 1.25rem;
   }
 
-  @media (max-width: 639px) {
+  @media (min-width: 640px) {
     .boxers-layout {
-      gap: 1.25rem;
+      gap: 1.75rem;
     }
   }
 
   @media (min-width: 1024px) {
     .boxers-layout:not([data-view='combates']) {
-      grid-template-columns: 236px minmax(0, 1fr);
+      grid-template-columns: var(--boxers-sidebar-width) minmax(0, 1fr);
       align-items: start;
       gap: 2rem;
+    }
+
+    /* Título en la misma columna que el grid (f4e0c631: justify-self center, no stretch). */
+    .boxers-page-header {
+      display: grid;
+      grid-template-columns: var(--boxers-sidebar-width) minmax(0, 1fr);
+      column-gap: 2rem;
+      grid-column: 1 / -1;
+      grid-row: 1;
+    }
+
+    .boxers-page-header > * {
+      grid-column: 2;
+      justify-self: center;
+    }
+
+    .boxer-filters-panel {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .boxers-results {
+      grid-column: 2;
+      grid-row: 2;
     }
   }
 
   @media (min-width: 1280px) {
     .boxers-layout:not([data-view='combates']) {
-      grid-template-columns: 252px minmax(0, 1fr);
+      --boxers-sidebar-width: 252px;
       gap: 2.5rem;
+    }
+
+    .boxers-page-header {
+      column-gap: 2.5rem;
     }
   }
 
