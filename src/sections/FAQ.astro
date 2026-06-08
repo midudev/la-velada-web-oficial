@@ -480,6 +480,11 @@ const { faqs } = Astro.props
     grid-template-rows: 1fr;
   }
 
+  /* Native <details open> fallback when JS is unavailable */
+  .faq-item[open]:not(.faq-item--closing) .faq-answer-shell {
+    grid-template-rows: 1fr;
+  }
+
   .faq-answer-body {
     grid-column: 1;
     min-width: 0;
@@ -491,6 +496,10 @@ const { faqs } = Astro.props
   }
 
   .faq-answer-shell--open .faq-answer-body {
+    opacity: 1;
+  }
+
+  .faq-item[open]:not(.faq-item--closing) .faq-answer-body {
     opacity: 1;
   }
 
