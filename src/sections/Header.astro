@@ -52,11 +52,11 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
     </a>
 
     <nav class="hidden md:block" aria-label="Navegación principal">
-      <ul class="flex items-center gap-1 sm:gap-2">
+      <ul class="flex items-end gap-1 sm:gap-2">
         {
           NAV_ITEMS.map((item) =>
             item.disabled ? (
-              <li>
+              <li class="flex flex-col items-center">
                 <span
                   role="link"
                   aria-disabled="true"
@@ -64,15 +64,15 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
                   title="Próximamente"
                 >
                   {item.label}
-                  {item.note && (
-                    <span class="pointer-events-none absolute left-1/2 top-full hidden -translate-x-1/2 -translate-y-2 whitespace-nowrap rounded-full border border-theme-gold/40 bg-theme-gold/5 px-2 py-0.5 font-cinzel text-[0.5rem] font-semibold tracking-[0.22em] text-theme-gold/85 sm:inline-block sm:text-[0.55rem]">
-                      {item.note}
-                    </span>
-                  )}
                 </span>
+                {item.note && (
+                  <span class="mt-1 whitespace-nowrap rounded-full border border-theme-gold/40 bg-theme-gold/5 px-2 py-0.5 font-cinzel text-[0.5rem] font-semibold tracking-[0.22em] text-theme-gold/85 sm:text-[0.55rem]">
+                    {item.note}
+                  </span>
+                )}
               </li>
             ) : (
-              <li>
+              <li class="flex flex-col items-center">
                 <a
                   href={item.href}
                   data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
@@ -84,8 +84,9 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
                   />
                   {item.label}
                 </a>
+                <span class="mt-1 block h-[1.125rem] sm:h-[1.25rem]" aria-hidden="true"></span>
               </li>
-            )
+            ),
           )
         }
       </ul>
@@ -161,7 +162,7 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
                   {item.label}
                 </a>
               </li>
-            )
+            ),
           )
         }
       </ul>
@@ -233,8 +234,8 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
       () => {
         setMenuOpen(button.getAttribute('aria-expanded') !== 'true')
       },
-      { signal }
-    )
+      { signal },
+  )
 
     links.forEach((link) => {
       link.addEventListener('click', () => setMenuOpen(false), {
@@ -247,8 +248,8 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
       (event) => {
         if (event.key === 'Escape') setMenuOpen(false)
       },
-      { signal }
-    )
+      { signal },
+  )
   }
 
   document.addEventListener('astro:page-load', () => {

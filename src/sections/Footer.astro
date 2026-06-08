@@ -179,9 +179,13 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex min-h-8 items-center justify-center px-1 underline-offset-4 transition hover:text-theme-cream hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+                    class="group/edition relative inline-flex min-h-8 items-center justify-center px-1 outline-none transition-colors duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:text-theme-cream [@media(hover:hover)_and_(pointer:fine)]:hover:delay-[125ms] focus-visible:text-theme-cream focus-visible:delay-[125ms] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
                     aria-label={`Ir a la web de La Velada del Año ${year}`}
                   >
+                    <span
+                      aria-hidden="true"
+                      class="pointer-events-none absolute inset-x-1 bottom-1 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-150 ease-out delay-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover/edition:scale-x-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover/edition:delay-[125ms] group-focus-visible/edition:scale-x-100 group-focus-visible/edition:delay-[125ms]"
+                    />
                     {year}
                   </a>
                 </li>
@@ -200,7 +204,7 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
 
     <div class="pb-2 font-cinzel">
       <p class="text-center text-[0.7rem] tracking-[0.2em] text-white/60 sm:text-xs">
-        <span>© 2026 LA VELADA DEL AÑO</span>
+        <span>© 2026 LA VELADA DEL AÑO VI</span>
         <span aria-hidden="true" class="mx-2 text-theme-gold/40">·</span>
         <span class="text-white/45">TODOS LOS DERECHOS RESERVADOS</span>
       </p>
