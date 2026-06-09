@@ -8,7 +8,7 @@ export interface Boxer {
   birthDate: string | null
   age: number | null
   followersUpdatedAt: string
-  socials: { platform: string; username: string; followers: number; monthlyListeners?: number }[]
+  socials: { platform: string; username: string; followers?: number; monthlyListeners?: number }[]
   country: string
   previousVeladaWins: number[]
   youtubeChannelId?: string
