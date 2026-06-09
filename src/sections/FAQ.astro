@@ -1,7 +1,7 @@
 ---
 import EventLocalTime from '@/components/EventLocalTime.astro'
 import SectionHeader from '@/components/SectionHeader.astro'
-import { EVENT_VENUE_LABEL, EVENT_VENUE_MAP_URL } from '@/consts/event'
+
 import type { HomeFaqItem } from '@/consts/home-faq'
 
 interface Props {
@@ -111,23 +111,6 @@ const { faqs } = Astro.props
                         <>
                           {' '}
                           <EventLocalTime />.
-                        </>
-                      )}
-                      {question === '¿Dónde se celebra?' && (
-                        <>
-                          {' '}
-                          <a
-                            href={EVENT_VENUE_MAP_URL}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="faq-venue-link"
-                          >
-                            {EVENT_VENUE_LABEL}
-                          </a>
-                          .
-                          <span class="block mt-2 text-white/60">
-                            Zona Isla de La Cartuja, 22, 41970 Santiponce, Sevilla
-                          </span>
                         </>
                       )}
                     </p>

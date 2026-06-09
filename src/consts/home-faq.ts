@@ -37,10 +37,6 @@ export const HOME_FAQS = [
     eventTime: true,
   },
   {
-    question: '¿Dónde se celebra?',
-    answer: 'En el',
-  },
-  {
     question: '¿Dónde se puede ver online?',
     answer:
       'En directo y de forma gratuita en los canales oficiales de Ibai Llanos, en:',
