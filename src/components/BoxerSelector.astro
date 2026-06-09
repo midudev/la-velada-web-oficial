@@ -119,15 +119,21 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     >
       <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true"></div>
 
-      <div class="boxer-default-lockup flex w-full max-w-full flex-col items-center px-4">
-        <div class="animate-blurred-fade-in animate-delay-300 relative leading-none">
+      <div class="boxer-default-lockup flex w-full max-w-full items-center justify-center px-4">
+
+        <div class="boxer-default-info animate-fade-in-right animate-delay-[1000ms] flex flex-1 flex-col items-end gap-1">
+          <time datetime="2026-07-25" class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm">25 DE JULIO</time>
+          <time datetime="2026-07-25T20:00:00+02:00" class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm">20:00H CET</time>
+        </div>
+
+        <div class="animate-blurred-fade-in animate-delay-300 relative shrink-0 leading-none">
           <picture class="block">
             <source srcset="/logo.avif" type="image/avif" />
             <source srcset="/logo.webp" type="image/webp" />
             <img
               src="/logo.webp"
               alt="Logo de La Velada del Año VI"
-              class="boxer-default-logo relative block h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
+              class="boxer-default-logo relative block h-auto w-[46vw] max-w-[280px] sm:w-[34vw] md:w-[28vw] lg:w-[22vw]"
               width="512"
               height="512"
               decoding="async"
@@ -136,45 +142,15 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           </picture>
         </div>
 
-      <ul
-        class="boxer-default-info boxer-default-info-spacing animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center gap-1"
-      >
-        <li class="flex items-baseline">
-          <time
-            datetime="2026-07-25"
-            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
-          >
-            25 DE JULIO
-          </time>
-        </li>
-        <li class="flex items-baseline">
-          <time
-            datetime="2026-07-25T20:00:00+02:00"
-            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
-          >
-            20:00H CET
-          </time>
-        </li>
-        <li class="flex items-baseline">
-          <span
-            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
-          >
+        <div class="boxer-default-info animate-fade-in-left animate-delay-[1000ms] flex flex-1 flex-col items-start gap-1">
+          <span class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm">
             <a
-              href="https://maps.app.goo.gl/73mfDNVvhK3Y5Kq66"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="relative inline-block
-                        after:content-[''] after:absolute after:left-0 after:-bottom-1
-                        after:h-[1px] after:w-full after:bg-current
-                        after:scale-x-0 after:origin-left
-                        after:transition-transform after:duration-300
-                        hover:after:scale-x-100 focus-visible:after:scale-x-100"
-            >
-              ESTADIO DE LA CARTUJA, SEVILLA
-            </a>
+              href="#sede"
+              class="relative flex flex-col inline-block after:absolute after:left-0 after:-bottom-1 after:h-[1px] after:w-full after:bg-current after:content-[''] after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100"
+            ><span class="block">ESTADIO DE LA CARTUJA,</span><span class="block">SEVILLA</span></a> <!-- La otra opción sería usar br -->
           </span>
-        </li>
-        </ul>
+        </div>
+
       </div>
 
     </div>
@@ -464,9 +440,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     pointer-events: none;
   }
 
-  /* Lockup: eye-level offset here only. Logo → fechas: flex gap + .boxer-default-info-spacing. */
+  /* Lockup: logo centrado con info a los lados. */
   .boxer-default-lockup {
-    gap: clamp(0.625rem, 2vw, 1.125rem);
+    gap: clamp(1rem, 3vw, 2rem);
     padding-top: clamp(2.5rem, 11vh, 7rem);
   }
 
@@ -488,27 +464,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   }
 
-  .boxer-default-info-spacing {
-    margin-top: -0.75rem;
-  }
-
-  @media (min-width: 640px) {
-    .boxer-default-info-spacing {
-      margin-top: -1rem;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .boxer-default-info-spacing {
-      margin-top: -1.25rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .boxer-default-info-spacing {
-      margin-top: -1.5rem;
-    }
-  }
 
   .boxer-default-info {
     text-shadow:
@@ -520,11 +475,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   @media (max-height: 920px) {
     .boxer-default-lockup {
       padding-top: clamp(2rem, 8vh, 4.25rem);
-      gap: 0.5rem;
-    }
-
-    .boxer-default-info-spacing {
-      margin-top: -0.5rem;
+      gap: clamp(0.75rem, 2vw, 1.5rem);
     }
   }
 
