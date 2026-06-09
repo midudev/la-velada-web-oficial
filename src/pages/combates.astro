@@ -93,80 +93,80 @@ const breadcrumbJsonLd = {
             COMBATES
         </h1>
         <p
-          class="animate-fade-in-up animate-delay-200 text-balance font-cinzel text-xs font-medium tracking-[0.16em] text-white/55 sm:text-sm sm:tracking-[0.25em]"
+        class="animate-fade-in-up animate-delay-200 text-balance font-cinzel text-xs font-medium tracking-[0.16em] text-white/55 sm:text-sm sm:tracking-[0.25em]"
         >
-          La cartelera de La Velada del Año VI
+            La cartelera de La Velada del Año VI
         </p>
-      </header>
+        </header>
 
-      {
+        {
         mainEvents.length > 0 && (
-          <>
+            <>
             <div class="combates-seclabel">
-              <span class="size-1.5 rotate-45 bg-theme-gold/80" aria-hidden="true" />
+                <span class="size-1.5 rotate-45 bg-theme-gold/80" aria-hidden="true" />
             </div>
             <div class="combates-mains">
-              {mainEvents.map((c, i) => (
+                {mainEvents.map((c, i) => (
                 <div class="animate-fade-in-up" style={`animation-delay:${i * 70}ms`}>
-                  <CombatCard
+                    <CombatCard
                     number={c.position}
                     url={c.url}
                     featured
                     badge={i === 0 ? 'Main Event' : 'Co-estelar'}
                     a={c.a}
                     b={c.b}
-                  />
+                    />
                 </div>
-              ))}
+            ))}
             </div>
-          </>
+            </>
         )
-      }
+        }
 
-      {
+        {
         undercard.length > 0 && (
-          <>
+            <>
             <div class="combates-seclabel">
-              <span class="size-1.5 rotate-45 bg-theme-gold/80" aria-hidden="true" />
+                <span class="size-1.5 rotate-45 bg-theme-gold/80" aria-hidden="true" />
             </div>
             <div class="combates-under">
-              {undercard.map((c, i) => (
+                {undercard.map((c, i) => (
                 <div class="animate-fade-in-up" style={`animation-delay:${i * 45}ms`}>
-                  <CombatCard number={c.position} url={c.url} a={c.a} b={c.b} />
+                    <CombatCard number={c.position} url={c.url} a={c.a} b={c.b} />
                 </div>
-              ))}
+                ))}
             </div>
-          </>
+            </>
         )
-      }
+        }
     </div>
-  </section>
+    </section>
 
-  <Sponsors />
-  <Footer />
+    <Sponsors />
+    <Footer />
 </Layout>
 
 <style>
-  .combates-page { min-height: 100svh; }
+.combates-page { min-height: 100svh; }
 
-  .combates-header {
+.combates-header {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-  }
+}
 
-  .combates-bg {
+.combates-bg {
     background:
-      radial-gradient(
+        radial-gradient(
         ellipse 70% 45% at 50% 0%,
         color-mix(in srgb, var(--color-theme-gold) 16%, transparent) 0%,
         transparent 65%
-      ),
-      linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
-  }
+        ),
+        linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
+}
 
-  .combates-seclabel {
+.combates-seclabel {
     display: flex;
     align-items: center;
     gap: 0.7rem;
@@ -177,30 +177,30 @@ const breadcrumbJsonLd = {
     letter-spacing: 0.34em;
     text-transform: uppercase;
     color: var(--color-theme-gold);
-  }
-  .combates-seclabel.under {
+}
+.combates-seclabel.under {
     color: color-mix(in srgb, var(--color-theme-cream) 70%, transparent);
-  }
-  .combates-seclabel::after {
+}
+.combates-seclabel::after {
     content: '';
     flex: 1;
     height: 1px;
     background: linear-gradient(90deg, color-mix(in srgb, var(--color-theme-gold) 28%, transparent), transparent);
-  }
+}
 
-  .combates-mains,
-  .combates-under {
+.combates-mains,
+.combates-under {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.4rem;
-  }
+}
 
-  @media (min-width: 900px) {
+@media (min-width: 900px) {
     .combates-mains { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .combates-under { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
+}
 
-  @media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
     .animate-fade-in-up { animation: none; }
-  }
+}
 </style>
