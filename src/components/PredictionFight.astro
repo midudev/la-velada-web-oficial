@@ -1,0 +1,224 @@
+---
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import PredictionOption from '@/components/PredictionOption.astro'
+import { formatPredictionPercent, type PredictionBattle } from '@/consts/predictions'
+
+interface Props {
+  prediction: PredictionBattle
+}
+
+const { prediction } = Astro.props
+const { battle, options, leader, isClose } = prediction
+---
+
+<li id={battle.id} class="scroll-mt-28">
+  <article
+    class="prediction-fight relative overflow-hidden rounded-lg border border-theme-gold/18 bg-theme-midnight/82 shadow-[0_24px_70px_rgba(0,0,0,0.34)] backdrop-blur-md backdrop-saturate-150"
+    data-battle-id={battle.id}
+    data-prediction-fight
+  >
+    <div aria-hidden="true" class="prediction-fight-sheen pointer-events-none absolute inset-0">
+    </div>
+
+    <header
+      class="prediction-fight-header relative z-10 grid gap-4 border-b border-theme-gold/14 px-4 py-4 sm:px-5 md:grid-cols-[1fr_auto] md:items-center md:px-6"
+    >
+      <div>
+        <p
+          class="font-cinzel text-[0.58rem] font-bold tracking-[0.4em] text-theme-gold/85 sm:text-[0.68rem]"
+        >
+          COMBATE {String(battle.number).padStart(2, '0')}
+        </p>
+        <h2
+          class="mt-2 font-cinzel text-xl font-black tracking-[0.08em] text-balance text-theme-cream uppercase sm:text-2xl md:text-3xl"
+        >
+          {battle.title}
+        </h2>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 md:justify-end">
+        <span
+          class:list={[
+            'prediction-badge',
+            isClose ? 'prediction-badge-hot' : 'prediction-badge-calm',
+          ]}
+        >
+          {isClose ? 'A cara de perro' : `Favorito: ${leader.boxer.name}`}
+        </span>
+        <a
+          href={battle.url}
+          class="prediction-fight-link group inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-white/12 px-3 py-2 font-cinzel text-[0.58rem] font-bold tracking-[0.24em] text-white/78 transition duration-300 hover:border-theme-gold/55 hover:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold sm:text-[0.65rem]"
+        >
+          Combate
+          <ArrowRightIcon
+            class="size-3 transition-transform duration-300 group-hover:translate-x-0.5"
+            aria-hidden="true"
+          />
+        </a>
+      </div>
+    </header>
+
+    <div
+      class="prediction-body relative z-10 grid items-stretch gap-4 p-3 sm:gap-5 sm:p-5 md:p-6 lg:grid-cols-[minmax(0,1fr)_10rem_minmax(0,1fr)] lg:items-center"
+    >
+      {
+        options.map((option, optionIndex) => (
+          <>
+            {optionIndex === 1 && (
+              <div
+                class="duel-versus"
+                role="img"
+                aria-label={`${options[0].boxer.name}: ${formatPredictionPercent(options[0].percentage)}. ${options[1].boxer.name}: ${formatPredictionPercent(options[1].percentage)}.`}
+              >
+                <span aria-hidden="true" class="duel-versus-text">
+                  VS
+                </span>
+              </div>
+            )}
+
+            <PredictionOption battleId={battle.id} option={option} />
+          </>
+        ))
+      }
+    </div>
+  </article>
+</li>
+
+<style>
+  .prediction-fight {
+    opacity: 0;
+    translate: 0 2rem;
+    animation: prediction-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+    transition:
+      border-color 360ms ease,
+      box-shadow 360ms ease,
+      transform 360ms ease;
+  }
+
+  .prediction-fight:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--color-theme-gold) 42%, transparent);
+    box-shadow:
+      0 28px 84px rgba(0, 0, 0, 0.44),
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+  }
+
+  .prediction-fight-sheen {
+    background:
+      radial-gradient(
+        ellipse 42% 70% at 0% 50%,
+        color-mix(in srgb, #c63030 16%, transparent),
+        transparent 66%
+      ),
+      radial-gradient(
+        ellipse 42% 70% at 100% 50%,
+        color-mix(in srgb, var(--color-theme-gold) 14%, transparent),
+        transparent 68%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 42%);
+  }
+
+  .prediction-badge {
+    display: inline-flex;
+    min-height: 2.5rem;
+    align-items: center;
+    border-radius: 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 24%, transparent);
+    padding: 0.55rem 0.75rem;
+    font-family: var(--font-cinzel);
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+
+  .prediction-badge-hot {
+    background: color-mix(in srgb, var(--color-theme-maroon) 45%, transparent);
+    color: var(--color-theme-gold);
+  }
+
+  .prediction-badge-calm {
+    background: color-mix(in srgb, var(--color-theme-midnight) 68%, #c63030);
+    color: rgba(244, 228, 201, 0.82);
+  }
+
+  .duel-versus {
+    display: grid;
+    place-items: center;
+  }
+
+  .duel-versus-text {
+    display: grid;
+    width: 4rem;
+    height: 4rem;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 62%, transparent);
+    border-radius: 0.5rem;
+    background:
+      radial-gradient(
+        circle at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
+        transparent 68%
+      ),
+      color-mix(in srgb, var(--color-theme-midnight) 90%, black);
+    box-shadow:
+      0 10px 28px rgba(0, 0, 0, 0.48),
+      0 0 22px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+    color: var(--color-theme-gold);
+    font-family: var(--font-cinzel);
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+  }
+
+  @keyframes prediction-reveal {
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .prediction-badge {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .prediction-fight-link {
+      width: 100%;
+    }
+
+    .duel-versus {
+      margin-block: -0.15rem;
+    }
+
+    .duel-versus-text {
+      width: 3.65rem;
+      height: 3.65rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .prediction-fight,
+    .prediction-fight-link {
+      animation: none;
+      transition: none;
+    }
+
+    .prediction-fight {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @supports not (animation-timeline: view()) {
+    .prediction-fight {
+      opacity: 1;
+      translate: 0 0;
+      animation: none;
+    }
+  }
+</style>

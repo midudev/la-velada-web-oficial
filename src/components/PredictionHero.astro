@@ -1,0 +1,56 @@
+---
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import SectionDivider from '@/components/SectionDivider.astro'
+import PredictionStats from '@/components/PredictionStats.astro'
+
+interface Props {
+  firstBattleId?: string
+  totalCombats: number
+  totalVotes: number
+  closeBattles: number
+}
+
+const { firstBattleId, totalCombats, totalVotes, closeBattles } = Astro.props
+---
+
+<header class="predictions-hero mx-auto flex w-full max-w-5xl flex-col items-center text-center">
+  <SectionDivider size="lg" class="mb-8" />
+  <p
+    class="mb-3 font-cinzel text-[0.6rem] font-bold tracking-[0.45em] text-theme-gold/85 sm:text-xs"
+  >
+    LA VELADA VI
+  </p>
+  <h1
+    id="predictions-title"
+    class="font-cinzel text-4xl leading-[0.95] font-black tracking-[0.14em] text-theme-cream uppercase sm:text-5xl md:text-7xl"
+  >
+    Pronósticos
+  </h1>
+  <p
+    class="mt-5 max-w-3xl font-cinzel text-xs leading-7 font-medium tracking-[0.18em] text-balance text-white/62 sm:text-sm sm:tracking-[0.24em]"
+  >
+    Elige ganador en cada combate con una votación rápida, visual y pensada para comparar tendencias
+    de un vistazo.
+  </p>
+
+  <PredictionStats
+    totalCombats={totalCombats}
+    totalVotes={totalVotes}
+    closeBattles={closeBattles}
+  />
+
+  {
+    firstBattleId && (
+      <a
+        href={`#${firstBattleId}`}
+        class="prediction-jump group mt-8 inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-theme-gold/35 bg-theme-gold/10 px-5 py-3 font-cinzel text-[0.65rem] font-bold tracking-[0.28em] text-theme-cream transition duration-300 hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+      >
+        Ver cartelera
+        <ArrowRightIcon
+          class="size-3.5 transition-transform duration-300 group-hover:translate-x-1"
+          aria-hidden="true"
+        />
+      </a>
+    )
+  }
+</header>

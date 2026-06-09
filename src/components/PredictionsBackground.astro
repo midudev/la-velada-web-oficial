@@ -1,0 +1,58 @@
+<picture aria-hidden="true" class="pointer-events-none absolute inset-0 -z-30 block">
+  <source
+    type="image/avif"
+    srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
+    sizes="100vw"
+  />
+  <source
+    type="image/webp"
+    srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+    sizes="100vw"
+  />
+  <img
+    src="/background.webp"
+    srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+    sizes="100vw"
+    alt=""
+    role="presentation"
+    class="h-full w-full object-cover object-center opacity-45"
+    fetchpriority="high"
+    decoding="async"
+  />
+</picture>
+
+<div aria-hidden="true" class="predictions-backdrop absolute inset-0 -z-20"></div>
+<div aria-hidden="true" class="predictions-grid absolute inset-0 -z-10"></div>
+
+<style>
+  .predictions-backdrop {
+    background:
+      linear-gradient(180deg, rgba(10, 16, 36, 0.78) 0%, rgba(10, 16, 36, 0.92) 36%, #050816 100%),
+      radial-gradient(
+        ellipse 62% 38% at 18% 18%,
+        color-mix(in srgb, #c63030 22%, transparent),
+        transparent 62%
+      ),
+      radial-gradient(
+        ellipse 54% 34% at 82% 8%,
+        color-mix(in srgb, var(--color-theme-gold) 16%, transparent),
+        transparent 64%
+      );
+  }
+
+  .predictions-grid {
+    background-image:
+      linear-gradient(
+        color-mix(in srgb, var(--color-theme-gold) 12%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-theme-gold) 10%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 36px 36px;
+    mask-image: linear-gradient(180deg, black 0%, black 58%, transparent 100%);
+    opacity: 0.22;
+  }
+</style>
