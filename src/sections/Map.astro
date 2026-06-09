@@ -343,6 +343,8 @@ import SectionHeader from '@/components/SectionHeader.astro'
   }
 
   async function initMap() {
+      try {
+
     destroyMap()
 
     const container = document.getElementById('velada-map')
@@ -390,13 +392,16 @@ import SectionHeader from '@/components/SectionHeader.astro'
       maxWidth: 220,
     }).setContent(
       `<strong style="color:#c7a86b;display:block;margin-bottom:0.35rem;">Estadio de La Cartuja</strong>
-     <span style="color:rgba(244,228,201,0.7);">Sevilla, España</span><br/>
-     <span style="color:rgba(255,255,255,0.5);">25 · 07 · 2026 — 20:00h</span>`,
+      <span style="color:rgba(244,228,201,0.7);">Sevilla, España</span><br/>
+      <span style="color:rgba(255,255,255,0.5);">25 · 07 · 2026 — 20:00h</span>`,
     )
 
     L.marker([LAT, LNG], { icon: customIcon }).addTo(mapInstance).bindPopup(popup).openPopup()
 
     setTimeout(() => mapInstance?.invalidateSize(), 200)
+    } catch (error) {
+      console.error('No se pudo inicializar el mapa:', error)
+    }
   }
 
   document.addEventListener('astro:page-load', () => {
