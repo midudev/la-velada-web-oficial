@@ -17,7 +17,6 @@ export interface HomeFaqItem {
   battles?: readonly HomeFaqBattleItem[]
   mainEventBattle?: HomeFaqBattleItem
   eventTime?: boolean
-  venueMap?: boolean
 }
 
 export const HOME_FAQ_BATTLES: readonly HomeFaqBattleItem[] = battles.map((battle) => ({
@@ -40,7 +39,6 @@ export const HOME_FAQS = [
   {
     question: '¿Dónde se celebra?',
     answer: 'En el',
-    venueMap: true,
   },
   {
     question: '¿Dónde se puede ver online?',

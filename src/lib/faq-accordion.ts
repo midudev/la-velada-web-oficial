@@ -1,20 +1,11 @@
 import { animate } from 'motion'
 import { $, $$ } from '@/lib/dom-selector'
-import {
-  EVENT_VENUE_LAT,
-  EVENT_VENUE_LNG,
-  EVENT_VENUE_MAP_URL,
-  EVENT_VENUE_NAME,
-  FAQ_PANEL_TOGGLE,
-} from '@/consts/event'
 
 const PANEL_MS = 280
 const PANEL_DURATION = PANEL_MS / 1000
 const EASE = [0.23, 1, 0.32, 1] as [number, number, number, number]
 const PANEL_EASE = [0.77, 0, 0.175, 1] as [number, number, number, number]
 const MAX_SYNC_LOOPS = 4
-const APPLE_DEVICE_RE = /iPhone|iPad|iPod|Macintosh|Mac OS X/
-const ANDROID_DEVICE_RE = /Android/
 const FAQ_ITEM_SELECTOR = '.faq-item'
 const FAQ_OPEN_ITEM_SELECTOR = '.faq-item[open]'
 const FAQ_SHELL_SELECTOR = '.faq-answer-shell'
@@ -23,10 +14,6 @@ const FAQ_ICON_SELECTOR = '.faq-icon__inner'
 const FAQ_BODY_SELECTOR = '.faq-answer-body'
 const LAST_FAQ_WRAP_SELECTOR = '.faq-item-wrap--last'
 const FAQ_DIVIDER_SELECTOR = '.faq-divider'
-const VENUE_MAP_SELECTOR = '[data-venue-map]'
-const VENUE_MAP_LINK_SELECTOR = '[data-venue-map-link]'
-const VENUE_LABEL = encodeURIComponent(EVENT_VENUE_NAME)
-const VENUE_COORDS = `${EVENT_VENUE_LAT},${EVENT_VENUE_LNG}`
 const PANEL_ANIMATION = { duration: PANEL_DURATION, ease: PANEL_EASE }
 const OPEN_BODY_ANIMATION = { duration: 0.22, delay: 0.08, ease: EASE }
 const CLOSE_BODY_ANIMATION = { duration: 0.14, ease: EASE }
@@ -34,36 +21,6 @@ let lastFaqReserveRaf = 0
 
 export function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-}
-
-function isAppleDevice() {
-  return APPLE_DEVICE_RE.test(navigator.userAgent)
-}
-
-function isAndroidDevice() {
-  return ANDROID_DEVICE_RE.test(navigator.userAgent)
-}
-
-function getVenueMapUrl(): string {
-  if (isAppleDevice()) {
-    return `https://maps.apple.com/?ll=${VENUE_COORDS}&q=${VENUE_LABEL}`
-  }
-
-  if (isAndroidDevice()) {
-    return `geo:${VENUE_COORDS}?q=${VENUE_COORDS}(${VENUE_LABEL})`
-  }
-
-  return `https://www.google.com/maps/search/?api=1&query=${VENUE_COORDS}`
-}
-
-function openVenueInMaps() {
-  const url = getVenueMapUrl()
-
-  try {
-    window.open(url, '_blank', 'noopener,noreferrer')
-  } catch {
-    window.location.assign(EVENT_VENUE_MAP_URL)
-  }
 }
 
 export type FaqParts = {
@@ -123,13 +80,6 @@ export function applyIconInstant(icon: HTMLElement, expanded: boolean) {
   icon.style.setProperty('--faq-icon-turn', expanded ? '45deg' : '0deg')
 }
 
-function notifyVenueMapPanel(details: HTMLDetailsElement, open: boolean) {
-  if (!$(VENUE_MAP_SELECTOR, details)) return
-  details.dispatchEvent(
-    new CustomEvent(FAQ_PANEL_TOGGLE, { bubbles: true, detail: { open } }),
-  )
-}
-
 function getAnswerBody(shell: HTMLElement): HTMLElement | null {
   return $(FAQ_BODY_SELECTOR, shell)
 }
@@ -165,7 +115,6 @@ function applyOpenState(parts: FaqParts, open: boolean, instantIcon = false) {
   setSummaryExpanded(summary, open)
   setPanelShellOpen(shell, open)
   updateIcon(details, open, instantIcon)
-  notifyVenueMapPanel(details, open)
 }
 
 function isLastFaqItem(details: HTMLDetailsElement): boolean {
@@ -355,18 +304,6 @@ export function setupFaqAccordion(signal: AbortSignal) {
   }
 
   window.addEventListener('resize', reserveLastFaqSpace, { signal })
-
-  for (const link of $$<HTMLAnchorElement>(VENUE_MAP_LINK_SELECTOR)) {
-    link.href = getVenueMapUrl()
-    link.addEventListener(
-      'click',
-      (event) => {
-        event.preventDefault()
-        openVenueInMaps()
-      },
-      { signal },
-    )
-  }
 
   for (const details of items) {
     if (details.dataset.faqBound === 'true') continue

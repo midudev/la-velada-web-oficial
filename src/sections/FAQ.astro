@@ -1,7 +1,6 @@
 ---
 import EventLocalTime from '@/components/EventLocalTime.astro'
 import SectionHeader from '@/components/SectionHeader.astro'
-import VenueMap from '@/components/VenueMap.astro'
 import { EVENT_VENUE_LABEL, EVENT_VENUE_MAP_URL } from '@/consts/event'
 import type { HomeFaqItem } from '@/consts/home-faq'
 
@@ -50,8 +49,7 @@ const { faqs } = Astro.props
       <ul class="faq-list w-full">
       {
         faqs.map((faq, index) => {
-          const { question, answer, channels, battles, mainEventBattle, eventTime, venueMap } =
-            faq
+          const { question, answer, channels, battles, mainEventBattle, eventTime } = faq
           return (
             <li
               class:list={[
@@ -101,41 +99,38 @@ const { faqs } = Astro.props
                       channels && 'faq-answer-body--stream',
                       battles && 'faq-answer-body--battles',
                       mainEventBattle && 'faq-answer-body--main-event',
-                      venueMap && 'faq-answer-body--venue',
                     ]}
                   >
-                    {
-                      venueMap ? (
-                        <p class="faq-answer-lead">
-                          {answer}{' '}
+                    <p
+                      class:list={[
+                        (channels || battles || mainEventBattle) && 'faq-answer-lead',
+                      ]}
+                    >
+                      {answer}
+                      {eventTime && (
+                        <>
+                          {' '}
+                          <EventLocalTime />.
+                        </>
+                      )}
+                      {question === '¿Dónde se celebra?' && (
+                        <>
+                          {' '}
                           <a
                             href={EVENT_VENUE_MAP_URL}
                             target="_blank"
                             rel="noopener noreferrer"
                             class="faq-venue-link"
-                            data-venue-map-link
                           >
                             {EVENT_VENUE_LABEL}
                           </a>
                           .
-                        </p>
-                      ) : (
-                        <p
-                          class:list={[
-                            (channels || battles || mainEventBattle) && 'faq-answer-lead',
-                          ]}
-                        >
-                          {answer}
-                          {eventTime && (
-                            <>
-                              {' '}
-                              <EventLocalTime />.
-                            </>
-                          )}
-                        </p>
-                      )
-                    }
-                    {venueMap && <VenueMap />}
+                          <span class="block mt-2 text-white/60">
+                            Zona Isla de La Cartuja, 22, 41970 Santiponce, Sevilla
+                          </span>
+                        </>
+                      )}
+                    </p>
                     {
                       channels && (
                         <ul class="faq-channels list-none pl-0">
