@@ -1,22 +1,9 @@
 import { animate } from 'motion'
 import { $, $$ } from '@/lib/dom-selector'
 
-const PANEL_MS = 280
-const PANEL_DURATION = PANEL_MS / 1000
-const EASE = [0.23, 1, 0.32, 1] as [number, number, number, number]
-const PANEL_EASE = [0.77, 0, 0.175, 1] as [number, number, number, number]
-const MAX_SYNC_LOOPS = 4
-const FAQ_ITEM_SELECTOR = '.faq-item'
-const FAQ_OPEN_ITEM_SELECTOR = '.faq-item[open]'
-const FAQ_SHELL_SELECTOR = '.faq-answer-shell'
-const FAQ_SUMMARY_SELECTOR = '.faq-summary'
-const FAQ_ICON_SELECTOR = '.faq-icon__inner'
-const FAQ_BODY_SELECTOR = '.faq-answer-body'
-const LAST_FAQ_WRAP_SELECTOR = '.faq-item-wrap--last'
-const FAQ_DIVIDER_SELECTOR = '.faq-divider'
-const PANEL_ANIMATION = { duration: PANEL_DURATION, ease: PANEL_EASE }
-const OPEN_BODY_ANIMATION = { duration: 0.22, delay: 0.08, ease: EASE }
-const CLOSE_BODY_ANIMATION = { duration: 0.14, ease: EASE }
+const PANEL_ANIMATION = { duration: 0.28, ease: [0.77, 0, 0.175, 1] as [number, number, number, number] }
+const OPEN_BODY_ANIMATION = { duration: 0.22, delay: 0.08, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }
+const CLOSE_BODY_ANIMATION = { duration: 0.14, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }
 let lastFaqReserveRaf = 0
 
 export function prefersReducedMotion(): boolean {
@@ -38,8 +25,8 @@ function schedule(action: () => Promise<void>) {
 }
 
 export function getParts(details: HTMLDetailsElement): FaqParts | null {
-  const shell = $(FAQ_SHELL_SELECTOR, details)
-  const summary = $(FAQ_SUMMARY_SELECTOR, details)
+  const shell = $('.faq-answer-shell', details)
+  const summary = $('.faq-summary', details)
   if (!shell || !summary) return null
   return { details, shell, summary }
 }
@@ -81,7 +68,7 @@ export function applyIconInstant(icon: HTMLElement, expanded: boolean) {
 }
 
 function getAnswerBody(shell: HTMLElement): HTMLElement | null {
-  return $(FAQ_BODY_SELECTOR, shell)
+  return $('.faq-answer-body', shell)
 }
 
 export function setPanelShellOpen(shell: HTMLElement, open: boolean) {
@@ -118,7 +105,7 @@ function applyOpenState(parts: FaqParts, open: boolean, instantIcon = false) {
 }
 
 function isLastFaqItem(details: HTMLDetailsElement): boolean {
-  return details.closest(LAST_FAQ_WRAP_SELECTOR) != null
+  return details.closest('.faq-item-wrap--last') != null
 }
 
 function reserveLastFaqSpace() {
@@ -127,12 +114,12 @@ function reserveLastFaqSpace() {
   lastFaqReserveRaf = window.requestAnimationFrame(() => {
     lastFaqReserveRaf = 0
 
-    const wrap = $(LAST_FAQ_WRAP_SELECTOR)
+    const wrap = $('.faq-item-wrap--last')
     if (!wrap) return
 
-    const summary = $(FAQ_SUMMARY_SELECTOR, wrap)
-    const divider = $(FAQ_DIVIDER_SELECTOR, wrap)
-    const body = $(FAQ_BODY_SELECTOR, wrap)
+    const summary = $('.faq-summary', wrap)
+    const divider = $('.faq-divider', wrap)
+    const body = $('.faq-answer-body', wrap)
     if (!summary || !body || !divider) return
 
     const styles = window.getComputedStyle(wrap)
@@ -249,7 +236,7 @@ export async function closeOnce(parts: FaqParts): Promise<void> {
 async function syncToTarget(parts: FaqParts): Promise<void> {
   const { details, shell } = parts
 
-  for (let loop = 0; loop < MAX_SYNC_LOOPS; loop += 1) {
+  for (let loop = 0; loop < 4; loop += 1) {
     if (isAchieved(details, shell)) return
 
     if (details.dataset.faqTargetOpen === '1') await openOnce(parts)
@@ -262,7 +249,7 @@ async function syncToTarget(parts: FaqParts): Promise<void> {
 async function closeAllExcept(keep: HTMLDetailsElement) {
   const jobs: Promise<void>[] = []
 
-  for (const other of $$<HTMLDetailsElement>(FAQ_ITEM_SELECTOR)) {
+  for (const other of $$<HTMLDetailsElement>('.faq-item')) {
     if (other === keep) continue
     other.dataset.faqTargetOpen = '0'
 
@@ -291,12 +278,12 @@ function mountInitialState(parts: FaqParts) {
 }
 
 function getIconInner(details: HTMLDetailsElement): HTMLElement | null {
-  const icon = $(FAQ_ICON_SELECTOR, details)
+  const icon = $('.faq-icon__inner', details)
   return icon instanceof HTMLElement ? icon : null
 }
 
 export function setupFaqAccordion(signal: AbortSignal) {
-  const items = $$<HTMLDetailsElement>(FAQ_ITEM_SELECTOR)
+  const items = $$<HTMLDetailsElement>('.faq-item')
   reserveLastFaqSpace()
 
   for (const details of items) {
@@ -336,7 +323,7 @@ export function setupFaqAccordion(signal: AbortSignal) {
     (event) => {
       if (event.key !== 'Escape') return
 
-      const openItems = $$<HTMLDetailsElement>(FAQ_OPEN_ITEM_SELECTOR)
+      const openItems = $$<HTMLDetailsElement>('.faq-item[open]')
       if (openItems.length === 0) return
 
       void schedule(async () => {
