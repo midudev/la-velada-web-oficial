@@ -12,7 +12,7 @@ interface CardBoxer {
 
 interface Props {
     number: number
-    url: string // /combate/[id] → el cara a cara
+    url: string // /combate/[id] → destino real cuando la landing esté lista
     featured?: boolean
     badge?: string
     a: CardBoxer
@@ -20,6 +20,13 @@ interface Props {
 }
 
 const { number, url, featured = false, badge, a, b } = Astro.props
+
+// TEMPORAL: la landing individual de cada combate (/combate/[id]) todavía
+// no está hecha, así que el enlace del combate apunta al 404 a propósito.
+// Cuando esas vistas estén listas, cambiá `combatHref` por `url`.
+const combatHref = '/404'
+void url // (se conserva en props para reactivar el enlace real más adelante)
+
 const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     { ...a, side: 'a' },
     { ...b, side: 'b' },
@@ -66,12 +73,13 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
         ))
     }
 
-    <a class="vslink" href={url} aria-label={`Ver el cara a cara: ${a.name} contra ${b.name}`}>
+    {/* Enlace del combate → 404 temporal (ver nota arriba: cambiar combatHref por url). */}
+    <a class="vslink" href={combatHref} aria-label={`Combate: ${a.name} contra ${b.name} (próximamente)`}>
         <span class="vsmedal font-cinzel"><b>VS</b></span>
     </a>
     </div>
 
-    <a class="combat-foot" href={url} aria-label={`Ver combate: ${a.name} contra ${b.name}`}>
+    <a class="combat-foot" href={combatHref} aria-label={`Combate: ${a.name} contra ${b.name} (próximamente)`}>
     <span class="combat-no font-cinzel">Combate {String(number).padStart(2, '0')}</span>
     <span class="combat-cta font-cinzel">Ver cara a cara <span aria-hidden="true">&rarr;</span></span>
     </a>
@@ -85,25 +93,23 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     border-radius: 6px;
     background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
     box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 24%, transparent),
-    0 16px 40px rgba(0, 0, 0, 0.45);
+        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 24%, transparent),
+        0 16px 40px rgba(0, 0, 0, 0.45);
     transition: transform 400ms ease, box-shadow 400ms ease;
 }
-
 .combat:hover {
     transform: translateY(-4px);
     box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
-    0 28px 60px rgba(0, 0, 0, 0.6);
+        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
+        0 28px 60px rgba(0, 0, 0, 0.6);
 }
 
-  /* glow dorado fuerte cuando el cursor está sobre el link del COMBATE */
 .combat:has(.vslink:hover),
 .combat:has(.combat-foot:hover) {
     box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 75%, transparent),
-    0 28px 60px rgba(0, 0, 0, 0.6),
-    0 0 36px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 75%, transparent),
+        0 28px 60px rgba(0, 0, 0, 0.6),
+        0 0 36px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
 }
 .combat:has(.vslink:hover) .boxer-img,
 .combat:has(.combat-foot:hover) .boxer-img {
@@ -149,7 +155,6 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     grid-template-columns: 1fr 1fr;
 }
 
-  /* ── cada boxeador es un link a su perfil ── */
 .boxer {
     position: relative;
     display: block;
@@ -161,7 +166,6 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
 .is-featured .boxer { aspect-ratio: 4 / 5; }
 .boxer:focus-visible { outline: 2px solid var(--color-theme-gold); outline-offset: -3px; }
 
-  /* al señalar un boxeador, el OTRO se atenúa (efecto foco) */
 .combat-stage:has(.boxer:hover) .boxer:not(:hover) {
     opacity: 0.45;
     filter: saturate(0.5) brightness(0.7);
@@ -192,7 +196,7 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     filter: saturate(0.92) brightness(0.92);
     transition: scale 600ms ease, filter 500ms ease;
 }
-  .boxer.b .boxer-img { transform: scaleX(-1); } /* que "miren" al centro */
+.boxer.b .boxer-img { transform: scaleX(-1); }
 .boxer:hover .boxer-img { scale: 1.06; filter: saturate(1.1) brightness(1.05); }
 
 .boxer-veil {
@@ -236,7 +240,6 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
 }
 :global(.boxer-flag) { width: 14px; height: 14px; flex-shrink: 0; }
 
-  /* ── link del COMBATE: medallón VS centrado entre los dos boxeadores ── */
 .vslink {
     position: absolute;
     left: 50%;
@@ -247,9 +250,9 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     align-items: center;
     justify-content: center;
     text-decoration: none;
-  }
-  .vslink:focus-visible { outline: 2px solid var(--color-theme-gold); outline-offset: 4px; }
-  .vsmedal {
+}
+.vslink:focus-visible { outline: 2px solid var(--color-theme-gold); outline-offset: 4px; }
+.vsmedal {
     width: 46px;
     height: 46px;
     display: flex;
@@ -259,15 +262,15 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     border: 1px solid var(--color-theme-gold);
     background: radial-gradient(circle, color-mix(in srgb, var(--color-theme-gold) 22%, transparent), rgba(5, 8, 15, 0.85));
     transition: box-shadow 300ms ease, background 300ms ease;
-  }
-  .is-featured .vsmedal { width: 56px; height: 56px; }
+}
+.is-featured .vsmedal { width: 56px; height: 56px; }
 .vsmedal b {
     transform: rotate(-45deg);
     font-weight: 900;
     font-size: 0.9rem;
     color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
 }
-  .is-featured .vsmedal b { font-size: 1.05rem; }
+.is-featured .vsmedal b { font-size: 1.05rem; }
 .vslink:hover .vsmedal {
     background: radial-gradient(circle, color-mix(in srgb, var(--color-theme-gold) 40%, transparent), rgba(5, 8, 15, 0.85));
     animation: vspulse 1.3s ease infinite;
@@ -277,7 +280,6 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-theme-gold) 0%, transparent); }
 }
 
-  /* ── barra inferior: también link al combate ── */
 .combat-foot {
     position: relative;
     z-index: 4;
