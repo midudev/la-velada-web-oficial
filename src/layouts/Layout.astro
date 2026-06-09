@@ -5,6 +5,7 @@ import Analytics from '@vercel/analytics/astro'
 import '@/styles/global.css'
 
 import { fixedTitle } from '@/consts/pageTitles'
+import Header from '@/sections/Header.astro'
 
 const SITE_URL = 'https://www.infolavelada.com'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og.jpg`
@@ -19,18 +20,26 @@ interface Props {
   ogImageAlt?: string
   ogUrl?: string
   ogType?: 'website' | 'article' | 'profile'
+  /** Site chrome; disable on full-bleed routes (e.g. combate detail). */
+  showHeader?: boolean
 }
 
 const {
   title = fixedTitle,
-  description = 'La Velada del Año VI: evento de boxeo amateur entre streamers y creadores de contenido, organizado por Ibai Llanos el 25 de julio de 2026 en el Estadio de La Cartuja de Sevilla.',
+  description = 'La Velada del Año VI: evento de boxeo amateur de Ibai Llanos. Toda la información sobre fecha, combates y participantes en Sevilla el 25 de julio de 2026.',
   canonical,
   robots,
   ogImage = DEFAULT_OG_IMAGE,
   ogImageAlt = DEFAULT_OG_ALT,
-  ogUrl = canonical ?? SITE_URL,
+  ogUrl,
   ogType = 'website',
+  showHeader = true,
 } = Astro.props
+
+const cleanPathname = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/$/, '')
+const canonicalURL = canonical ?? `${SITE_URL}${cleanPathname}`
+const finalOgUrl = ogUrl ?? canonicalURL
+const finalRobots = robots ?? 'index, follow'
 
 // Datos estructurados globales (válidos para todas las páginas).
 // El SportsEvent específico vive en la home para evitar duplicar JSON-LD
@@ -79,7 +88,7 @@ const organizationJsonLd = {
     </title>
 
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/site.webmanifest" />
 
     <link
@@ -117,10 +126,10 @@ const organizationJsonLd = {
     <meta name="description" content={description} />
     <meta name="author" content="Ibai Llanos" />
     <meta name="theme-color" content="#0a1024" />
-    {canonical && <link rel="canonical" href={canonical} />}
-    {robots && <meta name="robots" content={robots} />}
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="robots" content={finalRobots} />
 
-    <meta property="og:url" content={ogUrl} />
+    <meta property="og:url" content={finalOgUrl} />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -197,6 +206,7 @@ const organizationJsonLd = {
     <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-black focus:outline-none">
       Saltar al contenido principal
     </a>
+    {showHeader && <Header />}
     <main id="main-content">
       <slot />
     </main>

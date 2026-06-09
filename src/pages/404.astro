@@ -2,13 +2,13 @@
 import ArrowDownIcon from '@/assets/svg/arrow-down.svg'
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import CountryFlag from '@/components/CountryFlag.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 import Layout from '@/layouts/Layout.astro'
-import Header from '@/sections/Header.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 import {
   BOXERS,
-  COUNTRY_FLAGS,
   COUNTRY_NAMES,
   getBoxerHeroImages,
   getBoxerSelectImages,
@@ -30,7 +30,6 @@ const rescueBoxers = [
 ].map((boxer) => ({
   ...boxer,
   thumbs: getBoxerSelectImages(boxer),
-  flag: COUNTRY_FLAGS[boxer.country] ?? '',
   countryName: COUNTRY_NAMES[boxer.country] ?? boxer.country,
   isKnockout: boxer.id === knockoutBoxer.id,
 }))
@@ -42,8 +41,6 @@ const rescueBoxers = [
   canonical="https://www.infolavelada.com/404"
   robots="noindex, follow"
 >
-  <Header />
-
   <section
     data-not-found
     class="not-found-hero relative flex w-full flex-col items-center justify-center overflow-hidden bg-theme-midnight px-4 pb-24 pt-28 text-center sm:pt-32"
@@ -101,14 +98,7 @@ const rescueBoxers = [
         ¡Fuera de combate!
       </h1>
 
-      <div
-        class="animate-fade-in animate-delay-700 mt-6 flex w-full items-center justify-center gap-3 sm:gap-4"
-        aria-hidden="true"
-      >
-        <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/60 sm:w-24"></span>
-        <span class="size-1.5 rotate-45 bg-theme-gold/85"></span>
-        <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/60 sm:w-24"></span>
-      </div>
+      <SectionDivider class="animate-fade-in animate-delay-700 mt-6 w-full" />
 
       <p
         class="animate-fade-in-up animate-delay-900 mt-6 max-w-xl font-cinzel text-sm font-medium tracking-[0.18em] text-theme-cream/85 sm:text-base"
@@ -154,14 +144,7 @@ const rescueBoxers = [
     <div aria-hidden="true" class="rescue-bg absolute inset-0 -z-10"></div>
 
     <div class="relative mx-auto flex w-full max-w-6xl flex-col items-center">
-      <div
-        class="flex w-full items-center justify-center gap-3 sm:gap-4"
-        aria-hidden="true"
-      >
-        <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/55 sm:w-24"></span>
-        <span class="size-1.5 rotate-45 bg-theme-gold/85"></span>
-        <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/55 sm:w-24"></span>
-      </div>
+      <SectionDivider class="w-full" />
 
       <span
         class="mt-5 font-cinzel text-[0.6rem] font-semibold tracking-[0.45em] text-theme-gold/85 sm:text-xs"
@@ -248,9 +231,12 @@ const rescueBoxers = [
                     {boxer.name}
                   </h3>
                   <p class="rescue-card-country flex items-center gap-1 font-cinzel text-[0.5rem] font-semibold tracking-[0.28em] text-theme-cream/75 sm:text-[0.55rem]">
-                    <span class="text-xs leading-none" aria-hidden="true">
-                      {boxer.flag}
-                    </span>
+                    <CountryFlag
+                      country={boxer.country}
+                      size={12}
+                      decorative
+                      class="rescue-card-flag"
+                    />
                     <span>{boxer.countryName}</span>
                   </p>
                 </div>
@@ -556,6 +542,12 @@ const rescueBoxers = [
     text-shadow:
       0 1px 2px rgba(0, 0, 0, 0.85),
       0 0 8px rgba(0, 0, 0, 0.65);
+  }
+
+  :global(.rescue-card-flag) {
+    width: 0.75rem;
+    height: 0.75rem;
+    flex-shrink: 0;
   }
 
   .rescue-card-badge {
