@@ -1488,14 +1488,50 @@ const totalBoxers = BOXERS.length
     const sortButtons = sortBar
       ? Array.from($$<HTMLButtonElement>('[data-sort]', sortBar))
       : []
-    let sortMode: SortMode = 'cartel'
-
-    // Estado de filtros: '' = "todos". Sólo un valor activo por grupo. Lee la URL primero, si no hay nada, usa ''
-    const params = new URLSearchParams(window.location.search)
-    const state: { country: string; gender: string } = {
-      country: params.get('country') || '',
-      gender: params.get('gender') || '',
+    // Lee el estado inicial desde la URL
+    function getStateFromURL(buttons: HTMLButtonElement[]) {
+      const validCountries = new Set(buttons.filter(b => b.dataset.filter === 'country').map(b => b.dataset.value ?? ''))
+      const validGenders = new Set(buttons.filter(b => b.dataset.filter === 'gender').map(b => b.dataset.value ?? ''))
+      const params = new URLSearchParams(window.location.search)
+      const rawCountry = params.get('country') ?? ''
+      const rawGender = params.get('gender') ?? ''
+      const sort = params.get('sort') as SortMode | null
+      return {
+        country: validCountries.has(rawCountry) ? rawCountry : '',
+        gender: validGenders.has(rawGender) ? rawGender : '',
+        sort: sort && ['cartel', 'followers-desc', 'followers-asc'].includes(sort) ? sort : 'cartel',
+      }
     }
+
+    function syncStateToURL() {
+      const params = new URLSearchParams(window.location.search)
+      if (state.country) {
+        params.set('country', state.country)
+      } else {
+        params.delete('country')
+      }
+      if (state.gender) {
+        params.set('gender', state.gender)
+      } else {
+        params.delete('gender')
+      }
+      if (sortMode !== 'cartel') {
+        params.set('sort', sortMode)
+      } else {
+        params.delete('sort')
+      }
+      const qs = params.toString()
+      const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname
+      window.history.replaceState(null, '', url)
+    }
+
+    // Estado inicial desde la URL (debe ir antes de sortMode)
+    const urlState = getStateFromURL(filterButtons)
+    const state: { country: string; gender: string } = {
+      country: urlState.country,
+      gender: urlState.gender,
+    }
+    let sortMode: SortMode = urlState.sort
 
     // Grupos decorativos inyectados en el grid para envolver los combates.
     let combateGroups: HTMLElement[] = []
@@ -1577,6 +1613,7 @@ const totalBoxers = BOXERS.length
       return n
     }
 
+    // Animación visual al presionar un filtro.
     function bump(el: HTMLElement | null) {
       if (!el) return
       el.classList.remove('is-bumping')
@@ -1659,15 +1696,8 @@ const totalBoxers = BOXERS.length
         // "todos"; mantenemos la UX simple: una activa siempre por grupo.
         if (state[group] === value) return
         state[group] = value
-        // Actualizamos la URL para guardar los filtros.
-        const currentURL = new URL(window.location.href)
-        if (value === '') {
-          currentURL.searchParams.delete(group)
-        } else {
-          currentURL.searchParams.set(group, value)
-        }
-        window.history.pushState({}, '', currentURL)
         applyFilters()
+        syncStateToURL()
       })
     }
 
@@ -1675,12 +1705,8 @@ const totalBoxers = BOXERS.length
       btn.addEventListener('click', () => {
         state.country = ''
         state.gender = ''
-        // Limpiamos solo los parámetros de filtro, preservando otros (ej: UTM).
-        const currentURL = new URL(window.location.href)
-        currentURL.searchParams.delete('country')
-        currentURL.searchParams.delete('gender')
-        window.history.pushState({}, '', currentURL)
         applyFilters()
+        syncStateToURL()
       })
     }
 
@@ -1697,10 +1723,17 @@ const totalBoxers = BOXERS.length
         // Siempre re-aplicamos filtros al cambiar de orden,
         // esto también asegurará que los grupos dorados se formen o deshagan.
         applyFilters()
+        syncStateToURL()
       })
     }
 
+    // Sincroniza aria-pressed en los botones de ordenación al cargar
+    for (const b of sortButtons) {
+      b.setAttribute('aria-pressed', String(b.dataset.sort === sortMode))
+    }
+
     applyFilters()
+    applySort()
   }
 
   document.addEventListener('astro:page-load', setupBoxersFilters)
