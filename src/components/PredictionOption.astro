@@ -16,7 +16,7 @@ const { battleId, option } = Astro.props
 
 <button
   type="button"
-  class="poll-option group relative min-h-[8.75rem] w-full overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-0 text-left text-theme-cream transition duration-300 hover:-translate-y-0.5 hover:border-theme-gold/55 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+  class="poll-option group relative min-h-[8.75rem] w-full cursor-pointer overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-0 text-left text-theme-cream transition duration-300 hover:-translate-y-0.5 hover:border-theme-gold/55 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
   data-battle-id={battleId}
   data-boxer-id={option.boxer.id}
   data-prediction-option
@@ -44,6 +44,11 @@ const { battleId, option } = Astro.props
           class="poll-portrait-img h-full w-full object-cover object-top transition duration-500 group-hover:scale-105 group-hover:saturate-125"
         />
       </picture>
+
+      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-tl"></span>
+      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-tr"></span>
+      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-bl"></span>
+      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-br"></span>
     </span>
 
     <span class="flex min-w-0 flex-1 flex-col justify-between gap-4 py-1">
@@ -166,6 +171,54 @@ const { battleId, option } = Astro.props
     background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
   }
 
+  /* Esquinas decorativas doradas, estilo trading card (consistente con la
+     ventana de boxeadores). */
+  .poll-portrait-corner {
+    position: absolute;
+    z-index: 2;
+    width: 11px;
+    height: 11px;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: color-mix(in srgb, var(--color-theme-gold) 65%, transparent);
+    transition:
+      width 400ms ease,
+      height 400ms ease,
+      border-color 400ms ease;
+  }
+
+  .poll-portrait-corner-tl {
+    top: 6px;
+    left: 6px;
+    border-right-width: 0;
+    border-bottom-width: 0;
+  }
+  .poll-portrait-corner-tr {
+    top: 6px;
+    right: 6px;
+    border-left-width: 0;
+    border-bottom-width: 0;
+  }
+  .poll-portrait-corner-bl {
+    bottom: 6px;
+    left: 6px;
+    border-right-width: 0;
+    border-top-width: 0;
+  }
+  .poll-portrait-corner-br {
+    bottom: 6px;
+    right: 6px;
+    border-left-width: 0;
+    border-top-width: 0;
+  }
+
+  .poll-option:hover .poll-portrait-corner,
+  .poll-option:focus-visible .poll-portrait-corner {
+    width: 16px;
+    height: 16px;
+    border-color: var(--color-theme-gold);
+  }
+
   .poll-mini-bar {
     width: var(--vote-share);
     transform-origin: left;
@@ -207,7 +260,8 @@ const { battleId, option } = Astro.props
   @media (prefers-reduced-motion: reduce) {
     .poll-option,
     .poll-mini-bar,
-    .poll-portrait-img {
+    .poll-portrait-img,
+    .poll-portrait-corner {
       animation: none;
       transition: none;
     }
