@@ -11,7 +11,7 @@ import {
 const testUserId = process.env.PREDICTION_TEST_USER_ID ?? 'manual-test-user'
 
 async function testPredictions() {
-  console.log(`Testing predictions with user_id=${testUserId}...`)
+  console.log('Testing predictions...')
 
   await ensurePredictionsSchema()
 
