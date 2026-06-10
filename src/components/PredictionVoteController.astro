@@ -1,23 +1,67 @@
+---
+interface Props {
+  isLoggedIn: boolean
+  userVotes: Record<string, string>
+}
+
+const { isLoggedIn, userVotes } = Astro.props
+const controllerConfig = JSON.stringify({ isLoggedIn, userVotes }).replaceAll('<', '\\u003c')
+---
+
+<script id="prediction-vote-config" type="application/json" set:html={controllerConfig} />
+
 <script>
   import { $, $$ } from '@/lib/dom-selector'
 
-  const PREDICTION_STORAGE_KEY = 'velada-vi-prediction-votes'
-  let predictionsAbort: AbortController | null = null
-
-  function readStoredVotes(): Record<string, string> {
-    try {
-      const rawVotes = window.localStorage.getItem(PREDICTION_STORAGE_KEY)
-      if (!rawVotes) return {}
-
-      const parsedVotes = JSON.parse(rawVotes)
-      return parsedVotes && typeof parsedVotes === 'object' ? parsedVotes : {}
-    } catch {
-      return {}
+  interface PredictionApiResponse {
+    prediction?: {
+      combat_id: string
+      predictions: Array<{
+        fighter_id: string
+        votes: number
+        percentage: number
+      }>
+      total_votes: number
     }
   }
 
-  function writeStoredVotes(votes: Record<string, string>) {
-    window.localStorage.setItem(PREDICTION_STORAGE_KEY, JSON.stringify(votes))
+  interface PredictionControllerConfig {
+    isLoggedIn: boolean
+    userVotes: Record<string, string>
+  }
+
+  let predictionsAbort: AbortController | null = null
+
+  const compactFormatter = new Intl.NumberFormat('es-ES', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  })
+
+  const percentFormatter = new Intl.NumberFormat('es-ES', {
+    maximumFractionDigits: 1,
+  })
+
+  function readConfig(): PredictionControllerConfig {
+    const config = $<HTMLScriptElement>('#prediction-vote-config')
+    if (!config?.textContent) return { isLoggedIn: false, userVotes: {} }
+
+    try {
+      return JSON.parse(config.textContent) as PredictionControllerConfig
+    } catch {
+      return { isLoggedIn: false, userVotes: {} }
+    }
+  }
+
+  function formatVotes(votes: number) {
+    return compactFormatter.format(votes)
+  }
+
+  function formatPercent(percentage: number) {
+    return `${percentFormatter.format(percentage)}%`
+  }
+
+  function formatSupport(votes: number) {
+    return `${formatVotes(votes)} ${votes === 1 ? 'apoyo' : 'apoyos'}`
   }
 
   function setBattleVote(battleId: string, boxerId: string) {
@@ -26,18 +70,97 @@
 
     $$<HTMLButtonElement>('[data-prediction-option]', fight).forEach((option) => {
       const isSelected = option.dataset.boxerId === boxerId
+
       option.dataset.selected = String(isSelected)
       option.dataset.muted = String(!isSelected)
       option.setAttribute('aria-pressed', String(isSelected))
     })
   }
 
+  function setFightPending(battleId: string, isPending: boolean) {
+    const fight = $<HTMLElement>(`[data-prediction-fight][data-battle-id="${battleId}"]`)
+    if (!fight) return
+
+    $$<HTMLButtonElement>('[data-prediction-option]', fight).forEach((option) => {
+      option.disabled = isPending
+      option.dataset.pending = String(isPending)
+    })
+  }
+
+  function applyPredictionData(prediction: NonNullable<PredictionApiResponse['prediction']>) {
+    const fight = $<HTMLElement>(
+      `[data-prediction-fight][data-battle-id="${prediction.combat_id}"]`,
+    )
+    if (!fight) return
+
+    prediction.predictions.forEach((predictionOption) => {
+      const option = $<HTMLButtonElement>(
+        `[data-prediction-option][data-boxer-id="${predictionOption.fighter_id}"]`,
+        fight,
+      )
+      if (!option) return
+
+      const percentage = formatPercent(predictionOption.percentage)
+      const votes = formatSupport(predictionOption.votes)
+      const percentNode = $<HTMLElement>('[data-prediction-percent]', option)
+      const votesNode = $<HTMLElement>('[data-prediction-votes]', option)
+
+      option.style.setProperty('--vote-share', `${predictionOption.percentage.toFixed(2)}%`)
+      if (percentNode) percentNode.textContent = percentage
+      if (votesNode) votesNode.textContent = votes
+    })
+  }
+
+  function focusLogin() {
+    const login = $<HTMLElement>('[data-predictions-auth]')
+    if (!login) return
+
+    login.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    login.dataset.attention = 'true'
+    window.setTimeout(() => {
+      delete login.dataset.attention
+    }, 1600)
+  }
+
+  async function submitVote(battleId: string, boxerId: string) {
+    setFightPending(battleId, true)
+
+    try {
+      const response = await fetch('/api/predictions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          combat_id: battleId,
+          fighter_id: boxerId,
+        }),
+      })
+
+      if (response.status === 401) {
+        focusLogin()
+        return
+      }
+
+      if (!response.ok) {
+        throw new Error(`No se pudo registrar el voto: ${response.status}`)
+      }
+
+      const data = (await response.json()) as PredictionApiResponse
+
+      setBattleVote(battleId, boxerId)
+      if (data.prediction) applyPredictionData(data.prediction)
+    } finally {
+      setFightPending(battleId, false)
+    }
+  }
+
   function setupPredictionVotes() {
     predictionsAbort?.abort()
     predictionsAbort = new AbortController()
 
-    const storedVotes = readStoredVotes()
-    Object.entries(storedVotes).forEach(([battleId, boxerId]) => {
+    const config = readConfig()
+    Object.entries(config.userVotes).forEach(([battleId, boxerId]) => {
       setBattleVote(battleId, boxerId)
     })
 
@@ -48,10 +171,12 @@
           const { battleId, boxerId } = option.dataset
           if (!battleId || !boxerId) return
 
-          const nextVotes = readStoredVotes()
-          nextVotes[battleId] = boxerId
-          writeStoredVotes(nextVotes)
-          setBattleVote(battleId, boxerId)
+          if (!config.isLoggedIn) {
+            focusLogin()
+            return
+          }
+
+          void submitVote(battleId, boxerId)
         },
         { signal: predictionsAbort.signal },
       )
@@ -60,3 +185,29 @@
 
   document.addEventListener('astro:page-load', setupPredictionVotes)
 </script>
+
+<style>
+  :global([data-predictions-auth][data-attention='true']) {
+    animation: prediction-auth-attention 800ms ease both;
+  }
+
+  :global([data-prediction-option][data-pending='true']) {
+    cursor: wait;
+  }
+
+  @keyframes prediction-auth-attention {
+    0%,
+    100% {
+      filter: none;
+    }
+    35% {
+      filter: drop-shadow(0 0 18px color-mix(in srgb, var(--color-theme-gold) 42%, transparent));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global([data-predictions-auth][data-attention='true']) {
+      animation: none;
+    }
+  }
+</style>

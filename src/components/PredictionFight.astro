@@ -5,9 +5,10 @@ import { formatPredictionPercent, type PredictionBattle } from '@/consts/predict
 
 interface Props {
   prediction: PredictionBattle
+  selectedBoxerId?: string
 }
 
-const { prediction } = Astro.props
+const { prediction, selectedBoxerId } = Astro.props
 const { battle, options, leader, isClose } = prediction
 ---
 
@@ -68,6 +69,7 @@ const { battle, options, leader, isClose } = prediction
               <div
                 class="duel-versus"
                 role="img"
+                data-prediction-versus
                 aria-label={`${options[0].boxer.name}: ${formatPredictionPercent(options[0].percentage)}. ${options[1].boxer.name}: ${formatPredictionPercent(options[1].percentage)}.`}
               >
                 <span aria-hidden="true" class="duel-versus-text">
@@ -76,7 +78,11 @@ const { battle, options, leader, isClose } = prediction
               </div>
             )}
 
-            <PredictionOption battleId={battle.id} option={option} />
+            <PredictionOption
+              battleId={battle.id}
+              option={option}
+              selectedBoxerId={selectedBoxerId}
+            />
           </>
         ))
       }
