@@ -4,7 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 import vercel from '@astrojs/vercel'
 import sitemap from '@astrojs/sitemap'
 
-import auth from 'auth-astro'
 import react from '@astrojs/react'
 
 export default defineConfig({
@@ -20,7 +19,7 @@ export default defineConfig({
 
   adapter: vercel(),
 
-  integrations: [react(), sitemap(), auth()],
+  integrations: [react(), sitemap()],
 
   site: 'https://www.infolavelada.com/',
 })
