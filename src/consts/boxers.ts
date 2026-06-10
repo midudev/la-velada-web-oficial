@@ -140,10 +140,10 @@ export const BOXERS: Boxer[] = [
       youtubeChannelId: 'UCZGr6IbuqQayELgiLivhnKA',
       followersUpdatedAt: '2026-06-10',
       socials: [
-        { platform: "instagram", username: "gastonedul", followers: 2_400_000 },
-        { platform: "tiktok", username: "gastonedul", followers: 1_900_000 },
-        { platform: "x", username: "gastonedul", followers: 1_200_000 },
-        { platform: "youtube", username: "gastonedul", followers: 510_000 },
+        { platform: 'instagram', username: 'gastonedul', followers: 2_400_000 },
+        { platform: 'tiktok', username: 'gastonedul', followers: 1_900_000 },
+        { platform: 'x', username: 'gastonedul', followers: 1_200_000 },
+        { platform: 'youtube', username: 'gastonedul', followers: 510_000 },
       ],
     },
     {
