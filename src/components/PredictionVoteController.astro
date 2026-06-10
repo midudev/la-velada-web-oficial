@@ -1,0 +1,62 @@
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  const PREDICTION_STORAGE_KEY = 'velada-vi-prediction-votes'
+  let predictionsAbort: AbortController | null = null
+
+  function readStoredVotes(): Record<string, string> {
+    try {
+      const rawVotes = window.localStorage.getItem(PREDICTION_STORAGE_KEY)
+      if (!rawVotes) return {}
+
+      const parsedVotes = JSON.parse(rawVotes)
+      return parsedVotes && typeof parsedVotes === 'object' ? parsedVotes : {}
+    } catch {
+      return {}
+    }
+  }
+
+  function writeStoredVotes(votes: Record<string, string>) {
+    window.localStorage.setItem(PREDICTION_STORAGE_KEY, JSON.stringify(votes))
+  }
+
+  function setBattleVote(battleId: string, boxerId: string) {
+    const fight = $<HTMLElement>(`[data-prediction-fight][data-battle-id="${battleId}"]`)
+    if (!fight) return
+
+    $$<HTMLButtonElement>('[data-prediction-option]', fight).forEach((option) => {
+      const isSelected = option.dataset.boxerId === boxerId
+      option.dataset.selected = String(isSelected)
+      option.dataset.muted = String(!isSelected)
+      option.setAttribute('aria-pressed', String(isSelected))
+    })
+  }
+
+  function setupPredictionVotes() {
+    predictionsAbort?.abort()
+    predictionsAbort = new AbortController()
+
+    const storedVotes = readStoredVotes()
+    Object.entries(storedVotes).forEach(([battleId, boxerId]) => {
+      setBattleVote(battleId, boxerId)
+    })
+
+    $$<HTMLButtonElement>('[data-prediction-option]').forEach((option) => {
+      option.addEventListener(
+        'click',
+        () => {
+          const { battleId, boxerId } = option.dataset
+          if (!battleId || !boxerId) return
+
+          const nextVotes = readStoredVotes()
+          nextVotes[battleId] = boxerId
+          writeStoredVotes(nextVotes)
+          setBattleVote(battleId, boxerId)
+        },
+        { signal: predictionsAbort?.signal },
+      )
+    })
+  }
+
+  document.addEventListener('astro:page-load', setupPredictionVotes)
+</script>
