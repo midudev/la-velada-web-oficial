@@ -1,0 +1,269 @@
+---
+import CountryFlag from '@/components/CountryFlag.astro'
+import {
+  formatPredictionPercent,
+  formatPredictionVotes,
+  type PredictionOption,
+} from '@/consts/predictions'
+
+interface Props {
+  battleId: string
+  option: PredictionOption
+}
+
+const { battleId, option } = Astro.props
+---
+
+<button
+  type="button"
+  class="poll-option group relative min-h-[8.75rem] w-full cursor-pointer overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-0 text-left text-theme-cream transition duration-300 hover:-translate-y-0.5 hover:border-theme-gold/55 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+  data-battle-id={battleId}
+  data-boxer-id={option.boxer.id}
+  data-prediction-option
+  data-side={option.side}
+  aria-label={`Pronosticar victoria de ${option.boxer.name}`}
+  aria-pressed="false"
+  style={`--vote-share: ${option.percentage.toFixed(2)}%; --vote-color: ${option.color}; --vote-delay: ${option.delay}ms;`}
+>
+  <span aria-hidden="true" class="poll-vote-tag">Tu voto</span>
+
+  <span class="relative z-10 flex min-h-[8.75rem] items-stretch gap-3 p-3 sm:gap-4 sm:p-4">
+    <span
+      class="poll-portrait relative flex w-24 shrink-0 items-end justify-center overflow-hidden rounded-md border border-white/10 bg-theme-navy/60 sm:w-28"
+    >
+      <picture>
+        <source type="image/avif" srcset={option.heroImages.avif} />
+        <source type="image/webp" srcset={option.heroImages.webp} />
+        <img
+          src={option.heroImages.webp}
+          alt={`Recorte de ${option.boxer.name}`}
+          loading="lazy"
+          decoding="async"
+          width="320"
+          height="420"
+          class="poll-portrait-img h-full w-full object-cover object-top transition duration-500 group-hover:scale-105 group-hover:saturate-125"
+        />
+      </picture>
+
+      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-tl"></span>
+      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-tr"></span>
+      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-bl"></span>
+      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-br"></span>
+    </span>
+
+    <span class="flex min-w-0 flex-1 flex-col justify-between gap-4 py-1">
+      <span>
+        <span
+          class="flex items-center gap-2 font-cinzel text-[0.6rem] font-bold tracking-[0.3em] text-white/60 sm:text-[0.68rem]"
+        >
+          <CountryFlag country={option.boxer.country} size={14} decorative />
+          {option.countryName}
+        </span>
+        <span
+          class="mt-2 block font-cinzel text-2xl leading-tight font-black tracking-[0.06em] text-balance text-theme-cream uppercase sm:text-3xl"
+        >
+          {option.boxer.name}
+        </span>
+      </span>
+
+      <span class="grid gap-2">
+        <span class="flex items-end justify-between gap-3">
+          <span class="font-cinzel text-[0.6rem] font-bold tracking-[0.28em] text-white/58">
+            Pronosticar
+          </span>
+          <span class="font-cinzel text-3xl leading-none font-black text-theme-cream sm:text-4xl">
+            {formatPredictionPercent(option.percentage)}
+          </span>
+        </span>
+        <span class="h-1.5 overflow-hidden rounded-full bg-black/34">
+          <span aria-hidden="true" class="poll-mini-bar block h-full rounded-full"></span>
+        </span>
+        <span
+          class="font-cinzel text-[0.58rem] font-semibold tracking-[0.24em] text-white/48 sm:text-[0.62rem]"
+        >
+          {formatPredictionVotes(option.votes)} apoyos
+        </span>
+      </span>
+    </span>
+  </span>
+</button>
+
+<style>
+  .poll-option::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 52% 80% at 0% 0%,
+      color-mix(in srgb, var(--vote-color) 14%, transparent),
+      transparent 72%
+    );
+    opacity: 0.72;
+    transition: opacity 300ms ease;
+  }
+
+  .poll-option[data-side='b']::before {
+    background: radial-gradient(
+      ellipse 52% 80% at 100% 0%,
+      color-mix(in srgb, var(--vote-color) 12%, transparent),
+      transparent 74%
+    );
+  }
+
+  .poll-option[data-selected='true'] {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 82%, transparent);
+    background: color-mix(in srgb, var(--color-theme-midnight) 72%, black);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 34%, transparent),
+      0 0 32px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+  }
+
+  .poll-option[data-muted='true'] {
+    opacity: 0.58;
+    filter: saturate(0.72);
+  }
+
+  .poll-option[data-selected='true']::before,
+  .poll-option:hover::before,
+  .poll-option:focus-visible::before {
+    opacity: 1;
+  }
+
+  .poll-vote-tag {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 20;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 64%, transparent);
+    border-radius: 0.35rem;
+    background: color-mix(in srgb, var(--color-theme-midnight) 88%, black);
+    padding: 0.32rem 0.48rem;
+    color: var(--color-theme-gold);
+    font-family: var(--font-cinzel);
+    font-size: 0.52rem;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    opacity: 0;
+    transform: translateY(-0.4rem);
+    transition:
+      opacity 260ms ease,
+      transform 260ms ease;
+    text-transform: uppercase;
+  }
+
+  .poll-option[data-selected='true'] .poll-vote-tag {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .poll-portrait {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 12px 28px rgba(0, 0, 0, 0.28);
+  }
+
+  .poll-portrait::after {
+    position: absolute;
+    inset: auto 0 0;
+    height: 48%;
+    content: '';
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
+  }
+
+  /* Esquinas decorativas doradas, estilo trading card (consistente con la
+     ventana de boxeadores). */
+  .poll-portrait-corner {
+    position: absolute;
+    z-index: 2;
+    width: 11px;
+    height: 11px;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: color-mix(in srgb, var(--color-theme-gold) 65%, transparent);
+    transition:
+      width 400ms ease,
+      height 400ms ease,
+      border-color 400ms ease;
+  }
+
+  .poll-portrait-corner-tl {
+    top: 6px;
+    left: 6px;
+    border-right-width: 0;
+    border-bottom-width: 0;
+  }
+  .poll-portrait-corner-tr {
+    top: 6px;
+    right: 6px;
+    border-left-width: 0;
+    border-bottom-width: 0;
+  }
+  .poll-portrait-corner-bl {
+    bottom: 6px;
+    left: 6px;
+    border-right-width: 0;
+    border-top-width: 0;
+  }
+  .poll-portrait-corner-br {
+    bottom: 6px;
+    right: 6px;
+    border-left-width: 0;
+    border-top-width: 0;
+  }
+
+  .poll-option:hover .poll-portrait-corner,
+  .poll-option:focus-visible .poll-portrait-corner {
+    width: 16px;
+    height: 16px;
+    border-color: var(--color-theme-gold);
+  }
+
+  .poll-mini-bar {
+    width: var(--vote-share);
+    transform-origin: left;
+    animation: poll-grow 900ms cubic-bezier(0.19, 1, 0.22, 1) both;
+    animation-delay: calc(var(--vote-delay) + 120ms);
+    background: var(--vote-color);
+    box-shadow: 0 0 16px color-mix(in srgb, var(--vote-color) 42%, transparent);
+  }
+
+  .poll-option[data-side='b'] .poll-mini-bar {
+    margin-left: auto;
+    transform-origin: right;
+    background: var(--vote-color);
+  }
+
+  @keyframes poll-grow {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .poll-option {
+      min-height: 8rem;
+    }
+
+    .poll-option > span:last-child {
+      min-height: 8.75rem;
+    }
+
+    .poll-portrait {
+      width: 5.3rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .poll-option,
+    .poll-mini-bar,
+    .poll-portrait-img,
+    .poll-portrait-corner {
+      animation: none;
+      transition: none;
+    }
+  }
+</style>
