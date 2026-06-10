@@ -3,7 +3,7 @@ import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 import CombatCard from '@/components/CombatCard.astro'
-import { battlesById } from '@/consts/battles'
+import { battles } from '@/consts/battles'
 import { BOXERS_BY_ID, COUNTRY_NAMES, getBoxerHeroImages, type Boxer } from '@/consts/boxers'
 
 const SITE_URL = 'https://www.infolavelada.com'
@@ -14,20 +14,7 @@ const canonical = `${SITE_URL}/combates`
 
 export const prerender = true
 
-
-// ─────────────────────────────────────────────────────────────────────
-const CARTELERA_ORDER: string[] = [
-    'illojuan-vs-thegrefg',         // Main Event
-    'plex-vs-fernanfloo',           // Co-estelar
-    'marta-diaz-vs-tatiana-kaer',
-    'samy-rivers-vs-roro',
-    'viruzz-vs-gero-arias',
-    'alondrissa-vs-angie-velasco',
-    'lit-killah-vs-kidd-keo',
-    'clersss-vs-natalia-mx',
-    'la-parce-vs-fabiana-sevillano',
-    'edu-aguirre-vs-gaston-edul',
-]
+// Cuántos combates van en la sección de estelares (arriba).
 const MAIN_EVENT_COUNT = 2
 
 const toCard = (boxer: Boxer) => ({
@@ -38,9 +25,10 @@ const toCard = (boxer: Boxer) => ({
     heroImages: getBoxerHeroImages(boxer),
 })
 
-const combatCards = CARTELERA_ORDER.map((id) => battlesById[id])
-    .filter((battle): battle is NonNullable<typeof battle> => Boolean(battle))
-    .map((battle, index) => {
+// La cartelera va del Main Event al primer combate: es el orden inverso de
+// `battles` (única fuente de la verdad, en battles.ts). Usamos [...battles]
+// (una copia) para NO mutar el array original, que lo usan otras páginas.
+const combatCards = [...battles].reverse().map((battle, index) => {
     const [id1, id2] = battle.boxerIds
     return {
         position: battle.number,
@@ -49,7 +37,7 @@ const combatCards = CARTELERA_ORDER.map((id) => battlesById[id])
         a: toCard(BOXERS_BY_ID[id1]),
         b: toCard(BOXERS_BY_ID[id2]),
     }
-    })
+})
 
 const mainEvents = combatCards.filter((c) => c.featured)
 const undercard = combatCards.filter((c) => !c.featured)
@@ -58,88 +46,88 @@ const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
-    { '@type': 'ListItem', position: 2, name: 'Combates', item: canonical },
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
+        { '@type': 'ListItem', position: 2, name: 'Combates', item: canonical },
     ],
 }
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
     <script
-    type="application/ld+json"
-    is:inline
-    set:html={JSON.stringify(breadcrumbJsonLd)}
-    slot="head"
+        type="application/ld+json"
+        is:inline
+        set:html={JSON.stringify(breadcrumbJsonLd)}
+        slot="head"
     />
 
     <section
-    class="combates-page relative isolate w-full overflow-x-clip bg-theme-midnight px-3 pb-20 pt-24 text-theme-cream sm:px-6 sm:pb-24 sm:pt-32 md:pt-36"
+        class="combates-page relative isolate w-full overflow-x-clip bg-theme-midnight px-3 pb-20 pt-24 text-theme-cream sm:px-6 sm:pb-24 sm:pt-32 md:pt-36"
     >
-    <div aria-hidden="true" class="combates-bg absolute inset-0 -z-20"></div>
+        <div aria-hidden="true" class="combates-bg absolute inset-0 -z-20"></div>
 
-    <div class="mx-auto w-full max-w-7xl">
-        <header class="combates-header">
-        <div
-            class="mb-8 flex w-full items-center justify-center gap-4 sm:mb-12"
-            aria-hidden="true"
-        >
-            <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-            <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-            <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
+        <div class="mx-auto w-full max-w-7xl">
+            <header class="combates-header">
+                <div
+                    class="mb-8 flex w-full items-center justify-center gap-4 sm:mb-12"
+                    aria-hidden="true"
+                >
+                    <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
+                    <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
+                    <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
+                </div>
+                <h1
+                    class="mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
+                >
+                    COMBATES
+                </h1>
+                <p
+                    class="animate-fade-in-up animate-delay-200 text-balance font-cinzel text-xs font-medium tracking-[0.16em] text-white/55 sm:text-sm sm:tracking-[0.25em]"
+                >
+                    La cartelera de La Velada del Año VI
+                </p>
+            </header>
+
+            {
+                mainEvents.length > 0 && (
+                    <>
+                        <div class="combates-seclabel">
+                            <span class="size-1.5 rotate-45 bg-theme-gold/80" aria-hidden="true" />
+                        </div>
+                        <div class="combates-mains">
+                            {mainEvents.map((c, i) => (
+                                <div class="animate-fade-in-up" style={`animation-delay:${i * 70}ms`}>
+                                    <CombatCard
+                                        number={c.position}
+                                        url={c.url}
+                                        featured
+                                        badge={i === 0 ? 'Main Event' : 'Co-estelar'}
+                                        a={c.a}
+                                        b={c.b}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                )
+            }
+
+            {
+                undercard.length > 0 && (
+                    <>
+                        <div class="combates-seclabel">
+                            <span class="size-1.5 rotate-45 bg-theme-gold/80" aria-hidden="true" />
+                        </div>
+                        <div class="combates-under">
+                            {undercard.map((c, i) => (
+                                <div class="animate-fade-in-up" style={`animation-delay:${i * 45}ms`}>
+                                    <CombatCard number={c.position} url={c.url} a={c.a} b={c.b} />
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                )
+            }
         </div>
-        <h1
-            class="mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
-        >
-            COMBATES
-        </h1>
-        <p
-        class="animate-fade-in-up animate-delay-200 text-balance font-cinzel text-xs font-medium tracking-[0.16em] text-white/55 sm:text-sm sm:tracking-[0.25em]"
-        >
-            La cartelera de La Velada del Año VI
-        </p>
-        </header>
-
-        {
-        mainEvents.length > 0 && (
-            <>
-            <div class="combates-seclabel">
-                <span class="size-1.5 rotate-45 bg-theme-gold/80" aria-hidden="true" />
-            </div>
-            <div class="combates-mains">
-                {mainEvents.map((c, i) => (
-                <div class="animate-fade-in-up" style={`animation-delay:${i * 70}ms`}>
-                    <CombatCard
-                    number={c.position}
-                    url={c.url}
-                    featured
-                    badge={i === 0 ? 'Main Event' : 'Co-estelar'}
-                    a={c.a}
-                    b={c.b}
-                    />
-                </div>
-            ))}
-            </div>
-            </>
-        )
-        }
-
-        {
-        undercard.length > 0 && (
-            <>
-            <div class="combates-seclabel">
-                <span class="size-1.5 rotate-45 bg-theme-gold/80" aria-hidden="true" />
-            </div>
-            <div class="combates-under">
-                {undercard.map((c, i) => (
-                <div class="animate-fade-in-up" style={`animation-delay:${i * 45}ms`}>
-                    <CombatCard number={c.position} url={c.url} a={c.a} b={c.b} />
-                </div>
-                ))}
-            </div>
-            </>
-        )
-        }
-    </div>
     </section>
 
     <Sponsors />
@@ -147,60 +135,51 @@ const breadcrumbJsonLd = {
 </Layout>
 
 <style>
-.combates-page { min-height: 100svh; }
+    .combates-page { min-height: 100svh; }
 
-.combates-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
+    .combates-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
 
-.combates-bg {
-    background:
-        radial-gradient(
-        ellipse 70% 45% at 50% 0%,
-        color-mix(in srgb, var(--color-theme-gold) 16%, transparent) 0%,
-        transparent 65%
-        ),
-        linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
-}
+    .combates-bg {
+        background:
+            radial-gradient(
+                ellipse 70% 45% at 50% 0%,
+                color-mix(in srgb, var(--color-theme-gold) 16%, transparent) 0%,
+                transparent 65%
+            ),
+            linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
+    }
 
-.combates-seclabel {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    margin: 3.5rem 0 1.5rem;
-    font-family: var(--font-cinzel, 'Cinzel', serif);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.34em;
-    text-transform: uppercase;
-    color: var(--color-theme-gold);
-}
-.combates-seclabel.under {
-    color: color-mix(in srgb, var(--color-theme-cream) 70%, transparent);
-}
-.combates-seclabel::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, color-mix(in srgb, var(--color-theme-gold) 28%, transparent), transparent);
-}
+    .combates-seclabel {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin: 3.5rem 0 1.5rem;
+    }
+    .combates-seclabel::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, color-mix(in srgb, var(--color-theme-gold) 28%, transparent), transparent);
+    }
 
-.combates-mains,
-.combates-under {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.4rem;
-}
+    .combates-mains,
+    .combates-under {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.4rem;
+    }
 
-@media (min-width: 900px) {
-    .combates-mains { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .combates-under { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
+    @media (min-width: 900px) {
+        .combates-mains { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .combates-under { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
 
-@media (prefers-reduced-motion: reduce) {
-    .animate-fade-in-up { animation: none; }
-}
+    @media (prefers-reduced-motion: reduce) {
+        .animate-fade-in-up { animation: none; }
+    }
 </style>
