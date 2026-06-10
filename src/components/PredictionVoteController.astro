@@ -111,15 +111,75 @@ const controllerConfig = JSON.stringify({ isLoggedIn, userVotes }).replaceAll('<
     })
   }
 
-  function focusLogin() {
-    const login = $<HTMLElement>('[data-predictions-auth]')
-    if (!login) return
+  const AUTH_DOCK_MS = 660
+  // Easing con overshoot: da el "botecito" natural al aterrizar.
+  const AUTH_SPRING = 'cubic-bezier(0.34, 1.42, 0.5, 1)'
 
-    login.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    login.dataset.attention = 'true'
-    window.setTimeout(() => {
-      delete login.dataset.attention
-    }, 1600)
+  function prefersReducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }
+
+  // Lleva el botón de login hasta el combate donde se ha pinchado, abriendo un
+  // hueco entre las cards. Usa FLIP (First-Last-Invert-Play): mide dónde está
+  // todo, reordena el DOM y anima cada elemento desde su posición anterior a la
+  // nueva, así el botón "viaja" por la pantalla y las cards hacen sitio.
+  function dockAuthToFight(battleId: string) {
+    const authEl = $<HTMLElement>('[data-predictions-auth]')
+    const list = $<HTMLElement>('[data-prediction-list]')
+    const fight = $<HTMLElement>(`[data-prediction-fight][data-battle-id="${battleId}"]`)
+    if (!authEl || !list || !fight) return
+
+    const targetLi = fight.closest('li')
+    if (!targetLi) return
+
+    const alreadyDocked = targetLi.nextElementSibling === authEl
+    const reduce = prefersReducedMotion()
+
+    // Elementos que pueden moverse: el botón y cada card de la lista (sin duplicar
+    // el botón si ya estaba dentro de la lista de un anclaje anterior).
+    const movers = Array.from(new Set([authEl, ...Array.from(list.children)])) as HTMLElement[]
+
+    // FIRST: posición de partida de cada uno.
+    const firstRects = new Map<HTMLElement, DOMRect>()
+    if (!reduce) movers.forEach((el) => firstRects.set(el, el.getBoundingClientRect()))
+
+    // MUTATE: recolocar el botón justo después del combate pinchado.
+    authEl.dataset.docked = 'true'
+    if (!alreadyDocked) targetLi.insertAdjacentElement('afterend', authEl)
+
+    if (reduce) {
+      authEl.scrollIntoView({ block: 'nearest' })
+      return
+    }
+
+    // LAST + PLAY: animar cada elemento desde su hueco viejo hasta el nuevo.
+    movers.forEach((el) => {
+      const first = firstRects.get(el)
+      if (!first) return
+
+      const last = el.getBoundingClientRect()
+      const dx = first.left - last.left
+      const dy = first.top - last.top
+      if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return
+
+      el.animate(
+        [
+          { transform: `translate(${dx}px, ${dy}px)` },
+          { transform: 'translate(0px, 0px)' },
+        ],
+        { duration: AUTH_DOCK_MS, easing: AUTH_SPRING },
+      )
+    })
+
+    // Botecito de aterrizaje sobre el propio botón (se suma al viaje).
+    authEl.animate(
+      [
+        { transform: 'scale(0.94)', offset: 0 },
+        { transform: 'scale(1.045)', offset: 0.6 },
+        { transform: 'scale(1)', offset: 1 },
+      ],
+      { duration: AUTH_DOCK_MS, easing: 'ease-out', composite: 'add' },
+    )
   }
 
   async function submitVote(battleId: string, boxerId: string) {
@@ -138,7 +198,7 @@ const controllerConfig = JSON.stringify({ isLoggedIn, userVotes }).replaceAll('<
       })
 
       if (response.status === 401) {
-        focusLogin()
+        dockAuthToFight(battleId)
         return
       }
 
@@ -172,7 +232,7 @@ const controllerConfig = JSON.stringify({ isLoggedIn, userVotes }).replaceAll('<
           if (!battleId || !boxerId) return
 
           if (!config.isLoggedIn) {
-            focusLogin()
+            dockAuthToFight(battleId)
             return
           }
 
@@ -187,27 +247,16 @@ const controllerConfig = JSON.stringify({ isLoggedIn, userVotes }).replaceAll('<
 </script>
 
 <style>
-  :global([data-predictions-auth][data-attention='true']) {
-    animation: prediction-auth-attention 800ms ease both;
-  }
-
   :global([data-prediction-option][data-pending='true']) {
     cursor: wait;
   }
 
-  @keyframes prediction-auth-attention {
-    0%,
-    100% {
-      filter: none;
-    }
-    35% {
-      filter: drop-shadow(0 0 18px color-mix(in srgb, var(--color-theme-gold) 42%, transparent));
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    :global([data-predictions-auth][data-attention='true']) {
-      animation: none;
-    }
+  /* Cuando el botón queda anclado entre dos cards, se integra en el hueco de la
+     rejilla (sin el margen superior que tiene en su sitio original). */
+  :global([data-predictions-auth][data-docked='true']) {
+    margin-top: 0;
+    width: 100%;
+    padding-block: 0.15rem;
+    will-change: transform;
   }
 </style>
