@@ -137,6 +137,7 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '1995-12-31',
       age: 30,
+      youtubeChannelId: 'UCZGr6IbuqQayELgiLivhnKA',
       followersUpdatedAt: '2026-06-10',
       socials: [
         { platform: "instagram", username: "gastonedul", followers: 2_400_000 },
