@@ -1,0 +1,66 @@
+---
+import { formatPredictionVotes } from '@/consts/predictions'
+
+interface Props {
+  totalCombats: number
+  totalVotes: number
+  closeBattles: number
+}
+
+const { totalCombats, totalVotes, closeBattles } = Astro.props
+---
+
+<dl class="prediction-stats mt-9 grid w-full max-w-3xl grid-cols-3 border-y border-theme-gold/20">
+  <div>
+    <dt>Combates</dt>
+    <dd>{totalCombats}</dd>
+  </div>
+  <div>
+    <dt>Apoyos</dt>
+    <dd>{formatPredictionVotes(totalVotes)}</dd>
+  </div>
+  <div>
+    <dt>Ajustados</dt>
+    <dd>{closeBattles}</dd>
+  </div>
+</dl>
+
+<style>
+  .prediction-stats div {
+    padding: 0.85rem 0.35rem;
+    border-inline-end: 1px solid color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+  }
+
+  .prediction-stats div:last-child {
+    border-inline-end: 0;
+  }
+
+  .prediction-stats dt {
+    margin-bottom: 0.35rem;
+    font-family: var(--font-cinzel);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    color: rgba(255, 255, 255, 0.48);
+    text-transform: uppercase;
+  }
+
+  .prediction-stats dd {
+    font-family: var(--font-cinzel);
+    font-size: 1.65rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--color-theme-cream);
+  }
+
+  @media (max-width: 639px) {
+    .prediction-stats dt {
+      font-size: 0.5rem;
+      letter-spacing: 0.18em;
+    }
+
+    .prediction-stats dd {
+      font-size: 1.25rem;
+    }
+  }
+</style>
