@@ -2,16 +2,19 @@
 import CountryFlag from '@/components/CountryFlag.astro'
 import {
   formatPredictionPercent,
-  formatPredictionVotes,
+  formatPredictionSupport,
   type PredictionOption,
 } from '@/consts/predictions'
 
 interface Props {
   battleId: string
   option: PredictionOption
+  selectedBoxerId?: string
 }
 
-const { battleId, option } = Astro.props
+const { battleId, option, selectedBoxerId } = Astro.props
+const isSelected = selectedBoxerId === option.boxer.id
+const isMuted = Boolean(selectedBoxerId) && !isSelected
 ---
 
 <button
@@ -20,9 +23,11 @@ const { battleId, option } = Astro.props
   data-battle-id={battleId}
   data-boxer-id={option.boxer.id}
   data-prediction-option
+  data-selected={String(isSelected)}
+  data-muted={String(isMuted)}
   data-side={option.side}
   aria-label={`Pronosticar victoria de ${option.boxer.name}`}
-  aria-pressed="false"
+  aria-pressed={String(isSelected)}
   style={`--vote-share: ${option.percentage.toFixed(2)}%; --vote-color: ${option.color}; --vote-delay: ${option.delay}ms;`}
 >
   <span aria-hidden="true" class="poll-vote-tag">Tu voto</span>
@@ -71,7 +76,10 @@ const { battleId, option } = Astro.props
           <span class="font-cinzel text-[0.6rem] font-bold tracking-[0.28em] text-white/58">
             Pronosticar
           </span>
-          <span class="font-cinzel text-3xl leading-none font-black text-theme-cream sm:text-4xl">
+          <span
+            class="font-cinzel text-3xl leading-none font-black text-theme-cream sm:text-4xl"
+            data-prediction-percent
+          >
             {formatPredictionPercent(option.percentage)}
           </span>
         </span>
@@ -80,8 +88,9 @@ const { battleId, option } = Astro.props
         </span>
         <span
           class="font-cinzel text-[0.58rem] font-semibold tracking-[0.24em] text-white/48 sm:text-[0.62rem]"
+          data-prediction-votes
         >
-          {formatPredictionVotes(option.votes)} apoyos
+          {formatPredictionSupport(option.votes)}
         </span>
       </span>
     </span>
