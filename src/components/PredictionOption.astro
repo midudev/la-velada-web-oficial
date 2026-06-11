@@ -2,16 +2,19 @@
 import CountryFlag from '@/components/CountryFlag.astro'
 import {
   formatPredictionPercent,
-  formatPredictionVotes,
+  formatPredictionSupport,
   type PredictionOption,
 } from '@/consts/predictions'
 
 interface Props {
   battleId: string
   option: PredictionOption
+  selectedBoxerId?: string
 }
 
-const { battleId, option } = Astro.props
+const { battleId, option, selectedBoxerId } = Astro.props
+const isSelected = selectedBoxerId === option.boxer.id
+const isMuted = Boolean(selectedBoxerId) && !isSelected
 ---
 
 <button
@@ -19,10 +22,15 @@ const { battleId, option } = Astro.props
   class="poll-option group relative min-h-[8.75rem] w-full cursor-pointer overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-0 text-left text-theme-cream transition duration-300 hover:-translate-y-0.5 hover:border-theme-gold/55 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
   data-battle-id={battleId}
   data-boxer-id={option.boxer.id}
+  data-boxer-name={option.boxer.name}
   data-prediction-option
+  data-selected={String(isSelected)}
+  data-muted={String(isMuted)}
   data-side={option.side}
+  data-vote-count={option.votes}
+  data-vote-percentage={option.percentage}
   aria-label={`Pronosticar victoria de ${option.boxer.name}`}
-  aria-pressed="false"
+  aria-pressed={String(isSelected)}
   style={`--vote-share: ${option.percentage.toFixed(2)}%; --vote-color: ${option.color}; --vote-delay: ${option.delay}ms;`}
 >
   <span aria-hidden="true" class="poll-vote-tag">Tu voto</span>
@@ -71,7 +79,10 @@ const { battleId, option } = Astro.props
           <span class="font-cinzel text-[0.6rem] font-bold tracking-[0.28em] text-white/58">
             Pronosticar
           </span>
-          <span class="font-cinzel text-3xl leading-none font-black text-theme-cream sm:text-4xl">
+          <span
+            class="font-cinzel text-3xl leading-none font-black text-theme-cream sm:text-4xl"
+            data-prediction-percent
+          >
             {formatPredictionPercent(option.percentage)}
           </span>
         </span>
@@ -80,8 +91,9 @@ const { battleId, option } = Astro.props
         </span>
         <span
           class="font-cinzel text-[0.58rem] font-semibold tracking-[0.24em] text-white/48 sm:text-[0.62rem]"
+          data-prediction-votes
         >
-          {formatPredictionVotes(option.votes)} apoyos
+          {formatPredictionSupport(option.votes)}
         </span>
       </span>
     </span>
@@ -103,6 +115,31 @@ const { battleId, option } = Astro.props
     transition: opacity 300ms ease;
   }
 
+  .poll-option::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    border: 1px solid transparent;
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--vote-color) 28%, transparent),
+        transparent 34%
+      ),
+      radial-gradient(
+        ellipse 54% 88% at 0% 50%,
+        color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
+        transparent 68%
+      );
+    opacity: 0;
+    transition:
+      opacity 320ms ease,
+      border-color 320ms ease,
+      box-shadow 320ms ease;
+  }
+
   .poll-option[data-side='b']::before {
     background: radial-gradient(
       ellipse 52% 80% at 100% 0%,
@@ -111,17 +148,45 @@ const { battleId, option } = Astro.props
     );
   }
 
+  .poll-option[data-side='b']::after {
+    background:
+      linear-gradient(
+        270deg,
+        color-mix(in srgb, var(--vote-color) 26%, transparent),
+        transparent 34%
+      ),
+      radial-gradient(
+        ellipse 54% 88% at 100% 50%,
+        color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
+        transparent 68%
+      );
+  }
+
   .poll-option[data-selected='true'] {
-    border-color: color-mix(in srgb, var(--color-theme-gold) 82%, transparent);
-    background: color-mix(in srgb, var(--color-theme-midnight) 72%, black);
+    border-color: var(--color-theme-gold);
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--vote-color) 14%, transparent),
+        color-mix(in srgb, var(--color-theme-midnight) 76%, black)
+      );
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 34%, transparent),
-      0 0 32px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+      inset 0 0 0 1px color-mix(in srgb, white 14%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 76%, transparent),
+      0 0 0 5px color-mix(in srgb, var(--color-theme-gold) 12%, transparent),
+      0 22px 48px rgba(0, 0, 0, 0.38),
+      0 0 42px color-mix(in srgb, var(--vote-color) 34%, transparent);
+  }
+
+  .poll-option[data-selected='true']::after {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 68%, transparent);
+    opacity: 1;
+    box-shadow: inset 0 0 24px color-mix(in srgb, var(--color-theme-gold) 13%, transparent);
   }
 
   .poll-option[data-muted='true'] {
-    opacity: 0.58;
-    filter: saturate(0.72);
+    opacity: 0.46;
+    filter: saturate(0.62) brightness(0.82);
   }
 
   .poll-option[data-selected='true']::before,
@@ -155,12 +220,32 @@ const { battleId, option } = Astro.props
   .poll-option[data-selected='true'] .poll-vote-tag {
     opacity: 1;
     transform: translateY(0);
+    border-color: var(--color-theme-gold);
+    background: var(--color-theme-gold);
+    color: var(--color-theme-midnight);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, white 24%, transparent),
+      0 10px 24px color-mix(in srgb, var(--color-theme-gold) 24%, transparent);
   }
 
   .poll-portrait {
     box-shadow:
       inset 0 0 0 1px rgba(255, 255, 255, 0.04),
       0 12px 28px rgba(0, 0, 0, 0.28);
+    transition:
+      border-color 320ms ease,
+      box-shadow 320ms ease,
+      filter 320ms ease;
+  }
+
+  .poll-option[data-selected='true'] .poll-portrait {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 70%, white);
+    filter: saturate(1.14) contrast(1.08);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, white 10%, transparent),
+      0 0 0 2px color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
+      0 16px 34px rgba(0, 0, 0, 0.42),
+      0 0 28px color-mix(in srgb, var(--vote-color) 32%, transparent);
   }
 
   .poll-portrait::after {
@@ -213,19 +298,64 @@ const { battleId, option } = Astro.props
   }
 
   .poll-option:hover .poll-portrait-corner,
-  .poll-option:focus-visible .poll-portrait-corner {
+  .poll-option:focus-visible .poll-portrait-corner,
+  .poll-option[data-selected='true'] .poll-portrait-corner {
     width: 16px;
     height: 16px;
     border-color: var(--color-theme-gold);
   }
 
+  .poll-option[data-selected='true'] [data-prediction-percent] {
+    color: var(--color-theme-gold);
+    text-shadow:
+      0 0 18px color-mix(in srgb, var(--color-theme-gold) 34%, transparent),
+      0 0 30px color-mix(in srgb, var(--vote-color) 22%, transparent);
+  }
+
   .poll-mini-bar {
     width: var(--vote-share);
+    position: relative;
+    overflow: hidden;
     transform-origin: left;
     animation: poll-grow 900ms cubic-bezier(0.19, 1, 0.22, 1) both;
     animation-delay: calc(var(--vote-delay) + 120ms);
     background: var(--vote-color);
     box-shadow: 0 0 16px color-mix(in srgb, var(--vote-color) 42%, transparent);
+    transition:
+      width 820ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 420ms ease,
+      filter 420ms ease;
+    will-change: width;
+  }
+
+  .poll-mini-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.52),
+      transparent
+    );
+    opacity: 0;
+    transform: translateX(-120%);
+  }
+
+  .poll-option[data-vote-changing] .poll-mini-bar {
+    animation: vote-bar-flare 820ms ease-out;
+    box-shadow:
+      0 0 14px color-mix(in srgb, var(--vote-color) 52%, transparent),
+      0 0 30px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+    filter: saturate(1.28) brightness(1.14);
+  }
+
+  .poll-option[data-vote-changing] .poll-mini-bar::after {
+    animation: vote-bar-sheen 760ms ease-out;
+  }
+
+  .poll-option[data-vote-changing] [data-prediction-percent] {
+    animation: vote-number-pop 680ms cubic-bezier(0.18, 0.86, 0.24, 1);
   }
 
   .poll-option[data-side='b'] .poll-mini-bar {
@@ -240,6 +370,40 @@ const { battleId, option } = Astro.props
     }
     to {
       transform: scaleX(1);
+    }
+  }
+
+  @keyframes vote-bar-flare {
+    0%,
+    100% {
+      filter: saturate(1) brightness(1);
+    }
+    34% {
+      filter: saturate(1.42) brightness(1.28);
+    }
+  }
+
+  @keyframes vote-bar-sheen {
+    0% {
+      opacity: 0;
+      transform: translateX(-120%);
+    }
+    18% {
+      opacity: 0.86;
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(150%);
+    }
+  }
+
+  @keyframes vote-number-pop {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+    35% {
+      transform: translateY(-0.08rem) scale(1.08);
     }
   }
 
@@ -261,7 +425,10 @@ const { battleId, option } = Astro.props
     .poll-option,
     .poll-mini-bar,
     .poll-portrait-img,
-    .poll-portrait-corner {
+    .poll-portrait,
+    .poll-portrait-corner,
+    .poll-mini-bar::after,
+    [data-prediction-percent] {
       animation: none;
       transition: none;
     }

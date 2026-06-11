@@ -34,7 +34,16 @@ export interface PredictionBattle {
   options: readonly [PredictionOption, PredictionOption]
   totalVotes: number
   leader: PredictionOption
+  favorite: PredictionOption | null
   isClose: boolean
+}
+
+export interface PredictionVotesInput {
+  combat_id: string
+  predictions: Array<{
+    fighter_id: string
+    votes: number
+  }>
 }
 
 export function formatPredictionVotes(votes: number) {
@@ -45,27 +54,8 @@ export function formatPredictionPercent(percentage: number) {
   return `${percentFormatter.format(percentage)}%`
 }
 
-function getAudienceScore(boxer: Boxer) {
-  return boxer.socials.reduce(
-    (total, social) => total + (social.followers ?? 0) + (social.monthlyListeners ?? 0),
-    0,
-  )
-}
-
-function getSeedScore(value: string) {
-  return Array.from(value).reduce((total, char, index) => {
-    return total + char.charCodeAt(0) * (index + 3)
-  }, 0)
-}
-
-function getPreviewVotes(boxer: Boxer, battle: Battle, sideIndex: number) {
-  const audience = Math.max(getAudienceScore(boxer), 180_000)
-  const socialWeight = Math.sqrt(audience) * 12
-  const legacyWeight = boxer.previousVeladaWins.length * 2_400
-  const seedWeight = (getSeedScore(`${battle.id}-${boxer.id}`) % 19) * 210
-  const sidePush = sideIndex === 0 ? 950 : 1_250
-
-  return Math.round(socialWeight + legacyWeight + seedWeight + sidePush)
+export function formatPredictionSupport(votes: number) {
+  return `${formatPredictionVotes(votes)} ${votes === 1 ? 'voto' : 'votos'}`
 }
 
 const sideStyles: Record<PredictionSide, { color: string }> = {
@@ -77,41 +67,69 @@ const sideStyles: Record<PredictionSide, { color: string }> = {
   },
 }
 
-export const predictionBattles: PredictionBattle[] = battles.map((battle, battleIndex) => {
-  const [boxerAId, boxerBId] = battle.boxerIds
-  const boxers = [BOXERS_BY_ID[boxerAId], BOXERS_BY_ID[boxerBId]] as const
-  const voteCounts = boxers.map((boxer, sideIndex) => getPreviewVotes(boxer, battle, sideIndex))
-  const totalVotes = voteCounts.reduce((total, votes) => total + votes, 0)
+function createVotesByBattle(predictions: PredictionVotesInput[]) {
+  const votesByBattle = new Map<string, Map<string, number>>()
 
-  const options = boxers.map((boxer, sideIndex) => {
-    const side = sideIndex === 0 ? 'a' : 'b'
-    const style = sideStyles[side]
+  predictions.forEach((combatPrediction) => {
+    votesByBattle.set(
+      combatPrediction.combat_id,
+      new Map(
+        combatPrediction.predictions.map((prediction) => [
+          prediction.fighter_id,
+          prediction.votes,
+        ]),
+      ),
+    )
+  })
+
+  return votesByBattle
+}
+
+export function createPredictionBattles(predictions: PredictionVotesInput[] = []) {
+  const votesByBattle = createVotesByBattle(predictions)
+
+  return battles.map((battle, battleIndex) => {
+    const [boxerAId, boxerBId] = battle.boxerIds
+    const boxers = [BOXERS_BY_ID[boxerAId], BOXERS_BY_ID[boxerBId]] as const
+    const battleVotes = votesByBattle.get(battle.id)
+    const voteCounts = boxers.map((boxer) => battleVotes?.get(boxer.id) ?? 0)
+    const totalVotes = voteCounts.reduce((total, votes) => total + votes, 0)
+
+    const options = boxers.map((boxer, sideIndex) => {
+      const side = sideIndex === 0 ? 'a' : 'b'
+      const style = sideStyles[side]
+      const votes = voteCounts[sideIndex]
+
+      return {
+        boxer,
+        countryName: COUNTRY_NAMES[boxer.country] ?? boxer.country,
+        heroImages: getBoxerHeroImages(boxer),
+        percentage: totalVotes > 0 ? (votes / totalVotes) * 100 : 0,
+        votes,
+        side,
+        color: style.color,
+        delay: battleIndex * 70 + sideIndex * 90,
+      } satisfies PredictionOption
+    }) as [PredictionOption, PredictionOption]
+
+    const leader = options[0].percentage >= options[1].percentage ? options[0] : options[1]
+    const favorite = totalVotes > 0 && leader.percentage >= 60 ? leader : null
+    const difference = Math.abs(options[0].percentage - options[1].percentage)
 
     return {
-      boxer,
-      countryName: COUNTRY_NAMES[boxer.country] ?? boxer.country,
-      heroImages: getBoxerHeroImages(boxer),
-      percentage: (voteCounts[sideIndex] / totalVotes) * 100,
-      votes: voteCounts[sideIndex],
-      side,
-      color: style.color,
-      delay: battleIndex * 70 + sideIndex * 90,
-    } satisfies PredictionOption
-  }) as [PredictionOption, PredictionOption]
+      battle,
+      options,
+      totalVotes,
+      leader,
+      favorite,
+      isClose: totalVotes === 0 || difference <= 8,
+    }
+  })
+}
 
-  const leader = options[0].percentage >= options[1].percentage ? options[0] : options[1]
-  const difference = Math.abs(options[0].percentage - options[1].percentage)
+export const predictionBattles = createPredictionBattles()
 
-  return {
-    battle,
-    options,
-    totalVotes,
-    leader,
-    isClose: difference <= 8,
-  }
-})
-
-export const totalPreviewVotes = predictionBattles.reduce(
+export const totalPredictionVotes = predictionBattles.reduce(
   (total, prediction) => total + prediction.totalVotes,
   0,
 )
