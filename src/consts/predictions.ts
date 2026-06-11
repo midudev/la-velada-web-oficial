@@ -34,6 +34,7 @@ export interface PredictionBattle {
   options: readonly [PredictionOption, PredictionOption]
   totalVotes: number
   leader: PredictionOption
+  favorite: PredictionOption | null
   isClose: boolean
 }
 
@@ -54,7 +55,7 @@ export function formatPredictionPercent(percentage: number) {
 }
 
 export function formatPredictionSupport(votes: number) {
-  return `${formatPredictionVotes(votes)} ${votes === 1 ? 'apoyo' : 'apoyos'}`
+  return `${formatPredictionVotes(votes)} ${votes === 1 ? 'voto' : 'votos'}`
 }
 
 const sideStyles: Record<PredictionSide, { color: string }> = {
@@ -112,6 +113,7 @@ export function createPredictionBattles(predictions: PredictionVotesInput[] = []
     }) as [PredictionOption, PredictionOption]
 
     const leader = options[0].percentage >= options[1].percentage ? options[0] : options[1]
+    const favorite = totalVotes > 0 && leader.percentage > 60 ? leader : null
     const difference = Math.abs(options[0].percentage - options[1].percentage)
 
     return {
@@ -119,6 +121,7 @@ export function createPredictionBattles(predictions: PredictionVotesInput[] = []
       options,
       totalVotes,
       leader,
+      favorite,
       isClose: totalVotes === 0 || difference <= 8,
     }
   })

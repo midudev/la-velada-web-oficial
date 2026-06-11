@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { prediction, selectedBoxerId } = Astro.props
-const { battle, options, leader, isClose } = prediction
+const { battle, options, favorite } = prediction
 ---
 
 <li id={battle.id} class="scroll-mt-28">
@@ -39,12 +39,13 @@ const { battle, options, leader, isClose } = prediction
 
       <div class="flex flex-wrap items-center gap-2 md:justify-end">
         <span
+          data-prediction-badge
           class:list={[
             'prediction-badge',
-            isClose ? 'prediction-badge-hot' : 'prediction-badge-calm',
+            favorite ? 'prediction-badge-calm' : 'prediction-badge-hot',
           ]}
         >
-          {isClose ? 'A cara de perro' : `Favorito: ${leader.boxer.name}`}
+          {favorite ? `Favorito: ${favorite.boxer.name}` : 'A cara de perro'}
         </span>
         <a
           href={battle.url}
