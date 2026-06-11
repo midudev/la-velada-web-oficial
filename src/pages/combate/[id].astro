@@ -23,6 +23,7 @@ const boxer1 = BOXERS_BY_ID[boxer1Id]
 const boxer2 = BOXERS_BY_ID[boxer2Id]
 const country1 = COUNTRY_NAMES[boxer1.country] ?? boxer1.country
 const country2 = COUNTRY_NAMES[boxer2.country] ?? boxer2.country
+const battleVideo = battle.video
 const title = `${battle.title} — Combate ${String(battle.number).padStart(2, '0')} de La Velada del Año VI`
 const description = `Toda la información del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} contra ${boxer2.name}. Fecha, horario y detalles en Sevilla.`
 const canonical = `${SITE_URL}${battle.url}`
@@ -172,6 +173,48 @@ export const prerender = true
       </div>
     </div>
   </section>
+  {
+    battleVideo && (
+      <section
+        class="relative isolate overflow-hidden bg-[#050816] px-4 pb-24 text-theme-cream sm:px-6 sm:pb-28"
+        aria-labelledby="battle-video-title"
+      >
+        <div
+          aria-hidden="true"
+          class="absolute inset-x-0 top-0 -z-10 h-48 bg-linear-to-b from-theme-midnight to-transparent"
+        />
+        <div class="mx-auto w-full max-w-6xl">
+          <div class="mb-6 flex items-center justify-center gap-4 text-center">
+            <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24" />
+            <h2
+              id="battle-video-title"
+              class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm"
+            >
+              CARA A CARA
+            </h2>
+            <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24" />
+          </div>
+
+          <div class="mx-auto w-full max-w-[24rem] overflow-hidden rounded-[6px] border border-theme-gold/25 bg-black shadow-[0_24px_80px_-28px_rgba(199,168,107,0.55)] md:max-w-6xl">
+            <video
+              class="aspect-[9/16] max-h-[72svh] w-full bg-black object-cover md:aspect-video md:max-h-none"
+              autoplay
+              controls
+              loop
+              muted
+              playsinline
+              preload="metadata"
+              aria-label={`Vídeo del combate ${battle.title}`}
+            >
+              <source src={battleVideo.desktop} type="video/mp4" media="(min-width: 768px)" />
+              <source src={battleVideo.mobile} type="video/mp4" />
+              Tu navegador no puede reproducir este vídeo.
+            </video>
+          </div>
+        </div>
+      </section>
+    )
+  }
   <Sponsors />
   <Footer />
 </Layout>
