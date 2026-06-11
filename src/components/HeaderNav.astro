@@ -13,6 +13,9 @@ const NAV_ITEMS = [
 
 const shouldReloadNavItem = (href: string) => Astro.url.pathname === '/' && href === '/boxeadores'
 
+const isActiveNavItem = (href: string) =>
+  Astro.url.pathname === href || Astro.url.pathname.startsWith(href + '/')
+
 const desktopColClass = 'flex flex-col items-center justify-center gap-1 px-3 sm:px-4'
 const desktopLabelClass =
   'relative inline-flex items-center font-cinzel text-[0.65rem] font-bold leading-none tracking-[0.25em] sm:text-xs'
@@ -53,8 +56,13 @@ const mobileLinkClass =
               <a
                 href={item.href}
                 data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
+                aria-current={isActiveNavItem(item.href) ? 'page' : undefined}
                 class:list={[desktopLabelClass, desktopLinkClass]}
               >
+                <span aria-hidden="true" class="pointer-events-none absolute top-1 left-1 size-2 border-t border-l border-theme-gold/0 transition duration-300 [a[aria-current=page]_&]:border-theme-gold/80" />
+                <span aria-hidden="true" class="pointer-events-none absolute top-1 right-1 size-2 border-t border-r border-theme-gold/0 transition duration-300 [a[aria-current=page]_&]:border-theme-gold/80" />
+                <span aria-hidden="true" class="pointer-events-none absolute bottom-1 left-1 size-2 border-b border-l border-theme-gold/0 transition duration-300 [a[aria-current=page]_&]:border-theme-gold/80" />
+                <span aria-hidden="true" class="pointer-events-none absolute bottom-1 right-1 size-2 border-b border-r border-theme-gold/0 transition duration-300 [a[aria-current=page]_&]:border-theme-gold/80" />
                 <span aria-hidden="true" class={desktopUnderlineClass} />
                 {item.label}
               </a>
@@ -82,6 +90,7 @@ const mobileLinkClass =
               <a
                 href={item.href}
                 data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
+                aria-current={isActiveNavItem(item.href) ? 'page' : undefined}
                 data-mobile-menu-link
                 class={mobileLinkClass}
               >
@@ -94,3 +103,16 @@ const mobileLinkClass =
     </nav>
   )
 }
+
+<style>
+  a[aria-current='page'] {
+    color: var(--color-theme-cream);
+    padding: 0.6rem 1.1rem;
+  }
+
+  /* Enlace activo en mobile: borde dorado más vivo. */
+  a[aria-current='page'].flex {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 75%, transparent);
+    color: var(--color-theme-cream);
+  }
+</style>
