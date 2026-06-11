@@ -1,5 +1,5 @@
-import { auth } from "@/lib/auth"
-import { defineMiddleware } from "astro:middleware"
+import { auth } from '@/lib/auth'
+import { defineMiddleware } from 'astro:middleware'
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const session = await auth.api.getSession({

@@ -37,9 +37,6 @@
     overscroll-behavior-y: none;
   }
 
-  
-
-
   html {
     scrollbar-gutter: stable;
     background: var(--color-theme-midnight);
@@ -282,28 +279,27 @@ html {
   mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
 }
 
-
 body:has(dialog[open]) {
-    overflow: hidden;
+  overflow: hidden;
 
-      .overlay{
-          display: block;
-      }
- }
-
+  .overlay {
+    display: block;
+  }
+}
 
 dialog {
-    scale: 0;
+  scale: 0;
 
-    transition: scale .4s ease, display .4s ease allow-discrete;
+  transition:
+    scale 0.4s ease,
+    display 0.4s ease allow-discrete;
 
-    &[open] {
-        scale: 1;
-        display: flex;
+  &[open] {
+    scale: 1;
+    display: flex;
 
-        @starting-style {
-            scale: 0;
-        }
+    @starting-style {
+      scale: 0;
     }
-  
+  }
 }

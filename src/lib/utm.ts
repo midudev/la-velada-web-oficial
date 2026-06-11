@@ -29,13 +29,7 @@ const DEFAULT_CAMPAIGN = 'velada-vi'
  */
 export function withUtm(
   url: string,
-  {
-    source = DEFAULT_SOURCE,
-    medium,
-    campaign = DEFAULT_CAMPAIGN,
-    content,
-    term,
-  }: UtmParams = {}
+  { source = DEFAULT_SOURCE, medium, campaign = DEFAULT_CAMPAIGN, content, term }: UtmParams = {},
 ): string {
   try {
     const target = new URL(url)

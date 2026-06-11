@@ -117,10 +117,11 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       data-default-panel
       class="boxer-default-panel relative flex w-full flex-col items-center justify-start text-center"
     >
-      <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true"></div>
+      <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true">
+      </div>
 
       <div class="boxer-default-lockup flex w-full max-w-full flex-col items-center px-4">
-        <div class="animate-blurred-fade-in animate-delay-300 relative leading-none">
+        <div class="relative animate-blurred-fade-in leading-none animate-delay-300">
           <picture class="block">
             <source srcset="/logo.avif" type="image/avif" />
             <source srcset="/logo.webp" type="image/webp" />
@@ -136,58 +137,52 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           </picture>
         </div>
 
-      <ul
-        class="boxer-default-info boxer-default-info-spacing animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center gap-1"
-      >
-        <li class="flex items-baseline">
-          <time
-            datetime="2026-07-25"
-            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
-          >
-            25 DE JULIO
-          </time>
-        </li>
-        <li class="flex items-baseline">
-          <time
-            datetime="2026-07-25T20:00:00+02:00"
-            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
-          >
-            20:00H CET
-          </time>
-        </li>
-        <li class="flex items-baseline">
-          <span
-            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
-          >
-            <a
-              href="https://maps.app.goo.gl/73mfDNVvhK3Y5Kq66"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="relative inline-block
-                        after:content-[''] after:absolute after:left-0 after:-bottom-1
-                        after:h-[1px] after:w-full after:bg-current
-                        after:scale-x-0 after:origin-left
-                        after:transition-transform after:duration-300
-                        hover:after:scale-x-100 focus-visible:after:scale-x-100"
+        <ul
+          class="boxer-default-info boxer-default-info-spacing flex animate-fade-in-up flex-col items-center justify-center gap-1 animate-delay-500"
+        >
+          <li class="flex items-baseline">
+            <time
+              datetime="2026-07-25"
+              class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
             >
-              ESTADIO DE LA CARTUJA, SEVILLA
-            </a>
-          </span>
-        </li>
+              25 DE JULIO
+            </time>
+          </li>
+          <li class="flex items-baseline">
+            <time
+              datetime="2026-07-25T20:00:00+02:00"
+              class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
+            >
+              20:00H CET
+            </time>
+          </li>
+          <li class="flex items-baseline">
+            <span
+              class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
+            >
+              <a
+                href="https://maps.app.goo.gl/73mfDNVvhK3Y5Kq66"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="relative inline-block after:absolute after:-bottom-1 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100 focus-visible:after:scale-x-100"
+              >
+                ESTADIO DE LA CARTUJA, SEVILLA
+              </a>
+            </span>
+          </li>
         </ul>
       </div>
-
     </div>
 
     <div
       data-boxer-panel
       aria-hidden="true"
-      class="boxer-panel relative flex w-full flex-col items-center -mb-10"
+      class="boxer-panel relative -mb-10 flex w-full flex-col items-center"
     >
       <span
         aria-hidden="true"
         data-active-watermark
-        class="boxer-watermark pointer-events-none absolute left-1/2 top-2 z-0 w-screen -translate-x-1/2 select-none overflow-hidden font-cinzel text-[18vw] font-black leading-[0.85] tracking-[-0.04em] text-theme-cream sm:text-[14vw] md:top-4 md:text-[11rem] lg:text-[13rem]"
+        class="boxer-watermark pointer-events-none absolute top-2 left-1/2 z-0 w-screen -translate-x-1/2 overflow-hidden font-cinzel text-[18vw] leading-[0.85] font-black tracking-[-0.04em] text-theme-cream select-none sm:text-[14vw] md:top-4 md:text-[11rem] lg:text-[13rem]"
       >
         <span class="boxer-watermark-track">
           {
@@ -202,18 +197,12 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         </span>
       </span>
 
-      <div class="boxer-portrait-layer pointer-events-none relative z-10 flex min-h-0 w-full flex-1 items-end justify-center">
+      <div
+        class="boxer-portrait-layer pointer-events-none relative z-10 flex min-h-0 w-full flex-1 items-end justify-center"
+      >
         <picture class="boxer-portrait-wrap relative block h-full">
-          <source
-            data-active-source-avif
-            type="image/avif"
-            srcset={fallbackHero.avif}
-          />
-          <source
-            data-active-source-webp
-            type="image/webp"
-            srcset={fallbackHero.webp}
-          />
+          <source data-active-source-avif type="image/avif" srcset={fallbackHero.avif} />
+          <source data-active-source-webp type="image/webp" srcset={fallbackHero.webp} />
           <img
             data-active-image
             src={fallbackHero.webp}
@@ -222,19 +211,23 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
             decoding="async"
             fetchpriority="high"
           />
-          {/*
+          {
+            /*
             La capa de la imagen se posiciona por CSS como absolute para
             poder extenderse por debajo del stage, hasta la franja de
             selección, sin mover el resto de elementos del panel.
-          */}
+          */
+          }
         </picture>
       </div>
 
       <div class="relative z-20 -mt-4 flex flex-col items-center sm:-mt-6 md:-mt-8 lg:-mt-10">
         <h2
           data-active-name
-          class="boxer-name relative font-cinzel text-3xl font-black leading-none tracking-[0.08em] text-theme-cream sm:text-5xl md:text-6xl lg:text-7xl"
-        >{fallback.name}</h2>
+          class="boxer-name relative font-cinzel text-3xl leading-none font-black tracking-[0.08em] text-theme-cream sm:text-5xl md:text-6xl lg:text-7xl"
+        >
+          {fallback.name}
+        </h2>
 
         <p
           class="boxer-country mt-1 flex items-center gap-x-2 font-cinzel text-[0.6rem] font-bold tracking-[0.3em] text-theme-cream sm:mt-1.5 sm:text-[0.7rem] md:mt-2 md:text-xs"
@@ -255,7 +248,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     </div>
   </div>
 
-  <div class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-4 md:gap-6">
+  <div
+    class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-4 md:gap-6"
+  >
     <div
       class="boxer-cta-bar relative z-20 flex w-full flex-col items-center gap-3 px-4 pt-2 transition-opacity duration-300 ease-out md:gap-4 md:pt-4"
     >
@@ -268,139 +263,141 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         <span class="h-px w-10 bg-linear-to-l from-transparent to-theme-gold/55 sm:w-20"></span>
       </div>
 
-      <p class="boxer-default-cta mb-2 text-center font-cinzel text-sm font-bold tracking-[0.3em] text-theme-cream sm:text-base">
+      <p
+        class="boxer-default-cta mb-2 text-center font-cinzel text-sm font-bold tracking-[0.3em] text-theme-cream sm:text-base"
+      >
         ¡SELECCIONA TU BOXEADOR O BOXEADORA!
       </p>
     </div>
 
     <div class="boxer-grid-frame relative z-10 w-full">
-    <div class="boxer-mobile-slider-shell md:hidden">
-      <div
-        class="boxer-mobile-slider"
-        data-mobile-slider
-        aria-label="Carrusel de boxeadores. Desliza horizontalmente y pulsa uno para ver su perfil"
-      >
-        <div class="boxer-mobile-track" data-mobile-track>
-          {
-            MOBILE_SLIDER_SETS.flatMap((setName) =>
-              positionedBoxers.map(({ boxer }, index) => {
-                const selectImages = getBoxerSelectImages(boxer)
-                const isAccessibleSet = setName === 'current'
+      <div class="boxer-mobile-slider-shell md:hidden">
+        <div
+          class="boxer-mobile-slider"
+          data-mobile-slider
+          aria-label="Carrusel de boxeadores. Desliza horizontalmente y pulsa uno para ver su perfil"
+        >
+          <div class="boxer-mobile-track" data-mobile-track>
+            {
+              MOBILE_SLIDER_SETS.flatMap((setName) =>
+                positionedBoxers.map(({ boxer }, index) => {
+                  const selectImages = getBoxerSelectImages(boxer)
+                  const isAccessibleSet = setName === 'current'
 
-                return (
-                  <a
-                    href={`/boxeadores/${boxer.id}`}
-                    data-mobile-thumb
-                    data-mobile-slide
-                    data-mobile-set={setName}
-                    data-id={boxer.id}
-                    aria-label={`Ver perfil de ${boxer.name}`}
-                    aria-hidden={isAccessibleSet ? undefined : 'true'}
-                    tabindex={isAccessibleSet ? undefined : -1}
-                    class="boxer-mobile-slide group relative aspect-[3/4] shrink-0 snap-center overflow-hidden rounded-[1.1rem] border border-theme-gold/35 bg-theme-midnight outline-none"
-                    style={`animation-delay: ${650 + index * 20}ms`}
-                  >
-                    <picture>
-                      <source type="image/avif" srcset={selectImages.avif} />
-                      <source type="image/webp" srcset={selectImages.webp} />
-                      <img
-                        src={selectImages.webp}
-                        alt=""
-                        role="presentation"
-                        loading="lazy"
-                        decoding="async"
-                        width="180"
-                        height="240"
-                        data-mirrored={MIRRORED_BOXER_IDS.has(boxer.id) ? 'true' : 'false'}
-                        class="boxer-mobile-slide-img absolute inset-0 h-full w-full object-cover object-top transition duration-500 group-active:scale-[1.03]"
-                      />
-                    </picture>
-                    <span
-                      aria-hidden="true"
-                      class="boxer-mobile-slide-name-bar pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-center px-2 pb-2.5 pt-10"
+                  return (
+                    <a
+                      href={`/boxeadores/${boxer.id}`}
+                      data-mobile-thumb
+                      data-mobile-slide
+                      data-mobile-set={setName}
+                      data-id={boxer.id}
+                      aria-label={`Ver perfil de ${boxer.name}`}
+                      aria-hidden={isAccessibleSet ? undefined : 'true'}
+                      tabindex={isAccessibleSet ? undefined : -1}
+                      class="boxer-mobile-slide group relative aspect-[3/4] shrink-0 snap-center overflow-hidden rounded-[1.1rem] border border-theme-gold/35 bg-theme-midnight outline-none"
+                      style={`animation-delay: ${650 + index * 20}ms`}
                     >
-                      <span class="boxer-mobile-slide-name font-cinzel text-[0.66rem] font-bold uppercase leading-[1.05] tracking-[0.16em] text-theme-cream text-balance">
-                        {boxer.name}
+                      <picture>
+                        <source type="image/avif" srcset={selectImages.avif} />
+                        <source type="image/webp" srcset={selectImages.webp} />
+                        <img
+                          src={selectImages.webp}
+                          alt=""
+                          role="presentation"
+                          loading="lazy"
+                          decoding="async"
+                          width="180"
+                          height="240"
+                          data-mirrored={MIRRORED_BOXER_IDS.has(boxer.id) ? 'true' : 'false'}
+                          class="boxer-mobile-slide-img absolute inset-0 h-full w-full object-cover object-top transition duration-500 group-active:scale-[1.03]"
+                        />
+                      </picture>
+                      <span
+                        aria-hidden="true"
+                        class="boxer-mobile-slide-name-bar pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-center px-2 pt-10 pb-2.5"
+                      >
+                        <span class="boxer-mobile-slide-name font-cinzel text-[0.66rem] leading-[1.05] font-bold tracking-[0.16em] text-balance text-theme-cream uppercase">
+                          {boxer.name}
+                        </span>
                       </span>
-                    </span>
-                  </a>
-                )
-              }),
-            )
-          }
+                    </a>
+                  )
+                }),
+              )
+            }
+          </div>
         </div>
       </div>
-    </div>
 
-    <div
-      data-boxer-grid
-      class="boxer-grid hidden md:grid md:grid-cols-8 md:grid-rows-3 lg:grid-cols-10 lg:grid-rows-2"
-      aria-label="Lista de boxeadores. Pulsa uno para ver su perfil"
-    >
-      {
-        positionedBoxers.map(
-          (
-            {
-              boxer,
-              opponentId,
-              colMobile,
-              rowMobile,
-              colTablet,
-              rowTablet,
-              colDesktop,
-              rowDesktop,
-            },
-            index,
-          ) => {
-            const countryName = COUNTRY_NAMES[boxer.country] ?? boxer.country
-            const selectImages = getBoxerSelectImages(boxer)
-            const heroImages = getBoxerHeroImages(boxer)
-            return (
-              <a
-                href={`/boxeadores/${boxer.id}`}
-                data-thumb
-                data-id={boxer.id}
-                data-opponent-id={opponentId}
-                data-name={boxer.name}
-                data-photo-avif={heroImages.avif}
-                data-photo-webp={heroImages.webp}
-                data-country-code={boxer.country}
-                data-country={countryName}
-                aria-label={`Ver perfil de ${boxer.name}`}
-                data-active="false"
-                class="boxer-cell animate-fade-in group relative aspect-square cursor-pointer overflow-hidden focus-visible:outline-none"
-                style={`--col-mobile: ${colMobile}; --row-mobile: ${rowMobile}; --col-tablet: ${colTablet}; --row-tablet: ${rowTablet}; --col-desktop: ${colDesktop}; --row-desktop: ${rowDesktop}; animation-delay: ${1000 + index * 25}ms`}
-                tabindex={index === 0 ? 0 : -1}
-              >
-                <picture>
-                  <source type="image/avif" srcset={selectImages.avif} />
-                  <source type="image/webp" srcset={selectImages.webp} />
-                  <img
-                    src={selectImages.webp}
-                    alt=""
-                    role="presentation"
-                    loading="lazy"
-                    decoding="async"
-                    width="160"
-                    height="160"
-                    data-mirrored={MIRRORED_BOXER_IDS.has(boxer.id) ? 'true' : 'false'}
-                    class="boxer-thumb-img absolute inset-0 h-full w-full object-cover object-top group-hover:scale-[1.05] group-focus-visible:scale-[1.05]"
-                  />
-                </picture>
-                <span
-                  aria-hidden="true"
-                  class="boxer-thumb-name-bar pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-center px-1 pb-1 pt-4 sm:px-1.5 sm:pb-1.5 sm:pt-5"
+      <div
+        data-boxer-grid
+        class="boxer-grid hidden md:grid md:grid-cols-8 md:grid-rows-3 lg:grid-cols-10 lg:grid-rows-2"
+        aria-label="Lista de boxeadores. Pulsa uno para ver su perfil"
+      >
+        {
+          positionedBoxers.map(
+            (
+              {
+                boxer,
+                opponentId,
+                colMobile,
+                rowMobile,
+                colTablet,
+                rowTablet,
+                colDesktop,
+                rowDesktop,
+              },
+              index,
+            ) => {
+              const countryName = COUNTRY_NAMES[boxer.country] ?? boxer.country
+              const selectImages = getBoxerSelectImages(boxer)
+              const heroImages = getBoxerHeroImages(boxer)
+              return (
+                <a
+                  href={`/boxeadores/${boxer.id}`}
+                  data-thumb
+                  data-id={boxer.id}
+                  data-opponent-id={opponentId}
+                  data-name={boxer.name}
+                  data-photo-avif={heroImages.avif}
+                  data-photo-webp={heroImages.webp}
+                  data-country-code={boxer.country}
+                  data-country={countryName}
+                  aria-label={`Ver perfil de ${boxer.name}`}
+                  data-active="false"
+                  class="boxer-cell group relative aspect-square animate-fade-in cursor-pointer overflow-hidden focus-visible:outline-none"
+                  style={`--col-mobile: ${colMobile}; --row-mobile: ${rowMobile}; --col-tablet: ${colTablet}; --row-tablet: ${rowTablet}; --col-desktop: ${colDesktop}; --row-desktop: ${rowDesktop}; animation-delay: ${1000 + index * 25}ms`}
+                  tabindex={index === 0 ? 0 : -1}
                 >
-                  <span class="boxer-thumb-name font-cinzel text-[0.5rem] font-bold uppercase leading-[1.05] tracking-[0.14em] text-theme-cream text-balance sm:text-[0.6rem] md:text-[0.7rem]">
-                    {boxer.name}
+                  <picture>
+                    <source type="image/avif" srcset={selectImages.avif} />
+                    <source type="image/webp" srcset={selectImages.webp} />
+                    <img
+                      src={selectImages.webp}
+                      alt=""
+                      role="presentation"
+                      loading="lazy"
+                      decoding="async"
+                      width="160"
+                      height="160"
+                      data-mirrored={MIRRORED_BOXER_IDS.has(boxer.id) ? 'true' : 'false'}
+                      class="boxer-thumb-img absolute inset-0 h-full w-full object-cover object-top group-hover:scale-[1.05] group-focus-visible:scale-[1.05]"
+                    />
+                  </picture>
+                  <span
+                    aria-hidden="true"
+                    class="boxer-thumb-name-bar pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-center px-1 pt-4 pb-1 sm:px-1.5 sm:pt-5 sm:pb-1.5"
+                  >
+                    <span class="boxer-thumb-name font-cinzel text-[0.5rem] leading-[1.05] font-bold tracking-[0.14em] text-balance text-theme-cream uppercase sm:text-[0.6rem] md:text-[0.7rem]">
+                      {boxer.name}
+                    </span>
                   </span>
-                </span>
-              </a>
-            )
-          },
-        )
-      }
-    </div>
+                </a>
+              )
+            },
+          )
+        }
+      </div>
     </div>
   </div>
 </section>
@@ -471,20 +468,18 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   .boxer-default-logo {
-    filter:
-      drop-shadow(0 12px 30px color-mix(in srgb, var(--color-theme-gold) 22%, transparent))
+    filter: drop-shadow(0 12px 30px color-mix(in srgb, var(--color-theme-gold) 22%, transparent))
       drop-shadow(0 2px 0 rgba(0, 0, 0, 0.25));
     animation: boxer-default-logo-float 6s ease-in-out infinite;
   }
 
   .boxer-default-aura {
     /* Halo dorado sutil detrás del logo, en línea con el del boxeador */
-    background:
-      radial-gradient(
-        ellipse 55% 45% at 50% 38%,
-        color-mix(in srgb, var(--color-theme-gold) 22%, transparent) 0%,
-        transparent 70%
-      );
+    background: radial-gradient(
+      ellipse 55% 45% at 50% 38%,
+      color-mix(in srgb, var(--color-theme-gold) 22%, transparent) 0%,
+      transparent 70%
+    );
     mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   }
 
@@ -547,8 +542,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       0 0 28px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
     opacity: 0;
     animation:
-      boxer-default-cta-fade-in 700ms cubic-bezier(0.16, 1, 0.3, 1) 1500ms
-        forwards,
+      boxer-default-cta-fade-in 700ms cubic-bezier(0.16, 1, 0.3, 1) 1500ms forwards,
       boxer-default-cta-pulse 2.4s ease-in-out 2300ms infinite;
   }
 
@@ -564,7 +558,8 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   @keyframes boxer-default-cta-pulse {
-    0%, 100% {
+    0%,
+    100% {
       filter: brightness(1);
     }
     50% {
@@ -582,8 +577,13 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   @keyframes boxer-default-logo-float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
   }
 
   .boxer-watermark {
@@ -604,13 +604,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       0 0 24px color-mix(in srgb, var(--color-theme-gold) 14%, transparent),
       0 1px 0 color-mix(in srgb, var(--color-theme-cream) 3%, transparent);
 
-    mask-image: linear-gradient(
-      180deg,
-      transparent 0%,
-      #000 28%,
-      #000 65%,
-      transparent 100%
-    );
+    mask-image: linear-gradient(180deg, transparent 0%, #000 28%, #000 65%, transparent 100%);
 
     transition: opacity 400ms ease;
   }
@@ -646,9 +640,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
       0 2px 18px color-mix(in srgb, var(--color-theme-gold) 55%, transparent),
       0 6px 40px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
-    filter:
-      drop-shadow(0 2px 2px rgba(0, 0, 0, 0.78))
-      drop-shadow(0 0 10px rgba(0, 0, 0, 0.58));
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.78)) drop-shadow(0 0 10px rgba(0, 0, 0, 0.58));
     background: linear-gradient(
       180deg,
       var(--color-theme-cream) 0%,
@@ -926,12 +918,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   .boxer-cell::after {
     /* Acento rojo sangre: visible cuando este boxer es el contrincante
        del activo. */
-    background: radial-gradient(
-      ellipse 90% 90% at 50% 35%,
-      #c63030 0%,
-      #9c1f1f 50%,
-      #5a1414 100%
-    );
+    background: radial-gradient(ellipse 90% 90% at 50% 35%, #c63030 0%, #9c1f1f 50%, #5a1414 100%);
   }
 
   /* La imagen va sobre los pseudo-elementos para que el recorte del
@@ -1044,22 +1031,30 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       0 0 14px 0 color-mix(in srgb, #c63030 45%, transparent);
   }
 
-  .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(:focus-visible)::after {
+  .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(
+      :focus-visible
+    )::after {
     opacity: 1;
   }
 
-  .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(:focus-visible) .boxer-thumb-img {
+  .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(:focus-visible)
+    .boxer-thumb-img {
     opacity: 1;
     filter: saturate(1.05);
   }
 
-  .boxer-cell:not([data-active='true']):not([data-opponent='true']):not(:hover):not(:focus-visible) .boxer-thumb-img {
+  .boxer-cell:not([data-active='true']):not([data-opponent='true']):not(:hover):not(:focus-visible)
+    .boxer-thumb-img {
     opacity: 0.85;
   }
 
   /* Cuando hay un boxeador seleccionado/hover, atenuamos los thumbs que no
      son ni el activo ni el contrincante para resaltar el combate. */
-  [data-boxer-selector][data-state='boxer'] .boxer-cell:not([data-active='true']):not([data-opponent='true']):not(:hover):not(:focus-visible) .boxer-thumb-img {
+  [data-boxer-selector][data-state='boxer']
+    .boxer-cell:not([data-active='true']):not([data-opponent='true']):not(:hover):not(
+      :focus-visible
+    )
+    .boxer-thumb-img {
     opacity: 0.55;
   }
 
@@ -1117,9 +1112,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     if (!slider || !track || slider.dataset.initialized === 'true') return
 
     const slides = Array.from($$<HTMLElement>('[data-mobile-slide]', track))
-    const realSlideCount = slides.filter(
-      (slide) => slide.dataset.mobileSet === 'current',
-    ).length
+    const realSlideCount = slides.filter((slide) => slide.dataset.mobileSet === 'current').length
     if (slides.length < 2 || realSlideCount === 0) return
 
     slider.dataset.initialized = 'true'
@@ -1185,19 +1178,11 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     setupMobileInfiniteSlider(root)
 
     const image = $<HTMLImageElement>('[data-active-image]', root)
-    const sourceAvif = $<HTMLSourceElement>(
-      '[data-active-source-avif]',
-      root,
-    )
-    const sourceWebp = $<HTMLSourceElement>(
-      '[data-active-source-webp]',
-      root,
-    )
+    const sourceAvif = $<HTMLSourceElement>('[data-active-source-avif]', root)
+    const sourceWebp = $<HTMLSourceElement>('[data-active-source-webp]', root)
     const nameNode = $<HTMLElement>('[data-active-name]', root)
     const watermark = $<HTMLElement>('[data-active-watermark]', root)
-    const watermarkTexts = Array.from(
-      $$<HTMLElement>('[data-active-watermark-text]', root),
-    )
+    const watermarkTexts = Array.from($$<HTMLElement>('[data-active-watermark-text]', root))
     const flagNode = $<HTMLImageElement>('[data-active-flag]', root)
     const countryNode = $<HTMLElement>('[data-active-country-name]', root)
     const defaultPanel = $<HTMLElement>('[data-default-panel]', root)
@@ -1214,10 +1199,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       (window as Window & { requestIdleCallback?: (cb: () => void) => number })
         .requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 800))
     void (async () => {
-      const [avifOk, webpOk] = await Promise.all([
-        detectFormat(AVIF_TEST),
-        detectFormat(WEBP_TEST),
-      ])
+      const [avifOk, webpOk] = await Promise.all([detectFormat(AVIF_TEST), detectFormat(WEBP_TEST)])
       const formats = { avif: avifOk, webp: webpOk }
       idle(() => {
         thumbs.forEach((btn) => {
@@ -1367,10 +1349,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           return
         }
 
-        const thumbImg = $<HTMLImageElement>(
-          '.boxer-thumb-img',
-          thumb,
-        )
+        const thumbImg = $<HTMLImageElement>('.boxer-thumb-img', thumb)
         if (thumbImg) {
           thumbImg.style.viewTransitionName = `boxer-hero-${id}`
         }
@@ -1382,10 +1361,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         const id = thumb.dataset.id
         if (!id) return
 
-        const thumbImg = $<HTMLImageElement>(
-          '.boxer-mobile-slide-img',
-          thumb,
-        )
+        const thumbImg = $<HTMLImageElement>('.boxer-mobile-slide-img', thumb)
         if (thumbImg) {
           thumbImg.style.viewTransitionName = `boxer-hero-${id}`
         }
@@ -1395,10 +1371,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     // Al salir con el ratón del grid, volvemos al estado por defecto,
     // salvo que haya un thumb con foco de teclado.
     grid.addEventListener('mouseleave', () => {
-      const keyboardFocused = $<HTMLElement>(
-        '[data-thumb]:focus-visible',
-        root,
-      )
+      const keyboardFocused = $<HTMLElement>('[data-thumb]:focus-visible', root)
       if (keyboardFocused) return
       showDefault()
     })

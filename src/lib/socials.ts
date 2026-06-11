@@ -42,7 +42,9 @@ const SOCIAL_LABELS: Record<string, string> = {
 
 /** Nombre legible de cada plataforma para usar en UI/aria-labels. */
 export function getSocialLabel(platform: string): string {
-  return SOCIAL_LABELS[platform.toLowerCase()] ?? platform.charAt(0).toUpperCase() + platform.slice(1)
+  return (
+    SOCIAL_LABELS[platform.toLowerCase()] ?? platform.charAt(0).toUpperCase() + platform.slice(1)
+  )
 }
 
 /** Devuelve el valor a mostrar (followers o monthlyListeners). */

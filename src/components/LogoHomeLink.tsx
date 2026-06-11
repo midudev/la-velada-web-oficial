@@ -1,11 +1,5 @@
 import { useId, useSyncExternalStore, type ReactNode } from 'react'
-import {
-  LazyMotion,
-  domAnimation,
-  m,
-  useReducedMotion,
-  type Transition,
-} from 'motion/react'
+import { LazyMotion, domAnimation, m, useReducedMotion, type Transition } from 'motion/react'
 
 const crest = {
   viewBox: '0 0 303 303',

@@ -87,19 +87,19 @@ const { user } = Astro.props
 }
 
 <script>
-  import { createAuthClient } from "better-auth/client"
+  import { createAuthClient } from 'better-auth/client'
 
   const authClient = createAuthClient()
 
-  document.getElementById("sign-in-twitch-btn")?.addEventListener("click", () => {
-    authClient.signIn.social({ provider: "twitch", callbackURL: "/pronosticos" })
+  document.getElementById('sign-in-twitch-btn')?.addEventListener('click', () => {
+    authClient.signIn.social({ provider: 'twitch', callbackURL: '/pronosticos' })
   })
 
-  document.getElementById("sign-in-google-btn")?.addEventListener("click", () => {
-    authClient.signIn.social({ provider: "google", callbackURL: "/pronosticos" })
+  document.getElementById('sign-in-google-btn')?.addEventListener('click', () => {
+    authClient.signIn.social({ provider: 'google', callbackURL: '/pronosticos' })
   })
 
-  document.getElementById("sign-out-btn")?.addEventListener("click", async () => {
+  document.getElementById('sign-out-btn')?.addEventListener('click', async () => {
     await authClient.signOut()
     window.location.reload()
   })

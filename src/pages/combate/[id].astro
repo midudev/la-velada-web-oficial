@@ -3,11 +3,7 @@ import type { GetStaticPaths } from 'astro'
 
 import CountryFlag from '@/components/CountryFlag.astro'
 import { battles, battlesById } from '@/consts/battles'
-import {
-  BOXERS_BY_ID,
-  COUNTRY_NAMES,
-  getBoxerPhoto,
-} from '@/consts/boxers'
+import { BOXERS_BY_ID, COUNTRY_NAMES, getBoxerPhoto } from '@/consts/boxers'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
@@ -126,13 +122,15 @@ export const prerender = true
       </p>
       <h1
         id="battle-title"
-        class="mt-4 text-balance text-center font-fantasy text-6xl leading-[0.9] sm:text-8xl md:text-9xl"
+        class="mt-4 text-center font-fantasy text-6xl leading-[0.9] text-balance sm:text-8xl md:text-9xl"
       >
         {battle.title}
       </h1>
 
       <div class="mt-12 grid w-full gap-6 md:grid-cols-[1fr_auto_1fr] md:items-center">
-        <article class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center">
+        <article
+          class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center"
+        >
           <img
             src={getBoxerPhoto(boxer1)}
             alt={`Foto principal de ${boxer1.name}`}
@@ -143,17 +141,24 @@ export const prerender = true
             decoding="async"
           />
           <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer1.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
+          <p
+            class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60"
+          >
             <CountryFlag country={boxer1.country} size={18} decorative />
             {COUNTRY_NAMES[boxer1.country]}
           </p>
         </article>
 
-        <span class="text-center font-fantasy text-7xl text-theme-gold md:text-8xl" aria-hidden="true">
+        <span
+          class="text-center font-fantasy text-7xl text-theme-gold md:text-8xl"
+          aria-hidden="true"
+        >
           VS
         </span>
 
-        <article class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center">
+        <article
+          class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center"
+        >
           <img
             src={getBoxerPhoto(boxer2)}
             alt={`Foto principal de ${boxer2.name}`}
@@ -164,7 +169,9 @@ export const prerender = true
             decoding="async"
           />
           <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer2.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
+          <p
+            class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60"
+          >
             <CountryFlag country={boxer2.country} size={18} decorative />
             {COUNTRY_NAMES[boxer2.country]}
           </p>

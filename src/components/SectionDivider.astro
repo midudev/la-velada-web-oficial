@@ -34,24 +34,13 @@ const sizes: Record<Size, { line: string; icon: string; gap: string }> = {
 const config = sizes[size]
 ---
 
-<div
-  class:list={['flex items-center justify-center', config.gap, className]}
-  aria-hidden="true"
->
-  <span
-    class:list={[
-      'h-px bg-linear-to-r from-transparent to-theme-gold/45',
-      config.line,
-    ]}></span>
+<div class:list={['flex items-center justify-center', config.gap, className]} aria-hidden="true">
+  <span class:list={['h-px bg-linear-to-r from-transparent to-theme-gold/45', config.line]}></span>
   <VeladaLogo
     class:list={[
       config.icon,
-      'shrink-0 text-theme-gold [&_path]:stroke-current [&_path]:stroke-[3] [&_path]:stroke-linejoin-round',
+      '[&_path]:stroke-linejoin-round shrink-0 text-theme-gold [&_path]:stroke-current [&_path]:stroke-[3]',
     ]}
   />
-  <span
-    class:list={[
-      'h-px bg-linear-to-l from-transparent to-theme-gold/45',
-      config.line,
-    ]}></span>
+  <span class:list={['h-px bg-linear-to-l from-transparent to-theme-gold/45', config.line]}></span>
 </div>

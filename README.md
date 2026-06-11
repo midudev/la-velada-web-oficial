@@ -92,14 +92,13 @@ La Velada VI es una competición de boxeo que enfrenta a streamers, creadores de
   ```
 
   </details>
-
-	- PNPM (es nuestra recomendación por su eficiencia y rapidez)
+  - PNPM (es nuestra recomendación por su eficiencia y rapidez)
 
   ```sh
   npm install -g pnpm
   ```
 
-	- o NPM
+  - o NPM
 
   ```sh
   npm install npm@latest -g
@@ -120,7 +119,6 @@ La Velada VI es una competición de boxeo que enfrenta a streamers, creadores de
    ```
 
 3. Ejecuta el proyecto
-
    - Base de datos remota (necesario linkear con proyecto de Astro Studio)
 
    ```sh

@@ -1,10 +1,12 @@
-import type { ImageMetadata, UnresolvedImageTransform } from "astro"
-import type { LocalImageProps, RemoteImageProps } from "astro:assets"
-import { getImage } from "astro:assets"
+import type { ImageMetadata, UnresolvedImageTransform } from 'astro'
+import type { LocalImageProps, RemoteImageProps } from 'astro:assets'
+import { getImage } from 'astro:assets'
 
 type ImagePromise = Promise<LocalImageProps['src'] | RemoteImageProps['src']>
 
-async function getExternalImageUrl(options: UnresolvedImageTransform): Promise<ImageMetadata | string> {
+async function getExternalImageUrl(
+  options: UnresolvedImageTransform,
+): Promise<ImageMetadata | string> {
   const externalImage = await getImage({
     ...options,
     inferSize: true,
@@ -14,16 +16,18 @@ async function getExternalImageUrl(options: UnresolvedImageTransform): Promise<I
 }
 
 async function getLocalImageUrl(imageUrl: string): Promise<ImageMetadata | string> {
-   // Get the image path list from the public folder
-   const images = import.meta.glob<{ default: ImageMetadata }>(
-    '../../public/images/**/*.{jpg,jpeg,png,webp,avif}'
+  // Get the image path list from the public folder
+  const images = import.meta.glob<{ default: ImageMetadata }>(
+    '../../public/images/**/*.{jpg,jpeg,png,webp,avif}',
   )
 
   // Remove the leading slash from the image path
   const sanitizedImagePath = imageUrl.replace(/^\//, '')
-  
+
   // Format the image path to be used in the import.meta.glob
-  const formattedImagePath = sanitizedImagePath.includes('../../public') ? sanitizedImagePath : `../../public/${sanitizedImagePath}`
+  const formattedImagePath = sanitizedImagePath.includes('../../public')
+    ? sanitizedImagePath
+    : `../../public/${sanitizedImagePath}`
 
   // Get image object from the import.meta.glob
   const imageObject = await images[formattedImagePath as keyof typeof images]()
@@ -41,7 +45,8 @@ export async function getOptimizedImageUrl(options: UnresolvedImageTransform): I
   }
 
   // Check if the image path is an external image, if so, return the image Url
-  const isExternalImage = typeof imageObjectOrUrl === 'string' && imageObjectOrUrl.startsWith('http')
+  const isExternalImage =
+    typeof imageObjectOrUrl === 'string' && imageObjectOrUrl.startsWith('http')
   if (isExternalImage) return await getExternalImageUrl(options)
 
   // Return the local image object

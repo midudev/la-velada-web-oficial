@@ -7,14 +7,17 @@ type ImageObjectOrUrl = Awaited<LocalImageProps['src']> | Awaited<RemoteImagePro
 type ImagePromise = Promise<LocalImageProps['src'] | RemoteImageProps['src']>
 
 export async function getBlurredImageUrl(imageObjectOrUrl: ImageObjectOrUrl): ImagePromise {
-    const imageUrl = typeof imageObjectOrUrl === 'string' ? imageObjectOrUrl : (imageObjectOrUrl as ImageMetadata).src
-    const normalizedImageUrl = imageUrl.replace(/\//g, '\\')
+  const imageUrl =
+    typeof imageObjectOrUrl === 'string'
+      ? imageObjectOrUrl
+      : (imageObjectOrUrl as ImageMetadata).src
+  const normalizedImageUrl = imageUrl.replace(/\//g, '\\')
 
-    const blurKey = Object.keys(blurPlaceholders).find((key) => normalizedImageUrl.includes(key))
+  const blurKey = Object.keys(blurPlaceholders).find((key) => normalizedImageUrl.includes(key))
 
-    if (blurKey) {
-      return blurPlaceholders[blurKey as keyof typeof blurPlaceholders].placeholder
-    }
-    
-    return getOptimizedImageUrl({ src: imageUrl, inferSize: true, width: 10, format: 'webp' })
+  if (blurKey) {
+    return blurPlaceholders[blurKey as keyof typeof blurPlaceholders].placeholder
+  }
+
+  return getOptimizedImageUrl({ src: imageUrl, inferSize: true, width: 10, format: 'webp' })
 }

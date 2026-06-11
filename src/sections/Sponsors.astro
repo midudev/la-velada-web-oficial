@@ -200,7 +200,7 @@ const SPONSORS: Sponsor[] = [
               width,
               height,
             },
-            index
+            index,
           ) => (
             <a
               href={withUtm(url, { medium: 'promo_banner', content: slug })}
@@ -208,7 +208,7 @@ const SPONSORS: Sponsor[] = [
               rel="sponsored noopener noreferrer"
               aria-label={label}
               title={name}
-              class="promo-banner group relative block w-full overflow-hidden rounded-md bg-black shadow-[0_14px_40px_rgba(0,0,0,0.3)] ring-1 ring-white/10 outline-none transition duration-500 animate-fade-in-up hover:-translate-y-1 hover:ring-theme-gold/45 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+              class="promo-banner group relative block w-full animate-fade-in-up overflow-hidden rounded-md bg-black shadow-[0_14px_40px_rgba(0,0,0,0.3)] ring-1 ring-white/10 transition duration-500 outline-none hover:-translate-y-1 hover:ring-theme-gold/45 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               style={`animation-delay:${850 + index * 90}ms`}
             >
               <picture>
@@ -227,7 +227,7 @@ const SPONSORS: Sponsor[] = [
                 />
               </picture>
             </a>
-          )
+          ),
         )
       }
     </div>
@@ -243,7 +243,7 @@ const SPONSORS: Sponsor[] = [
                 rel="sponsored noopener noreferrer"
                 aria-label={label}
                 title={name}
-                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white outline-none transition duration-500 hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white transition duration-500 outline-none hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               >
                 <span
                   aria-hidden="true"
@@ -259,7 +259,7 @@ const SPONSORS: Sponsor[] = [
                 />
                 <span
                   aria-hidden="true"
-                  class="pointer-events-none absolute bottom-1.5 right-1.5 size-2.5 border-b border-r border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:bottom-2 sm:right-2 sm:size-3"
+                  class="pointer-events-none absolute right-1.5 bottom-1.5 size-2.5 border-r border-b border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:right-2 sm:bottom-2 sm:size-3"
                 />
 
                 <Logo
@@ -277,7 +277,6 @@ const SPONSORS: Sponsor[] = [
         }
       </ul>
     </div>
-
   </div>
 </section>
 

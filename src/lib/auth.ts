@@ -1,4 +1,4 @@
-import { betterAuth } from "better-auth"
+import { betterAuth } from 'better-auth'
 
 export const auth = betterAuth({
   secret: import.meta.env.BETTER_AUTH_SECRET,

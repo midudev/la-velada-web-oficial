@@ -33,10 +33,10 @@ Closes #
 
 <!-- Delete if not applicable. -->
 
-| View | Before | After |
-|------|--------|-------|
-| Mobile | | |
-| Desktop | | |
+| View    | Before | After |
+| ------- | ------ | ----- |
+| Mobile  |        |       |
+| Desktop |        |       |
 
 ## Checklist
 

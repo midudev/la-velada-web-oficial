@@ -31,6 +31,4 @@ const buffers = await Promise.all(
 const ico = await pngToIco(buffers)
 await writeFile(OUTPUT_ICO, ico)
 
-console.log(
-  `Generado ${path.relative(ROOT, OUTPUT_ICO)} con tamaños: ${SIZES.join(', ')} px`,
-)
+console.log(`Generado ${path.relative(ROOT, OUTPUT_ICO)} con tamaños: ${SIZES.join(', ')} px`)

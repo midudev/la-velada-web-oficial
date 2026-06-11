@@ -7,7 +7,7 @@ import HeaderNav from '@/components/HeaderNav.astro'
   data-header
   class:list={[
     'fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent transition-[background-color,backdrop-filter,border-color] duration-500 ease-out',
-    'data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:backdrop-saturate-150 data-[scrolled=true]:backdrop-contrast-125',
+    'data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:backdrop-contrast-125 data-[scrolled=true]:backdrop-saturate-150',
   ]}
 >
   <div
@@ -15,7 +15,7 @@ import HeaderNav from '@/components/HeaderNav.astro'
   >
     <LogoHomeLink client:visible>
       <span
-        class="hidden font-cinzel text-[0.6rem] font-bold leading-none tracking-[0.32em] text-theme-cream/85 sm:inline sm:text-xs"
+        class="hidden font-cinzel text-[0.6rem] leading-none font-bold tracking-[0.32em] text-theme-cream/85 sm:inline sm:text-xs"
       >
         LA VELADA <span class="text-theme-gold">VI</span>
       </span>
@@ -27,7 +27,7 @@ import HeaderNav from '@/components/HeaderNav.astro'
       type="button"
       data-mobile-menu-button
       class:list={[
-        'group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] outline-none backdrop-blur-md backdrop-saturate-150 backdrop-contrast-125 transition duration-300 hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden',
+        'group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] backdrop-blur-md backdrop-contrast-125 backdrop-saturate-150 transition duration-300 outline-none hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden',
       ]}
       aria-controls="mobile-menu"
       aria-expanded="false"
@@ -55,13 +55,14 @@ import HeaderNav from '@/components/HeaderNav.astro'
     aria-hidden="true"
     inert
     class:list={[
-      'fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl backdrop-saturate-150 backdrop-contrast-125 transition duration-300 ease-out pointer-events-none data-[open=true]:translate-y-0 data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto md:hidden',
+      'pointer-events-none fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-150 transition duration-300 ease-out data-[open=true]:pointer-events-auto data-[open=true]:translate-y-0 data-[open=true]:opacity-100 md:hidden',
     ]}
   >
     <div
       aria-hidden="true"
       class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_50%_0%,color-mix(in_srgb,var(--color-theme-gold)_18%,transparent),transparent_62%)]"
-    ></div>
+    >
+    </div>
     <HeaderNav variant="mobile" />
   </div>
 </header>
