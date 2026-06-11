@@ -64,6 +64,7 @@ const controllerConfig = JSON.stringify({
   let predictionsAbort: AbortController | null = null
   let nextVoteRequestId = 0
   const latestVoteRequestByBattle = new Map<string, number>()
+  const voteBarAnimationTimeouts = new WeakMap<HTMLElement, number>()
 
   const compactFormatter = new Intl.NumberFormat('es-ES', {
     notation: 'compact',
@@ -121,6 +122,7 @@ const controllerConfig = JSON.stringify({
   function writeOptionPrediction(option: HTMLButtonElement, votes: number, percentage: number) {
     const safeVotes = Math.max(0, votes)
     const safePercentage = Math.max(0, Math.min(100, percentage))
+    const previousPercentage = readVotePercentage(option)
     const percentNode = $<HTMLElement>('[data-prediction-percent]', option)
     const votesNode = $<HTMLElement>('[data-prediction-votes]', option)
 
@@ -129,6 +131,17 @@ const controllerConfig = JSON.stringify({
     option.style.setProperty('--vote-share', `${safePercentage.toFixed(2)}%`)
     if (percentNode) percentNode.textContent = formatPercent(safePercentage)
     if (votesNode) votesNode.textContent = formatSupport(safeVotes)
+
+    if (Math.abs(previousPercentage - safePercentage) > 0.05 && !prefersReducedMotion()) {
+      window.clearTimeout(voteBarAnimationTimeouts.get(option))
+      option.dataset.voteChanging = safePercentage > previousPercentage ? 'up' : 'down'
+
+      const timeoutId = window.setTimeout(() => {
+        delete option.dataset.voteChanging
+      }, 960)
+
+      voteBarAnimationTimeouts.set(option, timeoutId)
+    }
   }
 
   function createFightSnapshot(battleId: string): PredictionFightSnapshot | null {
