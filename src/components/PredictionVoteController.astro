@@ -251,7 +251,7 @@ const controllerConfig = JSON.stringify({
     const leaderPercentage = leader ? readVotePercentage(leader) : 0
     const favoriteName = leader?.dataset.boxerName
 
-    if (leader && favoriteName && leaderPercentage > 60) {
+    if (leader && favoriteName && leaderPercentage >= 60) {
       badge.textContent = `Favorito: ${favoriteName}`
       badge.classList.remove('prediction-badge-hot')
       badge.classList.add('prediction-badge-calm')
