@@ -137,7 +137,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         </div>
 
       <ul
-        class="boxer-default-info animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center gap-1 -mt-12"
+        class="boxer-default-info animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center gap-1 -mt-8 md:-mt-12"
       >
         <li class="flex items-baseline">
           <time
@@ -168,7 +168,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                         after:h-[1px] after:w-full after:bg-current
                         after:scale-x-0 after:origin-left
                         after:transition-transform after:duration-300
-                        hover:after:scale-x-100 focus-visible:after:scale-x-100"
+                        hover:after:scale-x-100 focus-visible:after:scale-x-100 px-4"
             >
               ESTADIO DE LA CARTUJA, SEVILLA
             </a>
@@ -255,7 +255,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     </div>
   </div>
 
-  <div class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-3">
+  <div class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-1.5 md:gap-3">
     <div
       class="boxer-cta-bar relative z-20 flex w-full flex-col items-center gap-3 px-4 pt-2 transition-opacity duration-300 ease-out md:gap-4 md:pt-4"
     >
@@ -443,6 +443,10 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   @media (max-width: 767px) {
+    [data-default-panel]{
+      justify-content: center;
+    }
+
     [data-boxer-selector][data-state='boxer'] [data-default-panel] {
       opacity: 1;
       pointer-events: auto;
@@ -471,7 +475,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     animation: boxer-default-logo-float 6s ease-in-out infinite;
   }
 
-  @media screen and (height <= 767px) {
+  @media screen and (height <= 767px) and (width >= 768px) {
     [data-boxer-selector]{
       min-height: 590px;
     }
