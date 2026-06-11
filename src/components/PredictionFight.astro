@@ -5,15 +5,16 @@ import { formatPredictionPercent, type PredictionBattle } from '@/consts/predict
 
 interface Props {
   prediction: PredictionBattle
+  selectedBoxerId?: string
 }
 
-const { prediction } = Astro.props
-const { battle, options, leader, isClose } = prediction
+const { prediction, selectedBoxerId } = Astro.props
+const { battle, options, favorite } = prediction
 ---
 
 <li id={battle.id} class="scroll-mt-28">
   <article
-    class="prediction-fight relative overflow-hidden rounded-lg border border-theme-gold/18 bg-theme-midnight/82 shadow-[0_24px_70px_rgba(0,0,0,0.34)] backdrop-blur-md backdrop-saturate-150"
+    class="prediction-fight relative overflow-hidden rounded-lg border border-theme-gold/18 bg-theme-midnight/92 shadow-[0_24px_70px_rgba(0,0,0,0.34)]"
     data-battle-id={battle.id}
     data-prediction-fight
   >
@@ -38,12 +39,13 @@ const { battle, options, leader, isClose } = prediction
 
       <div class="flex flex-wrap items-center gap-2 md:justify-end">
         <span
+          data-prediction-badge
           class:list={[
             'prediction-badge',
-            isClose ? 'prediction-badge-hot' : 'prediction-badge-calm',
+            favorite ? 'prediction-badge-calm' : 'prediction-badge-hot',
           ]}
         >
-          {isClose ? 'A cara de perro' : `Favorito: ${leader.boxer.name}`}
+          {favorite ? `Favorito: ${favorite.boxer.name}` : 'A cara de perro'}
         </span>
         <a
           href={battle.url}
@@ -68,6 +70,7 @@ const { battle, options, leader, isClose } = prediction
               <div
                 class="duel-versus"
                 role="img"
+                data-prediction-versus
                 aria-label={`${options[0].boxer.name}: ${formatPredictionPercent(options[0].percentage)}. ${options[1].boxer.name}: ${formatPredictionPercent(options[1].percentage)}.`}
               >
                 <span aria-hidden="true" class="duel-versus-text">
@@ -76,7 +79,11 @@ const { battle, options, leader, isClose } = prediction
               </div>
             )}
 
-            <PredictionOption battleId={battle.id} option={option} />
+            <PredictionOption
+              battleId={battle.id}
+              option={option}
+              selectedBoxerId={selectedBoxerId}
+            />
           </>
         ))
       }
@@ -86,11 +93,6 @@ const { battle, options, leader, isClose } = prediction
 
 <style>
   .prediction-fight {
-    opacity: 0;
-    translate: 0 2rem;
-    animation: prediction-reveal linear both;
-    animation-timeline: view();
-    animation-range: entry 0% cover 30%;
     transition:
       border-color 360ms ease,
       box-shadow 360ms ease;
@@ -171,13 +173,6 @@ const { battle, options, leader, isClose } = prediction
     letter-spacing: 0.12em;
   }
 
-  @keyframes prediction-reveal {
-    to {
-      opacity: 1;
-      translate: 0 0;
-    }
-  }
-
   @media (max-width: 639px) {
     .prediction-badge {
       width: 100%;
@@ -202,21 +197,7 @@ const { battle, options, leader, isClose } = prediction
   @media (prefers-reduced-motion: reduce) {
     .prediction-fight,
     .prediction-fight-link {
-      animation: none;
       transition: none;
-    }
-
-    .prediction-fight {
-      opacity: 1;
-      translate: 0 0;
-    }
-  }
-
-  @supports not (animation-timeline: view()) {
-    .prediction-fight {
-      opacity: 1;
-      translate: 0 0;
-      animation: none;
     }
   }
 </style>
