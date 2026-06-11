@@ -12,6 +12,12 @@ export interface Boxer {
   country: string
   previousVeladaWins: number[]
   youtubeChannelId?: string
+  /** Peso en kg (categoría de boxeo). */
+  weightKg?: number | null
+  /** Altura en cm. */
+  heightCm?: number | null
+  /** Alcance (wingspan) en cm. */
+  reachCm?: number | null
 }
 
 /**

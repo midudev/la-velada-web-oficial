@@ -1,13 +1,13 @@
 ---
 import type { GetStaticPaths } from 'astro'
 
+import AuthButton from '@/components/AuthButton.astro'
 import CountryFlag from '@/components/CountryFlag.astro'
+import PredictionFight from '@/components/PredictionFight.astro'
+import PredictionVoteController from '@/components/PredictionVoteController.astro'
 import { battles, battlesById } from '@/consts/battles'
-import {
-  BOXERS_BY_ID,
-  COUNTRY_NAMES,
-  getBoxerPhoto,
-} from '@/consts/boxers'
+import { BOXERS_BY_ID, COUNTRY_NAMES, getBoxerHeroImages, getBoxerSelectImages } from '@/consts/boxers'
+import { predictionBattles } from '@/consts/predictions'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
@@ -21,12 +21,38 @@ const SITE_URL = 'https://www.infolavelada.com'
 const [boxer1Id, boxer2Id] = battle.boxerIds
 const boxer1 = BOXERS_BY_ID[boxer1Id]
 const boxer2 = BOXERS_BY_ID[boxer2Id]
-const country1 = COUNTRY_NAMES[boxer1.country] ?? boxer1.country
-const country2 = COUNTRY_NAMES[boxer2.country] ?? boxer2.country
 const battleVideo = battle.video
+const boxer1Hero = getBoxerHeroImages(boxer1)
+const boxer2Hero = getBoxerHeroImages(boxer2)
+const boxer1Select = getBoxerSelectImages(boxer1)
+const boxer2Select = getBoxerSelectImages(boxer2)
+const battlePrediction = predictionBattles.find((p) => p.battle.id === battle.id) ?? null
+
 const title = `${battle.title} — Combate ${String(battle.number).padStart(2, '0')} de La Velada del Año VI`
 const description = `Toda la información del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} contra ${boxer2.name}. Fecha, horario y detalles en Sevilla.`
 const canonical = `${SITE_URL}${battle.url}`
+
+// Helpers para mostrar valores opcionales
+const fmt = {
+  weight: (kg?: number | null) => (kg != null ? `${kg} kg` : '—'),
+  height: (cm?: number | null) => (cm != null ? `${(cm / 100).toFixed(2)} m` : '—'),
+  reach:  (cm?: number | null) => (cm != null ? `${cm} cm` : '—'),
+  age:    (age?: number | null) => (age != null ? `${age} años` : '—'),
+}
+
+const stats = [
+  {
+    label: 'País',
+    a: COUNTRY_NAMES[boxer1.country] ?? boxer1.country,
+    b: COUNTRY_NAMES[boxer2.country] ?? boxer2.country,
+    flagA: boxer1.country,
+    flagB: boxer2.country,
+  },
+  { label: 'Peso',    a: fmt.weight(boxer1.weightKg),  b: fmt.weight(boxer2.weightKg)  },
+  { label: 'Altura',  a: fmt.height(boxer1.heightCm),  b: fmt.height(boxer2.heightCm)  },
+  { label: 'Edad',    a: fmt.age(boxer1.age),           b: fmt.age(boxer2.age)          },
+  { label: 'Alcance', a: fmt.reach(boxer1.reachCm),    b: fmt.reach(boxer2.reachCm)    },
+]
 
 const sportsEventJsonLd = {
   '@context': 'https://schema.org',
@@ -38,11 +64,7 @@ const sportsEventJsonLd = {
   startDate: '2026-07-25T20:00:00+02:00',
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
-  superEvent: {
-    '@type': 'SportsEvent',
-    name: 'La Velada del Año VI',
-    url: `${SITE_URL}/`,
-  },
+  superEvent: { '@type': 'SportsEvent', name: 'La Velada del Año VI', url: `${SITE_URL}/` },
   location: {
     '@type': 'Place',
     name: 'Estadio de La Cartuja',
@@ -60,14 +82,12 @@ const sportsEventJsonLd = {
       name: boxer1.name,
       url: `${SITE_URL}/boxeadores/${boxer1.id}`,
       image: `${SITE_URL}/photos/${boxer1.id}/01.webp`,
-      nationality: { '@type': 'Country', name: country1 },
     },
     {
       '@type': 'Person',
       name: boxer2.name,
       url: `${SITE_URL}/boxeadores/${boxer2.id}`,
       image: `${SITE_URL}/photos/${boxer2.id}/01.webp`,
-      nationality: { '@type': 'Country', name: country2 },
     },
   ],
 }
@@ -77,21 +97,18 @@ const breadcrumbJsonLd = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
-    { '@type': 'ListItem', position: 2, name: 'Boxeadores', item: `${SITE_URL}/boxeadores` },
-    { '@type': 'ListItem', position: 3, name: battle.title, item: canonical },
+    { '@type': 'ListItem', position: 2, name: battle.title, item: canonical },
   ],
 }
 
 export const getStaticPaths = (() => {
-  return battles.map((battle) => ({
-    params: { id: battle.id },
-  }))
+  return battles.map((b) => ({ params: { id: b.id } }))
 }) satisfies GetStaticPaths
 
 export const prerender = true
 ---
 
-<Layout title={title} description={description} canonical={canonical} showHeader={false}>
+<Layout title={title} description={description} canonical={canonical} showHeader={true}>
   <script
     type="application/ld+json"
     is:inline
@@ -104,117 +121,575 @@ export const prerender = true
     set:html={JSON.stringify(breadcrumbJsonLd)}
     slot="head"
   />
-  <section
-    class="relative isolate min-h-screen overflow-hidden px-4 py-24 text-theme-cream sm:px-6"
-    aria-labelledby="battle-title"
-  >
-    <div
-      aria-hidden="true"
-      class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_50%_18%,rgba(199,168,107,0.22),transparent_30%),linear-gradient(180deg,var(--color-theme-midnight)_0%,#050816_100%)]"
-    >
+
+  <!-- ══════════════════════════════════════════════════════
+       FONDO FIJO — vídeo + overlay (visible toda la página)
+       ══════════════════════════════════════════════════════ -->
+  {
+    battleVideo ? (
+      <>
+        <div aria-hidden="true" class="combat-bg-video-wrap">
+          <video autoplay loop muted playsinline preload="metadata" class="combat-bg-video">
+            <source src={battleVideo.desktop} type="video/mp4" media="(min-width: 768px)" />
+            <source src={battleVideo.mobile} type="video/mp4" />
+          </video>
+        </div>
+        <div aria-hidden="true" class="combat-bg-overlay combat-bg-overlay-video" />
+      </>
+    ) : (
+      <div aria-hidden="true" class="combat-bg-overlay combat-bg-overlay-static" />
+    )
+  }
+
+  <!-- ══════════════════════════════════════════════════════
+       HERO
+       ══════════════════════════════════════════════════════ -->
+  <section class="combat-hero" aria-labelledby="battle-title">
+    <!-- Gradiente adicional sobre el hero para forzar contraste en el texto inferior -->
+    <div aria-hidden="true" class="combat-hero-veil"></div>
+
+    <!-- Boxeador 1 — izquierda -->
+    <div aria-hidden="true" class="combat-hero-boxer boxer-a">
+      <picture transition:name={`boxer-hero-${boxer1.id}`}>
+        <source type="image/avif" srcset={boxer1Hero.avif} />
+        <source type="image/webp" srcset={boxer1Hero.webp} />
+        <img
+          src={boxer1Hero.webp}
+          alt=""
+          fetchpriority="high"
+          decoding="async"
+          class="boxer-img"
+        />
+      </picture>
     </div>
 
-    <div class="mx-auto flex w-full max-w-6xl flex-col items-center">
-      <a
-        href="/"
-        class="mb-10 text-xs font-bold tracking-[0.28em] text-theme-gold/80 underline-offset-4 hover:text-theme-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
-      >
-        Volver al inicio
-      </a>
+    <!-- Boxeador 2 — derecha (espejado para que mire al centro) -->
+    <div aria-hidden="true" class="combat-hero-boxer boxer-b">
+      <picture transition:name={`boxer-hero-${boxer2.id}`}>
+        <source type="image/avif" srcset={boxer2Hero.avif} />
+        <source type="image/webp" srcset={boxer2Hero.webp} />
+        <img
+          src={boxer2Hero.webp}
+          alt=""
+          fetchpriority="high"
+          decoding="async"
+          class="boxer-img mirrored"
+        />
+      </picture>
+    </div>
 
-      <p class="text-xs font-bold tracking-[0.45em] text-theme-gold/85">
+    <!-- Contenido central -->
+    <div class="combat-hero-content">
+      <a href="/" class="combat-back font-cinzel">← Volver al inicio</a>
+
+      <p class="combat-number font-cinzel">
         COMBATE {String(battle.number).padStart(3, '0')}
       </p>
-      <h1
-        id="battle-title"
-        class="mt-4 text-balance text-center font-fantasy text-6xl leading-[0.9] sm:text-8xl md:text-9xl"
-      >
-        {battle.title}
+
+      <h1 id="battle-title" class="combat-title font-fantasy">
+        <span class="fighter-name">{boxer1.name}</span>
+        <span class="vs-glyph">VS</span>
+        <span class="fighter-name">{boxer2.name}</span>
       </h1>
 
-      <div class="mt-12 grid w-full gap-6 md:grid-cols-[1fr_auto_1fr] md:items-center">
-        <article class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center">
-          <img
-            src={getBoxerPhoto(boxer1)}
-            alt={`Foto principal de ${boxer1.name}`}
-            width="1440"
-            height="2160"
-            class="h-[22rem] max-w-full object-contain object-bottom"
-            fetchpriority="high"
-            decoding="async"
-          />
-          <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer1.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
-            <CountryFlag country={boxer1.country} size={18} decorative />
-            {COUNTRY_NAMES[boxer1.country]}
-          </p>
-        </article>
-
-        <span class="text-center font-fantasy text-7xl text-theme-gold md:text-8xl" aria-hidden="true">
-          VS
-        </span>
-
-        <article class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center">
-          <img
-            src={getBoxerPhoto(boxer2)}
-            alt={`Foto principal de ${boxer2.name}`}
-            width="1440"
-            height="2160"
-            class="h-[22rem] max-w-full object-contain object-bottom"
-            fetchpriority="high"
-            decoding="async"
-          />
-          <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer2.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
-            <CountryFlag country={boxer2.country} size={18} decorative />
-            {COUNTRY_NAMES[boxer2.country]}
-          </p>
-        </article>
+      <div aria-hidden="true" class="scroll-hint">
+        <span class="scroll-line"></span>
       </div>
     </div>
   </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       CARACTERÍSTICAS
+       ══════════════════════════════════════════════════════ -->
+  <section
+    class="combat-section px-4 pb-20 pt-16 sm:px-6"
+    aria-labelledby="features-title"
+  >
+    <div class="mx-auto w-full max-w-3xl">
+
+      <!-- Encabezado -->
+      <div class="mb-10 flex flex-col items-center text-center gap-2">
+        <div class="flex items-center gap-4">
+          <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-20" />
+          <h2 id="features-title" class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm">
+            CARACTERÍSTICAS
+          </h2>
+          <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-20" />
+        </div>
+        <p class="font-cinzel text-[0.6rem] tracking-[0.22em] text-white/42 uppercase">
+          Datos relevantes de los boxeadores
+        </p>
+      </div>
+
+      <!-- Fotos pequeñas de los boxeadores -->
+      <div class="mb-6 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+        <!-- Foto boxer 1 -->
+        <div class="flex flex-col items-center gap-2">
+          <div class="boxer-avatar">
+            <picture>
+              <source type="image/avif" srcset={boxer1Select.avif} />
+              <source type="image/webp" srcset={boxer1Select.webp} />
+              <img
+                src={boxer1Select.webp}
+                alt={boxer1.name}
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover object-top"
+              />
+            </picture>
+          </div>
+          <span class="font-cinzel text-[0.65rem] font-bold tracking-[0.16em] text-theme-cream/90 uppercase text-center">
+            {boxer1.name}
+          </span>
+        </div>
+
+        <!-- VS central -->
+        <div class="flex items-center justify-center">
+          <span class="font-fantasy text-2xl text-theme-gold/70">VS</span>
+        </div>
+
+        <!-- Foto boxer 2 -->
+        <div class="flex flex-col items-center gap-2">
+          <div class="boxer-avatar">
+            <picture>
+              <source type="image/avif" srcset={boxer2Select.avif} />
+              <source type="image/webp" srcset={boxer2Select.webp} />
+              <img
+                src={boxer2Select.webp}
+                alt={boxer2.name}
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover object-top"
+              />
+            </picture>
+          </div>
+          <span class="font-cinzel text-[0.65rem] font-bold tracking-[0.16em] text-theme-cream/90 uppercase text-center">
+            {boxer2.name}
+          </span>
+        </div>
+      </div>
+
+      <!-- Tabla de stats -->
+      <div class="stats-table" role="table" aria-label={`Características: ${boxer1.name} vs ${boxer2.name}`}>
+        {
+          stats.map((stat, i) => (
+            <div class:list={['stats-row', { 'stats-row-first': i === 0 }]} role="row">
+              <!-- Valor / Flag boxer 1 (derecha) -->
+              <div class="stats-cell cell-a" role="cell">
+                {stat.flagA && (
+                  <CountryFlag country={stat.flagA} size={16} decorative class="stats-flag" />
+                )}
+                <span class="stats-value">{stat.a}</span>
+              </div>
+
+              <!-- Etiqueta central -->
+              <div class="stats-label" role="rowheader">
+                <span class="font-cinzel text-[0.6rem] font-bold tracking-[0.28em] text-white/55 uppercase">
+                  {stat.label}
+                </span>
+              </div>
+
+              <!-- Valor / Flag boxer 2 (izquierda) -->
+              <div class="stats-cell cell-b" role="cell">
+                <span class="stats-value">{stat.b}</span>
+                {stat.flagB && (
+                  <CountryFlag country={stat.flagB} size={16} decorative class="stats-flag" />
+                )}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       PRONÓSTICOS
+       ══════════════════════════════════════════════════════ -->
   {
-    battleVideo && (
+    battlePrediction && (
       <section
-        class="relative isolate overflow-hidden bg-[#050816] px-4 pb-24 text-theme-cream sm:px-6 sm:pb-28"
-        aria-labelledby="battle-video-title"
+        class="combat-section px-4 pb-20 pt-10 sm:px-6 sm:pb-24"
+        aria-labelledby="battle-predictions-title"
       >
-        <div
-          aria-hidden="true"
-          class="absolute inset-x-0 top-0 -z-10 h-48 bg-linear-to-b from-theme-midnight to-transparent"
-        />
-        <div class="mx-auto w-full max-w-6xl">
-          <div class="mb-6 flex items-center justify-center gap-4 text-center">
-            <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24" />
+        <div class="mx-auto w-full max-w-7xl">
+          <div class="mb-10 flex items-center justify-center gap-4">
+            <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-20" />
             <h2
-              id="battle-video-title"
+              id="battle-predictions-title"
               class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm"
             >
-              CARA A CARA
+              PRONÓSTICOS
             </h2>
-            <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24" />
+            <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-20" />
           </div>
 
-          <div class="mx-auto w-full max-w-[24rem] overflow-hidden rounded-[6px] border border-theme-gold/25 bg-black shadow-[0_24px_80px_-28px_rgba(199,168,107,0.55)] md:max-w-6xl">
-            <video
-              class="aspect-[9/16] max-h-[72svh] w-full bg-black object-cover md:aspect-video md:max-h-none"
-              autoplay
-              controls
-              loop
-              muted
-              playsinline
-              preload="metadata"
-              aria-label={`Vídeo del combate ${battle.title}`}
-            >
-              <source src={battleVideo.desktop} type="video/mp4" media="(min-width: 768px)" />
-              <source src={battleVideo.mobile} type="video/mp4" />
-              Tu navegador no puede reproducir este vídeo.
-            </video>
+          <div id="predictions-auth" class="mb-6 flex justify-center" data-predictions-auth>
+            <AuthButton user={null} />
           </div>
+
+          <ol class="grid gap-5 md:gap-6" role="list" data-prediction-list>
+            <PredictionFight prediction={battlePrediction} />
+          </ol>
         </div>
       </section>
     )
   }
+
+  <PredictionVoteController isLoggedIn={false} userVotes={{}} user={null} />
   <Sponsors />
   <Footer />
 </Layout>
+
+<style>
+  /* ─── FONDO FIJO ──────────────────────────────────────── */
+  /*
+   * z-index: 0 (no negativo) para que quede encima del background del body
+   * pero el contenido de la página (z-index: 2+) lo tapa.
+   */
+  .combat-bg-video-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .combat-bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+  }
+
+  /* Overlay de contraste encima del vídeo fijo */
+  .combat-bg-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .combat-bg-overlay-video {
+    background: linear-gradient(
+      180deg,
+      rgba(5, 8, 22, 0.42) 0%,
+      rgba(5, 8, 22, 0.58) 40%,
+      rgba(5, 8, 22, 0.74) 100%
+    );
+  }
+
+  .combat-bg-overlay-static {
+    background:
+      radial-gradient(circle at 50% 18%, rgba(199, 168, 107, 0.18), transparent 32%),
+      linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
+  }
+
+  /* ─── HERO ─────────────────────────────────────────────── */
+  .combat-hero {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 100svh;
+    /* sin overflow:hidden para que el velo del gradiente se extienda suavemente
+       hacia la sección siguiente sin corte brusco */
+    color: var(--color-theme-cream);
+  }
+
+  /* Velo extra del hero — termina casi transparente para no crear línea con la sección siguiente
+     (el overlay fijo ya aporta ~0.74 de oscuridad en la parte baja; el velo solo añade contraste
+     en la zona media donde están los nombres de los luchadores) */
+  .combat-hero-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(5, 8, 22, 0.12) 0%,
+        transparent 18%,
+        transparent 36%,
+        rgba(5, 8, 22, 0.38) 62%,
+        rgba(5, 8, 22, 0.15) 100%
+      ),
+      radial-gradient(ellipse 70% 48% at 50% 100%, rgba(5, 8, 22, 0.22), transparent 72%);
+  }
+
+  /* Imágenes laterales de los boxeadores */
+  .combat-hero-boxer {
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    width: 48%;
+    max-width: 600px;
+    height: 96%;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .boxer-a {
+    left: 0;
+    justify-content: flex-start;
+    mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.9) 20%,
+      rgba(0, 0, 0, 0.42) 58%,
+      transparent 100%
+    );
+  }
+
+  .boxer-b {
+    right: 0;
+    justify-content: flex-end;
+    mask-image: linear-gradient(
+      to left,
+      rgba(0, 0, 0, 0.9) 20%,
+      rgba(0, 0, 0, 0.42) 58%,
+      transparent 100%
+    );
+  }
+
+  .boxer-img {
+    height: 100%;
+    max-height: 1000px;
+    width: auto;
+    object-fit: contain;
+    object-position: bottom center;
+    filter: saturate(1) brightness(0.96);
+  }
+
+  .mirrored {
+    transform: scaleX(-1);
+  }
+
+  /* Contenido central */
+  .combat-hero-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 1.5rem 4.5rem;
+    max-width: 40rem;
+    width: 100%;
+  }
+
+  .combat-back {
+    margin-bottom: 2rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: rgba(199, 168, 107, 0.6);
+    text-decoration: none;
+    transition: color 220ms ease;
+  }
+
+  .combat-back:hover {
+    color: var(--color-theme-gold);
+  }
+
+  .combat-back:focus-visible {
+    outline: 2px solid var(--color-theme-gold);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  .combat-number {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.44em;
+    text-transform: uppercase;
+    color: rgba(199, 168, 107, 0.82);
+    margin-bottom: 0.8rem;
+  }
+
+  .combat-title {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+
+  .fighter-name {
+    display: block;
+    font-size: clamp(2.2rem, 4.5vw + 1rem, 4.5rem);
+    font-weight: 900;
+    line-height: 0.88;
+    text-transform: uppercase;
+    text-shadow:
+      0 0 32px rgba(199, 168, 107, 0.2),
+      0 3px 22px rgba(0, 0, 0, 0.88);
+  }
+
+  .vs-glyph {
+    display: block;
+    font-family: var(--font-fantasy);
+    font-size: clamp(3.5rem, 8.5vw + 1rem, 8rem);
+    line-height: 1.1;
+    color: var(--color-theme-gold);
+    text-shadow:
+      0 0 55px rgba(199, 168, 107, 0.55),
+      0 0 110px rgba(199, 168, 107, 0.2),
+      0 4px 30px rgba(0, 0, 0, 0.92);
+  }
+
+  /* Indicador de scroll */
+  .scroll-hint {
+    margin-top: 3rem;
+  }
+
+  .scroll-line {
+    display: block;
+    width: 1px;
+    height: 3.5rem;
+    margin: 0 auto;
+    background: linear-gradient(to bottom, rgba(199, 168, 107, 0.7), transparent);
+    animation: scroll-drop 2.4s ease-in-out infinite;
+  }
+
+  @keyframes scroll-drop {
+    0%,
+    100% {
+      opacity: 0;
+      transform: scaleY(0.2) translateY(-50%);
+    }
+    50% {
+      opacity: 1;
+      transform: scaleY(1) translateY(0);
+    }
+  }
+
+  /* ─── SECCIONES (sobre el fondo fijo) ─────────────────── */
+  .combat-section {
+    position: relative;
+    z-index: 2;
+    color: var(--color-theme-cream);
+    /* Sin fondo propio: el overlay fijo cubre toda la página uniformemente */
+    background: transparent;
+  }
+
+  /* ─── CARACTERÍSTICAS ───────────────────────────────────── */
+
+  /* Foto circular del boxeador */
+  .boxer-avatar {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 9999px;
+    overflow: hidden;
+    border: 1.5px solid rgba(199, 168, 107, 0.45);
+    background: rgba(5, 8, 22, 0.6);
+    box-shadow:
+      0 0 0 3px rgba(199, 168, 107, 0.12),
+      0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Tabla de estadísticas */
+  .stats-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(199, 168, 107, 0.18);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: rgba(5, 8, 22, 0.45);
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid rgba(199, 168, 107, 0.1);
+    gap: 1rem;
+    transition: background 220ms ease;
+  }
+
+  .stats-row:last-child {
+    border-bottom: none;
+  }
+
+  .stats-row:hover {
+    background: rgba(199, 168, 107, 0.04);
+  }
+
+  .stats-row-first {
+    background: rgba(199, 168, 107, 0.04);
+  }
+
+  /* Celda izquierda (boxer a) — alineada a la derecha */
+  .stats-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .cell-a {
+    justify-content: flex-end;
+  }
+
+  .cell-b {
+    justify-content: flex-start;
+  }
+
+  .stats-value {
+    font-family: var(--font-cinzel);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-theme-cream);
+  }
+
+  .stats-row-first .stats-value {
+    font-size: 0.75rem;
+    color: rgba(244, 228, 201, 0.88);
+  }
+
+  /* Etiqueta central */
+  .stats-label {
+    text-align: center;
+    min-width: 5.5rem;
+  }
+
+  :global(.stats-flag) {
+    width: 18px !important;
+    height: 18px !important;
+    flex-shrink: 0;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  /* ─── RESPONSIVE ─────────────────────────────────────── */
+  @media (max-width: 639px) {
+    .combat-hero-boxer {
+      width: 52%;
+      height: 70%;
+    }
+
+    .combat-hero-content {
+      padding-bottom: 3.5rem;
+    }
+
+    .stats-row {
+      padding: 0.75rem 1rem;
+    }
+
+    .stats-value {
+      font-size: 0.72rem;
+    }
+
+    .boxer-avatar {
+      width: 4rem;
+      height: 4rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-line {
+      animation: none;
+      opacity: 0.38;
+    }
+  }
+</style>
