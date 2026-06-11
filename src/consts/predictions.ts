@@ -113,7 +113,7 @@ export function createPredictionBattles(predictions: PredictionVotesInput[] = []
     }) as [PredictionOption, PredictionOption]
 
     const leader = options[0].percentage >= options[1].percentage ? options[0] : options[1]
-    const favorite = totalVotes > 0 && leader.percentage > 60 ? leader : null
+    const favorite = totalVotes > 0 && leader.percentage >= 60 ? leader : null
     const difference = Math.abs(options[0].percentage - options[1].percentage)
 
     return {
