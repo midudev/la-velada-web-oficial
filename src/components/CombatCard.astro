@@ -50,7 +50,7 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
             aria-label={`Ver perfil de ${boxer.name}`}
         >
             <span aria-hidden="true" class="boxer-spot" />
-            <picture>
+            <picture class="boxer-pic" transition:name={`boxer-hero-${boxer.id}`}>
             <source type="image/avif" srcset={boxer.heroImages.avif} />
             <source type="image/webp" srcset={boxer.heroImages.webp} />
             <img
@@ -185,14 +185,17 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
 }
 .boxer:hover .boxer-spot { opacity: 0.95; }
 
-.boxer-img {
+.boxer-pic {
     position: absolute;
     inset: 0;
+    z-index: 2;
+    display: block;
+}
+.boxer-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top center;
-    z-index: 2;
     filter: saturate(0.92) brightness(0.92);
     transition: scale 600ms ease, filter 500ms ease;
 }
