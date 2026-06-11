@@ -1,3 +1,4 @@
+import { battleVideosById, type BattleVideoSources } from '@/consts/battle-videos'
 import { battlePairs } from '@/consts/battle-pairs'
 import { BOXERS_BY_ID } from '@/consts/boxers'
 
@@ -7,6 +8,7 @@ export interface Battle {
   boxerIds: readonly [string, string]
   title: string
   url: `/combate/${string}`
+  video: BattleVideoSources | null
 }
 
 function getBoxerName(id: string): string {
@@ -24,6 +26,7 @@ export const battles: Battle[] = battlePairs.map(([boxer1Id, boxer2Id], index) =
     boxerIds: [boxer1Id, boxer2Id],
     title: `${getBoxerName(boxer1Id)} vs ${getBoxerName(boxer2Id)}`,
     url: `/combate/${id}`,
+    video: battleVideosById[id] ?? null,
   }
 })
 
