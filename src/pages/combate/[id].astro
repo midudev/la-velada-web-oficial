@@ -1,5 +1,6 @@
 ---
 import CombatBackground from '@/components/combat/CombatBackground.astro'
+import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
 import CombatHero from '@/components/combat/CombatHero.astro'
 import CombatPredictionsSection from '@/components/combat/CombatPredictionsSection.astro'
 import CombatStatsSection from '@/components/combat/CombatStatsSection.astro'
@@ -176,6 +177,10 @@ export const prerender = false
     boxer1Select={boxer1Select}
     boxer2Select={boxer2Select}
     stats={stats}
+  />
+  <CombatFaceToFaceVideoSection
+    title={`${battle.title} | Cara a cara`}
+    videoUrl={battle.faceToFaceVideoUrl}
   />
   <CombatPredictionsSection
     prediction={battlePrediction}
