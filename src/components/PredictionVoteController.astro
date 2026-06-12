@@ -1,0 +1,594 @@
+---
+interface Props {
+  isLoggedIn: boolean
+  userVotes: Record<string, string>
+  user?: {
+    name?: string | null
+    image?: string | null
+  } | null
+}
+
+const { isLoggedIn, userVotes, user } = Astro.props
+const controllerConfig = JSON.stringify({
+  isLoggedIn,
+  userVotes,
+  userReaction: user
+    ? {
+        name: user.name ?? 'Tú',
+        image: user.image ?? null,
+      }
+    : null,
+}).replaceAll('<', '\\u003c')
+---
+
+<script id="prediction-vote-config" type="application/json" set:html={controllerConfig} />
+<div class="prediction-reaction-layer" data-prediction-reaction-layer aria-hidden="true"></div>
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  interface PredictionApiResponse {
+    prediction?: {
+      combat_id: string
+      predictions: Array<{
+        fighter_id: string
+        votes: number
+        percentage: number
+      }>
+      total_votes: number
+    }
+  }
+
+  interface PredictionControllerConfig {
+    isLoggedIn: boolean
+    userVotes: Record<string, string>
+    userReaction: {
+      name: string
+      image: string | null
+    } | null
+  }
+
+  interface PredictionOptionSnapshot {
+    boxerId: string
+    isSelected: boolean
+    isMuted: boolean
+    voteCount: number
+    votePercentage: number
+  }
+
+  interface PredictionFightSnapshot {
+    battleId: string
+    options: PredictionOptionSnapshot[]
+  }
+
+  let predictionsAbort: AbortController | null = null
+  let nextVoteRequestId = 0
+  const latestVoteRequestByBattle = new Map<string, number>()
+  const voteBarAnimationTimeouts = new WeakMap<HTMLElement, number>()
+
+  const compactFormatter = new Intl.NumberFormat('es-ES', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  })
+
+  const percentFormatter = new Intl.NumberFormat('es-ES', {
+    maximumFractionDigits: 1,
+  })
+
+  function readConfig(): PredictionControllerConfig {
+    const config = $<HTMLScriptElement>('#prediction-vote-config')
+    if (!config?.textContent) return { isLoggedIn: false, userVotes: {}, userReaction: null }
+
+    try {
+      return JSON.parse(config.textContent) as PredictionControllerConfig
+    } catch {
+      return { isLoggedIn: false, userVotes: {}, userReaction: null }
+    }
+  }
+
+  function formatVotes(votes: number) {
+    return compactFormatter.format(votes)
+  }
+
+  function formatPercent(percentage: number) {
+    return `${percentFormatter.format(percentage)}%`
+  }
+
+  function formatSupport(votes: number) {
+    return `${formatVotes(votes)} ${votes === 1 ? 'voto' : 'votos'}`
+  }
+
+  function getPredictionFight(battleId: string) {
+    return $<HTMLElement>(`[data-prediction-fight][data-battle-id="${battleId}"]`)
+  }
+
+  function getSelectedBoxerId(fight: HTMLElement) {
+    const selectedOption = $<HTMLButtonElement>(
+      '[data-prediction-option][data-selected="true"]',
+      fight,
+    )
+
+    return selectedOption?.dataset.boxerId ?? null
+  }
+
+  function readVoteCount(option: HTMLButtonElement) {
+    return Number(option.dataset.voteCount ?? 0)
+  }
+
+  function readVotePercentage(option: HTMLButtonElement) {
+    return Number(option.dataset.votePercentage ?? 0)
+  }
+
+  function writeOptionPrediction(option: HTMLButtonElement, votes: number, percentage: number) {
+    const safeVotes = Math.max(0, votes)
+    const safePercentage = Math.max(0, Math.min(100, percentage))
+    const previousPercentage = readVotePercentage(option)
+    const percentNode = $<HTMLElement>('[data-prediction-percent]', option)
+    const votesNode = $<HTMLElement>('[data-prediction-votes]', option)
+
+    option.dataset.voteCount = String(safeVotes)
+    option.dataset.votePercentage = String(safePercentage)
+    option.style.setProperty('--vote-share', `${safePercentage.toFixed(2)}%`)
+    if (percentNode) percentNode.textContent = formatPercent(safePercentage)
+    if (votesNode) votesNode.textContent = formatSupport(safeVotes)
+
+    if (Math.abs(previousPercentage - safePercentage) > 0.05 && !prefersReducedMotion()) {
+      window.clearTimeout(voteBarAnimationTimeouts.get(option))
+      option.dataset.voteChanging = safePercentage > previousPercentage ? 'up' : 'down'
+
+      const timeoutId = window.setTimeout(() => {
+        delete option.dataset.voteChanging
+      }, 960)
+
+      voteBarAnimationTimeouts.set(option, timeoutId)
+    }
+  }
+
+  function createFightSnapshot(battleId: string): PredictionFightSnapshot | null {
+    const fight = getPredictionFight(battleId)
+    if (!fight) return null
+
+    return {
+      battleId,
+      options: Array.from($$<HTMLButtonElement>('[data-prediction-option]', fight))
+        .map((option) => ({
+          boxerId: option.dataset.boxerId ?? '',
+          isSelected: option.dataset.selected === 'true',
+          isMuted: option.dataset.muted === 'true',
+          voteCount: readVoteCount(option),
+          votePercentage: readVotePercentage(option),
+        }))
+        .filter((option) => option.boxerId),
+    }
+  }
+
+  function restoreFightSnapshot(snapshot: PredictionFightSnapshot) {
+    const fight = getPredictionFight(snapshot.battleId)
+    if (!fight) return
+
+    snapshot.options.forEach((optionSnapshot) => {
+      const option = $<HTMLButtonElement>(
+        `[data-prediction-option][data-boxer-id="${optionSnapshot.boxerId}"]`,
+        fight,
+      )
+      if (!option) return
+
+      option.dataset.selected = String(optionSnapshot.isSelected)
+      option.dataset.muted = String(optionSnapshot.isMuted)
+      option.setAttribute('aria-pressed', String(optionSnapshot.isSelected))
+      writeOptionPrediction(option, optionSnapshot.voteCount, optionSnapshot.votePercentage)
+    })
+  }
+
+  function setBattleVote(battleId: string, boxerId: string | null) {
+    const fight = getPredictionFight(battleId)
+    if (!fight) return
+
+    $$<HTMLButtonElement>('[data-prediction-option]', fight).forEach((option) => {
+      const isSelected = option.dataset.boxerId === boxerId
+
+      option.dataset.selected = String(isSelected)
+      option.dataset.muted = String(Boolean(boxerId) && !isSelected)
+      option.setAttribute('aria-pressed', String(isSelected))
+    })
+  }
+
+  function setFightPending(battleId: string, isPending: boolean) {
+    const fight = getPredictionFight(battleId)
+    if (!fight) return
+
+    $$<HTMLButtonElement>('[data-prediction-option]', fight).forEach((option) => {
+      option.dataset.pending = String(isPending)
+    })
+  }
+
+  function applyOptimisticVote(battleId: string, boxerId: string) {
+    const fight = getPredictionFight(battleId)
+    if (!fight) return
+
+    const previousBoxerId = getSelectedBoxerId(fight)
+    if (previousBoxerId === boxerId) return
+
+    const options = Array.from($$<HTMLButtonElement>('[data-prediction-option]', fight))
+    const nextVotes = new Map<string, number>()
+
+    options.forEach((option) => {
+      const optionBoxerId = option.dataset.boxerId
+      if (!optionBoxerId) return
+
+      let votes = readVoteCount(option)
+      if (optionBoxerId === previousBoxerId) votes -= 1
+      if (optionBoxerId === boxerId) votes += 1
+
+      nextVotes.set(optionBoxerId, Math.max(0, votes))
+    })
+
+    const totalVotes = Array.from(nextVotes.values()).reduce((total, votes) => total + votes, 0)
+
+    setBattleVote(battleId, boxerId)
+    options.forEach((option) => {
+      const optionBoxerId = option.dataset.boxerId
+      if (!optionBoxerId) return
+
+      const votes = nextVotes.get(optionBoxerId) ?? 0
+      const percentage = totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0
+
+      writeOptionPrediction(option, votes, percentage)
+    })
+    updateFightBadge(fight)
+  }
+
+  function updateFightBadge(fight: HTMLElement) {
+    const badge = $<HTMLElement>('[data-prediction-badge]', fight)
+    if (!badge) return
+
+    const options = Array.from($$<HTMLButtonElement>('[data-prediction-option]', fight))
+    const leader = options.reduce<HTMLButtonElement | null>((currentLeader, option) => {
+      if (!currentLeader) return option
+      return readVotePercentage(option) > readVotePercentage(currentLeader) ? option : currentLeader
+    }, null)
+
+    const leaderPercentage = leader ? readVotePercentage(leader) : 0
+    const favoriteName = leader?.dataset.boxerName
+
+    if (leader && favoriteName && leaderPercentage >= 60) {
+      badge.textContent = `Favorito: ${favoriteName}`
+      badge.classList.remove('prediction-badge-hot')
+      badge.classList.add('prediction-badge-calm')
+      return
+    }
+
+    badge.textContent = 'A cara de perro'
+    badge.classList.remove('prediction-badge-calm')
+    badge.classList.add('prediction-badge-hot')
+  }
+
+  function getReactionOrigin(option: HTMLButtonElement, event: MouseEvent) {
+    const rect = option.getBoundingClientRect()
+    const hasPointerCoordinates = event.clientX > 0 && event.clientY > 0
+
+    return {
+      x: hasPointerCoordinates ? event.clientX : rect.left + rect.width / 2,
+      y: hasPointerCoordinates ? event.clientY : rect.top + rect.height * 0.42,
+    }
+  }
+
+  function createReactionAvatar(config: PredictionControllerConfig['userReaction']) {
+    const avatar = document.createElement('span')
+    avatar.className = 'prediction-reaction-avatar'
+
+    if (config?.image) {
+      const image = document.createElement('img')
+      image.src = config.image
+      image.alt = config.name
+      image.width = 32
+      image.height = 32
+      image.loading = 'eager'
+      image.decoding = 'async'
+      avatar.append(image)
+    } else {
+      avatar.textContent = config?.name?.trim().charAt(0).toUpperCase() || 'T'
+      avatar.dataset.fallback = 'true'
+    }
+
+    return avatar
+  }
+
+  function emitVoteReaction(
+    option: HTMLButtonElement,
+    event: MouseEvent,
+    config: PredictionControllerConfig,
+  ) {
+    const layer = $<HTMLElement>('[data-prediction-reaction-layer]')
+    if (!layer || !config.userReaction || prefersReducedMotion()) return
+
+    const avatar = createReactionAvatar(config.userReaction)
+    const origin = getReactionOrigin(option, event)
+    const drift = Math.round((Math.random() - 0.5) * 78)
+    const lift = Math.round(142 + Math.random() * 78)
+    const spin = Math.round((Math.random() - 0.5) * 30)
+    const duration = Math.round(760 + Math.random() * 260)
+
+    avatar.style.left = `${origin.x}px`
+    avatar.style.top = `${origin.y}px`
+    layer.append(avatar)
+
+    const animation = avatar.animate(
+      [
+        {
+          opacity: 0,
+          transform: `translate(-50%, -50%) translateY(10px) scale(0.62) rotate(${-spin}deg)`,
+          filter: 'blur(2px) saturate(0.9)',
+        },
+        {
+          opacity: 1,
+          offset: 0.16,
+          transform: `translate(-50%, -50%) translate(${drift * 0.16}px, -28px) scale(1.08) rotate(${
+            spin * 0.25
+          }deg)`,
+          filter: 'blur(0px) saturate(1.2)',
+        },
+        {
+          opacity: 0.88,
+          offset: 0.72,
+          transform: `translate(-50%, -50%) translate(${drift}px, -${lift}px) scale(0.88) rotate(${spin}deg)`,
+          filter: 'blur(0px) saturate(1.1)',
+        },
+        {
+          opacity: 0,
+          transform: `translate(-50%, -50%) translate(${drift * 1.18}px, -${
+            lift + 36
+          }px) scale(0.5) rotate(${spin * 1.2}deg)`,
+          filter: 'blur(3px) saturate(0.7)',
+        },
+      ],
+      {
+        duration,
+        easing: 'cubic-bezier(0.18, 0.86, 0.24, 1)',
+        fill: 'forwards',
+      },
+    )
+
+    void animation.finished.finally(() => avatar.remove())
+  }
+
+  function applyPredictionData(prediction: NonNullable<PredictionApiResponse['prediction']>) {
+    const fight = $<HTMLElement>(
+      `[data-prediction-fight][data-battle-id="${prediction.combat_id}"]`,
+    )
+    if (!fight) return
+
+    prediction.predictions.forEach((predictionOption) => {
+      const option = $<HTMLButtonElement>(
+        `[data-prediction-option][data-boxer-id="${predictionOption.fighter_id}"]`,
+        fight,
+      )
+      if (!option) return
+
+      writeOptionPrediction(option, predictionOption.votes, predictionOption.percentage)
+    })
+    updateFightBadge(fight)
+  }
+
+  const AUTH_DOCK_MS = 660
+  // Easing con overshoot: da el "botecito" natural al aterrizar.
+  const AUTH_SPRING = 'cubic-bezier(0.34, 1.42, 0.5, 1)'
+
+  function prefersReducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }
+
+  // Lleva el botón de login hasta el combate donde se ha pinchado, abriendo un
+  // hueco entre las cards. Usa FLIP (First-Last-Invert-Play): mide dónde está
+  // todo, reordena el DOM y anima cada elemento desde su posición anterior a la
+  // nueva, así el botón "viaja" por la pantalla y las cards hacen sitio.
+  function dockAuthToFight(battleId: string) {
+    const authEl = $<HTMLElement>('[data-predictions-auth]')
+    const list = $<HTMLElement>('[data-prediction-list]')
+    const fight = $<HTMLElement>(`[data-prediction-fight][data-battle-id="${battleId}"]`)
+    if (!authEl || !list || !fight) return
+
+    const targetLi = fight.closest('li')
+    if (!targetLi) return
+
+    const alreadyDocked = targetLi.nextElementSibling === authEl
+    const reduce = prefersReducedMotion()
+
+    // Elementos que pueden moverse: el botón y cada card de la lista (sin duplicar
+    // el botón si ya estaba dentro de la lista de un anclaje anterior).
+    const movers = Array.from(new Set([authEl, ...Array.from(list.children)])) as HTMLElement[]
+
+    // FIRST: posición de partida de cada uno.
+    const firstRects = new Map<HTMLElement, DOMRect>()
+    if (!reduce) movers.forEach((el) => firstRects.set(el, el.getBoundingClientRect()))
+
+    // MUTATE: recolocar el botón justo después del combate pinchado.
+    authEl.dataset.docked = 'true'
+    if (!alreadyDocked) targetLi.insertAdjacentElement('afterend', authEl)
+
+    if (reduce) {
+      authEl.scrollIntoView({ block: 'nearest' })
+      return
+    }
+
+    // LAST + PLAY: animar cada elemento desde su hueco viejo hasta el nuevo.
+    movers.forEach((el) => {
+      const first = firstRects.get(el)
+      if (!first) return
+
+      const last = el.getBoundingClientRect()
+      const dx = first.left - last.left
+      const dy = first.top - last.top
+      if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return
+
+      el.animate(
+        [
+          { transform: `translate(${dx}px, ${dy}px)` },
+          { transform: 'translate(0px, 0px)' },
+        ],
+        { duration: AUTH_DOCK_MS, easing: AUTH_SPRING },
+      )
+    })
+
+    // Botecito de aterrizaje sobre el propio botón (se suma al viaje).
+    authEl.animate(
+      [
+        { transform: 'scale(0.94)', offset: 0 },
+        { transform: 'scale(1.045)', offset: 0.6 },
+        { transform: 'scale(1)', offset: 1 },
+      ],
+      { duration: AUTH_DOCK_MS, easing: 'ease-out', composite: 'add' },
+    )
+  }
+
+  async function submitVote(battleId: string, boxerId: string) {
+    const fight = getPredictionFight(battleId)
+    if (!fight) return
+
+    const currentBoxerId = getSelectedBoxerId(fight)
+    if (currentBoxerId === boxerId) return
+
+    const requestId = nextVoteRequestId + 1
+    const snapshot = createFightSnapshot(battleId)
+    nextVoteRequestId = requestId
+    latestVoteRequestByBattle.set(battleId, requestId)
+
+    applyOptimisticVote(battleId, boxerId)
+    setFightPending(battleId, true)
+
+    try {
+      const response = await fetch('/api/predictions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          combat_id: battleId,
+          fighter_id: boxerId,
+        }),
+      })
+
+      if (response.status === 401) {
+        if (latestVoteRequestByBattle.get(battleId) === requestId && snapshot) {
+          restoreFightSnapshot(snapshot)
+        }
+        dockAuthToFight(battleId)
+        return
+      }
+
+      if (!response.ok) {
+        throw new Error(`No se pudo registrar el voto: ${response.status}`)
+      }
+
+      const data = (await response.json()) as PredictionApiResponse
+
+      if (latestVoteRequestByBattle.get(battleId) !== requestId) return
+
+      setBattleVote(battleId, boxerId)
+      if (data.prediction) applyPredictionData(data.prediction)
+    } catch (error) {
+      if (latestVoteRequestByBattle.get(battleId) === requestId && snapshot) {
+        restoreFightSnapshot(snapshot)
+      }
+
+      console.error(error)
+    } finally {
+      if (latestVoteRequestByBattle.get(battleId) === requestId) {
+        setFightPending(battleId, false)
+        latestVoteRequestByBattle.delete(battleId)
+      }
+    }
+  }
+
+  function setupPredictionVotes() {
+    predictionsAbort?.abort()
+    predictionsAbort = new AbortController()
+
+    const config = readConfig()
+    Object.entries(config.userVotes).forEach(([battleId, boxerId]) => {
+      setBattleVote(battleId, boxerId)
+    })
+
+    $$<HTMLButtonElement>('[data-prediction-option]').forEach((option) => {
+      option.addEventListener(
+        'click',
+        (event) => {
+          const { battleId, boxerId } = option.dataset
+          if (!battleId || !boxerId) return
+
+          if (!config.isLoggedIn) {
+            dockAuthToFight(battleId)
+            return
+          }
+
+          emitVoteReaction(option, event, config)
+          void submitVote(battleId, boxerId)
+        },
+        { signal: predictionsAbort.signal },
+      )
+    })
+  }
+
+  document.addEventListener('astro:page-load', setupPredictionVotes)
+</script>
+
+<style>
+  :global(.prediction-reaction-layer) {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    overflow: hidden;
+    pointer-events: none;
+    contain: layout style paint;
+  }
+
+  :global(.prediction-reaction-avatar) {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 48%, white);
+    border-radius: 9999px;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.28), transparent 36%),
+      color-mix(in srgb, var(--color-theme-midnight) 82%, black);
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0.12),
+      0 0 22px color-mix(in srgb, var(--color-theme-gold) 34%, transparent),
+      0 14px 30px rgba(0, 0, 0, 0.42);
+    color: var(--color-theme-gold);
+    font-family: var(--font-cinzel);
+    font-size: 0.72rem;
+    font-weight: 900;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+    will-change: transform, opacity, filter;
+  }
+
+  :global(.prediction-reaction-avatar img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  :global(.prediction-reaction-avatar[data-fallback='true']) {
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.48);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.prediction-reaction-avatar) {
+      display: none;
+    }
+  }
+
+  /* Cuando el botón queda anclado entre dos cards, se integra en el hueco de la
+     rejilla (sin el margen superior que tiene en su sitio original). */
+  :global([data-predictions-auth][data-docked='true']) {
+    margin-top: 0;
+    width: 100%;
+    padding-block: 0.15rem;
+    will-change: transform;
+  }
+</style>

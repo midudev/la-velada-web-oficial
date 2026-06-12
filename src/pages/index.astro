@@ -152,9 +152,9 @@ export const prerender = true
           return (
             <li>
               Combate {battle.number}:{' '}
-              <a href={`/boxeadores/${a.id}`}>{a.name}</a> ({COUNTRY_NAMES[a.country] ?? a.country})
+              <a href={`/boxeadores/${a.id}`} tabindex="-1">{a.name}</a> ({COUNTRY_NAMES[a.country] ?? a.country})
               {' vs '}
-              <a href={`/boxeadores/${b.id}`}>{b.name}</a> ({COUNTRY_NAMES[b.country] ?? b.country})
+              <a href={`/boxeadores/${b.id}`} tabindex="-1">{b.name}</a> ({COUNTRY_NAMES[b.country] ?? b.country})
             </li>
           )
         })
@@ -166,7 +166,7 @@ export const prerender = true
       {
         BOXERS.map((boxer) => (
           <li>
-            <a href={`/boxeadores/${boxer.id}`}>{boxer.name}</a> —{' '}
+            <a href={`/boxeadores/${boxer.id}`} tabindex="-1">{boxer.name}</a> —{' '}
             {COUNTRY_NAMES[boxer.country] ?? boxer.country}
           </li>
         ))
