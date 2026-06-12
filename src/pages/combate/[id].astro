@@ -1,6 +1,4 @@
 ---
-import type { GetStaticPaths } from 'astro'
-
 import CombatBackground from '@/components/combat/CombatBackground.astro'
 import CombatHero from '@/components/combat/CombatHero.astro'
 import CombatPredictionsSection from '@/components/combat/CombatPredictionsSection.astro'
@@ -147,10 +145,6 @@ const breadcrumbJsonLd = {
     { '@type': 'ListItem', position: 2, name: battle.title, item: canonical },
   ],
 }
-
-export const getStaticPaths = (() => {
-  return battles.map((b) => ({ params: { id: b.id } }))
-}) satisfies GetStaticPaths
 
 export const prerender = false
 ---
