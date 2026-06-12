@@ -1,10 +1,6 @@
----
-import { EVENT_ZONED_ISO } from '@/consts/event'
----
-
 <span class="event-local-time">
   <time
-    datetime={EVENT_ZONED_ISO}
+    datetime="2026-07-25T20:00:00+02:00"
     tabindex="0"
     class="event-local-time__trigger cursor-help font-medium underline decoration-theme-gold/35 decoration-dotted underline-offset-[0.2em] transition-[text-decoration-color] duration-200 hover:decoration-theme-gold/80"
   >
@@ -111,10 +107,7 @@ import { EVENT_ZONED_ISO } from '@/consts/event'
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .event-local-time__tooltip {
-      transform: none;
-    }
-
+    .event-local-time__tooltip,
     .event-local-time__tooltip:popover-open {
       transform: none;
     }
@@ -141,207 +134,101 @@ import { EVENT_ZONED_ISO } from '@/consts/event'
   import type { EventLocalTimeView } from '@/lib/event-local-time'
   import { animate } from 'motion'
 
-  const ROOT_SELECTOR = '.event-local-time'
-  const TOOLTIP_ID_PREFIX = 'event-local-time-tip'
-  const TRIGGER_SELECTOR = 'time'
-  const TOOLTIP_SELECTOR = '.event-local-time__tooltip'
-  const PRIMARY_SELECTOR = '.event-local-time__tooltip-primary'
-  const SECONDARY_SELECTOR = '.event-local-time__tooltip-secondary'
-  const TOOLTIP_LINE_SELECTOR = '.event-local-time__tooltip > span:not([hidden])'
-  const POPOVER_OPEN_SELECTOR = ':popover-open'
-  const HOVER_SELECTOR = ':hover'
-  const TOOLTIP_EXIT_MS = 200
-  const TOOLTIP_EASE = [0.23, 1, 0.32, 1] as const
-  const SHOW_TOOLTIP_ANIMATION = { duration: 0.18, ease: TOOLTIP_EASE }
-  const HIDE_TOOLTIP_ANIMATION = { duration: 0.16, ease: TOOLTIP_EASE }
-  const TEXT_STAGGER_MS = 40
-  const ANCHOR_POSITION_SUPPORTED = CSS.supports('anchor-name', '--x')
-  const REDUCED_MOTION_QUERY = matchMedia('(prefers-reduced-motion: reduce)')
-  const HOVER_QUERY = matchMedia('(hover: hover) and (pointer: fine)')
+  const EASE = [0.23, 1, 0.32, 1] as const
+  const EXIT_MS = 200
+  const anchorSupported = CSS.supports('anchor-name', '--x')
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
+  const hoverMedia = matchMedia('(hover: hover) and (pointer: fine)')
 
-  let eventTimeAbort: AbortController | undefined
-
-  function canAnimateTooltip(): boolean {
-    return ANCHOR_POSITION_SUPPORTED && !REDUCED_MOTION_QUERY.matches
+  function canAnimate() {
+    return anchorSupported && !reducedMotion.matches
   }
 
-  function canHover(): boolean {
-    return HOVER_QUERY.matches
-  }
+  let abort: AbortController | undefined
 
-  function isPopoverOpen(tooltip: HTMLElement): boolean {
-    return tooltip.matches(POPOVER_OPEN_SELECTOR)
-  }
-
-  function isTouchPointer(event: PointerEvent): boolean {
-    return event.pointerType === 'touch'
-  }
-
-  function waitForTooltipExit(playback: ReturnType<typeof animate>) {
-    return Promise.race([
-      playback.finished.catch(() => undefined),
-      new Promise<void>((resolve) => window.setTimeout(resolve, TOOLTIP_EXIT_MS)),
-    ])
-  }
-
-  function bindEventLocalTime(
-    root: HTMLElement,
-    view: EventLocalTimeView,
-    index: number,
-    signal: AbortSignal,
-  ) {
-    const trigger = $(TRIGGER_SELECTOR, root)
-    const tooltip = $(TOOLTIP_SELECTOR, root)
-    const primary = $(PRIMARY_SELECTOR, tooltip)
-    const secondary = $(SECONDARY_SELECTOR, tooltip)
+  function bind(root: HTMLElement, view: EventLocalTimeView, index: number, signal: AbortSignal) {
+    const trigger = $('time', root)
+    const tooltip = $('.event-local-time__tooltip', root)
+    const primary = tooltip && $('.event-local-time__tooltip-primary', tooltip)
     if (!trigger || !tooltip || !primary) return
-    tooltip.id ||= `${TOOLTIP_ID_PREFIX}-${index}`
 
+    tooltip.id ||= `event-local-time-tip-${index}`
     primary.textContent = view.tooltipPrimary
-
+    const secondary = $('.event-local-time__tooltip-secondary', tooltip)
     if (secondary) {
       secondary.textContent = view.tooltipSecondary ?? ''
       secondary.hidden = !view.tooltipSecondary
     }
-
     trigger.setAttribute('aria-describedby', tooltip.id)
 
     let hidePlayback: ReturnType<typeof animate> | null = null
     let hideToken = 0
+    const isOpen = () => tooltip.matches(':popover-open')
 
     const show = () => {
-      hideToken += 1
+      hideToken++
       hidePlayback?.cancel()
       hidePlayback = null
-
-      if (!isPopoverOpen(tooltip)) {
-        tooltip.showPopover()
-      }
-
-      if (!canAnimateTooltip()) return
-
-      void animate(
-        tooltip,
-        { opacity: [0, 1], scale: [0.96, 1] },
-        SHOW_TOOLTIP_ANIMATION,
-      )
-
-      const lines = $$<HTMLElement>(TOOLTIP_LINE_SELECTOR, tooltip)
-      lines.forEach((line, index) => {
+      if (!isOpen()) tooltip.showPopover()
+      if (!canAnimate()) return
+      void animate(tooltip, { opacity: [0, 1], scale: [0.96, 1] }, { duration: 0.18, ease: EASE })
+      $$<HTMLElement>('.event-local-time__tooltip > span:not([hidden])', tooltip).forEach((line, i) => {
         void animate(
           line,
           { opacity: [0, 1], transform: ['translateY(0.25rem)', 'translateY(0)'] },
-          {
-            duration: 0.18,
-            delay: (index * TEXT_STAGGER_MS) / 1000,
-            ease: TOOLTIP_EASE,
-          },
+          { duration: 0.18, delay: i * 0.04, ease: EASE },
         )
       })
     }
 
     const hide = async () => {
-      if (!isPopoverOpen(tooltip)) return
-
-      if (!canAnimateTooltip()) {
+      if (!isOpen()) return
+      if (!canAnimate()) {
         tooltip.hidePopover()
         return
       }
-
-      const token = hideToken + 1
-      hideToken = token
+      const token = ++hideToken
       hidePlayback?.cancel()
-
       const opacity = Number.parseFloat(getComputedStyle(tooltip).opacity) || 1
-      hidePlayback = animate(
-        tooltip,
-        { opacity: [opacity, 0], scale: [1, 0.96] },
-        HIDE_TOOLTIP_ANIMATION,
-      )
-
-      await waitForTooltipExit(hidePlayback)
-
+      hidePlayback = animate(tooltip, { opacity: [opacity, 0], scale: [1, 0.96] }, { duration: 0.16, ease: EASE })
+      await Promise.race([hidePlayback.finished.catch(() => undefined), new Promise<void>((r) => setTimeout(r, EXIT_MS))])
       if (hideToken !== token) return
-
       tooltip.hidePopover()
       tooltip.style.opacity = ''
       tooltip.style.transform = ''
       hidePlayback = null
     }
 
-    const hideAfterPointerSettles = () => {
-      window.requestAnimationFrame(() => {
-        if (trigger.matches(HOVER_SELECTOR) || tooltip.matches(HOVER_SELECTOR)) return
-        void hide()
+    const hideIfIdle = () =>
+      requestAnimationFrame(() => {
+        if (!trigger.matches(':hover') && !tooltip.matches(':hover')) void hide()
       })
-    }
 
-    trigger.addEventListener(
-      'pointerenter',
-      (event) => {
-        if (!isTouchPointer(event)) show()
-      },
-      { signal },
-    )
-    trigger.addEventListener(
-      'pointerleave',
-      (event) => {
-        if (!isTouchPointer(event)) hideAfterPointerSettles()
-      },
-      { signal },
-    )
-
-    trigger.addEventListener(
-      'focus',
-      () => {
-        if (canHover()) show()
-      },
-      { signal },
-    )
-    trigger.addEventListener(
-      'blur',
-      () => {
-        if (canHover()) void hide()
-      },
-      { signal },
-    )
-    trigger.addEventListener(
-      'click',
-      (event) => {
-        const touchClick = event instanceof PointerEvent && isTouchPointer(event)
-        if (canHover() && !touchClick) {
-          return
-        }
-
-        event.preventDefault()
-        if (isPopoverOpen(tooltip)) void hide()
-        else show()
-      },
-      { signal },
-    )
+    trigger.addEventListener('pointerenter', (e) => { if (e.pointerType !== 'touch') show() }, { signal })
+    trigger.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') hideIfIdle() }, { signal })
+    trigger.addEventListener('focus', () => { if (hoverMedia.matches) show() }, { signal })
+    trigger.addEventListener('blur', () => { if (hoverMedia.matches) void hide() }, { signal })
+    trigger.addEventListener('click', (e) => {
+      if (hoverMedia.matches && !(e instanceof PointerEvent && e.pointerType === 'touch')) return
+      e.preventDefault()
+      isOpen() ? void hide() : show()
+    }, { signal })
   }
 
-  function setupEventLocalTimes() {
-    eventTimeAbort?.abort()
-    eventTimeAbort = new AbortController()
-    const signal = eventTimeAbort.signal
-
-    const roots = $$(ROOT_SELECTOR)
-    if (roots.length === 0) return
-
+  function setup() {
+    abort?.abort()
+    abort = new AbortController()
+    const roots = $$<HTMLElement>('.event-local-time')
+    if (!roots.length) return
     let view: EventLocalTimeView
     try {
       view = resolveEventLocalTime()
-    } catch (error) {
-      console.error('[EventLocalTime] No se pudo calcular la hora local:', error)
+    } catch {
       return
     }
-
-    roots.forEach((root, index) => {
-      bindEventLocalTime(root, view, index, signal)
-    })
+    roots.forEach((root, i) => bind(root, view, i, abort.signal))
   }
 
-  document.addEventListener('astro:page-load', setupEventLocalTimes)
-  setupEventLocalTimes()
+  document.addEventListener('astro:page-load', setup)
+  setup()
 </script>
