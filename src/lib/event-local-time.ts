@@ -27,12 +27,9 @@ function getUserTimeZoneId(): string {
 
 function formatRelativeOffset(diffMinutes: number): string {
   const abs = Math.abs(diffMinutes)
-  const hours = Math.floor(abs / 60)
-  const minutes = abs % 60
-  const parts: string[] = []
-  if (hours > 0) parts.push(`${hours} h`)
-  if (minutes > 0) parts.push(`${minutes} min`)
-  return `${diffMinutes > 0 ? '+' : '-'}${parts.join(' ')} de diferencia`
+  const h = Math.floor(abs / 60)
+  const m = abs % 60
+  return `${diffMinutes > 0 ? '+' : '-'}${[h ? `${h} h` : '', m ? `${m} min` : ''].filter(Boolean).join(' ')} de diferencia`
 }
 
 export function resolveEventLocalTime(timeZoneId = getUserTimeZoneId()): EventLocalTimeView {
