@@ -13,7 +13,7 @@ const NAV_ITEMS = [
 ] as const
 
 const shouldReloadNavItem = (href: string) => currentPathname === '/' && href === '/boxeadores'
-const isCurrentNavItem = (href: string) => currentPathname === href
+const isCurrentNavItem = (href: string) => currentPathname === href || currentPathname.startsWith(href + '/')
 ---
 
 {
