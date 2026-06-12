@@ -1,0 +1,219 @@
+---
+import type { Boxer, BoxerImageVariants } from '@/consts/boxers'
+
+interface Props {
+  boxer1: Boxer
+  boxer2: Boxer
+  boxer1Hero: BoxerImageVariants
+  boxer2Hero: BoxerImageVariants
+}
+
+const { boxer1, boxer2, boxer1Hero, boxer2Hero } = Astro.props
+---
+
+<section class="combat-hero" aria-labelledby="battle-title">
+  <div aria-hidden="true" class="combat-hero-veil"></div>
+
+  <div aria-hidden="true" class="combat-hero-boxer boxer-a">
+    <picture transition:name={`boxer-hero-${boxer1.id}`}>
+      <source type="image/avif" srcset={boxer1Hero.avif} />
+      <source type="image/webp" srcset={boxer1Hero.webp} />
+      <img
+        src={boxer1Hero.webp}
+        alt=""
+        fetchpriority="high"
+        decoding="async"
+        class="boxer-img"
+      />
+    </picture>
+  </div>
+
+  <div aria-hidden="true" class="combat-hero-boxer boxer-b">
+    <picture transition:name={`boxer-hero-${boxer2.id}`}>
+      <source type="image/avif" srcset={boxer2Hero.avif} />
+      <source type="image/webp" srcset={boxer2Hero.webp} />
+      <img
+        src={boxer2Hero.webp}
+        alt=""
+        fetchpriority="high"
+        decoding="async"
+        class="boxer-img"
+      />
+    </picture>
+  </div>
+
+  <div class="combat-hero-content">
+    <div class="animate-blurred-fade-in animate-delay-100 relative leading-none">
+      <picture class="block">
+        <source srcset="/logo.avif" type="image/avif" />
+        <source srcset="/logo.webp" type="image/webp" />
+        <img
+          src="/logo.webp"
+          alt="Logo de La Velada del Año VI"
+          class="boxer-default-logo relative block h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
+          width="512"
+          height="512"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </picture>
+    </div>
+
+    <h1 id="battle-title" class="combat-title font-fantasy">
+      <span class="fighter-name">{boxer1.name}</span>
+      <span class="vs-glyph">VS</span>
+      <span class="fighter-name">{boxer2.name}</span>
+    </h1>
+
+    <div aria-hidden="true" class="scroll-hint">
+      <span class="scroll-line"></span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .combat-hero {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 100svh;
+    color: var(--color-theme-cream);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
+  }
+
+  .combat-hero-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(5, 8, 22, 0.12) 0%,
+        transparent 18%,
+        transparent 36%,
+        rgba(5, 8, 22, 0.38) 62%,
+        rgba(5, 8, 22, 0.15) 100%
+      ),
+      radial-gradient(ellipse 70% 48% at 50% 100%, rgba(5, 8, 22, 0.22), transparent 72%);
+  }
+
+  .combat-hero-boxer {
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    width: 50%;
+    max-width: 600px;
+    height: 1200px;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .boxer-a {
+    left: 0;
+    justify-content: flex-start;
+  }
+
+  .boxer-b {
+    right: 0;
+    justify-content: flex-end;
+  }
+
+  .boxer-img {
+    height: 100%;
+    max-height: 100vh;
+    width: auto;
+    object-fit: contain;
+    object-position: bottom center;
+    filter: saturate(1) brightness(0.96);
+  }
+
+  .combat-hero-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 1.5rem 4.5rem;
+    max-width: 40rem;
+    width: 100%;
+    height: 90vh;
+  }
+
+  .combat-title {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+
+  .fighter-name {
+    display: block;
+    font-size: clamp(2.2rem, 4.5vw + 1rem, 4.5rem);
+    font-weight: 900;
+    line-height: 0.88;
+    text-transform: uppercase;
+    text-shadow:
+      0 0 32px rgba(199, 168, 107, 0.2),
+      0 3px 22px rgba(0, 0, 0, 0.88);
+  }
+
+  .vs-glyph {
+    display: block;
+    font-family: var(--font-fantasy);
+    font-size: clamp(3.5rem, 8.5vw + 1rem, 8rem);
+    line-height: 1.1;
+    color: var(--color-theme-gold);
+    text-shadow:
+      0 0 55px rgba(199, 168, 107, 0.55),
+      0 0 110px rgba(199, 168, 107, 0.2),
+      0 4px 30px rgba(0, 0, 0, 0.92);
+  }
+
+  .scroll-hint {
+    margin-top: 3rem;
+  }
+
+  .scroll-line {
+    display: block;
+    width: 1px;
+    height: 3.5rem;
+    margin: 0 auto;
+    background: linear-gradient(to bottom, rgba(199, 168, 107, 0.7), transparent);
+    animation: scroll-drop 2.4s ease-in-out infinite;
+  }
+
+  @keyframes scroll-drop {
+    0%,
+    100% {
+      opacity: 0;
+      transform: scaleY(0.2) translateY(-50%);
+    }
+    50% {
+      opacity: 1;
+      transform: scaleY(1) translateY(0);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .combat-hero-boxer {
+      width: 52%;
+      height: 70%;
+    }
+
+    .combat-hero-content {
+      padding-bottom: 3.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-line {
+      animation: none;
+      opacity: 0.38;
+    }
+  }
+</style>

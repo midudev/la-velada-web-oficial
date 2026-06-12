@@ -242,6 +242,7 @@ const breadcrumbJsonLd = {
           <h1
             id="boxer-name"
             class="boxer-detail-name animate-fade-in-up animate-delay-150 mt-5 text-balance font-cinzel text-5xl font-black uppercase leading-[0.95] tracking-[0.04em] sm:text-6xl md:text-7xl lg:text-8xl"
+            transition:name={`boxer-name-${boxer.id}`}
           >
             {boxer.name}
           </h1>
@@ -266,6 +267,7 @@ const breadcrumbJsonLd = {
                     src={opponentSelectImages.webp}
                     alt=""
                     role="presentation"
+                    transition:name={`boxer-hero-${opponent.id}`}
                     decoding="async"
                     loading="lazy"
                     width="80"
@@ -274,7 +276,10 @@ const breadcrumbJsonLd = {
                   />
                 </picture>
               </span>
-              <span class="boxer-detail-versus-name font-cinzel text-xs font-bold tracking-[0.22em] text-theme-cream sm:text-sm">
+              <span
+                class="boxer-detail-versus-name font-cinzel text-xs font-bold tracking-[0.22em] text-theme-cream sm:text-sm"
+                transition:name={`boxer-name-${opponent.id}`}
+              >
                 {opponent.name}
               </span>
               <ArrowRightIcon
