@@ -79,5 +79,5 @@ return Array.from({ length: entry.count }, (_, i) => {
 
 /** ¿Tiene galería este boxeador? */
 export function hasBoxerGallery(boxerId: string): boolean {
-    return boxerId in GALLERY
+    return Object.hasOwn(GALLERY, boxerId)
 }
