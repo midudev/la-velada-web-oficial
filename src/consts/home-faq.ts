@@ -1,11 +1,12 @@
 import { battles } from '@/consts/battles'
-export interface HomeFaqStreamChannel {
+
+interface HomeFaqStreamChannel {
   platform: string
   href: string
   label: string
 }
 
-export interface HomeFaqBattleItem {
+interface HomeFaqBattleItem {
   number: number
   title: string
 }
@@ -19,14 +20,14 @@ export interface HomeFaqItem {
   eventTime?: boolean
 }
 
-export const HOME_FAQ_BATTLES: readonly HomeFaqBattleItem[] = battles.map((battle) => ({
-  number: battle.number,
-  title: battle.title,
-}))
-
-const mainEventBattle = HOME_FAQ_BATTLES[HOME_FAQ_BATTLES.length - 1]
-if (!mainEventBattle) {
+const lastBattle = battles[battles.length - 1]
+if (!lastBattle) {
   throw new Error('No hay combates definidos para el FAQ de la home')
+}
+
+const mainEventBattle: HomeFaqBattleItem = {
+  number: lastBattle.number,
+  title: lastBattle.title,
 }
 
 export const HOME_FAQS = [
@@ -61,7 +62,7 @@ export const HOME_FAQS = [
   {
     question: '¿Cuáles son los combates confirmados?',
     answer: 'Estos son los combates confirmados de La Velada del Año VI:',
-    battles: HOME_FAQ_BATTLES,
+    battles: battles.map((battle) => ({ number: battle.number, title: battle.title })),
   },
   {
     question: '¿Cuál es el main event?',
