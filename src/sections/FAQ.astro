@@ -63,13 +63,13 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
                   class="relative flex size-10.25 shrink-0 items-center justify-center rounded-full border border-theme-gold/30 bg-black/25 text-theme-gold transition duration-300 group-open:rotate-45 group-open:border-theme-gold/70 group-open:bg-theme-gold/15 sm:size-11.25"
                   aria-hidden="true"
                 >
-                  <span class="absolute h-px w-4.25 bg-current"></span>
-                  <span class="absolute h-4.25 w-px bg-current"></span>
+                  <span class="absolute h-px w-4.25 bg-current" />
+                  <span class="absolute h-4.25 w-px bg-current" />
                 </span>
               </summary>
 
               <div
-                class="px-2.5 pb-6 pr-14 sm:px-4 sm:pr-20"
+                class="px-2.5 pr-14 pb-6 sm:px-4 sm:pr-20"
                 itemprop="acceptedAnswer"
                 itemscope
                 itemtype="https://schema.org/Answer"
@@ -80,6 +80,9 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
                 >
                   {answer}
                 </p>
+                {index === 0 && (
+                  <div id="faq-local-times" data-timestamp={EVENT_TIMESTAMP} data-zones={JSON.stringify(FAQ_EVENT_ZONES)} class="mt-4 hidden" />
+                )}
                 {channels && (
                   <ul class="mt-4 flex list-none flex-col gap-2 pl-0 text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
                     {channels.map(({ platform, href, label }) => (
@@ -101,10 +104,7 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
                   <ol class="mt-4 grid list-none gap-2 pl-0 text-base leading-7 text-white/75 sm:grid-cols-2 sm:text-lg sm:leading-8">
                     {battles.map(({ number, title }) => (
                       <li class="grid grid-cols-[2rem_minmax(0,1fr)] gap-2">
-                        <span
-                          aria-hidden="true"
-                          class="font-bold text-theme-gold/80 tabular-nums"
-                        >
+                        <span aria-hidden="true" class="font-bold text-theme-gold/80 tabular-nums">
                           {number}
                         </span>
                         <span>{title}</span>
