@@ -10,7 +10,7 @@ const timestamp = EVENT_DATE.getTime()
     class="relative w-full overflow-hidden bg-theme-midnight"
     aria-label="Presentación de La Velada del Año VI"
   >
-    <picture data-hero-background class="absolute inset-0 z-0">
+    <picture data-hero-background class="absolute inset-0 opacity-90 saturate-130">
       <source
         type="image/avif"
         srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
@@ -36,16 +36,6 @@ const timestamp = EVENT_DATE.getTime()
 
     <div class="absolute inset-0 z-1 bg-linear-to-b from-black/40 via-transparent to-theme-midnight/80" aria-hidden="true"></div>
 
-    {/*
-      El "hero principal" (logo + selector + CTA + grid) ocupa siempre
-      AL MENOS 100vh. El countdown vive como hermano debajo, así que
-      cuando el contenido del header crece más allá del viewport sigue
-      siendo cómodo y no queda apretado contra el countdown.
-
-      Padding inferior reducido (`pb-3 lg:pb-5`) para que la cuadrícula
-      de boxers, anclada al bottom del hero, quede más cerca del
-      countdown sin pegarse al borde.
-    */}
     <header class="relative z-10 flex min-h-screen w-full flex-col items-center justify-start px-4 pt-14 pb-3 text-center sm:pt-16 lg:pb-5">
       <h1 class="sr-only">
         La Velada del Año VI — Evento de boxeo amateur entre streamers organizado por Ibai
@@ -55,32 +45,32 @@ const timestamp = EVENT_DATE.getTime()
       <BoxerSelector />
     </header>
 
-    <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pt-1 pb-6">
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pt-4 pb-6 lg:pt-8">
       <div
-        class="animate-fade-in-up animate-delay-1300 flex select-none items-center justify-center gap-3 sm:gap-5 md:gap-7"
+        class="animate-fade-in-up animate-delay-1300 flex select-none items-start justify-center gap-x-2 sm:gap-x-3 md:gap-x-4"
         id="countdown-hero"
         data-date={timestamp}
         role="timer"
         aria-label="Cuenta atrás para La Velada del Año VI"
       >
-        <div class="flex flex-col items-center gap-1">
-          <span data-days class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">---</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">DÍAS</span>
+        <div class="relative">
+          <span data-days class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl"><span></span><span></span><span></span></span>
+          <span class="absolute top-full left-0 right-0 mt-1 text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">DÍAS</span>
         </div>
-        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
-        <div class="flex flex-col items-center gap-1">
-          <span data-hours class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">HORAS</span>
+        <span class="countdown-separator self-center font-cinzel text-2xl font-bold text-theme-cream sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="relative">
+          <span data-hours class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl"><span></span><span></span></span>
+          <span class="absolute top-full left-0 right-0 mt-1 text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">HORAS</span>
         </div>
-        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
-        <div class="flex flex-col items-center gap-1">
-          <span data-minutes class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">MIN</span>
+        <span class="countdown-separator self-center font-cinzel text-2xl font-bold text-theme-cream sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="relative">
+          <span data-minutes class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl"><span></span><span></span></span>
+          <span class="absolute top-full left-0 right-0 mt-1 text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">MIN</span>
         </div>
-        <span class="self-start mt-1 font-cinzel text-2xl font-light text-theme-gold/30 sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
-        <div class="flex flex-col items-center gap-1">
-          <span data-seconds class="countdown-digit font-cinzel text-3xl font-bold tabular-nums text-theme-cream sm:text-4xl md:text-5xl">--</span>
-          <span class="font-cinzel text-[0.55rem] font-semibold tracking-[0.3em] text-white/40 sm:text-[0.65rem]">SEG</span>
+        <span class="countdown-separator self-center font-cinzel text-2xl font-bold text-theme-cream sm:text-3xl md:text-4xl" aria-hidden="true">:</span>
+        <div class="relative">
+          <span data-seconds class="countdown-digit font-cinzel text-3xl font-bold text-theme-cream sm:text-4xl md:text-5xl"><span></span><span></span></span>
+          <span class="absolute top-full left-0 right-0 mt-1 text-center font-cinzel text-[0.55rem] font-bold tracking-[0.3em] text-theme-cream sm:text-[0.65rem]">SEG</span>
         </div>
       </div>
     </div>
@@ -103,73 +93,79 @@ const timestamp = EVENT_DATE.getTime()
     }
 
     .countdown-digit {
-      text-shadow: 0 0 30px rgba(199, 168, 107, 0.2);
-      min-width: 1.8em;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      line-height: 1;
+    }
+
+    .countdown-digit span {
+      flex: 0 0 auto;
+      width: 1ch;
       text-align: center;
+    }
+
+    .countdown-digit span:empty {
+      width: 0;
+    }
+
+    .countdown-separator {
+      line-height: 1;
     }
   </style>
 
   <script>
-    import createCountdown, { type TimeParts } from '@/lib/countdown'
     import { $ } from '@/lib/dom-selector'
-
-    function initCountdown() {
-      const $countdown = $<HTMLElement>('#countdown-hero')
-      if (!$countdown) return
-
-      const $days = $('[data-days]', $countdown)
-      const $hours = $('[data-hours]', $countdown)
-      const $minutes = $('[data-minutes]', $countdown)
-      const $seconds = $('[data-seconds]', $countdown)
-
-      const timestamp = Number($countdown.getAttribute('data-date') ?? 0)
-      return createCountdown(timestamp, {
-        onTick({ days, hours, minutes, seconds }: TimeParts) {
-          if ($days) $days.textContent = days
-          if ($hours) $hours.textContent = hours
-          if ($minutes) $minutes.textContent = minutes
-          if ($seconds) $seconds.textContent = seconds
-        },
-        onComplete() {},
-      })
-    }
 
     document.addEventListener('astro:page-load', () => {
       const hero = $<HTMLElement>('[data-hero]')
       if (!hero) return
 
-      initCountdown()?.start()
+      let intervalId = 0
+      const countdown = $<HTMLElement>('#countdown-hero')
+      if (countdown) {
+        const days = $('[data-days]', countdown)
+        const hours = $('[data-hours]', countdown)
+        const minutes = $('[data-minutes]', countdown)
+        const seconds = $('[data-seconds]', countdown)
+        const target = Number(countdown.dataset.date)
 
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      if (!reduceMotion) {
-        const controller = new AbortController()
-        const { signal } = controller
+        if (Number.isFinite(target)) {
+          const tick = () => {
+            const ms = target - Date.now()
+            if (ms <= 0) return clearInterval(intervalId)
+            const d = String(Math.floor(ms / 86400000))
+            const h = String(Math.floor((ms % 86400000) / 3600000)).padStart(2, '0')
+            const m = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0')
+            const s = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')
+            if (days) for (let i = 0; i < 3; i++) days.children[i].textContent = d[i] ?? ''
+            if (hours) for (let i = 0; i < 2; i++) hours.children[i].textContent = h[i]
+            if (minutes) for (let i = 0; i < 2; i++) minutes.children[i].textContent = m[i]
+            if (seconds) for (let i = 0; i < 2; i++) seconds.children[i].textContent = s[i]
+          }
 
-        const MAX_SCALE = 0.18
-        let ticking = false
-
-        const update = () => {
-          ticking = false
-          const heroHeight = hero.offsetHeight || window.innerHeight
-          const progress = Math.min(Math.max(window.scrollY / heroHeight, 0), 1)
-          hero.style.setProperty('--hero-bg-scale', String(1 + progress * MAX_SCALE))
+          intervalId = window.setInterval(tick, 1000)
+          tick()
         }
-
-        const onScroll = () => {
-          if (ticking) return
-          ticking = true
-          requestAnimationFrame(update)
-        }
-
-        update()
-        window.addEventListener('scroll', onScroll, { passive: true, signal })
-        window.addEventListener('resize', update, { passive: true, signal })
-
-        document.addEventListener(
-          'astro:before-preparation',
-          () => controller.abort(),
-          { once: true },
-        )
       }
+
+      let onScroll = () => {}
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const MAX_SCALE = 0.18
+        onScroll = () => {
+          const h = hero.offsetHeight || window.innerHeight
+          const p = Math.min(Math.max(window.scrollY / h, 0), 1)
+          hero.style.setProperty('--hero-bg-scale', String(1 + p * MAX_SCALE))
+        }
+        onScroll()
+        window.addEventListener('scroll', onScroll, { passive: true })
+        window.addEventListener('resize', onScroll, { passive: true })
+      }
+
+      document.addEventListener('astro:before-preparation', () => {
+        clearInterval(intervalId)
+        window.removeEventListener('scroll', onScroll)
+        window.removeEventListener('resize', onScroll)
+      }, { once: true })
     })
   </script>

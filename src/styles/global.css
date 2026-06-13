@@ -37,9 +37,13 @@
     overscroll-behavior-y: none;
   }
 
+  
+
+
   html {
     scrollbar-gutter: stable;
     background: var(--color-theme-midnight);
+    scroll-behavior: smooth;
   }
 
   body {
@@ -268,7 +272,6 @@ html {
   text-transform: uppercase;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
 @utility mask-fade-bottom {
@@ -277,4 +280,40 @@ html {
 
 @utility mask-fade-bottom-quick {
   mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
+}
+
+
+body:has(dialog[open]) {
+    overflow: hidden;
+
+      .overlay{
+          display: block;
+      }
+ }
+
+
+dialog {
+    scale: 0;
+
+    transition: scale .4s ease, display .4s ease allow-discrete;
+
+    &[open] {
+        scale: 1;
+        display: flex;
+
+        @starting-style {
+            scale: 0;
+        }
+    }
+  
+}
+
+.font-cinzel {
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { 
+    scroll-behavior: auto;
+  }
 }

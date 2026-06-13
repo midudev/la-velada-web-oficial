@@ -8,7 +8,7 @@ export interface Boxer {
   birthDate: string | null
   age: number | null
   followersUpdatedAt: string
-  socials: { platform: string; username: string; followers: number; monthlyListeners?: number }[]
+  socials: { platform: string; username: string; followers?: number; monthlyListeners?: number }[]
   country: string
   previousVeladaWins: number[]
   youtubeChannelId?: string
@@ -137,11 +137,13 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '1995-12-31',
       age: 30,
-      followersUpdatedAt: '2026-05-14',
+      youtubeChannelId: 'UCZGr6IbuqQayELgiLivhnKA',
+      followersUpdatedAt: '2026-06-10',
       socials: [
-        { platform: 'instagram', username: 'gastonedul', followers: 2_300_000 },
-        { platform: 'tiktok', username: 'gastonedul', followers: 1_800_000 },
-        { platform: 'x', username: 'gastonedul', followers: 1_100_000 },
+        { platform: 'instagram', username: 'gastonedul', followers: 2_400_000 },
+        { platform: 'tiktok', username: 'gastonedul', followers: 1_900_000 },
+        { platform: 'x', username: 'gastonedul', followers: 1_200_000 },
+        { platform: 'youtube', username: 'gastonedul', followers: 510_000 },
       ],
     },
     {

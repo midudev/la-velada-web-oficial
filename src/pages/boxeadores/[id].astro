@@ -17,9 +17,9 @@ import {
   getBoxerSelectImages,
 } from '@/consts/boxers'
 import Layout from '@/layouts/Layout.astro'
-import Header from '@/sections/Header.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
+import BoxerGallery from '@/components/BoxerGallery.astro'
 
 export const prerender = true
 
@@ -145,8 +145,6 @@ const breadcrumbJsonLd = {
     slot="head"
   />
 
-  <Header />
-
   <section
     class="boxer-detail relative isolate w-full overflow-x-clip bg-theme-midnight px-4 pb-24 pt-24 text-theme-cream sm:px-6 sm:pt-28 md:pt-32"
     aria-labelledby="boxer-name"
@@ -218,7 +216,7 @@ const breadcrumbJsonLd = {
             />
           </picture>
 
-          <div class="boxer-detail-socials relative z-10 mt-6 w-full">
+          <div class="boxer-detail-socias relative z-10 mt-6 w-full">
             <BoxerSocials boxer={boxer} />
           </div>
         </div>
@@ -286,6 +284,8 @@ const breadcrumbJsonLd = {
               />
             </a>
           )}
+
+          <BoxerGallery boxerId={boxer.id} boxerName={boxer.name} />
 
           <div
             class="boxer-detail-coming-soon animate-fade-in-up animate-delay-500 mt-10 w-full"
@@ -562,6 +562,7 @@ const breadcrumbJsonLd = {
     display: flex;
     align-items: start;
     justify-content: center;
+    filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.55));
   }
 
   /* Badge de "Campeón previo" en la ficha individual: arriba a la
@@ -614,7 +615,6 @@ const breadcrumbJsonLd = {
       color-mix(in srgb, black 60%, transparent) 90%,
       transparent 100%
     );
-    filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.55));
   }
 
   @media (max-width: 1023px) {
