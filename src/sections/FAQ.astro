@@ -11,7 +11,7 @@ const { faqs } = Astro.props
 
 <section
   id="faq"
-  class="relative w-full overflow-hidden px-4 py-20 sm:px-6 lg:py-28"
+  class="faq-section relative w-full overflow-hidden px-4 py-20 sm:px-6 lg:py-28"
   aria-labelledby="faq-title"
   itemscope
   itemtype="https://schema.org/FAQPage"
@@ -43,11 +43,11 @@ const { faqs } = Astro.props
         faqs.map(({ question, answer }, index) => (
           <li>
             <details
-              class="group bg-theme-midnight/35 transition duration-300 open:bg-theme-navy/35 hover:bg-theme-navy/25"
+              class="faq-item group bg-theme-midnight/35 transition duration-300 open:bg-theme-navy/35 hover:bg-theme-navy/25"
+              name="faq"
               itemprop="mainEntity"
               itemscope
               itemtype="https://schema.org/Question"
-              open={index === 0}
             >
               <summary class="flex min-h-20 cursor-pointer list-none items-center justify-between gap-5 px-2.5 py-5 outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:min-h-24 sm:px-4 sm:py-6 [&::-webkit-details-marker]:hidden">
                 <h3
@@ -66,14 +66,14 @@ const { faqs } = Astro.props
               </summary>
 
               <div
-                class="px-2.5 pb-6 pr-14 sm:px-4 sm:pr-20"
+                class="faq-answer-shell px-2.5 pb-6 pr-14 sm:px-4 sm:pr-20"
                 itemprop="acceptedAnswer"
                 itemscope
                 itemtype="https://schema.org/Answer"
               >
                 <p
                   itemprop="text"
-                  class="max-w-3xl text-base leading-7 text-pretty text-white/75 sm:text-lg sm:leading-8"
+                  class="faq-answer-body max-w-3xl text-base leading-7 text-pretty text-white/75 sm:text-lg sm:leading-8"
                 >
                   {answer}
                 </p>
@@ -85,3 +85,68 @@ const { faqs } = Astro.props
     </ul>
   </div>
 </section>
+
+<style>
+  .faq-section {
+    --faq-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    interpolate-size: allow-keywords;
+  }
+
+  .faq-item {
+    position: relative;
+  }
+
+  .faq-item::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: -1px;
+    height: 1px;
+    background-color: var(--color-theme-gold);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 220ms var(--faq-ease-out);
+  }
+
+  .faq-item[open]::before {
+    transform: scaleX(1);
+  }
+
+  .faq-item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 280ms var(--faq-ease-out),
+      content-visibility 280ms var(--faq-ease-out);
+    transition-behavior: allow-discrete;
+  }
+
+  .faq-item[open]::details-content {
+    block-size: auto;
+  }
+
+  .faq-answer-body {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+    transition:
+      opacity 180ms var(--faq-ease-out),
+      transform 220ms var(--faq-ease-out);
+  }
+
+  .faq-item[open] .faq-answer-body {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-item::before,
+    .faq-item::details-content,
+    .faq-answer-body {
+      transition: none;
+    }
+
+    .faq-answer-body {
+      transform: none;
+    }
+  }
+</style>
