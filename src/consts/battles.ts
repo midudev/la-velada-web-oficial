@@ -1,3 +1,4 @@
+import { battlePairs } from '@/consts/battle-pairs'
 import { BOXERS_BY_ID } from '@/consts/boxers'
 
 export interface Battle {
@@ -7,19 +8,6 @@ export interface Battle {
   title: string
   url: `/combate/${string}`
 }
-
-const battlePairs = [
-  ['edu-aguirre', 'gaston-edul'],
-  ['la-parce', 'fabiana-sevillano'],
-  ['clersss', 'natalia-mx'],
-  ['lit-killah', 'kidd-keo'],
-  ['alondrissa', 'angie-velasco'],
-  ['viruzz', 'gero-arias'],
-  ['samy-rivers', 'roro'],
-  ['marta-diaz', 'tatiana-kaer'],
-  ['plex', 'fernanfloo'],
-  ['illojuan', 'thegrefg'],
-] as const
 
 function getBoxerName(id: string): string {
   const boxer = BOXERS_BY_ID[id]
