@@ -16,6 +16,7 @@ import {
   getBoxerPhoto,
   getBoxerSelectImages,
 } from '@/consts/boxers'
+import { EVENT_DATE_TIME } from '@/consts/event'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
@@ -80,7 +81,7 @@ const personJsonLd = {
   performerIn: {
     '@type': 'SportsEvent',
     name: 'La Velada del Año VI',
-    startDate: '2026-07-25T20:00:00+02:00',
+    startDate: EVENT_DATE_TIME,
     location: {
       '@type': 'Place',
       name: 'Estadio de La Cartuja',
@@ -146,7 +147,7 @@ const breadcrumbJsonLd = {
   />
 
   <section
-    class="boxer-detail relative isolate w-full overflow-x-clip bg-theme-midnight px-4 pb-24 pt-24 text-theme-cream sm:px-6 sm:pt-28 md:pt-32"
+    class="boxer-detail relative isolate w-full overflow-x-clip bg-theme-midnight px-4 pt-24 pb-24 text-theme-cream sm:px-6 sm:pt-28 md:pt-32"
     aria-labelledby="boxer-name"
   >
     <picture
@@ -189,7 +190,9 @@ const breadcrumbJsonLd = {
         Volver a boxeadores
       </a>
 
-      <div class="boxer-detail-grid mt-8 grid gap-8 sm:mt-10 md:gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start lg:gap-12">
+      <div
+        class="boxer-detail-grid mt-8 grid gap-8 sm:mt-10 md:gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start lg:gap-12"
+      >
         <div class="boxer-detail-portrait-wrap relative flex flex-col items-center">
           <span aria-hidden="true" class="boxer-detail-aura"></span>
 
@@ -201,7 +204,9 @@ const breadcrumbJsonLd = {
             class="boxer-detail-wins"
           />
 
-          <picture class="boxer-detail-portrait-picture relative z-10 flex w-full items-start justify-center">
+          <picture
+            class="boxer-detail-portrait-picture relative z-10 flex w-full items-start justify-center"
+          >
             <source type="image/avif" srcset={heroImages.avif} />
             <source type="image/webp" srcset={heroImages.webp} />
             <img
@@ -222,12 +227,14 @@ const breadcrumbJsonLd = {
         </div>
 
         <div class="boxer-detail-info relative flex flex-col items-start">
-          <div class="boxer-detail-tags animate-fade-in-up flex flex-wrap items-center gap-2">
-            {battle && (
-              <span class="boxer-detail-chip boxer-detail-chip-strong">
-                Combate · {String(battle.number).padStart(2, '0')}
-              </span>
-            )}
+          <div class="boxer-detail-tags flex animate-fade-in-up flex-wrap items-center gap-2">
+            {
+              battle && (
+                <span class="boxer-detail-chip boxer-detail-chip-strong">
+                  Combate · {String(battle.number).padStart(2, '0')}
+                </span>
+              )
+            }
             <span class="boxer-detail-chip">
               <CountryFlag
                 country={boxer.country}
@@ -242,58 +249,55 @@ const breadcrumbJsonLd = {
 
           <h1
             id="boxer-name"
-            class="boxer-detail-name animate-fade-in-up animate-delay-150 mt-5 text-balance font-cinzel text-5xl font-black uppercase leading-[0.95] tracking-[0.04em] sm:text-6xl md:text-7xl lg:text-8xl"
+            class="boxer-detail-name mt-5 animate-fade-in-up font-cinzel text-5xl leading-[0.95] font-black tracking-[0.04em] text-balance uppercase animate-delay-150 sm:text-6xl md:text-7xl lg:text-8xl"
           >
             {boxer.name}
           </h1>
 
-          {opponent && opponentSelectImages && (
-            <a
-              href={`/boxeadores/${opponent.id}`}
-              class="boxer-detail-versus animate-fade-in-up animate-delay-300 group mt-5 inline-flex items-center gap-3"
-              aria-label={`Ver el perfil de ${opponent.name}`}
-            >
-              <span
-                class="boxer-detail-versus-label font-cinzel text-[0.55rem] font-bold tracking-[0.45em] text-theme-gold/85 sm:text-[0.65rem]"
-                aria-hidden="true"
+          {
+            opponent && opponentSelectImages && (
+              <a
+                href={`/boxeadores/${opponent.id}`}
+                class="boxer-detail-versus group mt-5 inline-flex animate-fade-in-up items-center gap-3 animate-delay-300"
+                aria-label={`Ver el perfil de ${opponent.name}`}
               >
-                VS
-              </span>
-              <span class="boxer-detail-versus-photo relative inline-flex size-11 shrink-0 overflow-hidden rounded-full sm:size-12">
-                <picture class="absolute inset-0">
-                  <source type="image/avif" srcset={opponentSelectImages.avif} />
-                  <source type="image/webp" srcset={opponentSelectImages.webp} />
-                  <img
-                    src={opponentSelectImages.webp}
-                    alt=""
-                    role="presentation"
-                    decoding="async"
-                    loading="lazy"
-                    width="80"
-                    height="80"
-                    class="size-full object-cover object-top"
-                  />
-                </picture>
-              </span>
-              <span class="boxer-detail-versus-name font-cinzel text-xs font-bold tracking-[0.22em] text-theme-cream sm:text-sm">
-                {opponent.name}
-              </span>
-              <ArrowRightIcon
-                class="boxer-detail-versus-arrow size-3.5 text-theme-gold/70"
-                aria-hidden="true"
-              />
-            </a>
-          )}
+                <span
+                  class="boxer-detail-versus-label font-cinzel text-[0.55rem] font-bold tracking-[0.45em] text-theme-gold/85 sm:text-[0.65rem]"
+                  aria-hidden="true"
+                >
+                  VS
+                </span>
+                <span class="boxer-detail-versus-photo relative inline-flex size-11 shrink-0 overflow-hidden rounded-full sm:size-12">
+                  <picture class="absolute inset-0">
+                    <source type="image/avif" srcset={opponentSelectImages.avif} />
+                    <source type="image/webp" srcset={opponentSelectImages.webp} />
+                    <img
+                      src={opponentSelectImages.webp}
+                      alt=""
+                      role="presentation"
+                      decoding="async"
+                      loading="lazy"
+                      width="80"
+                      height="80"
+                      class="size-full object-cover object-top"
+                    />
+                  </picture>
+                </span>
+                <span class="boxer-detail-versus-name font-cinzel text-xs font-bold tracking-[0.22em] text-theme-cream sm:text-sm">
+                  {opponent.name}
+                </span>
+                <ArrowRightIcon
+                  class="boxer-detail-versus-arrow size-3.5 text-theme-gold/70"
+                  aria-hidden="true"
+                />
+              </a>
+            )
+          }
 
           <BoxerGallery boxerId={boxer.id} boxerName={boxer.name} />
 
-          <div
-            class="boxer-detail-coming-soon animate-fade-in-up animate-delay-500 mt-10 w-full"
-          >
-            <div
-              class="flex w-full items-center gap-3 sm:gap-4"
-              aria-hidden="true"
-            >
+          <div class="boxer-detail-coming-soon mt-10 w-full animate-fade-in-up animate-delay-500">
+            <div class="flex w-full items-center gap-3 sm:gap-4" aria-hidden="true">
               <span class="size-1 rotate-45 bg-theme-gold/70"></span>
               <span class="h-px flex-1 bg-linear-to-r from-theme-gold/45 to-transparent"></span>
             </div>
@@ -305,15 +309,13 @@ const breadcrumbJsonLd = {
             </p>
 
             <p
-              class="boxer-detail-coming-soon-text mt-3 max-w-xl font-cinzel text-xs font-medium leading-relaxed tracking-[0.18em] text-theme-cream/70 sm:text-sm"
+              class="boxer-detail-coming-soon-text mt-3 max-w-xl font-cinzel text-xs leading-relaxed font-medium tracking-[0.18em] text-theme-cream/70 sm:text-sm"
             >
-              Estamos puliendo la ficha completa de {boxer.name}: récord,
-              entrenamientos y rivalidades. Vuelve pronto.
+              Estamos puliendo la ficha completa de {boxer.name}: récord, entrenamientos y
+              rivalidades. Vuelve pronto.
             </p>
 
-            <div
-              class="mt-6 flex flex-wrap items-center gap-3 sm:gap-4"
-            >
+            <div class="mt-6 flex flex-wrap items-center gap-3 sm:gap-4">
               <a href="/boxeadores" class="boxer-detail-cta boxer-detail-cta-ghost">
                 Todos los boxeadores
               </a>
@@ -334,12 +336,7 @@ const breadcrumbJsonLd = {
   }
 
   [data-boxer-detail-bg] {
-    mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 60%,
-      transparent 100%
-    );
+    mask-image: linear-gradient(to bottom, #000 0%, #000 60%, transparent 100%);
   }
 
   [data-boxer-detail-bg] img {

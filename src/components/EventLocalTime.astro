@@ -1,10 +1,14 @@
+---
+import { EVENT_DATE_TIME, EVENT_DISPLAY_TIME } from '@/consts/event'
+---
+
 <span class="event-local-time">
   <time
-    datetime="2026-07-25T20:00:00+02:00"
+    datetime={EVENT_DATE_TIME}
     tabindex="0"
     class="event-local-time__trigger cursor-help font-medium underline decoration-theme-gold/35 decoration-dotted underline-offset-[0.2em] transition-[text-decoration-color] duration-200 hover:decoration-theme-gold/80"
   >
-    20:00H (españa peninsular)
+    {EVENT_DISPLAY_TIME}
   </time>
   <span popover="manual" role="tooltip" class="event-local-time__tooltip">
     <span class="event-local-time__tooltip-primary"></span>
@@ -172,13 +176,15 @@
       if (!isOpen()) tooltip.showPopover()
       if (!canAnimate()) return
       void animate(tooltip, { opacity: [0, 1], scale: [0.96, 1] }, { duration: 0.18, ease: EASE })
-      $$<HTMLElement>('.event-local-time__tooltip > span:not([hidden])', tooltip).forEach((line, i) => {
-        void animate(
-          line,
-          { opacity: [0, 1], transform: ['translateY(0.25rem)', 'translateY(0)'] },
-          { duration: 0.18, delay: i * 0.04, ease: EASE },
-        )
-      })
+      $$<HTMLElement>('.event-local-time__tooltip > span:not([hidden])', tooltip).forEach(
+        (line, i) => {
+          void animate(
+            line,
+            { opacity: [0, 1], transform: ['translateY(0.25rem)', 'translateY(0)'] },
+            { duration: 0.18, delay: i * 0.04, ease: EASE },
+          )
+        },
+      )
     }
 
     const hide = async () => {
@@ -190,8 +196,15 @@
       const token = ++hideToken
       hidePlayback?.cancel()
       const opacity = Number.parseFloat(getComputedStyle(tooltip).opacity) || 1
-      hidePlayback = animate(tooltip, { opacity: [opacity, 0], scale: [1, 0.96] }, { duration: 0.16, ease: EASE })
-      await Promise.race([hidePlayback.finished.catch(() => undefined), new Promise<void>((r) => setTimeout(r, EXIT_MS))])
+      hidePlayback = animate(
+        tooltip,
+        { opacity: [opacity, 0], scale: [1, 0.96] },
+        { duration: 0.16, ease: EASE },
+      )
+      await Promise.race([
+        hidePlayback.finished.catch(() => undefined),
+        new Promise<void>((r) => setTimeout(r, EXIT_MS)),
+      ])
       if (hideToken !== token) return
       tooltip.hidePopover()
       tooltip.style.opacity = ''
@@ -204,15 +217,43 @@
         if (!trigger.matches(':hover') && !tooltip.matches(':hover')) void hide()
       })
 
-    trigger.addEventListener('pointerenter', (e) => { if (e.pointerType !== 'touch') show() }, { signal })
-    trigger.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') hideIfIdle() }, { signal })
-    trigger.addEventListener('focus', () => { if (hoverMedia.matches) show() }, { signal })
-    trigger.addEventListener('blur', () => { if (hoverMedia.matches) void hide() }, { signal })
-    trigger.addEventListener('click', (e) => {
-      if (hoverMedia.matches && !(e instanceof PointerEvent && e.pointerType === 'touch')) return
-      e.preventDefault()
-      isOpen() ? void hide() : show()
-    }, { signal })
+    trigger.addEventListener(
+      'pointerenter',
+      (e) => {
+        if (e.pointerType !== 'touch') show()
+      },
+      { signal },
+    )
+    trigger.addEventListener(
+      'pointerleave',
+      (e) => {
+        if (e.pointerType !== 'touch') hideIfIdle()
+      },
+      { signal },
+    )
+    trigger.addEventListener(
+      'focus',
+      () => {
+        if (hoverMedia.matches) show()
+      },
+      { signal },
+    )
+    trigger.addEventListener(
+      'blur',
+      () => {
+        if (hoverMedia.matches) void hide()
+      },
+      { signal },
+    )
+    trigger.addEventListener(
+      'click',
+      (e) => {
+        if (hoverMedia.matches && !(e instanceof PointerEvent && e.pointerType === 'touch')) return
+        e.preventDefault()
+        isOpen() ? void hide() : show()
+      },
+      { signal },
+    )
   }
 
   function setup() {
