@@ -3,11 +3,15 @@ import SectionHeader from '@/components/SectionHeader.astro'
 
 const VENUE_NAME = 'Estadio de La Cartuja'
 const VENUE_CITY = 'Sevilla, España'
-const VENUE_LATITUDE = '37.41745253261154'
-const VENUE_LONGITUDE = '-6.004464222177984'
+const VENUE_COORDINATES = {
+  latitude: 37.41745253261154,
+  longitude: -6.004464222177984,
+  zoom: 15,
+}
+const VENUE_LOCATION = `${VENUE_COORDINATES.latitude},${VENUE_COORDINATES.longitude}`
 const VENUE_GEO_LABEL = encodeURIComponent(`${VENUE_NAME}, ${VENUE_CITY}`)
-const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LATITUDE},${VENUE_LONGITUDE}(${VENUE_GEO_LABEL})`
-const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VENUE_LATITUDE},${VENUE_LONGITUDE}`
+const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LOCATION}(${VENUE_GEO_LABEL})`
+const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VENUE_LOCATION}`
 ---
 
 <link
@@ -228,6 +232,9 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
         <div
           id="velada-map"
           class="h-full min-h-[360px] w-full md:min-h-[480px]"
+          data-latitude={VENUE_COORDINATES.latitude}
+          data-longitude={VENUE_COORDINATES.longitude}
+          data-zoom={VENUE_COORDINATES.zoom}
           aria-label="Mapa con la ubicación del Estadio de La Cartuja en Sevilla"
         >
         </div>
@@ -305,10 +312,6 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
 <script>
   import { $ } from '@/lib/dom-selector'
 
-  const LAT = 37.41745253261154
-  const LNG = -6.004464222177984
-  const ZOOM = 15
-
   const PIN_SVG = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 54" width="40" height="54">
       <defs>
@@ -351,62 +354,68 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
   }
 
   async function initMap() {
-      try {
+    try {
+      destroyMap()
 
-    destroyMap()
+      const container = $<HTMLElement>('#velada-map')
+      if (!container) return
 
-    const container = document.getElementById('velada-map')
-    if (!container) return
+      const latitude = Number(container.dataset.latitude)
+      const longitude = Number(container.dataset.longitude)
+      const zoom = Number(container.dataset.zoom)
 
-    if (!(window as any).L) {
-      await new Promise<void>((resolve, reject) => {
-        const s = document.createElement('script')
-        s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
-        s.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo='
-        s.crossOrigin = ''
-        s.onload = () => resolve()
-        s.onerror = () => reject(new Error('No se pudo cargar Leaflet'))
-        document.head.appendChild(s)
+      if (!(window as any).L) {
+        await new Promise<void>((resolve, reject) => {
+          const s = document.createElement('script')
+          s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+          s.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo='
+          s.crossOrigin = ''
+          s.onload = () => resolve()
+          s.onerror = () => reject(new Error('No se pudo cargar Leaflet'))
+          document.head.appendChild(s)
+        })
+      }
+
+      const L = (window as any).L
+
+      mapInstance = L.map(container, {
+        center: [latitude, longitude],
+        zoom,
+        zoomControl: true,
+        scrollWheelZoom: false,
+        attributionControl: true,
       })
-    }
 
-    const L = (window as any).L
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19,
+      }).addTo(mapInstance)
 
-    mapInstance = L.map(container, {
-      center: [LAT, LNG],
-      zoom: ZOOM,
-      zoomControl: true,
-      scrollWheelZoom: false,
-      attributionControl: true,
-    })
+      const customIcon = L.divIcon({
+        html: PIN_SVG,
+        className: 'velada-marker',
+        iconSize: [40, 54],
+        iconAnchor: [20, 54],
+        popupAnchor: [0, -58],
+      })
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19,
-    }).addTo(mapInstance)
-
-    const customIcon = L.divIcon({
-      html: PIN_SVG,
-      className: 'velada-marker',
-      iconSize: [40, 54],
-      iconAnchor: [20, 54],
-      popupAnchor: [0, -58],
-    })
-
-    const popup = L.popup({
-      closeButton: true,
-      maxWidth: 220,
-    }).setContent(
-      `<strong style="color:#c7a86b;display:block;margin-bottom:0.35rem;">Estadio de La Cartuja</strong>
+      const popup = L.popup({
+        closeButton: true,
+        maxWidth: 220,
+      }).setContent(
+        `<strong style="color:#c7a86b;display:block;margin-bottom:0.35rem;">Estadio de La Cartuja</strong>
       <span style="color:rgba(244,228,201,0.7);">Sevilla, España</span><br/>
       <span style="color:rgba(255,255,255,0.5);">25 · 07 · 2026 — 20:00h</span>`,
-    )
+      )
 
-    L.marker([LAT, LNG], { icon: customIcon }).addTo(mapInstance).bindPopup(popup).openPopup()
+      L.marker([latitude, longitude], { icon: customIcon })
+        .addTo(mapInstance)
+        .bindPopup(popup)
+        .openPopup()
 
-    setTimeout(() => mapInstance?.invalidateSize(), 200)
+      setTimeout(() => mapInstance?.invalidateSize(), 200)
     } catch (error) {
       console.error('No se pudo inicializar el mapa:', error)
     }
@@ -414,10 +423,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
 
   document.addEventListener('astro:page-load', () => {
     updateVenueMapLink()
-
-    if (document.getElementById('velada-map')) {
-      initMap()
-    }
+    initMap()
   })
 
   document.addEventListener('astro:before-preparation', destroyMap)
