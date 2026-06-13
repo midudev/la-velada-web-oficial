@@ -43,6 +43,7 @@
   html {
     scrollbar-gutter: stable;
     background: var(--color-theme-midnight);
+    scroll-behavior: smooth;
   }
 
   body {
@@ -309,4 +310,10 @@ dialog {
 
 .font-cinzel {
   text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { 
+    scroll-behavior: auto;
+  }
 }
