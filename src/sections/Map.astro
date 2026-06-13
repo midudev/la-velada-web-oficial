@@ -7,6 +7,7 @@ const VENUE_LATITUDE = '37.41745253261154'
 const VENUE_LONGITUDE = '-6.004464222177984'
 const VENUE_GEO_LABEL = encodeURIComponent(`${VENUE_NAME}, ${VENUE_CITY}`)
 const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LATITUDE},${VENUE_LONGITUDE}(${VENUE_GEO_LABEL})`
+const VENUE_WEB_MAP_URL = `https://www.openstreetmap.org/?mlat=${VENUE_LATITUDE}&mlon=${VENUE_LONGITUDE}#map=16/${VENUE_LATITUDE}/${VENUE_LONGITUDE}`
 ---
 
 <link
@@ -196,7 +197,8 @@ const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LATITUDE},${VENUE_LONGITUDE}(${VENUE_GE
           <!-- CTA ubicación -->
           <div class="flex flex-col items-center gap-4">
             <a
-              href={VENUE_GEO_URL}
+              href={VENUE_WEB_MAP_URL}
+              data-geo-href={VENUE_GEO_URL}
               class="inline-flex items-center gap-2 rounded border border-theme-gold/35 px-4 py-[0.6rem] font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-theme-gold uppercase no-underline transition-all duration-300 outline-none hover:-translate-y-px hover:border-theme-gold hover:bg-theme-gold/10 hover:text-theme-cream focus-visible:-translate-y-px focus-visible:border-theme-gold focus-visible:bg-theme-gold/10 focus-visible:text-theme-cream focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               aria-label="Abrir la ubicación del Estadio de La Cartuja en la aplicación de mapas"
             >
@@ -301,6 +303,8 @@ const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LATITUDE},${VENUE_LONGITUDE}(${VENUE_GE
 </style>
 
 <script>
+  import { $ } from '@/lib/dom-selector'
+
   const LAT = 37.41745253261154
   const LNG = -6.004464222177984
   const ZOOM = 15
@@ -327,6 +331,17 @@ const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LATITUDE},${VENUE_LONGITUDE}(${VENUE_GE
   `
 
   let mapInstance: any = null
+
+  function useNativeGeoLink() {
+    return /android/i.test(navigator.userAgent)
+  }
+
+  function updateVenueMapLink() {
+    const link = $<HTMLAnchorElement>('[data-geo-href]')
+    if (!link || !useNativeGeoLink()) return
+
+    link.href = link.dataset.geoHref ?? link.href
+  }
 
   function destroyMap() {
     if (mapInstance) {
@@ -398,6 +413,8 @@ const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LATITUDE},${VENUE_LONGITUDE}(${VENUE_GE
   }
 
   document.addEventListener('astro:page-load', () => {
+    updateVenueMapLink()
+
     if (document.getElementById('velada-map')) {
       initMap()
     }
