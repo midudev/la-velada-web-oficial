@@ -3,6 +3,8 @@ import { battles } from '@/consts/battles'
 export interface HomeFaqItem {
   question: string
   answer: string
+  schemaAnswer?: string
+  eventTime?: boolean
 }
 
 const mainEvent = battles[battles.length - 1]
@@ -16,7 +18,10 @@ export const HOME_FAQS = [
   {
     question: '¿Cuándo es La Velada del Año VI?',
     answer:
-      'La Velada del Año VI se celebra el sábado 25 de julio de 2026 a partir de las 20:00h (horario de España peninsular).',
+      'La Velada del Año VI se celebra el sábado 25 de julio de 2026 a partir de las',
+    schemaAnswer:
+      'La Velada del Año VI se celebra el sábado 25 de julio de 2026 a partir de las 20:00H (españa peninsular).',
+    eventTime: true,
   },
   {
     question: '¿Dónde se celebra?',
