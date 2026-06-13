@@ -86,7 +86,7 @@ const timestamp = EVENT_DATE.getTime()
             </svg>
           </summary>
 
-          <ul class="absolute bottom-full left-1/2 z-20 mb-2 w-52 -translate-x-1/2 overflow-hidden rounded border border-theme-gold/20 bg-theme-navy shadow-lg" role="list">
+          <ul id="cal-menu" class="fixed z-50 w-52 overflow-hidden rounded border border-theme-gold/20 bg-theme-navy shadow-lg" role="list">
             <li>
               <a
                 href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=La+Velada+del+A%C3%B1o+VI&dates=20260725T180000Z%2F20260725T230000Z&details=Evento+de+boxeo+amateur+organizado+por+Ibai+Llanos.+Retransmisi%C3%B3n+gratuita+en+Twitch%3A+https%3A%2F%2Fwww.twitch.tv%2Fibai&location=Estadio+de+La+Cartuja%2C+Sevilla%2C+Espa%C3%B1a"
@@ -235,10 +235,36 @@ const timestamp = EVENT_DATE.getTime()
         document.getElementById('cal-dropdown')?.removeAttribute('open')
       })
 
-      // Cerrar dropdown al hacer click fuera
+      // Portal: mover el menú al <body> al abrir para escapar overflow:hidden
       const calDropdown = document.getElementById('cal-dropdown')
+      const calMenu = document.getElementById('cal-menu') as HTMLElement | null
+
+      const positionCalMenu = () => {
+        if (!calDropdown || !calMenu) return
+        const summary = calDropdown.querySelector('summary')
+        if (!summary) return
+        const rect = summary.getBoundingClientRect()
+        calMenu.style.top = `${rect.bottom + 8}px`
+        calMenu.style.left = `${rect.left + rect.width / 2}px`
+        calMenu.style.transform = 'translateX(-50%)'
+      }
+
+      calDropdown?.addEventListener('toggle', () => {
+        if (!calMenu) return
+        if (calDropdown.open) {
+          document.body.appendChild(calMenu)
+          positionCalMenu()
+        } else {
+          calDropdown.appendChild(calMenu)
+        }
+      })
+
+      window.addEventListener('scroll', positionCalMenu, { passive: true })
+      window.addEventListener('resize', positionCalMenu, { passive: true })
+
       const closeDropdown = (e: MouseEvent) => {
-        if (calDropdown && !calDropdown.contains(e.target as Node)) {
+        const target = e.target as Node
+        if (calDropdown && !calDropdown.contains(target) && !calMenu?.contains(target)) {
           calDropdown.removeAttribute('open')
         }
       }
@@ -248,7 +274,13 @@ const timestamp = EVENT_DATE.getTime()
         clearInterval(intervalId)
         window.removeEventListener('scroll', onScroll)
         window.removeEventListener('resize', onScroll)
+        window.removeEventListener('scroll', positionCalMenu)
+        window.removeEventListener('resize', positionCalMenu)
         document.removeEventListener('click', closeDropdown)
+        // Devolver el menú al details si estaba en body
+        if (calMenu && calMenu.parentElement === document.body) {
+          calDropdown?.appendChild(calMenu)
+        }
       }, { once: true })
     })
   </script>
