@@ -7,7 +7,6 @@ const VENUE_LATITUDE = '37.41745253261154'
 const VENUE_LONGITUDE = '-6.004464222177984'
 const VENUE_GEO_LABEL = encodeURIComponent(`${VENUE_NAME}, ${VENUE_CITY}`)
 const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LATITUDE},${VENUE_LONGITUDE}(${VENUE_GEO_LABEL})`
-const VENUE_APPLE_MAPS_URL = `https://maps.apple.com/?ll=${VENUE_LATITUDE},${VENUE_LONGITUDE}&q=${VENUE_GEO_LABEL}`
 const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VENUE_LATITUDE},${VENUE_LONGITUDE}`
 ---
 
@@ -199,7 +198,6 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
           <div class="flex flex-col items-center gap-4">
             <a
               href={VENUE_WEB_MAP_URL}
-              data-apple-maps-href={VENUE_APPLE_MAPS_URL}
               data-geo-href={VENUE_GEO_URL}
               class="inline-flex items-center gap-2 rounded border border-theme-gold/35 px-4 py-[0.6rem] font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-theme-gold uppercase no-underline transition-all duration-300 outline-none hover:-translate-y-px hover:border-theme-gold hover:bg-theme-gold/10 hover:text-theme-cream focus-visible:-translate-y-px focus-visible:border-theme-gold focus-visible:bg-theme-gold/10 focus-visible:text-theme-cream focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               aria-label="Abrir la ubicación del Estadio de La Cartuja en la aplicación de mapas"
@@ -338,25 +336,11 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
     return /android/i.test(navigator.userAgent)
   }
 
-  function isIOS() {
-    return (
-      /iphone|ipad|ipod/i.test(navigator.userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
-    )
-  }
-
   function updateVenueMapLink() {
     const link = $<HTMLAnchorElement>('[data-geo-href]')
-    if (!link) return
+    if (!link || !isAndroid()) return
 
-    if (isAndroid()) {
-      link.href = link.dataset.geoHref ?? link.href
-      return
-    }
-
-    if (isIOS()) {
-      link.href = link.dataset.appleMapsHref ?? link.href
-    }
+    link.href = link.dataset.geoHref ?? link.href
   }
 
   function destroyMap() {
