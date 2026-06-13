@@ -1,12 +1,15 @@
 ---
 import SectionHeader from '@/components/SectionHeader.astro'
 import type { HomeFaqItem } from '@/consts/home-faq'
+import { FAQ_EVENT_ZONES } from '@/consts/home-faq'
 
 interface Props {
   faqs: readonly HomeFaqItem[]
 }
 
 const { faqs } = Astro.props
+
+const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
 ---
 
 <section
@@ -60,13 +63,13 @@ const { faqs } = Astro.props
                   class="relative flex size-10.25 shrink-0 items-center justify-center rounded-full border border-theme-gold/30 bg-black/25 text-theme-gold transition duration-300 group-open:rotate-45 group-open:border-theme-gold/70 group-open:bg-theme-gold/15 sm:size-11.25"
                   aria-hidden="true"
                 >
-                  <span class="absolute h-px w-4.25 bg-current"></span>
-                  <span class="absolute h-4.25 w-px bg-current"></span>
+                  <span class="absolute h-px w-4.25 bg-current" />
+                  <span class="absolute h-4.25 w-px bg-current" />
                 </span>
               </summary>
 
               <div
-                class="px-2.5 pb-6 pr-14 sm:px-4 sm:pr-20"
+                class="px-2.5 pr-14 pb-6 sm:px-4 sm:pr-20"
                 itemprop="acceptedAnswer"
                 itemscope
                 itemtype="https://schema.org/Answer"
@@ -77,6 +80,14 @@ const { faqs } = Astro.props
                 >
                   {answer}
                 </p>
+                {index === 0 && (
+                  <div
+                    id="faq-local-times"
+                    data-timestamp={EVENT_TIMESTAMP}
+                    data-zones={JSON.stringify(FAQ_EVENT_ZONES)}
+                    class="mt-4 hidden"
+                  />
+                )}
                 {channels && (
                   <ul class="mt-4 flex list-none flex-col gap-2 pl-0 text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
                     {channels.map(({ platform, href, label }) => (
@@ -98,10 +109,7 @@ const { faqs } = Astro.props
                   <ol class="mt-4 grid list-none gap-2 pl-0 text-base leading-7 text-white/75 sm:grid-cols-2 sm:text-lg sm:leading-8">
                     {battles.map(({ number, title }) => (
                       <li class="grid grid-cols-[2rem_minmax(0,1fr)] gap-2">
-                        <span
-                          aria-hidden="true"
-                          class="font-bold text-theme-gold/80 tabular-nums"
-                        >
+                        <span aria-hidden="true" class="font-bold text-theme-gold/80 tabular-nums">
                           {number}
                         </span>
                         <span>{title}</span>
@@ -122,3 +130,82 @@ const { faqs } = Astro.props
     </ul>
   </div>
 </section>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const container = document.getElementById('faq-local-times')
+    if (!container) return
+
+    try {
+      const target = Number(container.dataset.timestamp)
+      if (!Number.isFinite(target)) return
+
+      const eventDate = new Date(target)
+      const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+      // Boxer country zones come from the server (always shown)
+      const fixedZones: { tz: string; label: string }[] = JSON.parse(
+        container.dataset.zones ?? '[]',
+      )
+
+      const formatTime = (tz: string) =>
+        eventDate.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit', timeZone: tz })
+
+      // Friendly label for user's timezone if not already in the list
+      const regionMap: Record<string, string> = {
+        'Europe/Madrid': 'España',
+        'Europe/Lisbon': 'Portugal',
+        'America/Mexico_City': 'México',
+        'America/Monterrey': 'México (Noreste)',
+        'America/Merida': 'México (Sureste)',
+        'America/Tijuana': 'México (Pacífico)',
+        'America/New_York': 'EE.UU. (Este)',
+        'America/Chicago': 'EE.UU. (Centro)',
+        'America/Denver': 'EE.UU. (Montaña)',
+        'America/Los_Angeles': 'EE.UU. (Pacífico)',
+        'America/Bogota': 'Colombia',
+        'America/Lima': 'Perú',
+        'America/Santiago': 'Chile',
+        'America/Argentina/Buenos_Aires': 'Argentina',
+        'America/Caracas': 'Venezuela',
+        'America/Guayaquil': 'Ecuador',
+        'America/La_Paz': 'Bolivia',
+        'America/Asuncion': 'Paraguay',
+        'America/Montevideo': 'Uruguay',
+        'America/Havana': 'Cuba',
+        'America/Santo_Domingo': 'Rep. Dominicana',
+        'America/Panama': 'Panamá',
+        'America/Costa_Rica': 'Costa Rica',
+        'America/Guatemala': 'Guatemala',
+        'America/Tegucigalpa': 'Honduras',
+        'America/El_Salvador': 'El Salvador',
+        'America/Managua': 'Nicaragua',
+        'America/Puerto_Rico': 'Puerto Rico',
+      }
+
+      const userLabel = regionMap[userTz] ?? userTz.replace(/_/g, ' ').split('/').pop() ?? userTz
+      const isUserAlreadyListed = fixedZones.some((z) => z.tz === userTz)
+
+      const rows = [...fixedZones]
+      if (!isUserAlreadyListed) rows.push({ tz: userTz, label: userLabel })
+
+      const rowsHtml = rows
+        .map(({ tz, label }) => {
+          const highlight = tz === userTz
+          return `<li class="flex items-baseline justify-between gap-4 py-1.5 border-b border-white/5 last:border-0${highlight ? ' text-theme-gold/90' : ''}">
+            <span class="text-sm${highlight ? ' font-semibold' : ''}">${label}</span>
+            <span class="font-cinzel font-bold text-sm tabular-nums shrink-0">${formatTime(tz)}h</span>
+          </li>`
+        })
+        .join('')
+
+      container.innerHTML = `
+        <p class="mb-2 text-sm font-semibold tracking-widest text-white/40 uppercase">Hora del evento por país</p>
+        <ul class="list-none p-0 m-0 text-white/75">${rowsHtml}</ul>
+      `
+      container.classList.remove('hidden')
+    } catch {
+      // Silently fail
+    }
+  })
+</script>
