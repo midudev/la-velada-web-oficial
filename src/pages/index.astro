@@ -107,12 +107,12 @@ const sportsEventJsonLd = {
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: HOME_FAQS.map(({ question, answer }) => ({
+  mainEntity: HOME_FAQS.map(({ question, answer, schemaAnswer }) => ({
     '@type': 'Question',
     name: question,
     acceptedAnswer: {
       '@type': 'Answer',
-      text: answer,
+      text: schemaAnswer ?? answer,
     },
   })),
 }
