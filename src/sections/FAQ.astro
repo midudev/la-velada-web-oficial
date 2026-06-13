@@ -1,12 +1,15 @@
 ---
 import SectionHeader from '@/components/SectionHeader.astro'
 import type { HomeFaqItem } from '@/consts/home-faq'
+import { FAQ_EVENT_ZONES } from '@/consts/home-faq'
 
 interface Props {
   faqs: readonly HomeFaqItem[]
 }
 
 const { faqs } = Astro.props
+
+const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
 ---
 
 <section
