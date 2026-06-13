@@ -1,5 +1,17 @@
 ---
 import SectionHeader from '@/components/SectionHeader.astro'
+
+const VENUE_NAME = 'Estadio de La Cartuja'
+const VENUE_CITY = 'Sevilla, España'
+const VENUE_COORDINATES = {
+  latitude: 37.41745253261154,
+  longitude: -6.004464222177984,
+  zoom: 15,
+}
+const VENUE_LOCATION = `${VENUE_COORDINATES.latitude},${VENUE_COORDINATES.longitude}`
+const VENUE_GEO_LABEL = encodeURIComponent(`${VENUE_NAME}, ${VENUE_CITY}`)
+const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LOCATION}(${VENUE_GEO_LABEL})`
+const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VENUE_LOCATION}`
 ---
 
 <link
@@ -186,56 +198,32 @@ import SectionHeader from '@/components/SectionHeader.astro'
           <div class="my-5 h-px bg-linear-to-r from-transparent via-theme-gold/30 to-transparent">
           </div>
 
-          <!-- CTA Google Maps -->
-           <div class="flex flex-col items-center gap-4">
-
-          <a
-            href="https://maps.app.goo.gl/73mfDNVvhK3Y5Kq66"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 rounded border border-theme-gold/35 px-4 py-[0.6rem] font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-theme-gold uppercase no-underline transition-all duration-300 outline-none hover:-translate-y-px hover:border-theme-gold hover:bg-theme-gold/10 hover:text-theme-cream focus-visible:-translate-y-px focus-visible:border-theme-gold focus-visible:bg-theme-gold/10 focus-visible:text-theme-cream focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-            aria-label="Ver el Estadio de La Cartuja en Google Maps (abre en nueva pestaña)"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              width="14"
-              height="14"
-              aria-hidden="true"
+          <!-- CTA ubicación -->
+          <div class="flex flex-col items-center gap-4">
+            <a
+              href={VENUE_WEB_MAP_URL}
+              data-geo-href={VENUE_GEO_URL}
+              class="inline-flex items-center gap-2 rounded border border-theme-gold/35 px-4 py-[0.6rem] font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-theme-gold uppercase no-underline transition-all duration-300 outline-none hover:-translate-y-px hover:border-theme-gold hover:bg-theme-gold/10 hover:text-theme-cream focus-visible:-translate-y-px focus-visible:border-theme-gold focus-visible:bg-theme-gold/10 focus-visible:text-theme-cream focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+              aria-label="Abrir la ubicación del Estadio de La Cartuja en la aplicación de mapas"
             >
-              <path
-                fill-rule="evenodd"
-                d="M15.75 2.25H21a.75.75 0 01.75.75v5.25a.75.75 0 01-1.5 0V4.81L8.03 17.03a.75.75 0 01-1.06-1.06L19.19 3.75h-3.44a.75.75 0 010-1.5zm-10.5 4.5a1.5 1.5 0 00-1.5 1.5v10.5a1.5 1.5 0 001.5 1.5h10.5a1.5 1.5 0 001.5-1.5V10.5a.75.75 0 011.5 0v8.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V8.25a3 3 0 013-3H13.5a.75.75 0 010 1.5H5.25z"
-                clip-rule="evenodd"></path>
-            </svg>
-            Ver en Google Maps
-          </a>
-          <a
-            href="https://maps.apple/p/qe5msb_Npnw-HK"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 rounded border border-theme-gold/35 px-4 py-[0.6rem] font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-theme-gold uppercase no-underline transition-all duration-300 outline-none hover:-translate-y-px hover:border-theme-gold hover:bg-theme-gold/10 hover:text-theme-cream focus-visible:-translate-y-px focus-visible:border-theme-gold focus-visible:bg-theme-gold/10 focus-visible:text-theme-cream focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-            aria-label="Ver el Estadio de La Cartuja en Apple Maps (abre en nueva pestaña)"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              width="14"
-              height="14"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M15.75 2.25H21a.75.75 0 01.75.75v5.25a.75.75 0 01-1.5 0V4.81L8.03 17.03a.75.75 0 01-1.06-1.06L19.19 3.75h-3.44a.75.75 0 010-1.5zm-10.5 4.5a1.5 1.5 0 00-1.5 1.5v10.5a1.5 1.5 0 001.5 1.5h10.5a1.5 1.5 0 001.5-1.5V10.5a.75.75 0 011.5 0v8.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V8.25a3 3 0 013-3H13.5a.75.75 0 010 1.5H5.25z"
-                clip-rule="evenodd"></path>
-            </svg>
-            Ver en Apple Maps
-          </a>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="14"
+                height="14"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M15.75 2.25H21a.75.75 0 01.75.75v5.25a.75.75 0 01-1.5 0V4.81L8.03 17.03a.75.75 0 01-1.06-1.06L19.19 3.75h-3.44a.75.75 0 010-1.5zm-10.5 4.5a1.5 1.5 0 00-1.5 1.5v10.5a1.5 1.5 0 001.5 1.5h10.5a1.5 1.5 0 001.5-1.5V10.5a.75.75 0 011.5 0v8.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V8.25a3 3 0 013-3H13.5a.75.75 0 010 1.5H5.25z"
+                  clip-rule="evenodd"></path>
+              </svg>
+              Abrir ubicación
+            </a>
+          </div>
         </div>
       </div>
-    </div>
 
       <!-- Contenedor del mapa Leaflet -->
       <div
@@ -244,6 +232,9 @@ import SectionHeader from '@/components/SectionHeader.astro'
         <div
           id="velada-map"
           class="h-full min-h-[360px] w-full md:min-h-[480px]"
+          data-latitude={VENUE_COORDINATES.latitude}
+          data-longitude={VENUE_COORDINATES.longitude}
+          data-zoom={VENUE_COORDINATES.zoom}
           aria-label="Mapa con la ubicación del Estadio de La Cartuja en Sevilla"
         >
         </div>
@@ -319,9 +310,7 @@ import SectionHeader from '@/components/SectionHeader.astro'
 </style>
 
 <script>
-  const LAT = 37.41745253261154
-  const LNG = -6.004464222177984
-  const ZOOM = 15
+  import { $ } from '@/lib/dom-selector'
 
   const PIN_SVG = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 54" width="40" height="54">
@@ -346,6 +335,17 @@ import SectionHeader from '@/components/SectionHeader.astro'
 
   let mapInstance: any = null
 
+  function isAndroid() {
+    return /android/i.test(navigator.userAgent)
+  }
+
+  function updateVenueMapLink() {
+    const link = $<HTMLAnchorElement>('[data-geo-href]')
+    if (!link || !isAndroid()) return
+
+    link.href = link.dataset.geoHref ?? link.href
+  }
+
   function destroyMap() {
     if (mapInstance) {
       mapInstance.remove()
@@ -354,71 +354,76 @@ import SectionHeader from '@/components/SectionHeader.astro'
   }
 
   async function initMap() {
-      try {
+    try {
+      destroyMap()
 
-    destroyMap()
+      const container = $<HTMLElement>('#velada-map')
+      if (!container) return
 
-    const container = document.getElementById('velada-map')
-    if (!container) return
+      const latitude = Number(container.dataset.latitude)
+      const longitude = Number(container.dataset.longitude)
+      const zoom = Number(container.dataset.zoom)
 
-    if (!(window as any).L) {
-      await new Promise<void>((resolve, reject) => {
-        const s = document.createElement('script')
-        s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
-        s.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo='
-        s.crossOrigin = ''
-        s.onload = () => resolve()
-        s.onerror = () => reject(new Error('No se pudo cargar Leaflet'))
-        document.head.appendChild(s)
+      if (!(window as any).L) {
+        await new Promise<void>((resolve, reject) => {
+          const s = document.createElement('script')
+          s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+          s.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo='
+          s.crossOrigin = ''
+          s.onload = () => resolve()
+          s.onerror = () => reject(new Error('No se pudo cargar Leaflet'))
+          document.head.appendChild(s)
+        })
+      }
+
+      const L = (window as any).L
+
+      mapInstance = L.map(container, {
+        center: [latitude, longitude],
+        zoom,
+        zoomControl: true,
+        scrollWheelZoom: false,
+        attributionControl: true,
       })
-    }
 
-    const L = (window as any).L
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19,
+      }).addTo(mapInstance)
 
-    mapInstance = L.map(container, {
-      center: [LAT, LNG],
-      zoom: ZOOM,
-      zoomControl: true,
-      scrollWheelZoom: false,
-      attributionControl: true,
-    })
+      const customIcon = L.divIcon({
+        html: PIN_SVG,
+        className: 'velada-marker',
+        iconSize: [40, 54],
+        iconAnchor: [20, 54],
+        popupAnchor: [0, -58],
+      })
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19,
-    }).addTo(mapInstance)
-
-    const customIcon = L.divIcon({
-      html: PIN_SVG,
-      className: 'velada-marker',
-      iconSize: [40, 54],
-      iconAnchor: [20, 54],
-      popupAnchor: [0, -58],
-    })
-
-    const popup = L.popup({
-      closeButton: true,
-      maxWidth: 220,
-    }).setContent(
-      `<strong style="color:#c7a86b;display:block;margin-bottom:0.35rem;">Estadio de La Cartuja</strong>
+      const popup = L.popup({
+        closeButton: true,
+        maxWidth: 220,
+      }).setContent(
+        `<strong style="color:#c7a86b;display:block;margin-bottom:0.35rem;">Estadio de La Cartuja</strong>
       <span style="color:rgba(244,228,201,0.7);">Sevilla, España</span><br/>
       <span style="color:rgba(255,255,255,0.5);">25 · 07 · 2026 — 20:00h</span>`,
-    )
+      )
 
-    L.marker([LAT, LNG], { icon: customIcon }).addTo(mapInstance).bindPopup(popup).openPopup()
+      L.marker([latitude, longitude], { icon: customIcon })
+        .addTo(mapInstance)
+        .bindPopup(popup)
+        .openPopup()
 
-    setTimeout(() => mapInstance?.invalidateSize(), 200)
+      setTimeout(() => mapInstance?.invalidateSize(), 200)
     } catch (error) {
       console.error('No se pudo inicializar el mapa:', error)
     }
   }
 
   document.addEventListener('astro:page-load', () => {
-    if (document.getElementById('velada-map')) {
-      initMap()
-    }
+    updateVenueMapLink()
+    initMap()
   })
 
   document.addEventListener('astro:before-preparation', destroyMap)
