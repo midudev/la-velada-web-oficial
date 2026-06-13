@@ -1,0 +1,275 @@
+---
+import { EVENT_DATE_TIME, EVENT_DISPLAY_TIME } from '@/consts/event'
+---
+
+<span class="event-local-time">
+  <time
+    datetime={EVENT_DATE_TIME}
+    tabindex="0"
+    class="event-local-time__trigger cursor-help font-medium underline decoration-theme-gold/35 decoration-dotted underline-offset-[0.2em] transition-[text-decoration-color] duration-200 hover:decoration-theme-gold/80"
+  >
+    {EVENT_DISPLAY_TIME}
+  </time>
+  <span popover="manual" role="tooltip" class="event-local-time__tooltip">
+    <span class="event-local-time__tooltip-primary"></span>
+    <span class="event-local-time__tooltip-secondary" hidden></span>
+  </span>
+</span>
+
+<style is:global>
+  .event-local-time__trigger {
+    anchor-name: --event-local-time-trigger;
+  }
+
+  .event-local-time__tooltip {
+    position: fixed;
+    position-anchor: --event-local-time-trigger;
+    position-try-fallbacks: none;
+    inset: auto;
+    top: auto;
+    right: anchor(right);
+    left: auto;
+    bottom: anchor(top);
+    margin: 0;
+    width: max-content;
+    translate: 0 -0.35rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 10.5rem;
+    max-width: min(20rem, 78vw);
+    padding: 0.55rem 0.85rem 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+    border-radius: 0.25rem;
+    background: color-mix(in srgb, var(--color-theme-midnight) 96%, transparent);
+    backdrop-filter: blur(12px);
+    box-shadow:
+      0 4px 12px color-mix(in srgb, black 28%, transparent),
+      0 12px 28px color-mix(in srgb, black 38%, transparent);
+    font-family: inherit;
+    text-align: left;
+    text-wrap: balance;
+    color: var(--color-theme-cream);
+    transform-origin: 100% 100%;
+    opacity: 0;
+    transform: scale(0.96);
+    pointer-events: none;
+  }
+
+  .event-local-time__tooltip-primary {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .event-local-time__tooltip-secondary {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.03em;
+    color: color-mix(in srgb, var(--color-theme-cream) 72%, var(--color-theme-gold));
+  }
+
+  .event-local-time__tooltip:popover-open {
+    display: flex;
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  @starting-style {
+    .event-local-time__tooltip:popover-open {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+
+  @media (min-width: 640px) {
+    .event-local-time__tooltip {
+      gap: 0.25rem;
+      padding: 0.65rem 1rem 0.75rem;
+    }
+
+    .event-local-time__tooltip-primary {
+      font-size: 1.0625rem;
+    }
+
+    .event-local-time__tooltip-secondary {
+      font-size: 0.8125rem;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .event-local-time__tooltip {
+      right: auto;
+      left: anchor(left);
+      max-width: calc(100vw - 2rem);
+      transform-origin: 0 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .event-local-time__tooltip,
+    .event-local-time__tooltip:popover-open {
+      transform: none;
+    }
+  }
+
+  @supports not (anchor-name: --x) {
+    .event-local-time__tooltip {
+      position: fixed;
+      left: 50%;
+      right: auto;
+      bottom: auto;
+      top: 50%;
+      translate: -50% -50%;
+      transform: none;
+      transform-origin: 50% 50%;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+  import { resolveEventLocalTime } from '@/lib/event-local-time'
+  import type { EventLocalTimeView } from '@/lib/event-local-time'
+  import { animate } from 'motion'
+
+  const EASE = [0.23, 1, 0.32, 1] as const
+  const EXIT_MS = 200
+  const anchorSupported = CSS.supports('anchor-name', '--x')
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
+  const hoverMedia = matchMedia('(hover: hover) and (pointer: fine)')
+
+  function canAnimate() {
+    return anchorSupported && !reducedMotion.matches
+  }
+
+  let abort: AbortController | undefined
+
+  function bind(root: HTMLElement, view: EventLocalTimeView, index: number, signal: AbortSignal) {
+    const trigger = $('time', root)
+    const tooltip = $('.event-local-time__tooltip', root)
+    const primary = tooltip && $('.event-local-time__tooltip-primary', tooltip)
+    if (!trigger || !tooltip || !primary) return
+
+    tooltip.id ||= `event-local-time-tip-${index}`
+    primary.textContent = view.tooltipPrimary
+    const secondary = $('.event-local-time__tooltip-secondary', tooltip)
+    if (secondary) {
+      secondary.textContent = view.tooltipSecondary ?? ''
+      secondary.hidden = !view.tooltipSecondary
+    }
+    trigger.setAttribute('aria-describedby', tooltip.id)
+
+    let hidePlayback: ReturnType<typeof animate> | null = null
+    let hideToken = 0
+    const isOpen = () => tooltip.matches(':popover-open')
+
+    const show = () => {
+      hideToken++
+      hidePlayback?.cancel()
+      hidePlayback = null
+      if (!isOpen()) tooltip.showPopover()
+      if (!canAnimate()) return
+      void animate(tooltip, { opacity: [0, 1], scale: [0.96, 1] }, { duration: 0.18, ease: EASE })
+      $$<HTMLElement>('.event-local-time__tooltip > span:not([hidden])', tooltip).forEach(
+        (line, i) => {
+          void animate(
+            line,
+            { opacity: [0, 1], transform: ['translateY(0.25rem)', 'translateY(0)'] },
+            { duration: 0.18, delay: i * 0.04, ease: EASE },
+          )
+        },
+      )
+    }
+
+    const hide = async () => {
+      if (!isOpen()) return
+      if (!canAnimate()) {
+        tooltip.hidePopover()
+        return
+      }
+      const token = ++hideToken
+      hidePlayback?.cancel()
+      const opacity = Number.parseFloat(getComputedStyle(tooltip).opacity) || 1
+      hidePlayback = animate(
+        tooltip,
+        { opacity: [opacity, 0], scale: [1, 0.96] },
+        { duration: 0.16, ease: EASE },
+      )
+      await Promise.race([
+        hidePlayback.finished.catch(() => undefined),
+        new Promise<void>((r) => setTimeout(r, EXIT_MS)),
+      ])
+      if (hideToken !== token) return
+      tooltip.hidePopover()
+      tooltip.style.opacity = ''
+      tooltip.style.transform = ''
+      hidePlayback = null
+    }
+
+    const hideIfIdle = () =>
+      requestAnimationFrame(() => {
+        if (!trigger.matches(':hover') && !tooltip.matches(':hover')) void hide()
+      })
+
+    trigger.addEventListener(
+      'pointerenter',
+      (e) => {
+        if (e.pointerType !== 'touch') show()
+      },
+      { signal },
+    )
+    trigger.addEventListener(
+      'pointerleave',
+      (e) => {
+        if (e.pointerType !== 'touch') hideIfIdle()
+      },
+      { signal },
+    )
+    trigger.addEventListener(
+      'focus',
+      () => {
+        if (hoverMedia.matches) show()
+      },
+      { signal },
+    )
+    trigger.addEventListener(
+      'blur',
+      () => {
+        if (hoverMedia.matches) void hide()
+      },
+      { signal },
+    )
+    trigger.addEventListener(
+      'click',
+      (e) => {
+        if (hoverMedia.matches && !(e instanceof PointerEvent && e.pointerType === 'touch')) return
+        e.preventDefault()
+        isOpen() ? void hide() : show()
+      },
+      { signal },
+    )
+  }
+
+  function setup() {
+    abort?.abort()
+    abort = new AbortController()
+    const roots = $$<HTMLElement>('.event-local-time')
+    if (!roots.length) return
+    let view: EventLocalTimeView
+    try {
+      view = resolveEventLocalTime()
+    } catch {
+      return
+    }
+    roots.forEach((root, i) => bind(root, view, i, abort.signal))
+  }
+
+  document.addEventListener('astro:page-load', setup)
+  setup()
+</script>
