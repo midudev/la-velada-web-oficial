@@ -119,14 +119,8 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     >
       <div class="boxer-default-aura pointer-events-none absolute inset-0 -z-1" aria-hidden="true"></div>
 
-      <div class="boxer-default-lockup flex w-full max-w-full items-center justify-center px-4">
-
-        <div class="boxer-default-info animate-fade-in-right animate-delay-[1000ms] flex flex-1 flex-col items-end gap-1">
-          <time datetime="2026-07-25" class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm">25 DE JULIO</time>
-          <time datetime="2026-07-25T20:00:00+02:00" class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm">20:00H CET</time>
-        </div>
-
-        <div class="animate-blurred-fade-in animate-delay-300 relative shrink-0 leading-none">
+      <div class="boxer-default-lockup flex w-full max-w-full flex-col items-center">
+        <div class="animate-blurred-fade-in animate-delay-300 relative leading-none">
           <picture class="block">
             <source srcset="/logo.avif" type="image/avif" />
             <source srcset="/logo.webp" type="image/webp" />
@@ -142,12 +136,39 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           </picture>
         </div>
 
-        <div class="boxer-default-info animate-fade-in-left animate-delay-[1000ms] flex flex-1 flex-col items-start gap-1">
-          <span class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm">
+      <ul
+        class="boxer-default-info animate-fade-in-up animate-delay-500 flex flex-col items-center justify-center gap-1 -mt-8 md:-mt-12"
+      >
+        <li class="flex items-baseline">
+          <time
+            datetime="2026-07-25"
+            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
+          >
+            25 DE JULIO
+          </time>
+        </li>
+        <li class="flex items-baseline">
+          <time
+            datetime="2026-07-25T20:00:00+02:00"
+            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
+          >
+            20:00H CET
+          </time>
+        </li>
+        <li class="flex items-baseline">
+          <span
+            class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
+          >
             <a
               href="#sede"
-              class="relative flex flex-col inline-block after:absolute after:left-0 after:-bottom-1 after:h-[1px] after:w-full after:bg-current after:content-[''] after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100"
-            ><span class="block">ESTADIO DE LA CARTUJA,</span><span class="block">SEVILLA</span></a> <!-- La otra opción sería usar br -->
+              class="group/edition relative cursor-pointer focus-visible:outline-none"
+            >
+              <span
+                aria-hidden="true"
+                class="pointer-events-none absolute inset-x-0 -bottom-1 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-150 ease-out delay-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover/edition:scale-x-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover/edition:delay-125 group-focus-visible/edition:scale-x-100 group-focus-visible/edition:delay-125"
+              />
+              Estadio de la Cartuja, Sevilla
+            </a>
           </span>
         </div>
 
@@ -158,7 +179,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     <div
       data-boxer-panel
       aria-hidden="true"
-      class="boxer-panel relative flex w-full flex-col items-center -mb-10"
+      class="boxer-panel relative flex w-full flex-col items-center"
     >
       <span
         aria-hidden="true"
@@ -231,7 +252,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     </div>
   </div>
 
-  <div class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-4 md:gap-6">
+  <div class="boxer-selector-foot mt-auto flex w-full shrink-0 flex-col items-center gap-1.5 md:gap-3">
     <div
       class="boxer-cta-bar relative z-20 flex w-full flex-col items-center gap-3 px-4 pt-2 transition-opacity duration-300 ease-out md:gap-4 md:pt-4"
     >
@@ -244,8 +265,8 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         <span class="h-px w-10 bg-linear-to-l from-transparent to-theme-gold/55 sm:w-20"></span>
       </div>
 
-      <p class="boxer-default-cta mb-2 text-center font-cinzel text-sm font-bold tracking-[0.3em] text-theme-cream sm:text-base">
-        ¡SELECCIONA TU BOXEADOR O BOXEADORA!
+      <p class="boxer-default-cta font-cinzel text-sm font-bold tracking-[0.3em] text-[color-mix(var(--color-theme-cream),white_30%)] uppercase">
+        ¡Selecciona tu boxeador o boxeadora!
       </p>
     </div>
 
@@ -419,6 +440,10 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   @media (max-width: 767px) {
+    [data-default-panel]{
+      justify-content: center;
+    }
+
     [data-boxer-selector][data-state='boxer'] [data-default-panel] {
       opacity: 1;
       pointer-events: auto;
@@ -440,17 +465,30 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     pointer-events: none;
   }
 
-  /* Lockup: logo centrado con info a los lados. */
-  .boxer-default-lockup {
-    gap: clamp(1rem, 3vw, 2rem);
-    padding-top: clamp(2.5rem, 11vh, 7rem);
-  }
-
   .boxer-default-logo {
     filter:
       drop-shadow(0 12px 30px color-mix(in srgb, var(--color-theme-gold) 22%, transparent))
       drop-shadow(0 2px 0 rgba(0, 0, 0, 0.25));
     animation: boxer-default-logo-float 6s ease-in-out infinite;
+  }
+
+  @media screen and (height <= 767px) and (width >= 768px) {
+    [data-boxer-selector]{
+      min-height: 590px;
+    }
+
+    .boxer-default-logo{
+      width: 24vw;
+    }
+
+    .boxer-default-panel{
+      margin-top: -2rem;
+    }
+
+    .boxer-default-cta{
+      font-size: 0.75rem;
+      max-width: 50ch;
+    }
   }
 
   .boxer-default-aura {
@@ -464,19 +502,11 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   }
 
-
   .boxer-default-info {
     text-shadow:
       0 0 1px color-mix(in srgb, var(--color-theme-cream) 60%, transparent),
       0 2px 14px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
       0 0 24px color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
-  }
-
-  @media (max-height: 920px) {
-    .boxer-default-lockup {
-      padding-top: clamp(2rem, 8vh, 4.25rem);
-      gap: clamp(0.75rem, 2vw, 1.5rem);
-    }
   }
 
   /* La cuadrícula del selector entra escalonada con un delay base de
