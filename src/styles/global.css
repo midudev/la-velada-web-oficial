@@ -40,6 +40,7 @@
   html {
     scrollbar-gutter: stable;
     background: var(--color-theme-midnight);
+    scroll-behavior: smooth;
   }
 
   body {
@@ -222,7 +223,6 @@ html {
   text-transform: uppercase;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
 @utility mask-fade-bottom {
@@ -257,4 +257,14 @@ dialog {
         }
     }
   
+}
+
+.font-cinzel {
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { 
+    scroll-behavior: auto;
+  }
 }

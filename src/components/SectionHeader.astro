@@ -10,6 +10,7 @@ interface Props {
   titleClass?: string
   subtitleClass?: string
   eyebrowClass?: string
+  hideDivider?: boolean
 }
 
 const {
@@ -21,10 +22,15 @@ const {
   titleClass = 'mb-3',
   subtitleClass = 'mb-10 max-w-xl tracking-[0.14em] sm:text-sm',
   eyebrowClass,
+  hideDivider,
 } = Astro.props
 ---
 
-<SectionDivider class:list={['mb-8', dividerClass]} />
+{
+  !hideDivider && (
+    <SectionDivider class:list={['mb-8', dividerClass]} />
+  )
+}
 
 {
   eyebrow && (
