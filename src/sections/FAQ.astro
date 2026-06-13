@@ -81,7 +81,12 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
                   {answer}
                 </p>
                 {index === 0 && (
-                  <div id="faq-local-times" data-timestamp={EVENT_TIMESTAMP} data-zones={JSON.stringify(FAQ_EVENT_ZONES)} class="mt-4 hidden" />
+                  <div
+                    id="faq-local-times"
+                    data-timestamp={EVENT_TIMESTAMP}
+                    data-zones={JSON.stringify(FAQ_EVENT_ZONES)}
+                    class="mt-4 hidden"
+                  />
                 )}
                 {channels && (
                   <ul class="mt-4 flex list-none flex-col gap-2 pl-0 text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
@@ -139,7 +144,9 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
       const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone
 
       // Boxer country zones come from the server (always shown)
-      const fixedZones: { tz: string; label: string }[] = JSON.parse(container.dataset.zones ?? '[]')
+      const fixedZones: { tz: string; label: string }[] = JSON.parse(
+        container.dataset.zones ?? '[]',
+      )
 
       const formatTime = (tz: string) =>
         eventDate.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit', timeZone: tz })
@@ -186,7 +193,7 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
         .map(({ tz, label }) => {
           const highlight = tz === userTz
           return `<li class="flex items-baseline justify-between gap-4 py-1.5 border-b border-white/5 last:border-0${highlight ? ' text-theme-gold/90' : ''}">
-            <span class="text-sm${highlight ? ' font-semibold' : ''}">${label}${highlight ? ' <span class="text-xs opacity-60">(tu zona)</span>' : ''}</span>
+            <span class="text-sm${highlight ? ' font-semibold' : ''}">${label}</span>
             <span class="font-cinzel font-bold text-sm tabular-nums shrink-0">${formatTime(tz)}h</span>
           </li>`
         })
