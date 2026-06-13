@@ -40,7 +40,7 @@ const { faqs } = Astro.props
 
     <ul class="w-full divide-y divide-white/10 border-y border-white/10">
       {
-        faqs.map(({ question, answer }, index) => (
+        faqs.map(({ question, answer, channels, battles, mainEventBattle }, index) => (
           <li>
             <details
               class="group bg-theme-midnight/35 transition duration-300 open:bg-theme-navy/35 hover:bg-theme-navy/25"
@@ -77,6 +77,43 @@ const { faqs } = Astro.props
                 >
                   {answer}
                 </p>
+                {channels && (
+                  <ul class="mt-4 flex list-none flex-col gap-2 pl-0 text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
+                    {channels.map(({ platform, href, label }) => (
+                      <li>
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`Ver en ${platform}: ${label}`}
+                          class="font-medium text-theme-gold/90 underline decoration-theme-gold/35 decoration-dotted underline-offset-[0.2em] transition-colors hover:text-theme-cream focus-visible:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold/70"
+                        >
+                          {label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {battles && (
+                  <ol class="mt-4 grid list-none gap-2 pl-0 text-base leading-7 text-white/75 sm:grid-cols-2 sm:text-lg sm:leading-8">
+                    {battles.map(({ number, title }) => (
+                      <li class="grid grid-cols-[2rem_minmax(0,1fr)] gap-2">
+                        <span
+                          aria-hidden="true"
+                          class="font-bold text-theme-gold/80 tabular-nums"
+                        >
+                          {number}
+                        </span>
+                        <span>{title}</span>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+                {mainEventBattle && (
+                  <p class="mt-3 max-w-3xl text-base leading-7 font-medium text-pretty text-white/85 sm:text-lg sm:leading-8">
+                    {mainEventBattle.title}
+                  </p>
+                )}
               </div>
             </details>
           </li>
