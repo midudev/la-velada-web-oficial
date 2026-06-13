@@ -125,3 +125,80 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
     </ul>
   </div>
 </section>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const container = document.getElementById('faq-local-times')
+    if (!container) return
+
+    try {
+      const target = Number(container.dataset.timestamp)
+      if (!Number.isFinite(target)) return
+
+      const eventDate = new Date(target)
+      const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+      // Boxer country zones come from the server (always shown)
+      const fixedZones: { tz: string; label: string }[] = JSON.parse(container.dataset.zones ?? '[]')
+
+      const formatTime = (tz: string) =>
+        eventDate.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit', timeZone: tz })
+
+      // Friendly label for user's timezone if not already in the list
+      const regionMap: Record<string, string> = {
+        'Europe/Madrid': 'España',
+        'Europe/Lisbon': 'Portugal',
+        'America/Mexico_City': 'México',
+        'America/Monterrey': 'México (Noreste)',
+        'America/Merida': 'México (Sureste)',
+        'America/Tijuana': 'México (Pacífico)',
+        'America/New_York': 'EE.UU. (Este)',
+        'America/Chicago': 'EE.UU. (Centro)',
+        'America/Denver': 'EE.UU. (Montaña)',
+        'America/Los_Angeles': 'EE.UU. (Pacífico)',
+        'America/Bogota': 'Colombia',
+        'America/Lima': 'Perú',
+        'America/Santiago': 'Chile',
+        'America/Argentina/Buenos_Aires': 'Argentina',
+        'America/Caracas': 'Venezuela',
+        'America/Guayaquil': 'Ecuador',
+        'America/La_Paz': 'Bolivia',
+        'America/Asuncion': 'Paraguay',
+        'America/Montevideo': 'Uruguay',
+        'America/Havana': 'Cuba',
+        'America/Santo_Domingo': 'Rep. Dominicana',
+        'America/Panama': 'Panamá',
+        'America/Costa_Rica': 'Costa Rica',
+        'America/Guatemala': 'Guatemala',
+        'America/Tegucigalpa': 'Honduras',
+        'America/El_Salvador': 'El Salvador',
+        'America/Managua': 'Nicaragua',
+        'America/Puerto_Rico': 'Puerto Rico',
+      }
+
+      const userLabel = regionMap[userTz] ?? userTz.replace(/_/g, ' ').split('/').pop() ?? userTz
+      const isUserAlreadyListed = fixedZones.some((z) => z.tz === userTz)
+
+      const rows = [...fixedZones]
+      if (!isUserAlreadyListed) rows.push({ tz: userTz, label: userLabel })
+
+      const rowsHtml = rows
+        .map(({ tz, label }) => {
+          const highlight = tz === userTz
+          return `<li class="flex items-baseline justify-between gap-4 py-1.5 border-b border-white/5 last:border-0${highlight ? ' text-theme-gold/90' : ''}">
+            <span class="text-sm${highlight ? ' font-semibold' : ''}">${label}${highlight ? ' <span class="text-xs opacity-60">(tu zona)</span>' : ''}</span>
+            <span class="font-cinzel font-bold text-sm tabular-nums shrink-0">${formatTime(tz)}h</span>
+          </li>`
+        })
+        .join('')
+
+      container.innerHTML = `
+        <p class="mb-2 text-sm font-semibold tracking-widest text-white/40 uppercase">Hora del evento por país</p>
+        <ul class="list-none p-0 m-0 text-white/75">${rowsHtml}</ul>
+      `
+      container.classList.remove('hidden')
+    } catch {
+      // Silently fail
+    }
+  })
+</script>
