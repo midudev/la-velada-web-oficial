@@ -19,6 +19,7 @@ import {
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
+import BoxerGallery from '@/components/BoxerGallery.astro'
 
 export const prerender = true
 
@@ -215,7 +216,7 @@ const breadcrumbJsonLd = {
             />
           </picture>
 
-          <div class="boxer-detail-socials relative z-10 mt-6 w-full">
+          <div class="boxer-detail-socias relative z-10 mt-6 w-full">
             <BoxerSocials boxer={boxer} />
           </div>
         </div>
@@ -283,6 +284,8 @@ const breadcrumbJsonLd = {
               />
             </a>
           )}
+
+          <BoxerGallery boxerId={boxer.id} boxerName={boxer.name} />
 
           <div
             class="boxer-detail-coming-soon animate-fade-in-up animate-delay-500 mt-10 w-full"
