@@ -2,6 +2,7 @@
 import CountryFlag from '@/components/CountryFlag.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
 import { battles } from '@/consts/battles'
+import { EVENT_DATE_DAY, EVENT_DATE_TIME, EVENT_DISPLAY_TIME_SHORT } from '@/consts/event'
 import {
   BOXERS,
   BOXERS_BY_ID,
@@ -141,7 +142,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       >
         <li class="flex items-baseline">
           <time
-            datetime="2026-07-25"
+            datetime={EVENT_DATE_DAY}
             class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
           >
             25 DE JULIO
@@ -149,10 +150,10 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         </li>
         <li class="flex items-baseline">
           <time
-            datetime="2026-07-25T20:00:00+02:00"
+            datetime={EVENT_DATE_TIME}
             class="font-cinzel text-xs font-bold tracking-[0.28em] text-theme-cream sm:text-sm"
           >
-            20:00H CET
+            {EVENT_DISPLAY_TIME_SHORT}
           </time>
         </li>
         <li class="flex items-baseline">
