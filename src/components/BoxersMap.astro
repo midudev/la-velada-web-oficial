@@ -1,0 +1,420 @@
+---
+import 'leaflet/dist/leaflet.css'
+import { BOXERS, COUNTRY_NAMES } from '@/consts/boxers'
+
+const countryCounts: Record<string, number> = {}
+for (const boxer of BOXERS) {
+  countryCounts[boxer.country] = (countryCounts[boxer.country] ?? 0) + 1
+}
+
+const ISO_TO_NUMERIC: Record<string, number> = {
+  es: 724,
+  ar: 32,
+  mx: 484,
+  co: 170,
+  sv: 222,
+  pr: 630,
+}
+
+const mapData = Object.entries(countryCounts).map(([code, count]) => ({
+  code,
+  numeric: ISO_TO_NUMERIC[code] ?? null,
+  name: COUNTRY_NAMES[code] ?? code,
+  count,
+  boxers: BOXERS.filter((b) => b.country === code).map((b) => ({ id: b.id, name: b.name })),
+}))
+---
+
+<section class="boxers-map-section">
+  <div class="boxers-map-header">
+    <div class="boxers-map-ornament" aria-hidden="true">
+      <span class="ornament-line ornament-line-left"></span>
+      <span class="ornament-diamond"></span>
+      <span class="ornament-line ornament-line-right"></span>
+    </div>
+    <h2 class="boxers-map-title">ORIGEN DE LOS CONTENDIENTES</h2>
+    <p class="boxers-map-lead">
+      {Object.keys(countryCounts).length} países representados en La Velada del Año VI
+    </p>
+  </div>
+  <div class="boxers-map-wrapper">
+    <!-- Los datos se pasan via data-attribute para poder usar import() en el script -->
+    <div
+      id="boxers-map"
+      data-map={JSON.stringify(mapData)}
+      aria-label="Mapa de países de los boxeadores"
+    >
+    </div>
+  </div>
+</section>
+
+<script>
+  import L from 'leaflet'
+  import { feature } from 'topojson-client'
+
+  const GOLD = '#c7a86b'
+  const GOLD_BRIGHT = '#e8c97a'
+
+  let mapInstance: ReturnType<typeof L.map> | null = null
+
+  function destroyMap() {
+    if (mapInstance) {
+      mapInstance.remove()
+      mapInstance = null
+    }
+  }
+
+  async function initMap() {
+    try {
+      destroyMap()
+
+      const mapEl = document.getElementById('boxers-map') as HTMLElement | null
+      if (!mapEl) return
+
+      const mapData = JSON.parse(mapEl.dataset.map ?? '[]')
+      const byNumeric: Record<number, (typeof mapData)[0]> = Object.fromEntries(
+        mapData.filter((d: any) => d.numeric).map((d: any) => [d.numeric, d]),
+      )
+
+      mapInstance = L.map(mapEl, {
+        center: [20, -30],
+        zoom: 2,
+        zoomControl: true,
+        scrollWheelZoom: false,
+        minZoom: 1,
+        maxZoom: 6,
+      })
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20,
+      }).addTo(mapInstance)
+
+      const topo = await fetch(
+        'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json',
+      ).then((r) => r.json())
+      const geojson = feature(topo, topo.objects.countries) as unknown as GeoJSON.FeatureCollection
+
+      let fixedPopup: ReturnType<typeof L.popup> | null = null
+      let fixedLayer: ReturnType<typeof L.geoJSON> | null = null
+
+      const geolayer = L.geoJSON(geojson, {
+        style(f) {
+          return byNumeric[Number(f?.id)]
+            ? { fillColor: GOLD, fillOpacity: 0.45, color: GOLD_BRIGHT, weight: 1.5 }
+            : { fillColor: 'transparent', fillOpacity: 0, color: '#ffffff08', weight: 0.5 }
+        },
+        onEachFeature(f, layer) {
+          const data = byNumeric[Number(f.id)]
+          if (!data) return
+
+          layer.bindTooltip(
+            `<div class="map-tt-name">${data.name}</div>
+             <div class="map-tt-hint">Pulsa para ver boxeadores</div>`,
+            { sticky: true, className: 'boxers-map-tooltip', direction: 'top', offset: [0, -4] },
+          )
+
+          layer.on({
+            mouseover(e: any) {
+              if (fixedLayer === e.target) return
+              e.target.setStyle({ fillOpacity: 0.7, color: GOLD_BRIGHT, weight: 2 })
+              e.target.bringToFront()
+            },
+            mouseout(e: any) {
+              if (fixedLayer === e.target) return
+              geolayer.resetStyle(e.target)
+            },
+            click(e: any) {
+              L.DomEvent.stopPropagation(e)
+
+              if (fixedLayer === e.target) {
+                fixedPopup?.remove()
+                return
+              }
+
+              fixedPopup?.remove()
+              if (fixedLayer) geolayer.resetStyle(fixedLayer)
+
+              e.target.setStyle({ fillOpacity: 0.85, color: GOLD_BRIGHT, weight: 2.5 })
+              e.target.bringToFront()
+              fixedLayer = e.target
+
+              const links = data.boxers
+                .map(
+                  (b: any) =>
+                    `<a href="/boxeadores/${b.id}" class="map-popup-link">
+                      <span class="map-popup-arrow">›</span>${b.name}
+                    </a>`,
+                )
+                .join('')
+
+              fixedPopup = L.popup({
+                className: 'boxers-map-popup',
+                autoPan: true,
+                autoPanPadding: [32, 32],
+                closeButton: true,
+                closeOnClick: false,
+              })
+                .setLatLng(e.target.getBounds().getCenter())
+                .setContent(
+                  `<div class="map-popup">
+                    <div class="map-popup-country">${data.name}</div>
+                    <div class="map-popup-count">${data.count} contendiente${data.count !== 1 ? 's' : ''}</div>
+                    <div class="map-popup-list">${links}</div>
+                  </div>`,
+                )
+                .addTo(mapInstance!)
+
+              fixedPopup.on('remove', () => {
+                if (fixedLayer) {
+                  geolayer.resetStyle(fixedLayer)
+                  fixedLayer = null
+                }
+                fixedPopup = null
+              })
+            },
+          })
+        },
+      }).addTo(mapInstance)
+
+      mapInstance.on('click', () => fixedPopup?.remove())
+
+      const highlightedFc: GeoJSON.FeatureCollection = {
+        type: 'FeatureCollection',
+        features: geojson.features.filter((f) => byNumeric[Number(f.id)]),
+      }
+      if (highlightedFc.features.length) {
+        mapInstance.fitBounds(L.geoJSON(highlightedFc).getBounds(), {
+          padding: [40, 40],
+          maxZoom: 4,
+        })
+      }
+    } catch (err) {
+      console.error('BoxersMap:', err)
+    }
+  }
+
+  document.addEventListener('astro:page-load', initMap)
+  document.addEventListener('astro:before-preparation', destroyMap)
+</script>
+
+<style>
+  .boxers-map-section {
+    background: linear-gradient(180deg, #050816 0%, var(--color-theme-midnight) 100%);
+    padding: 4rem 1.5rem 5rem;
+  }
+  @media (min-width: 640px) {
+    .boxers-map-section {
+      padding: 5rem 2rem 6rem;
+    }
+  }
+
+  .boxers-map-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .boxers-map-ornament {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .ornament-line {
+    display: block;
+    height: 1px;
+    width: 4rem;
+  }
+  .ornament-line-left {
+    background: linear-gradient(
+      to right,
+      transparent,
+      color-mix(in srgb, var(--color-theme-gold) 40%, transparent)
+    );
+  }
+  .ornament-line-right {
+    background: linear-gradient(
+      to left,
+      transparent,
+      color-mix(in srgb, var(--color-theme-gold) 40%, transparent)
+    );
+  }
+  .ornament-diamond {
+    display: block;
+    width: 6px;
+    height: 6px;
+    background: color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
+    transform: rotate(45deg);
+  }
+
+  .boxers-map-title {
+    font-family: var(--font-cinzel);
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--color-theme-cream);
+    margin-bottom: 0.75rem;
+  }
+
+  .boxers-map-lead {
+    font-family: var(--font-cinzel);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
+    text-transform: uppercase;
+  }
+
+  .boxers-map-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 28%, transparent),
+      0 24px 60px rgba(0, 0, 0, 0.6);
+  }
+
+  #boxers-map {
+    width: 100%;
+    height: 420px;
+    background: #0a0e1f;
+  }
+  @media (min-width: 640px) {
+    #boxers-map {
+      height: 480px;
+    }
+  }
+
+  :global(.leaflet-container) {
+    background: #0a0e1f !important;
+  }
+  :global(.leaflet-control-attribution) {
+    background: rgba(5, 8, 22, 0.8) !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+    font-size: 0.5rem !important;
+  }
+  :global(.leaflet-control-attribution a) {
+    color: color-mix(in srgb, var(--color-theme-gold) 60%, transparent) !important;
+  }
+  :global(.leaflet-control-zoom a) {
+    background: rgba(10, 14, 31, 0.9) !important;
+    color: var(--color-theme-gold) !important;
+    border-color: color-mix(in srgb, var(--color-theme-gold) 30%, transparent) !important;
+  }
+  :global(.leaflet-control-zoom a:hover) {
+    background: color-mix(in srgb, var(--color-theme-gold) 15%, rgba(10, 14, 31, 0.95)) !important;
+  }
+
+  :global(.boxers-map-tooltip.leaflet-tooltip) {
+    background: rgba(8, 11, 28, 0.92) !important;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 35%, transparent) !important;
+    border-radius: 4px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+  :global(.boxers-map-tooltip.leaflet-tooltip::before) {
+    border-top-color: color-mix(in srgb, var(--color-theme-gold) 35%, transparent) !important;
+  }
+  :global(.map-tt-name) {
+    font-family: var(--font-cinzel), sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--color-theme-gold);
+    text-transform: uppercase;
+  }
+  :global(.map-tt-hint) {
+    font-family: var(--font-cinzel), sans-serif;
+    font-size: 0.48rem;
+    letter-spacing: 0.12em;
+    color: color-mix(in srgb, var(--color-theme-cream) 45%, transparent);
+    margin-top: 0.15rem;
+  }
+
+  :global(.boxers-map-popup .leaflet-popup-content-wrapper) {
+    background: linear-gradient(180deg, #1a2040 0%, rgba(8, 11, 28, 0.98) 100%) !important;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 40%, transparent) !important;
+    border-radius: 6px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7) !important;
+    color: var(--color-theme-cream) !important;
+    padding: 0 !important;
+  }
+  :global(.boxers-map-popup .leaflet-popup-content) {
+    margin: 0 !important;
+  }
+  :global(.boxers-map-popup .leaflet-popup-tip-container) {
+    display: none !important;
+  }
+  :global(.boxers-map-popup .leaflet-popup-close-button) {
+    color: color-mix(in srgb, var(--color-theme-gold) 70%, transparent) !important;
+    top: 6px !important;
+    right: 8px !important;
+  }
+  :global(.boxers-map-popup .leaflet-popup-close-button:hover) {
+    color: var(--color-theme-gold) !important;
+  }
+
+  :global(.map-popup) {
+    padding: 0.85rem 1.1rem 0.9rem;
+    min-width: 160px;
+  }
+  :global(.map-popup-country) {
+    font-family: var(--font-cinzel), sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--color-theme-gold);
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+  :global(.map-popup-count) {
+    font-family: var(--font-cinzel), sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
+    text-transform: uppercase;
+    padding-bottom: 0.6rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
+  }
+  :global(.map-popup-list) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  :global(.map-popup-link) {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-cinzel), sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--color-theme-cream);
+    text-decoration: none;
+    padding: 0.25rem 0.3rem;
+    border-radius: 3px;
+    transition:
+      background 150ms,
+      color 150ms;
+  }
+  :global(.map-popup-link:hover) {
+    background: color-mix(in srgb, var(--color-theme-gold) 15%, transparent);
+    color: var(--color-theme-gold);
+  }
+  :global(.map-popup-arrow) {
+    color: color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    font-size: 0.8rem;
+    transition: transform 150ms;
+  }
+  :global(.map-popup-link:hover .map-popup-arrow) {
+    color: var(--color-theme-gold);
+    transform: translateX(2px);
+  }
+</style>
