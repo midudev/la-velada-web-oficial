@@ -1232,29 +1232,34 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   @keyframes boxer-name-reveal {
     from {
       opacity: 0;
-      clip-path: inset(0 100% 0 0);
+      /* El wipe se hace por la derecha (100% → 0). En el resto de lados
+         expandimos la región con insets negativos para que el clip-path no
+         recorte la text-shadow/drop-shadow del nombre durante la animación. */
+      clip-path: inset(-3rem 100% -3rem -3rem);
       transform: translateY(6px);
     }
     to {
       opacity: 1;
-      clip-path: inset(0 0 0 0);
+      clip-path: inset(-3rem 0 -3rem -3rem);
       transform: none;
     }
   }
 
-  /* ── 3 · Entrada del roster (más limpia, sin overshoot). ── */
+  /* ── 3 · Entrada del roster ──────────────────────────────────────────
+     La CELDA (que lleva el borde por box-shadow) se funde SOLO en opacidad,
+     con los mismos parámetros que el `animate-fade-in` de producción
+     (0.6s ease-in). Así las líneas del grid se dibujan continuas y alineadas,
+     idénticas a "Actual": nunca se escala el recuadro con el borde. */
   .boxer-cell-enter {
-    animation: boxer-cell-enter 520ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation: boxer-cell-enter 600ms ease-in both;
   }
 
   @keyframes boxer-cell-enter {
     from {
       opacity: 0;
-      transform: translateY(12px) scale(0.92);
     }
     to {
       opacity: 1;
-      transform: none;
     }
   }
 
