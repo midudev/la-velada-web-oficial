@@ -1378,17 +1378,17 @@ const totalBoxers = BOXERS.length
     display: none;
   }
 
-  .boxers-grid{
+  .boxers-grid {
     --cards-gap: calc(var(--spacing) * 3);
   }
 
   @media (width >= 64rem) {
-    .boxers-grid{
+    .boxers-grid {
       --cards-gap: calc(var(--spacing) * 5);
     }
   }
 
-  [data-state="default"] > .boxer-card-wrap:nth-child(even)::after {
+  .boxers-grid[data-state="default"] > .boxer-card-wrap:nth-child(even)::after {
     --inline-size: 2.3em;
     --block-size: 2.05em;
     content: 'VS';
@@ -1402,12 +1402,24 @@ const totalBoxers = BOXERS.length
     block-size: var(--block-size);
     font-family: var(--font-cinzel);
     font-weight: 700;
-    font-size: clamp(1rem, 0.939rem + 0.259vw, 1.25rem);
+    font-size: clamp(1.125rem, 0.875rem + 0.313vw, 1.25rem);
     color: var(--color-theme-gold);
     background-color: var(--color-theme-midnight);
     border-radius: 4px;
     line-height: normal;
     border: 1px solid color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+  }
+
+  @media (width <= 48rem) {  
+    .boxers-grid[data-state="default"] > .boxer-card-wrap:nth-child(even)::after {
+      font-size: clamp(1rem, 0.641rem + 1.531vw, 1.375rem);
+    }
+  }
+
+  @media (width >=  48rem) and (width <= 79.999rem) {
+    .boxers-grid[data-state='default'] > .boxer-card-wrap:nth-child(even)::after {
+      content: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
