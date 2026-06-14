@@ -1,4 +1,5 @@
 ---
+import 'leaflet/dist/leaflet.css'
 import SectionHeader from '@/components/SectionHeader.astro'
 
 const VENUE_NAME = 'Estadio de La Cartuja'
@@ -14,12 +15,6 @@ const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LOCATION}(${VENUE_GEO_LABEL})`
 const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VENUE_LOCATION}`
 ---
 
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-  crossorigin=""
-/>
 
 <section
   id="sede"
@@ -336,19 +331,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
       const longitude = Number(container.dataset.longitude)
       const zoom = Number(container.dataset.zoom)
 
-      if (!(window as any).L) {
-        await new Promise<void>((resolve, reject) => {
-          const s = document.createElement('script')
-          s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
-          s.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo='
-          s.crossOrigin = ''
-          s.onload = () => resolve()
-          s.onerror = () => reject(new Error('No se pudo cargar Leaflet'))
-          document.head.appendChild(s)
-        })
-      }
-
-      const L = (window as any).L
+      const L = (await import('leaflet')).default
 
       mapInstance = L.map(container, {
         center: [latitude, longitude],
