@@ -71,7 +71,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Clara Merino',
       country: 'es',
       previousVeladaWins: [],
-      birthDate: null,
+      birthDate: '2001-09-15',
       gender: 'f',
       age: null,
       youtubeChannelId: 'UCYa7uV_ICFXbho_JRyv0nFA',
