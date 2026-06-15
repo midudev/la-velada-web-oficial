@@ -1,0 +1,396 @@
+---
+import SectionDivider from '@/components/SectionDivider.astro'
+import Layout from '@/layouts/Layout.astro'
+import Footer from '@/sections/Footer.astro'
+import Sponsors from '@/sections/Sponsors.astro'
+import { ARTISTS } from '@/consts/artists'
+
+const SITE_URL = 'https://www.infolavelada.com'
+const title = 'Cantantes y artistas | La Velada del Año VI'
+const description =
+    'Descubre los cantantes y artistas que actuarán en La Velada del Año VI, el evento de boxeo de Ibai Llanos en Sevilla el 25 de julio de 2026.'
+const canonical = `${SITE_URL}/cantantes`
+
+export const prerender = true
+
+const totalArtists = ARTISTS.length
+
+const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Cantantes', item: canonical },
+    ],
+}
+
+const itemListJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Cantantes y artistas de La Velada del Año VI',
+    numberOfItems: totalArtists,
+    itemListOrder: 'https://schema.org/ItemListOrderAscending',
+    itemListElement: ARTISTS.map((artist, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: artist.name,
+    })),
+}
+---
+
+<Layout title={title} description={description} canonical={canonical}>
+    <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(breadcrumbJsonLd)}
+    slot="head"
+    />
+    <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(itemListJsonLd)}
+    slot="head"
+    />
+
+    <section
+    class="artists-page relative isolate w-full overflow-x-clip bg-theme-midnight px-3 pt-24 pb-20 text-theme-cream sm:px-6 sm:pt-32 sm:pb-24 md:pt-36"
+    >
+    <div aria-hidden="true" class="artists-bg absolute inset-0 -z-20"></div>
+    <div aria-hidden="true" class="artists-grain pointer-events-none absolute inset-0 -z-10"></div>
+
+    <div class="mx-auto w-full max-w-7xl">
+        <header class="flex flex-col items-center text-center">
+        <SectionDivider class="mb-7 w-full sm:mb-10" />
+
+        <div
+            class="artists-eyebrow mb-5 inline-flex items-center gap-2.5 sm:mb-6"
+            aria-hidden="true"
+        >
+        </div>
+
+        <h1
+            class="mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
+        >
+            CANTANTES
+        </h1>
+        <p
+            class="mb-12 max-w-xl animate-fade-in-up font-cinzel text-xs font-medium tracking-[0.16em] text-balance text-white/55 animate-delay-200 sm:mb-16 sm:text-sm sm:tracking-[0.25em]"
+        >
+            Los {totalArtists} artistas que sonarán en La Velada del Año VI
+        </p>
+        </header>
+
+        <ul
+        class="artists-grid grid w-full grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5"
+        role="list"
+        >
+        {
+            ARTISTS.map((artist, index) => (
+            <li
+                class="artist-card-wrap animate-fade-in-up"
+              style={`animation-delay: ${index * 45}ms`}
+            >
+                <article class="artist-card group relative block aspect-[3/4] w-full overflow-hidden rounded-md">
+                <span
+                    aria-hidden="true"
+                    class="artist-card-bg-gold pointer-events-none absolute inset-0"
+                />
+
+                <span aria-hidden="true" class="artist-card-fallback absolute inset-0">
+                    <span class="artist-card-disc">
+                    <span class="artist-card-monogram">{artist.name.trim().charAt(0)}</span>
+                    </span>
+                </span>
+
+                <img
+                    src={artist.image}
+                    alt={artist.name}
+                    loading="lazy"
+                    decoding="async"
+                    onerror="this.style.display='none'"
+                    class="artist-card-img absolute inset-0 h-full w-full object-cover object-center"
+                />
+
+                <span aria-hidden="true" class="artist-card-veil pointer-events-none absolute inset-0" />
+
+                <span aria-hidden="true" class="artist-card-corner artist-card-corner-tl" />
+                <span aria-hidden="true" class="artist-card-corner artist-card-corner-tr" />
+                <span aria-hidden="true" class="artist-card-corner artist-card-corner-bl" />
+                <span aria-hidden="true" class="artist-card-corner artist-card-corner-br" />
+
+                <div class="artist-card-caption absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-1 px-2.5 pt-12 pb-4 text-center sm:gap-1.5 sm:px-3 sm:pt-14 sm:pb-6">
+                    <span
+                    aria-hidden="true"
+                    class="artist-card-divider mb-1 h-px w-8 bg-theme-gold/60 transition-all duration-500"
+                    />
+                    <h2 class="artist-card-name font-cinzel text-[0.82rem] leading-[1.1] font-bold tracking-[0.1em] text-balance text-theme-cream uppercase sm:text-base sm:tracking-[0.16em] md:text-lg">
+                    {artist.name}
+                    </h2>
+                </div>
+                </article>
+            </li>
+            ))
+        }
+        </ul>
+    </div>
+    </section>
+
+    <Sponsors />
+    <Footer />
+</Layout>
+
+<style>
+.artists-page {
+    min-height: 100svh;
+}
+
+.artists-bg {
+    background:
+        radial-gradient(
+        ellipse 70% 45% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 16%, transparent) 0%,
+        transparent 65%
+        ),
+        linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
+}
+
+.artists-grain {
+    background-image: radial-gradient(rgba(199, 168, 107, 0.05) 1px, transparent 1px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 85%);
+}
+
+.artists-eyebrow {
+    text-shadow: 0 0 14px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+}
+
+.artist-card {
+    background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
+        0 12px 30px rgba(0, 0, 0, 0.4);
+    transition:
+        box-shadow 400ms ease,
+        transform 400ms ease,
+        opacity 400ms ease,
+        filter 400ms ease;
+    will-change: transform;
+}
+
+.artist-card:hover,
+.artist-card:focus-within {
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 70%, transparent),
+        0 28px 60px rgba(0, 0, 0, 0.6),
+        0 0 30px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    transform: translateY(-4px);
+}
+
+.artist-card-bg-gold {
+    background: radial-gradient(
+        ellipse 90% 65% at 50% 38%,
+        color-mix(in srgb, var(--color-theme-gold) 26%, transparent) 0%,
+        transparent 70%
+    );
+    opacity: 0.5;
+    transition: opacity 500ms ease;
+}
+
+.artist-card:hover .artist-card-bg-gold,
+.artist-card:focus-within .artist-card-bg-gold {
+    opacity: 1;
+}
+
+.artist-card-fallback {
+    display: grid;
+    place-items: center;
+}
+
+.artist-card-disc {
+    display: grid;
+    place-items: center;
+    width: 46%;
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 38%, transparent);
+    background: radial-gradient(
+    circle at 50% 38%,
+    color-mix(in srgb, var(--color-theme-gold) 16%, transparent) 0%,
+    transparent 72%
+    );
+    box-shadow:
+    inset 0 0 0 5px color-mix(in srgb, var(--color-theme-gold) 7%, transparent),
+    0 0 22px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
+    transition:
+    transform 500ms ease,
+    border-color 500ms ease;
+}
+
+.artist-card:hover .artist-card-disc,
+.artist-card:focus-within .artist-card-disc {
+    transform: scale(1.05);
+    border-color: color-mix(in srgb, var(--color-theme-gold) 60%, transparent);
+}
+
+.artist-card-monogram {
+    font-family: var(--font-cinzel);
+    font-weight: 700;
+    font-size: clamp(1.8rem, 1rem + 4vw, 3rem);
+    line-height: 1;
+    color: color-mix(in srgb, var(--color-theme-gold) 78%, var(--color-theme-cream));
+    text-shadow: 0 0 18px color-mix(in srgb, var(--color-theme-gold) 38%, transparent);
+}
+
+.artist-card-img {
+    transition:
+    scale 600ms ease,
+    filter 500ms ease;
+    filter: saturate(0.95) brightness(0.95);
+}
+
+.artist-card:hover .artist-card-img,
+.artist-card:focus-within .artist-card-img {
+    scale: 1.04;
+    filter: saturate(1.08) brightness(1.03);
+}
+
+.artist-card-veil {
+    background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.55) 74%,
+    rgba(0, 0, 0, 0.95) 100%
+    );
+}
+
+.artist-card-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: color-mix(in srgb, var(--color-theme-gold) 65%, transparent);
+    transition:
+    width 400ms ease,
+    height 400ms ease,
+    border-color 400ms ease;
+}
+
+.artist-card-corner-tl {
+    top: 10px;
+    left: 10px;
+    border-right-width: 0;
+    border-bottom-width: 0;
+}
+.artist-card-corner-tr {
+    top: 10px;
+    right: 10px;
+    border-left-width: 0;
+    border-bottom-width: 0;
+}
+.artist-card-corner-bl {
+    bottom: 10px;
+    left: 10px;
+    border-right-width: 0;
+    border-top-width: 0;
+}
+.artist-card-corner-br {
+    bottom: 10px;
+    right: 10px;
+    border-left-width: 0;
+    border-top-width: 0;
+}
+
+.artist-card:hover .artist-card-corner,
+.artist-card:focus-within .artist-card-corner {
+    width: 24px;
+    height: 24px;
+    border-color: var(--color-theme-gold);
+}
+
+.artist-card:hover .artist-card-divider,
+.artist-card:focus-within .artist-card-divider {
+    width: 3rem;
+    background-color: var(--color-theme-gold);
+}
+
+.artist-card-name {
+    text-shadow:
+    0 0 2px rgba(0, 0, 0, 0.95),
+    0 1px 2px rgba(0, 0, 0, 0.9),
+    0 2px 10px rgba(0, 0, 0, 0.65);
+}
+
+@media (max-width: 639px) {
+    .artist-card {
+    aspect-ratio: 4 / 5;
+    }
+
+.artist-card-veil {
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        transparent 36%,
+        rgba(0, 0, 0, 0.6) 72%,
+        rgba(0, 0, 0, 0.96) 100%
+    );
+}
+
+.artist-card-corner {
+    width: 12px;
+    height: 12px;
+}
+.artist-card-corner-tl {
+    top: 8px;
+    left: 8px;
+}
+.artist-card-corner-tr {
+    top: 8px;
+    right: 8px;
+}
+.artist-card-corner-bl {
+    bottom: 8px;
+    left: 8px;
+}
+.artist-card-corner-br {
+    bottom: 8px;
+    right: 8px;
+}
+}
+
+@media (hover: hover) and (pointer: fine) {
+.artists-grid:hover .artist-card {
+    opacity: 0.45;
+    filter: saturate(0.6) brightness(0.72);
+}
+
+.artists-grid:hover .artist-card:hover {
+    opacity: 1;
+    filter: saturate(1.08) brightness(1.03);
+}
+}
+
+@media (prefers-reduced-motion: reduce) {
+.artist-card,
+.artist-card-img,
+.artist-card-bg-gold,
+.artist-card-corner,
+.artist-card-divider,
+.artist-card-disc {
+    transition: none;
+}
+.artist-card:hover,
+.artist-card:focus-within {
+    transform: none;
+}
+.artist-card:hover .artist-card-img,
+.artist-card:focus-within .artist-card-img {
+    scale: 1;
+}
+.artist-card:hover .artist-card-disc,
+.artist-card:focus-within .artist-card-disc {
+    transform: none;
+}
+}
+</style>
