@@ -427,22 +427,15 @@ const SPONSORS: Sponsor[] = [
   import { $, $$ } from '@/lib/dom-selector'
   import { animate, hover, inView } from 'motion'
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-  const canAnimateHover = window.matchMedia(
-    '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
-  ).matches
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const canUseHoverMotion = window.matchMedia('(hover: hover) and (pointer: fine)').matches
   const header = $('.sponsors-header')
   const promoBanners = $$('.sponsors-promos .promo-banner')
   const sponsorItems = $$('.sponsors-grid li')
   const grid = $('[data-corner-grid]')
   const corners = $$<SVGElement>('.corner-grid svg')
-  const smQuery = window.matchMedia('(min-width: 640px)')
-  let isSmScreen = smQuery.matches
-  smQuery.addEventListener('change', (event) => {
-    isSmScreen = event.matches
-  })
 
-  if (!reducedMotion.matches) {
+  if (!prefersReducedMotion) {
     const reveal = (elements: Element[], delayStep = 0.05) => {
       elements.forEach((el, i) => {
         animate(
@@ -462,118 +455,130 @@ const SPONSORS: Sponsor[] = [
     inView('.sponsors-promos', () => reveal(promoBanners, 0.08))
     inView('.sponsors-grid', () => reveal(sponsorItems, 0.045))
 
-    hover('.promo-banner', (banner) => {
-      const img = $<HTMLImageElement>('.banner-img', banner)
-      if (!img) return
-      animate(img, { scale: 1 }, { duration: 0.3 })
+    if (canUseHoverMotion) {
+      hover('.promo-banner', (banner) => {
+        const img = $<HTMLImageElement>('.banner-img', banner)
+        if (!img) return
+        animate(img, { scale: 1 }, { duration: 0.3 })
 
-      return () => {
-        animate(img, { scale: 1.02 }, { duration: 0.3 })
-      }
-    })
-  }
+        return () => {
+          animate(img, { scale: 1.02 }, { duration: 0.3 })
+        }
+      })
 
-  if (canAnimateHover && grid) {
-    const OUTWARD = [
-      [-4, -16],
-      [4, -16],
-      [-4, 16],
-      [4, 16],
-    ]
-    let activeCard: Element | null = null
-    let hoverId = 0
-    let cornersVisible = false
-    let hideTimer: ReturnType<typeof setTimeout> | null = null
-    const lockTimers: ReturnType<typeof setTimeout>[] = []
-    const revealFrames: number[] = []
+      if (grid) {
+        const smQuery = window.matchMedia('(min-width: 640px)')
+        let isSmScreen = smQuery.matches
+        smQuery.addEventListener('change', (event) => {
+          isSmScreen = event.matches
+        })
 
-    hover('.sponsor-card', (card) => {
-      const currentHoverId = ++hoverId
-      activeCard = card
-      if (hideTimer) {
-        clearTimeout(hideTimer)
-        hideTimer = null
-      }
-      lockTimers.forEach(clearTimeout)
-      lockTimers.length = 0
-      revealFrames.forEach(cancelAnimationFrame)
-      revealFrames.length = 0
+        const OUTWARD = [
+          [-4, -16],
+          [4, -16],
+          [-4, 16],
+          [4, 16],
+        ]
+        let activeCard: Element | null = null
+        let hoverId = 0
+        let cornersVisible = false
+        let hideTimer: ReturnType<typeof setTimeout> | null = null
+        const lockTimers: ReturnType<typeof setTimeout>[] = []
+        const revealFrames: number[] = []
 
-      const gridRect = grid.getBoundingClientRect()
-      const cardRect = card.getBoundingClientRect()
-      const sm = isSmScreen
-      const inset = sm ? 6 : 4
-      const size = sm ? 16 : 12
-
-      const x0 = cardRect.left - gridRect.left + inset
-      const y0 = cardRect.top - gridRect.top + inset
-      const x1 = cardRect.right - gridRect.left - inset - size
-      const y1 = cardRect.bottom - gridRect.top - inset - size
-
-      for (let i = 0; i < 4; i++) {
-        const corner = corners[i]
-        if (!corner) continue
-        const x = i % 2 === 0 ? x0 : x1
-        const y = i < 2 ? y0 : y1
-        const originX = x + OUTWARD[i][0]
-        const originY = y + OUTWARD[i][1]
-
-        if (cornersVisible) {
-          animate(corner, { opacity: 1 }, { duration: 0 })
-          animate(
-            corner,
-            { x: originX, y: originY },
-            { type: 'spring', stiffness: 700, damping: 60 },
-          )
-        } else {
-          animate(corner, { x: originX, y: originY, opacity: 0 }, { duration: 0 })
-          revealFrames.push(
-            requestAnimationFrame(() => {
-              if (activeCard !== card || currentHoverId !== hoverId) return
-              animate(corner, { opacity: 1 }, { duration: 0.14, ease: 'ease-out' })
-            }),
-          )
+        const clearCornerQueue = () => {
+          lockTimers.forEach(clearTimeout)
+          lockTimers.length = 0
+          revealFrames.forEach(cancelAnimationFrame)
+          revealFrames.length = 0
         }
 
-        lockTimers.push(
-          setTimeout(
-            () => {
-              if (activeCard !== card || currentHoverId !== hoverId) return
-              cornersVisible = true
-              animate(corner, { x, y }, { type: 'spring', stiffness: 700, damping: 60 })
-            },
-            50 + i * 40,
-          ),
-        )
-      }
-
-      const logo = $('[data-sponsor-logo]', card)
-      if (logo) animate(logo, { scale: 0.96 }, { type: 'spring', stiffness: 500, damping: 60 })
-
-      return () => {
-        if (logo) animate(logo, { scale: 1 }, { type: 'spring', stiffness: 500, damping: 60 })
-        if (activeCard !== card) return
-
-        activeCard = null
-        hoverId++
-        const exitHoverId = hoverId
-        lockTimers.forEach(clearTimeout)
-        lockTimers.length = 0
-        revealFrames.forEach(cancelAnimationFrame)
-        revealFrames.length = 0
-
-        hideTimer = setTimeout(() => {
-          if (activeCard || exitHoverId !== hoverId) return
-          for (let i = 0; i < 4; i++) {
-            const c = corners[i]
-            if (c) animate(c, { opacity: 0 }, { duration: 0.08, ease: 'ease-out' })
-          }
-          hideTimer = setTimeout(() => {
-            if (!activeCard && exitHoverId === hoverId) cornersVisible = false
+        hover('.sponsor-card', (card) => {
+          const currentHoverId = ++hoverId
+          activeCard = card
+          if (hideTimer) {
+            clearTimeout(hideTimer)
             hideTimer = null
-          }, 60)
-        }, 150)
+          }
+          clearCornerQueue()
+
+          const gridRect = grid.getBoundingClientRect()
+          const cardRect = card.getBoundingClientRect()
+          const inset = isSmScreen ? 6 : 4
+          const size = isSmScreen ? 16 : 12
+
+          const x0 = cardRect.left - gridRect.left + inset
+          const y0 = cardRect.top - gridRect.top + inset
+          const x1 = cardRect.right - gridRect.left - inset - size
+          const y1 = cardRect.bottom - gridRect.top - inset - size
+
+          for (let i = 0; i < 4; i++) {
+            const corner = corners[i]
+            if (!corner) continue
+            const x = i % 2 === 0 ? x0 : x1
+            const y = i < 2 ? y0 : y1
+            const originX = x + OUTWARD[i][0]
+            const originY = y + OUTWARD[i][1]
+
+            if (cornersVisible) {
+              animate(corner, { opacity: 1 }, { duration: 0 })
+              animate(
+                corner,
+                { x: originX, y: originY },
+                { type: 'spring', stiffness: 700, damping: 60 },
+              )
+            } else {
+              animate(corner, { x: originX, y: originY, opacity: 0 }, { duration: 0 })
+              revealFrames.push(
+                requestAnimationFrame(() => {
+                  if (activeCard !== card || currentHoverId !== hoverId) return
+                  animate(corner, { opacity: 1 }, { duration: 0.14, ease: 'ease-out' })
+                }),
+              )
+            }
+
+            lockTimers.push(
+              setTimeout(
+                () => {
+                  if (activeCard !== card || currentHoverId !== hoverId) return
+                  cornersVisible = true
+                  animate(corner, { x, y }, { type: 'spring', stiffness: 700, damping: 60 })
+                },
+                50 + i * 40,
+              ),
+            )
+          }
+
+          const logo = $('[data-sponsor-logo]', card)
+          if (logo) {
+            animate(logo, { scale: 0.96 }, { type: 'spring', stiffness: 500, damping: 60 })
+          }
+
+          return () => {
+            if (logo) {
+              animate(logo, { scale: 1 }, { type: 'spring', stiffness: 500, damping: 60 })
+            }
+            if (activeCard !== card) return
+
+            activeCard = null
+            hoverId++
+            const exitHoverId = hoverId
+            clearCornerQueue()
+
+            hideTimer = setTimeout(() => {
+              if (activeCard || exitHoverId !== hoverId) return
+              for (let i = 0; i < 4; i++) {
+                const c = corners[i]
+                if (c) animate(c, { opacity: 0 }, { duration: 0.08, ease: 'ease-out' })
+              }
+              hideTimer = setTimeout(() => {
+                if (!activeCard && exitHoverId === hoverId) cornersVisible = false
+                hideTimer = null
+              }, 60)
+            }, 150)
+          }
+        })
       }
-    })
+    }
   }
 </script>
