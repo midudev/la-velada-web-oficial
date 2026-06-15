@@ -1,5 +1,8 @@
 export type BoxerGender = 'f' | 'm'
 
+/** Fecha en formato ISO `YYYY-MM-DD`. Evita valores malformados como `'2004'`. */
+export type ISODate = `${number}-${number}-${number}`
+
 export interface Boxer {
   id: string
   name: string
