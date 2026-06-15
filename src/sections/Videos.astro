@@ -1,5 +1,6 @@
 ---
 import SectionHeader from '@/components/SectionHeader.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import CloseIcon from '@/assets/svg/close.svg'
 import PlayIcon from '@/assets/svg/play.svg'
@@ -167,14 +168,7 @@ const SPAN_CLASSES: Record<Span, string> = {
                 </div>
               ) : (
                 <div class="relative flex h-full w-full flex-col items-center justify-center gap-3 px-6 py-8 text-center sm:gap-4 sm:px-8">
-                  <span
-                    aria-hidden="true"
-                    class="flex items-center gap-3 font-cinzel text-[0.55rem] font-black tracking-[0.26em] text-theme-gold/70 sm:text-[0.6rem]"
-                  >
-                    <span class="h-px w-8 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-12" />
-                    <span class="size-1 rotate-45 bg-theme-gold/60" />
-                    <span class="h-px w-8 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-12" />
-                  </span>
+                  <SectionDivider size="sm" />
 
                   <h3
                     class:list={[
