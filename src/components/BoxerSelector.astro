@@ -809,6 +809,12 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       0 18px 38px rgba(0, 0, 0, 0.4);
   }
 
+  /* Durante el reajuste de set (normalize) refrescamos el foco sin transición
+     para que el nuevo slide central herede el marco al instante, sin parpadeo. */
+  .boxer-mobile-slider.is-normalizing .boxer-mobile-frame {
+    transition: none;
+  }
+
   .bmf-corner {
     position: absolute;
     width: 26%;
@@ -1543,6 +1549,16 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       if (!focusRaf) focusRaf = requestAnimationFrame(updateFocus)
     }
 
+    // Tras normalize() el scrollLeft salta un set completo, así que el slide
+    // centrado pasa a ser OTRO elemento (idéntico). Refrescamos las vars de
+    // foco al instante y sin transición, para que el nuevo slide central herede
+    // el realce sin parpadeo (el salto es invisible porque los sets son iguales).
+    const refreshFocusInstant = () => {
+      slider.classList.add('is-normalizing')
+      updateFocus()
+      requestAnimationFrame(() => slider.classList.remove('is-normalizing'))
+    }
+
     slider.addEventListener('scroll', requestFocus, { passive: true })
 
     requestAnimationFrame(() => {
@@ -1555,16 +1571,21 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     // (incluido el snap) ha terminado, evitando cualquier corte visual.
     // Como fallback, debounce manual: ejecutamos `normalize` ~160ms después
     // del último evento de scroll, tiempo de sobra para que termine el snap.
+    const normalizeAndRefresh = () => {
+      normalize()
+      refreshFocusInstant()
+    }
+
     const supportsScrollEnd = 'onscrollend' in window
     if (supportsScrollEnd) {
-      slider.addEventListener('scrollend', normalize, { passive: true })
+      slider.addEventListener('scrollend', normalizeAndRefresh, { passive: true })
     } else {
       let scrollEndTimer: ReturnType<typeof setTimeout> | null = null
       slider.addEventListener(
         'scroll',
         () => {
           if (scrollEndTimer) clearTimeout(scrollEndTimer)
-          scrollEndTimer = setTimeout(normalize, 160)
+          scrollEndTimer = setTimeout(normalizeAndRefresh, 160)
         },
         { passive: true },
       )
