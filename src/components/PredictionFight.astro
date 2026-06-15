@@ -223,9 +223,10 @@ const [optionA, optionB] = options
   .fight-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
+    justify-content: center;
+    gap: 0.4rem;
     min-height: 2.25rem;
-    padding: 0.35rem 1.1rem;
+    padding: 0.35rem 1.2rem;
     border-radius: 9999px;
     border: 1px solid color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
     font-family: var(--font-cinzel);
@@ -233,11 +234,20 @@ const [optionA, optionB] = options
     font-weight: 800;
     letter-spacing: 0.22em;
     text-transform: uppercase;
+    white-space: nowrap;
     color: var(--color-theme-gold);
     transition:
       color 260ms ease,
       border-color 260ms ease,
       background-color 260ms ease;
+  }
+
+  /* La flecha mantiene su tamaño y queda alineada con el texto (la separación
+     visual del tracking en mayúsculas se compensa con un margen negativo). */
+  .fight-link :global(svg) {
+    flex-shrink: 0;
+    margin-inline-start: -0.12em;
+    transform: translateY(0.02em);
   }
 
   .fight-link:hover {
