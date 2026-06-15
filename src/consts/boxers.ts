@@ -10,7 +10,7 @@ export interface Boxer {
   gender: BoxerGender
   birthDate: ISODate | null
   age: number | null
-  followersUpdatedAt: string
+  followersUpdatedAt: ISODate
   socials: { platform: string; username: string; followers?: number; monthlyListeners?: number }[]
   country: string
   previousVeladaWins: number[]
