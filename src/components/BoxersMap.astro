@@ -1,5 +1,6 @@
 ---
 import 'leaflet/dist/leaflet.css'
+import SectionDivider from '@/components/SectionDivider.astro'
 import { BOXERS, COUNTRY_NAMES } from '@/consts/boxers'
 
 const countryCounts: Record<string, number> = {}
@@ -16,6 +17,8 @@ const ISO_TO_NUMERIC: Record<string, number> = {
   pr: 630,
 }
 
+const countryCount = Object.keys(countryCounts).length
+
 const mapData = Object.entries(countryCounts).map(([code, count]) => ({
   code,
   numeric: ISO_TO_NUMERIC[code] ?? null,
@@ -25,22 +28,26 @@ const mapData = Object.entries(countryCounts).map(([code, count]) => ({
 }))
 ---
 
-<section class="boxers-map-section">
-  <div class="boxers-map-header">
-    <div class="boxers-map-ornament" aria-hidden="true">
-      <span class="ornament-line ornament-line-left"></span>
-      <span class="ornament-diamond"></span>
-      <span class="ornament-line ornament-line-right"></span>
-    </div>
-    <h2 class="boxers-map-title">ORIGEN DE LOS BOXEADORES</h2>
-    <p class="boxers-map-lead">
-      {Object.keys(countryCounts).length} países representados en La Velada del Año VI
-    </p>
+<section
+  class="bg-linear-to-b from-[#050816] to-theme-midnight px-6 pt-16 pb-20 sm:px-8 sm:pt-20 sm:pb-24"
+  aria-labelledby="boxers-map-title"
+>
+  <div class="mb-10 flex flex-col items-center text-center">
+    <SectionDivider class="mb-8" />
+    <h2
+      id="boxers-map-title"
+      class="max-w-xl text-center font-cinzel text-[clamp(0.875rem,2.5vw,1.125rem)] font-semibold tracking-[0.12em] text-theme-cream/85"
+    >
+      {countryCount} países representados en La Velada del Año VI
+    </h2>
   </div>
-  <div class="boxers-map-wrapper">
+  <div
+    class="mx-auto max-w-[1000px] overflow-hidden rounded-lg shadow-[0_0_0_1px_color-mix(in_srgb,var(--color-theme-gold)_28%,transparent),0_24px_60px_rgba(0,0,0,0.6)]"
+  >
     <!-- Los datos se pasan via data-attribute para poder usar import() en el script -->
     <div
       id="boxers-map"
+      class="h-[420px] w-full bg-[#0a0e1f] sm:h-[480px]"
       data-map={JSON.stringify(mapData)}
       aria-label="Mapa de países de los boxeadores"
     >
@@ -111,8 +118,8 @@ const mapData = Object.entries(countryCounts).map(([code, count]) => ({
           if (!data) return
 
           layer.bindTooltip(
-            `<div class="map-tt-name">${data.name}</div>
-             <div class="map-tt-hint">Pulsa para ver boxeadores</div>`,
+            `<div class="font-cinzel text-[0.65rem] font-bold tracking-[0.18em] text-theme-gold uppercase">${data.name}</div>
+             <div class="mt-0.5 font-cinzel text-[0.48rem] tracking-[0.12em] text-theme-cream/45">Pulsa para ver boxeadores</div>`,
             { sticky: true, className: 'boxers-map-tooltip', direction: 'top', offset: [0, -4] },
           )
 
@@ -144,8 +151,8 @@ const mapData = Object.entries(countryCounts).map(([code, count]) => ({
               const links = data.boxers
                 .map(
                   (b: any) =>
-                    `<a href="/boxeadores/${b.id}" class="map-popup-link">
-                      <span class="map-popup-arrow">›</span>${b.name}
+                    `<a href="/boxeadores/${b.id}" class="group flex items-center gap-1.5 rounded-sm px-[0.3rem] py-1 font-cinzel text-[0.6rem] font-semibold tracking-[0.1em] text-theme-cream no-underline transition-colors duration-150 hover:bg-theme-gold/15 hover:text-theme-gold">
+                      <span class="text-[0.8rem] text-theme-gold/55 transition-[transform,color] duration-150 group-hover:translate-x-0.5 group-hover:text-theme-gold">›</span>${b.name}
                     </a>`,
                 )
                 .join('')
@@ -159,10 +166,10 @@ const mapData = Object.entries(countryCounts).map(([code, count]) => ({
               })
                 .setLatLng(e.target.getBounds().getCenter())
                 .setContent(
-                  `<div class="map-popup">
-                    <div class="map-popup-country">${data.name}</div>
-                    <div class="map-popup-count">${data.count} contendiente${data.count !== 1 ? 's' : ''}</div>
-                    <div class="map-popup-list">${links}</div>
+                  `<div class="min-w-40 px-[1.1rem] pt-[0.85rem] pb-[0.9rem]">
+                    <div class="mb-0.5 font-cinzel text-xs font-bold tracking-[0.2em] text-theme-gold uppercase">${data.name}</div>
+                    <div class="mb-2 border-b border-theme-gold/20 pb-2.5 font-cinzel text-[0.55rem] tracking-[0.18em] text-theme-cream/55 uppercase">${data.count} contendiente${data.count !== 1 ? 's' : ''}</div>
+                    <div class="flex flex-col gap-0.5">${links}</div>
                   </div>`,
                 )
                 .addTo(mapInstance!)
@@ -201,96 +208,10 @@ const mapData = Object.entries(countryCounts).map(([code, count]) => ({
 </script>
 
 <style>
-  .boxers-map-section {
-    background: linear-gradient(180deg, #050816 0%, var(--color-theme-midnight) 100%);
-    padding: 4rem 1.5rem 5rem;
-  }
-  @media (min-width: 640px) {
-    .boxers-map-section {
-      padding: 5rem 2rem 6rem;
-    }
-  }
-
-  .boxers-map-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 2.5rem;
-  }
-
-  .boxers-map-ornament {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  .ornament-line {
-    display: block;
-    height: 1px;
-    width: 4rem;
-  }
-  .ornament-line-left {
-    background: linear-gradient(
-      to right,
-      transparent,
-      color-mix(in srgb, var(--color-theme-gold) 40%, transparent)
-    );
-  }
-  .ornament-line-right {
-    background: linear-gradient(
-      to left,
-      transparent,
-      color-mix(in srgb, var(--color-theme-gold) 40%, transparent)
-    );
-  }
-  .ornament-diamond {
-    display: block;
-    width: 6px;
-    height: 6px;
-    background: color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
-    transform: rotate(45deg);
-  }
-
-  .boxers-map-title {
-    font-family: var(--font-cinzel);
-    font-size: clamp(1.25rem, 3vw, 2rem);
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    color: var(--color-theme-cream);
-    margin-bottom: 0.75rem;
-  }
-
-  .boxers-map-lead {
-    font-family: var(--font-cinzel);
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
-    text-transform: uppercase;
-  }
-
-  .boxers-map-wrapper {
-    max-width: 1000px;
-    margin: 0 auto;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 28%, transparent),
-      0 24px 60px rgba(0, 0, 0, 0.6);
-  }
-
-  #boxers-map {
-    width: 100%;
-    height: 420px;
-    background: #0a0e1f;
-  }
-  @media (min-width: 640px) {
-    #boxers-map {
-      height: 480px;
-    }
-  }
-
+  /*
+    Solo overrides de Leaflet — apuntan a clases externas que Tailwind
+    no puede alcanzar desde el markup.
+  */
   :global(.leaflet-container) {
     background: #0a0e1f !important;
   }
@@ -321,21 +242,6 @@ const mapData = Object.entries(countryCounts).map(([code, count]) => ({
   :global(.boxers-map-tooltip.leaflet-tooltip::before) {
     border-top-color: color-mix(in srgb, var(--color-theme-gold) 35%, transparent) !important;
   }
-  :global(.map-tt-name) {
-    font-family: var(--font-cinzel), sans-serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    color: var(--color-theme-gold);
-    text-transform: uppercase;
-  }
-  :global(.map-tt-hint) {
-    font-family: var(--font-cinzel), sans-serif;
-    font-size: 0.48rem;
-    letter-spacing: 0.12em;
-    color: color-mix(in srgb, var(--color-theme-cream) 45%, transparent);
-    margin-top: 0.15rem;
-  }
 
   :global(.boxers-map-popup .leaflet-popup-content-wrapper) {
     background: linear-gradient(180deg, #1a2040 0%, rgba(8, 11, 28, 0.98) 100%) !important;
@@ -358,63 +264,5 @@ const mapData = Object.entries(countryCounts).map(([code, count]) => ({
   }
   :global(.boxers-map-popup .leaflet-popup-close-button:hover) {
     color: var(--color-theme-gold) !important;
-  }
-
-  :global(.map-popup) {
-    padding: 0.85rem 1.1rem 0.9rem;
-    min-width: 160px;
-  }
-  :global(.map-popup-country) {
-    font-family: var(--font-cinzel), sans-serif;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: var(--color-theme-gold);
-    text-transform: uppercase;
-    margin-bottom: 0.2rem;
-  }
-  :global(.map-popup-count) {
-    font-family: var(--font-cinzel), sans-serif;
-    font-size: 0.55rem;
-    letter-spacing: 0.18em;
-    color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
-    text-transform: uppercase;
-    padding-bottom: 0.6rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
-  }
-  :global(.map-popup-list) {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-  }
-  :global(.map-popup-link) {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-cinzel), sans-serif;
-    font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--color-theme-cream);
-    text-decoration: none;
-    padding: 0.25rem 0.3rem;
-    border-radius: 3px;
-    transition:
-      background 150ms,
-      color 150ms;
-  }
-  :global(.map-popup-link:hover) {
-    background: color-mix(in srgb, var(--color-theme-gold) 15%, transparent);
-    color: var(--color-theme-gold);
-  }
-  :global(.map-popup-arrow) {
-    color: color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
-    font-size: 0.8rem;
-    transition: transform 150ms;
-  }
-  :global(.map-popup-link:hover .map-popup-arrow) {
-    color: var(--color-theme-gold);
-    transform: translateX(2px);
   }
 </style>
