@@ -6,7 +6,8 @@ import { battles, battlesById } from '@/consts/battles'
 import {
   BOXERS_BY_ID,
   COUNTRY_NAMES,
-  getBoxerPhoto,
+  getBoxerHeroImages,
+  type Boxer,
 } from '@/consts/boxers'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
@@ -17,12 +18,97 @@ const battle = battlesById[id]
 
 if (!battle) return Astro.redirect('/404')
 
+// Datos del evento (fuente local para chips + JSON-LD, sin duplicar strings).
+const EVENT_DATE_ISO = '2026-07-25T20:00:00+02:00'
+const EVENT_DATE_LABEL = '25 JUL 2026'
+const EVENT_VENUE = 'Estadio de La Cartuja'
+const EVENT_CITY = 'Sevilla'
+const EVENT_REGION = 'Andalucía'
+const EVENT_COUNTRY = 'ES'
+const EVENT_VENUE_LABEL = `${EVENT_VENUE} · ${EVENT_CITY}`
+
 const SITE_URL = 'https://www.infolavelada.com'
 const [boxer1Id, boxer2Id] = battle.boxerIds
 const boxer1 = BOXERS_BY_ID[boxer1Id]
 const boxer2 = BOXERS_BY_ID[boxer2Id]
+
+if (!boxer1 || !boxer2) return Astro.redirect('/404')
+
 const country1 = COUNTRY_NAMES[boxer1.country] ?? boxer1.country
 const country2 = COUNTRY_NAMES[boxer2.country] ?? boxer2.country
+
+const hero1 = getBoxerHeroImages(boxer1)
+const hero2 = getBoxerHeroImages(boxer2)
+
+const compactNumber = new Intl.NumberFormat('es-ES', { notation: 'compact', maximumFractionDigits: 1 })
+const totalFollowers = (boxer: Boxer) =>
+  boxer.socials.reduce((total, social) => total + (social.followers ?? 0), 0)
+
+const followersA = totalFollowers(boxer1)
+const followersB = totalFollowers(boxer2)
+const velaA = boxer1.previousVeladaWins.length
+const velaB = boxer2.previousVeladaWins.length
+
+type Winner = 'a' | 'b' | null
+const higher = (a: number, b: number): Winner => (a === b ? null : a > b ? 'a' : 'b')
+
+// Reparto porcentual (0-100) para la barra comparativa; null si no procede.
+const share = (a: number, b: number): [number, number] | null => {
+  const total = a + b
+  if (total <= 0) return null
+  return [Math.round((a / total) * 100), Math.round((b / total) * 100)]
+}
+
+type IconName = 'age' | 'country' | 'followers' | 'trophy'
+interface TapeRow {
+  label: string
+  icon: IconName
+  a: string
+  b: string
+  winner: Winner
+  share: [number, number] | null
+}
+
+// Datos para la comparativa ("tale of the tape"). `winner` resalta el valor mayor
+// y `share` alimenta la barra comparativa de las métricas que admiten duelo.
+const tape: TapeRow[] = [
+  {
+    label: 'Edad',
+    icon: 'age',
+    a: boxer1.age != null ? String(boxer1.age) : '—',
+    b: boxer2.age != null ? String(boxer2.age) : '—',
+    winner: null,
+    share: null,
+  },
+  { label: 'País', icon: 'country', a: country1, b: country2, winner: null, share: null },
+  {
+    label: 'Seguidores',
+    icon: 'followers',
+    a: compactNumber.format(followersA),
+    b: compactNumber.format(followersB),
+    winner: higher(followersA, followersB),
+    share: share(followersA, followersB),
+  },
+  {
+    label: 'Veladas ganadas',
+    icon: 'trophy',
+    a: String(velaA),
+    b: String(velaB),
+    winner: higher(velaA, velaB),
+    share: share(velaA, velaB),
+  },
+]
+
+// Iconos de línea (SVG path) por métrica.
+const TAPE_ICONS: Record<IconName, string> = {
+  age: 'M8 2v3M16 2v3M3.5 9.5h17M5 4.5h14a1.5 1.5 0 011.5 1.5v13A1.5 1.5 0 0119 20.5H5A1.5 1.5 0 013.5 19V6A1.5 1.5 0 015 4.5z',
+  country:
+    'M12 3a9 9 0 100 18 9 9 0 000-18zM3.5 12h17M12 3c2.4 2.6 2.4 15.4 0 18M12 3c-2.4 2.6-2.4 15.4 0 18',
+  followers:
+    'M16 20v-1.5a3.5 3.5 0 00-3.5-3.5h-5A3.5 3.5 0 004 18.5V20M10 11.5A3.5 3.5 0 1010 4.5a3.5 3.5 0 000 7zM20 20v-1.5a3.5 3.5 0 00-2.6-3.4M15.5 4.7a3.5 3.5 0 010 6.6',
+  trophy:
+    'M8 21h8M12 17v4M6 4h12v5a6 6 0 01-12 0V4zM6 6H3.5v1.5A2.5 2.5 0 006 10M18 6h2.5v1.5A2.5 2.5 0 0118 10',
+}
 const title = `${battle.title} — Combate ${String(battle.number).padStart(2, '0')} de La Velada del Año VI`
 const description = `Toda la información del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} contra ${boxer2.name}. Fecha, horario y detalles en Sevilla.`
 const canonical = `${SITE_URL}${battle.url}`
@@ -34,7 +120,7 @@ const sportsEventJsonLd = {
   description,
   url: canonical,
   sport: 'Boxing',
-  startDate: '2026-07-25T20:00:00+02:00',
+  startDate: EVENT_DATE_ISO,
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
   superEvent: {
@@ -44,12 +130,12 @@ const sportsEventJsonLd = {
   },
   location: {
     '@type': 'Place',
-    name: 'Estadio de La Cartuja',
+    name: EVENT_VENUE,
     address: {
       '@type': 'PostalAddress',
-      addressLocality: 'Sevilla',
-      addressRegion: 'Andalucía',
-      addressCountry: 'ES',
+      addressLocality: EVENT_CITY,
+      addressRegion: EVENT_REGION,
+      addressCountry: EVENT_COUNTRY,
     },
   },
   organizer: { '@type': 'Person', name: 'Ibai Llanos' },
@@ -90,7 +176,7 @@ export const getStaticPaths = (() => {
 export const prerender = true
 ---
 
-<Layout title={title} description={description} canonical={canonical} showHeader={false}>
+<Layout title={title} description={description} canonical={canonical}>
   <script
     type="application/ld+json"
     is:inline
@@ -103,75 +189,796 @@ export const prerender = true
     set:html={JSON.stringify(breadcrumbJsonLd)}
     slot="head"
   />
-  <section
-    class="relative isolate min-h-[100svh] overflow-hidden px-4 py-24 text-theme-cream sm:px-6"
-    aria-labelledby="battle-title"
-  >
-    <div
-      aria-hidden="true"
-      class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_50%_18%,rgba(199,168,107,0.22),transparent_30%),linear-gradient(180deg,var(--color-theme-midnight)_0%,#050816_100%)]"
-    >
+  <!-- Hero -->
+  <section class="combat-hero" aria-labelledby="battle-title">
+    <span aria-hidden="true" class="combat-hero-glow"></span>
+
+    <div class="combat-hero-side combat-hero-a">
+      <picture>
+        <source type="image/avif" srcset={hero1.avif} />
+        <source type="image/webp" srcset={hero1.webp} />
+        <img
+          src={hero1.webp}
+          alt={`Recorte de ${boxer1.name}`}
+          width="1066"
+          height="1600"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
+    </div>
+    <div class="combat-hero-side combat-hero-b">
+      <picture>
+        <source type="image/avif" srcset={hero2.avif} />
+        <source type="image/webp" srcset={hero2.webp} />
+        <img
+          src={hero2.webp}
+          alt={`Recorte de ${boxer2.name}`}
+          width="1066"
+          height="1600"
+          decoding="async"
+        />
+      </picture>
     </div>
 
-    <div class="mx-auto flex w-full max-w-6xl flex-col items-center">
-      <a
-        href="/"
-        class="mb-10 text-xs font-bold tracking-[0.28em] text-theme-gold/80 underline-offset-4 hover:text-theme-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
-      >
-        Volver al inicio
-      </a>
+    <span aria-hidden="true" class="combat-hero-scrim"></span>
 
-      <p class="text-xs font-bold tracking-[0.45em] text-theme-gold/85">
-        COMBATE {String(battle.number).padStart(3, '0')}
-      </p>
-      <h1
-        id="battle-title"
-        class="mt-4 text-balance text-center font-fantasy text-6xl leading-[0.9] sm:text-8xl md:text-9xl"
-      >
-        {battle.title}
+    <div class="combat-hero-content">
+      <p class="combat-combat">COMBATE {String(battle.number).padStart(3, '0')}</p>
+      <h1 id="battle-title" class="combat-title">
+        {boxer1.name}<em>VS</em>{boxer2.name}
       </h1>
-
-      <div class="mt-12 grid w-full gap-6 md:grid-cols-[1fr_auto_1fr] md:items-center">
-        <article class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center">
-          <img
-            src={getBoxerPhoto(boxer1)}
-            alt={`Foto principal de ${boxer1.name}`}
-            width="1440"
-            height="2160"
-            class="h-[22rem] max-w-full object-contain object-bottom"
-            fetchpriority="high"
-            decoding="async"
-          />
-          <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer1.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
-            <CountryFlag country={boxer1.country} size={18} decorative />
-            {COUNTRY_NAMES[boxer1.country]}
-          </p>
-        </article>
-
-        <span class="text-center font-fantasy text-7xl text-theme-gold md:text-8xl" aria-hidden="true">
-          VS
-        </span>
-
-        <article class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center">
-          <img
-            src={getBoxerPhoto(boxer2)}
-            alt={`Foto principal de ${boxer2.name}`}
-            width="1440"
-            height="2160"
-            class="h-[22rem] max-w-full object-contain object-bottom"
-            fetchpriority="high"
-            decoding="async"
-          />
-          <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer2.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
-            <CountryFlag country={boxer2.country} size={18} decorative />
-            {COUNTRY_NAMES[boxer2.country]}
-          </p>
-        </article>
+      <div class="combat-chips">
+        <span class="combat-chip">{EVENT_DATE_LABEL}</span>
+        <span class="combat-chip">{EVENT_VENUE_LABEL}</span>
       </div>
     </div>
+
+    <a href="#combate-detalle" class="combat-scroll" aria-label="Ver más información del combate">
+      <span class="combat-scroll-text">Ver más</span>
+      <svg viewBox="0 0 24 24" fill="none" class="combat-scroll-icon" aria-hidden="true">
+        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </a>
   </section>
+
+  <div
+    id="combate-detalle"
+    tabindex="-1"
+    class="mx-auto flex w-full max-w-5xl scroll-mt-24 flex-col gap-16 px-4 py-16 focus:outline-none sm:px-6 sm:py-20"
+  >
+    <!-- Comparativa-->
+    <section aria-labelledby="tape-title">
+      <h2 id="tape-title" class="combat-section-title">
+        Comparativa<span aria-hidden="true" class="title-accent"></span>
+      </h2>
+      <div class="tape" data-tape>
+        <div class="tape-row tape-row-head">
+          <div class="tape-head tape-head-a">
+            <span class="tape-fname">{boxer1.name}</span>
+            <span class="tape-fsub">{boxer1.realName}</span>
+          </div>
+          <span class="tape-label" aria-hidden="true"></span>
+          <div class="tape-head tape-head-b">
+            <span class="tape-fname">{boxer2.name}</span>
+            <span class="tape-fsub">{boxer2.realName}</span>
+          </div>
+        </div>
+
+        {
+          tape.map((row) => (
+            <div class="tape-row">
+              <div class="tape-line">
+                <span class="tape-a" data-winner={row.winner === 'a' ? 'true' : 'false'}>
+                  {row.a}
+                </span>
+                <span class="tape-label">
+                  <svg viewBox="0 0 24 24" fill="none" class="tape-icon" aria-hidden="true">
+                    <path
+                      d={TAPE_ICONS[row.icon]}
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  <span>{row.label}</span>
+                </span>
+                <span class="tape-b" data-winner={row.winner === 'b' ? 'true' : 'false'}>
+                  {row.b}
+                </span>
+              </div>
+
+              {row.share && (
+                <div
+                  class="tape-bar"
+                  data-tape-bar
+                  role="img"
+                  aria-label={`${boxer1.name} ${row.share[0]}%, ${boxer2.name} ${row.share[1]}%`}
+                  style={`--a: ${row.share[0]}%; --b: ${row.share[1]}%;`}
+                >
+                  <span class="tape-bar-a" />
+                  <span class="tape-bar-b" />
+                </div>
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Pronóstico en vivo -->
+    <section aria-labelledby="pred-title">
+      <h2 id="pred-title" class="combat-section-title">
+        Pronóstico en vivo<span aria-hidden="true" class="title-accent"></span>
+      </h2>
+      <div
+        class="combat-pred is-loading"
+        data-combat-pred
+        data-combat-id={battle.id}
+        data-boxer-a={boxer1.id}
+        data-boxer-b={boxer2.id}
+      >
+        <div class="combat-pred-side combat-pred-a">
+          <span class="combat-pred-name">{boxer1.name}</span>
+          <span class="combat-pred-pct" data-pred-pct-a><span class="combat-pred-skel"></span></span>
+        </div>
+        <span class="combat-pred-vs" aria-hidden="true">VS</span>
+        <div class="combat-pred-side combat-pred-b">
+          <span class="combat-pred-name">{boxer2.name}</span>
+          <span class="combat-pred-pct" data-pred-pct-b><span class="combat-pred-skel"></span></span>
+        </div>
+
+        <div class="combat-pred-bar" data-pred-bar aria-hidden="true" style="--a: 50%; --b: 50%;">
+          <span class="combat-pred-bar-a"></span><span class="combat-pred-bar-b"></span>
+        </div>
+
+        <p class="combat-pred-total" data-pred-total aria-live="polite">Cargando pronósticos…</p>
+
+        <a href={`/pronosticos#${battle.id}`} class="combat-pred-cta">Pronosticar este combate</a>
+      </div>
+    </section>
+  </div>
+
   <Sponsors />
   <Footer />
+
+  <script>
+    interface PredictionItem {
+      fighter_id: string
+      percentage: number
+      votes: number
+    }
+    interface PredictionResponse {
+      predictions?: PredictionItem[]
+      total_votes?: number
+    }
+
+    // Carga en vivo (solo lectura) del reparto de votos del combate. Hoisteado y
+    // leyendo del DOM (no define:vars) para no acumular listeners entre vistas.
+    async function loadCombatPrediction() {
+      const root = document.querySelector<HTMLElement>('[data-combat-pred]')
+      if (!root) return
+      // Evita ejecuciones duplicadas (carga directa + astro:page-load) y refetch.
+      if (root.dataset.predState === 'loading' || root.dataset.predState === 'done') return
+
+      const combatId = root.dataset.combatId
+      const boxerAId = root.dataset.boxerA
+      const boxerBId = root.dataset.boxerB
+      if (!combatId || !boxerAId || !boxerBId) return
+
+      root.dataset.predState = 'loading'
+
+      const pctNodeA = root.querySelector<HTMLElement>('[data-pred-pct-a]')
+      const pctNodeB = root.querySelector<HTMLElement>('[data-pred-pct-b]')
+      const bar = root.querySelector<HTMLElement>('[data-pred-bar]')
+      const total = root.querySelector<HTMLElement>('[data-pred-total]')
+
+      try {
+        const controller = new AbortController()
+        const timeoutId = window.setTimeout(() => controller.abort(), 8000)
+        const response = await fetch(
+          `/api/predictions?combat_id=${encodeURIComponent(combatId)}`,
+          { signal: controller.signal },
+        )
+        window.clearTimeout(timeoutId)
+        if (!response.ok) throw new Error(String(response.status))
+        const data = (await response.json()) as PredictionResponse
+
+        const byFighter = new Map<string, PredictionItem>(
+          (data.predictions ?? []).map((p) => [p.fighter_id, p]),
+        )
+        const pctA = byFighter.get(boxerAId)?.percentage ?? 0
+        const pctB = byFighter.get(boxerBId)?.percentage ?? 0
+
+        root.classList.remove('is-loading')
+        if (pctNodeA) pctNodeA.textContent = `${pctA}%`
+        if (pctNodeB) pctNodeB.textContent = `${pctB}%`
+        if (bar) {
+          bar.style.setProperty('--a', `${pctA}%`)
+          bar.style.setProperty('--b', `${pctB}%`)
+        }
+        if (total) {
+          const totalVotes = data.total_votes ?? 0
+          total.textContent =
+            totalVotes > 0
+              ? `${new Intl.NumberFormat('es-ES').format(totalVotes)} votos registrados`
+              : 'Sé el primero en pronosticar'
+        }
+        root.dataset.predState = 'done'
+      } catch (error) {
+        root.classList.remove('is-loading')
+        root.classList.add('has-error')
+        if (pctNodeA) pctNodeA.textContent = '—'
+        if (pctNodeB) pctNodeB.textContent = '—'
+        // Barra neutra (vacía) para no insinuar un reparto real.
+        if (bar) {
+          bar.style.setProperty('--a', '0%')
+          bar.style.setProperty('--b', '0%')
+        }
+        if (total) total.textContent = 'No se pudieron cargar los pronósticos'
+        root.dataset.predState = 'idle' // permite reintento en una próxima carga
+        console.error('Error al cargar el pronóstico del combate:', error)
+      }
+    }
+
+    loadCombatPrediction()
+    document.addEventListener('astro:page-load', loadCombatPrediction)
+  </script>
+
+  <script>
+    // Revela (anima) las barras de la comparativa al entrar en pantalla.
+    function initTapeReveal() {
+      const tape = document.querySelector('[data-tape]')
+      if (!tape || tape.classList.contains('is-visible')) return
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (reduce || !('IntersectionObserver' in window)) {
+        tape.classList.add('is-visible')
+        return
+      }
+
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              tape.classList.add('is-visible')
+              obs.disconnect()
+            }
+          }
+        },
+        { threshold: 0.25 },
+      )
+      observer.observe(tape)
+    }
+
+    initTapeReveal()
+    document.addEventListener('astro:page-load', initTapeReveal)
+  </script>
+
+  <style>
+    /* Hero */
+    .combat-hero {
+      position: relative;
+      height: clamp(38rem, 100svh, 60rem);
+      overflow: hidden;
+      background: var(--color-theme-midnight);
+    }
+    /* Reservamos espacio arriba para que las cabezas (boxeadores altos) no se
+       metan bajo la barra de navegación. */
+    .combat-hero-side {
+      position: absolute;
+      top: clamp(3.75rem, 7vh, 5.5rem);
+      bottom: 0;
+      z-index: 1;
+      width: 42%;
+    }
+    .combat-hero-a {
+      left: 0;
+    }
+    .combat-hero-b {
+      right: 0;
+    }
+    .combat-hero-side picture {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+    .combat-hero-side img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    /* Cada figura se ancla hacia el centro (junto al texto) y su borde interior
+       se difumina hacia el texto, sin corte. El espacio sobrante queda en los
+       bordes exteriores, así las figuras siguen pegadas al texto en cualquier
+       ancho de pantalla. */
+    .combat-hero-a img {
+      object-position: bottom right;
+      -webkit-mask-image: linear-gradient(90deg, #000 60%, transparent 100%);
+      mask-image: linear-gradient(90deg, #000 60%, transparent 100%);
+    }
+    .combat-hero-b img {
+      object-position: bottom left;
+      -webkit-mask-image: linear-gradient(270deg, #000 60%, transparent 100%);
+      mask-image: linear-gradient(270deg, #000 60%, transparent 100%);
+    }
+    .combat-hero-side:hover img {
+      transform: scale(1.03);
+    }
+    /* Brillo de ambiente FULL-WIDTH detrás de las figuras (z0): focos cálidos
+       tras cada boxeador + halo superior + suelo. Al ser radiales a todo el hero
+       no generan costuras verticales. */
+    .combat-hero-glow {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(
+          ellipse 26% 58% at 27% 50%,
+          color-mix(in srgb, var(--color-theme-gold) 16%, transparent),
+          transparent 72%
+        ),
+        radial-gradient(
+          ellipse 26% 58% at 73% 50%,
+          color-mix(in srgb, #c98b8b 14%, transparent),
+          transparent 72%
+        ),
+        radial-gradient(
+          ellipse 60% 36% at 50% 4%,
+          color-mix(in srgb, var(--color-theme-gold) 14%, transparent),
+          transparent 60%
+        ),
+        radial-gradient(
+          ellipse 55% 40% at 50% 100%,
+          color-mix(in srgb, var(--color-theme-gold) 12%, transparent),
+          transparent 72%
+        );
+    }
+    /* Scrim oscuro FULL-WIDTH al frente (z2): oscurece arriba y abajo para que el
+       enlace y el título lean. Cubre todo el ancho, sin banda central. */
+    .combat-hero-scrim {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        linear-gradient(
+          0deg,
+          color-mix(in srgb, var(--color-theme-midnight) 98%, black) 0%,
+          color-mix(in srgb, var(--color-theme-midnight) 78%, transparent) 20%,
+          transparent 50%
+        ),
+        linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--color-theme-midnight) 72%, transparent) 0%,
+          transparent 16%
+        );
+    }
+    .combat-hero-content {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      padding: 2rem 1rem;
+      text-align: center;
+      pointer-events: none;
+    }
+    .combat-combat {
+      font-family: var(--font-cinzel);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.5em;
+      color: var(--color-theme-gold);
+    }
+    .combat-title {
+      font-family: var(--font-fantasy, var(--font-cinzel));
+      font-size: clamp(2.6rem, 8vw, 6rem);
+      line-height: 0.82;
+      color: var(--color-theme-cream);
+      text-shadow: 0 6px 40px rgba(0, 0, 0, 0.7);
+    }
+    .combat-title em {
+      display: block;
+      font-style: normal;
+      font-size: 0.42em;
+      color: var(--color-theme-gold);
+      margin: 0.12em 0;
+    }
+    .combat-chips {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .combat-chip {
+      font-family: var(--font-cinzel);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--color-theme-cream) 90%, transparent);
+      border: 1px solid color-mix(in srgb, var(--color-theme-gold) 34%, transparent);
+      border-radius: 9999px;
+      padding: 0.45rem 0.95rem;
+    }
+
+    /* Indicador de scroll al pie del hero. */
+    .combat-scroll {
+      position: absolute;
+      bottom: 1.8rem;
+      left: 50%;
+      z-index: 4;
+      translate: -50% 0;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.55rem;
+      min-height: 2.75rem;
+      padding: 0.6rem 1rem;
+      color: color-mix(in srgb, var(--color-theme-gold) 88%, transparent);
+      transition: color 240ms ease;
+    }
+    .combat-scroll:hover {
+      color: var(--color-theme-cream);
+    }
+    .combat-scroll:focus-visible {
+      outline: 2px solid var(--color-theme-gold);
+      outline-offset: 4px;
+      border-radius: 0.75rem;
+    }
+    .combat-scroll-text {
+      font-family: var(--font-cinzel);
+      font-size: 0.64rem;
+      font-weight: 800;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+    .combat-scroll-icon {
+      width: 1.6rem;
+      height: 1.6rem;
+      padding: 0.25rem;
+      border: 1px solid color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
+      border-radius: 9999px;
+      box-sizing: content-box;
+      animation: combat-scroll-bounce 1.8s ease-in-out infinite;
+    }
+
+    @keyframes combat-scroll-bounce {
+      0%,
+      100% {
+        transform: translateY(0);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateY(0.3rem);
+        opacity: 1;
+      }
+    }
+
+    /* SECCIÓN */
+    .combat-section-title {
+      font-family: var(--font-cinzel);
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-theme-cream);
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+    .title-accent {
+      display: block;
+      width: 2.5rem;
+      height: 2px;
+      margin: 0.7rem auto 0;
+      border-radius: 9999px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--color-theme-gold),
+        transparent
+      );
+    }
+
+    /* TALE OF THE TAPE */
+    .tape {
+      border: 1px solid color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+      border-radius: 1rem;
+      padding: 0.5rem 1.5rem;
+      background:
+        linear-gradient(180deg, color-mix(in srgb, var(--color-theme-navy) 30%, transparent), transparent 60%),
+        color-mix(in srgb, var(--color-theme-navy) 18%, transparent);
+    }
+    .tape-row {
+      padding-block: 0.95rem;
+      border-bottom: 1px solid color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
+    }
+    .tape-row:last-child {
+      border-bottom: 0;
+    }
+    .tape-line {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+    }
+    .tape-row-head {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      padding-block: 1.1rem;
+      border-bottom-color: color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+    }
+    .tape-head {
+      display: flex;
+      flex-direction: column;
+    }
+    .tape-head-b {
+      align-items: flex-end;
+      text-align: right;
+    }
+    .tape-fname {
+      font-family: var(--font-cinzel);
+      font-size: clamp(1rem, 4vw, 1.45rem);
+      font-weight: 900;
+      color: var(--color-theme-cream);
+    }
+    .tape-fsub {
+      font-size: 0.74rem;
+      letter-spacing: 0.02em;
+      color: color-mix(in srgb, var(--color-theme-cream) 72%, transparent);
+    }
+    .tape-a,
+    .tape-b {
+      font-family: var(--font-cinzel);
+      font-size: clamp(1.1rem, 4vw, 1.6rem);
+      font-weight: 800;
+      color: color-mix(in srgb, var(--color-theme-cream) 90%, transparent);
+      font-variant-numeric: tabular-nums;
+      transition: color 240ms ease;
+    }
+    .tape-b {
+      text-align: right;
+    }
+    /* Resalte del valor mayor (cuando la métrica admite comparación). */
+    .tape-a[data-winner='true'],
+    .tape-b[data-winner='true'] {
+      color: var(--color-theme-gold);
+    }
+    /* Etiqueta central: icono + texto apilados. */
+    .tape-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: var(--font-cinzel);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--color-theme-cream) 74%, transparent);
+      text-align: center;
+      white-space: nowrap;
+    }
+    .tape-icon {
+      width: 1.15rem;
+      height: 1.15rem;
+      color: color-mix(in srgb, var(--color-theme-gold) 85%, transparent);
+    }
+    /* Barra comparativa (tira y afloja) por métrica, animada al entrar en pantalla. */
+    .tape-bar {
+      display: flex;
+      height: 0.4rem;
+      margin-top: 0.85rem;
+      overflow: hidden;
+      border-radius: 9999px;
+      background: rgba(0, 0, 0, 0.32);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    }
+    .tape-bar-a,
+    .tape-bar-b {
+      width: 0;
+      transition: width 900ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tape-bar-a {
+      background: #c63030;
+    }
+    .tape-bar-b {
+      margin-left: auto;
+      background: var(--color-theme-gold);
+    }
+    .tape.is-visible .tape-bar-a {
+      width: var(--a, 0%);
+    }
+    .tape.is-visible .tape-bar-b {
+      width: var(--b, 0%);
+    }
+
+    /* PRONÓSTICO */
+    .combat-pred {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      border: 1px solid color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+      border-radius: 1rem;
+      padding: 1.5rem 1.5rem 3.5rem;
+      background: var(--color-theme-midnight);
+      overflow: hidden;
+    }
+    .combat-pred-side {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .combat-pred-a {
+      align-items: flex-start;
+    }
+    .combat-pred-b {
+      align-items: flex-end;
+    }
+    .combat-pred-name {
+      font-family: var(--font-cinzel);
+      font-size: clamp(0.95rem, 3.5vw, 1.2rem);
+      font-weight: 900;
+      color: var(--color-theme-cream);
+    }
+    .combat-pred-pct {
+      font-family: var(--font-cinzel);
+      font-size: clamp(2rem, 8vw, 3rem);
+      font-weight: 900;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .combat-pred-a .combat-pred-pct {
+      color: color-mix(in srgb, #e06b6b 72%, var(--color-theme-cream));
+    }
+    .combat-pred-b .combat-pred-pct {
+      color: var(--color-theme-gold);
+    }
+    .combat-pred-vs {
+      display: grid;
+      width: 3rem;
+      height: 3rem;
+      place-items: center;
+      border-radius: 9999px;
+      border: 1px solid var(--color-theme-gold);
+      background: color-mix(in srgb, var(--color-theme-midnight) 80%, black);
+      font-family: var(--font-cinzel);
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: var(--color-theme-gold);
+    }
+    .combat-pred-total {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-family: var(--font-cinzel);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--color-theme-cream) 72%, transparent);
+    }
+    .combat-pred-bar {
+      position: absolute;
+      inset: auto 1.5rem 2.75rem;
+      display: flex;
+      height: 0.5rem;
+      overflow: hidden;
+      border-radius: 9999px;
+      background: rgba(0, 0, 0, 0.4);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+    .combat-pred-bar-a {
+      width: var(--a, 50%);
+      background: #c63030;
+      transition: width 640ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .combat-pred-bar-b {
+      width: var(--b, 50%);
+      margin-left: auto;
+      background: var(--color-theme-gold);
+      transition: width 640ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Estado de carga: skeleton del porcentaje + shimmer de la barra. */
+    .combat-pred-skel {
+      display: inline-block;
+      width: 3.2rem;
+      height: 2.6rem;
+      border-radius: 0.4rem;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.04) 25%,
+        rgba(255, 255, 255, 0.1) 37%,
+        rgba(255, 255, 255, 0.04) 63%
+      );
+      background-size: 400% 100%;
+      animation: combat-shimmer 1.4s ease infinite;
+    }
+    .combat-pred.is-loading .combat-pred-bar-a,
+    .combat-pred.is-loading .combat-pred-bar-b {
+      width: 50%;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.05) 25%,
+        rgba(255, 255, 255, 0.12) 37%,
+        rgba(255, 255, 255, 0.05) 63%
+      );
+      background-size: 400% 100%;
+      animation: combat-shimmer 1.4s ease infinite;
+    }
+    .combat-pred.is-loading .combat-pred-total {
+      color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
+    }
+
+    @keyframes combat-shimmer {
+      0% { background-position: 100% 0; }
+      100% { background-position: 0 0; }
+    }
+    .combat-pred-cta {
+      position: absolute;
+      inset: auto 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.75rem;
+      border-top: 1px solid color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+      background: color-mix(in srgb, var(--color-theme-midnight) 92%, black);
+      font-family: var(--font-cinzel);
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-theme-gold);
+      transition:
+        background-color 240ms ease,
+        color 240ms ease;
+    }
+    .combat-pred-cta:hover {
+      background: var(--color-theme-gold);
+      color: var(--color-theme-midnight);
+    }
+
+    @media (max-width: 640px) {
+      /* En móvil la figura (contain) es estrecha; subimos el ancho y bajamos la
+         altura para que llenen mejor y no quede aire muerto arriba. */
+      .combat-hero {
+        height: clamp(30rem, 82svh, 44rem);
+      }
+      .combat-hero-side {
+        width: 72%;
+      }
+      .combat-hero-content {
+        padding-bottom: 2rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .combat-hero-side img,
+      .combat-pred-bar-a,
+      .combat-pred-bar-b,
+      .tape-bar-a,
+      .tape-bar-b {
+        transition: none;
+      }
+      .combat-pred-skel,
+      .combat-pred.is-loading .combat-pred-bar-a,
+      .combat-pred.is-loading .combat-pred-bar-b,
+      .combat-scroll-icon {
+        animation: none;
+      }
+    }
+  </style>
 </Layout>
