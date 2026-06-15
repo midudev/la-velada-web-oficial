@@ -53,10 +53,12 @@ type Winner = 'a' | 'b' | null
 const higher = (a: number, b: number): Winner => (a === b ? null : a > b ? 'a' : 'b')
 
 // Reparto porcentual (0-100) para la barra comparativa; null si no procede.
+// El segundo valor se deriva del primero para que siempre sumen 100%.
 const share = (a: number, b: number): [number, number] | null => {
   const total = a + b
   if (total <= 0) return null
-  return [Math.round((a / total) * 100), Math.round((b / total) * 100)]
+  const pctA = Math.round((a / total) * 100)
+  return [pctA, 100 - pctA]
 }
 
 type IconName = 'age' | 'country' | 'followers' | 'trophy'
