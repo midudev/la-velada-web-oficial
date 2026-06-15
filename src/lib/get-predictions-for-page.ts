@@ -34,7 +34,6 @@ export const getPredictionsForPage = async () => {
 
       // Si la caché no ha expirado, usar los datos cacheados
       if (now - timestamp < CACHE_DURATION) {
-        console.log('Usando datos de caché para predicciones')
         processPredictions(predictions)
         return
       }
