@@ -59,10 +59,7 @@ const boxerCards = BOXERS.map((boxer) => {
   const battle = battleByBoxer[boxer.id]
   // Suma de seguidores reales (excluimos `monthlyListeners` de Spotify
   // porque no es una métrica de seguidores comparable).
-  const totalFollowers = boxer.socials.reduce(
-    (sum, s) => sum + (s.followers ?? 0),
-    0,
-  )
+  const totalFollowers = boxer.socials.reduce((sum, s) => sum + (s.followers ?? 0), 0)
   return {
     ...boxer,
     heroImages: getBoxerHeroImages(boxer),
@@ -122,29 +119,30 @@ const totalBoxers = BOXERS.length
   />
 
   <section
-    class="boxers-page relative isolate w-full overflow-x-clip bg-theme-midnight px-3 pb-20 pt-24 text-theme-cream sm:px-6 sm:pb-24 sm:pt-32 md:pt-36"
+    class="boxers-page relative isolate w-full overflow-x-clip bg-theme-midnight px-3 pt-24 pb-20 text-theme-cream sm:px-6 sm:pt-32 sm:pb-24 md:pt-36"
   >
     <div aria-hidden="true" class="boxers-bg absolute inset-0 -z-20"></div>
     <div aria-hidden="true" class="boxers-grain pointer-events-none absolute inset-0 -z-10"></div>
 
     <div class="boxers-layout mx-auto w-full max-w-7xl">
       <header class="boxers-page-header">
-        <SectionDivider class="boxers-page-header-ornament mb-8 w-full sm:mb-12" />
         <h1
-            class="boxers-page-title mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
-          >
-            BOXEADORES
+          class="boxers-page-title mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
+        >
+          <SectionDivider class="boxers-page-header-ornament mb-8 w-full sm:mb-12" />
+
+          BOXEADORES
         </h1>
         <p
-            class="boxers-page-lead mb-8 animate-fade-in-up animate-delay-200 text-balance font-cinzel text-xs font-medium tracking-[0.16em] text-white/55 sm:mb-12 sm:text-sm sm:tracking-[0.25em]"
-          >
-            Los {totalBoxers} contendientes de La Velada del Año VI
+          class="boxers-page-lead mb-8 animate-fade-in-up font-cinzel text-xs font-medium tracking-[0.16em] text-balance text-white/55 animate-delay-200 sm:mb-12 sm:text-sm sm:tracking-[0.25em]"
+        >
+          Los {totalBoxers} contendientes de La Velada del Año VI
         </p>
       </header>
 
       <form
         data-boxers-filters
-        class="boxer-filters-panel animate-fade-in-up animate-delay-300 relative w-full"
+        class="boxer-filters-panel relative w-full animate-fade-in-up animate-delay-300"
         aria-label="Filtros de boxeadores"
         onsubmit="return false"
       >
@@ -154,11 +152,13 @@ const totalBoxers = BOXERS.length
         <span aria-hidden="true" class="boxer-filters-corner boxer-filters-corner-br"></span>
 
         <div
-          class="boxer-filters-eyebrow absolute left-1/2 -top-3 flex -translate-x-1/2 items-center gap-2 px-3 py-1"
+          class="boxer-filters-eyebrow absolute -top-3 left-1/2 flex -translate-x-1/2 items-center gap-2 px-3 py-1"
           aria-hidden="true"
         >
           <span class="size-1 rotate-45 bg-theme-gold/85"></span>
-          <span class="font-cinzel text-[0.55rem] font-bold tracking-[0.4em] text-theme-gold/95 sm:text-[0.65rem]">
+          <span
+            class="font-cinzel text-[0.55rem] font-bold tracking-[0.4em] text-theme-gold/95 sm:text-[0.65rem]"
+          >
             FILTROS
           </span>
           <span class="size-1 rotate-45 bg-theme-gold/85"></span>
@@ -170,11 +170,7 @@ const totalBoxers = BOXERS.length
               <span aria-hidden="true" class="boxer-filter-row-label-mark"></span>
               País
             </legend>
-            <div
-              class="boxer-filter-row-pills"
-              role="group"
-              aria-label="Filtrar por país"
-            >
+            <div class="boxer-filter-row-pills" role="group" aria-label="Filtrar por país">
               <button
                 type="button"
                 data-filter="country"
@@ -216,11 +212,7 @@ const totalBoxers = BOXERS.length
               <span aria-hidden="true" class="boxer-filter-row-label-mark"></span>
               Género
             </legend>
-            <div
-              class="boxer-filter-row-pills"
-              role="group"
-              aria-label="Filtrar por género"
-            >
+            <div class="boxer-filter-row-pills" role="group" aria-label="Filtrar por género">
               <button
                 type="button"
                 data-filter="gender"
@@ -254,181 +246,181 @@ const totalBoxers = BOXERS.length
           <div data-boxers-footer hidden>
             <span aria-hidden="true" class="boxer-filters-rule"></span>
             <div class="boxer-filters-footer">
-            <button
-              type="button"
-              data-boxers-reset
-              class="boxer-filter-reset"
-              aria-label="Restablecer filtros"
-            >
-              <ResetIcon class="size-3.5" aria-hidden="true" />
-              Limpiar filtros
-            </button>
+              <button
+                type="button"
+                data-boxers-reset
+                class="boxer-filter-reset"
+                aria-label="Restablecer filtros"
+              >
+                <ResetIcon class="size-3.5" aria-hidden="true" />
+                Limpiar filtros
+              </button>
             </div>
           </div>
         </div>
       </form>
 
       <div class="boxers-results w-full">
-      <div
-        data-boxers-sort
-        class="boxer-sort-bar animate-fade-in-up animate-delay-300 relative"
-        role="region"
-        aria-label="Ordenar boxeadores"
-      >
-        <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-tl"></span>
-        <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-tr"></span>
-        <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-bl"></span>
-        <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-br"></span>
+        <div
+          data-boxers-sort
+          class="boxer-sort-bar relative animate-fade-in-up animate-delay-300"
+          role="region"
+          aria-label="Ordenar boxeadores"
+        >
+          <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-tl"></span>
+          <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-tr"></span>
+          <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-bl"></span>
+          <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-br"></span>
 
-        <div class="boxer-sort-label">
-          <span aria-hidden="true" class="boxer-sort-label-mark"></span>
-          <span>Ordenar por</span>
+          <div class="boxer-sort-label">
+            <span aria-hidden="true" class="boxer-sort-label-mark"></span>
+            <span>Ordenar por</span>
+          </div>
+
+          <div class="boxer-sort-pills" role="group" aria-label="Modo de ordenación">
+            <button
+              type="button"
+              data-sort="cartel"
+              aria-pressed="true"
+              class="boxer-filter-pill boxer-sort-pill"
+            >
+              <span class="boxer-filter-pill-label">Cartelera</span>
+            </button>
+            <button
+              type="button"
+              data-sort="followers-desc"
+              aria-pressed="false"
+              aria-label="Ordenar por más seguidores en redes sociales"
+              class="boxer-filter-pill boxer-sort-pill"
+            >
+              <span aria-hidden="true" class="boxer-sort-pill-icon">▾</span>
+              <span class="boxer-filter-pill-label">Más seguidores</span>
+            </button>
+            <button
+              type="button"
+              data-sort="followers-asc"
+              aria-pressed="false"
+              aria-label="Ordenar por menos seguidores en redes sociales"
+              class="boxer-filter-pill boxer-sort-pill"
+            >
+              <span aria-hidden="true" class="boxer-sort-pill-icon">▴</span>
+              <span class="boxer-filter-pill-label">Menos seguidores</span>
+            </button>
+          </div>
         </div>
+
+        <ul
+          data-boxers-grid
+          class="boxers-grid grid w-full grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4"
+          role="list"
+        >
+          {
+            boxerCards.map((b, index) => (
+              <li
+                class="boxer-card-wrap animate-fade-in-up"
+                data-boxer-card
+                data-country={b.country}
+                data-gender={b.gender}
+                data-default-order={index}
+                data-followers={b.totalFollowers}
+                data-battle={b.battleNumber}
+                style={`animation-delay: ${index * 35}ms`}
+              >
+                <a
+                  href={`/boxeadores/${b.id}`}
+                  class="boxer-card group relative block aspect-[3/4] w-full overflow-hidden rounded-md focus-visible:outline-none"
+                  aria-label={`Ver ficha de ${b.name}`}
+                >
+                  <span
+                    aria-hidden="true"
+                    class="boxer-card-bg-gold pointer-events-none absolute inset-0 -z-10"
+                  />
+
+                  <picture>
+                    <source type="image/avif" srcset={b.heroImages.avif} />
+                    <source type="image/webp" srcset={b.heroImages.webp} />
+                    <img
+                      src={b.heroImages.webp}
+                      alt={`Recorte fotográfico de ${b.name}`}
+                      loading="lazy"
+                      decoding="async"
+                      transition:name={`boxer-hero-${b.id}`}
+                      class="boxer-card-img absolute inset-0 h-full w-full object-cover object-top"
+                    />
+                  </picture>
+
+                  <span
+                    aria-hidden="true"
+                    class="boxer-card-veil pointer-events-none absolute inset-0"
+                  />
+
+                  <span aria-hidden="true" class="boxer-card-corner boxer-card-corner-tl" />
+                  <span aria-hidden="true" class="boxer-card-corner boxer-card-corner-tr" />
+                  <span aria-hidden="true" class="boxer-card-corner boxer-card-corner-bl" />
+                  <span aria-hidden="true" class="boxer-card-corner boxer-card-corner-br" />
+
+                  {b.battleNumber > 0 && (
+                    <span
+                      aria-hidden="true"
+                      class="boxer-card-number pointer-events-none absolute top-3.5 right-3 font-cinzel text-[0.42rem] font-bold tracking-[0.14em] text-theme-gold/90 sm:top-4 sm:right-4 sm:text-[0.55rem] sm:tracking-[0.22em]"
+                    >
+                      COMBATE · {String(b.battleNumber).padStart(2, '0')}
+                    </span>
+                  )}
+
+                  <BoxerWinsBadge
+                    wins={b.previousVeladaWins}
+                    boxerName={b.name}
+                    variant="card"
+                    class="boxer-card-wins"
+                  />
+
+                  <div class="boxer-card-caption absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-1 px-2.5 pt-12 pb-4 text-center sm:gap-1.5 sm:px-3 sm:pt-14 sm:pb-6">
+                    <span
+                      aria-hidden="true"
+                      class="boxer-card-divider mb-1 h-px w-8 bg-theme-gold/60 transition-all duration-500"
+                    />
+                    <h2 class="boxer-card-name font-cinzel text-[0.78rem] leading-[1.1] font-bold tracking-[0.1em] text-balance text-theme-cream uppercase sm:text-base sm:tracking-[0.16em] md:text-lg">
+                      {b.name}
+                    </h2>
+                    <p class="boxer-card-country flex max-w-full items-center gap-1 font-cinzel text-[0.5rem] font-semibold tracking-[0.18em] text-theme-cream/80 sm:gap-1.5 sm:text-[0.65rem] sm:tracking-[0.32em]">
+                      <CountryFlag
+                        country={b.country}
+                        size={14}
+                        decorative
+                        class="boxer-card-flag"
+                      />
+                      <span class="boxer-card-country-name">{b.countryName}</span>
+                    </p>
+                  </div>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
 
         <div
-          class="boxer-sort-pills"
-          role="group"
-          aria-label="Modo de ordenación"
+          data-boxers-empty
+          class="mx-auto mt-16 hidden max-w-md flex-col items-center gap-4 text-center"
+          role="status"
         >
+          <SectionDivider size="sm" />
+          <p class="font-cinzel text-base font-bold tracking-[0.18em] text-theme-cream sm:text-lg">
+            Sin boxeadores
+          </p>
+          <p
+            class="font-cinzel text-[0.65rem] font-medium tracking-[0.28em] text-theme-cream/65 sm:text-xs"
+          >
+            Ningún contendiente coincide con los filtros seleccionados.
+          </p>
           <button
             type="button"
-            data-sort="cartel"
-            aria-pressed="true"
-            class="boxer-filter-pill boxer-sort-pill"
+            data-boxers-reset
+            class="boxer-filter-reset boxer-filter-reset-strong"
           >
-            <span class="boxer-filter-pill-label">Cartelera</span>
-          </button>
-          <button
-            type="button"
-            data-sort="followers-desc"
-            aria-pressed="false"
-            aria-label="Ordenar por más seguidores en redes sociales"
-            class="boxer-filter-pill boxer-sort-pill"
-          >
-            <span aria-hidden="true" class="boxer-sort-pill-icon">▾</span>
-            <span class="boxer-filter-pill-label">Más seguidores</span>
-          </button>
-          <button
-            type="button"
-            data-sort="followers-asc"
-            aria-pressed="false"
-            aria-label="Ordenar por menos seguidores en redes sociales"
-            class="boxer-filter-pill boxer-sort-pill"
-          >
-            <span aria-hidden="true" class="boxer-sort-pill-icon">▴</span>
-            <span class="boxer-filter-pill-label">Menos seguidores</span>
+            Limpiar filtros
           </button>
         </div>
-      </div>
-
-      <ul
-        data-boxers-grid
-        class="boxers-grid grid w-full grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4"
-        role="list"
-      >
-        {
-          boxerCards.map((b, index) => (
-            <li
-              class="boxer-card-wrap animate-fade-in-up"
-              data-boxer-card
-              data-country={b.country}
-              data-gender={b.gender}
-              data-default-order={index}
-              data-followers={b.totalFollowers}
-              data-battle={b.battleNumber}
-              style={`animation-delay: ${index * 35}ms`}
-            >
-              <a
-                href={`/boxeadores/${b.id}`}
-                class="boxer-card group relative block aspect-[3/4] w-full overflow-hidden rounded-md focus-visible:outline-none"
-                aria-label={`Ver ficha de ${b.name}`}
-              >
-                <span aria-hidden="true" class="boxer-card-bg-gold pointer-events-none absolute inset-0 -z-10" />
-
-                <picture>
-                  <source type="image/avif" srcset={b.heroImages.avif} />
-                  <source type="image/webp" srcset={b.heroImages.webp} />
-                  <img
-                    src={b.heroImages.webp}
-                    alt={`Recorte fotográfico de ${b.name}`}
-                    loading="lazy"
-                    decoding="async"
-                    transition:name={`boxer-hero-${b.id}`}
-                    class="boxer-card-img absolute inset-0 h-full w-full object-cover object-top"
-                  />
-                </picture>
-
-                <span aria-hidden="true" class="boxer-card-veil pointer-events-none absolute inset-0" />
-
-                <span aria-hidden="true" class="boxer-card-corner boxer-card-corner-tl" />
-                <span aria-hidden="true" class="boxer-card-corner boxer-card-corner-tr" />
-                <span aria-hidden="true" class="boxer-card-corner boxer-card-corner-bl" />
-                <span aria-hidden="true" class="boxer-card-corner boxer-card-corner-br" />
-
-                {b.battleNumber > 0 && (
-                  <span
-                    aria-hidden="true"
-                    class="boxer-card-number pointer-events-none absolute right-3 top-3.5 font-cinzel text-[0.42rem] font-bold tracking-[0.14em] text-theme-gold/90 sm:right-4 sm:top-4 sm:text-[0.55rem] sm:tracking-[0.22em]"
-                  >
-                    COMBATE · {String(b.battleNumber).padStart(2, '0')}
-                  </span>
-                )}
-
-                <BoxerWinsBadge
-                  wins={b.previousVeladaWins}
-                  boxerName={b.name}
-                  variant="card"
-                  class="boxer-card-wins"
-                />
-
-                <div class="boxer-card-caption absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-1 px-2.5 pb-4 pt-12 text-center sm:gap-1.5 sm:px-3 sm:pb-6 sm:pt-14">
-                  <span
-                    aria-hidden="true"
-                    class="boxer-card-divider mb-1 h-px w-8 bg-theme-gold/60 transition-all duration-500"
-                  />
-                  <h2 class="boxer-card-name font-cinzel text-[0.78rem] font-bold uppercase tracking-[0.1em] text-theme-cream text-balance leading-[1.1] sm:text-base sm:tracking-[0.16em] md:text-lg">
-                    {b.name}
-                  </h2>
-                  <p class="boxer-card-country flex max-w-full items-center gap-1 font-cinzel text-[0.5rem] font-semibold tracking-[0.18em] text-theme-cream/80 sm:gap-1.5 sm:text-[0.65rem] sm:tracking-[0.32em]">
-                    <CountryFlag
-                      country={b.country}
-                      size={14}
-                      decorative
-                      class="boxer-card-flag"
-                    />
-                    <span class="boxer-card-country-name">{b.countryName}</span>
-                  </p>
-                </div>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-
-      <div
-        data-boxers-empty
-        class="mx-auto mt-16 hidden max-w-md flex-col items-center gap-4 text-center"
-        role="status"
-      >
-        <SectionDivider size="sm" />
-        <p
-          class="font-cinzel text-base font-bold tracking-[0.18em] text-theme-cream sm:text-lg"
-        >
-          Sin boxeadores
-        </p>
-        <p
-          class="font-cinzel text-[0.65rem] font-medium tracking-[0.28em] text-theme-cream/65 sm:text-xs"
-        >
-          Ningún contendiente coincide con los filtros seleccionados.
-        </p>
-        <button
-          type="button"
-          data-boxers-reset
-          class="boxer-filter-reset boxer-filter-reset-strong"
-        >
-          Limpiar filtros
-        </button>
-      </div>
       </div>
     </div>
   </section>
@@ -475,16 +467,9 @@ const totalBoxers = BOXERS.length
 
   /* Grano fino dorado para dar textura sin ruido visual. */
   .boxers-grain {
-    background-image: radial-gradient(
-      rgba(199, 168, 107, 0.05) 1px,
-      transparent 1px
-    );
+    background-image: radial-gradient(rgba(199, 168, 107, 0.05) 1px, transparent 1px);
     background-size: 22px 22px;
-    mask-image: radial-gradient(
-      ellipse at center,
-      black 30%,
-      transparent 85%
-    );
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 85%);
   }
 
   /* ---------- Card ---------- */
@@ -869,8 +854,7 @@ const totalBoxers = BOXERS.length
       color-mix(in srgb, var(--color-velada-navy) 35%, var(--color-theme-midnight)) 0%,
       color-mix(in srgb, var(--color-theme-midnight) 95%, black) 100%
     );
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
     border-radius: 9999px;
     text-shadow:
       0 1px 0 rgba(0, 0, 0, 0.6),
@@ -1158,8 +1142,7 @@ const totalBoxers = BOXERS.length
     padding: 0.42rem 0.85rem;
     border-radius: 4px;
     background: color-mix(in srgb, var(--color-theme-midnight) 78%, black);
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
     color: color-mix(in srgb, var(--color-theme-cream) 86%, transparent);
     font-size: 0.6rem;
     font-weight: 600;
@@ -1248,16 +1231,14 @@ const totalBoxers = BOXERS.length
     opacity: 0.32;
     cursor: not-allowed;
     transform: none;
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
   }
 
   .boxer-filter-pill:disabled:hover,
   .boxer-filter-pill[data-disabled='true']:hover {
     transform: none;
     color: color-mix(in srgb, var(--color-theme-cream) 86%, transparent);
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
   }
 
   :global(.boxer-filter-pill-flag) {
@@ -1381,7 +1362,7 @@ const totalBoxers = BOXERS.length
     }
   }
 
-  .boxers-grid[data-state="default"] > .boxer-card-wrap:nth-child(even)::after {
+  .boxers-grid[data-state='default'] > .boxer-card-wrap:nth-child(even)::after {
     --inline-size: 2.3em;
     --block-size: 2.05em;
     content: 'VS';
@@ -1403,13 +1384,13 @@ const totalBoxers = BOXERS.length
     border: 1px solid color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
   }
 
-  @media (width <= 48rem) {  
-    .boxers-grid[data-state="default"] > .boxer-card-wrap:nth-child(even)::after {
+  @media (width <= 48rem) {
+    .boxers-grid[data-state='default'] > .boxer-card-wrap:nth-child(even)::after {
       font-size: clamp(1rem, 0.641rem + 1.531vw, 1.375rem);
     }
   }
 
-  @media (width >=  48rem) and (width <= 79.999rem) {
+  @media (width >= 48rem) and (width <= 79.999rem) {
     .boxers-grid[data-state='default'] > .boxer-card-wrap:nth-child(even)::after {
       content: none;
     }
@@ -1443,13 +1424,15 @@ const totalBoxers = BOXERS.length
     const cards = Array.from($$<HTMLElement>('[data-boxer-card]', grid))
     const filterButtons = Array.from($$<HTMLButtonElement>('[data-filter]', form))
     const resetButtons = Array.from($$<HTMLButtonElement>('[data-boxers-reset]'))
-    const sortButtons = sortBar
-      ? Array.from($$<HTMLButtonElement>('[data-sort]', sortBar))
-      : []
+    const sortButtons = sortBar ? Array.from($$<HTMLButtonElement>('[data-sort]', sortBar)) : []
     // Lee el estado inicial desde la URL
     function getStateFromURL(buttons: HTMLButtonElement[]) {
-      const validCountries = new Set(buttons.filter(b => b.dataset.filter === 'country').map(b => b.dataset.value ?? ''))
-      const validGenders = new Set(buttons.filter(b => b.dataset.filter === 'gender').map(b => b.dataset.value ?? ''))
+      const validCountries = new Set(
+        buttons.filter((b) => b.dataset.filter === 'country').map((b) => b.dataset.value ?? ''),
+      )
+      const validGenders = new Set(
+        buttons.filter((b) => b.dataset.filter === 'gender').map((b) => b.dataset.value ?? ''),
+      )
       const params = new URLSearchParams(window.location.search)
       const rawCountry = params.get('country') ?? ''
       const rawGender = params.get('gender') ?? ''
@@ -1457,7 +1440,8 @@ const totalBoxers = BOXERS.length
       return {
         country: validCountries.has(rawCountry) ? rawCountry : '',
         gender: validGenders.has(rawGender) ? rawGender : '',
-        sort: sort && ['cartel', 'followers-desc', 'followers-asc'].includes(sort) ? sort : 'cartel',
+        sort:
+          sort && ['cartel', 'followers-desc', 'followers-asc'].includes(sort) ? sort : 'cartel',
       }
     }
 
@@ -1491,7 +1475,7 @@ const totalBoxers = BOXERS.length
     }
     let sortMode: SortMode = urlState.sort
 
-    function setGridState(state: 'default' | 'modified'){
+    function setGridState(state: 'default' | 'modified') {
       gridEl.dataset.state = state
     }
 
@@ -1501,33 +1485,27 @@ const totalBoxers = BOXERS.length
     function applySort() {
       const hasActiveFilter = state.country !== '' || state.gender !== ''
       const isDefaultSortMode = sortMode === 'cartel'
-      const gridState = !hasActiveFilter && isDefaultSortMode ? 'default': 'modified'
+      const gridState = !hasActiveFilter && isDefaultSortMode ? 'default' : 'modified'
 
       setGridState(gridState)
 
       const ordered = [...cards]
       if (sortMode === 'followers-desc') {
         ordered.sort(
-          (a, b) =>
-            Number(b.dataset.followers ?? '0') -
-            Number(a.dataset.followers ?? '0'),
+          (a, b) => Number(b.dataset.followers ?? '0') - Number(a.dataset.followers ?? '0'),
         )
       } else if (sortMode === 'followers-asc') {
         ordered.sort(
-          (a, b) =>
-            Number(a.dataset.followers ?? '0') -
-            Number(b.dataset.followers ?? '0'),
+          (a, b) => Number(a.dataset.followers ?? '0') - Number(b.dataset.followers ?? '0'),
         )
       } else {
         // Both 'cartel' and 'combates' use default order (by battle number).
         ordered.sort(
-          (a, b) =>
-            Number(a.dataset.defaultOrder ?? '0') -
-            Number(b.dataset.defaultOrder ?? '0'),
+          (a, b) => Number(a.dataset.defaultOrder ?? '0') - Number(b.dataset.defaultOrder ?? '0'),
         )
       }
 
-    for (const card of ordered) gridEl.appendChild(card)
+      for (const card of ordered) gridEl.appendChild(card)
     }
 
     // Cuenta cards que coinciden con un par (country, gender). Pasar '' en
@@ -1555,7 +1533,7 @@ const totalBoxers = BOXERS.length
     function applyFilters() {
       const hasActiveFilter = state.country !== '' || state.gender !== ''
       const isDefaultSortMode = sortMode === 'cartel'
-      const gridState = !hasActiveFilter && isDefaultSortMode ? 'default': 'modified'
+      const gridState = !hasActiveFilter && isDefaultSortMode ? 'default' : 'modified'
 
       setGridState(gridState)
 
