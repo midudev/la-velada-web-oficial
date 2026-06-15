@@ -44,6 +44,16 @@ const photo = getBoxerPhoto(boxer)
 const countryName = COUNTRY_NAMES[boxer.country] ?? boxer.country
 const genderLabel = GENDER_LABELS[boxer.gender]
 
+// Fecha de nacimiento formateada en español (p. ej. "28 de agosto de 2004").
+// Se construye con hora local para evitar desfases de día por zona horaria.
+const birthDateLabel = boxer.birthDate
+  ? new Intl.DateTimeFormat('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(`${boxer.birthDate}T00:00:00`))
+  : null
+
 // Buscamos su combate para enlazar y mostrar el número.
 const battle = battles.find((b) => b.boxerIds.includes(boxer.id))
 const opponentId = battle?.boxerIds.find((id) => id !== boxer.id)
@@ -238,6 +248,11 @@ const breadcrumbJsonLd = {
               {countryName}
             </span>
             <span class="boxer-detail-chip">{genderLabel}</span>
+            {birthDateLabel && (
+              <span class="boxer-detail-chip">
+                <time datetime={boxer.birthDate}>{birthDateLabel}</time>
+              </span>
+            )}
           </div>
 
           <h1
