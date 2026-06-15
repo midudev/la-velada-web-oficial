@@ -8,7 +8,7 @@ export interface Boxer {
   name: string
   realName: string
   gender: BoxerGender
-  birthDate: string | null
+  birthDate: ISODate | null
   age: number | null
   followersUpdatedAt: string
   socials: { platform: string; username: string; followers?: number; monthlyListeners?: number }[]
