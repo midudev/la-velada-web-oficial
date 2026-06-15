@@ -208,7 +208,7 @@ const SPONSORS: Sponsor[] = [
               rel="sponsored noopener noreferrer"
               aria-label={label}
               title={name}
-              class="promo-banner group relative block w-full overflow-hidden rounded-md bg-black shadow-[0_14px_40px_rgba(0,0,0,0.3)] ring-1 ring-white/10 outline-none transition duration-500 animate-fade-in-up hover:-translate-y-1 hover:ring-theme-gold/45 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+              class="promo-banner group relative block w-full animate-fade-in-up overflow-hidden rounded-md bg-black shadow-[0_14px_40px_rgba(0,0,0,0.3)] ring-1 ring-white/10 transition duration-500 outline-none hover:-translate-y-1 hover:ring-theme-gold/45 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               style={`animation-delay:${850 + index * 90}ms`}
             >
               <picture>
@@ -253,26 +253,45 @@ const SPONSORS: Sponsor[] = [
                 <span class="sr-only">{name}</span>
               </a>
             </li>
-          )
-        )
+          ))
+        }
       </ul>
 
       <div class="corner-grid" aria-hidden="true">
         <svg class="corner-tl" viewBox="0 0 12 12">
-          <path d="M 1 9 L 1 1 L 9 1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+          <path
+            d="M 1 9 L 1 1 L 9 1"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="square"></path>
         </svg>
         <svg class="corner-tr" viewBox="0 0 12 12">
-          <path d="M 11 9 L 11 1 L 3 1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+          <path
+            d="M 11 9 L 11 1 L 3 1"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="square"></path>
         </svg>
         <svg class="corner-bl" viewBox="0 0 12 12">
-          <path d="M 1 3 L 1 11 L 9 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+          <path
+            d="M 1 3 L 1 11 L 9 11"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="square"></path>
         </svg>
         <svg class="corner-br" viewBox="0 0 12 12">
-          <path d="M 11 3 L 11 11 L 3 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
+          <path
+            d="M 11 3 L 11 11 L 3 11"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="square"></path>
         </svg>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -397,13 +416,18 @@ const SPONSORS: Sponsor[] = [
   import { animate, hover } from 'motion'
 
   const canAnimateHover = window.matchMedia(
-    '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)'
+    '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
   ).matches
   const grid = $('[data-corner-grid]')
   const corners = $$<SVGElement>('.corner-grid svg')
 
   if (canAnimateHover && grid) {
-    const OUTWARD = [[-4, -16], [4, -16], [-4, 16], [4, 16]]
+    const OUTWARD = [
+      [-4, -16],
+      [4, -16],
+      [-4, 16],
+      [4, 16],
+    ]
     let activeCard: Element | null = null
     let hoverId = 0
     let cornersVisible = false
@@ -414,9 +438,14 @@ const SPONSORS: Sponsor[] = [
     hover('.sponsor-card', (card) => {
       const currentHoverId = ++hoverId
       activeCard = card
-      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null }
-      lockTimers.forEach(clearTimeout); lockTimers.length = 0
-      revealFrames.forEach(cancelAnimationFrame); revealFrames.length = 0
+      if (hideTimer) {
+        clearTimeout(hideTimer)
+        hideTimer = null
+      }
+      lockTimers.forEach(clearTimeout)
+      lockTimers.length = 0
+      revealFrames.forEach(cancelAnimationFrame)
+      revealFrames.length = 0
 
       const gridRect = grid.getBoundingClientRect()
       const cardRect = card.getBoundingClientRect()
@@ -439,20 +468,31 @@ const SPONSORS: Sponsor[] = [
 
         if (cornersVisible) {
           animate(corner, { opacity: 1 }, { duration: 0 })
-          animate(corner, { x: originX, y: originY }, { type: 'spring', stiffness: 700, damping: 60 })
+          animate(
+            corner,
+            { x: originX, y: originY },
+            { type: 'spring', stiffness: 700, damping: 60 },
+          )
         } else {
           animate(corner, { x: originX, y: originY, opacity: 0 }, { duration: 0 })
-          revealFrames.push(requestAnimationFrame(() => {
-            if (activeCard !== card || currentHoverId !== hoverId) return
-            animate(corner, { opacity: 1 }, { duration: 0.14, ease: 'ease-out' })
-          }))
+          revealFrames.push(
+            requestAnimationFrame(() => {
+              if (activeCard !== card || currentHoverId !== hoverId) return
+              animate(corner, { opacity: 1 }, { duration: 0.14, ease: 'ease-out' })
+            }),
+          )
         }
 
-        lockTimers.push(setTimeout(() => {
-          if (activeCard !== card || currentHoverId !== hoverId) return
-          cornersVisible = true
-          animate(corner, { x, y }, { type: 'spring', stiffness: 700, damping: 60 })
-        }, 50 + i * 40))
+        lockTimers.push(
+          setTimeout(
+            () => {
+              if (activeCard !== card || currentHoverId !== hoverId) return
+              cornersVisible = true
+              animate(corner, { x, y }, { type: 'spring', stiffness: 700, damping: 60 })
+            },
+            50 + i * 40,
+          ),
+        )
       }
 
       const logo = $('[data-sponsor-logo]', card)
@@ -465,8 +505,10 @@ const SPONSORS: Sponsor[] = [
         activeCard = null
         hoverId++
         const exitHoverId = hoverId
-        lockTimers.forEach(clearTimeout); lockTimers.length = 0
-        revealFrames.forEach(cancelAnimationFrame); revealFrames.length = 0
+        lockTimers.forEach(clearTimeout)
+        lockTimers.length = 0
+        revealFrames.forEach(cancelAnimationFrame)
+        revealFrames.length = 0
 
         hideTimer = setTimeout(() => {
           if (activeCard || exitHoverId !== hoverId) return
