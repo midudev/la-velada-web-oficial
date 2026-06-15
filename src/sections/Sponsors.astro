@@ -176,14 +176,17 @@ const SPONSORS: Sponsor[] = [
   </div>
 
   <div class="relative mx-auto flex max-w-6xl flex-col items-center">
-    <SectionHeader
-      titleId="sponsors-title"
-      title="PATROCINADORES"
-      subtitle="Las marcas que hacen posible La Velada del Año VI"
-      subtitleClass="mb-10 max-w-xl tracking-[0.25em] sm:mb-12 sm:text-sm"
-    />
+    <div class="sponsors-header motion-hidden">
+      <SectionHeader
+        titleId="sponsors-title"
+        title="PATROCINADORES"
+        subtitle="Las marcas que hacen posible La Velada del Año VI"
+        subtitleClass="mb-10 max-w-xl tracking-[0.25em] sm:mb-12 sm:text-sm"
+        hideDivider
+      />
+    </div>
 
-    <div class="mb-12 flex w-full max-w-[760px] flex-col gap-3 sm:mb-16">
+    <div class="sponsors-promos mb-16 flex w-full max-w-[760px] flex-col gap-5 sm:mb-20">
       {
         PROMO_BANNERS.map(
           (
@@ -208,7 +211,7 @@ const SPONSORS: Sponsor[] = [
               rel="sponsored noopener noreferrer"
               aria-label={label}
               title={name}
-              class="promo-banner group relative block w-full overflow-hidden rounded-md bg-black shadow-[0_14px_40px_rgba(0,0,0,0.3)] ring-1 ring-white/10 outline-none transition duration-500 animate-fade-in-up hover:-translate-y-1 hover:ring-theme-gold/45 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+              class="promo-banner motion-hidden group relative block w-full overflow-hidden rounded-md ring-1 ring-theme-gold/25 outline-none hover:ring-theme-gold/45 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               style={`animation-delay:${850 + index * 90}ms`}
             >
               <picture>
@@ -223,7 +226,7 @@ const SPONSORS: Sponsor[] = [
                   height={height}
                   loading="lazy"
                   decoding="async"
-                  class="block h-auto w-full transition duration-500 group-hover:scale-[1.01] group-hover:brightness-105 group-focus-visible:scale-[1.01] group-focus-visible:brightness-105"
+                  class="banner-img block h-auto w-full origin-center"
                 />
               </picture>
             </a>
@@ -236,7 +239,7 @@ const SPONSORS: Sponsor[] = [
       <ul class="sponsors-grid" role="list">
         {
           SPONSORS.map(({ name, slug, url, label, Logo, logoClass }, index) => (
-            <li class="animate-fade-in-up" style={`animation-delay:${1100 + index * 65}ms`}>
+            <li class="motion-hidden" style={`animation-delay:${1100 + index * 65}ms`}>
               <a
                 href={withUtm(url, { medium: 'sponsor_card', content: slug })}
                 target="_blank"
@@ -273,8 +276,8 @@ const SPONSORS: Sponsor[] = [
                 <span class="sr-only">{name}</span>
               </a>
             </li>
-          ))
-        }
+          )
+        )
       </ul>
     </div>
 
@@ -282,6 +285,15 @@ const SPONSORS: Sponsor[] = [
 </section>
 
 <style>
+  .promo-banner img {
+    scale: 1.02;
+  }
+
+  .motion-hidden {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
   .sponsors-grid {
     display: grid;
     width: 100%;
@@ -334,10 +346,48 @@ const SPONSORS: Sponsor[] = [
       transform: none;
     }
 
-    [class*='animate-fade-in-up'] {
+    [class*='animate-fade-in-up'],
+    .motion-hidden {
       animation: none !important;
       opacity: 1 !important;
       transform: none !important;
     }
   }
 </style>
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+  import { animate, hover, inView } from 'motion'
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  const header = $('.sponsors-header')
+  const promoBanners = $$('.sponsors-promos .promo-banner')
+  const sponsorItems = $$('.sponsors-grid li')
+
+  if (!reducedMotion.matches) {
+    const reveal = (elements: Element[], delayStep = 0.05) => {
+      elements.forEach((el, i) => {
+        animate(el, { opacity: [0, 1], y: [20, 0] }, { duration: 0.6, delay: i * delayStep, ease: 'ease-out' })
+      })
+    }
+
+    if (header) {
+      inView(header, (el) => {
+        animate(el, { opacity: [0, 1], y: [16, 0] }, { duration: 0.7, ease: 'ease-out' })
+      })
+    }
+
+    inView('.sponsors-promos', () => reveal(promoBanners, 0.08))
+    inView('.sponsors-grid', () => reveal(sponsorItems, 0.045))
+
+    hover('.promo-banner', (banner) => {
+      const img = $<HTMLImageElement>('.banner-img', banner)
+      if (!img) return
+      animate(img, { scale: 1 }, { duration: 0.3 })
+
+      return () => {
+        animate(img, { scale: 1.02 }, { duration: 0.3 })
+      }
+    })
+  }
+</script>
