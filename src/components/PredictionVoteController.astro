@@ -277,8 +277,22 @@ const controllerConfig = JSON.stringify({
     const sideA = options.find((option) => option.dataset.side === 'a')
     const sideB = options.find((option) => option.dataset.side === 'b')
 
-    bar.style.setProperty('--share-a', `${sideA ? readVotePercentage(sideA) : 0}%`)
-    bar.style.setProperty('--share-b', `${sideB ? readVotePercentage(sideB) : 0}%`)
+    const shareA = sideA ? readVotePercentage(sideA) : 0
+    const shareB = sideB ? readVotePercentage(sideB) : 0
+
+    bar.style.setProperty('--share-a', `${shareA}%`)
+    bar.style.setProperty('--share-b', `${shareB}%`)
+
+    // Mantener el aria-label sincronizado para que los lectores de pantalla
+    // anuncien los porcentajes actuales y no los renderizados en el SSR.
+    const nameA = sideA?.dataset.boxerName
+    const nameB = sideB?.dataset.boxerName
+    if (nameA && nameB) {
+      bar.setAttribute(
+        'aria-label',
+        `${nameA}: ${formatPercent(shareA)}. ${nameB}: ${formatPercent(shareB)}.`,
+      )
+    }
   }
 
   function getReactionOrigin(option: HTMLButtonElement, event: MouseEvent) {
