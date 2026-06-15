@@ -189,22 +189,19 @@ const SPONSORS: Sponsor[] = [
     <div class="sponsors-promos mb-16 flex w-full max-w-[760px] flex-col gap-5 sm:mb-20">
       {
         PROMO_BANNERS.map(
-          (
-            {
-              name,
-              slug,
-              url,
-              label,
-              alt,
-              avifSrc,
-              webpSrc,
-              mobileAvifSrc,
-              mobileWebpSrc,
-              width,
-              height,
-            },
-            index,
-          ) => (
+          ({
+            name,
+            slug,
+            url,
+            label,
+            alt,
+            avifSrc,
+            webpSrc,
+            mobileAvifSrc,
+            mobileWebpSrc,
+            width,
+            height,
+          }) => (
             <a
               href={withUtm(url, { medium: 'promo_banner', content: slug })}
               target="_blank"
@@ -212,7 +209,6 @@ const SPONSORS: Sponsor[] = [
               aria-label={label}
               title={name}
               class="promo-banner motion-hidden group relative block w-full overflow-hidden rounded-md ring-1 ring-theme-gold/25 outline-none hover:ring-theme-gold/45 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
-              style={`animation-delay:${850 + index * 90}ms`}
             >
               <picture>
                 <source srcset={mobileAvifSrc} media="(max-width: 639px)" type="image/avif" />
@@ -238,8 +234,8 @@ const SPONSORS: Sponsor[] = [
     <div class="sponsors-grid-wrap relative w-full" data-corner-grid>
       <ul class="sponsors-grid" role="list">
         {
-          SPONSORS.map(({ name, slug, url, label, Logo, logoClass }, index) => (
-            <li class="motion-hidden" style={`animation-delay:${1100 + index * 65}ms`}>
+          SPONSORS.map(({ name, slug, url, label, Logo, logoClass }) => (
+            <li class="motion-hidden">
               <a
                 href={withUtm(url, { medium: 'sponsor_card', content: slug })}
                 target="_blank"
