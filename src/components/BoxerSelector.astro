@@ -181,6 +181,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       aria-hidden="true"
       class="boxer-panel relative flex w-full flex-col items-center"
     >
+      <span data-hero-glow class="boxer-hero-glow" aria-hidden="true"></span>
       <span
         aria-hidden="true"
         data-active-watermark
@@ -248,6 +249,11 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           />
           <span data-active-country-name>{fallbackCountry}</span>
         </p>
+
+        <p data-vs-line class="boxer-vs-line" aria-hidden="true">
+          <span class="boxer-vs-tag">VS</span>
+          <span data-vs-name class="boxer-vs-name"></span>
+        </p>
       </div>
     </div>
   </div>
@@ -258,7 +264,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     >
       <SectionDivider class="boxer-default-divider" />
 
-      <p class="boxer-default-cta font-cinzel text-sm font-bold tracking-[0.3em] text-[color-mix(var(--color-theme-cream),white_30%)] uppercase">
+      <p class="boxer-default-cta font-cinzel text-sm font-bold tracking-[0.3em] text-[color-mix(in_srgb,var(--color-theme-cream),white_30%)] uppercase">
         ¡Selecciona tu boxeador o boxeadora!
       </p>
     </div>
@@ -327,6 +333,14 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       class="boxer-grid hidden md:grid md:grid-cols-8 md:grid-rows-3 lg:grid-cols-10 lg:grid-rows-2"
       aria-label="Lista de boxeadores. Pulsa uno para ver su perfil"
     >
+      {/* Cursor de selección estilo "character select": se desliza a la
+          casilla activa (ver positionFrame en el script). */}
+      <span data-selector-frame class="boxer-selector-frame" aria-hidden="true">
+        <span class="bsf-corner bsf-tl"></span>
+        <span class="bsf-corner bsf-tr"></span>
+        <span class="bsf-corner bsf-bl"></span>
+        <span class="bsf-corner bsf-br"></span>
+      </span>
       {
         positionedBoxers.map(
           (
@@ -358,7 +372,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                 data-country={countryName}
                 aria-label={`Ver perfil de ${boxer.name}`}
                 data-active="false"
-                class="boxer-cell animate-fade-in group relative aspect-square cursor-pointer overflow-hidden focus-visible:outline-none"
+                class="boxer-cell boxer-cell-enter group relative aspect-square cursor-pointer overflow-hidden focus-visible:outline-none"
                 style={`--col-mobile: ${colMobile}; --row-mobile: ${rowMobile}; --col-tablet: ${colTablet}; --row-tablet: ${rowTablet}; --col-desktop: ${colDesktop}; --row-desktop: ${rowDesktop}; animation-delay: ${1000 + index * 25}ms`}
                 tabindex={index === 0 ? 0 : -1}
               >
@@ -1043,6 +1057,262 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     opacity: 0;
   }
 
+  /* ───────────────────────────────────────────────────────────────────
+     Mejoras "selector de combate" (character select).
+     Todo basado en transform/opacity y conducido por la máquina de
+     data-state existente; sin runtime de animación adicional.
+     ─────────────────────────────────────────────────────────────────── */
+
+  /* La rejilla necesita ser contenedor de posicionamiento para el frame. */
+  .boxer-grid {
+    position: relative;
+  }
+
+  /* 1 · Frame/cursor de selección que se desliza a la casilla activa. */
+  .boxer-selector-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    z-index: 4;
+    pointer-events: none;
+    opacity: 0;
+    will-change: transform;
+    transition:
+      transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 200ms ease;
+  }
+
+  .boxer-selector-frame.is-visible {
+    opacity: 1;
+    animation: boxer-frame-pop 240ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes boxer-frame-pop {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* Halo interior con "respiración" sutil mientras hay selección activa:
+     refuerza la sensación de casilla bloqueada (estilo character select). */
+  .boxer-selector-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 55%, transparent),
+      0 0 18px 0 color-mix(in srgb, var(--color-theme-gold) 50%, transparent);
+  }
+
+  .boxer-selector-frame.is-visible::before {
+    animation: boxer-frame-breathe 1.9s ease-in-out infinite;
+  }
+
+  @keyframes boxer-frame-breathe {
+    0%,
+    100% {
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 50%, transparent),
+        0 0 14px 0 color-mix(in srgb, var(--color-theme-gold) 38%, transparent);
+    }
+    50% {
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 75%, transparent),
+        0 0 26px 2px color-mix(in srgb, var(--color-theme-gold) 60%, transparent);
+    }
+  }
+
+  .bsf-corner {
+    position: absolute;
+    width: 30%;
+    height: 27%;
+    border: 2px solid var(--color-theme-gold);
+    filter: drop-shadow(0 0 4px color-mix(in srgb, var(--color-theme-gold) 70%, transparent));
+  }
+
+  .bsf-tl {
+    top: -1px;
+    left: -1px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .bsf-tr {
+    top: -1px;
+    right: -1px;
+    border-left: 0;
+    border-bottom: 0;
+  }
+  .bsf-bl {
+    bottom: -1px;
+    left: -1px;
+    border-right: 0;
+    border-top: 0;
+  }
+  .bsf-br {
+    bottom: -1px;
+    right: -1px;
+    border-left: 0;
+    border-top: 0;
+  }
+
+  /* ── 2 · Reveal cinematográfico COORDINADO ────────────────────────────
+     Una sola línea de tiempo con easing expo-out común y stagger; gestos
+     editoriales (wipe de máscara), sin rebotes "arcade". ─────────────── */
+
+  /* Foco/atmósfera dorada tras el fighter: aporta profundidad y enfoque. */
+  .boxer-hero-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+      56% 50% at 50% 40%,
+      color-mix(in srgb, var(--color-theme-gold) 22%, transparent) 0%,
+      color-mix(in srgb, var(--color-theme-gold) 7%, transparent) 42%,
+      transparent 72%
+    );
+    transition: opacity 520ms ease;
+  }
+
+  [data-boxer-selector][data-state='boxer'] .boxer-hero-glow {
+    opacity: 1;
+  }
+
+  .boxer-panel.is-revealing .boxer-hero-glow {
+    animation: boxer-glow-in 720ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  @keyframes boxer-glow-in {
+    from {
+      opacity: 0;
+      transform: scale(1.07);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Retrato: wipe vertical + asentamiento de escala (sin rebote). */
+  .boxer-panel.is-revealing .boxer-portrait {
+    animation: boxer-hero-reveal 600ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  @keyframes boxer-hero-reveal {
+    from {
+      opacity: 0;
+      clip-path: inset(20% 0 0 0);
+      transform: translateY(12px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      clip-path: inset(0 0 0 0);
+      transform: none;
+    }
+  }
+
+  /* Nombre: reveal de máscara editorial, ligeramente retrasado. */
+  .boxer-panel.is-revealing .boxer-name {
+    animation: boxer-name-reveal 560ms cubic-bezier(0.16, 1, 0.3, 1) 110ms backwards;
+  }
+
+  @keyframes boxer-name-reveal {
+    from {
+      opacity: 0;
+      /* El wipe se hace por la derecha (100% → 0). En el resto de lados
+         expandimos la región con insets negativos para que el clip-path no
+         recorte la text-shadow/drop-shadow del nombre durante la animación. */
+      clip-path: inset(-3rem 100% -3rem -3rem);
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      clip-path: inset(-3rem 0 -3rem -3rem);
+      transform: none;
+    }
+  }
+
+  /* ── 3 · Entrada del roster ──────────────────────────────────────────
+     La CELDA (que lleva el borde por box-shadow) se funde SOLO en opacidad,
+     con los mismos parámetros que el `animate-fade-in` de producción
+     (0.6s ease-in). Así las líneas del grid se dibujan continuas y alineadas,
+     idénticas a "Actual": nunca se escala el recuadro con el borde. */
+  .boxer-cell-enter {
+    animation: boxer-cell-enter 600ms ease-in both;
+  }
+
+  @keyframes boxer-cell-enter {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* ── 4 · VS del rival: fade+slide limpio (sin pop), al final de la
+     timeline. El rival se resalta con su glow rojo (ramp por la transición
+     de opacidad del ::after existente), sin pulso de escala. ── */
+  .boxer-vs-line {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: 0.5rem;
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 320ms ease,
+      transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+  }
+
+  [data-boxer-selector][data-state='boxer'] .boxer-vs-line[data-has-opponent='true'] {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.24s;
+  }
+
+  .boxer-vs-tag {
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    color: var(--color-theme-cream);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, #c63030 85%, black) 0%,
+      var(--color-velada-maroon) 100%
+    );
+    padding: 0.28em 0.5em;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 60%, transparent);
+    border-radius: 0.25rem;
+    box-shadow: 0 0 12px color-mix(in srgb, #c63030 45%, transparent);
+  }
+
+  .boxer-vs-name {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: color-mix(in srgb, var(--color-theme-cream) 88%, transparent);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  }
+
+  @media (min-width: 768px) {
+    .boxer-vs-tag {
+      font-size: 0.8rem;
+    }
+    .boxer-vs-name {
+      font-size: 0.72rem;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .boxer-portrait,
     .boxer-name,
@@ -1051,6 +1321,27 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     .boxer-default-logo {
       transition: none;
       animation: none;
+    }
+
+    /* Las mejoras de selector también se desactivan: estados sin movimiento. */
+    .boxer-selector-frame {
+      transition: opacity 200ms ease;
+    }
+    .boxer-cell-enter,
+    .boxer-selector-frame.is-visible,
+    .boxer-selector-frame.is-visible::before,
+    .boxer-panel.is-revealing .boxer-hero-glow,
+    .boxer-panel.is-revealing .boxer-portrait,
+    .boxer-panel.is-revealing .boxer-name {
+      animation: none;
+    }
+    .boxer-panel.is-revealing .boxer-portrait,
+    .boxer-panel.is-revealing .boxer-name {
+      clip-path: none;
+    }
+    .boxer-vs-line {
+      transition: opacity 200ms ease;
+      transform: none;
     }
   }
 </style>
@@ -1176,6 +1467,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     const countryNode = $<HTMLElement>('[data-active-country-name]', root)
     const defaultPanel = $<HTMLElement>('[data-default-panel]', root)
     const boxerPanel = $<HTMLElement>('[data-boxer-panel]', root)
+    const selectorFrame = $<HTMLElement>('[data-selector-frame]', root)
+    const vsLine = $<HTMLElement>('[data-vs-line]', root)
+    const vsName = $<HTMLElement>('[data-vs-name]', root)
     const grid = $<HTMLElement>('[data-boxer-grid]', root)
     const thumbs = Array.from($$<HTMLAnchorElement>('[data-thumb]', root))
     const mobileThumbs = Array.from($$<HTMLAnchorElement>('[data-mobile-thumb]', root))
@@ -1210,6 +1504,52 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       if (id) thumbsById.set(id, btn)
     })
 
+    // Desliza el frame de selección sobre la casilla activa. Todas las
+    // celdas son cuadradas e iguales, así que solo necesitamos trasladar
+    // (sin animar width/height): leemos el tamaño real del thumb en cada
+    // llamada para ser robustos ante cambios de breakpoint.
+    function moveFrameTo(thumb: HTMLElement) {
+      if (!selectorFrame) return
+      // En la PRIMERA aparición colocamos el frame SIN transición para que
+      // no se deslice desde la esquina (0,0): solo aparece con fade+pop.
+      // En selecciones posteriores sí se desliza entre casillas.
+      const wasHidden = !selectorFrame.classList.contains('is-visible')
+      if (wasHidden) selectorFrame.style.transition = 'none'
+      selectorFrame.style.width = `${thumb.offsetWidth}px`
+      selectorFrame.style.height = `${thumb.offsetHeight}px`
+      selectorFrame.style.transform = `translate(${thumb.offsetLeft}px, ${thumb.offsetTop}px)`
+      if (wasHidden) {
+        void selectorFrame.offsetWidth // reflow para fijar la posición sin animar
+        selectorFrame.style.transition = '' // restaura la transición del CSS
+      }
+      selectorFrame.classList.add('is-visible')
+    }
+
+    function hideFrame() {
+      selectorFrame?.classList.remove('is-visible')
+    }
+
+    // Re-dispara las animaciones de reveal (retrato, nombre, barrido, VS).
+    function playReveal() {
+      if (!boxerPanel) return
+      boxerPanel.classList.remove('is-revealing')
+      // Forzar reflow para reiniciar las animaciones CSS.
+      void boxerPanel.offsetWidth
+      boxerPanel.classList.add('is-revealing')
+    }
+
+    // Actualiza la línea "VS {rival}" a partir del thumb del contrincante.
+    function updateVsLine(opponentThumb: HTMLAnchorElement | null) {
+      if (!vsLine) return
+      const opponentName = opponentThumb?.dataset.name
+      if (opponentName && vsName) {
+        vsName.textContent = opponentName
+        vsLine.dataset.hasOpponent = 'true'
+      } else {
+        vsLine.dataset.hasOpponent = 'false'
+      }
+    }
+
     function showDefault() {
       if (root!.dataset.state === 'default') return
       root!.dataset.state = 'default'
@@ -1220,6 +1560,8 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       })
       defaultPanel?.setAttribute('aria-hidden', 'false')
       boxerPanel?.setAttribute('aria-hidden', 'true')
+      hideFrame()
+      boxerPanel?.classList.remove('is-revealing')
     }
 
     /** Aplica el contenido (imagen, nombre, watermark, bandera, país) al
@@ -1262,6 +1604,10 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         btn.tabIndex = isActive ? 0 : -1
       })
 
+      // Desliza el frame de selección a la casilla activa y refresca el VS.
+      moveFrameTo(thumb)
+      updateVsLine(opponentThumb ?? null)
+
       // Si veníamos del estado por defecto, aplicamos el contenido
       // ANTES de hacer visible el panel para evitar el "flash" del
       // boxer pre-renderizado (fallback Alondrissa). Como no hay nada
@@ -1274,6 +1620,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         root!.dataset.state = 'boxer'
         defaultPanel?.setAttribute('aria-hidden', 'true')
         boxerPanel?.setAttribute('aria-hidden', 'false')
+        playReveal()
         return
       }
 
@@ -1298,6 +1645,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           image.classList.remove('is-switching')
           nameNode!.classList.remove('is-switching')
           watermark?.classList.remove('is-switching')
+          playReveal()
         }
         if (image.complete && image.naturalHeight > 0) {
           requestAnimationFrame(onLoaded)
