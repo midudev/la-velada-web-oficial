@@ -282,7 +282,7 @@ export const BOXERS: Boxer[] = [
       gender: 'm',
       country: 'es',
       previousVeladaWins: [2024],
-      birthDate: null,
+      birthDate: '2002-09-20',
       age: 24,
       youtubeChannelId: 'UCl8bYBm0XAP23mReE11IBOA',
       followersUpdatedAt: '2026-05-14',
