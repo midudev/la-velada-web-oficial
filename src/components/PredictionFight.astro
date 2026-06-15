@@ -10,193 +10,251 @@ interface Props {
 
 const { prediction, selectedBoxerId } = Astro.props
 const { battle, options, favorite } = prediction
+const [optionA, optionB] = options
 ---
 
 <li id={battle.id} class="scroll-mt-28">
   <article
-    class="prediction-fight relative overflow-hidden rounded-lg border border-theme-gold/18 bg-theme-midnight/92 shadow-[0_24px_70px_rgba(0,0,0,0.34)]"
+    class="prediction-fight relative overflow-hidden rounded-2xl border border-theme-gold/25 bg-theme-midnight shadow-[0_30px_80px_rgba(0,0,0,0.5)]"
     data-battle-id={battle.id}
     data-prediction-fight
   >
-    <div aria-hidden="true" class="prediction-fight-sheen pointer-events-none absolute inset-0">
-    </div>
+    <span aria-hidden="true" class="fight-glow"></span>
 
-    <header
-      class="prediction-fight-header relative z-10 grid gap-4 border-b border-theme-gold/14 px-4 py-4 sm:px-5 md:grid-cols-[1fr_auto] md:items-center md:px-6"
-    >
-      <div>
-        <p
-          class="font-cinzel text-[0.58rem] font-bold tracking-[0.4em] text-theme-gold/85 sm:text-[0.68rem]"
-        >
-          COMBATE {String(battle.number).padStart(2, '0')}
-        </p>
-        <h2
-          class="mt-2 font-cinzel text-xl font-black tracking-[0.08em] text-balance text-theme-cream uppercase sm:text-2xl md:text-3xl"
-        >
-          {battle.title}
-        </h2>
-      </div>
-
-      <div class="flex flex-wrap items-center gap-2 md:justify-end">
-        <span
-          data-prediction-badge
-          class:list={[
-            'prediction-badge',
-            favorite ? 'prediction-badge-calm' : 'prediction-badge-hot',
-          ]}
-        >
-          {favorite ? `Favorito: ${favorite.boxer.name}` : 'A cara de perro'}
-        </span>
-        <a
-          href={battle.url}
-          class="prediction-fight-link group inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-white/12 px-3 py-2 font-cinzel text-[0.58rem] font-bold tracking-[0.24em] text-white/78 transition duration-300 hover:border-theme-gold/55 hover:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold sm:text-[0.65rem]"
-        >
-          Combate
-          <ArrowRightIcon
-            class="size-3 transition-transform duration-300 group-hover:translate-x-0.5"
-            aria-hidden="true"
-          />
-        </a>
-      </div>
+    <header class="fight-head">
+      <span class="fight-combat">
+        COMBATE {String(battle.number).padStart(2, '0')}
+      </span>
+      <span
+        data-prediction-badge
+        class:list={[
+          'prediction-badge',
+          favorite ? 'prediction-badge-calm' : 'prediction-badge-hot',
+        ]}
+      >
+        {favorite ? `Favorito · ${favorite.boxer.name}` : 'A cara de perro'}
+      </span>
     </header>
 
-    <div
-      class="prediction-body relative z-10 grid items-stretch gap-4 p-3 sm:gap-5 sm:p-5 md:p-6 lg:grid-cols-[minmax(0,1fr)_10rem_minmax(0,1fr)] lg:items-center"
-    >
-      {
-        options.map((option, optionIndex) => (
-          <>
-            {optionIndex === 1 && (
-              <div
-                class="duel-versus"
-                role="img"
-                data-prediction-versus
-                aria-label={`${options[0].boxer.name}: ${formatPredictionPercent(options[0].percentage)}. ${options[1].boxer.name}: ${formatPredictionPercent(options[1].percentage)}.`}
-              >
-                <span aria-hidden="true" class="duel-versus-text">
-                  VS
-                </span>
-              </div>
-            )}
+    <div class="fight-stage">
+      <PredictionOption battleId={battle.id} option={optionA} selectedBoxerId={selectedBoxerId} />
+      <PredictionOption battleId={battle.id} option={optionB} selectedBoxerId={selectedBoxerId} />
 
-            <PredictionOption
-              battleId={battle.id}
-              option={option}
-              selectedBoxerId={selectedBoxerId}
-            />
-          </>
-        ))
-      }
+      <div class="fight-vs" aria-hidden="true"><span>VS</span></div>
     </div>
+
+    <div
+      class="fight-bar"
+      data-prediction-bar
+      role="img"
+      aria-label={`${optionA.boxer.name}: ${formatPredictionPercent(optionA.percentage)}. ${optionB.boxer.name}: ${formatPredictionPercent(optionB.percentage)}.`}
+      style={`--share-a: ${optionA.percentage.toFixed(2)}%; --share-b: ${optionB.percentage.toFixed(2)}%;`}
+    >
+      <span class="fight-bar-a"></span><span class="fight-bar-b"></span>
+    </div>
+
+    <footer class="fight-foot">
+      <a href={battle.url} class="fight-link group">
+        Ver combate
+        <ArrowRightIcon
+          class="size-3 transition-transform duration-300 group-hover:translate-x-0.5"
+          aria-hidden="true"
+        />
+      </a>
+    </footer>
   </article>
 </li>
 
 <style>
   .prediction-fight {
     transition:
-      border-color 360ms ease,
-      box-shadow 360ms ease;
+      border-color 320ms ease,
+      box-shadow 320ms ease;
   }
 
   .prediction-fight:hover {
-    border-color: color-mix(in srgb, var(--color-theme-gold) 42%, transparent);
-    box-shadow:
-      0 28px 84px rgba(0, 0, 0, 0.44),
-      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+    border-color: color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
   }
 
-  .prediction-fight-sheen {
+  /* Brillos rojo/dorado de ambiente. */
+  .fight-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
     background:
       radial-gradient(
-        ellipse 42% 70% at 0% 50%,
-        color-mix(in srgb, #c63030 16%, transparent),
-        transparent 66%
+        ellipse 36% 60% at 0% 72%,
+        color-mix(in srgb, #c63030 26%, transparent),
+        transparent 70%
       ),
       radial-gradient(
-        ellipse 42% 70% at 100% 50%,
-        color-mix(in srgb, var(--color-theme-gold) 14%, transparent),
-        transparent 68%
+        ellipse 36% 60% at 100% 72%,
+        color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
+        transparent 70%
       ),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 42%);
+      radial-gradient(
+        ellipse 50% 38% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 12%, transparent),
+        transparent 60%
+      );
   }
 
-  .prediction-badge {
-    display: inline-flex;
-    min-height: 2.5rem;
+  .fight-head {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 6;
+    display: flex;
     align-items: center;
-    border-radius: 0.5rem;
-    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 24%, transparent);
-    padding: 0.55rem 0.75rem;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.85rem 1.1rem;
+    pointer-events: none;
+  }
+
+  .fight-combat {
     font-family: var(--font-cinzel);
-    font-size: 0.58rem;
+    font-size: 0.6rem;
     font-weight: 800;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.32em;
+    color: var(--color-theme-gold);
+  }
+
+  /* Badge: clases que el JS alterna (prediction-badge-hot / -calm). */
+  .prediction-badge {
+    font-family: var(--font-cinzel);
+    font-size: 0.52rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
+    color: var(--color-theme-cream);
+    border: 1px solid transparent;
+    border-radius: 9999px;
+    padding: 0.3rem 0.75rem;
+    backdrop-filter: blur(4px);
+    white-space: nowrap;
   }
 
   .prediction-badge-hot {
-    background: color-mix(in srgb, var(--color-theme-maroon) 45%, transparent);
-    color: var(--color-theme-gold);
+    border-color: color-mix(in srgb, #c63030 55%, transparent);
+    background: color-mix(in srgb, #c63030 22%, transparent);
   }
 
   .prediction-badge-calm {
-    background: color-mix(in srgb, var(--color-theme-midnight) 68%, #c63030);
-    color: rgba(244, 228, 201, 0.82);
-  }
-
-  .duel-versus {
-    display: grid;
-    place-items: center;
-  }
-
-  .duel-versus-text {
-    display: grid;
-    width: 4rem;
-    height: 4rem;
-    place-items: center;
-    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 62%, transparent);
-    border-radius: 0.5rem;
-    background:
-      radial-gradient(
-        circle at 50% 0%,
-        color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
-        transparent 68%
-      ),
-      color-mix(in srgb, var(--color-theme-midnight) 90%, black);
-    box-shadow:
-      0 10px 28px rgba(0, 0, 0, 0.48),
-      0 0 22px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
     color: var(--color-theme-gold);
-    font-family: var(--font-cinzel);
-    font-size: 0.82rem;
-    font-weight: 900;
-    letter-spacing: 0.12em;
+    border-color: color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
+    background: color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
   }
 
-  @media (max-width: 639px) {
-    .prediction-badge {
-      width: 100%;
-      justify-content: center;
-      text-align: center;
-    }
+  .fight-stage {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: clamp(19rem, 42vw, 25rem);
+  }
 
-    .prediction-fight-link {
-      width: 100%;
-    }
+  /* Medallón VS centrado sobre la junta (no captura clics). */
+  .fight-vs {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 5;
+    translate: -50% -50%;
+    pointer-events: none;
+    display: grid;
+    width: 3.6rem;
+    height: 3.6rem;
+    place-items: center;
+    border-radius: 9999px;
+    border: 1px solid var(--color-theme-gold);
+    background: color-mix(in srgb, var(--color-theme-midnight) 82%, black);
+    font-family: var(--font-cinzel);
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--color-theme-gold);
+    box-shadow:
+      0 0 0 8px color-mix(in srgb, var(--color-theme-midnight) 55%, transparent),
+      0 0 28px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+  }
 
-    .duel-versus {
-      margin-block: -0.15rem;
+  @media (min-width: 640px) {
+    .fight-vs {
+      width: 4rem;
+      height: 4rem;
+      font-size: 1.05rem;
     }
+  }
 
-    .duel-versus-text {
-      width: 3.65rem;
-      height: 3.65rem;
-    }
+  /* Barra única tira y afloja. */
+  .fight-bar {
+    position: relative;
+    z-index: 6;
+    display: flex;
+    height: 0.55rem;
+  }
+
+  .fight-bar-a,
+  .fight-bar-b {
+    transition: width 640ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .fight-bar-a {
+    width: var(--share-a, 0%);
+    background: #c63030;
+    box-shadow: 0 0 16px color-mix(in srgb, #c63030 55%, transparent);
+  }
+
+  .fight-bar-b {
+    width: var(--share-b, 0%);
+    margin-left: auto;
+    background: var(--color-theme-gold);
+    box-shadow: 0 0 16px color-mix(in srgb, var(--color-theme-gold) 50%, transparent);
+  }
+
+  /* Pie con botón a la vista del combate. */
+  .fight-foot {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid color-mix(in srgb, var(--color-theme-gold) 14%, transparent);
+    background: color-mix(in srgb, var(--color-theme-midnight) 92%, black);
+    padding: 0.55rem 1rem;
+  }
+
+  .fight-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.25rem;
+    padding: 0.35rem 1.1rem;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+    font-family: var(--font-cinzel);
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-theme-gold);
+    transition:
+      color 260ms ease,
+      border-color 260ms ease,
+      background-color 260ms ease;
+  }
+
+  .fight-link:hover {
+    color: var(--color-theme-midnight);
+    background: var(--color-theme-gold);
+    border-color: var(--color-theme-gold);
+  }
+
+  .fight-link:focus-visible {
+    outline: 2px solid var(--color-theme-gold);
+    outline-offset: 3px;
   }
 
   @media (prefers-reduced-motion: reduce) {
     .prediction-fight,
-    .prediction-fight-link {
+    .fight-bar-a,
+    .fight-bar-b {
       transition: none;
     }
   }

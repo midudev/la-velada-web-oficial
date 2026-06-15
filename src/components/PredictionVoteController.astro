@@ -178,6 +178,8 @@ const controllerConfig = JSON.stringify({
       option.setAttribute('aria-pressed', String(optionSnapshot.isSelected))
       writeOptionPrediction(option, optionSnapshot.voteCount, optionSnapshot.votePercentage)
     })
+    updateFightBadge(fight)
+    updateFightBar(fight)
   }
 
   function setBattleVote(battleId: string, boxerId: string | null) {
@@ -236,6 +238,7 @@ const controllerConfig = JSON.stringify({
       writeOptionPrediction(option, votes, percentage)
     })
     updateFightBadge(fight)
+    updateFightBar(fight)
   }
 
   function updateFightBadge(fight: HTMLElement) {
@@ -252,7 +255,7 @@ const controllerConfig = JSON.stringify({
     const favoriteName = leader?.dataset.boxerName
 
     if (leader && favoriteName && leaderPercentage >= 60) {
-      badge.textContent = `Favorito: ${favoriteName}`
+      badge.textContent = `Favorito · ${favoriteName}`
       badge.classList.remove('prediction-badge-hot')
       badge.classList.add('prediction-badge-calm')
       return
@@ -261,6 +264,21 @@ const controllerConfig = JSON.stringify({
     badge.textContent = 'A cara de perro'
     badge.classList.remove('prediction-badge-calm')
     badge.classList.add('prediction-badge-hot')
+  }
+
+  // Actualiza la barra única "tira y afloja" del combate a partir de los
+  // porcentajes de cada lado. La barra vive fuera de los botones, por eso se
+  // sincroniza aquí en cada cambio de voto.
+  function updateFightBar(fight: HTMLElement) {
+    const bar = $<HTMLElement>('[data-prediction-bar]', fight)
+    if (!bar) return
+
+    const options = Array.from($$<HTMLButtonElement>('[data-prediction-option]', fight))
+    const sideA = options.find((option) => option.dataset.side === 'a')
+    const sideB = options.find((option) => option.dataset.side === 'b')
+
+    bar.style.setProperty('--share-a', `${sideA ? readVotePercentage(sideA) : 0}%`)
+    bar.style.setProperty('--share-b', `${sideB ? readVotePercentage(sideB) : 0}%`)
   }
 
   function getReactionOrigin(option: HTMLButtonElement, event: MouseEvent) {
@@ -368,6 +386,7 @@ const controllerConfig = JSON.stringify({
       writeOptionPrediction(option, predictionOption.votes, predictionOption.percentage)
     })
     updateFightBadge(fight)
+    updateFightBar(fight)
   }
 
   const AUTH_DOCK_MS = 660
