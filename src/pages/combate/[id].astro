@@ -951,17 +951,57 @@ export const prerender = true
       color: var(--color-theme-midnight);
     }
 
-    @media (max-width: 640px) {
-      /* En móvil la figura (contain) es estrecha; subimos el ancho y bajamos la
-         altura para que llenen mejor y no quede aire muerto arriba. */
+    @media (max-width: 1024px) {
+      /* Móvil y tablet (estilo cartel): caras arriba, título abajo. Cada figura se limita
+         a su mitad (sin solape), anclada ARRIBA (caras visibles bajo la nav), y
+         con doble difuminado (borde interior + borde inferior) para que se fundan
+         en la oscuridad sin costura central ni corte recto del recorte. */
+      /* Altura compacta (no 80svh): así los chips caen justo bajo las figuras,
+         sin el hueco muerto que dejaba un hero demasiado alto. */
       .combat-hero {
-        height: clamp(30rem, 82svh, 44rem);
+        height: clamp(24rem, 62svh, 29rem);
       }
       .combat-hero-side {
-        width: 72%;
+        width: 50%;
       }
+      .combat-hero-a img {
+        object-position: top right;
+        -webkit-mask-image: linear-gradient(90deg, #000 50%, transparent 96%),
+          linear-gradient(180deg, #000 58%, transparent 96%);
+        -webkit-mask-composite: source-in;
+        mask-image: linear-gradient(90deg, #000 50%, transparent 96%),
+          linear-gradient(180deg, #000 58%, transparent 96%);
+        mask-composite: intersect;
+      }
+      .combat-hero-b img {
+        object-position: top left;
+        -webkit-mask-image: linear-gradient(270deg, #000 50%, transparent 96%),
+          linear-gradient(180deg, #000 58%, transparent 96%);
+        -webkit-mask-composite: source-in;
+        mask-image: linear-gradient(270deg, #000 50%, transparent 96%),
+          linear-gradient(180deg, #000 58%, transparent 96%);
+        mask-composite: intersect;
+      }
+      /* Título (combate + nombres) superpuesto sobre las imágenes, algo más
+         pequeño; la fecha/sede se ancla abajo, donde terminan las figuras. */
       .combat-hero-content {
-        padding-bottom: 2rem;
+        justify-content: center;
+        padding: 5.5rem 1rem 0;
+      }
+      .combat-combat {
+        font-size: 0.62rem;
+      }
+      .combat-title {
+        font-size: clamp(1.9rem, 8.5vw, 2.9rem);
+      }
+      .combat-chips {
+        position: absolute;
+        inset: auto 0 1.5rem;
+      }
+      /* En móvil el scroll es natural y la comparativa va justo debajo; el
+         indicador se encimaba con el contenido, así que se oculta. */
+      .combat-scroll {
+        display: none;
       }
     }
 
