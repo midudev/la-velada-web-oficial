@@ -1,0 +1,226 @@
+---
+import SectionDivider from '@/components/SectionDivider.astro'
+import { getBoxerGallery } from '@/consts/boxer-gallery'
+
+interface Props {
+  boxerId: string
+  boxerName?: string
+}
+
+const { boxerId, boxerName } = Astro.props
+const images = getBoxerGallery(boxerId, boxerName)
+---
+
+{
+  images.length > 0 && (
+    <section
+      data-boxer-gallery
+      class="boxer-gallery animate-fade-in-up animate-delay-500 mt-10 w-full"
+    >
+      <SectionDivider size="sm" class="w-full" />
+
+      <p class="mt-5 font-cinzel text-[0.55rem] font-bold tracking-[0.45em] text-theme-gold/80 sm:text-[0.65rem]">
+        GALERÍA
+      </p>
+
+      <ul class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+        {images.map((image, i) => (
+          <li>
+            <button
+              type="button"
+              data-gallery-item
+              data-index={i}
+              data-md-avif={image.md.avif}
+              data-md-webp={image.md.webp}
+              data-alt={image.alt}
+              aria-label={`Ampliar ${image.alt}`}
+              class="group relative block aspect-[3/4] w-full overflow-hidden rounded-lg ring-1 ring-theme-cream/10 transition duration-300 hover:ring-theme-gold/50 focus-visible:ring-2 focus-visible:ring-theme-gold focus-visible:outline-none"
+            >
+              <picture>
+                <source type="image/avif" srcset={image.sm.avif} />
+                <source type="image/webp" srcset={image.sm.webp} />
+                <img
+                  src={image.sm.webp}
+                  alt={image.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="size-full object-cover transition duration-300 group-hover:scale-105"
+                />
+              </picture>
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <dialog data-gallery-dialog class="boxer-gallery-dialog" aria-label="Galería de fotos ampliada">
+        <div data-gallery-backdrop class="boxer-gallery-dialog-inner">
+          <button type="button" data-gallery-close class="boxer-gallery-btn boxer-gallery-close" aria-label="Cerrar">✕</button>
+          <button type="button" data-gallery-prev class="boxer-gallery-btn boxer-gallery-nav boxer-gallery-prev" aria-label="Foto anterior">‹</button>
+          <img data-gallery-dialog-img class="boxer-gallery-dialog-img" alt="" decoding="async" />
+          <button type="button" data-gallery-next class="boxer-gallery-btn boxer-gallery-nav boxer-gallery-next" aria-label="Foto siguiente">›</button>
+          <span data-gallery-counter class="boxer-gallery-counter" aria-hidden="true" />
+        </div>
+      </dialog>
+    </section>
+  )
+}
+
+<script>
+  function initBoxerGallery() {
+    const gallery = document.querySelector('[data-boxer-gallery]')
+    if (!gallery) return
+
+    const dialog = gallery.querySelector('[data-gallery-dialog]') as HTMLDialogElement | null
+    const dialogImg = gallery.querySelector('[data-gallery-dialog-img]') as HTMLImageElement | null
+    const counter = gallery.querySelector('[data-gallery-counter]') as HTMLElement | null
+    const items = Array.from(gallery.querySelectorAll('[data-gallery-item]')) as HTMLElement[]
+    if (!dialog || !dialogImg || items.length === 0) return
+
+    let current = 0
+
+    const show = (index: number) => {
+      current = (index + items.length) % items.length
+      const btn = items[current]
+      const webp = btn.dataset.mdWebp ?? ''
+      dialogImg.onerror = () => {
+        dialogImg.onerror = null
+        dialogImg.src = webp
+      }
+      dialogImg.src = btn.dataset.mdAvif ?? webp
+      dialogImg.alt = btn.dataset.alt ?? ''
+      if (counter) counter.textContent = `${current + 1} / ${items.length}`
+    }
+
+    items.forEach((btn, i) =>
+      btn.addEventListener('click', () => {
+        show(i)
+        dialog.showModal()
+        document.documentElement.style.overflow = 'hidden'
+      }),
+    )
+
+    gallery.querySelector('[data-gallery-prev]')?.addEventListener('click', () => show(current - 1))
+    gallery.querySelector('[data-gallery-next]')?.addEventListener('click', () => show(current + 1))
+    gallery.querySelector('[data-gallery-close]')?.addEventListener('click', () => dialog.close())
+
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(current - 1) }
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(current + 1) }
+    })
+
+    dialog.addEventListener('click', (e) => {
+      const t = e.target as Element
+      if (t === dialog || t.hasAttribute('data-gallery-backdrop')) dialog.close()
+    })
+
+    dialog.addEventListener('close', () => {
+      document.documentElement.style.overflow = ''
+    })
+  }
+
+  document.addEventListener('astro:page-load', initBoxerGallery)
+</script>
+
+<style>
+  .boxer-gallery-dialog {
+    max-width: 100vw;
+    max-height: 100dvh;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  .boxer-gallery-dialog::backdrop {
+    background: rgba(3, 6, 16, 0.82);
+    backdrop-filter: blur(6px);
+  }
+
+  .boxer-gallery-dialog-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: clamp(1rem, 4vw, 3rem);
+  }
+
+  .boxer-gallery-dialog-img {
+    max-width: 100%;
+    max-height: 85dvh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  }
+
+  .boxer-gallery-btn {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-theme-cream);
+    background: color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    border-radius: 9999px;
+    transition: background-color 250ms ease, box-shadow 250ms ease, transform 250ms ease;
+  }
+
+  .boxer-gallery-btn:hover,
+  .boxer-gallery-btn:focus-visible {
+    background: color-mix(in srgb, var(--color-theme-midnight) 90%, black);
+    box-shadow: inset 0 0 0 1px var(--color-theme-gold);
+    outline: none;
+  }
+
+  .boxer-gallery-close {
+    top: clamp(0.75rem, 3vw, 1.5rem);
+    right: clamp(0.75rem, 3vw, 1.5rem);
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1rem;
+  }
+
+  .boxer-gallery-nav {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.75rem;
+    line-height: 1;
+  }
+
+  .boxer-gallery-nav:hover,
+  .boxer-gallery-nav:focus-visible {
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  .boxer-gallery-prev { left: clamp(0.5rem, 3vw, 2rem); }
+  .boxer-gallery-next { right: clamp(0.5rem, 3vw, 2rem); }
+
+  .boxer-gallery-counter {
+    position: absolute;
+    bottom: clamp(0.75rem, 3vw, 1.75rem);
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: color-mix(in srgb, var(--color-theme-cream) 80%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boxer-gallery-btn,
+    .boxer-gallery-dialog-img,
+    .boxer-gallery img {
+      transition: none !important;
+    }
+  }
+</style>

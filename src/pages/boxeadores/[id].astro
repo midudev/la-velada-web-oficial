@@ -6,6 +6,7 @@ import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import BoxerSocials from '@/components/BoxerSocials.astro'
 import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
 import CountryFlag from '@/components/CountryFlag.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 import { battles } from '@/consts/battles'
 import {
   BOXERS,
@@ -19,6 +20,7 @@ import {
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
+import BoxerGallery from '@/components/BoxerGallery.astro'
 
 export const prerender = true
 
@@ -42,6 +44,16 @@ const heroImages = getBoxerHeroImages(boxer)
 const photo = getBoxerPhoto(boxer)
 const countryName = COUNTRY_NAMES[boxer.country] ?? boxer.country
 const genderLabel = GENDER_LABELS[boxer.gender]
+
+// Fecha de nacimiento formateada en español (p. ej. "28 de agosto de 2004").
+// Se construye con hora local para evitar desfases de día por zona horaria.
+const birthDateLabel = boxer.birthDate
+  ? new Intl.DateTimeFormat('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(`${boxer.birthDate}T00:00:00`))
+  : null
 
 // Buscamos su combate para enlazar y mostrar el número.
 const battle = battles.find((b) => b.boxerIds.includes(boxer.id))
@@ -150,7 +162,7 @@ const breadcrumbJsonLd = {
   >
     <picture
       data-boxer-detail-bg
-      class="pointer-events-none absolute inset-0 -z-20"
+      class="pointer-events-none absolute inset-0 max-h-svh -z-20"
       aria-hidden="true"
     >
       <source
@@ -215,7 +227,7 @@ const breadcrumbJsonLd = {
             />
           </picture>
 
-          <div class="boxer-detail-socials relative z-10 mt-6 w-full">
+          <div class="boxer-detail-socias relative z-10 mt-6 w-full">
             <BoxerSocials boxer={boxer} />
           </div>
         </div>
@@ -237,6 +249,11 @@ const breadcrumbJsonLd = {
               {countryName}
             </span>
             <span class="boxer-detail-chip">{genderLabel}</span>
+            {birthDateLabel && (
+              <span class="boxer-detail-chip">
+                <time datetime={boxer.birthDate}>{birthDateLabel}</time>
+              </span>
+            )}
           </div>
 
           <h1
@@ -289,16 +306,12 @@ const breadcrumbJsonLd = {
             </a>
           )}
 
+          <BoxerGallery boxerId={boxer.id} boxerName={boxer.name} />
+
           <div
             class="boxer-detail-coming-soon animate-fade-in-up animate-delay-500 mt-10 w-full"
           >
-            <div
-              class="flex w-full items-center gap-3 sm:gap-4"
-              aria-hidden="true"
-            >
-              <span class="size-1 rotate-45 bg-theme-gold/70"></span>
-              <span class="h-px flex-1 bg-linear-to-r from-theme-gold/45 to-transparent"></span>
-            </div>
+            <SectionDivider size="sm" class="w-full" />
 
             <p
               class="boxer-detail-coming-soon-eyebrow mt-5 font-cinzel text-[0.55rem] font-bold tracking-[0.45em] text-theme-gold/80 sm:text-[0.65rem]"
