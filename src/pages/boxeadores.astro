@@ -102,6 +102,8 @@ const genderFilters: Array<{ code: BoxerGender; name: string; count: number }> =
 }))
 
 const totalBoxers = BOXERS.length
+
+const cardImageEagerAmount = 4
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
@@ -342,10 +344,13 @@ const totalBoxers = BOXERS.length
                     <img
                       src={b.heroImages.webp}
                       alt={`Recorte fotográfico de ${b.name}`}
-                      loading="lazy"
-                      decoding="async"
+                      width="1066"
+                      height="1600"
+                      loading={index < cardImageEagerAmount ? 'eager' : 'lazy'}
+                      decoding={index < cardImageEagerAmount ? 'auto' : 'async'}
+                      fetchpriority={index < cardImageEagerAmount ? 'high' : 'auto'}
                       transition:name={`boxer-hero-${b.id}`}
-                      class="boxer-card-img absolute inset-0 h-full w-full object-cover object-top"
+                      class="boxer-card-img h-full w-full object-cover object-top"
                     />
                   </picture>
 
