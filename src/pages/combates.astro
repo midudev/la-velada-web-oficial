@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 import CombatCard from '@/components/CombatCard.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 import { battles } from '@/consts/battles'
 import { BOXERS_BY_ID, COUNTRY_NAMES, getBoxerHeroImages, type Boxer } from '@/consts/boxers'
 
@@ -67,14 +68,7 @@ const breadcrumbJsonLd = {
 
         <div class="mx-auto w-full max-w-7xl">
             <header class="combates-header">
-                <div
-                    class="mb-8 flex w-full items-center justify-center gap-4 sm:mb-12"
-                    aria-hidden="true"
-                >
-                    <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-                    <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-                    <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
-                </div>
+                <SectionDivider class="mb-8 w-full sm:mb-12" />
                 <h1
                     class="mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
                 >
