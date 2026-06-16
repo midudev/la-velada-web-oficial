@@ -107,7 +107,7 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       gender: 'm',
       birthDate: '1988-01-14',
-      age: 30,
+      age: 38,
       heightCm: 175,
       weightKg: 70,
       fightWeightKg: 70,
