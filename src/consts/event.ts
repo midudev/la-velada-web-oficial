@@ -7,5 +7,5 @@ export const EVENT_DURATION_HOURS = 5
 export const EVENT_END_ISO = new Date(
   EVENT_DATE.getTime() + EVENT_DURATION_HOURS * 60 * 60 * 1000,
 ).toISOString()
-export const EVENT_DISPLAY_TIME = '20:00H (españa peninsular)'
+export const EVENT_DISPLAY_TIME = '20:00H (España peninsular)'
 export const EVENT_DISPLAY_TIME_SHORT = '20:00H CEST'

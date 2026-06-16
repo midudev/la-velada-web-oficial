@@ -1,13 +1,16 @@
 export type BoxerGender = 'f' | 'm'
 
+/** Fecha en formato ISO `YYYY-MM-DD`. Evita valores malformados como `'2004'`. */
+export type ISODate = `${number}-${number}-${number}`
+
 export interface Boxer {
   id: string
   name: string
   realName: string
   gender: BoxerGender
-  birthDate: string | null
+  birthDate: ISODate | null
   age: number | null
-  followersUpdatedAt: string
+  followersUpdatedAt: ISODate
   socials: { platform: string; username: string; followers?: number; monthlyListeners?: number }[]
   country: string
   previousVeladaWins: number[]
@@ -68,7 +71,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Clara Merino',
       country: 'es',
       previousVeladaWins: [],
-      birthDate: null,
+      birthDate: '2001-09-15',
       gender: 'f',
       age: null,
       youtubeChannelId: 'UCYa7uV_ICFXbho_JRyv0nFA',
@@ -261,7 +264,7 @@ export const BOXERS: Boxer[] = [
       gender: 'f',
       country: 'mx',
       previousVeladaWins: [],
-      birthDate: null,
+      birthDate: '2001-04-01',
       age: null,
       youtubeChannelId: 'UCLmWjPj5qLmqSCcoL1FNf1Q',
       followersUpdatedAt: '2026-05-14',
@@ -279,7 +282,7 @@ export const BOXERS: Boxer[] = [
       gender: 'm',
       country: 'es',
       previousVeladaWins: [2024],
-      birthDate: null,
+      birthDate: '2002-09-20',
       age: 24,
       youtubeChannelId: 'UCl8bYBm0XAP23mReE11IBOA',
       followersUpdatedAt: '2026-05-14',
@@ -332,7 +335,7 @@ export const BOXERS: Boxer[] = [
       gender: 'f',
       country: 'es',
       previousVeladaWins: [],
-      birthDate: '2004',
+      birthDate: '2004-08-28',
       age: 21,
       youtubeChannelId: 'UCZh4XmGTOxSJAsjZLDkZArA',
       followersUpdatedAt: '2026-05-14',
