@@ -1,30 +1,28 @@
 ---
+import CombatHeroVideo from '@/components/combat/CombatHeroVideo.astro'
 import type { Boxer, BoxerImageVariants } from '@/consts/boxers'
+import type { BattleVideoSources } from '@/consts/battle-videos'
 
 interface Props {
   boxer1: Boxer
   boxer2: Boxer
   boxer1Hero: BoxerImageVariants
   boxer2Hero: BoxerImageVariants
+  video: BattleVideoSources | null
 }
 
-const { boxer1, boxer2, boxer1Hero, boxer2Hero } = Astro.props
+const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
 ---
 
 <section class="combat-hero" aria-labelledby="battle-title">
+  <CombatHeroVideo video={video} />
   <div aria-hidden="true" class="combat-hero-veil"></div>
 
   <div aria-hidden="true" class="combat-hero-boxer boxer-a">
     <picture transition:name={`boxer-hero-${boxer1.id}`}>
       <source type="image/avif" srcset={boxer1Hero.avif} />
       <source type="image/webp" srcset={boxer1Hero.webp} />
-      <img
-        src={boxer1Hero.webp}
-        alt=""
-        fetchpriority="high"
-        decoding="async"
-        class="boxer-img"
-      />
+      <img src={boxer1Hero.webp} alt="" fetchpriority="high" decoding="async" class="boxer-img" />
     </picture>
   </div>
 
@@ -32,25 +30,19 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero } = Astro.props
     <picture transition:name={`boxer-hero-${boxer2.id}`}>
       <source type="image/avif" srcset={boxer2Hero.avif} />
       <source type="image/webp" srcset={boxer2Hero.webp} />
-      <img
-        src={boxer2Hero.webp}
-        alt=""
-        fetchpriority="high"
-        decoding="async"
-        class="boxer-img"
-      />
+      <img src={boxer2Hero.webp} alt="" fetchpriority="high" decoding="async" class="boxer-img" />
     </picture>
   </div>
 
   <div class="combat-hero-content">
-    <div class="animate-blurred-fade-in animate-delay-100 relative leading-none">
+    <div class="relative animate-blurred-fade-in leading-none animate-delay-100">
       <picture class="block">
         <source srcset="/logo.avif" type="image/avif" />
         <source srcset="/logo.webp" type="image/webp" />
         <img
           src="/logo.webp"
           alt="Logo de La Velada del Año VI"
-          class="boxer-default-logo relative block h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
+          class="boxer-default-logo relative block h-auto w-[58vw] max-w-[300px] sm:w-[40vw] md:w-[30vw] lg:w-[23vw]"
           width="512"
           height="512"
           decoding="async"
@@ -79,7 +71,10 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero } = Astro.props
     align-items: flex-end;
     justify-content: center;
     min-height: 100svh;
+    overflow: hidden;
     color: var(--color-theme-cream);
+    background: var(--color-theme-midnight);
+    isolation: isolate;
     mask-image: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
   }
 
@@ -118,6 +113,21 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero } = Astro.props
 
   .boxer-b {
     right: 0;
+    justify-content: flex-end;
+  }
+
+  .combat-hero-boxer picture {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+  }
+
+  .boxer-a picture {
+    justify-content: flex-start;
+  }
+
+  .boxer-b picture {
     justify-content: flex-end;
   }
 
@@ -201,12 +211,62 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero } = Astro.props
 
   @media (max-width: 639px) {
     .combat-hero-boxer {
-      width: 52%;
-      height: 70%;
+      width: 72vw;
+      max-width: none;
+      height: min(92svh, 46rem);
+    }
+
+    .boxer-a {
+      left: -18vw;
+    }
+
+    .boxer-b {
+      right: -18vw;
+    }
+
+    .boxer-img {
+      max-height: 92svh;
     }
 
     .combat-hero-content {
-      padding-bottom: 3.5rem;
+      height: 100svh;
+      max-width: 100%;
+      padding: 4.5rem 0.85rem 2.75rem;
+    }
+
+    .combat-title {
+      width: min(92vw, 30rem);
+      margin-top: auto;
+      margin-bottom: clamp(2rem, 9svh, 4.25rem);
+    }
+
+    .fighter-name {
+      font-size: clamp(2.45rem, 13vw, 4.65rem);
+      line-height: 0.82;
+      overflow-wrap: anywhere;
+    }
+
+    .vs-glyph {
+      font-size: clamp(4.75rem, 22vw, 7.5rem);
+      line-height: 0.88;
+    }
+
+    .scroll-hint {
+      display: none;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .combat-hero-boxer {
+      width: 78vw;
+    }
+
+    .boxer-a {
+      left: -24vw;
+    }
+
+    .boxer-b {
+      right: -24vw;
     }
   }
 

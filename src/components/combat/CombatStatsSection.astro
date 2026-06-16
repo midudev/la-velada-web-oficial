@@ -1,5 +1,6 @@
 ---
 import CountryFlag from '@/components/CountryFlag.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 import type { Boxer, BoxerImageVariants } from '@/consts/boxers'
 
 interface CombatStat {
@@ -21,19 +22,16 @@ interface Props {
 const { boxer1, boxer2, boxer1Select, boxer2Select, stats } = Astro.props
 ---
 
-<section class="combat-section px-4 pb-20 pt-16 sm:px-6" aria-labelledby="features-title">
+<section class="combat-section px-4 pt-16 pb-20 sm:px-6" aria-labelledby="features-title">
   <div class="mx-auto w-full max-w-3xl">
     <div class="mb-10 flex flex-col items-center gap-2 text-center">
-      <div class="flex items-center gap-4">
-        <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-20" />
-        <h2
-          id="features-title"
-          class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm"
-        >
-          CARACTERÍSTICAS
-        </h2>
-        <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-20" />
-      </div>
+      <SectionDivider size="sm" class="w-full" />
+      <h2
+        id="features-title"
+        class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm"
+      >
+        CARACTERÍSTICAS
+      </h2>
       <p class="font-cinzel text-[0.6rem] tracking-[0.22em] text-white/42 uppercase">
         Datos relevantes de los boxeadores
       </p>
@@ -97,12 +95,18 @@ const { boxer1, boxer2, boxer1Select, boxer2Select, stats } = Astro.props
       </a>
     </div>
 
-    <div class="stats-table" role="table" aria-label={`Características: ${boxer1.name} vs ${boxer2.name}`}>
+    <div
+      class="stats-table"
+      role="table"
+      aria-label={`Características: ${boxer1.name} vs ${boxer2.name}`}
+    >
       {
         stats.map((stat, i) => (
           <div class:list={['stats-row', { 'stats-row-first': i === 0 }]} role="row">
             <div class="stats-cell cell-a" role="cell">
-              {stat.flagA && <CountryFlag country={stat.flagA} size={16} decorative class="stats-flag" />}
+              {stat.flagA && (
+                <CountryFlag country={stat.flagA} size={16} decorative class="stats-flag" />
+              )}
               <span class="stats-value">{stat.a}</span>
             </div>
 
@@ -114,7 +118,9 @@ const { boxer1, boxer2, boxer1Select, boxer2Select, stats } = Astro.props
 
             <div class="stats-cell cell-b" role="cell">
               <span class="stats-value">{stat.b}</span>
-              {stat.flagB && <CountryFlag country={stat.flagB} size={16} decorative class="stats-flag" />}
+              {stat.flagB && (
+                <CountryFlag country={stat.flagB} size={16} decorative class="stats-flag" />
+              )}
             </div>
           </div>
         ))

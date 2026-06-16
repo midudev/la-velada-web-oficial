@@ -1,4 +1,5 @@
 ---
+import SectionDivider from '@/components/SectionDivider.astro'
 import PlayIcon from '@/assets/svg/play.svg'
 
 interface Props {
@@ -37,15 +38,14 @@ const embedUrl = videoId
       aria-labelledby="face-to-face-title"
     >
       <div class="mx-auto w-full max-w-5xl">
-        <div class="mb-8 flex items-center justify-center gap-4">
-          <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-20" />
+        <div class="mb-8 flex flex-col items-center gap-2 text-center">
+          <SectionDivider size="sm" class="w-full" />
           <h2
             id="face-to-face-title"
             class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm"
           >
             CARA A CARA
           </h2>
-          <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-20" />
         </div>
 
         <div class="face-video-shell" data-face-video>
@@ -71,11 +71,17 @@ const embedUrl = videoId
               )}
             </picture>
 
-            <span aria-hidden="true" class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/42 to-black/18"></span>
-            <span aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"></span>
+            <span
+              aria-hidden="true"
+              class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/42 to-black/18"
+            />
+            <span
+              aria-hidden="true"
+              class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
+            />
 
             <span aria-hidden="true" class="absolute inset-0 flex items-center justify-center">
-              <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md backdrop-saturate-150 backdrop-contrast-125 transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
+              <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md backdrop-contrast-125 backdrop-saturate-150 transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
                 <PlayIcon
                   class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
                   aria-hidden="true"
