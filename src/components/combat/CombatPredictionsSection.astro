@@ -1,6 +1,7 @@
 ---
 import AuthButton from '@/components/AuthButton.astro'
 import PredictionFight from '@/components/PredictionFight.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 import type { PredictionBattle } from '@/consts/predictions'
 
 interface AuthUser {
@@ -21,19 +22,18 @@ const { prediction, selectedBoxerId, user, callbackURL } = Astro.props
 {
   prediction && (
     <section
-      class="combat-section px-4 pb-20 pt-10 sm:px-6 sm:pb-24"
+      class="combat-section px-4 pt-10 pb-20 sm:px-6 sm:pb-24"
       aria-labelledby="battle-predictions-title"
     >
       <div class="mx-auto w-full max-w-7xl">
-        <div class="mb-10 flex items-center justify-center gap-4">
-          <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-20" />
+        <div class="mb-10 flex flex-col items-center gap-2 text-center">
+          <SectionDivider size="sm" class="w-full" />
           <h2
             id="battle-predictions-title"
             class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm"
           >
             PRONÓSTICOS
           </h2>
-          <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-20" />
         </div>
 
         <div id="predictions-auth" class="mb-6 flex justify-center" data-predictions-auth>
