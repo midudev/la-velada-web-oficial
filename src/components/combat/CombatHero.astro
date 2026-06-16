@@ -18,21 +18,45 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
   <CombatHeroVideo video={video} />
   <div aria-hidden="true" class="combat-hero-veil"></div>
 
-  <div aria-hidden="true" class="combat-hero-boxer boxer-a">
-    <picture transition:name={`boxer-hero-${boxer1.id}`}>
+  <a
+    href={`/boxeadores/${boxer1.id}`}
+    class="combat-hero-boxer boxer-a"
+    aria-label={`Ver perfil de ${boxer1.name}`}
+  >
+    <span aria-hidden="true" class="hero-boxer-glow"></span>
+    <picture>
       <source type="image/avif" srcset={boxer1Hero.avif} />
       <source type="image/webp" srcset={boxer1Hero.webp} />
-      <img src={boxer1Hero.webp} alt="" fetchpriority="high" decoding="async" class="boxer-img" />
+      <img
+        src={boxer1Hero.webp}
+        alt=""
+        fetchpriority="high"
+        decoding="async"
+        class="boxer-img"
+        transition:name={`boxer-hero-${boxer1.id}`}
+      />
     </picture>
-  </div>
+  </a>
 
-  <div aria-hidden="true" class="combat-hero-boxer boxer-b">
-    <picture transition:name={`boxer-hero-${boxer2.id}`}>
+  <a
+    href={`/boxeadores/${boxer2.id}`}
+    class="combat-hero-boxer boxer-b"
+    aria-label={`Ver perfil de ${boxer2.name}`}
+  >
+    <span aria-hidden="true" class="hero-boxer-glow"></span>
+    <picture>
       <source type="image/avif" srcset={boxer2Hero.avif} />
       <source type="image/webp" srcset={boxer2Hero.webp} />
-      <img src={boxer2Hero.webp} alt="" fetchpriority="high" decoding="async" class="boxer-img" />
+      <img
+        src={boxer2Hero.webp}
+        alt=""
+        fetchpriority="high"
+        decoding="async"
+        class="boxer-img"
+        transition:name={`boxer-hero-${boxer2.id}`}
+      />
     </picture>
-  </div>
+  </a>
 
   <div class="combat-hero-content">
     <div class="relative animate-blurred-fade-in leading-none animate-delay-100">
@@ -52,9 +76,21 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
     </div>
 
     <h1 id="battle-title" class="combat-title font-fantasy">
-      <span class="fighter-name">{boxer1.name}</span>
+      <a
+        href={`/boxeadores/${boxer1.id}`}
+        class="fighter-name fighter-name-a"
+        transition:name={`boxer-name-${boxer1.id}`}
+      >
+        {boxer1.name}
+      </a>
       <span class="vs-glyph">VS</span>
-      <span class="fighter-name">{boxer2.name}</span>
+      <a
+        href={`/boxeadores/${boxer2.id}`}
+        class="fighter-name fighter-name-b"
+        transition:name={`boxer-name-${boxer2.id}`}
+      >
+        {boxer2.name}
+      </a>
     </h1>
 
     <div aria-hidden="true" class="scroll-hint">
@@ -104,6 +140,9 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
     height: 1200px;
     display: flex;
     align-items: flex-end;
+    color: inherit;
+    text-decoration: none;
+    outline: none;
   }
 
   .boxer-a {
@@ -116,7 +155,26 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
     justify-content: flex-end;
   }
 
+  .hero-boxer-glow {
+    position: absolute;
+    inset: 8% -12% 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      70% 58% at 50% 42%,
+      color-mix(in srgb, var(--color-theme-gold) 30%, transparent),
+      transparent 66%
+    );
+    opacity: 0.22;
+    filter: blur(8px);
+    transition:
+      opacity 500ms ease,
+      transform 500ms ease;
+  }
+
   .combat-hero-boxer picture {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: flex-end;
     width: 100%;
@@ -138,6 +196,10 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
     object-fit: contain;
     object-position: bottom center;
     filter: saturate(1) brightness(0.96);
+    transform: translateZ(0);
+    transition:
+      filter 500ms ease,
+      transform 500ms ease;
   }
 
   .combat-hero-content {
@@ -167,16 +229,89 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
     font-weight: 900;
     line-height: 0.88;
     text-transform: uppercase;
+    color: var(--color-theme-cream);
+    text-decoration: none;
+    outline: none;
+    transition:
+      color 350ms ease,
+      text-shadow 350ms ease,
+      transform 350ms ease;
     text-shadow:
       0 0 32px rgba(199, 168, 107, 0.2),
       0 3px 22px rgba(0, 0, 0, 0.88);
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+
+      z-index: -1;
+
+      display: block;
+      width: 0;
+      height: 2px;
+      margin: 0 auto;
+      background: linear-gradient(to left, rgba(199, 168, 107, 0.7), transparent);
+
+      transition:
+        width 350ms ease,
+        background 350ms ease;
+    }
+  }
+
+  .fighter-name:hover,
+  .fighter-name:focus-visible,
+  .combat-hero:has(.boxer-a:hover) .fighter-name-a,
+  .combat-hero:has(.boxer-a:focus-visible) .fighter-name-a,
+  .combat-hero:has(.boxer-b:hover) .fighter-name-b,
+  .combat-hero:has(.boxer-b:focus-visible) .fighter-name-b {
+    color: color-mix(in srgb, var(--color-theme-gold) 88%, white);
+    transform: translateY(-0.08rem);
+    text-shadow:
+      0 0 26px color-mix(in srgb, var(--color-theme-gold) 40%, transparent),
+      0 4px 24px rgba(0, 0, 0, 0.9);
+
+    &::before {
+      width: 100%;
+    }
+  }
+
+  .fighter-name:focus-visible {
+    border-radius: 0.25rem;
+    outline: 2px solid var(--color-theme-gold);
+    outline-offset: 0.3rem;
+  }
+
+  .combat-hero-boxer:hover .hero-boxer-glow,
+  .combat-hero-boxer:focus-visible .hero-boxer-glow,
+  .combat-hero:has(.fighter-name-a:hover) .boxer-a .hero-boxer-glow,
+  .combat-hero:has(.fighter-name-a:focus-visible) .boxer-a .hero-boxer-glow,
+  .combat-hero:has(.fighter-name-b:hover) .boxer-b .hero-boxer-glow,
+  .combat-hero:has(.fighter-name-b:focus-visible) .boxer-b .hero-boxer-glow {
+    opacity: 0.9;
+    transform: scale(1.04);
+  }
+
+  .combat-hero-boxer:hover .boxer-img,
+  .combat-hero-boxer:focus-visible .boxer-img,
+  .combat-hero:has(.fighter-name-a:hover) .boxer-a .boxer-img,
+  .combat-hero:has(.fighter-name-a:focus-visible) .boxer-a .boxer-img,
+  .combat-hero:has(.fighter-name-b:hover) .boxer-b .boxer-img,
+  .combat-hero:has(.fighter-name-b:focus-visible) .boxer-b .boxer-img {
+    filter: saturate(1.12) brightness(1.06)
+      drop-shadow(0 0 28px color-mix(in srgb, var(--color-theme-gold) 34%, transparent));
+    transform: translateY(-0.35rem) scale(1.015);
+  }
+
+  .combat-hero-boxer:focus-visible {
+    outline: none;
   }
 
   .vs-glyph {
     display: block;
     font-family: var(--font-fantasy);
-    font-size: clamp(3.5rem, 8.5vw + 1rem, 8rem);
-    line-height: 1.1;
+    font-size: clamp(3.5rem, 3vw, 8rem);
+    line-height: 1.2;
     color: var(--color-theme-gold);
     text-shadow:
       0 0 55px rgba(199, 168, 107, 0.55),
@@ -247,8 +382,8 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
     }
 
     .vs-glyph {
-      font-size: clamp(4.75rem, 22vw, 7.5rem);
-      line-height: 0.88;
+      font-size: clamp(4.75rem, 8vw, 7.5rem);
+      line-height: 1.2;
     }
 
     .scroll-hint {
@@ -274,6 +409,12 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
     .scroll-line {
       animation: none;
       opacity: 0.38;
+    }
+
+    .hero-boxer-glow,
+    .boxer-img,
+    .fighter-name {
+      transition: none;
     }
   }
 </style>

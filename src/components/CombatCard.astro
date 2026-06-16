@@ -21,15 +21,17 @@ interface Props {
 
 const { number, url, featured = false, badge, a, b } = Astro.props
 
-const combatHref = url
-
 const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
   { ...a, side: 'a' },
   { ...b, side: 'b' },
 ]
 ---
 
-<article class:list={['combat', { 'is-featured': featured }]}>
+<a
+  class:list={['combat', { 'is-featured': featured }]}
+  href={url}
+  aria-label={`Ver combate: ${a.name} contra ${b.name}`}
+>
   {badge && <span class="combat-badge font-cinzel">{badge}</span>}
 
   <span aria-hidden="true" class="combat-corner tl"></span>
@@ -40,11 +42,7 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
   <div class="combat-stage">
     {
       boxers.map((boxer) => (
-        <a
-          class:list={['boxer', boxer.side]}
-          href={`/boxeadores/${boxer.id}`}
-          aria-label={`Ver perfil de ${boxer.name}`}
-        >
+        <div class:list={['boxer', boxer.side]}>
           <span aria-hidden="true" class="boxer-spot" />
           <picture class="boxer-pic" transition:name={`boxer-hero-${boxer.id}`}>
             <source type="image/avif" srcset={boxer.heroImages.avif} />
@@ -65,22 +63,22 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
               <span>{boxer.countryName}</span>
             </p>
           </div>
-        </a>
+        </div>
       ))
     }
 
-    <a class="vslink" href={combatHref} aria-label={`Ver combate: ${a.name} contra ${b.name}`}>
+    <span class="vslink" aria-hidden="true">
       <span class="vsmedal font-cinzel"><b>VS</b></span>
-    </a>
+    </span>
   </div>
 
-  <a class="combat-foot" href={combatHref} aria-label={`Ver combate: ${a.name} contra ${b.name}`}>
+  <span class="combat-foot">
     <span class="combat-no font-cinzel">Combate {String(number).padStart(2, '0')}</span>
     <span class="combat-cta font-cinzel"
       >Ver cara a cara <span aria-hidden="true">&rarr;</span></span
     >
-  </a>
-</article>
+  </span>
+</a>
 
 <style>
   .combat {
@@ -89,6 +87,9 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     overflow: hidden;
     border-radius: 6px;
     background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 24%, transparent),
       0 16px 40px rgba(0, 0, 0, 0.45);
@@ -101,6 +102,14 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
       0 28px 60px rgba(0, 0, 0, 0.6);
+  }
+  .combat:focus-visible {
+    outline: 2px solid var(--color-theme-gold);
+    outline-offset: 4px;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 75%, transparent),
+      0 28px 60px rgba(0, 0, 0, 0.6),
+      0 0 36px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
   }
 
   .combat:has(.vslink:hover),
@@ -198,15 +207,6 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
   .is-featured .boxer {
     aspect-ratio: 4 / 5;
   }
-  .boxer:focus-visible {
-    outline: 2px solid var(--color-theme-gold);
-    outline-offset: -3px;
-  }
-
-  .combat-stage:has(.boxer:hover) .boxer:not(:hover) {
-    opacity: 0.45;
-    filter: saturate(0.5) brightness(0.7);
-  }
 
   .boxer-spot {
     position: absolute;
@@ -228,9 +228,6 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     );
     opacity: 0.4;
   }
-  .boxer:hover .boxer-spot {
-    opacity: 0.95;
-  }
 
   .boxer-pic {
     position: absolute;
@@ -250,10 +247,6 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
   }
   .boxer.b .boxer-img {
     transform: scaleX(-1);
-  }
-  .boxer:hover .boxer-img {
-    scale: 1.06;
-    filter: saturate(1.1) brightness(1.05);
   }
 
   .boxer-veil {
@@ -388,12 +381,9 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     text-decoration: none;
     transition: background 300ms ease;
   }
+  .combat:hover .combat-foot,
   .combat-foot:hover {
     background: rgba(5, 8, 15, 0.75);
-  }
-  .combat-foot:focus-visible {
-    outline: 2px solid var(--color-theme-gold);
-    outline-offset: -3px;
   }
   .combat-no {
     font-size: 0.58rem;
@@ -410,6 +400,7 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     color: color-mix(in srgb, var(--color-theme-cream) 72%, transparent);
     transition: color 250ms ease;
   }
+  .combat:hover .combat-cta,
   .combat-foot:hover .combat-cta {
     color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
   }
@@ -428,8 +419,7 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     .combat:hover {
       transform: none;
     }
-    .combat:hover .boxer-img,
-    .boxer:hover .boxer-img {
+    .combat:hover .boxer-img {
       scale: 1;
     }
     .vslink:hover .vsmedal {
