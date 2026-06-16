@@ -262,14 +262,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     <div
       class="boxer-cta-bar relative z-20 flex w-full flex-col items-center gap-3 px-4 pt-2 transition-opacity duration-300 ease-out md:gap-4 md:pt-4"
     >
-      <div
-        class="boxer-default-divider flex items-center justify-center gap-3 sm:gap-4"
-        aria-hidden="true"
-      >
-        <span class="h-px w-10 bg-linear-to-r from-transparent to-theme-gold/55 sm:w-20"></span>
-        <span class="size-1.5 rotate-45 bg-theme-gold/85"></span>
-        <span class="h-px w-10 bg-linear-to-l from-transparent to-theme-gold/55 sm:w-20"></span>
-      </div>
+      <SectionDivider class="boxer-default-divider" />
 
       <p class="boxer-default-cta font-cinzel text-sm font-bold tracking-[0.3em] text-[color-mix(in_srgb,var(--color-theme-cream),white_30%)] uppercase">
         ¡Selecciona tu boxeador o boxeadora!
@@ -300,31 +293,39 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                     aria-label={`Ver perfil de ${boxer.name}`}
                     aria-hidden={isAccessibleSet ? undefined : 'true'}
                     tabindex={isAccessibleSet ? undefined : -1}
-                    class="boxer-mobile-slide group relative aspect-[3/4] shrink-0 snap-center overflow-hidden rounded-[1.1rem] border border-theme-gold/35 bg-theme-midnight outline-none"
+                    class="boxer-mobile-slide group relative aspect-[3/4] shrink-0 snap-center border border-theme-gold/35 bg-theme-midnight outline-none"
                     style={`animation-delay: ${650 + index * 20}ms`}
                   >
-                    <picture>
-                      <source type="image/avif" srcset={selectImages.avif} />
-                      <source type="image/webp" srcset={selectImages.webp} />
-                      <img
-                        src={selectImages.webp}
-                        alt=""
-                        role="presentation"
-                        loading="lazy"
-                        decoding="async"
-                        width="180"
-                        height="240"
-                        data-mirrored={MIRRORED_BOXER_IDS.has(boxer.id) ? 'true' : 'false'}
-                        class="boxer-mobile-slide-img absolute inset-0 h-full w-full object-cover object-top transition duration-500 group-active:scale-[1.03]"
-                      />
-                    </picture>
-                    <span
-                      aria-hidden="true"
-                      class="boxer-mobile-slide-name-bar pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-center px-2 pb-2.5 pt-10"
-                    >
-                      <span class="boxer-mobile-slide-name font-cinzel text-[0.66rem] font-bold uppercase leading-[1.05] tracking-[0.16em] text-theme-cream text-balance">
-                        {boxer.name}
+                    <span class="boxer-mobile-slide-media absolute inset-0 overflow-hidden">
+                      <picture>
+                        <source type="image/avif" srcset={selectImages.avif} />
+                        <source type="image/webp" srcset={selectImages.webp} />
+                        <img
+                          src={selectImages.webp}
+                          alt=""
+                          role="presentation"
+                          loading="lazy"
+                          decoding="async"
+                          width="180"
+                          height="240"
+                          data-mirrored={MIRRORED_BOXER_IDS.has(boxer.id) ? 'true' : 'false'}
+                          class="boxer-mobile-slide-img absolute inset-0 h-full w-full object-cover object-top transition duration-500 group-active:scale-[1.03]"
+                        />
+                      </picture>
+                      <span
+                        aria-hidden="true"
+                        class="boxer-mobile-slide-name-bar pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-center px-2 pb-2.5 pt-10"
+                      >
+                        <span class="boxer-mobile-slide-name font-cinzel text-[0.66rem] font-bold uppercase leading-[1.05] tracking-[0.16em] text-theme-cream text-balance">
+                          {boxer.name}
+                        </span>
                       </span>
+                    </span>
+                    <span aria-hidden="true" class="boxer-mobile-frame">
+                      <span class="bmf-corner bmf-tl" />
+                      <span class="bmf-corner bmf-tr" />
+                      <span class="bmf-corner bmf-bl" />
+                      <span class="bmf-corner bmf-br" />
                     </span>
                   </a>
                 )
@@ -456,6 +457,17 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   @media (max-width: 767px) {
     [data-default-panel]{
       justify-content: center;
+    }
+
+    /* En móvil la primera vista mete logo + fecha + CTA + carrusel en una
+       sola pantalla (svh). Reducimos un punto el logo y damos respiro al
+       carrusel para que entre todo sin amontonarse ni cortarse abajo. */
+    .boxer-default-logo {
+      width: 50vw;
+    }
+
+    .boxer-selector-foot {
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
     }
 
     [data-boxer-selector][data-state='boxer'] [data-default-panel] {
@@ -748,7 +760,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    padding-block: 0.25rem 0.6rem;
+    /* Más aire vertical para que la tarjeta central, al agrandarse, no se
+       recorte arriba/abajo (overflow-x:auto fuerza overflow-y a recortar). */
+    padding-block: 1rem 1.1rem;
   }
 
   .boxer-mobile-slider::-webkit-scrollbar {
@@ -767,7 +781,91 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
       0 12px 28px rgba(0, 0, 0, 0.35);
     opacity: 0;
+    /* La animación de entrada usa `translate`/`opacity` (no `transform`) para
+       dejar libre `transform` al efecto de foco del carrusel. */
     animation: boxer-mobile-slide-in 520ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    /* Foco "character select": el JS escribe --focus-* según la distancia al
+       centro. Defaults a 1 para que sin JS (o SSR) se vean normales. */
+    transform: scale(var(--focus-scale, 1));
+    transform-origin: center center;
+    filter: brightness(var(--focus-bright, 1)) saturate(var(--focus-sat, 1));
+    will-change: transform, filter;
+  }
+
+  /* Marco de esquinas estilo "character select" (igual que el cursor de la
+     versión escritorio). Aparece FUERA de la card y su opacidad la controla el
+     JS de forma continua (--focus-frame) según la cercanía al centro, con una
+     transición que amortigua el snap: se funde de a poco, sin cortes. */
+  .boxer-mobile-frame {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    opacity: var(--focus-frame, 0);
+    transition: opacity 320ms cubic-bezier(0.33, 1, 0.68, 1);
+    box-shadow:
+      inset 0 0 0 1.5px color-mix(in srgb, var(--color-theme-gold) 62%, transparent),
+      0 0 26px color-mix(in srgb, var(--color-theme-gold) 32%, transparent),
+      0 18px 38px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Durante el reajuste de set (normalize) refrescamos el foco sin transición
+     para que el nuevo slide central herede el marco al instante, sin parpadeo. */
+  .boxer-mobile-slider.is-normalizing .boxer-mobile-frame {
+    transition: none;
+  }
+
+  .bmf-corner {
+    position: absolute;
+    width: 26%;
+    height: 22%;
+    border: 2px solid var(--color-theme-gold);
+    filter: drop-shadow(0 0 4px color-mix(in srgb, var(--color-theme-gold) 70%, transparent));
+    animation: boxer-mobile-frame-breathe 1.9s ease-in-out infinite;
+  }
+
+  .bmf-tl {
+    top: -6px;
+    left: -6px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .bmf-tr {
+    top: -6px;
+    right: -6px;
+    border-left: 0;
+    border-bottom: 0;
+  }
+  .bmf-bl {
+    bottom: -6px;
+    left: -6px;
+    border-right: 0;
+    border-top: 0;
+  }
+  .bmf-br {
+    bottom: -6px;
+    right: -6px;
+    border-left: 0;
+    border-top: 0;
+  }
+
+  @keyframes boxer-mobile-frame-breathe {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 4px color-mix(in srgb, var(--color-theme-gold) 55%, transparent));
+    }
+    50% {
+      filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-theme-gold) 80%, transparent));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boxer-mobile-slide {
+      transform: none;
+    }
+    .bmf-corner {
+      animation: none;
+    }
   }
 
   .boxer-mobile-slide::before {
@@ -826,11 +924,11 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   @keyframes boxer-mobile-slide-in {
     from {
       opacity: 0;
-      transform: translateY(10px) scale(0.98);
+      translate: 0 10px;
     }
     to {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      translate: 0 0;
     }
   }
 
@@ -1425,29 +1523,80 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       }
     }
 
-    requestAnimationFrame(moveToMiddleSet)
+    // Efecto "character select": la tarjeta más centrada en el viewport del
+    // carrusel se agranda y brilla, y las laterales se encogen/atenúan según su
+    // distancia al centro. Además, el marco de esquinas se funde de forma
+    // continua (--focus-frame) para que no aparezca de golpe. Se recalcula en
+    // cada frame de scroll (rAF) usando offsets (no getBoundingClientRect) para
+    // no forzar reflows por slide.
+    let focusRaf = 0
+    const updateFocus = () => {
+      focusRaf = 0
+      const half = slider.clientWidth / 2 || 1
+      const viewportCenter = slider.scrollLeft + half
+      for (const slide of slides) {
+        const slideCenter = slide.offsetLeft + slide.offsetWidth / 2
+        const ratio = Math.min(Math.abs(slideCenter - viewportCenter) / half, 1)
+        slide.style.setProperty('--focus-scale', (1.12 - ratio * 0.24).toFixed(3))
+        slide.style.setProperty('--focus-bright', (1.05 - ratio * 0.4).toFixed(3))
+        slide.style.setProperty('--focus-sat', (1.05 - ratio * 0.25).toFixed(3))
+        // Rango ancho (0.55) + smoothstep para que el marco entre/salga suave.
+        const t = Math.max(0, 1 - ratio / 0.55)
+        slide.style.setProperty('--focus-frame', (t * t * (3 - 2 * t)).toFixed(3))
+      }
+    }
+    const requestFocus = () => {
+      if (!focusRaf) focusRaf = requestAnimationFrame(updateFocus)
+    }
+
+    // Tras normalize() el scrollLeft salta un set completo, así que el slide
+    // centrado pasa a ser OTRO elemento (idéntico). Refrescamos las vars de
+    // foco al instante y sin transición, para que el nuevo slide central herede
+    // el realce sin parpadeo (el salto es invisible porque los sets son iguales).
+    const refreshFocusInstant = () => {
+      slider.classList.add('is-normalizing')
+      updateFocus()
+      requestAnimationFrame(() => slider.classList.remove('is-normalizing'))
+    }
+
+    slider.addEventListener('scroll', requestFocus, { passive: true })
+
+    requestAnimationFrame(() => {
+      moveToMiddleSet()
+      updateFocus()
+    })
 
     // `scrollend` está disponible en Safari iOS 18.2+, Chrome 114+ y
     // Firefox 109+. Cuando exista, normalizamos solo cuando todo el scroll
     // (incluido el snap) ha terminado, evitando cualquier corte visual.
     // Como fallback, debounce manual: ejecutamos `normalize` ~160ms después
     // del último evento de scroll, tiempo de sobra para que termine el snap.
+    const normalizeAndRefresh = () => {
+      normalize()
+      refreshFocusInstant()
+    }
+
     const supportsScrollEnd = 'onscrollend' in window
     if (supportsScrollEnd) {
-      slider.addEventListener('scrollend', normalize, { passive: true })
+      slider.addEventListener('scrollend', normalizeAndRefresh, { passive: true })
     } else {
       let scrollEndTimer: ReturnType<typeof setTimeout> | null = null
       slider.addEventListener(
         'scroll',
         () => {
           if (scrollEndTimer) clearTimeout(scrollEndTimer)
-          scrollEndTimer = setTimeout(normalize, 160)
+          scrollEndTimer = setTimeout(normalizeAndRefresh, 160)
         },
         { passive: true },
       )
     }
 
-    window.addEventListener('resize', () => requestAnimationFrame(moveToMiddleSet))
+    window.addEventListener('resize', () =>
+      requestAnimationFrame(() => {
+        moveToMiddleSet()
+        updateFocus()
+      }),
+    )
   }
 
   function initBoxerSelector() {
