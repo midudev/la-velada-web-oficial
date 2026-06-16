@@ -24,6 +24,30 @@ const { video } = Astro.props
   )
 }
 
+<script>
+  function initCombatBgVideo() {
+    const video = document.querySelector<HTMLVideoElement>('.combat-bg-video')
+    if (!video) return
+
+    // Accesibilidad: no reproducir si el usuario pide menos movimiento.
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion) {
+      video.removeAttribute('autoplay')
+      video.pause()
+      return
+    }
+
+    // Ahorro de batería/datos: pausar mientras la pestaña no está visible.
+    const handleVisibility = () => {
+      if (document.hidden) video.pause()
+      else void video.play().catch(() => {})
+    }
+    document.addEventListener('visibilitychange', handleVisibility)
+  }
+
+  document.addEventListener('astro:page-load', initCombatBgVideo)
+</script>
+
 <style>
   .combat-bg-video-wrap {
     position: fixed;
