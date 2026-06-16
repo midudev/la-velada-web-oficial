@@ -529,7 +529,96 @@ const controllerConfig = JSON.stringify({
     })
   }
 
-  document.addEventListener('astro:page-load', setupPredictionVotes)
+  // ── Refresco en vivo de los pronósticos ───────────────────────────────
+  // Polling de cliente: funciona igual en SSG y SSR, y queda aislado en
+  // refreshPredictions para poder cambiar a SSE más adelante.
+  const LIVE_REFRESH_INTERVAL_MS = 15_000
+
+  let liveRefreshTimer: number | null = null
+  let liveRefreshAbort: AbortController | null = null
+  let liveObserver: IntersectionObserver | null = null
+  let liveSectionVisible = true
+
+  function liveRefreshActive() {
+    return document.visibilityState === 'visible' && liveSectionVisible
+  }
+
+  async function refreshPredictions() {
+    if (!liveRefreshActive()) return
+
+    liveRefreshAbort?.abort()
+    const abort = new AbortController()
+    liveRefreshAbort = abort
+
+    try {
+      const response = await fetch('/api/predictions', { signal: abort.signal })
+      if (!response.ok) return
+
+      const data = (await response.json()) as {
+        predictions?: Array<NonNullable<PredictionApiResponse['prediction']>>
+      }
+      if (abort.signal.aborted || !data.predictions) return
+
+      data.predictions.forEach((prediction) => {
+        // No pisamos un combate cuyo voto del usuario sigue en vuelo: su valor
+        // optimista es más reciente que lo que devuelve este refresco.
+        if (latestVoteRequestByBattle.has(prediction.combat_id)) return
+        applyPredictionData(prediction)
+      })
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return
+      console.error('No se pudo refrescar los pronósticos en vivo:', error)
+    }
+  }
+
+  function handleVisibilityChange() {
+    if (document.visibilityState === 'visible') void refreshPredictions()
+  }
+
+  function teardownLiveRefresh() {
+    if (liveRefreshTimer !== null) {
+      window.clearInterval(liveRefreshTimer)
+      liveRefreshTimer = null
+    }
+    liveRefreshAbort?.abort()
+    liveRefreshAbort = null
+    liveObserver?.disconnect()
+    liveObserver = null
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }
+
+  function setupLivePredictions() {
+    // Astro re-dispara page-load en cada navegación sin recargar: limpiamos los
+    // timers/observers de la anterior antes de crear los nuevos.
+    teardownLiveRefresh()
+
+    const list = $<HTMLElement>('[data-prediction-list]')
+    if (!list) return
+
+    liveSectionVisible = true
+    liveRefreshTimer = window.setInterval(
+      () => void refreshPredictions(),
+      LIVE_REFRESH_INTERVAL_MS,
+    )
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    liveObserver = new IntersectionObserver(
+      (entries) => {
+        liveSectionVisible = entries.some((entry) => entry.isIntersecting)
+        if (liveSectionVisible) void refreshPredictions()
+      },
+      { rootMargin: '120px' },
+    )
+    liveObserver.observe(list)
+
+    // En SSG el HTML inicial no trae votos frescos: pedimos uno al montar.
+    void refreshPredictions()
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    setupPredictionVotes()
+    setupLivePredictions()
+  })
 </script>
 
 <style>
