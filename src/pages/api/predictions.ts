@@ -24,7 +24,7 @@ async function getUserId(request: Request) {
     headers: request.headers,
   })
 
-  return session?.user.id ?? null
+  return session?.user?.id ?? null
 }
 
 export const GET: APIRoute = async ({ request, url }) => {
