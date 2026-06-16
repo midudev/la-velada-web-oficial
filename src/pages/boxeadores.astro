@@ -119,6 +119,9 @@ const cardImageEagerAmount = 4
     set:html={JSON.stringify(itemListJsonLd)}
     slot="head"
   />
+  <script is:inline>
+    document.documentElement.classList.add('js')
+  </script>
 
   <section
     class="boxers-page relative isolate w-full overflow-x-clip bg-theme-midnight px-3 pt-24 pb-20 text-theme-cream sm:px-6 sm:pt-32 sm:pb-24 md:pt-36"
@@ -129,14 +132,14 @@ const cardImageEagerAmount = 4
     <div class="boxers-layout mx-auto w-full max-w-7xl">
       <header class="boxers-page-header">
         <h1
-          class="boxers-page-title mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
+          class="boxers-page-title mb-3 font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream not-motion-reduce:animate-fade-in-up sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
         >
           <SectionDivider class="boxers-page-header-ornament mb-8 w-full sm:mb-12" />
 
           BOXEADORES
         </h1>
         <p
-          class="boxers-page-lead mb-8 animate-fade-in-up font-cinzel text-xs font-medium tracking-[0.16em] text-balance text-white/55 animate-delay-200 sm:mb-12 sm:text-sm sm:tracking-[0.25em]"
+          class="boxers-page-lead mb-8 font-cinzel text-xs font-medium tracking-[0.16em] text-balance text-white/55 animate-delay-200 not-motion-reduce:animate-fade-in-up sm:mb-12 sm:text-sm sm:tracking-[0.25em]"
         >
           Los {totalBoxers} contendientes de La Velada del Año VI
         </p>
@@ -144,7 +147,7 @@ const cardImageEagerAmount = 4
 
       <form
         data-boxers-filters
-        class="boxer-filters-panel relative w-full animate-fade-in-up animate-delay-300"
+        class="boxer-filters-panel relative w-full not-motion-reduce:animate-fade-in-up not-motion-reduce:animate-delay-300"
         aria-label="Filtros de boxeadores"
         onsubmit="return false"
       >
@@ -265,7 +268,7 @@ const cardImageEagerAmount = 4
       <div class="boxers-results w-full">
         <div
           data-boxers-sort
-          class="boxer-sort-bar relative animate-fade-in-up animate-delay-300"
+          class="boxer-sort-bar relative not-motion-reduce:animate-fade-in-up not-motion-reduce:animate-delay-300"
           role="region"
           aria-label="Ordenar boxeadores"
         >
@@ -319,7 +322,7 @@ const cardImageEagerAmount = 4
           {
             boxerCards.map((b, index) => (
               <li
-                class="boxer-card-wrap opacity-0"
+                class="boxer-card-wrap"
                 data-boxer-card
                 data-country={b.country}
                 data-gender={b.gender}
@@ -1352,6 +1355,10 @@ const cardImageEagerAmount = 4
     color: var(--color-theme-cream);
   }
 
+  :global(.js) .boxer-card-wrap {
+    opacity: 0;
+  }
+
   .boxer-card-wrap {
     animation-delay: var(--animation-delay);
   }
@@ -1410,6 +1417,11 @@ const cardImageEagerAmount = 4
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .boxer-card-wrap,
+    .boxers-grid[data-state='default'] > .boxer-card-wrap:nth-child(even)::after {
+      animation: none;
+    }
+
     .boxer-filter-pill,
     .boxer-filter-pill-count,
     .boxer-filter-reset,
@@ -1438,6 +1450,9 @@ const cardImageEagerAmount = 4
     const filterButtons = Array.from($$<HTMLButtonElement>('[data-filter]', form))
     const resetButtons = Array.from($$<HTMLButtonElement>('[data-boxers-reset]'))
     const sortButtons = sortBar ? Array.from($$<HTMLButtonElement>('[data-sort]', sortBar)) : []
+
+    const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+
     // Lee el estado inicial desde la URL
     function getStateFromURL(buttons: HTMLButtonElement[]) {
       const validCountries = new Set(
@@ -1515,6 +1530,8 @@ const cardImageEagerAmount = 4
 
     function retriggerAnimations() {
       let visibleIndex = 0
+
+      if (reduceMotionQuery.matches) return
 
       for (const card of Array.from(gridEl.children) as HTMLElement[]) {
         if (card.dataset.hidden === 'true') continue
