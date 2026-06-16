@@ -1362,6 +1362,10 @@ const totalBoxers = BOXERS.length
     }
   }
 
+  .boxers-grid[data-state='default'] > .boxer-card-wrap:nth-child(even) {
+    position: relative;
+  }
+
   .boxers-grid[data-state='default'] > .boxer-card-wrap:nth-child(even)::after {
     --inline-size: 2.3em;
     --block-size: 2.05em;
@@ -1479,6 +1483,24 @@ const totalBoxers = BOXERS.length
       gridEl.dataset.state = state
     }
 
+    const HEADER_HEIGHT = 70
+    const SCROLL_OFFSET = 110
+
+    function keepContentInView(anchor: HTMLElement | null) {
+      if (!anchor) return
+
+      const { top: anchorTop } = anchor.getBoundingClientRect()
+
+      if (anchorTop > HEADER_HEIGHT) return
+
+      const scrollTop = anchor.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET
+
+      window.scrollTo({
+        top: scrollTop,
+        behavior: 'instant',
+      })
+    }
+
     // Reordena el DOM (no sólo CSS `order`) para que el orden de
     // tabulación coincida con el visual. Con 20 cards el coste es
     // despreciable y mantenemos la accesibilidad correcta.
@@ -1536,6 +1558,8 @@ const totalBoxers = BOXERS.length
       const gridState = !hasActiveFilter && isDefaultSortMode ? 'default' : 'modified'
 
       setGridState(gridState)
+      // Mantiene el contenido dentro del viewport al aplicar filtros. Esto evita que los cambios en la altura del contenedor de las cards, ya sea por crecimiento o reducción de su contenido, provoquen desplazamientos inesperados que puedan enviar al usuario a la siguiente sección o dejar contenido parcialmente cortado.
+      keepContentInView(sortBar)
 
       let visible = 0
       for (const card of cards) {
