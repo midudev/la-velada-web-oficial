@@ -5,6 +5,7 @@ import CombatPredictionsSection from '@/components/combat/CombatPredictionsSecti
 import CombatStatsSection from '@/components/combat/CombatStatsSection.astro'
 import PredictionVoteController from '@/components/PredictionVoteController.astro'
 import { battles, battlesById } from '@/consts/battles'
+import { EVENT_DATE_TIME } from '@/consts/event'
 import {
   BOXERS_BY_ID,
   COUNTRY_NAMES,
@@ -106,7 +107,7 @@ const sportsEventJsonLd = {
   description,
   url: canonical,
   sport: 'Boxing',
-  startDate: '2026-07-25T20:00:00+02:00',
+  startDate: EVENT_DATE_TIME,
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
   superEvent: { '@type': 'SportsEvent', name: 'La Velada del Año VI', url: `${SITE_URL}/` },
