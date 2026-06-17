@@ -17,9 +17,20 @@ interface Props {
     badge?: string
     a: CardBoxer
     b: CardBoxer
+    imageLoadingStrategy?: {
+        loading?: astroHTML.JSX.ImgHTMLAttributes["loading"]
+        decoding?: astroHTML.JSX.ImgHTMLAttributes["decoding"]
+        fetchpriority?: astroHTML.JSX.ImgHTMLAttributes["fetchpriority"]
+    }
 }
 
-const { number, url, featured = false, badge, a, b } = Astro.props
+const { number, url, featured = false, badge, a, b, imageLoadingStrategy } = Astro.props
+
+const { loading, decoding, fetchpriority } = imageLoadingStrategy || {
+  loading: 'lazy',
+  decoding: 'async',
+  fetchpriority: 'auto',
+}
 
 // TEMPORAL: la landing individual de cada combate (/combate/[id]) todavía
 // no está hecha, así que el enlace del combate apunta al 404 a propósito.
@@ -65,8 +76,9 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
             <img
                 src={boxer.heroImages.webp}
                 alt={`Recorte fotográfico de ${boxer.name}`}
-                loading="lazy"
-                decoding="async"
+                loading={loading}
+                decoding={decoding}
+                fetchpriority={fetchpriority}
                 class="boxer-img"
             />
             </picture>
