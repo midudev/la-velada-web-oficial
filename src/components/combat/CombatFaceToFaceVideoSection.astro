@@ -1,5 +1,6 @@
 ---
 import SectionDivider from '@/components/SectionDivider.astro'
+import ThumbnailPlaceholder from '@/components/ThumbnailPlaceholder.astro'
 import PlayIcon from '@/assets/svg/play.svg'
 
 interface Props {
@@ -57,6 +58,7 @@ const embedUrl = videoId
             data-face-video-title={title}
             aria-label={`Reproducir cara a cara: ${title}`}
           >
+            <ThumbnailPlaceholder />
             <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
               {posterWebp && <source srcset={posterWebp} type="image/webp" />}
               {posterJpg && (
@@ -67,6 +69,7 @@ const embedUrl = videoId
                   loading="lazy"
                   decoding="async"
                   class="h-full w-full object-cover"
+                  onerror={`this.onerror=null;this.src='https://i.ytimg.com/vi/${videoId}/hqdefault.jpg'`}
                 />
               )}
             </picture>
