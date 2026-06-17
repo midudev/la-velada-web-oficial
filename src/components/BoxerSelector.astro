@@ -777,6 +777,12 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   .boxer-mobile-slide {
+    /* Aísla el stacking context de cada slide: sin esto, el z-index del
+       nombre (2) y de la imagen (1) se resuelven en el shell (que es
+       stacking context por su transform). Durante el scroll la imagen se
+       promociona a capa GPU (transition + filter) y se pinta sobre el
+       nombre hasta que la capa se degrada. `isolation` lo confina. */
+    isolation: isolate;
     width: var(--mobile-slide-width);
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
@@ -907,6 +913,11 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 
   .boxer-mobile-slide-name-bar {
     z-index: 2;
+    /* ponytail: translateZ(0) fuerza al nombre a su propia capa GPU. Sin esto,
+       iOS recompone la imagen (capa por filter+transition) sobre el nombre al
+       cambiar el --focus-scale del slide durante el scroll, y el nombre
+       parpadea detrás de la foto. Con su capa propia, el z-index se respeta. */
+    transform: translateZ(0);
     background: linear-gradient(
       to top,
       rgba(0, 0, 0, 0.94) 0%,
@@ -939,6 +950,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   }
 
   .boxer-cell {
+    /* Mismo motivo que .boxer-mobile-slide: aislar para que la imagen
+       promocionada en hover/activo nunca pinte sobre su propio nombre. */
+    isolation: isolate;
     background: color-mix(in srgb, var(--color-theme-midnight) 92%, var(--color-theme-navy));
     /* Cada celda lleva su propio borde dorado para que, al estar opacity:0
        durante el cascade inicial, no quede ningún "bloque" visible debajo.
