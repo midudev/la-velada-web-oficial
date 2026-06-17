@@ -146,8 +146,6 @@ const breadcrumbJsonLd = {
     { '@type': 'ListItem', position: 2, name: battle.title, item: canonical },
   ],
 }
-
-export const prerender = false
 ---
 
 <Layout title={title} description={description} canonical={canonical} showHeader={true}>
@@ -207,12 +205,6 @@ export const prerender = false
     <CombatFaceToFaceVideoSection
       title={`${battle.title} | Cara a cara`}
       videoUrl={battle.faceToFaceVideoUrl}
-    />
-    <CombatPredictionsSection
-      prediction={battlePrediction}
-      selectedBoxerId={userVotesByCombat[battle.id]}
-      user={user}
-      callbackURL={battle.url}
     />
   </div>
 
