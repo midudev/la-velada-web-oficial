@@ -51,6 +51,8 @@ const breadcrumbJsonLd = {
     { '@type': 'ListItem', position: 2, name: 'Combates', item: canonical },
   ],
 }
+
+const cardImageEagerAmount = 4
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
@@ -97,6 +99,11 @@ const breadcrumbJsonLd = {
                     badge={i === 0 ? 'Main Event' : 'Co-estelar'}
                     a={c.a}
                     b={c.b}
+                    imageLoadingStrategy={{
+                        loading: i < cardImageEagerAmount ? 'eager' : 'lazy',
+                        decoding: i < cardImageEagerAmount ? 'auto' : 'async',
+                        fetchpriority: i < cardImageEagerAmount ? 'high' : 'auto',
+                    }}
                   />
                 </div>
               ))}
