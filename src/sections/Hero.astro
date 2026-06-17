@@ -1,4 +1,5 @@
 ---
+import AddToCalendarButton from '@/components/AddToCalendarButton.astro'
 import BoxerSelector from '@/components/BoxerSelector.astro'
 
 const EVENT_DATE = new Date('2026-07-25T20:00:00+02:00')
@@ -74,53 +75,7 @@ const timestamp = EVENT_DATE.getTime()
         </div>
       </div>
 
-      <div class="animate-fade-in-up animate-delay-[1500ms] mt-8 flex justify-center">
-        <details class="group relative" id="cal-dropdown">
-          <summary class="flex cursor-pointer list-none items-center gap-2 rounded border border-theme-gold/35 px-4 py-2.5 font-cinzel text-[0.65rem] font-bold tracking-[0.28em] text-theme-gold transition-colors duration-200 hover:border-theme-gold hover:bg-theme-gold/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-gold/60">
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-            </svg>
-            AÑADIR AL CALENDARIO
-            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="transition-transform duration-200 group-open:-rotate-180">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </summary>
-
-          <ul id="cal-menu" class="fixed z-50 w-52 overflow-hidden rounded border border-theme-gold/20 bg-theme-navy shadow-lg" role="list">
-            <li>
-              <a
-                href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=La+Velada+del+A%C3%B1o+VI&dates=20260725T180000Z%2F20260725T230000Z&details=Evento+de+boxeo+amateur+organizado+por+Ibai+Llanos.+Retransmisi%C3%B3n+gratuita+en+Twitch%3A+https%3A%2F%2Fwww.twitch.tv%2Fibai&location=Estadio+de+La+Cartuja%2C+Sevilla%2C+Espa%C3%B1a"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center gap-2 px-4 py-3 font-cinzel text-[0.6rem] tracking-[0.2em] text-theme-cream transition-colors duration-150 hover:bg-theme-gold/10 hover:text-theme-gold"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                GOOGLE CALENDAR
-              </a>
-            </li>
-            <li class="border-t border-theme-gold/10">
-              <a
-                href="https://outlook.live.com/calendar/0/deeplink/compose?subject=La+Velada+del+A%C3%B1o+VI&startdt=2026-07-25T18%3A00%3A00Z&enddt=2026-07-25T23%3A00%3A00Z&body=Evento+de+boxeo+amateur+organizado+por+Ibai+Llanos&location=Estadio+de+La+Cartuja%2C+Sevilla%2C+Espa%C3%B1a"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center gap-2 px-4 py-3 font-cinzel text-[0.6rem] tracking-[0.2em] text-theme-cream transition-colors duration-150 hover:bg-theme-gold/10 hover:text-theme-gold"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path d="M22 8v8c0 .6-.4 1-1 1h-7v4L2 19.2V4.8L14 3v4h7c.6 0 1 .4 1 1m-1 .1l-4 2.3l-3-1.7v1.6l3 1.7l4-2.3V8.1m-13.08.01c-2.1-.07-3.13 1.78-3.13 3.98s1.07 3.97 3.13 3.99c1.87.01 3.08-1.69 3.08-3.89c0-2.19-.87-4-3.08-4.08M7.61 9.7c.84 0 1.59.74 1.59 2.25c0 1.52-.75 2.36-1.59 2.36c-.83 0-1.51-1.11-1.51-2.36c0-1.24.68-2.25 1.51-2.25z" fill="currentColor"/></svg>
-                OUTLOOK
-              </a>
-            </li>
-            <li class="border-t border-theme-gold/10">
-              <button
-                id="ics-download"
-                class="flex w-full items-center gap-2 px-4 py-3 font-cinzel text-[0.6rem] tracking-[0.2em] text-theme-cream transition-colors duration-150 hover:bg-theme-gold/10 hover:text-theme-gold cursor-pointer"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                .ics
-              </button>
-            </li>
-          </ul>
-        </details>
-      </div>
+      <AddToCalendarButton class="animate-fade-in-up animate-delay-1500 mt-8" />
     </div>
   </section>
 
@@ -210,77 +165,10 @@ const timestamp = EVENT_DATE.getTime()
         window.addEventListener('resize', onScroll, { passive: true })
       }
 
-      // Botón descarga .ics
-      const icsBtn = document.getElementById('ics-download')
-      icsBtn?.addEventListener('click', () => {
-        const ics = [
-          'BEGIN:VCALENDAR',
-          'VERSION:2.0',
-          'PRODID:-//La Velada del Año VI//ES',
-          'BEGIN:VEVENT',
-          'DTSTART:20260725T180000Z',
-          'DTEND:20260725T230000Z',
-          'SUMMARY:La Velada del Año VI',
-          'DESCRIPTION:Evento de boxeo amateur organizado por Ibai Llanos.\\nRetransmisión gratuita en https://www.twitch.tv/ibai',
-          'LOCATION:Estadio de La Cartuja\\, Sevilla\\, España',
-          'URL:https://www.infolavelada.com/',
-          'END:VEVENT',
-          'END:VCALENDAR',
-        ].join('\r\n')
-        const a = document.createElement('a')
-        a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }))
-        a.download = 'la-velada-vi.ics'
-        a.click()
-        URL.revokeObjectURL(a.href)
-        document.getElementById('cal-dropdown')?.removeAttribute('open')
-      })
-
-      // Portal: mover el menú al <body> al abrir para escapar overflow:hidden
-      const calDropdown = document.getElementById('cal-dropdown')
-      const calMenu = document.getElementById('cal-menu') as HTMLElement | null
-
-      const positionCalMenu = () => {
-        if (!calDropdown || !calMenu) return
-        const summary = calDropdown.querySelector('summary')
-        if (!summary) return
-        const rect = summary.getBoundingClientRect()
-        calMenu.style.top = `${rect.bottom + 8}px`
-        calMenu.style.left = `${rect.left + rect.width / 2}px`
-        calMenu.style.transform = 'translateX(-50%)'
-      }
-
-      calDropdown?.addEventListener('toggle', () => {
-        if (!calMenu) return
-        if (calDropdown.open) {
-          document.body.appendChild(calMenu)
-          positionCalMenu()
-        } else {
-          calDropdown.appendChild(calMenu)
-        }
-      })
-
-      window.addEventListener('scroll', positionCalMenu, { passive: true })
-      window.addEventListener('resize', positionCalMenu, { passive: true })
-
-      const closeDropdown = (e: MouseEvent) => {
-        const target = e.target as Node
-        if (calDropdown && !calDropdown.contains(target) && !calMenu?.contains(target)) {
-          calDropdown.removeAttribute('open')
-        }
-      }
-      document.addEventListener('click', closeDropdown)
-
       document.addEventListener('astro:before-preparation', () => {
         clearInterval(intervalId)
         window.removeEventListener('scroll', onScroll)
         window.removeEventListener('resize', onScroll)
-        window.removeEventListener('scroll', positionCalMenu)
-        window.removeEventListener('resize', positionCalMenu)
-        document.removeEventListener('click', closeDropdown)
-        // Devolver el menú al details si estaba en body
-        if (calMenu && calMenu.parentElement === document.body) {
-          calDropdown?.appendChild(calMenu)
-        }
       }, { once: true })
     })
   </script>
