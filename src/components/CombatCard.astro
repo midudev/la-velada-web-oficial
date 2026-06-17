@@ -17,9 +17,31 @@ interface Props {
   badge?: string
   a: CardBoxer
   b: CardBoxer
+  imageLoadingStrategy?: {
+    loading?: astroHTML.JSX.ImgHTMLAttributes['loading']
+    decoding?: astroHTML.JSX.ImgHTMLAttributes['decoding']
+    fetchpriority?: astroHTML.JSX.ImgHTMLAttributes['fetchpriority']
+  }
 }
 
-const { number, url, featured = false, badge, a, b } = Astro.props
+const { number, url, featured = false, badge, a, b, imageLoadingStrategy } = Astro.props
+
+const { loading = 'lazy', decoding = 'async', fetchpriority = 'auto' } = imageLoadingStrategy || {}
+
+// TEMPORAL: la landing individual de cada combate (/combate/[id]) todavía
+// no está hecha, así que el enlace del combate apunta al 404 a propósito.
+// Cuando esas vistas estén listas, cambiá `combatHref` por `url`.
+const combatHref = '/404'
+void url // (se conserva en props para reactivar el enlace real más adelante)
+
+// Mientras el combate apunta al 404 temporal no debe ser un enlace real:
+// un `<a aria-disabled>` sigue siendo enfocable por teclado y navegable con
+// Enter, llevando al usuario a un 404 a propósito. Cuando está «próximamente»
+// renderizamos un elemento no interactivo (no enfocable, sin href) y exponemos
+// el estado mediante role="img" + aria-label para lectores de pantalla.
+const isComingSoon = combatHref === '/404'
+const CombatTag = isComingSoon ? 'span' : 'a'
+const combatAriaLabel = `Combate: ${a.name} contra ${b.name}${isComingSoon ? ' (próximamente)' : ''}`
 
 const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
   { ...a, side: 'a' },
@@ -50,8 +72,9 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
             <img
               src={boxer.heroImages.webp}
               alt={`Recorte fotográfico de ${boxer.name}`}
-              loading="lazy"
-              decoding="async"
+              loading={loading}
+              decoding={decoding}
+              fetchpriority={fetchpriority}
               class="boxer-img"
             />
           </picture>
