@@ -1,13 +1,16 @@
 export type BoxerGender = 'f' | 'm'
 
+/** Fecha en formato ISO `YYYY-MM-DD`. Evita valores malformados como `'2004'`. */
+export type ISODate = `${number}-${number}-${number}`
+
 export interface Boxer {
   id: string
   name: string
   realName: string
   gender: BoxerGender
-  birthDate: string | null
+  birthDate: ISODate | null
   age: number | null
-  followersUpdatedAt: string
+  followersUpdatedAt: ISODate
   socials: { platform: string; username: string; followers?: number; monthlyListeners?: number }[]
   country: string
   previousVeladaWins: number[]
@@ -86,7 +89,7 @@ export const BOXERS: Boxer[] = [
       realName: 'Clara Merino',
       country: 'es',
       previousVeladaWins: [],
-      birthDate: null,
+      birthDate: '2001-09-15',
       gender: 'f',
       age: null,
       weightKg: 61,
@@ -107,7 +110,7 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       gender: 'm',
       birthDate: '1988-01-14',
-      age: 30,
+      age: 38,
       heightCm: 175,
       weightKg: 70,
       fightWeightKg: 70,
@@ -306,7 +309,7 @@ export const BOXERS: Boxer[] = [
       gender: 'f',
       country: 'mx',
       previousVeladaWins: [],
-      birthDate: null,
+      birthDate: '2001-04-01',
       age: null,
       weightKg: 54,
       fightWeightKg: 57.5,
@@ -326,7 +329,7 @@ export const BOXERS: Boxer[] = [
       gender: 'm',
       country: 'es',
       previousVeladaWins: [2024],
-      birthDate: null,
+      birthDate: '2002-09-20',
       age: 24,
       weightKg: 81.9,
       heightCm: 197,
@@ -388,7 +391,7 @@ export const BOXERS: Boxer[] = [
       gender: 'f',
       country: 'es',
       previousVeladaWins: [],
-      birthDate: '2004',
+      birthDate: '2004-08-28',
       age: 21,
       weightKg: 57,
       heightCm: 165,

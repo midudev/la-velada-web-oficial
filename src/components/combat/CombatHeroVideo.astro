@@ -1,0 +1,54 @@
+---
+import type { BattleVideoSources } from '@/consts/battle-videos'
+
+interface Props {
+  video: BattleVideoSources | null
+}
+
+const { video } = Astro.props
+---
+
+{
+  video && (
+    <div aria-hidden="true" class="combat-hero-video-wrap">
+      <video autoplay loop muted playsinline preload="metadata" class="combat-hero-video">
+        <source src={video.desktop.webm} type="video/webm" media="(min-width: 768px)" />
+        <source src={video.desktop.mp4} type="video/mp4" media="(min-width: 768px)" />
+        <source src={video.mobile.webm} type="video/webm" />
+        <source src={video.mobile.mp4} type="video/mp4" />
+      </video>
+    </div>
+  )
+}
+
+<style>
+  .combat-hero-video-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background: var(--color-theme-midnight);
+  }
+
+  .combat-hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.82) contrast(1.04) saturate(1.08);
+    transform: scale(1.2);
+  }
+
+  @media (max-width: 767px) {
+    .combat-hero-video {
+      object-position: center top;
+      transform: scale(1.01);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .combat-hero-video {
+      transform: none;
+    }
+  }
+</style>

@@ -4,58 +4,50 @@ interface Props {
 }
 
 const { variant } = Astro.props
+const currentPathname = Astro.url.pathname
 
 const NAV_ITEMS = [
-  { label: 'BOXEADORES', href: '/boxeadores', disabled: false },
-  { label: 'COMBATES', href: '/combates', disabled: false },
-  { label: 'PRONÓSTICOS', href: '/pronosticos', disabled: true, note: 'PRÓXIMAMENTE' },
+  { label: 'Boxeadores', href: '/boxeadores', disabled: false },
+  { label: 'Combates', href: '/combates', disabled: false },
+  { label: 'Pronósticos', href: '/pronosticos', disabled: true, note: 'Próximamente' },
 ] as const
 
-const shouldReloadNavItem = (href: string) => Astro.url.pathname === '/' && href === '/boxeadores'
-
-const desktopColClass = 'flex flex-col items-center justify-center gap-1 px-3 sm:px-4'
-const desktopLabelClass =
-  'relative inline-flex items-center font-cinzel text-[0.65rem] font-bold leading-none tracking-[0.25em] sm:text-xs'
-const desktopNoteClass =
-  'inline-flex items-center whitespace-nowrap rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-2 py-0.5 font-cinzel text-[0.5rem] font-semibold leading-none tracking-[0.22em] text-theme-gold sm:text-[0.55rem]'
-const desktopLinkClass =
-  'group/nav text-white/85 outline-none transition-colors duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:text-theme-cream [@media(hover:hover)_and_(pointer:fine)]:hover:delay-[125ms] focus-visible:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold'
-const desktopUnderlineClass =
-  'pointer-events-none absolute inset-x-0 -bottom-1.5 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-150 ease-out delay-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:scale-x-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:delay-[125ms] group-focus-visible/nav:scale-x-100'
-
-const mobileDisabledClass =
-  'flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-white/35'
-const mobileNoteClass =
-  'rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-3 py-1 text-[0.55rem] font-semibold tracking-[0.24em] text-theme-gold'
-const mobileLinkClass =
-  'flex items-center justify-center rounded-2xl border border-theme-gold/55 bg-theme-midnight/80 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 active:border-theme-gold active:bg-theme-midnight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold'
+const shouldReloadNavItem = (href: string) => currentPathname === '/' && href === '/boxeadores'
+const isCurrentNavItem = (href: string) => currentPathname === href || currentPathname.startsWith(href + '/')
 ---
 
 {
   variant === 'desktop' ? (
-    <nav class="hidden md:block" aria-label="Navegación principal">
-      <ul class="flex items-stretch gap-1 sm:gap-2">
+    <nav class='hidden md:block' aria-label='Navegación principal'>
+      <ul class='flex items-stretch gap-1 sm:gap-2'>
         {NAV_ITEMS.map((item) => (
-          <li class={desktopColClass}>
+          <li>
             {item.disabled ? (
-              <>
+              <div class='flex flex-col items-center justify-center gap-1 px-3 sm:px-4'>
                 <span
-                  role="link"
-                  aria-disabled="true"
-                  class:list={[desktopLabelClass, 'select-none text-white/40']}
-                  title="Próximamente"
+                  role='link'
+                  aria-disabled='true'
+                  class='relative inline-flex items-center font-cinzel text-[0.65rem] font-bold leading-none tracking-[0.25em] sm:text-xs select-none text-white/40'
+                  title='Próximamente'
                 >
                   {item.label}
                 </span>
-                {item.note && <span class={desktopNoteClass}>{item.note}</span>}
-              </>
+                {item.note && (
+                  <span class='inline-flex items-center whitespace-nowrap rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-2 py-0.5 font-cinzel text-[0.5rem] font-semibold leading-none tracking-[0.22em] text-theme-gold sm:text-[0.55rem]'>{item.note}</span>
+                )}
+              </div>
             ) : (
               <a
                 href={item.href}
                 data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
-                class:list={[desktopLabelClass, desktopLinkClass]}
+                aria-current={isCurrentNavItem(item.href) ? 'page' : undefined}
+                class='relative inline-flex flex-col items-center justify-center px-3 sm:px-4 h-full font-cinzel text-[0.65rem] font-bold leading-none tracking-[0.25em] sm:text-xs group/nav text-white/85 outline-none transition-colors duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:text-theme-cream [@media(hover:hover)_and_(pointer:fine)]:hover:delay-125 focus-visible:text-theme-cream'
               >
-                <span aria-hidden="true" class={desktopUnderlineClass} />
+                <div
+                  aria-hidden='true'
+                  class='pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-theme-gold to-transparent [a[aria-current=page]_&]:opacity-100 opacity-0 transition-opacity'
+                ></div>
+                <span aria-hidden='true' class='bg-linear-to-r from-transparent via-theme-gold to-transparent pointer-events-none absolute inset-x-0 bottom-0 h-px origin-center scale-x-0 transition-transform duration-150 ease-out delay-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:scale-x-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover/nav:delay-125 group-focus-visible/nav:scale-x-100' />
                 {item.label}
               </a>
             )}
@@ -64,27 +56,32 @@ const mobileLinkClass =
       </ul>
     </nav>
   ) : (
-    <nav aria-label="Menú principal móvil" class="relative w-full max-w-sm">
-      <ul class="flex flex-col items-center gap-6">
+    <nav aria-label='Menú principal móvil' class='relative w-full max-w-sm'>
+      <ul class='flex flex-col items-center gap-6'>
         {NAV_ITEMS.map((item) => (
-          <li class="w-full">
+          <li class='w-full'>
             {item.disabled ? (
               <span
-                role="link"
-                aria-disabled="true"
-                class={mobileDisabledClass}
-                title="Próximamente"
+                role='link'
+                aria-disabled='true'
+                class='flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/3 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-white/35'
+                title='Próximamente'
               >
                 {item.label}
-                {item.note && <span class={mobileNoteClass}>{item.note}</span>}
+                {item.note && <span class='rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-3 py-1 text-[0.55rem] font-semibold tracking-[0.24em] text-theme-gold'>{item.note}</span>}
               </span>
             ) : (
               <a
                 href={item.href}
                 data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
+                aria-current={isCurrentNavItem(item.href) ? 'page' : undefined}
                 data-mobile-menu-link
-                class={mobileLinkClass}
+                class='relative flex items-center justify-center rounded-2xl border border-theme-gold/40 bg-theme-midnight/80 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 active:border-theme-gold active:bg-theme-midnight focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-theme-gold [a[aria-current=page]]:border-theme-gold/75'
               >
+                 <div
+                  aria-hidden='true'
+                  class='pointer-events-none absolute inset-x-0 bottom-0 -z-1 h-full bg-[radial-gradient(ellipse_at_bottom,var(--color-theme-gold)_0%,transparent_70%)] [a[aria-current=page]_&]:opacity-[0.5] opacity-0'
+                ></div>
                 {item.label}
               </a>
             )}

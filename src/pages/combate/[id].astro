@@ -1,5 +1,4 @@
 ---
-import CombatBackground from '@/components/combat/CombatBackground.astro'
 import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
 import CombatHero from '@/components/combat/CombatHero.astro'
 import CombatPredictionsSection from '@/components/combat/CombatPredictionsSection.astro'
@@ -164,32 +163,57 @@ export const prerender = false
     slot="head"
   />
 
-  <CombatBackground video={battleVideo} />
   <CombatHero
     boxer1={boxer1}
     boxer2={boxer2}
     boxer1Hero={boxer1Hero}
     boxer2Hero={boxer2Hero}
-  />
-  <CombatStatsSection
-    boxer1={boxer1}
-    boxer2={boxer2}
-    boxer1Select={boxer1Select}
-    boxer2Select={boxer2Select}
-    stats={stats}
-  />
-  <CombatFaceToFaceVideoSection
-    title={`${battle.title} | Cara a cara`}
-    videoUrl={battle.faceToFaceVideoUrl}
-  />
-  <CombatPredictionsSection
-    prediction={battlePrediction}
-    selectedBoxerId={userVotesByCombat[battle.id]}
-    user={user}
-    callbackURL={battle.url}
+    video={battleVideo}
   />
 
-  <PredictionVoteController isLoggedIn={Boolean(user)} userVotes={userVotesByCombat} user={user} />
+  <div class="combat-detail-content">
+    <picture aria-hidden="true" class="combat-detail-bg">
+      <source
+        type="image/avif"
+        srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
+        sizes="100vw"
+      />
+      <source
+        type="image/webp"
+        srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+        sizes="100vw"
+      />
+      <img
+        src="/background.webp"
+        srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+        sizes="100vw"
+        alt=""
+        role="presentation"
+        class="combat-detail-bg-img"
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
+    <div aria-hidden="true" class="combat-detail-bg-veil"></div>
+
+    <CombatStatsSection
+      boxer1={boxer1}
+      boxer2={boxer2}
+      boxer1Select={boxer1Select}
+      boxer2Select={boxer2Select}
+      stats={stats}
+    />
+    <CombatFaceToFaceVideoSection
+      title={`${battle.title} | Cara a cara`}
+      videoUrl={battle.faceToFaceVideoUrl}
+    />
+    <CombatPredictionsSection
+      prediction={battlePrediction}
+      selectedBoxerId={userVotesByCombat[battle.id]}
+      user={user}
+      callbackURL={battle.url}
+    />
+  </div>
 
   <div class="sponsors-and-footer">
     <Sponsors />
@@ -198,6 +222,42 @@ export const prerender = false
 </Layout>
 
 <style>
+  .combat-detail-content {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--color-theme-midnight);
+  }
+
+  .combat-detail-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .combat-detail-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    opacity: 0.42;
+  }
+
+  .combat-detail-bg-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(10, 16, 36, 0.92) 0%, rgba(10, 16, 36, 0.78) 34%, #050816 100%),
+      radial-gradient(
+        ellipse 62% 38% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 16%, transparent),
+        transparent 68%
+      );
+  }
+
   .sponsors-and-footer {
     position: relative;
     z-index: 2;
