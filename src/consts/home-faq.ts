@@ -1,5 +1,4 @@
 import { battles } from '@/consts/battles'
-import { BOXERS } from '@/consts/boxers'
 
 interface HomeFaqStreamChannel {
   platform: string
@@ -19,45 +18,6 @@ export interface HomeFaqItem {
   battles?: readonly HomeFaqBattleItem[]
   mainEventBattle?: HomeFaqBattleItem
 }
-
-// ── Event timezone zones ────────────────────────────────────────────────────
-
-export interface FaqZone {
-  tz: string
-  label: string
-}
-
-const COUNTRY_TO_ZONE: Record<string, FaqZone> = {
-  es: { tz: 'Europe/Madrid',                   label: 'España' },
-  mx: { tz: 'America/Mexico_City',             label: 'México' },
-  co: { tz: 'America/Bogota',                  label: 'Colombia' },
-  ar: { tz: 'America/Argentina/Buenos_Aires',  label: 'Argentina' },
-  sv: { tz: 'America/El_Salvador',             label: 'El Salvador' },
-  pr: { tz: 'America/Puerto_Rico',             label: 'Puerto Rico' },
-}
-
-// España always first, then remaining boxer countries in order of appearance
-const seen = new Set<string>()
-const spainZone = COUNTRY_TO_ZONE['es']!
-seen.add(spainZone.tz)
-const boxerZones = BOXERS.reduce<FaqZone[]>((acc, boxer) => {
-  const zone = COUNTRY_TO_ZONE[boxer.country]
-  if (zone && !seen.has(zone.tz)) {
-    seen.add(zone.tz)
-    acc.push(zone)
-  }
-  return acc
-}, [])
-
-const EXTRA_ZONES: FaqZone[] = [
-  { tz: 'America/Santiago',    label: 'Chile' },
-  { tz: 'America/New_York',    label: 'EE.UU. (Este)' },
-  { tz: 'America/Los_Angeles', label: 'EE.UU. (Pacífico)' },
-].filter(z => !seen.has(z.tz))
-
-export const FAQ_EVENT_ZONES: FaqZone[] = [spainZone, ...boxerZones, ...EXTRA_ZONES]
-
-// ────────────────────────────────────────────────────────────────────────────
 
 const lastBattle = battles[battles.length - 1]
 if (!lastBattle) {

@@ -1,7 +1,6 @@
 ---
 import SectionHeader from '@/components/SectionHeader.astro'
 import type { HomeFaqItem } from '@/consts/home-faq'
-import { FAQ_EVENT_ZONES } from '@/consts/home-faq'
 
 interface Props {
   faqs: readonly HomeFaqItem[]
@@ -14,7 +13,7 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
 
 <section
   id="faq"
-  class="relative w-full overflow-hidden px-4 py-20 sm:px-6 lg:py-28"
+  class="faq-section relative w-full overflow-hidden px-4 py-20 sm:px-6 lg:py-28"
   aria-labelledby="faq-title"
   itemscope
   itemtype="https://schema.org/FAQPage"
@@ -46,11 +45,11 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
         faqs.map(({ question, answer, channels, battles, mainEventBattle }, index) => (
           <li>
             <details
-              class="group bg-theme-midnight/35 transition duration-300 open:bg-theme-navy/35 hover:bg-theme-navy/25"
+              class="faq-item group bg-theme-midnight/35 transition duration-300 open:bg-theme-navy/35 hover:bg-theme-navy/25"
+              name="faq"
               itemprop="mainEntity"
               itemscope
               itemtype="https://schema.org/Question"
-              open={index === 0}
             >
               <summary class="flex min-h-20 cursor-pointer list-none items-center justify-between gap-5 px-2.5 py-5 outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:min-h-24 sm:px-4 sm:py-6 [&::-webkit-details-marker]:hidden">
                 <h3
@@ -69,23 +68,22 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
               </summary>
 
               <div
-                class="px-2.5 pr-14 pb-6 sm:px-4 sm:pr-20"
+                class="faq-answer-shell px-2.5 pb-6 pr-14 sm:px-4 sm:pr-20"
                 itemprop="acceptedAnswer"
                 itemscope
                 itemtype="https://schema.org/Answer"
               >
                 <p
                   itemprop="text"
-                  class="max-w-3xl text-base leading-7 text-pretty text-white/75 sm:text-lg sm:leading-8"
+                  class="faq-answer-body max-w-3xl text-base leading-7 text-pretty text-white/75 sm:text-lg sm:leading-8"
                 >
                   {answer}
                 </p>
                 {index === 0 && (
-                  <div
+                  <p
                     id="faq-local-times"
                     data-timestamp={EVENT_TIMESTAMP}
-                    data-zones={JSON.stringify(FAQ_EVENT_ZONES)}
-                    class="mt-4 hidden"
+                    class="mt-4 hidden w-fit items-center gap-2 rounded-lg border border-theme-gold/25 bg-theme-gold/5 px-3 py-2 text-sm text-white/80"
                   />
                 )}
                 {channels && (
@@ -143,18 +141,20 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
       const eventDate = new Date(target)
       const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone
 
-      // Boxer country zones come from the server (always shown)
-      const fixedZones: { tz: string; label: string }[] = JSON.parse(
-        container.dataset.zones ?? '[]',
-      )
+      // El evento se anuncia en horario de España: si el usuario ya está ahí,
+      // no hace falta repetir la conversión.
+      if (userTz === 'Europe/Madrid') return
 
-      const formatTime = (tz: string) =>
-        eventDate.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit', timeZone: tz })
+      const time = eventDate.toLocaleTimeString('es', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: userTz,
+      })
 
-      // Friendly label for user's timezone if not already in the list
+      // Etiqueta amistosa para las zonas más habituales del público.
       const regionMap: Record<string, string> = {
-        'Europe/Madrid': 'España',
         'Europe/Lisbon': 'Portugal',
+        'Atlantic/Canary': 'Canarias',
         'America/Mexico_City': 'México',
         'America/Monterrey': 'México (Noreste)',
         'America/Merida': 'México (Sureste)',
@@ -184,28 +184,80 @@ const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
       }
 
       const userLabel = regionMap[userTz] ?? userTz.replace(/_/g, ' ').split('/').pop() ?? userTz
-      const isUserAlreadyListed = fixedZones.some((z) => z.tz === userTz)
-
-      const rows = [...fixedZones]
-      if (!isUserAlreadyListed) rows.push({ tz: userTz, label: userLabel })
-
-      const rowsHtml = rows
-        .map(({ tz, label }) => {
-          const highlight = tz === userTz
-          return `<li class="flex items-baseline justify-between gap-4 py-1.5 border-b border-white/5 last:border-0${highlight ? ' text-theme-gold/90' : ''}">
-            <span class="text-sm${highlight ? ' font-semibold' : ''}">${label}</span>
-            <span class="font-cinzel font-bold text-sm tabular-nums shrink-0">${formatTime(tz)}h</span>
-          </li>`
-        })
-        .join('')
 
       container.innerHTML = `
-        <p class="mb-2 text-sm font-semibold tracking-widest text-white/40 uppercase">Hora del evento por país</p>
-        <ul class="list-none p-0 m-0 text-white/75">${rowsHtml}</ul>
+        <span>En tu zona (${userLabel}):</span>
+        <time class="font-cinzel font-bold text-theme-gold tabular-nums">${time}h</time>
       `
       container.classList.remove('hidden')
+      container.classList.add('inline-flex')
     } catch {
       // Silently fail
     }
   })
 </script>
+
+<style>
+  .faq-section {
+    --faq-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    interpolate-size: allow-keywords;
+  }
+
+  .faq-item {
+    position: relative;
+  }
+
+  .faq-item::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: -1px;
+    height: 1px;
+    background-color: var(--color-theme-gold);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 220ms var(--faq-ease-out);
+  }
+
+  .faq-item[open]::before {
+    transform: scaleX(1);
+  }
+
+  .faq-item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 280ms var(--faq-ease-out),
+      content-visibility 280ms var(--faq-ease-out);
+    transition-behavior: allow-discrete;
+  }
+
+  .faq-item[open]::details-content {
+    block-size: auto;
+  }
+
+  .faq-answer-body {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+    transition:
+      opacity 180ms var(--faq-ease-out),
+      transform 220ms var(--faq-ease-out);
+  }
+
+  .faq-item[open] .faq-answer-body {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-item::before,
+    .faq-item::details-content,
+    .faq-answer-body {
+      transition: none;
+    }
+
+    .faq-answer-body {
+      transform: none;
+    }
+  }
+</style>
