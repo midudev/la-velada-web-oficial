@@ -4,6 +4,7 @@ import TwitchIcon from '@/assets/svg/twitch.svg'
 import XIcon from '@/assets/svg/x.svg'
 import YoutubeIcon from '@/assets/svg/youtube.svg'
 import InfojobsLogo from '@/assets/sponsors/infojobs.svg'
+import SectionDivider from '@/components/SectionDivider.astro'
 import { withUtm } from '@/lib/utm'
 
 const PREVIOUS_EDITIONS = [
@@ -71,7 +72,7 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
   <div class="relative z-10 flex flex-col items-center justify-center">
     <div class="mb-12 flex w-full flex-row items-center justify-center sm:mb-14">
       <nav
-        class="relative z-10 mx-auto grid w-full max-w-5xl grid-cols-2 gap-3 py-6 sm:grid-cols-4 sm:gap-6 lg:gap-10"
+        class="relative z-10 mx-auto w-full max-w-5xl gap-5 md:gap-3 py-6 flex flex-wrap justify-center md:justify-between"
         aria-label="Redes sociales de Ibai Llanos"
       >
         <a
@@ -79,8 +80,8 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
           target="_blank"
           rel="noopener noreferrer"
           style="--brand: #a970ff;"
-          class="group relative flex min-h-11 w-full items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
-          aria-label="Seguir a Ibai en Twitch"
+          class="group relative flex min-h-11 items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+          aria-label="Seguir a Ibai en Twitch (abre en nueva pestaña)"
         >
           <span
             aria-hidden="true"
@@ -101,8 +102,8 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
           target="_blank"
           rel="noopener noreferrer"
           style="--brand: #00f2ea;"
-          class="group relative flex min-h-11 w-full items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
-          aria-label="Seguir a Ibai Llanos en TikTok"
+          class="group relative flex min-h-11 items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+          aria-label="Seguir a Ibai Llanos en TikTok (abre en nueva pestaña)"
         >
           <span
             aria-hidden="true"
@@ -123,8 +124,8 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
           target="_blank"
           rel="noopener noreferrer"
           style="--brand: #ff0000;"
-          class="group relative flex min-h-11 w-full items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
-          aria-label="Seguir a Ibai Llanos en YouTube"
+          class="group relative flex min-h-11 items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+          aria-label="Seguir a Ibai Llanos en YouTube (abre en nueva pestaña)"
         >
           <span
             aria-hidden="true"
@@ -145,8 +146,8 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
           target="_blank"
           rel="noopener noreferrer"
           style="--brand: #ffffff;"
-          class="group relative flex min-h-11 w-full items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
-          aria-label="Seguir a Ibai Llanos en X"
+          class="group relative flex min-h-11 items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+          aria-label="Seguir a Ibai Llanos en X (abre en nueva pestaña)"
         >
           <span
             aria-hidden="true"
@@ -173,7 +174,7 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
           href={INFOJOBS_FOOTER_URL}
           target="_blank"
           rel="sponsored noopener noreferrer"
-          aria-label="Ir a la página web de InfoJobs"
+          aria-label="Ir a la página web de InfoJobs (abre en nueva pestaña)"
           style="--brand: #167db7;"
           class="group inline-flex items-center text-white transition duration-300 hover:-translate-y-0.5 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand)]"
         >
@@ -203,7 +204,7 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
                     target="_blank"
                     rel="noopener noreferrer"
                     class="group/edition relative inline-flex min-h-8 items-center justify-center px-1 outline-none transition-colors duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:text-theme-cream [@media(hover:hover)_and_(pointer:fine)]:hover:delay-[125ms] focus-visible:text-theme-cream focus-visible:delay-[125ms] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
-                    aria-label={`Ir a la web de La Velada del Año ${year}`}
+                    aria-label={`Ir a la web de La Velada del Año ${year} (abre en nueva pestaña)`}
                   >
                     <span
                       aria-hidden="true"
@@ -219,11 +220,7 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
       </nav>
     </div>
 
-    <div class="mb-8 flex items-center gap-3 sm:mb-10" aria-hidden="true">
-      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/25 sm:w-20"></span>
-      <span class="size-1 rotate-45 bg-theme-gold/50"></span>
-      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/25 sm:w-20"></span>
-    </div>
+    <SectionDivider size="sm" class="mb-8 sm:mb-10" />
 
     <div class="pb-2 font-cinzel">
       <p class="text-center text-[0.7rem] tracking-[0.2em] text-white/60 sm:text-xs">
@@ -236,6 +233,7 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
           href="https://midu.dev"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Ir a midu.dev (abre en nueva pestaña)"
           class="text-theme-cream/90 underline underline-offset-4 transition hover:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
           >MIDU.DEV</a
         > Y SU COMUNIDAD
