@@ -17,15 +17,31 @@ interface Props {
     badge?: string
     a: CardBoxer
     b: CardBoxer
+    imageLoadingStrategy?: {
+        loading?: astroHTML.JSX.ImgHTMLAttributes["loading"]
+        decoding?: astroHTML.JSX.ImgHTMLAttributes["decoding"]
+        fetchpriority?: astroHTML.JSX.ImgHTMLAttributes["fetchpriority"]
+    }
 }
 
-const { number, url, featured = false, badge, a, b } = Astro.props
+const { number, url, featured = false, badge, a, b, imageLoadingStrategy } = Astro.props
+
+const { loading = 'lazy', decoding = 'async', fetchpriority = 'auto' } = imageLoadingStrategy || {}
 
 // TEMPORAL: la landing individual de cada combate (/combate/[id]) todavía
 // no está hecha, así que el enlace del combate apunta al 404 a propósito.
 // Cuando esas vistas estén listas, cambiá `combatHref` por `url`.
 const combatHref = '/404'
 void url // (se conserva en props para reactivar el enlace real más adelante)
+
+// Mientras el combate apunta al 404 temporal no debe ser un enlace real:
+// un `<a aria-disabled>` sigue siendo enfocable por teclado y navegable con
+// Enter, llevando al usuario a un 404 a propósito. Cuando está «próximamente»
+// renderizamos un elemento no interactivo (no enfocable, sin href) y exponemos
+// el estado mediante role="img" + aria-label para lectores de pantalla.
+const isComingSoon = combatHref === '/404'
+const CombatTag = isComingSoon ? 'span' : 'a'
+const combatAriaLabel = `Combate: ${a.name} contra ${b.name}${isComingSoon ? ' (próximamente)' : ''}`
 
 const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     { ...a, side: 'a' },
@@ -56,8 +72,9 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
             <img
                 src={boxer.heroImages.webp}
                 alt={`Recorte fotográfico de ${boxer.name}`}
-                loading="lazy"
-                decoding="async"
+                loading={loading}
+                decoding={decoding}
+                fetchpriority={fetchpriority}
                 class="boxer-img"
             />
             </picture>
@@ -74,15 +91,25 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     }
 
     {/* Enlace del combate → 404 temporal (ver nota arriba: cambiar combatHref por url). */}
-    <a class={combatHref === '/404' ? 'vslink pointer-events-none' : 'vslink'} href={combatHref} aria-disabled={combatHref === '/404'} aria-label={`Combate: ${a.name} contra ${b.name} (próximamente)`}>
+    <CombatTag
+        class={isComingSoon ? 'vslink pointer-events-none' : 'vslink'}
+        href={isComingSoon ? undefined : combatHref}
+        role={isComingSoon ? 'img' : undefined}
+        aria-label={combatAriaLabel}
+    >
         <span class="vsmedal font-cinzel"><b>VS</b></span>
-    </a>
+    </CombatTag>
     </div>
 
-    <a class={combatHref === '/404' ? 'combat-foot pointer-events-none' : 'combat-foot'} href={combatHref} aria-disabled={combatHref === '/404'} aria-label={`Combate: ${a.name} contra ${b.name} (próximamente)`}>
+    <CombatTag
+        class={isComingSoon ? 'combat-foot pointer-events-none' : 'combat-foot'}
+        href={isComingSoon ? undefined : combatHref}
+        role={isComingSoon ? 'img' : undefined}
+        aria-label={combatAriaLabel}
+    >
     <span class="combat-no font-cinzel">Combate {String(number).padStart(2, '0')}</span>
     <span class="combat-cta font-cinzel">Ver cara a cara <span aria-hidden="true">&rarr;</span></span>
-    </a>
+    </CombatTag>
 </article>
 
 <style>

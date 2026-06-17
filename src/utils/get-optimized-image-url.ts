@@ -25,10 +25,16 @@ async function getLocalImageUrl(imageUrl: string): Promise<ImageMetadata | strin
   // Format the image path to be used in the import.meta.glob
   const formattedImagePath = sanitizedImagePath.includes('../../public') ? sanitizedImagePath : `../../public/${sanitizedImagePath}`
 
-  // Get image object from the import.meta.glob
-  const imageObject = await images[formattedImagePath as keyof typeof images]()
+  // Get the image loader from the import.meta.glob
+  const imageLoader = images[formattedImagePath as keyof typeof images]
+
+  // Fail loudly with a useful message instead of an opaque "is not a function" TypeError
+  if (!imageLoader) {
+    throw new Error(`Imagen local no encontrada: ${formattedImagePath}`)
+  }
 
   // Return the image object
+  const imageObject = await imageLoader()
   return imageObject.default
 }
 
