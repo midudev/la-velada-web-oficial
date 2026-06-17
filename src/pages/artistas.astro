@@ -62,12 +62,6 @@ const itemListJsonLd = {
         <header class="flex flex-col items-center text-center">
         <SectionDivider class="mb-7 w-full sm:mb-10" />
 
-        <div
-            class="artists-eyebrow mb-5 inline-flex items-center gap-2.5 sm:mb-6"
-            aria-hidden="true"
-        >
-        </div>
-
         <h1
             class="mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
         >
@@ -98,7 +92,7 @@ const itemListJsonLd = {
                 />
                 <label
                 for={`reveal-${artist.id}`}
-                class="artist-flip relative block w-full"
+                class="artist-flip relative block w-full cursor-pointer"
                 aria-label={`Revelar artista: ${artist.name}`}
                 >
                 <span class="artist-flip-inner absolute inset-0">
@@ -197,10 +191,6 @@ const itemListJsonLd = {
     background-image: radial-gradient(rgba(199, 168, 107, 0.05) 1px, transparent 1px);
     background-size: 22px 22px;
     mask-image: radial-gradient(ellipse at center, black 30%, transparent 85%);
-}
-
-.artists-eyebrow {
-    text-shadow: 0 0 14px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
 }
 
 .artist-card-wrap {
