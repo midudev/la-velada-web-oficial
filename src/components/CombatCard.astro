@@ -26,11 +26,7 @@ interface Props {
 
 const { number, url, featured = false, badge, a, b, imageLoadingStrategy } = Astro.props
 
-const { loading, decoding, fetchpriority } = imageLoadingStrategy || {
-  loading: 'lazy',
-  decoding: 'async',
-  fetchpriority: 'auto',
-}
+const { loading = 'lazy', decoding = 'async', fetchpriority = 'auto' } = imageLoadingStrategy || {}
 
 // TEMPORAL: la landing individual de cada combate (/combate/[id]) todavía
 // no está hecha, así que el enlace del combate apunta al 404 a propósito.

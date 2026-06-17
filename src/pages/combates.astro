@@ -49,10 +49,10 @@ const breadcrumbJsonLd = {
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
     { '@type': 'ListItem', position: 2, name: 'Combates', item: canonical },
-  ],
+  ],  
 }
 
-const cardImageEagerAmount = 4
+const EAGER_IMAGE_COUNT = 4
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
@@ -100,9 +100,9 @@ const cardImageEagerAmount = 4
                     a={c.a}
                     b={c.b}
                     imageLoadingStrategy={{
-                        loading: i < cardImageEagerAmount ? 'eager' : 'lazy',
-                        decoding: i < cardImageEagerAmount ? 'auto' : 'async',
-                        fetchpriority: i < cardImageEagerAmount ? 'high' : 'auto',
+                        loading: i < EAGER_IMAGE_COUNT ? 'eager' : 'lazy',
+                        decoding: i < EAGER_IMAGE_COUNT ? 'auto' : 'async',
+                        fetchpriority: i < EAGER_IMAGE_COUNT ? 'high' : 'auto',
                     }}
                   />
                 </div>
