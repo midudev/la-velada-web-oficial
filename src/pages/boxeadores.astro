@@ -102,6 +102,8 @@ const genderFilters: Array<{ code: BoxerGender; name: string; count: number }> =
 }))
 
 const totalBoxers = BOXERS.length
+
+const cardImageEagerAmount = 4
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
@@ -117,6 +119,9 @@ const totalBoxers = BOXERS.length
     set:html={JSON.stringify(itemListJsonLd)}
     slot="head"
   />
+  <script is:inline>
+    document.documentElement.classList.add('js')
+  </script>
 
   <section
     class="boxers-page relative isolate w-full overflow-x-clip bg-theme-midnight px-3 pt-24 pb-20 text-theme-cream sm:px-6 sm:pt-32 sm:pb-24 md:pt-36"
@@ -127,14 +132,14 @@ const totalBoxers = BOXERS.length
     <div class="boxers-layout mx-auto w-full max-w-7xl">
       <header class="boxers-page-header">
         <h1
-          class="boxers-page-title mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
+          class="boxers-page-title mb-3 font-cinzel text-3xl font-black tracking-[0.12em] text-theme-cream not-motion-reduce:animate-fade-in-up sm:text-4xl sm:tracking-[0.16em] md:text-6xl"
         >
           <SectionDivider class="boxers-page-header-ornament mb-8 w-full sm:mb-12" />
 
           BOXEADORES
         </h1>
         <p
-          class="boxers-page-lead mb-8 animate-fade-in-up font-cinzel text-xs font-medium tracking-[0.16em] text-balance text-white/55 animate-delay-200 sm:mb-12 sm:text-sm sm:tracking-[0.25em]"
+          class="boxers-page-lead mb-8 font-cinzel text-xs font-medium tracking-[0.14em] text-balance text-white/55 animate-delay-200 not-motion-reduce:animate-fade-in-up sm:mb-12 sm:text-sm"
         >
           Los {totalBoxers} contendientes de La Velada del Año VI
         </p>
@@ -142,7 +147,7 @@ const totalBoxers = BOXERS.length
 
       <form
         data-boxers-filters
-        class="boxer-filters-panel relative w-full animate-fade-in-up animate-delay-300"
+        class="boxer-filters-panel relative w-full not-motion-reduce:animate-fade-in-up not-motion-reduce:animate-delay-300"
         aria-label="Filtros de boxeadores"
         onsubmit="return false"
       >
@@ -157,7 +162,7 @@ const totalBoxers = BOXERS.length
         >
           <span class="size-1 rotate-45 bg-theme-gold/85"></span>
           <span
-            class="font-cinzel text-[0.55rem] font-bold tracking-[0.4em] text-theme-gold/95 sm:text-[0.65rem]"
+            class="font-cinzel text-[0.55rem] font-black tracking-[0.26em] text-theme-gold/95 sm:text-[0.65rem]"
           >
             FILTROS
           </span>
@@ -263,7 +268,7 @@ const totalBoxers = BOXERS.length
       <div class="boxers-results w-full">
         <div
           data-boxers-sort
-          class="boxer-sort-bar relative animate-fade-in-up animate-delay-300"
+          class="boxer-sort-bar relative not-motion-reduce:animate-fade-in-up not-motion-reduce:animate-delay-300"
           role="region"
           aria-label="Ordenar boxeadores"
         >
@@ -317,14 +322,13 @@ const totalBoxers = BOXERS.length
           {
             boxerCards.map((b, index) => (
               <li
-                class="boxer-card-wrap animate-fade-in-up"
+                class="boxer-card-wrap"
                 data-boxer-card
                 data-country={b.country}
                 data-gender={b.gender}
                 data-default-order={index}
                 data-followers={b.totalFollowers}
                 data-battle={b.battleNumber}
-                style={`animation-delay: ${index * 35}ms`}
               >
                 <a
                   href={`/boxeadores/${b.id}`}
@@ -342,10 +346,13 @@ const totalBoxers = BOXERS.length
                     <img
                       src={b.heroImages.webp}
                       alt={`Recorte fotográfico de ${b.name}`}
-                      loading="lazy"
-                      decoding="async"
+                      width="1066"
+                      height="1600"
+                      loading={index < cardImageEagerAmount ? 'eager' : 'lazy'}
+                      decoding={index < cardImageEagerAmount ? 'auto' : 'async'}
+                      fetchpriority={index < cardImageEagerAmount ? 'high' : 'auto'}
                       transition:name={`boxer-hero-${b.id}`}
-                      class="boxer-card-img absolute inset-0 h-full w-full object-cover object-top"
+                      class="boxer-card-img h-full w-full object-cover object-top"
                     />
                   </picture>
 
@@ -362,7 +369,7 @@ const totalBoxers = BOXERS.length
                   {b.battleNumber > 0 && (
                     <span
                       aria-hidden="true"
-                      class="boxer-card-number pointer-events-none absolute top-3.5 right-3 font-cinzel text-[0.42rem] font-bold tracking-[0.14em] text-theme-gold/90 sm:top-4 sm:right-4 sm:text-[0.55rem] sm:tracking-[0.22em]"
+                      class="boxer-card-number pointer-events-none absolute top-3.5 right-3 font-cinzel text-[0.42rem] font-black tracking-[0.16em] text-theme-gold/90 sm:top-4 sm:right-4 sm:text-[0.55rem] sm:tracking-[0.2em]"
                     >
                       COMBATE · {String(b.battleNumber).padStart(2, '0')}
                     </span>
@@ -380,10 +387,10 @@ const totalBoxers = BOXERS.length
                       aria-hidden="true"
                       class="boxer-card-divider mb-1 h-px w-8 bg-theme-gold/60 transition-all duration-500"
                     />
-                    <h2 class="boxer-card-name font-cinzel text-[0.78rem] leading-[1.1] font-bold tracking-[0.1em] text-balance text-theme-cream uppercase sm:text-base sm:tracking-[0.16em] md:text-lg">
+                    <h2 class="boxer-card-name font-cinzel text-[0.78rem] leading-[1.1] font-black tracking-[0.1em] text-balance text-theme-cream uppercase sm:text-base sm:tracking-[0.16em] md:text-lg">
                       {b.name}
                     </h2>
-                    <p class="boxer-card-country flex max-w-full items-center gap-1 font-cinzel text-[0.5rem] font-semibold tracking-[0.18em] text-theme-cream/80 sm:gap-1.5 sm:text-[0.65rem] sm:tracking-[0.32em]">
+                    <p class="boxer-card-country flex max-w-full items-center gap-1 font-cinzel text-[0.5rem] font-black tracking-[0.18em] text-theme-cream/80 sm:gap-1.5 sm:text-[0.65rem] sm:tracking-[0.22em]">
                       <CountryFlag
                         country={b.country}
                         size={14}
@@ -405,11 +412,11 @@ const totalBoxers = BOXERS.length
           role="status"
         >
           <SectionDivider size="sm" />
-          <p class="font-cinzel text-base font-bold tracking-[0.18em] text-theme-cream sm:text-lg">
+          <p class="font-cinzel text-base font-black tracking-[0.16em] text-theme-cream sm:text-lg">
             Sin boxeadores
           </p>
           <p
-            class="font-cinzel text-[0.65rem] font-medium tracking-[0.28em] text-theme-cream/65 sm:text-xs"
+            class="font-cinzel text-[0.65rem] font-medium tracking-[0.14em] text-theme-cream/65 sm:text-xs"
           >
             Ningún contendiente coincide con los filtros seleccionados.
           </p>
@@ -932,8 +939,8 @@ const totalBoxers = BOXERS.length
     align-items: center;
     gap: 0.45rem;
     font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.32em;
+    font-weight: 900;
+    letter-spacing: 0.26em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--color-theme-gold) 90%, var(--color-theme-cream));
     text-shadow:
@@ -944,7 +951,7 @@ const totalBoxers = BOXERS.length
   @media (max-width: 639px) {
     .boxer-filter-row-label {
       font-size: 0.55rem;
-      letter-spacing: 0.24em;
+      letter-spacing: 0.18em;
     }
   }
 
@@ -1077,8 +1084,8 @@ const totalBoxers = BOXERS.length
     align-items: center;
     gap: 0.55rem;
     font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.32em;
+    font-weight: 900;
+    letter-spacing: 0.26em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--color-theme-gold) 92%, var(--color-theme-cream));
     text-shadow:
@@ -1089,7 +1096,7 @@ const totalBoxers = BOXERS.length
   @media (max-width: 639px) {
     .boxer-sort-label {
       font-size: 0.55rem;
-      letter-spacing: 0.24em;
+      letter-spacing: 0.18em;
     }
   }
 
@@ -1145,8 +1152,8 @@ const totalBoxers = BOXERS.length
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
     color: color-mix(in srgb, var(--color-theme-cream) 86%, transparent);
     font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.22em;
+    font-weight: 900;
+    letter-spacing: 0.18em;
     line-height: 1;
     cursor: pointer;
     transition:
@@ -1277,8 +1284,8 @@ const totalBoxers = BOXERS.length
     background: color-mix(in srgb, var(--color-theme-midnight) 60%, transparent);
     color: color-mix(in srgb, var(--color-theme-cream) 75%, transparent);
     font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
+    font-weight: 900;
+    letter-spacing: 0.04em;
     font-variant-numeric: tabular-nums;
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
     transition:
@@ -1316,8 +1323,8 @@ const totalBoxers = BOXERS.length
     padding: 0.45rem 0.95rem;
     color: color-mix(in srgb, var(--color-theme-cream) 80%, transparent);
     font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 0.3em;
+    font-weight: 900;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     cursor: pointer;
     transition:
@@ -1348,6 +1355,14 @@ const totalBoxers = BOXERS.length
     color: var(--color-theme-cream);
   }
 
+  :global(.js) .boxer-card-wrap {
+    opacity: 0;
+  }
+
+  .boxer-card-wrap {
+    animation-delay: var(--animation-delay);
+  }
+
   .boxer-card-wrap[data-hidden='true'] {
     display: none;
   }
@@ -1360,6 +1375,10 @@ const totalBoxers = BOXERS.length
     .boxers-grid {
       --cards-gap: calc(var(--spacing) * 5);
     }
+  }
+
+  .boxers-grid[data-state='default'] > .boxer-card-wrap:nth-child(even) {
+    position: relative;
   }
 
   .boxers-grid[data-state='default'] > .boxer-card-wrap:nth-child(even)::after {
@@ -1375,13 +1394,14 @@ const totalBoxers = BOXERS.length
     inline-size: var(--inline-size);
     block-size: var(--block-size);
     font-family: var(--font-cinzel);
-    font-weight: 700;
+    font-weight: 900;
     font-size: clamp(1.125rem, 0.875rem + 0.313vw, 1.25rem);
     color: var(--color-theme-gold);
     background-color: var(--color-theme-midnight);
     border-radius: 4px;
     line-height: normal;
     border: 1px solid color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+    animation: blurred-fade-in 0.4s ease-in-out both calc(var(--animation-delay) + 0.6s);
   }
 
   @media (width <= 48rem) {
@@ -1396,7 +1416,18 @@ const totalBoxers = BOXERS.length
     }
   }
 
+  html[data-skip-boxers-enter] :global(.animate-fade-in-up) {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .boxer-card-wrap,
+    .boxers-grid[data-state='default'] > .boxer-card-wrap:nth-child(even)::after {
+      animation: none;
+    }
+
     .boxer-filter-pill,
     .boxer-filter-pill-count,
     .boxer-filter-reset,
@@ -1425,6 +1456,9 @@ const totalBoxers = BOXERS.length
     const filterButtons = Array.from($$<HTMLButtonElement>('[data-filter]', form))
     const resetButtons = Array.from($$<HTMLButtonElement>('[data-boxers-reset]'))
     const sortButtons = sortBar ? Array.from($$<HTMLButtonElement>('[data-sort]', sortBar)) : []
+
+    const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+
     // Lee el estado inicial desde la URL
     function getStateFromURL(buttons: HTMLButtonElement[]) {
       const validCountries = new Set(
@@ -1479,6 +1513,48 @@ const totalBoxers = BOXERS.length
       gridEl.dataset.state = state
     }
 
+    const HEADER_HEIGHT = 70
+    const SCROLL_OFFSET = 110
+
+    function keepContentInView(anchor: HTMLElement | null) {
+      if (!anchor) return
+
+      const { top: anchorTop } = anchor.getBoundingClientRect()
+
+      if (anchorTop > HEADER_HEIGHT) return
+
+      const scrollTop = anchor.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET
+
+      window.scrollTo({
+        top: scrollTop,
+        behavior: 'instant',
+      })
+    }
+
+    const ANIM_CLASS = 'animate-fade-in-up'
+    const ANIM_DELAY = 35
+    let skipCardsAnimation = document.documentElement.hasAttribute('data-skip-boxers-enter')
+
+    function retriggerAnimations() {
+      let visibleIndex = 0
+
+      if (reduceMotionQuery.matches) return
+
+      for (const card of Array.from(gridEl.children) as HTMLElement[]) {
+        if (card.dataset.hidden === 'true') continue
+
+        card.classList.remove(ANIM_CLASS)
+
+        void card.offsetWidth
+
+        card.style.setProperty('--animation-delay', `${visibleIndex * ANIM_DELAY}ms`)
+
+        card.classList.add(ANIM_CLASS)
+
+        visibleIndex++
+      }
+    }
+
     // Reordena el DOM (no sólo CSS `order`) para que el orden de
     // tabulación coincida con el visual. Con 20 cards el coste es
     // despreciable y mantenemos la accesibilidad correcta.
@@ -1506,6 +1582,8 @@ const totalBoxers = BOXERS.length
       }
 
       for (const card of ordered) gridEl.appendChild(card)
+
+      if (!skipCardsAnimation) retriggerAnimations()
     }
 
     // Cuenta cards que coinciden con un par (country, gender). Pasar '' en
@@ -1536,6 +1614,8 @@ const totalBoxers = BOXERS.length
       const gridState = !hasActiveFilter && isDefaultSortMode ? 'default' : 'modified'
 
       setGridState(gridState)
+      // Mantiene el contenido dentro del viewport al aplicar filtros. Esto evita que los cambios en la altura del contenedor de las cards, ya sea por crecimiento o reducción de su contenido, provoquen desplazamientos inesperados que puedan enviar al usuario a la siguiente sección o dejar contenido parcialmente cortado.
+      keepContentInView(sortBar)
 
       let visible = 0
       for (const card of cards) {
@@ -1589,6 +1669,8 @@ const totalBoxers = BOXERS.length
         btn.disabled = shouldDisable
         btn.dataset.disabled = String(shouldDisable)
       }
+
+      if (!skipCardsAnimation) retriggerAnimations()
     }
 
     for (const btn of filterButtons) {
@@ -1634,6 +1716,11 @@ const totalBoxers = BOXERS.length
 
     applyFilters()
     applySort()
+
+    if (skipCardsAnimation) {
+      document.documentElement.removeAttribute('data-skip-boxers-enter')
+      skipCardsAnimation = false
+    }
   }
 
   document.addEventListener('astro:page-load', setupBoxersFilters)

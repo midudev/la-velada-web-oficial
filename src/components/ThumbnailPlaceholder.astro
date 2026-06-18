@@ -1,0 +1,27 @@
+---
+import VeladaLogo from '@/assets/svg/logo.svg'
+
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<div
+  class:list={[
+    'absolute inset-0 -z-10 flex items-center justify-center overflow-hidden bg-theme-midnight',
+    className,
+  ]}
+  aria-hidden="true"
+>
+  <div
+    class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(199,168,107,0.14),_transparent_58%)]"
+  >
+  </div>
+  <div
+    class="absolute inset-0 bg-linear-to-br from-theme-navy/70 via-theme-midnight to-black"
+  >
+  </div>
+  <VeladaLogo class="relative size-16 text-theme-cream/75 drop-shadow-[0_0_28px_rgba(247,238,211,0.14)] sm:size-20" />
+</div>

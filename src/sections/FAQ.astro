@@ -7,6 +7,8 @@ interface Props {
 }
 
 const { faqs } = Astro.props
+
+const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
 ---
 
 <section
@@ -35,7 +37,7 @@ const { faqs } = Astro.props
       title="PREGUNTAS FRECUENTES"
       subtitle="Respuestas rápidas sobre fecha, sede, directo, combates, entradas y anuncios de La Velada del Año VI."
       titleClass="mb-4"
-      subtitleClass="mb-10 max-w-2xl tracking-[0.2em] sm:mb-14 sm:text-sm"
+      subtitleClass="mb-10 max-w-2xl tracking-[0.16em] sm:mb-14 sm:text-sm"
     />
 
     <ul class="w-full divide-y divide-white/10 border-y border-white/10">
@@ -52,7 +54,7 @@ const { faqs } = Astro.props
               <summary class="flex min-h-20 cursor-pointer list-none items-center justify-between gap-5 px-2.5 py-5 outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:min-h-24 sm:px-4 sm:py-6 [&::-webkit-details-marker]:hidden">
                 <h3
                   itemprop="name"
-                  class="font-cinzel text-xl leading-tight font-bold tracking-[0.02em] text-balance text-theme-cream transition duration-300 group-open:text-theme-gold sm:text-2xl"
+                  class="font-cinzel text-xl leading-tight font-black tracking-[0.02em] text-balance text-theme-cream transition duration-300 group-open:text-theme-gold sm:text-2xl"
                 >
                   {question}
                 </h3>
@@ -60,8 +62,8 @@ const { faqs } = Astro.props
                   class="relative flex size-10.25 shrink-0 items-center justify-center rounded-full border border-theme-gold/30 bg-black/25 text-theme-gold transition duration-300 group-open:rotate-45 group-open:border-theme-gold/70 group-open:bg-theme-gold/15 sm:size-11.25"
                   aria-hidden="true"
                 >
-                  <span class="absolute h-px w-4.25 bg-current"></span>
-                  <span class="absolute h-4.25 w-px bg-current"></span>
+                  <span class="absolute h-px w-4.25 bg-current" />
+                  <span class="absolute h-4.25 w-px bg-current" />
                 </span>
               </summary>
 
@@ -77,6 +79,13 @@ const { faqs } = Astro.props
                 >
                   {answer}
                 </p>
+                {index === 0 && (
+                  <p
+                    id="faq-local-times"
+                    data-timestamp={EVENT_TIMESTAMP}
+                    class="mt-4 hidden w-fit items-center gap-2 rounded-lg border border-theme-gold/25 bg-theme-gold/5 px-3 py-2 text-sm text-white/80"
+                  />
+                )}
                 {channels && (
                   <ul class="mt-4 flex list-none flex-col gap-2 pl-0 text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
                     {channels.map(({ platform, href, label }) => (
@@ -98,10 +107,7 @@ const { faqs } = Astro.props
                   <ol class="mt-4 grid list-none gap-2 pl-0 text-base leading-7 text-white/75 sm:grid-cols-2 sm:text-lg sm:leading-8">
                     {battles.map(({ number, title }) => (
                       <li class="grid grid-cols-[2rem_minmax(0,1fr)] gap-2">
-                        <span
-                          aria-hidden="true"
-                          class="font-bold text-theme-gold/80 tabular-nums"
-                        >
+                        <span aria-hidden="true" class="font-bold text-theme-gold/80 tabular-nums">
                           {number}
                         </span>
                         <span>{title}</span>
@@ -122,6 +128,74 @@ const { faqs } = Astro.props
     </ul>
   </div>
 </section>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const container = document.getElementById('faq-local-times')
+    if (!container) return
+
+    try {
+      const target = Number(container.dataset.timestamp)
+      if (!Number.isFinite(target)) return
+
+      const eventDate = new Date(target)
+      const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+      // El evento se anuncia en horario de España: si el usuario ya está ahí,
+      // no hace falta repetir la conversión.
+      if (userTz === 'Europe/Madrid') return
+
+      const time = eventDate.toLocaleTimeString('es', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: userTz,
+      })
+
+      // Etiqueta amistosa para las zonas más habituales del público.
+      const regionMap: Record<string, string> = {
+        'Europe/Lisbon': 'Portugal',
+        'Atlantic/Canary': 'Canarias',
+        'America/Mexico_City': 'México',
+        'America/Monterrey': 'México (Noreste)',
+        'America/Merida': 'México (Sureste)',
+        'America/Tijuana': 'México (Pacífico)',
+        'America/New_York': 'EE.UU. (Este)',
+        'America/Chicago': 'EE.UU. (Centro)',
+        'America/Denver': 'EE.UU. (Montaña)',
+        'America/Los_Angeles': 'EE.UU. (Pacífico)',
+        'America/Bogota': 'Colombia',
+        'America/Lima': 'Perú',
+        'America/Santiago': 'Chile',
+        'America/Argentina/Buenos_Aires': 'Argentina',
+        'America/Caracas': 'Venezuela',
+        'America/Guayaquil': 'Ecuador',
+        'America/La_Paz': 'Bolivia',
+        'America/Asuncion': 'Paraguay',
+        'America/Montevideo': 'Uruguay',
+        'America/Havana': 'Cuba',
+        'America/Santo_Domingo': 'Rep. Dominicana',
+        'America/Panama': 'Panamá',
+        'America/Costa_Rica': 'Costa Rica',
+        'America/Guatemala': 'Guatemala',
+        'America/Tegucigalpa': 'Honduras',
+        'America/El_Salvador': 'El Salvador',
+        'America/Managua': 'Nicaragua',
+        'America/Puerto_Rico': 'Puerto Rico',
+      }
+
+      const userLabel = regionMap[userTz] ?? userTz.replace(/_/g, ' ').split('/').pop() ?? userTz
+
+      container.innerHTML = `
+        <span>En tu zona (${userLabel}):</span>
+        <time class="font-cinzel font-black text-theme-gold tabular-nums">${time}h</time>
+      `
+      container.classList.remove('hidden')
+      container.classList.add('inline-flex')
+    } catch {
+      // Silently fail
+    }
+  })
+</script>
 
 <style>
   .faq-section {

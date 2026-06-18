@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro'
 
 import CountryFlag from '@/components/CountryFlag.astro'
 import { battles, battlesById } from '@/consts/battles'
+import { EVENT_DATE_TIME } from '@/consts/event'
 import {
   BOXERS_BY_ID,
   COUNTRY_NAMES,
@@ -34,7 +35,7 @@ const sportsEventJsonLd = {
   description,
   url: canonical,
   sport: 'Boxing',
-  startDate: '2026-07-25T20:00:00+02:00',
+  startDate: EVENT_DATE_TIME,
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
   superEvent: {
@@ -116,17 +117,17 @@ export const prerender = true
     <div class="mx-auto flex w-full max-w-6xl flex-col items-center">
       <a
         href="/"
-        class="mb-10 text-xs font-bold tracking-[0.28em] text-theme-gold/80 underline-offset-4 hover:text-theme-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+        class="mb-10 text-xs font-black tracking-[0.18em] text-theme-gold/80 underline-offset-4 hover:text-theme-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
       >
         Volver al inicio
       </a>
 
-      <p class="text-xs font-bold tracking-[0.45em] text-theme-gold/85">
+      <p class="text-xs font-black tracking-[0.26em] text-theme-gold/85">
         COMBATE {String(battle.number).padStart(3, '0')}
       </p>
       <h1
         id="battle-title"
-        class="mt-4 text-balance text-center font-fantasy text-6xl leading-[0.9] sm:text-8xl md:text-9xl"
+        class="mt-4 text-balance text-center font-cinzel font-black text-6xl leading-[0.9] sm:text-8xl md:text-9xl"
       >
         {battle.title}
       </h1>
@@ -143,13 +144,13 @@ export const prerender = true
             decoding="async"
           />
           <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer1.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
+          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-black tracking-[0.18em] text-white/60">
             <CountryFlag country={boxer1.country} size={18} decorative />
             {COUNTRY_NAMES[boxer1.country]}
           </p>
         </article>
 
-        <span class="text-center font-fantasy text-7xl text-theme-gold md:text-8xl" aria-hidden="true">
+        <span class="text-center font-cinzel font-black text-7xl text-theme-gold md:text-8xl" aria-hidden="true">
           VS
         </span>
 
@@ -164,7 +165,7 @@ export const prerender = true
             decoding="async"
           />
           <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer2.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
+          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-black tracking-[0.18em] text-white/60">
             <CountryFlag country={boxer2.country} size={18} decorative />
             {COUNTRY_NAMES[boxer2.country]}
           </p>
