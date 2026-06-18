@@ -70,7 +70,6 @@ const controllerConfig = JSON.stringify({
   let hasDispatchedComplete = false
   const latestVoteRequestByBattle = new Map<string, number>()
   const voteBarAnimationTimeouts = new WeakMap<HTMLElement, number>()
-
   const compactFormatter = new Intl.NumberFormat('es-ES', {
     notation: 'compact',
     maximumFractionDigits: 1,
@@ -518,6 +517,14 @@ const controllerConfig = JSON.stringify({
     Object.entries(config.userVotes).forEach(([battleId, boxerId]) => {
       setBattleVote(battleId, boxerId)
     })
+
+    // Si el usuario ya tenía las 10 predicciones al cargar la página,
+    // marcamos el flag para que un cambio posterior no re-dispare el modal.
+    // El modal sólo debe abrirse cuando se completa la décima desde un estado
+    // incompleto, o cuando el usuario hace click en el FAB.
+    if (areAllPredictionsComplete()) {
+      hasDispatchedComplete = true
+    }
 
     $$<HTMLButtonElement>('[data-prediction-option]').forEach((option) => {
       option.addEventListener(
