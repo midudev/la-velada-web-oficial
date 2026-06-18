@@ -355,6 +355,13 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
     animation: vote-number-pop 680ms cubic-bezier(0.18, 0.86, 0.24, 1);
   }
 
+  .poll-option[data-vote-changing='up'] [data-prediction-percent] {
+    color: var(--color-theme-gold);
+    text-shadow:
+      0 0 16px color-mix(in srgb, var(--color-theme-gold) 48%, transparent),
+      0 0 34px color-mix(in srgb, var(--vote-color) 30%, transparent);
+  }
+
   .poll-option[data-side='b'] .poll-mini-bar {
     margin-left: auto;
     transform-origin: right;

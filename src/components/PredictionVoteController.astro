@@ -75,6 +75,10 @@ const controllerConfig = JSON.stringify({
     maximumFractionDigits: 1,
   })
 
+  const exactVotesFormatter = new Intl.NumberFormat('es-ES', {
+    maximumFractionDigits: 0,
+  })
+
   const percentFormatter = new Intl.NumberFormat('es-ES', {
     maximumFractionDigits: 1,
   })
@@ -91,7 +95,7 @@ const controllerConfig = JSON.stringify({
   }
 
   function formatVotes(votes: number) {
-    return compactFormatter.format(votes)
+    return votes > 100_000 ? compactFormatter.format(votes) : exactVotesFormatter.format(votes)
   }
 
   function formatPercent(percentage: number) {
@@ -126,6 +130,7 @@ const controllerConfig = JSON.stringify({
   function writeOptionPrediction(option: HTMLButtonElement, votes: number, percentage: number) {
     const safeVotes = Math.max(0, votes)
     const safePercentage = Math.max(0, Math.min(100, percentage))
+    const previousVotes = readVoteCount(option)
     const previousPercentage = readVotePercentage(option)
     const percentNode = $<HTMLElement>('[data-prediction-percent]', option)
     const votesNode = $<HTMLElement>('[data-prediction-votes]', option)
@@ -136,9 +141,13 @@ const controllerConfig = JSON.stringify({
     if (percentNode) percentNode.textContent = formatPercent(safePercentage)
     if (votesNode) votesNode.textContent = formatSupport(safeVotes)
 
-    if (Math.abs(previousPercentage - safePercentage) > 0.05 && !prefersReducedMotion()) {
+    const voteDelta = safeVotes - previousVotes
+    const percentageDelta = safePercentage - previousPercentage
+    const hasVisibleChange = voteDelta !== 0 || Math.abs(percentageDelta) > 0.05
+
+    if (hasVisibleChange && !prefersReducedMotion()) {
       window.clearTimeout(voteBarAnimationTimeouts.get(option))
-      option.dataset.voteChanging = safePercentage > previousPercentage ? 'up' : 'down'
+      option.dataset.voteChanging = percentageDelta >= 0 && voteDelta >= 0 ? 'up' : 'down'
 
       const timeoutId = window.setTimeout(() => {
         delete option.dataset.voteChanging
@@ -235,7 +244,7 @@ const controllerConfig = JSON.stringify({
       if (!optionBoxerId) return
 
       const votes = nextVotes.get(optionBoxerId) ?? 0
-      const percentage = totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0
+      const percentage = totalVotes > 0 ? Number(((votes / totalVotes) * 100).toFixed(1)) : 0
 
       writeOptionPrediction(option, votes, percentage)
     })
