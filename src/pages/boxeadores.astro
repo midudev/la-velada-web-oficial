@@ -1414,6 +1414,12 @@ const cardImageEagerAmount = 4
     }
   }
 
+  html[data-skip-boxers-enter] .animate-fade-in-up {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .boxer-card-wrap,
     .boxers-grid[data-state='default'] > .boxer-card-wrap:nth-child(even)::after {
@@ -1525,6 +1531,7 @@ const cardImageEagerAmount = 4
 
     const ANIM_CLASS = 'animate-fade-in-up'
     const ANIM_DELAY = 35
+    let skipCardsAnimation = document.documentElement.hasAttribute('data-skip-boxers-enter')
 
     function retriggerAnimations() {
       let visibleIndex = 0
@@ -1574,7 +1581,7 @@ const cardImageEagerAmount = 4
 
       for (const card of ordered) gridEl.appendChild(card)
 
-      retriggerAnimations()
+      if (!skipCardsAnimation) retriggerAnimations()
     }
 
     // Cuenta cards que coinciden con un par (country, gender). Pasar '' en
@@ -1661,7 +1668,7 @@ const cardImageEagerAmount = 4
         btn.dataset.disabled = String(shouldDisable)
       }
 
-      retriggerAnimations()
+      if (!skipCardsAnimation) retriggerAnimations()
     }
 
     for (const btn of filterButtons) {
@@ -1707,6 +1714,11 @@ const cardImageEagerAmount = 4
 
     applyFilters()
     applySort()
+
+    if (skipCardsAnimation) {
+      document.documentElement.removeAttribute('data-skip-boxers-enter')
+      skipCardsAnimation = false
+    }
   }
 
   document.addEventListener('astro:page-load', setupBoxersFilters)
