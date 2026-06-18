@@ -26,6 +26,10 @@ const controllerConfig = JSON.stringify({
 
 <script>
   import { $, $$ } from '@/lib/dom-selector'
+  import {
+    areAllPredictionsComplete,
+    dispatchPredictionsComplete,
+  } from '@/lib/prediction-completion'
 
   interface PredictionApiResponse {
     prediction?: {
@@ -63,6 +67,7 @@ const controllerConfig = JSON.stringify({
 
   let predictionsAbort: AbortController | null = null
   let nextVoteRequestId = 0
+  let hasDispatchedComplete = false
   const latestVoteRequestByBattle = new Map<string, number>()
   const voteBarAnimationTimeouts = new WeakMap<HTMLElement, number>()
 
@@ -422,10 +427,7 @@ const controllerConfig = JSON.stringify({
       if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return
 
       el.animate(
-        [
-          { transform: `translate(${dx}px, ${dy}px)` },
-          { transform: 'translate(0px, 0px)' },
-        ],
+        [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'translate(0px, 0px)' }],
         { duration: AUTH_DOCK_MS, easing: AUTH_SPRING },
       )
     })
@@ -486,6 +488,7 @@ const controllerConfig = JSON.stringify({
 
       setBattleVote(battleId, boxerId)
       if (data.prediction) applyPredictionData(data.prediction)
+      checkAllPredictionsComplete()
     } catch (error) {
       if (latestVoteRequestByBattle.get(battleId) === requestId && snapshot) {
         restoreFightSnapshot(snapshot)
@@ -498,6 +501,13 @@ const controllerConfig = JSON.stringify({
         latestVoteRequestByBattle.delete(battleId)
       }
     }
+  }
+
+  function checkAllPredictionsComplete() {
+    if (hasDispatchedComplete) return
+    if (!areAllPredictionsComplete()) return
+    hasDispatchedComplete = true
+    dispatchPredictionsComplete()
   }
 
   function setupPredictionVotes() {
@@ -524,7 +534,7 @@ const controllerConfig = JSON.stringify({
           emitVoteReaction(option, event, config)
           void submitVote(battleId, boxerId)
         },
-        { signal: predictionsAbort.signal },
+        { signal: predictionsAbort?.signal },
       )
     })
   }
