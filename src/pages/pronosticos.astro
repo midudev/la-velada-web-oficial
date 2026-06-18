@@ -2,6 +2,7 @@
 import AuthButton from '@/components/AuthButton.astro'
 import PredictionFight from '@/components/PredictionFight.astro'
 import PredictionHero from '@/components/PredictionHero.astro'
+import PredictionShareController from '@/components/PredictionShareController.astro'
 import PredictionVoteController from '@/components/PredictionVoteController.astro'
 import PredictionsBackground from '@/components/PredictionsBackground.astro'
 import { createPredictionBattles } from '@/consts/predictions'
@@ -61,7 +62,11 @@ const userVotesByCombat = Object.fromEntries(
         <AuthButton user={user} />
       </div>
 
-      <ol class="prediction-list mt-14 grid gap-5 sm:mt-16 md:gap-6" role="list" data-prediction-list>
+      <ol
+        class="prediction-list mt-14 grid gap-5 sm:mt-16 md:gap-6"
+        role="list"
+        data-prediction-list
+      >
         {
           predictionBattles
             .slice()
@@ -78,6 +83,7 @@ const userVotesByCombat = Object.fromEntries(
   </section>
 
   <PredictionVoteController isLoggedIn={Boolean(user)} userVotes={userVotesByCombat} user={user} />
+  <PredictionShareController isLoggedIn={Boolean(user)} totalFights={predictionBattles.length} />
   <Sponsors />
   <Footer />
 </Layout>
