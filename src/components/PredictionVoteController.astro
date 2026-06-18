@@ -374,7 +374,12 @@ const controllerConfig = JSON.stringify({
       )
       if (!option) return
 
-      writeOptionPrediction(option, predictionOption.votes, predictionOption.percentage)
+      // Reconciliación silenciosa con el servidor: actualizamos cifras y anchura,
+      // pero sin volver a disparar el flare de la barra. La animación ya se ejecutó
+      // una sola vez con el voto optimista al hacer click (sensación de fluidez).
+      writeOptionPrediction(option, predictionOption.votes, predictionOption.percentage, {
+        animateChange: false,
+      })
     })
     updateFightBadge(fight)
   }
