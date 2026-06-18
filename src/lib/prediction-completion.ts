@@ -1,4 +1,4 @@
-import { $$ } from '@/lib/dom-selector'
+import { $, $$ } from '@/lib/dom-selector'
 
 export interface UserVotes {
   [combatId: string]: string
@@ -12,8 +12,9 @@ export function getUserVotesFromDOM(): UserVotes {
     const battleId = fight.dataset.battleId
     if (!battleId) return
 
-    const selected = fight.querySelector<HTMLButtonElement>(
+    const selected = $<HTMLButtonElement>(
       '[data-prediction-option][data-selected="true"]',
+      fight,
     )
     const boxerId = selected?.dataset.boxerId
     if (boxerId) {
@@ -29,7 +30,7 @@ export function areAllPredictionsComplete(): boolean {
   if (fights.length === 0) return false
 
   return fights.every(
-    (fight) => fight.querySelector('[data-prediction-option][data-selected="true"]') !== null,
+    (fight) => $('[data-prediction-option][data-selected="true"]', fight) !== null,
   )
 }
 
