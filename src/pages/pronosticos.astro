@@ -79,11 +79,14 @@ const userVotesByCombat = Object.fromEntries(
             ))
         }
       </ol>
+
+      <div class="mt-10 flex justify-center sm:mt-12">
+        <PredictionShareController isLoggedIn={Boolean(user)} totalFights={predictionBattles.length} />
+      </div>
     </div>
   </section>
 
   <PredictionVoteController isLoggedIn={Boolean(user)} userVotes={userVotesByCombat} user={user} />
-  <PredictionShareController isLoggedIn={Boolean(user)} totalFights={predictionBattles.length} />
   <Sponsors />
   <Footer />
 </Layout>
