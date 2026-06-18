@@ -123,7 +123,12 @@ const controllerConfig = JSON.stringify({
     return Number(option.dataset.votePercentage ?? 0)
   }
 
-  function writeOptionPrediction(option: HTMLButtonElement, votes: number, percentage: number) {
+  function writeOptionPrediction(
+    option: HTMLButtonElement,
+    votes: number,
+    percentage: number,
+    { animateChange = true }: { animateChange?: boolean } = {},
+  ) {
     const safeVotes = Math.max(0, votes)
     const safePercentage = Math.max(0, Math.min(100, percentage))
     const previousPercentage = readVotePercentage(option)
@@ -136,7 +141,7 @@ const controllerConfig = JSON.stringify({
     if (percentNode) percentNode.textContent = formatPercent(safePercentage)
     if (votesNode) votesNode.textContent = formatSupport(safeVotes)
 
-    if (Math.abs(previousPercentage - safePercentage) > 0.05 && !prefersReducedMotion()) {
+    if (animateChange && Math.abs(previousPercentage - safePercentage) > 0.05 && !prefersReducedMotion()) {
       window.clearTimeout(voteBarAnimationTimeouts.get(option))
       option.dataset.voteChanging = safePercentage > previousPercentage ? 'up' : 'down'
 
