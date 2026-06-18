@@ -1,6 +1,7 @@
 ---
 import 'leaflet/dist/leaflet.css'
 import SectionHeader from '@/components/SectionHeader.astro'
+import { EVENT_HOUR } from '@/consts/event'
 
 const VENUE_NAME = 'Estadio de La Cartuja'
 const VENUE_CITY = 'Sevilla, España'
@@ -13,6 +14,8 @@ const VENUE_LOCATION = `${VENUE_COORDINATES.latitude},${VENUE_COORDINATES.longit
 const VENUE_GEO_LABEL = encodeURIComponent(`${VENUE_NAME}, ${VENUE_CITY}`)
 const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LOCATION}(${VENUE_GEO_LABEL})`
 const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VENUE_LOCATION}`
+
+console.log('hola')
 ---
 
 
@@ -131,7 +134,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
               <p
                 class="font-cinzel text-[0.75rem] font-black tracking-[0.06em] text-white/75 uppercase"
               >
-                20:00h (hora peninsular)
+                {EVENT_HOUR}h (hora peninsular)
               </p>
             </div>
           </div>
@@ -281,6 +284,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
 </style>
 
 <script>
+  import { EVENT_HOUR } from '@/consts/event'
   import { $ } from '@/lib/dom-selector'
 
   const PIN_SVG = `
@@ -366,7 +370,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
       }).setContent(
         `<strong style="color:#c7a86b;display:block;margin-bottom:0.35rem;">Estadio de La Cartuja</strong>
       <span style="color:rgba(244,228,201,0.7);">Sevilla, España</span><br/>
-      <span style="color:rgba(255,255,255,0.5);">25 · 07 · 2026 — 20:00h</span>`,
+      <span style="color:rgba(255,255,255,0.5);">25 · 07 · 2026 — ${EVENT_HOUR}h</span>`,
       )
 
       L.marker([latitude, longitude], { icon: customIcon })
