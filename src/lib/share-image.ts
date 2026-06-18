@@ -19,7 +19,7 @@ export const EXPORT_SCALE = 3 // <- Esto es por la exportación en Figma, lo exp
 
 export const IMAGE_WIDTH = DESIGN_WIDTH * EXPORT_SCALE
 export const IMAGE_HEIGHT = DESIGN_HEIGHT * EXPORT_SCALE
-export const BACKGROUND_SRC = '/porra.png'
+export const BACKGROUND_SRC = 'https://cdn.infolavelada.com/porra.png'
 
 export const HIGHLIGHT_COLOR = '#EBDDB8'
 export const BOX_INSET = 6
