@@ -126,7 +126,7 @@ function createPredictionResponse(
       return {
         fighter_id: fighterId,
         votes,
-        percentage: totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0,
+        percentage: totalVotes > 0 ? Number(((votes / totalVotes) * 100).toFixed(1)) : 0,
       }
     }),
     total_votes: totalVotes,

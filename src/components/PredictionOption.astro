@@ -31,7 +31,7 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
   data-vote-percentage={option.percentage}
   aria-label={`Pronosticar victoria de ${option.boxer.name}`}
   aria-pressed={String(isSelected)}
-  style={`--vote-share: ${option.percentage.toFixed(2)}%; --vote-color: ${option.color}; --vote-delay: ${option.delay}ms;`}
+  style={`--vote-share: ${option.percentage.toFixed(2)}%; --vote-color: ${option.color};`}
 >
   <span aria-hidden="true" class="poll-vote-tag">Tu voto</span>
 
@@ -316,9 +316,6 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
     width: var(--vote-share);
     position: relative;
     overflow: hidden;
-    transform-origin: left;
-    animation: poll-grow 900ms cubic-bezier(0.19, 1, 0.22, 1) both;
-    animation-delay: calc(var(--vote-delay) + 120ms);
     background: var(--vote-color);
     box-shadow: 0 0 16px color-mix(in srgb, var(--vote-color) 42%, transparent);
     transition:
@@ -358,19 +355,17 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
     animation: vote-number-pop 680ms cubic-bezier(0.18, 0.86, 0.24, 1);
   }
 
+  .poll-option[data-vote-changing='up'] [data-prediction-percent] {
+    color: var(--color-theme-gold);
+    text-shadow:
+      0 0 16px color-mix(in srgb, var(--color-theme-gold) 48%, transparent),
+      0 0 34px color-mix(in srgb, var(--vote-color) 30%, transparent);
+  }
+
   .poll-option[data-side='b'] .poll-mini-bar {
     margin-left: auto;
     transform-origin: right;
     background: var(--vote-color);
-  }
-
-  @keyframes poll-grow {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
-    }
   }
 
   @keyframes vote-bar-flare {
