@@ -27,13 +27,13 @@ const isCurrentNavItem = (href: string) => currentPathname === href || currentPa
                 <span
                   role='link'
                   aria-disabled='true'
-                  class='relative inline-flex items-center font-cinzel text-[0.65rem] font-bold leading-none tracking-[0.25em] sm:text-xs select-none text-white/40'
+                  class='relative inline-flex items-center font-cinzel text-[0.65rem] font-black leading-none tracking-[0.16em] sm:text-xs select-none text-white/40'
                   title='Próximamente'
                 >
                   {item.label}
                 </span>
                 {item.note && (
-                  <span class='inline-flex items-center whitespace-nowrap rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-2 py-0.5 font-cinzel text-[0.5rem] font-semibold leading-none tracking-[0.22em] text-theme-gold sm:text-[0.55rem]'>{item.note}</span>
+                  <span class='inline-flex items-center whitespace-nowrap rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-2 py-0.5 font-cinzel text-[0.5rem] font-black leading-none tracking-[0.16em] text-theme-gold sm:text-[0.55rem]'>{item.note}</span>
                 )}
               </div>
             ) : (
@@ -41,7 +41,7 @@ const isCurrentNavItem = (href: string) => currentPathname === href || currentPa
                 href={item.href}
                 data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
                 aria-current={isCurrentNavItem(item.href) ? 'page' : undefined}
-                class='relative inline-flex flex-col items-center justify-center px-3 sm:px-4 h-full font-cinzel text-[0.65rem] font-bold leading-none tracking-[0.25em] sm:text-xs group/nav text-white/85 outline-none transition-colors duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:text-theme-cream [@media(hover:hover)_and_(pointer:fine)]:hover:delay-125 focus-visible:text-theme-cream'
+                class='relative inline-flex flex-col items-center justify-center px-3 sm:px-4 h-full font-cinzel text-[0.65rem] font-black leading-none tracking-[0.16em] sm:text-xs group/nav text-white/85 outline-none transition-colors duration-150 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:text-theme-cream [@media(hover:hover)_and_(pointer:fine)]:hover:delay-125 focus-visible:text-theme-cream'
               >
                 <div
                   aria-hidden='true'
@@ -64,11 +64,11 @@ const isCurrentNavItem = (href: string) => currentPathname === href || currentPa
               <span
                 role='link'
                 aria-disabled='true'
-                class='flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/3 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-white/35'
+                class='flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/3 px-5 py-5 text-center font-cinzel text-lg font-black tracking-[0.16em] text-white/35'
                 title='Próximamente'
               >
                 {item.label}
-                {item.note && <span class='rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-3 py-1 text-[0.55rem] font-semibold tracking-[0.24em] text-theme-gold'>{item.note}</span>}
+                {item.note && <span class='rounded-full border border-theme-gold/55 bg-theme-midnight/90 px-3 py-1 text-[0.55rem] font-black tracking-[0.16em] text-theme-gold'>{item.note}</span>}
               </span>
             ) : (
               <a
@@ -76,7 +76,7 @@ const isCurrentNavItem = (href: string) => currentPathname === href || currentPa
                 data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
                 aria-current={isCurrentNavItem(item.href) ? 'page' : undefined}
                 data-mobile-menu-link
-                class='relative flex items-center justify-center rounded-2xl border border-theme-gold/40 bg-theme-midnight/80 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 active:border-theme-gold active:bg-theme-midnight focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-theme-gold [a[aria-current=page]]:border-theme-gold/75'
+                class='relative flex items-center justify-center rounded-2xl border border-theme-gold/40 bg-theme-midnight/80 px-5 py-5 text-center font-cinzel text-lg font-black tracking-[0.16em] text-theme-cream outline-none transition duration-300 active:border-theme-gold active:bg-theme-midnight focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-theme-gold [a[aria-current=page]]:border-theme-gold/75'
               >
                  <div
                   aria-hidden='true'
