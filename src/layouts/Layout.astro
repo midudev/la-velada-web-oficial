@@ -184,7 +184,12 @@ const organizationJsonLd = {
 
       const SKIP_BOXERS_ENTER_ATTR = 'data-skip-boxers-enter'
       const BOXERS_INDEX_PATH = '/boxeadores'
+      const COMBATS_INDEX_PATH = '/combates'
       const BOXER_DETAIL_PATH_RE = /^\/boxeadores\/[^/]+$/
+
+      // Imágenes que comparten `transition:name="boxer-hero-*"` entre páginas:
+      // los recortes de los combates y las tarjetas del listado de boxeadores.
+      const SHARED_HERO_SELECTOR = '.boxer-pic, .boxer-card-img'
 
       const getNormalizedPathname = (url: URL | string) => {
         const pathname =
@@ -199,6 +204,35 @@ const organizationJsonLd = {
         return toPath === BOXERS_INDEX_PATH && BOXER_DETAIL_PATH_RE.test(fromPath)
       }
 
+      // Navegación directa entre los dos listados (combates ↔ boxeadores). Ahí
+      // las decenas de imágenes con el mismo `transition:name` provocan que
+      // todas vuelen a la vez y queda fatal: lo evitamos para dejar solo el
+      // fundido de la raíz entre ambas páginas.
+      const isListingCrossfade = (event: AstroNavigationEvent) => {
+        const fromPath = getNormalizedPathname(event.from)
+        const toPath = getNormalizedPathname(event.to)
+        const endpoints = new Set([fromPath, toPath])
+
+        return endpoints.has(BOXERS_INDEX_PATH) && endpoints.has(COMBATS_INDEX_PATH)
+      }
+
+      // Quita el `view-transition-name` para que esas imágenes no se capturen
+      // como elementos compartidos y formen parte del fundido de la raíz.
+      const dropSharedHeroNames = (root: Document) => {
+        root.querySelectorAll<HTMLElement>(SHARED_HERO_SELECTOR).forEach((el) => {
+          el.style.setProperty('view-transition-name', 'none', 'important')
+        })
+      }
+
+      // El snapshot «antiguo» se captura al arrancar la view transition, antes
+      // de `before-swap`, así que la página saliente hay que limpiarla aquí.
+      document.addEventListener('astro:before-preparation', (event) => {
+        const navigationEvent = event as AstroNavigationEvent
+        if (isListingCrossfade(navigationEvent)) {
+          dropSharedHeroNames(document)
+        }
+      })
+
       document.addEventListener('astro:before-swap', (event) => {
         const transitionEvent = event as AstroBeforeSwapEvent
         const shouldSkipBoxersEnter = isReturningFromBoxerDetail(transitionEvent)
@@ -207,6 +241,14 @@ const organizationJsonLd = {
           SKIP_BOXERS_ENTER_ATTR,
           shouldSkipBoxersEnter,
         )
+
+        // Y la página entrante se limpia antes de capturar el snapshot «nuevo».
+        // (No tocamos la animación de entrada de las tarjetas: el listado de
+        // boxeadores las revela con `animate-fade-in-up`, así que dejamos que
+        // aparezcan con normalidad sobre el fundido.)
+        if (isListingCrossfade(transitionEvent)) {
+          dropSharedHeroNames(transitionEvent.newDocument)
+        }
       })
     </script>
   </head>
