@@ -10,6 +10,7 @@ import {
   getBoxerPhoto,
 } from '@/consts/boxers'
 import Layout from '@/layouts/Layout.astro'
+import { formatFollowers, getSocialMetricValue } from '@/lib/socials'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 
@@ -24,6 +25,9 @@ const boxer1 = BOXERS_BY_ID[boxer1Id]
 const boxer2 = BOXERS_BY_ID[boxer2Id]
 const country1 = COUNTRY_NAMES[boxer1.country] ?? boxer1.country
 const country2 = COUNTRY_NAMES[boxer2.country] ?? boxer2.country
+
+const totalFollowers = (boxer: typeof boxer1) =>
+  boxer.socials.reduce((sum, social) => sum + getSocialMetricValue(social), 0)
 const title = `${battle.title} — Combate ${String(battle.number).padStart(2, '0')} de La Velada del Año VI`
 const description = `Toda la información del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} contra ${boxer2.name}. Fecha, horario y detalles en Sevilla.`
 const canonical = `${SITE_URL}${battle.url}`
@@ -191,6 +195,18 @@ export const prerender = true
           <dd class="flex items-center justify-start gap-2 text-lg font-black tracking-wide sm:text-xl">
             <CountryFlag country={boxer2.country} size={22} decorative />
             <span>{country2}</span>
+          </dd>
+        </div>
+
+        <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-3 py-4 sm:gap-6">
+          <dd class="text-right text-2xl font-black tracking-wide sm:text-3xl">
+            {formatFollowers(totalFollowers(boxer1))}
+          </dd>
+          <dt class="text-center text-[0.7rem] font-bold tracking-[0.3em] text-theme-gold/85 sm:text-xs">
+            SEGUIDORES
+          </dt>
+          <dd class="text-left text-2xl font-black tracking-wide sm:text-3xl">
+            {formatFollowers(totalFollowers(boxer2))}
           </dd>
         </div>
       </dl>
