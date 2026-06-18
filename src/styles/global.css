@@ -3,11 +3,9 @@
 
 @theme {
   --font-fallback:
-    'Adjusted Arial Fallback', system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI',
+    'Cinzel Fallback', system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI',
     'Noto Sans', helvetica, arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
-  --font-primary: 'Anisette';
   --font-cinzel: 'Cinzel';
-  --font-fantasy: 'Fantasy Magist';
 
   --color-velada-cream: #f4e4c9;
   --color-velada-gold: #c7a86b;
@@ -39,7 +37,6 @@
 
   
 
-
   html {
     scrollbar-gutter: stable;
     background: var(--color-theme-midnight);
@@ -48,12 +45,6 @@
 
   body {
     background: var(--color-theme-midnight);
-  }
-
-  html[data-skip-boxers-enter] .boxers-page .animate-fade-in-up {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
   }
 
   /* Webkit Browsers (Chrome, Safari, Edge) */
@@ -201,19 +192,9 @@
 }
 
 @font-face {
-  font-family: 'Adjusted Arial Fallback';
-  src: local(Arial);
-  size-adjust: 112%;
-  ascent-override: 74%;
-  descent-override: normal;
-  line-gap-override: normal;
-}
-
-@font-face {
-  font-family: 'Cinzel';
-  src: url('/fonts/cinzel-regular.woff2') format('woff2');
-  font-weight: 400;
-  font-display: swap;
+  font-family: 'Cinzel Fallback';
+  src: local(georgia);
+  size-adjust: 103%;
 }
 
 @font-face {
@@ -225,50 +206,14 @@
 
 @font-face {
   font-family: 'Cinzel';
-  src: url('/fonts/cinzel-semibold.woff2') format('woff2');
-  font-weight: 600;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Cinzel';
-  src: url('/fonts/cinzel-bold.woff2') format('woff2');
-  font-weight: 700;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Cinzel';
-  src: url('/fonts/cinzel-extrabold.woff2') format('woff2');
-  font-weight: 800;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Cinzel';
   src: url('/fonts/cinzel-black.woff2') format('woff2');
   font-weight: 900;
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'Fantasy Magist';
-  src: url('/fonts/fantasy-magist.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Fantasy Magist';
-  src: url('/fonts/fantasy-magist-italic.woff2') format('woff2');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
 html {
   font-family: 'Cinzel', var(--font-fallback);
+  font-weight: 500;
   text-transform: uppercase;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
