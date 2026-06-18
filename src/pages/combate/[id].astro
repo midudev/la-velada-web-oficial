@@ -143,10 +143,6 @@ export const prerender = true
             decoding="async"
           />
           <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer1.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
-            <CountryFlag country={boxer1.country} size={18} decorative />
-            {COUNTRY_NAMES[boxer1.country]}
-          </p>
         </article>
 
         <span class="text-center font-fantasy text-7xl text-theme-gold md:text-8xl" aria-hidden="true">
@@ -164,12 +160,39 @@ export const prerender = true
             decoding="async"
           />
           <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer2.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-[0.25em] text-white/60">
-            <CountryFlag country={boxer2.country} size={18} decorative />
-            {COUNTRY_NAMES[boxer2.country]}
-          </p>
         </article>
       </div>
+
+      <dl
+        class="mx-auto mt-12 w-full max-w-3xl divide-y divide-theme-gold/10 rounded-3xl border border-theme-gold/25 bg-white/[0.03] px-4 sm:px-8"
+        aria-label={`Comparativa entre ${boxer1.name} y ${boxer2.name}`}
+      >
+        <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-3 py-4 sm:gap-6">
+          <dd class="text-right text-2xl font-black tracking-wide sm:text-3xl">
+            {boxer1.age != null ? `${boxer1.age} años` : '—'}
+          </dd>
+          <dt class="text-center text-[0.7rem] font-bold tracking-[0.3em] text-theme-gold/85 sm:text-xs">
+            EDAD
+          </dt>
+          <dd class="text-left text-2xl font-black tracking-wide sm:text-3xl">
+            {boxer2.age != null ? `${boxer2.age} años` : '—'}
+          </dd>
+        </div>
+
+        <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-3 py-4 sm:gap-6">
+          <dd class="flex items-center justify-end gap-2 text-lg font-black tracking-wide sm:text-xl">
+            <span>{country1}</span>
+            <CountryFlag country={boxer1.country} size={22} decorative />
+          </dd>
+          <dt class="text-center text-[0.7rem] font-bold tracking-[0.3em] text-theme-gold/85 sm:text-xs">
+            PAÍS
+          </dt>
+          <dd class="flex items-center justify-start gap-2 text-lg font-black tracking-wide sm:text-xl">
+            <CountryFlag country={boxer2.country} size={22} decorative />
+            <span>{country2}</span>
+          </dd>
+        </div>
+      </dl>
     </div>
   </section>
   <Sponsors />
