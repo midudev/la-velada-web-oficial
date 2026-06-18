@@ -33,7 +33,7 @@ export const HOME_FAQS = [
   {
     question: '¿Cuándo es La Velada del Año VI?',
     answer:
-      'La Velada del Año VI se celebra el sábado 25 de julio de 2026 a partir de las 20:00h (horario de España peninsular).',
+      'La Velada del Año VI se celebra el sábado 25 de julio de 2026 a partir de las 19:00h (horario de España peninsular).',
   },
   {
     question: '¿Dónde se puede ver online?',

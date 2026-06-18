@@ -1,5 +1,6 @@
 ---
 import SectionHeader from '@/components/SectionHeader.astro'
+import { EVENT_DATE_TIME } from '@/consts/event'
 import type { HomeFaqItem } from '@/consts/home-faq'
 
 interface Props {
@@ -8,7 +9,7 @@ interface Props {
 
 const { faqs } = Astro.props
 
-const EVENT_TIMESTAMP = new Date('2026-07-25T20:00:00+02:00').getTime()
+const EVENT_TIMESTAMP = new Date(EVENT_DATE_TIME).getTime()
 ---
 
 <section
