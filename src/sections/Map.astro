@@ -1,5 +1,6 @@
 ---
 import SectionHeader from '@/components/SectionHeader.astro'
+import { EVENT_HOUR } from '@/consts/event'
 
 const VENUE_NAME = 'Estadio de La Cartuja'
 const VENUE_CITY = 'Sevilla, España'
@@ -132,7 +133,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
                 Hora
               </p>
               <p class="text-[0.75rem] font-semibold tracking-[0.08em] text-white/75 uppercase">
-                20:00h (hora peninsular)
+                {EVENT_HOUR}h (hora peninsular)
               </p>
             </div>
           </div>
@@ -282,6 +283,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
 </style>
 
 <script>
+  import { EVENT_HOUR } from '@/consts/event'
   import { $ } from '@/lib/dom-selector'
 
   const PIN_SVG = `
@@ -379,7 +381,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
       }).setContent(
         `<strong style="color:#c7a86b;display:block;margin-bottom:0.35rem;">Estadio de La Cartuja</strong>
       <span style="color:rgba(244,228,201,0.7);">Sevilla, España</span><br/>
-      <span style="color:rgba(255,255,255,0.5);">25 · 07 · 2026 — 20:00h</span>`,
+      <span style="color:rgba(255,255,255,0.5);">25 · 07 · 2026 — 19:00h</span>`,
       )
 
       L.marker([latitude, longitude], { icon: customIcon })
