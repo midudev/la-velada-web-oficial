@@ -28,8 +28,6 @@ export interface Boxer {
   heightCm?: number | null
   /** Alcance (wingspan) en cm. */
   reachCm?: number | null
-  /** Guardia de boxeo. */
-  guard?: 'Izquierda' | 'Derecha' | null
 }
 
 /**
@@ -392,6 +390,7 @@ pero que ahora tendrá que demostrarlo bajo presión y frente a un rival. 🥊`,
     previousVeladaWins: [],
     birthDate: '1994-06-22',
     age: 31,
+    fightWeightKg: 77,
     youtubeChannelId: 'UCKvoBRFqMNqvuSvFBiNadgw',
     followersUpdatedAt: '2026-05-14',
     socials: [
@@ -622,6 +621,7 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     previousVeladaWins: [],
     birthDate: '2002-03-01',
     age: 24,
+    fightWeightKg: 52,
     youtubeChannelId: 'UCrzySRaber8_-52PPh0GG2g',
     followersUpdatedAt: '2026-05-14',
     socials: [
@@ -660,6 +660,7 @@ workout: [
     previousVeladaWins: [2023],
     birthDate: '1998-08-20',
     age: 27,
+    fightWeightKg: 52,
     youtubeChannelId: 'UCW3bX8K5LuQHw8cKc3U8iUg',
     followersUpdatedAt: '2026-05-14',
     socials: [
@@ -748,6 +749,7 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     previousVeladaWins: [2025],
     birthDate: '1997-04-24',
     age: 29,
+    fightWeightKg: 77,
     youtubeChannelId: 'UCCEmjNPpJYhGDgaEqeeA4HA',
     followersUpdatedAt: '2026-05-14',
     socials: [
