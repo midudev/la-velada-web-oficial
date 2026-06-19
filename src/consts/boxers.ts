@@ -19,10 +19,6 @@ export interface Boxer {
   workout?: {
     videoId: string
     title: string
-    thumbnail: {
-      avif: string
-      webp: string
-    }
   }[]
   /** Peso actual en kg. */
   weightKg?: number | null
@@ -84,26 +80,14 @@ export const BOXERS: Boxer[] = [
       {
         videoId: '6BMdwhu2f0g',
         title: 'PELEO EN LA VELADA DEL AÑO VI',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/alondrissa/6BMdwhu2f0g-HD.avif',
-          webp: '/Entrenamientos/thumbnails/alondrissa/6BMdwhu2f0g-HD.webp',
-        },
       },
       {
         videoId: '_q7KA1Vw24I',
         title: 'UN DIA ENTRENANDO CONMIGO ',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/alondrissa/_q7KA1Vw24I-HD.avif',
-          webp: '/Entrenamientos/thumbnails/alondrissa/_q7KA1Vw24I-HD.webp',
-        },
       },
       {
         videoId: 'hNMGa52cdGw',
         title: 'MI CARA A CARA CON ANGIE ',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/alondrissa/hNMGa52cdGw-HD.avif',
-          webp: '/Entrenamientos/thumbnails/alondrissa/hNMGa52cdGw-HD.webp',
-        },
       },
     ],
   },
@@ -134,10 +118,6 @@ export const BOXERS: Boxer[] = [
       {
         videoId: 'DGHzGPJT4OE',
         title: 'Un día conmigo Entrenando para la Velada',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/angie-velasco/DGHzGPJT4OE-HD.avif',
-          webp: '/Entrenamientos/thumbnails/angie-velasco/DGHzGPJT4OE-HD.webp',
-        },
       },
     ],
   },
@@ -216,34 +196,18 @@ pero que ahora tendrá que demostrarlo todo bajo los focos del ring. 🥊
       {
         videoId: 'IvaT8PKc1w',
         title: 'Así fue mi presentación de LA VELADA DEL AÑO VI',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/fabiana-sevillano/-IvaT8PKc1w-HD.avif',
-          webp: '/Entrenamientos/thumbnails/fabiana-sevillano/-IvaT8PKc1w-HD.webp',
-        },
       },
       {
         videoId: 'JWqJ22YGvjM',
         title: 'LA VELADA - Yo amargá no voy a ir | Capítulo 1',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/fabiana-sevillano/JWqJ22YGvjM-HD.avif',
-          webp: '/Entrenamientos/thumbnails/fabiana-sevillano/JWqJ22YGvjM-HD.webp',
-        },
       },
       {
         videoId: 'Zv9QJf8uAOM',
         title: 'LA VELADA - Bien, mal, cansada | Capítulo 2',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/fabiana-sevillano/Zv9QJf8uAOM-HD.avif',
-          webp: '/Entrenamientos/thumbnails/fabiana-sevillano/Zv9QJf8uAOM-HD.webp',
-        },
       },
       {
         videoId: 'wkWbbHspRzM',
         title: 'LA VELADA - Primeros sparrings | Capítulo 3',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/fabiana-sevillano/wkWbbHspRzM-HD.avif',
-          webp: '/Entrenamientos/thumbnails/fabiana-sevillano/wkWbbHspRzM-HD.webp',
-        },
       },
     ],
   },
@@ -275,10 +239,6 @@ pero que ahora tendría que demostrarlo golpe a golpe. 🥊`,
       {
         videoId: 'JflVnA3Woro',
         title: 'VlogSito España Por La Velada Del Año 6',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/fernanfloo/JflVnA3Woro-HD.avif',
-          webp: '/Entrenamientos/thumbnails/fernanfloo/JflVnA3Woro-HD.webp',
-        },
       },
     ],
   },
@@ -311,36 +271,20 @@ pero que ahora tendrá que responder golpe a golpe. 🥊`,
       {
         videoId: 'FrirlWQUOrE',
         title: 'VOY A PELEAR EN LA VELADA DEL AÑO | Cara a Cara con Edu Aguirre',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/gaston-edul/FrirlWQUOrE-HD.avif',
-          webp: '/Entrenamientos/thumbnails/gaston-edul/FrirlWQUOrE-HD.webp',
-        },
       },
       {
         videoId: 'eu3ku2A4c_s',
         title:
           'MANO A MANO CON MARAVILLA MARTÍNEZ | Consejos de un Campeón Mundial para La Velada del Año',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/gaston-edul/eu3ku2A4c_s-HD.avif',
-          webp: '/Entrenamientos/thumbnails/gaston-edul/eu3ku2A4c_s-HD.webp',
-        },
       },
       {
         videoId: 'vj-GPlmP19Y',
         title: 'PELEO CONTRA UN CAMPEÓN DEL MUNDO | Sparring vs. Maravilla Martínez',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/gaston-edul/vj-GPlmP19Y-HD.avif',
-          webp: '/Entrenamientos/thumbnails/gaston-edul/vj-GPlmP19Y-HD.webp',
-        },
       },
 
       {
         videoId: 'H5ANqu6eKDw',
         title: 'PELEO CONTRA UN BOXEADOR PROFESIONAL EN KANSAS CITY - VLOG #3',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/gaston-edul/H5ANqu6eKDw-HD.avif',
-          webp: '/Entrenamientos/thumbnails/gaston-edul/H5ANqu6eKDw-HD.webp',
-        },
       },
     ],
   },
@@ -372,50 +316,26 @@ pero que ahora tendrá que demostrarlo bajo presión y frente a un rival. 🥊`,
       {
         videoId: 'lrUJJaolMf0',
         title: 'Lo que no se vió en la Presentación de la Velada Del Año 6',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/gero-arias/lrUJJaolMf0-HD.avif',
-          webp: '/Entrenamientos/thumbnails/gero-arias/lrUJJaolMf0-HD.webp',
-        },
       },
       {
         videoId: 'fvIVHMDXvgs',
         title: 'Peleé Contra un Campeón Mundial de Boxeo',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/gero-arias/fvIVHMDXvgs-HD.avif',
-          webp: '/Entrenamientos/thumbnails/gero-arias/fvIVHMDXvgs-HD.webp',
-        },
       },
       {
         videoId: '8b63j6136RI',
         title: 'Sobreviví 72h en un Campamento de Boxeo con Milica',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/gero-arias/8b63j6136RI-HD.avif',
-          webp: '/Entrenamientos/thumbnails/gero-arias/8b63j6136RI-HD.webp',
-        },
       },
       {
         videoId: 'Uu9ncwoUBus',
         title: 'Boxee en el Barrio más Peligroso de México',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/gero-arias/Uu9ncwoUBus-HD.avif',
-          webp: '/Entrenamientos/thumbnails/gero-arias/Uu9ncwoUBus-HD.webp',
-        },
       },
       {
         videoId: 'WSB2fbqqzSw',
         title: 'Puse a Prueba el Limite de Rivers',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/gero-arias/WSB2fbqqzSw-HD.avif',
-          webp: '/Entrenamientos/thumbnails/gero-arias/WSB2fbqqzSw-HD.webp',
-        },
       },
       {
         videoId: 'GQXwAqOvpAM',
         title: 'Competí Contra Atletas de Cada Categoría Olímpica',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/gero-arias/GQXwAqOvpAM-HD.avif',
-          webp: '/Entrenamientos/thumbnails/gero-arias/GQXwAqOvpAM-HD.webp',
-        },
       },
     ],
   },
@@ -653,66 +573,34 @@ que ahora tendrá que volver a demostrarlo golpe a golpe. 🥊
       {
         videoId: 'TcjSRGm_FDA',
         title: 'Regreso a la velada del año ',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/Rivers/rivers.avif',
-          webp: '/Entrenamientos/thumbnails/Rivers/rivers.webp',
-        },
       },
       {
         videoId: 'WPpozQubJm8',
         title: 'MI PRIMER ENTRENAMIENTO DESPUÉS DE 3 AÑOS',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/Rivers/rivers1.avif',
-          webp: '/Entrenamientos/thumbnails/Rivers/rivers1.webp',
-        },
       },
       {
         videoId: 'kfsfN50CYzY',
         title: 'Entrenamiento de BOX con PIO FC',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/Rivers/kfsfN50CYzY-SD.avif',
-          webp: '/Entrenamientos/thumbnails/Rivers/kfsfN50CYzY-SD.webp',
-        },
       },
       {
         videoId: 'SR_SKdi-xw8',
         title: 'Entrené con Canelo Álvarez y Eddy Reynoso | Camino a La Velada VI',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/Rivers/SR_SKdi-xw8-HD.avif',
-          webp: '/Entrenamientos/thumbnails/Rivers/SR_SKdi-xw8-HD.webp',
-        },
       },
       {
         videoId: '7qzy2sL2Uss',
         title: 'Me pegué con Lupita Villalobos antes de que...',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/Rivers/7qzy2sL2Uss-HD.avif',
-          webp: '/Entrenamientos/thumbnails/Rivers/7qzy2sL2Uss-HD.webp',
-        },
       },
       {
         videoId: 'tBnsvXAmszc',
         title: 'Boxeamos a CIEGAS con @geroariass rumbo a La Velada VI',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/Rivers/tBnsvXAmszc-SD.avif',
-          webp: '/Entrenamientos/thumbnails/Rivers/tBnsvXAmszc-SD.webp',
-        },
       },
       {
         videoId: 'Og2tZlNiZSc',
         title: 'NOS DIMOS CON TODO ft. ARIA BELA',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/Rivers/Og2tZlNiZSc-SD.avif',
-          webp: '/Entrenamientos/thumbnails/Rivers/Og2tZlNiZSc-SD.webp',
-        },
       },
       {
         videoId: 'GkhX2_HLmU0',
         title: '¿Cuánto aguantará Carlos Belcast mi ENTRENAMIENTO? - La Velada 6',
-        thumbnail: {
-          avif: '/Entrenamientos/thumbnails/Rivers/GkhX2_HLmU0-HD.avif',
-          webp: '/Entrenamientos/thumbnails/Rivers/GkhX2_HLmU0-HD.webp',
-        },
       },
     ],
   },
