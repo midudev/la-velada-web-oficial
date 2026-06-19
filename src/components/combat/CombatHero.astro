@@ -1,0 +1,445 @@
+---
+import CombatHeroVideo from '@/components/combat/CombatHeroVideo.astro'
+import type { Boxer, BoxerImageVariants } from '@/consts/boxers'
+import type { BattleVideoSources } from '@/consts/battle-videos'
+
+interface Props {
+  boxer1: Boxer
+  boxer2: Boxer
+  boxer1Hero: BoxerImageVariants
+  boxer2Hero: BoxerImageVariants
+  video: BattleVideoSources | null
+}
+
+const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
+---
+
+<section class="combat-hero" aria-labelledby="battle-title">
+  <CombatHeroVideo video={video} />
+  <div aria-hidden="true" class="combat-hero-veil"></div>
+
+  <a
+    href={`/boxeadores/${boxer1.id}`}
+    class="combat-hero-boxer boxer-a"
+    aria-label={`Ver perfil de ${boxer1.name}`}
+  >
+    <span aria-hidden="true" class="hero-boxer-glow"></span>
+    <picture>
+      <source type="image/avif" srcset={boxer1Hero.avif} />
+      <source type="image/webp" srcset={boxer1Hero.webp} />
+      <img
+        src={boxer1Hero.webp}
+        alt=""
+        fetchpriority="high"
+        decoding="async"
+        class="boxer-img"
+        transition:name={`boxer-hero-${boxer1.id}`}
+      />
+    </picture>
+  </a>
+
+  <a
+    href={`/boxeadores/${boxer2.id}`}
+    class="combat-hero-boxer boxer-b"
+    aria-label={`Ver perfil de ${boxer2.name}`}
+  >
+    <span aria-hidden="true" class="hero-boxer-glow"></span>
+    <picture>
+      <source type="image/avif" srcset={boxer2Hero.avif} />
+      <source type="image/webp" srcset={boxer2Hero.webp} />
+      <img
+        src={boxer2Hero.webp}
+        alt=""
+        fetchpriority="high"
+        decoding="async"
+        class="boxer-img"
+        transition:name={`boxer-hero-${boxer2.id}`}
+      />
+    </picture>
+  </a>
+
+  <div class="combat-hero-content">
+    <div class="relative animate-blurred-fade-in leading-none animate-delay-100">
+      <picture class="block">
+        <source srcset="/logo.avif" type="image/avif" />
+        <source srcset="/logo.webp" type="image/webp" />
+        <img
+          src="/logo.webp"
+          alt="Logo de La Velada del Año VI"
+          class="boxer-default-logo relative block h-auto w-[58vw] max-w-[300px] sm:w-[40vw] md:w-[30vw] lg:w-[23vw]"
+          width="512"
+          height="512"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </picture>
+    </div>
+
+    <h1 id="battle-title" class="combat-title font-fantasy">
+      <a
+        href={`/boxeadores/${boxer1.id}`}
+        class="fighter-name fighter-name-a"
+        transition:name={`boxer-name-${boxer1.id}`}
+      >
+        {boxer1.name}
+      </a>
+      <span class="vs-glyph">VS</span>
+      <a
+        href={`/boxeadores/${boxer2.id}`}
+        class="fighter-name fighter-name-b"
+        transition:name={`boxer-name-${boxer2.id}`}
+      >
+        {boxer2.name}
+      </a>
+    </h1>
+
+    <div aria-hidden="true" class="scroll-hint">
+      <span class="scroll-line"></span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .combat-hero {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 100svh;
+    overflow: hidden;
+    color: var(--color-theme-cream);
+    background: var(--color-theme-midnight);
+    isolation: isolate;
+    mask-image: linear-gradient(to bottom, #000 0%, #000 64%, #000 82%, transparent 100%);
+  }
+
+  .combat-hero-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(5, 8, 22, 0.12) 0%,
+        transparent 18%,
+        transparent 34%,
+        rgba(5, 8, 22, 0.45) 64%,
+        rgba(5, 8, 22, 0.86) 100%
+      ),
+      radial-gradient(ellipse 70% 48% at 50% 100%, rgba(5, 8, 22, 0.32), transparent 72%);
+  }
+
+  .combat-hero-boxer {
+    position: absolute;
+    /* Anclados por arriba con una zona segura para que la cabeza nunca se
+       meta bajo la cabecera fija; el alto rebasa el viewport para que los
+       boxeadores se vean más grandes y los pies se recorten fuera. */
+    top: clamp(4rem, 8vh, 5.5rem);
+    bottom: auto;
+    z-index: 2;
+    width: 54%;
+    max-width: 680px;
+    height: 108vh;
+    display: flex;
+    align-items: flex-start;
+    color: inherit;
+    text-decoration: none;
+    outline: none;
+  }
+
+  .boxer-a {
+    left: 0;
+    justify-content: flex-start;
+  }
+
+  .boxer-b {
+    right: 0;
+    justify-content: flex-end;
+  }
+
+  .hero-boxer-glow {
+    position: absolute;
+    inset: 8% -12% 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      70% 58% at 50% 42%,
+      color-mix(in srgb, var(--color-theme-gold) 30%, transparent),
+      transparent 66%
+    );
+    opacity: 0.22;
+    filter: blur(8px);
+    transition:
+      opacity 500ms ease,
+      transform 500ms ease;
+  }
+
+  .combat-hero-boxer picture {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+  }
+
+  .boxer-a picture {
+    justify-content: flex-start;
+  }
+
+  .boxer-b picture {
+    justify-content: flex-end;
+  }
+
+  .boxer-img {
+    height: 100%;
+    max-height: none;
+    width: auto;
+    object-fit: contain;
+    object-position: top center;
+    filter: saturate(1) brightness(0.96);
+    transform: translateZ(0);
+    transition:
+      filter 500ms ease,
+      transform 500ms ease;
+  }
+
+  .combat-hero-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 1.5rem 4.5rem;
+    max-width: 40rem;
+    width: 100%;
+    height: 90vh;
+  }
+
+  .combat-title {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+
+  .fighter-name {
+    display: block;
+    font-size: clamp(2.2rem, 4.5vw + 1rem, 4.5rem);
+    font-weight: 900;
+    line-height: 0.88;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+    text-decoration: none;
+    outline: none;
+    transition:
+      color 350ms ease,
+      text-shadow 350ms ease,
+      transform 350ms ease;
+    text-shadow:
+      0 0 32px rgba(199, 168, 107, 0.2),
+      0 3px 22px rgba(0, 0, 0, 0.88);
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+
+      z-index: -1;
+
+      display: block;
+      width: 0;
+      height: 2px;
+      margin: 0 auto;
+      background: linear-gradient(to left, rgba(199, 168, 107, 0.7), transparent);
+
+      transition:
+        width 350ms ease,
+        background 350ms ease;
+    }
+  }
+
+  .fighter-name:hover,
+  .fighter-name:focus-visible,
+  .combat-hero:has(.boxer-a:hover) .fighter-name-a,
+  .combat-hero:has(.boxer-a:focus-visible) .fighter-name-a,
+  .combat-hero:has(.boxer-b:hover) .fighter-name-b,
+  .combat-hero:has(.boxer-b:focus-visible) .fighter-name-b {
+    color: color-mix(in srgb, var(--color-theme-gold) 88%, white);
+    transform: translateY(-0.08rem);
+    text-shadow:
+      0 0 26px color-mix(in srgb, var(--color-theme-gold) 40%, transparent),
+      0 4px 24px rgba(0, 0, 0, 0.9);
+
+    &::before {
+      width: 100%;
+    }
+  }
+
+  .fighter-name:focus-visible {
+    border-radius: 0.25rem;
+    outline: 2px solid var(--color-theme-gold);
+    outline-offset: 0.3rem;
+  }
+
+  .combat-hero-boxer:hover .hero-boxer-glow,
+  .combat-hero-boxer:focus-visible .hero-boxer-glow,
+  .combat-hero:has(.fighter-name-a:hover) .boxer-a .hero-boxer-glow,
+  .combat-hero:has(.fighter-name-a:focus-visible) .boxer-a .hero-boxer-glow,
+  .combat-hero:has(.fighter-name-b:hover) .boxer-b .hero-boxer-glow,
+  .combat-hero:has(.fighter-name-b:focus-visible) .boxer-b .hero-boxer-glow {
+    opacity: 0.9;
+    transform: scale(1.04);
+  }
+
+  .combat-hero-boxer:hover .boxer-img,
+  .combat-hero-boxer:focus-visible .boxer-img,
+  .combat-hero:has(.fighter-name-a:hover) .boxer-a .boxer-img,
+  .combat-hero:has(.fighter-name-a:focus-visible) .boxer-a .boxer-img,
+  .combat-hero:has(.fighter-name-b:hover) .boxer-b .boxer-img,
+  .combat-hero:has(.fighter-name-b:focus-visible) .boxer-b .boxer-img {
+    filter: saturate(1.12) brightness(1.06)
+      drop-shadow(0 0 28px color-mix(in srgb, var(--color-theme-gold) 34%, transparent));
+    transform: translateY(-0.35rem) scale(1.015);
+  }
+
+  .combat-hero-boxer:focus-visible {
+    outline: none;
+  }
+
+  .vs-glyph {
+    display: block;
+    font-family: var(--font-fantasy);
+    font-size: clamp(3.5rem, 3vw, 8rem);
+    line-height: 1.2;
+    color: var(--color-theme-gold);
+    text-shadow:
+      0 0 55px rgba(199, 168, 107, 0.55),
+      0 0 110px rgba(199, 168, 107, 0.2),
+      0 4px 30px rgba(0, 0, 0, 0.92);
+  }
+
+  .scroll-hint {
+    margin-top: 3rem;
+  }
+
+  .scroll-line {
+    display: block;
+    width: 1px;
+    height: 3.5rem;
+    margin: 0 auto;
+    background: linear-gradient(to bottom, rgba(199, 168, 107, 0.7), transparent);
+    animation: scroll-drop 2.4s ease-in-out infinite;
+  }
+
+  @keyframes scroll-drop {
+    0%,
+    100% {
+      opacity: 0;
+      transform: scaleY(0.2) translateY(-50%);
+    }
+    50% {
+      opacity: 1;
+      transform: scaleY(1) translateY(0);
+    }
+  }
+
+  @media (max-width: 639px) {
+    /* En móvil los boxeadores son decorativos a los lados: se mantienen
+       anclados abajo como hasta ahora. */
+    .combat-hero-boxer {
+      top: auto;
+      bottom: 0;
+      width: 72vw;
+      max-width: none;
+      height: min(92svh, 46rem);
+      align-items: flex-end;
+    }
+
+    .boxer-a {
+      left: -18vw;
+    }
+
+    .boxer-b {
+      right: -18vw;
+    }
+
+    .boxer-img {
+      max-height: 92svh;
+      object-position: bottom center;
+    }
+
+    .combat-hero-content {
+      height: 100svh;
+      max-width: 100%;
+      padding: 4.5rem 0.85rem 2.75rem;
+    }
+
+    .combat-title {
+      width: min(92vw, 30rem);
+      margin-top: auto;
+      margin-bottom: clamp(2rem, 9svh, 4.25rem);
+    }
+
+    .fighter-name {
+      font-size: clamp(2.45rem, 13vw, 4.65rem);
+      line-height: 0.82;
+      overflow-wrap: anywhere;
+    }
+
+    .vs-glyph {
+      font-size: clamp(4.75rem, 8vw, 7.5rem);
+      line-height: 1.2;
+    }
+
+    .scroll-hint {
+      display: none;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .combat-hero-boxer {
+      width: 78vw;
+    }
+
+    .boxer-a {
+      left: -24vw;
+    }
+
+    .boxer-b {
+      right: -24vw;
+    }
+  }
+
+  /* Pantallas anchas pero bajas (p. ej. MacBook Air): el alto del hero es
+     pequeño, así que compactamos el contenido para que las caras (ancladas
+     bajo la cabecera) y los nombres convivan sin solaparse. */
+  @media (min-width: 640px) and (max-height: 860px) {
+    .combat-hero-content {
+      height: auto;
+      justify-content: flex-end;
+      padding-bottom: 3rem;
+    }
+
+    .scroll-hint {
+      margin-top: 1.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-line {
+      animation: none;
+      opacity: 0.38;
+    }
+
+    .hero-boxer-glow,
+    .boxer-img,
+    .fighter-name {
+      transition: none;
+    }
+  }
+</style>
