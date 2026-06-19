@@ -238,7 +238,7 @@ pero que ahora tendrá que demostrarlo todo bajo los focos del ring. 🥊
 `,
     workout: [
       {
-        videoId: 'IvaT8PKc1w',
+        videoId: '-IvaT8PKc1w',
         title: 'Así fue mi presentación de LA VELADA DEL AÑO VI',
       },
       {
@@ -478,6 +478,12 @@ Ahora afronta uno de los mayores retos de su carrera.
 De las redes sociales… al ring.
 La Velada VI supone para La Parce un cambio radical, donde tendrá que enfrentarse a meses de preparación física y mental para competir en un deporte completamente nuevo para ella. Sin experiencia previa en boxeo, el desafío será adaptarse a la exigencia del combate y demostrar disciplina dentro del cuadrilátero.
 Un perfil en pleno crecimiento, con ambición y proyección… pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
+    workout: [
+      {
+        videoId: 'hnseJg3DZzo',
+        title: 'VOY A PELEAR EN LA VELADA DEL AÑO 6 | VLOG | La Parce',
+      },
+    ],
   },
   {
     id: 'lit-killah',
@@ -538,6 +544,12 @@ La Velada VI marca su salto a un terreno completamente distinto, donde tendrá q
 De las redes sociales y los eventos… a un combate real.
 Un perfil acostumbrado al foco mediático y a la presión constante…
 pero que ahora tendrá que demostrarlo dentro del ring. 🥊`,
+workout: [
+      {
+        videoId: 'plWZbt_DFCw',
+        title: 'MI RUTINA PARA LA VELADA *Episodio 1* - Marta Diaz',
+      },
+    ],
   },
   {
     id: 'natalia-mx',
@@ -563,6 +575,12 @@ De las redes sociales… al ring.
 La Velada VI supone para Natalia MX un cambio radical, donde tendrá que someterse a meses de preparación física y mental para competir en un deporte totalmente nuevo para ella. Sin experiencia previa en el boxeo, el reto será adaptarse a la exigencia del combate y demostrar disciplina dentro del cuadrilátero.
 Un perfil con gran presencia mediática, acostumbrado a estar en el foco…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
+workout: [
+      {
+        videoId: 'b7KZHgHpsWI',
+        title: 'ENTRENANDO PARA LA VELADA DEL AÑO || VLOG',
+      },
+    ],
   },
   {
     id: 'plex',
@@ -618,6 +636,20 @@ De las recetas… al ring.
 La Velada VI supone para Roro un reto totalmente nuevo, donde tendrá que enfrentarse a meses de preparación física y mental para competir en un deporte exigente y desconocido para ella. Sin experiencia previa en el boxeo, el desafío será adaptarse al ritmo del combate y demostrar disciplina dentro del cuadrilátero.
 Un perfil acostumbrado a la exposición constante y a la presión de las redes…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
+workout: [
+      {
+        videoId: 'b4YZtb6lkpI',
+        title: 'Rivers... voy a por ti.',
+      },
+      {
+        videoId: 'IcGLCqFRfE4',
+        title: 'Me Enfrenté a un Monje Shaolín...',
+      },
+      {
+        videoId: 'V6xAOfEPdpE',
+        title: 'Mi vida a un mes de pelear en La Velada...',
+      },
+    ],
   },
   {
     id: 'samy-rivers',
