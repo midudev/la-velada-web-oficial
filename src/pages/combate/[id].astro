@@ -1,13 +1,15 @@
 ---
-import type { GetStaticPaths } from 'astro'
-
-import CountryFlag from '@/components/CountryFlag.astro'
-import { battles, battlesById } from '@/consts/battles'
+import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
+import CombatHero from '@/components/combat/CombatHero.astro'
+import CombatStatsSection from '@/components/combat/CombatStatsSection.astro'
+import { battlesById } from '@/consts/battles'
 import { EVENT_DATE_TIME } from '@/consts/event'
 import {
   BOXERS_BY_ID,
   COUNTRY_NAMES,
-  getBoxerPhoto,
+  getBoxerHeroImages,
+  getBoxerSelectImages,
+  type Boxer,
 } from '@/consts/boxers'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
@@ -22,11 +24,53 @@ const SITE_URL = 'https://www.infolavelada.com'
 const [boxer1Id, boxer2Id] = battle.boxerIds
 const boxer1 = BOXERS_BY_ID[boxer1Id]
 const boxer2 = BOXERS_BY_ID[boxer2Id]
-const country1 = COUNTRY_NAMES[boxer1.country] ?? boxer1.country
-const country2 = COUNTRY_NAMES[boxer2.country] ?? boxer2.country
+const battleVideo = battle.video
+const boxer1Hero = getBoxerHeroImages(boxer1)
+const boxer2Hero = getBoxerHeroImages(boxer2)
+const boxer1Select = getBoxerSelectImages(boxer1)
+const boxer2Select = getBoxerSelectImages(boxer2)
+
 const title = `${battle.title} — Combate ${String(battle.number).padStart(2, '0')} de La Velada del Año VI`
 const description = `Toda la información del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} contra ${boxer2.name}. Fecha, horario y detalles en Sevilla.`
 const canonical = `${SITE_URL}${battle.url}`
+
+const fmt = {
+  weight: (kg?: number | null) => (kg != null ? `${kg} kg` : '—'),
+  height: (cm?: number | null) => (cm != null ? `${(cm / 100).toFixed(2)} m` : '—'),
+  age: (age?: number | null) => (age != null ? `${age} años` : '—'),
+  guard: (guard?: Boxer['guard']) =>
+    guard === 'Derecha' ? 'Diestra' : guard === 'Izquierda' ? 'Izquierda' : '—',
+}
+
+const stats = [
+  {
+    label: 'País',
+    a: COUNTRY_NAMES[boxer1.country] ?? boxer1.country,
+    b: COUNTRY_NAMES[boxer2.country] ?? boxer2.country,
+    flagA: boxer1.country,
+    flagB: boxer2.country,
+  },
+  {
+    label: 'Peso pactado',
+    a: fmt.weight(boxer1.fightWeightKg ?? boxer1.weightKg),
+    b: fmt.weight(boxer2.fightWeightKg ?? boxer2.weightKg),
+  },
+  {
+    label: 'Altura',
+    a: fmt.height(boxer1.heightCm),
+    b: fmt.height(boxer2.heightCm),
+  },
+  {
+    label: 'Edad',
+    a: fmt.age(boxer1.age),
+    b: fmt.age(boxer2.age),
+  },
+  {
+    label: 'Guardia',
+    a: fmt.guard(boxer1.guard),
+    b: fmt.guard(boxer2.guard),
+  },
+]
 
 const sportsEventJsonLd = {
   '@context': 'https://schema.org',
@@ -38,11 +82,7 @@ const sportsEventJsonLd = {
   startDate: EVENT_DATE_TIME,
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
-  superEvent: {
-    '@type': 'SportsEvent',
-    name: 'La Velada del Año VI',
-    url: `${SITE_URL}/`,
-  },
+  superEvent: { '@type': 'SportsEvent', name: 'La Velada del Año VI', url: `${SITE_URL}/` },
   location: {
     '@type': 'Place',
     name: 'Estadio de La Cartuja',
@@ -60,14 +100,12 @@ const sportsEventJsonLd = {
       name: boxer1.name,
       url: `${SITE_URL}/boxeadores/${boxer1.id}`,
       image: `${SITE_URL}/photos/${boxer1.id}/01.webp`,
-      nationality: { '@type': 'Country', name: country1 },
     },
     {
       '@type': 'Person',
       name: boxer2.name,
       url: `${SITE_URL}/boxeadores/${boxer2.id}`,
       image: `${SITE_URL}/photos/${boxer2.id}/01.webp`,
-      nationality: { '@type': 'Country', name: country2 },
     },
   ],
 }
@@ -77,21 +115,12 @@ const breadcrumbJsonLd = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
-    { '@type': 'ListItem', position: 2, name: 'Boxeadores', item: `${SITE_URL}/boxeadores` },
-    { '@type': 'ListItem', position: 3, name: battle.title, item: canonical },
+    { '@type': 'ListItem', position: 2, name: battle.title, item: canonical },
   ],
 }
-
-export const getStaticPaths = (() => {
-  return battles.map((battle) => ({
-    params: { id: battle.id },
-  }))
-}) satisfies GetStaticPaths
-
-export const prerender = true
 ---
 
-<Layout title={title} description={description} canonical={canonical} showHeader={false}>
+<Layout title={title} description={description} canonical={canonical} showHeader={true}>
   <script
     type="application/ld+json"
     is:inline
@@ -104,75 +133,124 @@ export const prerender = true
     set:html={JSON.stringify(breadcrumbJsonLd)}
     slot="head"
   />
-  <section
-    class="relative isolate min-h-[100svh] overflow-hidden px-4 py-24 text-theme-cream sm:px-6"
-    aria-labelledby="battle-title"
-  >
-    <div
-      aria-hidden="true"
-      class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_50%_18%,rgba(199,168,107,0.22),transparent_30%),linear-gradient(180deg,var(--color-theme-midnight)_0%,#050816_100%)]"
-    >
-    </div>
 
-    <div class="mx-auto flex w-full max-w-6xl flex-col items-center">
-      <a
-        href="/"
-        class="mb-10 text-xs font-black tracking-[0.18em] text-theme-gold/80 underline-offset-4 hover:text-theme-gold hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
-      >
-        Volver al inicio
-      </a>
+  <CombatHero
+    boxer1={boxer1}
+    boxer2={boxer2}
+    boxer1Hero={boxer1Hero}
+    boxer2Hero={boxer2Hero}
+    video={battleVideo}
+  />
 
-      <p class="text-xs font-black tracking-[0.26em] text-theme-gold/85">
-        COMBATE {String(battle.number).padStart(3, '0')}
-      </p>
-      <h1
-        id="battle-title"
-        class="mt-4 text-balance text-center font-cinzel font-black text-6xl leading-[0.9] sm:text-8xl md:text-9xl"
-      >
-        {battle.title}
-      </h1>
+  <div class="combat-detail-content">
+    <picture aria-hidden="true" class="combat-detail-bg">
+      <source
+        type="image/avif"
+        srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
+        sizes="100vw"
+      />
+      <source
+        type="image/webp"
+        srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+        sizes="100vw"
+      />
+      <img
+        src="/background.webp"
+        srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+        sizes="100vw"
+        alt=""
+        role="presentation"
+        class="combat-detail-bg-img"
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
+    <div aria-hidden="true" class="combat-detail-bg-veil"></div>
 
-      <div class="mt-12 grid w-full gap-6 md:grid-cols-[1fr_auto_1fr] md:items-center">
-        <article class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center">
-          <img
-            src={getBoxerPhoto(boxer1)}
-            alt={`Foto principal de ${boxer1.name}`}
-            width="1440"
-            height="2160"
-            class="h-[22rem] max-w-full object-contain object-bottom"
-            fetchpriority="high"
-            decoding="async"
-          />
-          <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer1.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-black tracking-[0.18em] text-white/60">
-            <CountryFlag country={boxer1.country} size={18} decorative />
-            {COUNTRY_NAMES[boxer1.country]}
-          </p>
-        </article>
+    <CombatStatsSection
+      boxer1={boxer1}
+      boxer2={boxer2}
+      boxer1Select={boxer1Select}
+      boxer2Select={boxer2Select}
+      stats={stats}
+    />
+    <CombatFaceToFaceVideoSection
+      title={`${battle.title} | Cara a cara`}
+      videoUrl={battle.faceToFaceVideoUrl}
+    />
+  </div>
 
-        <span class="text-center font-cinzel font-black text-7xl text-theme-gold md:text-8xl" aria-hidden="true">
-          VS
-        </span>
-
-        <article class="flex flex-col items-center rounded-3xl border border-theme-gold/25 bg-white/[0.03] p-5 text-center">
-          <img
-            src={getBoxerPhoto(boxer2)}
-            alt={`Foto principal de ${boxer2.name}`}
-            width="1440"
-            height="2160"
-            class="h-[22rem] max-w-full object-contain object-bottom"
-            fetchpriority="high"
-            decoding="async"
-          />
-          <h2 class="mt-4 text-3xl font-black tracking-wide">{boxer2.name}</h2>
-          <p class="mt-2 inline-flex items-center justify-center gap-2 text-sm font-black tracking-[0.18em] text-white/60">
-            <CountryFlag country={boxer2.country} size={18} decorative />
-            {COUNTRY_NAMES[boxer2.country]}
-          </p>
-        </article>
-      </div>
-    </div>
-  </section>
-  <Sponsors />
-  <Footer />
+  <div class="sponsors-and-footer">
+    <Sponsors />
+    <Footer />
+  </div>
 </Layout>
+
+<style>
+  .combat-detail-content {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--color-theme-midnight);
+  }
+
+  /* Costura definida entre la cabecera (hero) y el contenido: una fina
+     línea dorada con un leve halo que marca con claridad dónde acaba el
+     header y empieza la página, mejorando el contraste entre ambos. */
+  .combat-detail-content::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 3;
+    height: 6rem;
+    pointer-events: none;
+    background:
+      linear-gradient(
+          to right,
+          transparent 0%,
+          color-mix(in srgb, var(--color-theme-gold) 60%, transparent) 50%,
+          transparent 100%
+        )
+        top / 100% 1px no-repeat,
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-theme-gold) 12%, transparent),
+        transparent 70%
+      );
+  }
+
+  .combat-detail-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .combat-detail-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    opacity: 0.42;
+  }
+
+  .combat-detail-bg-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(10, 16, 36, 0.92) 0%, rgba(10, 16, 36, 0.78) 34%, #050816 100%),
+      radial-gradient(
+        ellipse 62% 38% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 16%, transparent),
+        transparent 68%
+      );
+  }
+
+  .sponsors-and-footer {
+    position: relative;
+    z-index: 2;
+    background: var(--color-theme-midnight);
+  }
+</style>
