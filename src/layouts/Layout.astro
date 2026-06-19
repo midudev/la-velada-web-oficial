@@ -107,30 +107,8 @@ const organizationJsonLd = {
       type="font/woff2"
       crossorigin="anonymous"
     />
-    <link
-      rel="preload"
-      as="image"
-      href="/background-1280.avif"
-      type="image/avif"
-      media="(max-width: 768px)"
-      fetchpriority="high"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="/background-2048.avif"
-      type="image/avif"
-      media="(min-width: 769px) and (max-width: 1920px)"
-      fetchpriority="high"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="/background.avif"
-      type="image/avif"
-      media="(min-width: 1921px)"
-      fetchpriority="high"
-    />
+    {/* El preload del fondo del hero solo aplica a la home (su LCP); las demás
+        rutas lo inyectan vía `slot="head"` si lo necesitan. */}
     <meta name="description" content={description} />
     <meta name="author" content="Ibai Llanos" />
     <meta name="theme-color" content="#0a1024" />
