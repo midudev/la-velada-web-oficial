@@ -107,7 +107,7 @@ const valueClass = (won: boolean) => (won ? 'font-black text-theme-gold' : 'text
           <td class="px-3 py-3 text-theme-cream/85">
             <span class="flex items-center justify-center gap-2">
               <CountryFlag country={boxer1.country} size={18} decorative />
-              {COUNTRY_NAMES[boxer1.country] ?? boxer1.country}
+              <span class="sr-only sm:not-sr-only">{COUNTRY_NAMES[boxer1.country] ?? boxer1.country}</span>
             </span>
           </td>
           <th
@@ -119,7 +119,7 @@ const valueClass = (won: boolean) => (won ? 'font-black text-theme-gold' : 'text
           <td class="px-3 py-3 text-theme-cream/85">
             <span class="flex items-center justify-center gap-2">
               <CountryFlag country={boxer2.country} size={18} decorative />
-              {COUNTRY_NAMES[boxer2.country] ?? boxer2.country}
+              <span class="sr-only sm:not-sr-only">{COUNTRY_NAMES[boxer2.country] ?? boxer2.country}</span>
             </span>
           </td>
         </tr>
