@@ -1,0 +1,737 @@
+---
+import SectionDivider from '@/components/SectionDivider.astro'
+import Layout from '@/layouts/Layout.astro'
+import Footer from '@/sections/Footer.astro'
+import Sponsors from '@/sections/Sponsors.astro'
+import { ARTISTS } from '@/consts/artists'
+
+const SITE_URL = 'https://www.infolavelada.com'
+const title = 'Artistas | La Velada del Año VI'
+const description =
+    'Descubre los artistas que actuarán en La Velada del Año VI, el evento de boxeo de Ibai Llanos en Sevilla el 25 de julio de 2026.'
+const canonical = `${SITE_URL}/artistas`
+
+export const prerender = true
+
+const totalArtists = ARTISTS.length
+
+const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Artistas', item: canonical },
+    ],
+}
+
+const itemListJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Artistas de La Velada del Año VI',
+    numberOfItems: totalArtists,
+    itemListOrder: 'https://schema.org/ItemListOrderAscending',
+    itemListElement: ARTISTS.map((artist, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: artist.name,
+    })),
+}
+---
+
+<Layout title={title} description={description} canonical={canonical}>
+    <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(breadcrumbJsonLd)}
+    slot="head"
+    />
+    <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(itemListJsonLd)}
+    slot="head"
+    />
+
+    <section
+    class="artists-page relative isolate w-full overflow-x-clip bg-theme-midnight px-3 pt-24 pb-20 text-theme-cream sm:px-6 sm:pt-32 sm:pb-24 md:pt-36"
+    >
+    <div aria-hidden="true" class="artists-bg absolute inset-0 -z-20"></div>
+    <div aria-hidden="true" class="artists-grain pointer-events-none absolute inset-0 -z-10"></div>
+
+    <div class="mx-auto w-full max-w-7xl">
+        <header class="flex flex-col items-center text-center">
+        <SectionDivider class="mb-7 w-full sm:mb-10" />
+
+        <h1
+            class="mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
+        >
+            ARTISTAS
+        </h1>
+        <p
+            class="mb-12 max-w-xl animate-fade-in-up font-cinzel text-xs font-medium tracking-[0.16em] text-balance text-white/55 animate-delay-200 sm:mb-16 sm:text-sm sm:tracking-[0.25em]"
+        >
+            Los {totalArtists} artistas que sonarán en La Velada del Año VI
+        </p>
+        </header>
+
+        <ul
+        class="artists-grid grid w-full grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5"
+        role="list"
+        >
+        {
+            ARTISTS.map((artist, index) => (
+            <li
+                class="artist-card-wrap animate-fade-in-up"
+                style={`animation-delay: ${index * 45}ms; --idx: ${index}`}
+            >
+                <input
+                type="radio"
+                name={`reveal-${artist.id}`}
+                id={`reveal-${artist.id}`}
+                class="artist-reveal-toggle"
+                />
+                <label
+                for={`reveal-${artist.id}`}
+                class="artist-flip relative block w-full cursor-pointer"
+                aria-label={`Revelar artista: ${artist.name}`}
+                >
+                <span class="artist-flip-inner absolute inset-0">
+                    <span
+                    aria-hidden="true"
+                    class="artist-face artist-face-front absolute inset-0 grid place-items-center overflow-hidden rounded-md"
+                    >
+                    <span class="artist-card-bg-gold pointer-events-none absolute inset-0" />
+                    <span class="artist-front-mark font-cinzel">?</span>
+                    <span class="artist-front-hint font-cinzel">toca para descubrir</span>
+                    <span class="artist-front-sheen pointer-events-none" />
+                    <span class="artist-card-corner artist-card-corner-tl" />
+                    <span class="artist-card-corner artist-card-corner-tr" />
+                    <span class="artist-card-corner artist-card-corner-bl" />
+                    <span class="artist-card-corner artist-card-corner-br" />
+                    <span class="artist-front-flicker pointer-events-none" />
+                    </span>
+
+                    <span class="artist-face artist-face-back absolute inset-0">
+                    <article class="artist-card group relative block h-full w-full overflow-hidden rounded-md">
+                        <span
+                        aria-hidden="true"
+                        class="artist-card-bg-gold pointer-events-none absolute inset-0"
+                        />
+
+                        <span aria-hidden="true" class="artist-card-fallback absolute inset-0">
+                        <span class="artist-card-disc">
+                            <span class="artist-card-monogram">{artist.name.trim().charAt(0)}</span>
+                        </span>
+                        </span>
+
+                        <img
+                        src={artist.image}
+                        alt={artist.name}
+                        loading="lazy"
+                        decoding="async"
+                        onerror="this.style.display='none'"
+                        class="artist-card-img absolute inset-0 h-full w-full object-cover object-center"
+                        />
+
+                        <span aria-hidden="true" class="artist-card-veil pointer-events-none absolute inset-0" />
+
+                        <span aria-hidden="true" class="artist-card-corner artist-card-corner-tl" />
+                        <span aria-hidden="true" class="artist-card-corner artist-card-corner-tr" />
+                        <span aria-hidden="true" class="artist-card-corner artist-card-corner-bl" />
+                        <span aria-hidden="true" class="artist-card-corner artist-card-corner-br" />
+
+                        <span aria-hidden="true" class="artist-reveal-flash pointer-events-none" />
+                        <span aria-hidden="true" class="artist-reveal-sheen pointer-events-none" />
+                        <span aria-hidden="true" class="artist-hover-sheen pointer-events-none" />
+                        <span aria-hidden="true" class="artist-spark artist-spark-1" />
+                        <span aria-hidden="true" class="artist-spark artist-spark-2" />
+                        <span aria-hidden="true" class="artist-spark artist-spark-3" />
+                        <span aria-hidden="true" class="artist-spark artist-spark-4" />
+
+                        <div class="artist-card-caption absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-1 px-2.5 pt-12 pb-4 text-center sm:gap-1.5 sm:px-3 sm:pt-14 sm:pb-6">
+                        <span
+                            aria-hidden="true"
+                            class="artist-card-divider mb-1 h-px w-8 bg-theme-gold/60 transition-all duration-500"
+                        />
+                        <h2 class="artist-card-name font-cinzel text-[0.82rem] leading-[1.1] font-bold tracking-[0.1em] text-balance text-theme-cream uppercase sm:text-base sm:tracking-[0.16em] md:text-lg">
+                            {artist.name}
+                        </h2>
+                        </div>
+                    </article>
+                    </span>
+                </span>
+                </label>
+            </li>
+            ))
+        }
+        </ul>
+    </div>
+    </section>
+
+    <Sponsors />
+    <Footer />
+</Layout>
+
+<style>
+.artists-page {
+    min-height: 100svh;
+}
+
+.artists-bg {
+    background:
+        radial-gradient(
+        ellipse 70% 45% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 16%, transparent) 0%,
+        transparent 65%
+        ),
+        linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
+}
+
+.artists-grain {
+    background-image: radial-gradient(rgba(199, 168, 107, 0.05) 1px, transparent 1px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 85%);
+}
+
+.artist-card-wrap {
+    transition:
+        opacity 400ms ease,
+        filter 400ms ease;
+}
+
+.artist-flip {
+    aspect-ratio: 3 / 4;
+    perspective: 1200px;
+}
+
+.artist-flip-inner {
+    transform-style: preserve-3d;
+    transition: transform 750ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: transform;
+}
+
+.artist-face {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.artist-face-front {
+    z-index: 2;
+    background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
+        0 12px 30px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 400ms ease;
+}
+
+.artist-face-back {
+    z-index: 1;
+    transform: rotateY(180deg);
+}
+
+.artist-reveal-toggle:checked + .artist-flip .artist-flip-inner {
+    animation: artistRevealFlip 820ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes artistRevealFlip {
+    0% { transform: rotateY(0deg) scale(1); }
+    55% { transform: rotateY(140deg) scale(1.05); }
+    100% { transform: rotateY(180deg) scale(1); }
+}
+
+.artist-reveal-toggle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.artist-reveal-toggle:focus-visible + .artist-flip {
+    outline: 2px solid var(--color-theme-gold);
+    outline-offset: 3px;
+    border-radius: 8px;
+}
+
+.artist-front-mark {
+    position: relative;
+    z-index: 2;
+    font-weight: 700;
+    font-size: clamp(2.4rem, 1.4rem + 5vw, 4rem);
+    line-height: 1;
+    color: color-mix(in srgb, var(--color-theme-gold) 80%, var(--color-theme-cream));
+    text-shadow: 0 0 22px color-mix(in srgb, var(--color-theme-gold) 42%, transparent);
+}
+
+.artist-front-hint {
+    position: absolute;
+    bottom: 13%;
+    z-index: 2;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: lowercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 62%, transparent);
+    animation: artistHintPulse 2.6s ease-in-out infinite;
+}
+
+.artist-front-sheen {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: linear-gradient(
+        105deg,
+        transparent 38%,
+        color-mix(in srgb, var(--color-theme-gold) 30%, transparent) 50%,
+        transparent 62%
+    );
+    transform: translateX(-120%) rotate(8deg);
+    animation: artistFrontSheen 6s ease-in-out infinite;
+    animation-delay: calc(var(--idx, 0) * 600ms);
+}
+
+@keyframes artistCardFlicker {
+    0%, 100% { opacity: 0; }
+    2% { opacity: 0.38; }
+    4% { opacity: 0; }
+    6% { opacity: 0.22; }
+    8% { opacity: 0; }
+    52% { opacity: 0; }
+    54% { opacity: 0.34; }
+    56% { opacity: 0; }
+    58% { opacity: 0.18; }
+    60% { opacity: 0; }
+}
+@keyframes artistHintPulse {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 0.9; }
+}
+@keyframes artistFrontSheen {
+    0% { transform: translateX(-120%) rotate(8deg); opacity: 0; }
+    6% { opacity: 0.5; }
+    20% { transform: translateX(120%) rotate(8deg); opacity: 0; }
+    100% { transform: translateX(120%) rotate(8deg); opacity: 0; }
+}
+
+.artist-flip:hover .artist-face-front {
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 70%, transparent),
+        0 28px 60px rgba(0, 0, 0, 0.6),
+        0 0 30px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+}
+
+.artist-front-flicker {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: #060a1d;
+    opacity: 0;
+    animation: artistCardFlicker 5s ease-in-out infinite;
+    animation-delay: calc(var(--idx, 0) * -0.7s);
+}
+
+.artist-flip:hover .artist-face-front .artist-card-bg-gold {
+    opacity: 1;
+}
+
+.artist-flip:hover .artist-front-flicker {
+    animation: none;
+    opacity: 0;
+}
+
+.artist-flip:hover .artist-face-front .artist-card-corner {
+    width: 24px;
+    height: 24px;
+    border-color: var(--color-theme-gold);
+}
+
+.artist-reveal-flash,
+.artist-reveal-sheen,
+.artist-spark {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.artist-reveal-flash {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    z-index: 6;
+    width: 82%;
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    transform: translate(-50%, -50%) scale(0.2);
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.9) 0%,
+        color-mix(in srgb, var(--color-theme-gold) 70%, transparent) 30%,
+        transparent 65%
+    );
+}
+
+.artist-reveal-sheen {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    background: linear-gradient(
+        105deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.45) 50%,
+        transparent 60%
+    );
+    transform: translateX(-120%) rotate(8deg);
+}
+
+.artist-spark {
+    position: absolute;
+    z-index: 6;
+    width: 14px;
+    aspect-ratio: 1;
+    background: radial-gradient(
+        circle,
+        #fff 0%,
+        color-mix(in srgb, var(--color-theme-gold) 80%, transparent) 45%,
+        transparent 70%
+    );
+    clip-path: polygon(50% 0, 59% 41%, 100% 50%, 59% 59%, 50% 100%, 41% 59%, 0 50%, 41% 41%);
+    transform: scale(0);
+}
+.artist-spark-1 { top: 18%; left: 20%; }
+.artist-spark-2 { top: 30%; right: 16%; width: 10px; }
+.artist-spark-3 { bottom: 34%; left: 26%; width: 11px; }
+.artist-spark-4 { top: 46%; right: 30%; width: 16px; }
+
+.artist-reveal-toggle:checked + .artist-flip .artist-reveal-flash {
+    animation: artistRevealFlash 700ms ease-out 330ms both;
+}
+.artist-reveal-toggle:checked + .artist-flip .artist-reveal-sheen {
+    animation: artistRevealSheen 900ms ease-out 360ms both;
+}
+.artist-reveal-toggle:checked + .artist-flip .artist-spark-1 {
+    animation: artistSparkPop 720ms ease-out 360ms both;
+}
+.artist-reveal-toggle:checked + .artist-flip .artist-spark-2 {
+    animation: artistSparkPop 720ms ease-out 470ms both;
+}
+.artist-reveal-toggle:checked + .artist-flip .artist-spark-3 {
+    animation: artistSparkPop 720ms ease-out 540ms both;
+}
+.artist-reveal-toggle:checked + .artist-flip .artist-spark-4 {
+    animation: artistSparkPop 720ms ease-out 620ms both;
+}
+
+@keyframes artistRevealFlash {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+    30% { opacity: 0.95; }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(2.1); }
+}
+@keyframes artistRevealSheen {
+    0% { opacity: 0; transform: translateX(-120%) rotate(8deg); }
+    15% { opacity: 0.85; }
+    60% { opacity: 0.4; }
+    100% { opacity: 0; transform: translateX(130%) rotate(8deg); }
+}
+@keyframes artistSparkPop {
+    0% { opacity: 0; transform: scale(0) rotate(0deg); }
+    40% { opacity: 1; transform: scale(1.2) rotate(35deg); }
+    100% { opacity: 0; transform: scale(0.4) rotate(70deg); }
+}
+
+.artist-hover-sheen {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    opacity: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        105deg,
+        transparent 42%,
+        color-mix(in srgb, var(--color-theme-gold) 32%, transparent) 50%,
+        transparent 58%
+    );
+    transform: translateX(-120%) rotate(8deg);
+}
+
+.artist-card:hover .artist-hover-sheen {
+    animation: artistHoverSheen 850ms ease-out;
+}
+
+@keyframes artistHoverSheen {
+    0% { opacity: 0; transform: translateX(-120%) rotate(8deg); }
+    12% { opacity: 0.7; }
+    60% { opacity: 0.35; }
+    100% { opacity: 0; transform: translateX(130%) rotate(8deg); }
+}
+
+.artist-card {
+    background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
+        0 12px 30px rgba(0, 0, 0, 0.4);
+    transition:
+        box-shadow 400ms ease,
+        transform 400ms ease,
+        opacity 400ms ease,
+        filter 400ms ease;
+    will-change: transform;
+}
+
+.artist-card:hover,
+.artist-card:focus-within {
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 70%, transparent),
+        0 28px 60px rgba(0, 0, 0, 0.6),
+        0 0 30px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    transform: translateY(-4px);
+}
+
+.artist-card-bg-gold {
+    background: radial-gradient(
+        ellipse 90% 65% at 50% 38%,
+        color-mix(in srgb, var(--color-theme-gold) 26%, transparent) 0%,
+        transparent 70%
+    );
+    opacity: 0.5;
+    transition: opacity 500ms ease;
+}
+
+.artist-card:hover .artist-card-bg-gold,
+.artist-card:focus-within .artist-card-bg-gold {
+    opacity: 1;
+}
+
+.artist-card-fallback {
+    display: grid;
+    place-items: center;
+}
+
+.artist-card-disc {
+    display: grid;
+    place-items: center;
+    width: 46%;
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 38%, transparent);
+    background: radial-gradient(
+    circle at 50% 38%,
+    color-mix(in srgb, var(--color-theme-gold) 16%, transparent) 0%,
+    transparent 72%
+    );
+    box-shadow:
+    inset 0 0 0 5px color-mix(in srgb, var(--color-theme-gold) 7%, transparent),
+    0 0 22px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
+    transition:
+    transform 500ms ease,
+    border-color 500ms ease;
+}
+
+.artist-card:hover .artist-card-disc,
+.artist-card:focus-within .artist-card-disc {
+    transform: scale(1.05);
+    border-color: color-mix(in srgb, var(--color-theme-gold) 60%, transparent);
+}
+
+.artist-card-monogram {
+    font-family: var(--font-cinzel);
+    font-weight: 700;
+    font-size: clamp(1.8rem, 1rem + 4vw, 3rem);
+    line-height: 1;
+    color: color-mix(in srgb, var(--color-theme-gold) 78%, var(--color-theme-cream));
+    text-shadow: 0 0 18px color-mix(in srgb, var(--color-theme-gold) 38%, transparent);
+}
+
+.artist-card-img {
+    transition:
+    scale 600ms ease,
+    filter 500ms ease;
+    filter: saturate(0.95) brightness(0.95);
+}
+
+.artist-card:hover .artist-card-img,
+.artist-card:focus-within .artist-card-img {
+    scale: 1.04;
+    filter: saturate(1.08) brightness(1.03);
+}
+
+.artist-card-veil {
+    background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.55) 74%,
+    rgba(0, 0, 0, 0.95) 100%
+    );
+}
+
+.artist-card-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-style: solid;
+    border-width: 1.5px;
+    border-color: color-mix(in srgb, var(--color-theme-gold) 65%, transparent);
+    transition:
+    width 400ms ease,
+    height 400ms ease,
+    border-color 400ms ease;
+}
+
+.artist-card-corner-tl {
+    top: 10px;
+    left: 10px;
+    border-right-width: 0;
+    border-bottom-width: 0;
+}
+.artist-card-corner-tr {
+    top: 10px;
+    right: 10px;
+    border-left-width: 0;
+    border-bottom-width: 0;
+}
+.artist-card-corner-bl {
+    bottom: 10px;
+    left: 10px;
+    border-right-width: 0;
+    border-top-width: 0;
+}
+.artist-card-corner-br {
+    bottom: 10px;
+    right: 10px;
+    border-left-width: 0;
+    border-top-width: 0;
+}
+
+.artist-card:hover .artist-card-corner,
+.artist-card:focus-within .artist-card-corner {
+    width: 24px;
+    height: 24px;
+    border-color: var(--color-theme-gold);
+}
+
+.artist-card:hover .artist-card-divider,
+.artist-card:focus-within .artist-card-divider {
+    width: 3rem;
+    background-color: var(--color-theme-gold);
+}
+
+.artist-card-name {
+    text-shadow:
+    0 0 2px rgba(0, 0, 0, 0.95),
+    0 1px 2px rgba(0, 0, 0, 0.9),
+    0 2px 10px rgba(0, 0, 0, 0.65);
+}
+
+@media (max-width: 639px) {
+    .artist-flip {
+    aspect-ratio: 4 / 5;
+    }
+
+.artist-card-veil {
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        transparent 36%,
+        rgba(0, 0, 0, 0.6) 72%,
+        rgba(0, 0, 0, 0.96) 100%
+    );
+}
+
+.artist-card-corner {
+    width: 12px;
+    height: 12px;
+}
+.artist-card-corner-tl {
+    top: 8px;
+    left: 8px;
+}
+.artist-card-corner-tr {
+    top: 8px;
+    right: 8px;
+}
+.artist-card-corner-bl {
+    bottom: 8px;
+    left: 8px;
+}
+.artist-card-corner-br {
+    bottom: 8px;
+    right: 8px;
+}
+}
+
+@media (hover: hover) and (pointer: fine) {
+.artists-grid:hover .artist-card-wrap:not(:has(.artist-reveal-toggle:checked)) {
+    opacity: 0.45;
+    filter: saturate(0.6) brightness(0.72);
+}
+
+.artists-grid:hover .artist-card-wrap:hover {
+    opacity: 1;
+    filter: saturate(1.08) brightness(1.05);
+}
+}
+
+@media (prefers-reduced-motion: reduce) {
+.artist-flip-inner {
+    transition: none;
+    transform: none !important;
+    animation: none !important;
+}
+.artist-front-hint,
+.artist-front-sheen,
+.artist-hover-sheen,
+.artist-front-flicker,
+.artist-reveal-flash,
+.artist-reveal-sheen,
+.artist-spark {
+    animation: none !important;
+}
+.artist-front-flicker {
+    display: none;
+}
+.artist-front-hint {
+    opacity: 0.7;
+}
+.artist-reveal-toggle:checked + .artist-flip .artist-flip-inner {
+    animation: none !important;
+}
+.artist-face {
+    backface-visibility: visible;
+}
+.artist-face-back {
+    transform: none;
+    opacity: 0;
+    transition: opacity 300ms ease;
+}
+.artist-face-front {
+    transition: opacity 300ms ease;
+}
+.artist-reveal-toggle:checked + .artist-flip .artist-face-back {
+    opacity: 1;
+}
+.artist-reveal-toggle:checked + .artist-flip .artist-face-front {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.artist-card,
+.artist-card-img,
+.artist-card-bg-gold,
+.artist-card-corner,
+.artist-card-divider,
+.artist-card-disc {
+    transition: none;
+}
+.artist-card:hover,
+.artist-card:focus-within {
+    transform: none;
+}
+.artist-card:hover .artist-card-img,
+.artist-card:focus-within .artist-card-img {
+    scale: 1;
+}
+.artist-card:hover .artist-card-disc,
+.artist-card:focus-within .artist-card-disc {
+    transform: none;
+}
+}
+</style>

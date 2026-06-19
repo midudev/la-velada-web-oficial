@@ -1,0 +1,309 @@
+---
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import CloseIcon from '@/assets/svg/close.svg'
+import PlayIcon from '@/assets/svg/play.svg'
+import SectionHeader from '@/components/SectionHeader.astro'
+
+interface WorkoutVideo {
+  videoId: string
+  title: string
+  thumbnail: {
+    avif: string
+    webp: string
+  }
+}
+
+interface Props {
+  boxerId: string
+  boxerName: string
+  videos: WorkoutVideo[]
+}
+
+const { boxerId, boxerName, videos } = Astro.props
+const [featuredVideo, ...secondaryVideos] = videos
+const titleId = `boxer-workout-title-${boxerId}`
+const dialogTitleId = `boxer-workout-dialog-title-${boxerId}`
+const secondaryCountLabel = `${secondaryVideos.length} VÍDEO${secondaryVideos.length === 1 ? '' : 'S'}`
+const secondaryListRows =
+  secondaryVideos.length === 1
+    ? 'lg:grid-rows-1'
+    : secondaryVideos.length === 2
+      ? 'lg:grid-rows-2'
+      : 'lg:auto-rows-[minmax(9rem,1fr)] lg:overflow-y-auto lg:pr-1'
+---
+
+{
+  featuredVideo && (
+    <section
+      id="workout"
+      data-boxer-workout-root
+      class="relative w-full px-4 py-20 sm:px-6 lg:py-28"
+      aria-labelledby={titleId}
+    >
+      <div class="mx-auto flex max-w-7xl flex-col items-center">
+        <SectionHeader
+          titleId={titleId}
+          title="ENTRENAMIENTOS"
+          subtitle={`Vídeos de ${boxerName} camino a La Velada VI`}
+          subtitleClass="mb-10 max-w-xl tracking-[0.16em] sm:mb-14 sm:text-sm"
+        />
+
+        <div
+          class:list={[
+            'grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4',
+            secondaryVideos.length > 0
+              ? 'lg:aspect-[24/9] lg:grid-cols-3 lg:grid-rows-2 lg:gap-4'
+              : 'max-w-5xl',
+          ]}
+        >
+          <button
+            type="button"
+            data-workout-video-tile
+            data-video-id={featuredVideo.videoId}
+            data-video-title={featuredVideo.title}
+            aria-label={`Reproducir entrenamiento destacado: ${featuredVideo.title}`}
+            class:list={[
+              'group relative isolate flex aspect-video w-full cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-theme-navy/40 text-left transition duration-500 outline-none hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight',
+              secondaryVideos.length > 0
+                ? 'sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:aspect-auto'
+                : '',
+            ]}
+          >
+            <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
+              <source srcset={featuredVideo.thumbnail.avif} type="image/avif" />
+              <source srcset={featuredVideo.thumbnail.webp} type="image/webp" />
+              <img
+                src={featuredVideo.thumbnail.webp}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover"
+              />
+            </picture>
+
+            <div
+              aria-hidden="true"
+              class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
+            />
+            <div
+              aria-hidden="true"
+              class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
+            />
+
+            <span
+              aria-hidden="true"
+              class="absolute right-4 top-4 z-10 rounded-full border border-theme-gold/35 bg-black/35 px-3 py-1 font-cinzel text-[0.55rem] font-black tracking-[0.22em] text-theme-gold backdrop-blur sm:right-5 sm:top-5 sm:text-[0.58rem]"
+            >
+              DESTACADO
+            </span>
+
+            <span aria-hidden="true" class="absolute inset-0 -z-10 flex items-center justify-center">
+              <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md backdrop-saturate-150 backdrop-contrast-125 transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
+                <PlayIcon
+                  class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
+                  aria-hidden="true"
+                />
+              </span>
+            </span>
+
+            <div class="relative flex h-full w-full flex-col justify-end gap-2 p-5 sm:p-6 lg:p-7">
+              <h3 class="max-w-3xl text-balance font-cinzel text-2xl font-black leading-tight tracking-[0.04em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl xl:text-5xl">
+                {featuredVideo.title}
+              </h3>
+              <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
+                VER VÍDEO
+                <ArrowRightIcon
+                  class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                  stroke-width="2.5"
+                  aria-hidden="true"
+                />
+              </span>
+            </div>
+          </button>
+
+          {secondaryVideos.length > 0 && (
+            <ul
+              class:list={[
+                'boxer-workout-scroll grid min-h-0 gap-3 sm:col-span-2 sm:grid-cols-2 sm:gap-4 lg:col-span-1 lg:row-span-2 lg:h-full lg:grid-cols-1 lg:gap-4',
+                secondaryListRows,
+              ]}
+              aria-label={`${secondaryCountLabel} adicionales de entrenamiento de ${boxerName}`}
+            >
+              {secondaryVideos.map((video) => (
+                <li class="min-h-0">
+                  <button
+                    type="button"
+                    data-workout-video-tile
+                    data-video-id={video.videoId}
+                    data-video-title={video.title}
+                    aria-label={`Reproducir vídeo: ${video.title}`}
+                    class="group relative isolate flex aspect-video h-full w-full cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-theme-midnight/90 text-left transition duration-500 outline-none hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.45)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight lg:aspect-auto lg:min-h-[9rem]"
+                  >
+                    <picture class="absolute inset-0 -z-10 scale-105 brightness-80 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-105 group-focus-visible:scale-110 group-focus-visible:brightness-105">
+                      <source srcset={video.thumbnail.avif} type="image/avif" />
+                      <source srcset={video.thumbnail.webp} type="image/webp" />
+                      <img
+                        src={video.thumbnail.webp}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                        decoding="async"
+                        class="h-full w-full object-cover"
+                      />
+                    </picture>
+
+                    <div
+                      aria-hidden="true"
+                      class="absolute inset-0 -z-10 bg-linear-to-t from-black/90 via-black/48 to-black/18"
+                    />
+                    <div
+                      aria-hidden="true"
+                      class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.16),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
+                    />
+
+                    <span
+                      aria-hidden="true"
+                      class="absolute inset-0 -z-10 flex items-center justify-center opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+                    >
+                      <span class="flex size-11 items-center justify-center rounded-full border border-white/25 bg-black/45 backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20">
+                        <PlayIcon
+                          class="size-5 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </span>
+
+                    <div class="relative flex h-full w-full flex-col justify-between gap-4 p-4 sm:p-5 lg:p-5">
+                      <span class="w-fit font-cinzel text-[0.58rem] font-black tracking-[0.22em] text-theme-gold/80 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold">
+                        VÍDEO
+                      </span>
+
+                      <h3 class="line-clamp-2 text-balance font-cinzel text-base font-black leading-tight tracking-[0.04em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-lg lg:text-xl">
+                        {video.title}
+                      </h3>
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+
+      <dialog
+        data-workout-video-dialog
+        aria-labelledby={dialogTitleId}
+        class="m-0 w-screen max-w-none bg-transparent p-0 backdrop:bg-black/85 backdrop:backdrop-blur-sm backdrop:backdrop-saturate-150 backdrop:backdrop-contrast-125 open:flex open:h-screen open:items-center open:justify-center"
+      >
+        <div class="relative mx-4 w-full max-w-5xl">
+          <div class="mb-4 flex items-center justify-between gap-4">
+            <h3
+              id={dialogTitleId}
+              data-workout-video-dialog-title
+              class="font-cinzel text-base font-black tracking-[0.16em] text-theme-cream sm:text-xl"
+            />
+            <button
+              type="button"
+              data-workout-video-dialog-close
+              aria-label="Cerrar vídeo"
+              class="inline-flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white transition outline-none hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
+            >
+              <CloseIcon class="size-5" aria-hidden="true" />
+            </button>
+          </div>
+          <div class="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]">
+            <div data-workout-video-dialog-frame class="absolute inset-0 h-full w-full" />
+          </div>
+        </div>
+      </dialog>
+    </section>
+  )
+}
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  function initWorkoutVideoDialogs() {
+    const sections = $$<HTMLElement>('[data-boxer-workout-root]')
+
+    sections.forEach((section) => {
+      if (section.dataset.workoutVideoReady === 'true') return
+      section.dataset.workoutVideoReady = 'true'
+
+      const dialog = $<HTMLDialogElement>('[data-workout-video-dialog]', section)
+      const tiles = $$<HTMLElement>('[data-workout-video-tile]', section)
+      const closeBtn = $<HTMLButtonElement>('[data-workout-video-dialog-close]', section)
+      const titleEl = $<HTMLElement>('[data-workout-video-dialog-title]', section)
+      const frame = $<HTMLElement>('[data-workout-video-dialog-frame]', section)
+      if (!dialog || !frame) return
+
+      function openVideo(videoId: string, title: string) {
+        if (titleEl) titleEl.textContent = title
+        const iframe = document.createElement('iframe')
+        iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&playsinline=1`
+        iframe.allow =
+          'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+        iframe.setAttribute('allowfullscreen', '')
+        iframe.title = title
+        iframe.className = 'h-full w-full border-0'
+        frame.replaceChildren(iframe)
+        dialog.showModal()
+      }
+
+      function closeVideo() {
+        if (!dialog.open) return
+        dialog.close()
+      }
+
+      tiles.forEach((tile) => {
+        tile.addEventListener('click', () => {
+          const videoId = tile.getAttribute('data-video-id')
+          const title = tile.getAttribute('data-video-title') ?? ''
+          if (!videoId) return
+          openVideo(videoId, title)
+        })
+      })
+
+      closeBtn?.addEventListener('click', closeVideo)
+
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) closeVideo()
+      })
+
+      dialog.addEventListener('close', () => {
+        frame.replaceChildren()
+      })
+    })
+  }
+
+  document.addEventListener('astro:page-load', initWorkoutVideoDialogs)
+</script>
+
+<style>
+  .boxer-workout-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-theme-gold) transparent;
+    scrollbar-gutter: stable;
+  }
+
+  .boxer-workout-scroll::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .boxer-workout-scroll::-webkit-scrollbar-track {
+    background: transparent;
+    border-left: 1px solid color-mix(in srgb, white 6%, transparent);
+  }
+
+  .boxer-workout-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--color-theme-gold);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  .boxer-workout-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-theme-cream);
+  }
+</style>
