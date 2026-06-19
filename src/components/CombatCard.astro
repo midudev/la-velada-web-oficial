@@ -17,9 +17,16 @@ interface Props {
     badge?: string
     a: CardBoxer
     b: CardBoxer
+    imageLoadingStrategy?: {
+        loading?: astroHTML.JSX.ImgHTMLAttributes["loading"]
+        decoding?: astroHTML.JSX.ImgHTMLAttributes["decoding"]
+        fetchpriority?: astroHTML.JSX.ImgHTMLAttributes["fetchpriority"]
+    }
 }
 
-const { number, url, featured = false, badge, a, b } = Astro.props
+const { number, url, featured = false, badge, a, b, imageLoadingStrategy } = Astro.props
+
+const { loading = 'lazy', decoding = 'async', fetchpriority = 'auto' } = imageLoadingStrategy || {}
 
 // TEMPORAL: la landing individual de cada combate (/combate/[id]) todavía
 // no está hecha, así que el enlace del combate apunta al 404 a propósito.
@@ -43,6 +50,10 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
 ---
 
 <article class:list={['combat', { 'is-featured': featured }]}>
+    <h2 class="sr-only">
+        Combate {number}: {a.name} ({a.countryName}) VS {b.name} ({b.countryName})
+    </h2>
+    
     {badge && <span class="combat-badge font-cinzel">{badge}</span>}
 
     <span aria-hidden="true" class="combat-corner tl"></span>
@@ -65,8 +76,9 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
             <img
                 src={boxer.heroImages.webp}
                 alt={`Recorte fotográfico de ${boxer.name}`}
-                loading="lazy"
-                decoding="async"
+                loading={loading}
+                decoding={decoding}
+                fetchpriority={fetchpriority}
                 class="boxer-img"
             />
             </picture>
@@ -143,8 +155,8 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     z-index: 7;
     padding: 0.4rem 1.4rem;
     font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 0.32em;
+    font-weight: 900;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
     background: linear-gradient(180deg, color-mix(in srgb, var(--color-theme-gold) 18%, transparent), transparent);
@@ -241,8 +253,8 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
 
 .boxer-name {
     font-size: clamp(0.8rem, 0.6rem + 0.9vw, 1.25rem);
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    font-weight: 900;
+    letter-spacing: 0.035em;
     line-height: 1.05;
     text-transform: uppercase;
     color: var(--color-theme-cream);
@@ -254,8 +266,8 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     gap: 0.4rem;
     margin-top: 0.4rem;
     font-size: 0.55rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
+    font-weight: 900;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--color-theme-cream) 78%, transparent);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
@@ -319,15 +331,15 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
 .combat-foot:focus-visible { outline: 2px solid var(--color-theme-gold); outline-offset: -3px; }
 .combat-no {
     font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.26em;
+    font-weight: 900;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-theme-gold);
 }
 .combat-cta {
     font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 0.22em;
+    font-weight: 900;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--color-theme-cream) 72%, transparent);
     transition: color 250ms ease;
