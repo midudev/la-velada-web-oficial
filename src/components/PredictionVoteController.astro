@@ -30,6 +30,7 @@ const controllerConfig = JSON.stringify({
     areAllPredictionsComplete,
     dispatchPredictionsComplete,
   } from '@/lib/prediction-completion'
+  import { formatPredictionPercent, formatPredictionSupport } from '@/lib/format-votes'
 
   interface PredictionApiResponse {
     prediction?: {
@@ -70,18 +71,6 @@ const controllerConfig = JSON.stringify({
   let hasDispatchedComplete = false
   const latestVoteRequestByBattle = new Map<string, number>()
   const voteBarAnimationTimeouts = new WeakMap<HTMLElement, number>()
-  const compactFormatter = new Intl.NumberFormat('es-ES', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  })
-
-  const exactVotesFormatter = new Intl.NumberFormat('es-ES', {
-    maximumFractionDigits: 0,
-  })
-
-  const percentFormatter = new Intl.NumberFormat('es-ES', {
-    maximumFractionDigits: 1,
-  })
 
   function readConfig(): PredictionControllerConfig {
     const config = $<HTMLScriptElement>('#prediction-vote-config')
@@ -92,18 +81,6 @@ const controllerConfig = JSON.stringify({
     } catch {
       return { isLoggedIn: false, userVotes: {}, userReaction: null }
     }
-  }
-
-  function formatVotes(votes: number) {
-    return votes > 100_000 ? compactFormatter.format(votes) : exactVotesFormatter.format(votes)
-  }
-
-  function formatPercent(percentage: number) {
-    return `${percentFormatter.format(percentage)}%`
-  }
-
-  function formatSupport(votes: number) {
-    return `${formatVotes(votes)} ${votes === 1 ? 'voto' : 'votos'}`
   }
 
   function getPredictionFight(battleId: string) {
@@ -138,8 +115,8 @@ const controllerConfig = JSON.stringify({
     option.dataset.voteCount = String(safeVotes)
     option.dataset.votePercentage = String(safePercentage)
     option.style.setProperty('--vote-share', `${safePercentage.toFixed(2)}%`)
-    if (percentNode) percentNode.textContent = formatPercent(safePercentage)
-    if (votesNode) votesNode.textContent = formatSupport(safeVotes)
+    if (percentNode) percentNode.textContent = formatPredictionPercent(safePercentage)
+    if (votesNode) votesNode.textContent = formatPredictionSupport(safeVotes)
 
     const voteDelta = safeVotes - previousVotes
     const percentageDelta = safePercentage - previousPercentage
