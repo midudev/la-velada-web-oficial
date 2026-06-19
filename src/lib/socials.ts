@@ -59,6 +59,31 @@ export function getSocialMetricLabel(social: BoxerSocial): string {
 }
 
 /**
+ * Suma total de seguidores del boxeador en todas sus redes. Solo cuenta
+ * `followers` (ignora los oyentes mensuales de Spotify), igual que el
+ * resto de la web. Es el "alcance combinado" del comparador.
+ */
+export function getTotalFollowers(boxer: Boxer): number {
+  return boxer.socials.reduce((sum, s) => sum + (s.followers ?? 0), 0)
+}
+
+/**
+ * Devuelve un mapa `plataforma → seguidores`, agregando las cuentas
+ * múltiples de una misma red (p. ej. dos canales de YouTube). Las redes
+ * sin seguidores se omiten. Solo cuenta `followers`, no oyentes mensuales.
+ */
+export function getFollowersByPlatform(boxer: Boxer): Record<string, number> {
+  const totals: Record<string, number> = {}
+  for (const social of boxer.socials) {
+    const followers = social.followers ?? 0
+    if (followers <= 0) continue
+    const key = social.platform.toLowerCase()
+    totals[key] = (totals[key] ?? 0) + followers
+  }
+  return totals
+}
+
+/**
  * Construye la URL pública del perfil del boxeador en la red social
  * indicada. Para YouTube y siempre que esté disponible, se prefiere el
  * id del canal del boxeador para no depender del handle.

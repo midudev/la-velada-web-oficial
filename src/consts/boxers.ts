@@ -427,6 +427,22 @@ export function getBoxerPhoto(boxer: Boxer): string {
   return `/photos/${boxer.id}/01.webp`
 }
 
+/**
+ * Edad del boxeador. Usa el campo `age` mantenido a mano; si falta, la
+ * deriva de `birthDate`. Devuelve `null` si no hay ningún dato. Preferir
+ * el campo evita el desfase de recalcular en cada build.
+ */
+export function getBoxerAge(boxer: Boxer): number | null {
+  if (boxer.age != null) return boxer.age
+  if (!boxer.birthDate) return null
+  const birth = new Date(`${boxer.birthDate}T00:00:00`)
+  const now = new Date()
+  let age = now.getFullYear() - birth.getFullYear()
+  const monthDiff = now.getMonth() - birth.getMonth()
+  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) age--
+  return age
+}
+
 /** Mapa rápido para acceder a un boxer por su id. */
 export const BOXERS_BY_ID: Record<string, Boxer> = Object.fromEntries(
   BOXERS.map((boxer) => [boxer.id, boxer]),
