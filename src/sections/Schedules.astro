@@ -1,7 +1,7 @@
 ---
 import SectionHeader from '@/components/SectionHeader.astro'
 import CountryFlag from '@/components/CountryFlag.astro'
-import { EVENT_DATE, EVENT_END_ISO, EVENT_TIME_ZONE } from '@/consts/event'
+import { EVENT_DATE, EVENT_TIME_ZONE } from '@/consts/event'
 
 // El instante de inicio del evento es la única fuente de verdad del proyecto
 // (sede: España peninsular). Se reutiliza para mantener coherencia con el
@@ -97,29 +97,6 @@ const groups = [...groupsByTime.values()].sort((a, b) => a.time.localeCompare(b.
 
 const hostTime = timeIn(host.timeZone)
 const hostOffset = offsetIn(host.timeZone)
-
-// Fichero .ics generado en build para "Añadir al calendario".
-const toICS = (iso: string): string => iso.replace(/[-:]/g, '').replace(/\.\d{3}/, '')
-const stamp = toICS(EVENT_DATE.toISOString())
-const icsHref = `data:text/calendar;charset=utf-8,${encodeURIComponent(
-  [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//infolavelada.com//Velada VI//ES',
-    'CALSCALE:GREGORIAN',
-    'BEGIN:VEVENT',
-    'UID:velada-vi-2026@infolavelada.com',
-    `DTSTAMP:${stamp}`,
-    `DTSTART:${stamp}`,
-    `DTEND:${toICS(EVENT_END_ISO)}`,
-    'SUMMARY:La Velada del Año VI',
-    'DESCRIPTION:Evento de boxeo de Ibai Llanos. Gratis en twitch.tv/ibai',
-    'LOCATION:Estadio de La Cartuja\\, Sevilla\\, España',
-    'URL:https://www.infolavelada.com',
-    'END:VEVENT',
-    'END:VCALENDAR',
-  ].join('\r\n'),
-)}`
 ---
 
 <section
@@ -261,27 +238,6 @@ const icsHref = `data:text/calendar;charset=utf-8,${encodeURIComponent(
         ))
       }
     </div>
-
-    <a
-      href={icsHref}
-      download="la-velada-del-año-vi.ics"
-      class="mt-9 flex items-center justify-center gap-2 rounded border border-theme-gold/35 px-6 py-[0.7rem] font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-theme-gold uppercase transition-[translate,border-color,background-color,color] duration-300 outline-none hover:-translate-y-px hover:border-theme-gold hover:bg-theme-gold/10 hover:text-theme-cream focus-visible:-translate-y-px focus-visible:border-theme-gold focus-visible:bg-theme-gold/10 focus-visible:text-theme-cream focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        width="14"
-        height="14"
-        aria-hidden="true"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zM12 12.75a.75.75 0 01.75.75v2.69l.97-.97a.75.75 0 111.06 1.06l-2.25 2.25a.75.75 0 01-1.06 0l-2.25-2.25a.75.75 0 111.06-1.06l.97.97V13.5a.75.75 0 01.75-.75z"
-          clip-rule="evenodd"></path>
-      </svg>
-      Añadir al calendario
-    </a>
 
     <p
       class="mt-8 max-w-xl text-center font-cinzel text-[0.65rem] leading-[1.8] tracking-[0.08em] text-white/55 uppercase"
