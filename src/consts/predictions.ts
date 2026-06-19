@@ -12,6 +12,10 @@ const compactFormatter = new Intl.NumberFormat('es-ES', {
   maximumFractionDigits: 1,
 })
 
+const exactVotesFormatter = new Intl.NumberFormat('es-ES', {
+  maximumFractionDigits: 0,
+})
+
 const percentFormatter = new Intl.NumberFormat('es-ES', {
   maximumFractionDigits: 1,
 })
@@ -47,7 +51,7 @@ export interface PredictionVotesInput {
 }
 
 export function formatPredictionVotes(votes: number) {
-  return compactFormatter.format(votes)
+  return votes > 100_000 ? compactFormatter.format(votes) : exactVotesFormatter.format(votes)
 }
 
 export function formatPredictionPercent(percentage: number) {
