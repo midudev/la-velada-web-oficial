@@ -51,8 +51,6 @@ const breadcrumbJsonLd = {
     { '@type': 'ListItem', position: 2, name: 'Combates', item: canonical },
   ],
 }
-
-const EAGER_IMAGE_COUNT = 4
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
@@ -100,9 +98,9 @@ const EAGER_IMAGE_COUNT = 4
                     a={c.a}
                     b={c.b}
                     imageLoadingStrategy={{
-                        loading: i < EAGER_IMAGE_COUNT ? 'eager' : 'lazy',
-                        decoding: i < EAGER_IMAGE_COUNT ? 'auto' : 'async',
-                        fetchpriority: i < EAGER_IMAGE_COUNT ? 'high' : 'auto',
+                      loading: 'eager',
+                      decoding: 'auto',
+                      fetchpriority: 'high',
                     }}
                   />
                 </div>
