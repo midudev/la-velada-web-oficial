@@ -126,11 +126,11 @@ function getPosterErrorHandler(videoId: string) {
 
             {secondaryVideos.length > 0 && (
               <ul
-                class="boxer-workout-scroll grid max-h-[34rem] gap-px overflow-y-auto sm:grid-cols-2 lg:max-h-[31.5cqw] lg:grid-cols-1"
+                class="boxer-workout-scroll grid max-h-[34rem] auto-rows-max items-start gap-px overflow-y-auto sm:grid-cols-2 lg:max-h-[31.5cqw] lg:grid-cols-1"
                 aria-label={`${secondaryCountLabel} adicionales de preparación de ${boxerName}`}
               >
                 {secondaryVideos.map((video, index) => (
-                  <li>
+                  <li class="h-fit self-start">
                     <button
                       type="button"
                       data-workout-video-tile
@@ -138,7 +138,7 @@ function getPosterErrorHandler(videoId: string) {
                       data-video-id={video.videoId}
                       data-video-title={video.title}
                       aria-label={`Reproducir vídeo: ${video.title}`}
-                      class="group grid w-full cursor-pointer grid-cols-[5.25rem_1fr] gap-3 bg-theme-midnight/60 p-3 text-left transition duration-300 outline-none hover:bg-theme-navy/55 focus-visible:bg-theme-navy/55 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-inset sm:grid-cols-[6rem_1fr] sm:p-4 lg:grid-cols-[7.5rem_1fr]"
+                      class="group grid h-fit w-full cursor-pointer grid-cols-[5.25rem_1fr] gap-3 bg-theme-midnight/60 p-3 text-left transition duration-300 outline-none hover:bg-theme-navy/55 focus-visible:bg-theme-navy/55 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-inset sm:grid-cols-[6rem_1fr] sm:p-4 lg:grid-cols-[7.5rem_1fr]"
                     >
                       <span class="relative block aspect-video overflow-hidden rounded-lg border border-white/10 bg-black/30">
                         <picture class="absolute inset-0 transition duration-500 group-hover:scale-105 group-focus-visible:scale-105">
