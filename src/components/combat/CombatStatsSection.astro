@@ -29,8 +29,12 @@ const sumFollowers = (boxer: Boxer) =>
 const followers1 = sumFollowers(boxer1)
 const followers2 = sumFollowers(boxer2)
 const followersTotal = followers1 + followers2
-// Reparto de la barra comparativa; 50/50 si no hay datos de ninguno.
+// Punto de corte de la barra: ancho del segmento izquierdo (boxer A). Es la
+// geometría real del reparto y no depende de quién lidere.
 const followersShareA = followersTotal > 0 ? (followers1 / followersTotal) * 100 : 50
+// Lado que se pinta en oro sólido = el de mayor alcance, igual que el realce del
+// número. La geometría (corte) no cambia; solo qué segmento va iluminado.
+const followersLeaderSide = followers1 >= followers2 ? 'a' : 'b'
 const hasFollowers = followersTotal > 0
 ---
 
@@ -133,6 +137,7 @@ const hasFollowers = followersTotal > 0
 
             <div
               class="followers-bar"
+              data-leader={followersLeaderSide}
               style={`--share-a: ${followersShareA}%`}
               aria-hidden="true"
             />
@@ -273,18 +278,29 @@ const hasFollowers = followersTotal > 0
     text-shadow: 0 0 20px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
   }
 
-  /* Barra proporcional (tale of the tape): oro para el líder por la izquierda,
-     oro atenuado para el rival por la derecha, con un corte limpio en el reparto. */
+  /* Barra proporcional (tale of the tape): el segmento del de mayor alcance va
+     en oro sólido y el del rival en oro atenuado, cada uno en su lado real. El
+     corte (--share-a) es la geometría del reparto y no depende de quién lidere;
+     solo se intercambia qué lado se ilumina (data-leader). */
   .followers-bar {
     grid-column: 1 / -1;
     height: 5px;
     border-radius: 9999px;
+    --bar-strong: var(--color-theme-gold);
+    --bar-weak: color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
+    --bar-left: var(--bar-strong);
+    --bar-right: var(--bar-weak);
     background: linear-gradient(
       90deg,
-      var(--color-theme-gold) 0 var(--share-a),
-      color-mix(in srgb, var(--color-theme-gold) 20%, transparent) var(--share-a) 100%
+      var(--bar-left) 0 var(--share-a),
+      var(--bar-right) var(--share-a) 100%
     );
     box-shadow: inset 0 0 0 1px rgba(199, 168, 107, 0.18);
+  }
+
+  .followers-bar[data-leader='b'] {
+    --bar-left: var(--bar-weak);
+    --bar-right: var(--bar-strong);
   }
 
   .stats-cell {
@@ -330,11 +346,25 @@ const hasFollowers = followersTotal > 0
 
   @media (max-width: 639px) {
     .stats-row {
-      padding: 0.75rem 1rem;
+      padding: 0.75rem 0.85rem;
+      gap: 0.5rem;
+    }
+
+    /* En móvil el label central fijo a 7.25rem ahogaba las celdas laterales y el
+       país + bandera se salían de la tarjeta. Le damos menos ancho, dejamos que
+       las celdas encojan y reducimos el valor y la bandera para que el nombre
+       del país quepa en una sola línea (sin partir la palabra). */
+    .stats-label {
+      min-width: 5.25rem;
+    }
+
+    .stats-cell {
+      min-width: 0;
     }
 
     .stats-value {
-      font-size: 0.72rem;
+      font-size: 0.66rem;
+      letter-spacing: 0.02em;
     }
 
     .followers-value {
@@ -344,6 +374,11 @@ const hasFollowers = followersTotal > 0
     .boxer-avatar {
       width: 4rem;
       height: 4rem;
+    }
+
+    :global(.stats-flag) {
+      width: 15px !important;
+      height: 15px !important;
     }
   }
 
