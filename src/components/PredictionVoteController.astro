@@ -482,7 +482,6 @@ const controllerConfig = JSON.stringify({
     latestVoteRequestByBattle.set(battleId, requestId)
 
     applyOptimisticVote(battleId, boxerId)
-    announceVote(fight, boxerId)
     setFightPending(battleId, true)
 
     try {
@@ -515,6 +514,9 @@ const controllerConfig = JSON.stringify({
 
       setBattleVote(battleId, boxerId)
       if (data.prediction) applyPredictionData(data.prediction)
+      // Anunciamos solo tras confirmar el servidor, con el porcentaje real, para
+      // no informar de un voto que luego se revierte (p. ej. sesión caducada).
+      announceVote(fight, boxerId)
       checkAllPredictionsComplete()
     } catch (error) {
       if (latestVoteRequestByBattle.get(battleId) === requestId && snapshot) {
