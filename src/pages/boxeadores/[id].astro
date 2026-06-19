@@ -3,10 +3,12 @@ import type { GetStaticPaths } from 'astro'
 
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import BoxerGallery from '@/components/BoxerGallery.astro'
 import BoxerSocials from '@/components/BoxerSocials.astro'
 import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
+import BoxerWorkoutVideos from '@/components/BoxerWorkoutVideos.astro'
+import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
 import CountryFlag from '@/components/CountryFlag.astro'
-import SectionDivider from '@/components/SectionDivider.astro'
 import { battles } from '@/consts/battles'
 import { EVENT_DATE_TIME } from '@/consts/event'
 import {
@@ -21,7 +23,6 @@ import {
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
-import BoxerGallery from '@/components/BoxerGallery.astro'
 
 export const prerender = true
 
@@ -34,6 +35,42 @@ export const getStaticPaths = (() => {
 
 interface Props {
   boxerId: string
+}
+
+interface WorkoutVideo {
+  videoId: string
+  title: string
+  eyebrow?: string
+}
+
+function getYouTubeVideoId(url: string) {
+  try {
+    const parsedUrl = new URL(url)
+    const hostname = parsedUrl.hostname.replace(/^www\./, '')
+
+    if (hostname === 'youtu.be') {
+      return parsedUrl.pathname.split('/').filter(Boolean)[0] ?? null
+    }
+
+    if (hostname === 'youtube.com' || hostname === 'm.youtube.com') {
+      return parsedUrl.searchParams.get('v')
+    }
+  } catch {
+    return null
+  }
+
+  return null
+}
+
+function createFaceToFaceVideo(videoUrl: string, battleTitle: string): WorkoutVideo | null {
+  const videoId = getYouTubeVideoId(videoUrl)
+  if (!videoId) return null
+
+  return {
+    videoId,
+    title: `Cara a cara: ${battleTitle}`,
+    eyebrow: 'CARA A CARA',
+  }
 }
 
 const { boxerId } = Astro.props
@@ -61,6 +98,17 @@ const battle = battles.find((b) => b.boxerIds.includes(boxer.id))
 const opponentId = battle?.boxerIds.find((id) => id !== boxer.id)
 const opponent = opponentId ? BOXERS_BY_ID[opponentId] : null
 const opponentSelectImages = opponent ? getBoxerSelectImages(opponent) : null
+
+const boxerWorkoutVideos: WorkoutVideo[] = boxer.workout ?? []
+const hasBoxerWorkoutVideos = boxerWorkoutVideos.length > 0
+const faceToFaceVideoUrl = battle?.faceToFaceVideoUrl ?? null
+const faceToFaceVideo =
+  hasBoxerWorkoutVideos && faceToFaceVideoUrl && battle
+    ? createFaceToFaceVideo(faceToFaceVideoUrl, battle.title)
+    : null
+const workoutVideos = faceToFaceVideo
+  ? [...boxerWorkoutVideos, faceToFaceVideo]
+  : boxerWorkoutVideos
 
 const SITE_URL = 'https://www.infolavelada.com'
 const canonical = `${SITE_URL}/boxeadores/${boxer.id}`
@@ -158,12 +206,12 @@ const breadcrumbJsonLd = {
   />
 
   <section
-    class="boxer-detail relative isolate w-full overflow-x-clip bg-theme-midnight px-4 pb-24 pt-24 text-theme-cream sm:px-6 sm:pt-28 md:pt-32"
+    class="boxer-detail relative isolate w-full overflow-x-clip bg-theme-midnight px-4 pt-24 pb-24 text-theme-cream sm:px-6 sm:pt-28 md:pt-32"
     aria-labelledby="boxer-name"
   >
     <picture
       data-boxer-detail-bg
-      class="pointer-events-none absolute inset-0 max-h-svh -z-20"
+      class="pointer-events-none absolute inset-0 -z-20 max-h-svh"
       aria-hidden="true"
     >
       <source
@@ -198,7 +246,9 @@ const breadcrumbJsonLd = {
         <span class="boxer-back-label">Volver a boxeadores</span>
       </a>
 
-      <div class="boxer-hero mt-8 grid items-center gap-10 sm:mt-10 md:grid-cols-[0.82fr_1fr] md:gap-10 lg:gap-14">
+      <div
+        class="boxer-hero mt-8 grid items-center gap-10 sm:mt-10 md:grid-cols-[0.82fr_1fr] md:gap-10 lg:gap-14"
+      >
         <div class="boxer-portrait-wrap relative flex flex-col items-center md:order-1">
           <span aria-hidden="true" class="boxer-detail-aura"></span>
 
@@ -210,7 +260,9 @@ const breadcrumbJsonLd = {
             class="boxer-detail-wins"
           />
 
-          <picture class="boxer-detail-portrait-picture relative z-10 flex w-full items-start justify-center">
+          <picture
+            class="boxer-detail-portrait-picture relative z-10 flex w-full items-start justify-center"
+          >
             <source type="image/avif" srcset={heroImages.avif} />
             <source type="image/webp" srcset={heroImages.webp} />
             <img
@@ -225,7 +277,9 @@ const breadcrumbJsonLd = {
             />
           </picture>
 
-          <div class="boxer-detail-socias animate-fade-in-up animate-delay-300 relative z-10 mt-6 w-full">
+          <div
+            class="boxer-detail-socias relative z-10 mt-6 w-full animate-fade-in-up animate-delay-300"
+          >
             <BoxerSocials boxer={boxer} />
           </div>
         </div>
@@ -233,96 +287,94 @@ const breadcrumbJsonLd = {
         <div class="boxer-info relative flex flex-col items-start md:order-2">
           <h1
             id="boxer-name"
-            class="boxer-detail-name animate-fade-in-up text-balance font-cinzel text-5xl font-black uppercase leading-[0.92] tracking-[0.02em] sm:text-6xl md:text-7xl lg:text-8xl"
+            class="boxer-detail-name animate-fade-in-up font-cinzel text-5xl leading-[0.92] font-black tracking-[0.02em] text-balance uppercase sm:text-6xl md:text-7xl lg:text-8xl"
           >
             {boxer.name}
           </h1>
 
-          <div class="boxer-meta animate-fade-in-up animate-delay-300 mt-6">
-            {battle && (
-              <span class="boxer-meta-combat">
-                Combate · {String(battle.number).padStart(2, '0')}
-              </span>
-            )}
+          <div class="boxer-meta mt-6 animate-fade-in-up animate-delay-300">
+            {
+              battle && (
+                <span class="boxer-meta-combat">
+                  Combate · {String(battle.number).padStart(2, '0')}
+                </span>
+              )
+            }
             <span class="boxer-meta-strip">
               <span class="boxer-meta-item">
-                <CountryFlag
-                  country={boxer.country}
-                  size={16}
-                  decorative
-                  class="boxer-meta-flag"
-                />
+                <CountryFlag country={boxer.country} size={16} decorative class="boxer-meta-flag" />
                 {countryName}
               </span>
               <span aria-hidden="true" class="boxer-meta-sep"></span>
               <span class="boxer-meta-item">{genderLabel}</span>
-              {birthDateLabel && (
-                <>
-                  <span aria-hidden="true" class="boxer-meta-sep"></span>
-                  <span class="boxer-meta-item">
-                    <time datetime={boxer.birthDate}>{birthDateLabel}</time>
-                  </span>
-                </>
-              )}
+              {
+                birthDateLabel && (
+                  <>
+                    <span aria-hidden="true" class="boxer-meta-sep" />
+                    <span class="boxer-meta-item">
+                      <time datetime={boxer.birthDate}>{birthDateLabel}</time>
+                    </span>
+                  </>
+                )
+              }
             </span>
           </div>
 
-          {opponent && opponentSelectImages && (
-            <a
-              href={`/boxeadores/${opponent.id}`}
-              class="boxer-versus animate-fade-in-up animate-delay-500 group mt-8"
-              aria-label={`Ver el perfil de ${opponent.name}, su rival`}
-            >
-              <span class="boxer-versus-tag" aria-hidden="true">VS</span>
-              <span class="boxer-versus-photo relative inline-flex size-12 shrink-0 overflow-hidden rounded-full sm:size-14">
-                <picture class="absolute inset-0">
-                  <source type="image/avif" srcset={opponentSelectImages.avif} />
-                  <source type="image/webp" srcset={opponentSelectImages.webp} />
-                  <img
-                    src={opponentSelectImages.webp}
-                    alt=""
-                    role="presentation"
-                    decoding="async"
-                    loading="lazy"
-                    width="80"
-                    height="80"
-                    class="size-full object-cover object-top"
-                  />
-                </picture>
-              </span>
-              <span class="boxer-versus-text">
-                <span class="boxer-versus-label">Su rival</span>
-                <span class="boxer-versus-name">{opponent.name}</span>
-              </span>
-              <ArrowRightIcon
-                class="boxer-versus-arrow size-4 text-theme-gold/70"
-                aria-hidden="true"
-              />
-            </a>
-          )}
+          {
+            opponent && opponentSelectImages && (
+              <a
+                href={`/boxeadores/${opponent.id}`}
+                class="boxer-versus group mt-8 animate-fade-in-up animate-delay-500"
+                aria-label={`Ver el perfil de ${opponent.name}, su rival`}
+              >
+                <span class="boxer-versus-tag" aria-hidden="true">
+                  VS
+                </span>
+                <span class="boxer-versus-photo relative inline-flex size-12 shrink-0 overflow-hidden rounded-full sm:size-14">
+                  <picture class="absolute inset-0">
+                    <source type="image/avif" srcset={opponentSelectImages.avif} />
+                    <source type="image/webp" srcset={opponentSelectImages.webp} />
+                    <img
+                      src={opponentSelectImages.webp}
+                      alt=""
+                      role="presentation"
+                      transition:name={`boxer-hero-${opponent.id}`}
+                      decoding="async"
+                      loading="lazy"
+                      width="80"
+                      height="80"
+                      class="size-full object-cover object-top"
+                    />
+                  </picture>
+                </span>
+                <span class="boxer-versus-text">
+                  <span class="boxer-versus-label">Su rival</span>
+                  <span class="boxer-versus-name">{opponent.name}</span>
+                </span>
+                <ArrowRightIcon
+                  class="boxer-versus-arrow size-4 text-theme-gold/70"
+                  aria-hidden="true"
+                />
+              </a>
+            )
+          }
         </div>
       </div>
 
       <BoxerGallery boxerId={boxer.id} boxerName={boxer.name} />
-
-      <div class="boxer-detail-coming-soon animate-fade-in-up animate-delay-500 mt-14 w-full sm:mt-16">
-        <SectionDivider size="sm" class="w-full" />
-
-        <p class="boxer-eyebrow mt-6">Ficha en preparación</p>
-
-        <p class="boxer-detail-coming-soon-text mt-3 max-w-xl font-cinzel text-xs font-medium leading-relaxed tracking-[0.18em] text-theme-cream/70 sm:text-sm">
-          Estamos puliendo la ficha completa de {boxer.name}: récord,
-          entrenamientos y rivalidades. Vuelve pronto.
-        </p>
-
-        <div class="mt-6 flex flex-wrap items-center gap-3 sm:gap-4">
-          <a href="/boxeadores" class="boxer-detail-cta boxer-detail-cta-ghost">
-            Todos los boxeadores
-          </a>
-        </div>
-      </div>
     </div>
   </section>
+
+  {hasBoxerWorkoutVideos && (
+    <BoxerWorkoutVideos boxerId={boxer.id} boxerName={boxer.name} videos={workoutVideos} />
+  )}
+  {!hasBoxerWorkoutVideos && battle && faceToFaceVideoUrl && (
+    <CombatFaceToFaceVideoSection
+      sectionId="workout"
+      title={`${battle.title} | Cara a cara`}
+      videoUrl={faceToFaceVideoUrl}
+    />
+  )}
 
   <Sponsors />
   <Footer />
@@ -335,12 +387,7 @@ const breadcrumbJsonLd = {
   }
 
   [data-boxer-detail-bg] {
-    mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 55%,
-      transparent 100%
-    );
+    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
   }
 
   [data-boxer-detail-bg] img {
