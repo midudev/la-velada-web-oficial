@@ -15,7 +15,7 @@ const images = getBoxerGallery(boxerId, boxerName)
   images.length > 0 && (
     <section
       data-boxer-gallery
-      class="boxer-gallery animate-fade-in-up animate-delay-500 mt-10 w-full"
+      class="boxer-gallery mt-10 w-full animate-fade-in-up animate-delay-500"
     >
       <SectionDivider size="sm" class="w-full" />
 
@@ -52,12 +52,37 @@ const images = getBoxerGallery(boxerId, boxerName)
         ))}
       </ul>
 
-      <dialog data-gallery-dialog class="boxer-gallery-dialog" aria-label="Galería de fotos ampliada">
+      <dialog
+        data-gallery-dialog
+        class="boxer-gallery-dialog"
+        aria-label="Galería de fotos ampliada"
+      >
         <div data-gallery-backdrop class="boxer-gallery-dialog-inner">
-          <button type="button" data-gallery-close class="boxer-gallery-btn boxer-gallery-close" aria-label="Cerrar">✕</button>
-          <button type="button" data-gallery-prev class="boxer-gallery-btn boxer-gallery-nav boxer-gallery-prev" aria-label="Foto anterior">‹</button>
+          <button
+            type="button"
+            data-gallery-close
+            class="boxer-gallery-btn boxer-gallery-close"
+            aria-label="Cerrar"
+          >
+            ✕
+          </button>
+          <button
+            type="button"
+            data-gallery-prev
+            class="boxer-gallery-btn boxer-gallery-nav boxer-gallery-prev"
+            aria-label="Foto anterior"
+          >
+            ‹
+          </button>
           <img data-gallery-dialog-img class="boxer-gallery-dialog-img" alt="" decoding="async" />
-          <button type="button" data-gallery-next class="boxer-gallery-btn boxer-gallery-nav boxer-gallery-next" aria-label="Foto siguiente">›</button>
+          <button
+            type="button"
+            data-gallery-next
+            class="boxer-gallery-btn boxer-gallery-nav boxer-gallery-next"
+            aria-label="Foto siguiente"
+          >
+            ›
+          </button>
           <span data-gallery-counter class="boxer-gallery-counter" aria-hidden="true" />
         </div>
       </dialog>
@@ -104,8 +129,14 @@ const images = getBoxerGallery(boxerId, boxerName)
     gallery.querySelector('[data-gallery-close]')?.addEventListener('click', () => dialog.close())
 
     dialog.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') { e.preventDefault(); show(current - 1) }
-      if (e.key === 'ArrowRight') { e.preventDefault(); show(current + 1) }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        show(current - 1)
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        show(current + 1)
+      }
     })
 
     dialog.addEventListener('click', (e) => {
@@ -146,15 +177,15 @@ const images = getBoxerGallery(boxerId, boxerName)
     justify-content: center;
     width: 100%;
     height: 100%;
-    padding: clamp(1rem, 4vw, 3rem);
+    padding: clamp(0.5rem, 2vw, 1.5rem); /* small padding for controls */
   }
 
   .boxer-gallery-dialog-img {
     max-width: 100%;
-    max-height: 85dvh;
+    max-height: 100dvh;
     width: auto;
     height: auto;
-    object-fit: contain;
+    object-fit: contain; /* show whole image without cropping */
     border-radius: 0.5rem;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
   }
@@ -169,7 +200,10 @@ const images = getBoxerGallery(boxerId, boxerName)
     background: color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
     border-radius: 9999px;
-    transition: background-color 250ms ease, box-shadow 250ms ease, transform 250ms ease;
+    transition:
+      background-color 250ms ease,
+      box-shadow 250ms ease,
+      transform 250ms ease;
   }
 
   .boxer-gallery-btn:hover,
@@ -201,8 +235,12 @@ const images = getBoxerGallery(boxerId, boxerName)
     transform: translateY(-50%) scale(1.05);
   }
 
-  .boxer-gallery-prev { left: clamp(0.5rem, 3vw, 2rem); }
-  .boxer-gallery-next { right: clamp(0.5rem, 3vw, 2rem); }
+  .boxer-gallery-prev {
+    left: clamp(0.5rem, 3vw, 2rem);
+  }
+  .boxer-gallery-next {
+    right: clamp(0.5rem, 3vw, 2rem);
+  }
 
   .boxer-gallery-counter {
     position: absolute;
