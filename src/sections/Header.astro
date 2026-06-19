@@ -1,5 +1,4 @@
 ---
-import LogoHomeLink from '@/components/LogoHomeLink.tsx'
 import HeaderNav from '@/components/HeaderNav.astro'
 ---
 
@@ -7,19 +6,57 @@ import HeaderNav from '@/components/HeaderNav.astro'
   data-header
   class:list={[
     'fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent transition-[background-color,backdrop-filter,border-color] duration-500 ease-out',
-    'data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:backdrop-saturate-150 data-[scrolled=true]:backdrop-contrast-125',
+    'data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:backdrop-contrast-125 data-[scrolled=true]:backdrop-saturate-150',
   ]}
 >
   <div
     class="relative z-50 mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4"
   >
-    <LogoHomeLink client:visible>
-      <span
-        class="hidden font-cinzel text-[0.6rem] font-bold leading-none tracking-[0.32em] text-theme-cream/85 sm:inline sm:text-xs"
+    <a
+      href="/"
+      class="home-link group flex items-center gap-3 focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+      aria-label="La Velada del Año VI - Inicio"
+    >
+      <svg
+        class="transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105 group-[.active]:scale-103"
+        xmlns="http://www.w3.org/2000/svg"
+        width="40"
+        height="40"
+        viewBox="0 0 303 303"
       >
-        LA VELADA <span class="text-theme-gold">VI</span>
+        <path
+          class="transition-[stroke-width] duration-700 ease-[cubic-bezier(0.15,1,0.3,1)] group-hover:stroke-8 group-[.active]:stroke-10"
+          fill="url(#gold-gradient)"
+          stroke="url(#gold-gradient)"
+          stroke-width="1"
+          stroke-linejoin="round"
+          d="m188.1 150.2 90.6 137.4-34.9-16c-7.7-3.5-15.1-7.7-21.9-12.3-15.3-10.4-29-25.3-39.6-43.1L164.5 186l-12 18.2-12-18.2-17.7 30.2c-10.6 17.8-24.4 32.7-39.7 43.1-6.8 4.6-14.2 8.8-21.9 12.3l-34.9 16 90.6-137.4L26.3 12.8l34.9 16c7.7 3.5 15.1 7.7 21.9 12.3 15.3 10.4 29.1 25.3 39.7 43.1l17.7 30.2 12-18.2 12 18.2 17.8-30.2c10.6-17.8 24.3-32.7 39.6-43.1 6.8-4.6 14.2-8.8 21.9-12.3l34.9-16zm-21-31.8 18.4 27.9L266.8 23l-21.2 9.7c-7.5 3.5-14.7 7.5-21.3 12-14.8 10-28 24.5-38.3 41.8zM38.2 23l81.2 123.2 18.4-27.8-18.8-32c-10.3-17.3-23.6-31.7-38.4-41.8-6.6-4.5-13.8-8.5-21.3-11.9zm147.3 131.1L162 118.5l-9.5-14.5-9.6 14.5-23.4 35.6-81.3 123.2 21.2-9.7c7.5-3.4 14.6-7.4 21.2-11.9 14.8-10.1 28.1-24.5 38.4-41.8l19.5-33.1 14-23.7 13.9 23.7 19.5 33.1c10.3 17.3 23.6 31.7 38.4 41.8 6.6 4.5 13.8 8.5 21.3 11.9l21.1 9.7zm-23.4 27.8-9.6-16.2-9.5 16.2 9.5 14.4z"
+        ></path>
+
+        <defs>
+          <linearGradient id="gold-gradient" x1="15%" y1="5%" x2="90%" y2="95%">
+            <stop
+              class="transition-[stop-color] duration-600 ease-in"
+              offset="0%"
+              stop-color="#c6ad9c"></stop>
+            <stop
+              class="transition-[stop-color] duration-600 ease-in"
+              offset="50%"
+              stop-color="#c6ad9c"></stop>
+            <stop
+              class="transition-[stop-color] duration-600 ease-in"
+              offset="100%"
+              stop-color="#c6ad9c"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <span
+        class="hidden font-cinzel text-[0.6rem] leading-none font-black tracking-[0.26em] text-theme-cream/85 sm:inline sm:text-xs"
+      >
+        La Velada <span class="text-theme-gold">VI</span>
       </span>
-    </LogoHomeLink>
+    </a>
 
     <HeaderNav variant="desktop" />
 
@@ -27,7 +64,7 @@ import HeaderNav from '@/components/HeaderNav.astro'
       type="button"
       data-mobile-menu-button
       class:list={[
-        'group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] outline-none backdrop-blur-md backdrop-saturate-150 backdrop-contrast-125 transition duration-300 hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden',
+        'group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] backdrop-blur-md backdrop-contrast-125 backdrop-saturate-150 transition duration-300 outline-none hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden',
       ]}
       aria-controls="mobile-menu"
       aria-expanded="false"
@@ -55,22 +92,43 @@ import HeaderNav from '@/components/HeaderNav.astro'
     aria-hidden="true"
     inert
     class:list={[
-      'fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl backdrop-saturate-150 backdrop-contrast-125 transition duration-300 ease-out pointer-events-none data-[open=true]:translate-y-0 data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto md:hidden',
+      'pointer-events-none fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-150 transition duration-300 ease-out data-[open=true]:pointer-events-auto data-[open=true]:translate-y-0 data-[open=true]:opacity-100 md:hidden',
     ]}
   >
     <div
       aria-hidden="true"
       class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_50%_0%,color-mix(in_srgb,var(--color-theme-gold)_18%,transparent),transparent_62%)]"
-    ></div>
+    >
+    </div>
     <HeaderNav variant="mobile" />
   </div>
 </header>
+
+<style>
+  #gold-gradient stop {
+    transition: stop-color 600ms ease;
+  }
+
+  .home-link:hover #gold-gradient stop:nth-child(1),
+  .home-link.active #gold-gradient stop:nth-child(1) {
+    stop-color: #f5cfb5;
+  }
+
+  .home-link:hover #gold-gradient stop:nth-child(2),
+  .home-link.active #gold-gradient stop:nth-child(2) {
+    stop-color: #ca9066;
+  }
+
+  .home-link:hover #gold-gradient stop:nth-child(3),
+  .home-link.active #gold-gradient stop:nth-child(3) {
+    stop-color: #594233;
+  }
+</style>
 
 <script>
   import { $, $$ } from '@/lib/dom-selector'
 
   let headerAbort: AbortController | null = null
-  const mobileMenuToggleEvent = 'header:mobile-menu-toggle'
 
   function setupHeaderScroll(header: HTMLElement, signal: AbortSignal) {
     const update = () => {
@@ -85,6 +143,8 @@ import HeaderNav from '@/components/HeaderNav.astro'
     const menu = $<HTMLElement>('[data-mobile-menu]')
     const button = $<HTMLButtonElement>('[data-mobile-menu-button]')
     const links = $$<HTMLAnchorElement>('[data-mobile-menu-link]')
+    const homeLink = $<HTMLElement>('.home-link')
+
     if (!menu || !button) return
 
     const setMenuOpen = (open: boolean) => {
@@ -97,7 +157,7 @@ import HeaderNav from '@/components/HeaderNav.astro'
       const label = $<HTMLElement>('.sr-only', button)
       if (label) label.textContent = open ? 'Cerrar menú' : 'Abrir menú'
       document.documentElement.classList.toggle('overflow-hidden', open)
-      document.dispatchEvent(new CustomEvent(mobileMenuToggleEvent, { detail: { open } }))
+      homeLink?.classList.toggle('active', open)
     }
 
     setMenuOpen(false)

@@ -31,7 +31,7 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
   data-vote-percentage={option.percentage}
   aria-label={`Pronosticar victoria de ${option.boxer.name}`}
   aria-pressed={String(isSelected)}
-  style={`--vote-share: ${option.percentage.toFixed(2)}%; --vote-color: ${option.color}; --vote-delay: ${option.delay}ms;`}
+  style={`--vote-share: ${option.percentage.toFixed(2)}%; --vote-color: ${option.color};`}
 >
   <span aria-hidden="true" class="poll-vote-tag">Tu voto</span>
 
@@ -62,7 +62,7 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
     <span class="flex min-w-0 flex-1 flex-col justify-between gap-4 py-1">
       <span>
         <span
-          class="flex items-center gap-2 font-cinzel text-[0.6rem] font-bold tracking-[0.3em] text-white/60 sm:text-[0.68rem]"
+          class="flex items-center gap-2 font-cinzel text-[0.6rem] font-black tracking-[0.18em] text-white/60 sm:text-[0.68rem]"
         >
           <CountryFlag country={option.boxer.country} size={14} decorative />
           {option.countryName}
@@ -76,7 +76,7 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
 
       <span class="grid gap-2">
         <span class="flex items-end justify-between gap-3">
-          <span class="font-cinzel text-[0.6rem] font-bold tracking-[0.28em] text-white/58">
+          <span class="font-cinzel text-[0.6rem] font-black tracking-[0.18em] text-white/58">
             Pronosticar
           </span>
           <span
@@ -90,7 +90,7 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
           <span aria-hidden="true" class="poll-mini-bar block h-full rounded-full"></span>
         </span>
         <span
-          class="font-cinzel text-[0.58rem] font-semibold tracking-[0.24em] text-white/48 sm:text-[0.62rem]"
+          class="font-cinzel text-[0.58rem] font-black tracking-[0.16em] text-white/48 sm:text-[0.62rem]"
           data-prediction-votes
         >
           {formatPredictionSupport(option.votes)}
@@ -316,9 +316,6 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
     width: var(--vote-share);
     position: relative;
     overflow: hidden;
-    transform-origin: left;
-    animation: poll-grow 900ms cubic-bezier(0.19, 1, 0.22, 1) both;
-    animation-delay: calc(var(--vote-delay) + 120ms);
     background: var(--vote-color);
     box-shadow: 0 0 16px color-mix(in srgb, var(--vote-color) 42%, transparent);
     transition:
@@ -358,19 +355,17 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
     animation: vote-number-pop 680ms cubic-bezier(0.18, 0.86, 0.24, 1);
   }
 
+  .poll-option[data-vote-changing='up'] [data-prediction-percent] {
+    color: var(--color-theme-gold);
+    text-shadow:
+      0 0 16px color-mix(in srgb, var(--color-theme-gold) 48%, transparent),
+      0 0 34px color-mix(in srgb, var(--vote-color) 30%, transparent);
+  }
+
   .poll-option[data-side='b'] .poll-mini-bar {
     margin-left: auto;
     transform-origin: right;
     background: var(--vote-color);
-  }
-
-  @keyframes poll-grow {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
-    }
   }
 
   @keyframes vote-bar-flare {
