@@ -1,10 +1,8 @@
 ---
 import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
 import CombatHero from '@/components/combat/CombatHero.astro'
-import CombatPredictionsSection from '@/components/combat/CombatPredictionsSection.astro'
 import CombatStatsSection from '@/components/combat/CombatStatsSection.astro'
-import PredictionVoteController from '@/components/PredictionVoteController.astro'
-import { battles, battlesById } from '@/consts/battles'
+import { battlesById } from '@/consts/battles'
 import { EVENT_DATE_TIME } from '@/consts/event'
 import {
   BOXERS_BY_ID,
@@ -13,9 +11,7 @@ import {
   getBoxerSelectImages,
   type Boxer,
 } from '@/consts/boxers'
-import { createPredictionBattles } from '@/consts/predictions'
 import Layout from '@/layouts/Layout.astro'
-import { getPredictionsByCombat, getUserVotes } from '@/lib/predictions'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 
@@ -37,30 +33,6 @@ const boxer2Select = getBoxerSelectImages(boxer2)
 const title = `${battle.title} — Combate ${String(battle.number).padStart(2, '0')} de La Velada del Año VI`
 const description = `Toda la información del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} contra ${boxer2.name}. Fecha, horario y detalles en Sevilla.`
 const canonical = `${SITE_URL}${battle.url}`
-const user = Astro.locals.user
-
-let storedPrediction: Awaited<ReturnType<typeof getPredictionsByCombat>> = null
-let storedUserVotes: Awaited<ReturnType<typeof getUserVotes>> = []
-
-try {
-  storedPrediction = await getPredictionsByCombat(battle.id)
-} catch (error) {
-  console.error('Error al cargar predicciones del combate:', error)
-}
-
-if (user?.id) {
-  try {
-    storedUserVotes = await getUserVotes(user.id)
-  } catch (error) {
-    console.error('Error al cargar votos del usuario:', error)
-  }
-}
-
-const predictionBattles = createPredictionBattles(storedPrediction ? [storedPrediction] : [])
-const battlePrediction = predictionBattles.find((p) => p.battle.id === battle.id) ?? null
-const userVotesByCombat = Object.fromEntries(
-  storedUserVotes.map((vote) => [vote.combat_id, vote.fighter_id]),
-)
 
 const fmt = {
   weight: (kg?: number | null) => (kg != null ? `${kg} kg` : '—'),
