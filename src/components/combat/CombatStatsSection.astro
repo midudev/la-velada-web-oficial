@@ -278,29 +278,30 @@ const hasFollowers = followersTotal > 0
     text-shadow: 0 0 20px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
   }
 
-  /* Barra proporcional (tale of the tape): el segmento del de mayor alcance va
-     en oro sólido y el del rival en oro atenuado, cada uno en su lado real. El
-     corte (--share-a) es la geometría del reparto y no depende de quién lidere;
-     solo se intercambia qué lado se ilumina (data-leader). */
+  /* Barra comparativa (tale of the tape): dos colores en vez de uno para que se
+     lea como enfrentamiento y no como barra de progreso. Oro para el de mayor
+     alcance, azul (familia navy de marca, aclarado para contrastar sobre el
+     fondo oscuro) para el rival. El corte (--share-a) es la geometría real del
+     reparto; solo se intercambia qué lado va en oro según el líder. */
   .followers-bar {
     grid-column: 1 / -1;
-    height: 5px;
+    height: 6px;
     border-radius: 9999px;
-    --bar-strong: var(--color-theme-gold);
-    --bar-weak: color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
-    --bar-left: var(--bar-strong);
-    --bar-right: var(--bar-weak);
+    --bar-gold: var(--color-theme-gold);
+    --bar-blue: color-mix(in srgb, var(--color-theme-navy) 45%, #5e8bd8);
+    --bar-left: var(--bar-gold);
+    --bar-right: var(--bar-blue);
     background: linear-gradient(
       90deg,
       var(--bar-left) 0 var(--share-a),
       var(--bar-right) var(--share-a) 100%
     );
-    box-shadow: inset 0 0 0 1px rgba(199, 168, 107, 0.18);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   }
 
   .followers-bar[data-leader='b'] {
-    --bar-left: var(--bar-weak);
-    --bar-right: var(--bar-strong);
+    --bar-left: var(--bar-blue);
+    --bar-right: var(--bar-gold);
   }
 
   .stats-cell {
