@@ -41,11 +41,6 @@ interface WorkoutVideo {
   videoId: string
   title: string
   eyebrow?: string
-  thumbnail: {
-    avif?: string
-    webp?: string
-    jpg?: string
-  }
 }
 
 function getYouTubeVideoId(url: string) {
@@ -75,9 +70,6 @@ function createFaceToFaceVideo(videoUrl: string, battleTitle: string): WorkoutVi
     videoId,
     title: `Cara a cara: ${battleTitle}`,
     eyebrow: 'CARA A CARA',
-    thumbnail: {
-      jpg: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-    },
   }
 }
 

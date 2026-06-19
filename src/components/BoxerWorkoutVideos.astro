@@ -9,11 +9,6 @@ interface WorkoutVideo {
   videoId: string
   title: string
   eyebrow?: string
-  thumbnail: {
-    avif?: string
-    webp?: string
-    jpg?: string
-  }
 }
 
 interface Props {
@@ -28,8 +23,16 @@ const titleId = `boxer-workout-title-${boxerId}`
 const dialogTitleId = `boxer-workout-dialog-title-${boxerId}`
 const secondaryCountLabel = `${secondaryVideos.length} VÍDEO${secondaryVideos.length === 1 ? '' : 'S'}`
 
-function getPosterSrc(video: WorkoutVideo) {
-  return video.thumbnail.jpg ?? video.thumbnail.webp ?? video.thumbnail.avif ?? '/logo.webp'
+function getYouTubePosterSrc(videoId: string) {
+  return `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/maxresdefault.jpg`
+}
+
+function getYouTubePosterFallbackSrc(videoId: string) {
+  return `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`
+}
+
+function getPosterErrorHandler(videoId: string) {
+  return `if (this.dataset.posterFallbackUsed === 'true') { this.onerror=null; this.src='/logo.webp'; } else { this.dataset.posterFallbackUsed='true'; this.src='${getYouTubePosterFallbackSrc(videoId)}'; }`
 }
 ---
 
@@ -67,19 +70,14 @@ function getPosterSrc(video: WorkoutVideo) {
               class="group relative isolate flex aspect-video w-full cursor-pointer self-start overflow-hidden border border-white/10 bg-theme-navy/40 text-left transition duration-500 outline-none hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 lg:aspect-auto lg:h-[31.5cqw]"
             >
               <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
-                {featuredVideo.thumbnail.avif && (
-                  <source srcset={featuredVideo.thumbnail.avif} type="image/avif" />
-                )}
-                {featuredVideo.thumbnail.webp && (
-                  <source srcset={featuredVideo.thumbnail.webp} type="image/webp" />
-                )}
                 <img
-                  src={getPosterSrc(featuredVideo)}
+                  src={getYouTubePosterSrc(featuredVideo.videoId)}
                   alt=""
                   aria-hidden="true"
                   loading="lazy"
                   decoding="async"
                   class="h-full w-full object-cover"
+                  onerror={getPosterErrorHandler(featuredVideo.videoId)}
                 />
               </picture>
 
@@ -144,19 +142,14 @@ function getPosterSrc(video: WorkoutVideo) {
                     >
                       <span class="relative block aspect-video overflow-hidden rounded-lg border border-white/10 bg-black/30">
                         <picture class="absolute inset-0 transition duration-500 group-hover:scale-105 group-focus-visible:scale-105">
-                          {video.thumbnail.avif && (
-                            <source srcset={video.thumbnail.avif} type="image/avif" />
-                          )}
-                          {video.thumbnail.webp && (
-                            <source srcset={video.thumbnail.webp} type="image/webp" />
-                          )}
                           <img
-                            src={getPosterSrc(video)}
+                            src={getYouTubePosterSrc(video.videoId)}
                             alt=""
                             aria-hidden="true"
                             loading="lazy"
                             decoding="async"
                             class="h-full w-full object-cover"
+                            onerror={getPosterErrorHandler(video.videoId)}
                           />
                         </picture>
                         <span
