@@ -24,6 +24,16 @@ export interface Boxer {
       webp: string
     }
   }[]
+  /** Peso actual en kg. */
+  weightKg?: number | null
+  /** Peso pactado para el combate de La Velada VI (kg). */
+  fightWeightKg?: number | null
+  /** Altura en cm. */
+  heightCm?: number | null
+  /** Alcance (wingspan) en cm. */
+  reachCm?: number | null
+  /** Guardia de boxeo. */
+  guard?: 'Izquierda' | 'Derecha' | null
 }
 
 /**
