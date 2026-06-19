@@ -116,7 +116,7 @@ const icsHref = `data:text/calendar;charset=utf-8,${encodeURIComponent(
     `DTEND:${toICS(EVENT_END_ISO)}`,
     'SUMMARY:La Velada del Año VI',
     'DESCRIPTION:Evento de boxeo de Ibai Llanos. Gratis en twitch.tv/ibai',
-    'LOCATION:Estadio de La Cartuja, Sevilla, España',
+    'LOCATION:Estadio de La Cartuja\\, Sevilla\\, España',
     'URL:https://www.infolavelada.com',
     'END:VEVENT',
     'END:VCALENDAR',
@@ -376,14 +376,16 @@ const icsHref = `data:text/calendar;charset=utf-8,${encodeURIComponent(
     const row = section.querySelector<HTMLElement>(
       `[data-schedule-row][data-time="${userTime}"]`,
     )
-    if (row && !row.querySelector('[data-user-pill]')) {
+    if (row) {
       row.setAttribute('data-current', 'true')
-      const pill = document.createElement('span')
-      pill.dataset.userPill = ''
-      pill.className =
-        'ml-auto shrink-0 rounded-full border border-theme-gold/60 bg-theme-gold/15 px-2.5 py-[0.15rem] font-cinzel text-[0.5rem] font-bold tracking-[0.2em] text-theme-gold uppercase'
-      pill.textContent = 'Tu hora'
-      row.appendChild(pill)
+      if (!row.querySelector('[data-user-pill]')) {
+        const pill = document.createElement('span')
+        pill.dataset.userPill = ''
+        pill.className =
+          'ml-auto shrink-0 rounded-full border border-theme-gold/60 bg-theme-gold/15 px-2.5 py-[0.15rem] font-cinzel text-[0.5rem] font-bold tracking-[0.2em] text-theme-gold uppercase'
+        pill.textContent = 'Tu hora'
+        row.appendChild(pill)
+      }
     }
 
     // 3) Entrada escalonada (respetando prefers-reduced-motion)
