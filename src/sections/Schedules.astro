@@ -1,13 +1,11 @@
 ---
 import SectionHeader from '@/components/SectionHeader.astro'
 import CountryFlag from '@/components/CountryFlag.astro'
+import { EVENT_DATE, EVENT_END_ISO, EVENT_TIME_ZONE } from '@/consts/event'
 
-// Instante fijo de inicio del evento (sede: España peninsular, CEST).
-const EVENT_TIME_ZONE = 'Europe/Madrid'
-const EVENT_DATE = new Date('2026-07-25T20:00:00+02:00')
-const EVENT_END_ISO = new Date(
-  EVENT_DATE.getTime() + 5 * 60 * 60 * 1000,
-).toISOString()
+// El instante de inicio del evento es la única fuente de verdad del proyecto
+// (sede: España peninsular). Se reutiliza para mantener coherencia con el
+// resto del sitio (subtítulos, JSON-LD, etc.).
 
 // Países hispanohablantes (Latinoamérica + España) con su zona horaria IANA
 // representativa. Se omite EE. UU. porque abarca varios husos. Orden: España
