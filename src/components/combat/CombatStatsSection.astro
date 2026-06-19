@@ -2,6 +2,7 @@
 import CountryFlag from '@/components/CountryFlag.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
 import type { Boxer, BoxerImageVariants } from '@/consts/boxers'
+import { formatFollowers, getSocialMetricValue } from '@/lib/socials'
 
 interface CombatStat {
   label: string
@@ -20,6 +21,21 @@ interface Props {
 }
 
 const { boxer1, boxer2, boxer1Select, boxer2Select, stats } = Astro.props
+
+// Seguidores totales sumando todas las redes (followers o oyentes/mes).
+const sumFollowers = (boxer: Boxer) =>
+  boxer.socials.reduce((total, social) => total + getSocialMetricValue(social), 0)
+
+const followers1 = sumFollowers(boxer1)
+const followers2 = sumFollowers(boxer2)
+const followersTotal = followers1 + followers2
+// Punto de corte de la barra: ancho del segmento izquierdo (boxer A). Es la
+// geometría real del reparto y no depende de quién lidere.
+const followersShareA = followersTotal > 0 ? (followers1 / followersTotal) * 100 : 50
+// Lado que se pinta en oro sólido = el de mayor alcance, igual que el realce del
+// número. La geometría (corte) no cambia; solo qué segmento va iluminado.
+const followersLeaderSide = followers1 >= followers2 ? 'a' : 'b'
+const hasFollowers = followersTotal > 0
 ---
 
 <section class="combat-section px-4 pt-16 pb-20 sm:px-6" aria-labelledby="features-title">
@@ -98,6 +114,36 @@ const { boxer1, boxer2, boxer1Select, boxer2Select, stats } = Astro.props
       role="table"
       aria-label={`Características: ${boxer1.name} vs ${boxer2.name}`}
     >
+      {
+        hasFollowers && (
+          <div class="stats-row stats-row-followers" role="row">
+            <div class="stats-cell cell-a" role="cell">
+              <span class="followers-value" data-leader={followers1 > followers2 ? 'true' : 'false'}>
+                {formatFollowers(followers1)}
+              </span>
+            </div>
+
+            <div class="stats-label" role="rowheader">
+              <span class="font-cinzel text-[0.6rem] font-bold tracking-[0.28em] text-theme-gold/85 uppercase">
+                Seguidores
+              </span>
+            </div>
+
+            <div class="stats-cell cell-b" role="cell">
+              <span class="followers-value" data-leader={followers2 > followers1 ? 'true' : 'false'}>
+                {formatFollowers(followers2)}
+              </span>
+            </div>
+
+            <div
+              class="followers-bar"
+              data-leader={followersLeaderSide}
+              style={`--share-a: ${followersShareA}%`}
+              aria-hidden="true"
+            />
+          </div>
+        )
+      }
       {
         stats.map((stat, i) => (
           <div class:list={['stats-row', { 'stats-row-first': i === 0 }]} role="row">
@@ -201,6 +247,63 @@ const { boxer1, boxer2, boxer1Select, boxer2Select, stats } = Astro.props
     background: rgba(199, 168, 107, 0.04);
   }
 
+  /* Fila destacada de seguidores: el dato estrella de la comparativa. */
+  .stats-row-followers {
+    row-gap: 0.85rem;
+    padding-top: 1.1rem;
+    padding-bottom: 1.1rem;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 11%, transparent),
+      color-mix(in srgb, var(--color-theme-gold) 4%, transparent)
+    );
+  }
+
+  .followers-value {
+    font-family: var(--font-cinzel);
+    font-size: 1.65rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+    color: rgba(244, 228, 201, 0.92);
+    transition:
+      color 220ms ease,
+      text-shadow 220ms ease;
+  }
+
+  /* El de mayor alcance se ilumina en oro. */
+  .followers-value[data-leader='true'] {
+    color: var(--color-theme-gold);
+    text-shadow: 0 0 20px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+  }
+
+  /* Barra comparativa (tale of the tape): dos colores en vez de uno para que se
+     lea como enfrentamiento y no como barra de progreso. Oro para el de mayor
+     alcance, azul (familia navy de marca, aclarado para contrastar sobre el
+     fondo oscuro) para el rival. El corte (--share-a) es la geometría real del
+     reparto; solo se intercambia qué lado va en oro según el líder. */
+  .followers-bar {
+    grid-column: 1 / -1;
+    height: 6px;
+    border-radius: 9999px;
+    --bar-gold: var(--color-theme-gold);
+    --bar-blue: #284f9e;
+    --bar-left: var(--bar-gold);
+    --bar-right: var(--bar-blue);
+    background: linear-gradient(
+      90deg,
+      var(--bar-left) 0 var(--share-a),
+      var(--bar-right) var(--share-a) 100%
+    );
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .followers-bar[data-leader='b'] {
+    --bar-left: var(--bar-blue);
+    --bar-right: var(--bar-gold);
+  }
+
   .stats-cell {
     display: flex;
     align-items: center;
@@ -244,16 +347,45 @@ const { boxer1, boxer2, boxer1Select, boxer2Select, stats } = Astro.props
 
   @media (max-width: 639px) {
     .stats-row {
-      padding: 0.75rem 1rem;
+      padding: 0.75rem 0.85rem;
+      gap: 0.5rem;
+    }
+
+    /* En móvil el label central fijo a 7.25rem ahogaba las celdas laterales y el
+       país + bandera se salían de la tarjeta. Le damos menos ancho, dejamos que
+       las celdas encojan y reducimos el valor y la bandera para que el nombre
+       del país quepa en una sola línea (sin partir la palabra). */
+    .stats-label {
+      min-width: 5.25rem;
+    }
+
+    .stats-cell {
+      min-width: 0;
     }
 
     .stats-value {
-      font-size: 0.72rem;
+      font-size: 0.66rem;
+      letter-spacing: 0.02em;
+    }
+
+    .followers-value {
+      font-size: 1.3rem;
     }
 
     .boxer-avatar {
       width: 4rem;
       height: 4rem;
+    }
+
+    :global(.stats-flag) {
+      width: 15px !important;
+      height: 15px !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .followers-value {
+      transition: none;
     }
   }
 </style>
