@@ -111,7 +111,7 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
     color: var(--color-theme-cream);
     background: var(--color-theme-midnight);
     isolation: isolate;
-    mask-image: linear-gradient(to bottom, #000 0%, #000 50%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 64%, #000 82%, transparent 100%);
   }
 
   .combat-hero-veil {
@@ -124,11 +124,11 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
         180deg,
         rgba(5, 8, 22, 0.12) 0%,
         transparent 18%,
-        transparent 36%,
-        rgba(5, 8, 22, 0.38) 62%,
-        rgba(5, 8, 22, 0.15) 100%
+        transparent 34%,
+        rgba(5, 8, 22, 0.45) 64%,
+        rgba(5, 8, 22, 0.86) 100%
       ),
-      radial-gradient(ellipse 70% 48% at 50% 100%, rgba(5, 8, 22, 0.22), transparent 72%);
+      radial-gradient(ellipse 70% 48% at 50% 100%, rgba(5, 8, 22, 0.32), transparent 72%);
   }
 
   .combat-hero-boxer {
@@ -402,6 +402,29 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
 
     .boxer-b {
       right: -24vw;
+    }
+  }
+
+  /* Pantallas anchas pero bajas (p. ej. MacBook Air): el alto del hero es
+     pequeño, así que bajamos los recortes para que las caras queden a la
+     vista y no se escondan tras la cabecera, y compactamos el contenido. */
+  @media (min-width: 640px) and (max-height: 860px) {
+    .combat-hero-boxer {
+      height: 88svh;
+    }
+
+    .boxer-img {
+      max-height: 82svh;
+    }
+
+    .combat-hero-content {
+      height: auto;
+      justify-content: flex-end;
+      padding-bottom: 3rem;
+    }
+
+    .scroll-hint {
+      margin-top: 1.5rem;
     }
   }
 
