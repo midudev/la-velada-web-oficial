@@ -15,6 +15,16 @@ export interface Boxer {
   country: string
   previousVeladaWins: number[]
   youtubeChannelId?: string
+  /** Peso actual en kg. */
+  weightKg?: number | null
+  /** Peso pactado para el combate de La Velada VI (kg). */
+  fightWeightKg?: number | null
+  /** Altura en cm. */
+  heightCm?: number | null
+  /** Alcance (wingspan) en cm. */
+  reachCm?: number | null
+  /** Guardia de boxeo. */
+  guard?: 'Izquierda' | 'Derecha' | null
 }
 
 /**
@@ -37,6 +47,10 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '2001-10-30',
       age: 24,
+      weightKg: 56,
+      heightCm: 167,
+      fightWeightKg: 56,
+      guard: 'Derecha',
       youtubeChannelId: 'UCMhJtoft9mSZ_T1FEV__LXA',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -57,6 +71,10 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '1998-10-30',
       age: 27,
+      weightKg: 61,
+      heightCm: 170,
+      fightWeightKg: 61,
+      guard: 'Derecha',
       youtubeChannelId: 'UC2rScBVAJSkL4qXn-27t80A',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -74,6 +92,8 @@ export const BOXERS: Boxer[] = [
       birthDate: '2001-09-15',
       gender: 'f',
       age: null,
+      weightKg: 61,
+      fightWeightKg: 57.5,
       youtubeChannelId: 'UCYa7uV_ICFXbho_JRyv0nFA',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -91,6 +111,9 @@ export const BOXERS: Boxer[] = [
       gender: 'm',
       birthDate: '1988-01-14',
       age: 38,
+      heightCm: 175,
+      weightKg: 70,
+      fightWeightKg: 70,
       followersUpdatedAt: '2026-05-14',
       socials: [
         { platform: 'instagram', username: 'eduaguirre7', followers: 1_100_000 },
@@ -106,6 +129,8 @@ export const BOXERS: Boxer[] = [
       gender: 'f',
       birthDate: '2002-08-08',
       age: 23,
+      weightKg: 50,
+      fightWeightKg: 52.5,
       youtubeChannelId: 'UCcV3n8U3gkPKYxHerfsrk7A',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -123,6 +148,9 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '1993-07-07',
       age: 32,
+      weightKg: 80,
+      heightCm: 185,
+      guard: 'Derecha',
       youtubeChannelId: 'UCV4xOVpbcV8SdueDCOxLXtQ',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -139,7 +167,10 @@ export const BOXERS: Boxer[] = [
       country: 'ar',
       previousVeladaWins: [],
       birthDate: '1995-12-31',
-      age: 30,
+      age: 29,
+      weightKg: 72,
+      heightCm: 171,
+      fightWeightKg: 72,
       youtubeChannelId: 'UCZGr6IbuqQayELgiLivhnKA',
       followersUpdatedAt: '2026-06-10',
       socials: [
@@ -158,6 +189,8 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '2003-04-01',
       age: 23,
+      weightKg: 75,
+      fightWeightKg: 75,
       youtubeChannelId: 'UClYcutwIFo-UoNRw2_3Kwaw',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -175,6 +208,8 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '1994-06-22',
       age: 31,
+      weightKg: 86,
+      fightWeightKg: 77,
       youtubeChannelId: 'UCKvoBRFqMNqvuSvFBiNadgw',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -193,6 +228,8 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '1995-09-27',
       age: 30,
+      weightKg: 64,
+      fightWeightKg: 70,
       youtubeChannelId: 'UCBCD1nIuiH-d10_l6Q-8rRg',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -212,6 +249,8 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '2002-06-18',
       age: 23,
+      weightKg: 55,
+      fightWeightKg: 52.5,
       youtubeChannelId: 'UCpkHmV8jZGISRr18KrJgR_A',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -231,6 +270,8 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '1999-10-04',
       age: 26,
+      weightKg: 78,
+      fightWeightKg: 70,
       youtubeChannelId: 'UCExVswmCLmkkoBkjBp3Ta9Q',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -249,6 +290,10 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '2000-10-30',
       age: 25,
+      weightKg: 57,
+      heightCm: 165,
+      fightWeightKg: 57,
+      guard: 'Derecha',
       youtubeChannelId: 'UCF1h4Bry3S9fL12D15H5P7Q',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -266,6 +311,8 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '2001-04-01',
       age: null,
+      weightKg: 54,
+      fightWeightKg: 57.5,
       youtubeChannelId: 'UCLmWjPj5qLmqSCcoL1FNf1Q',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -284,6 +331,9 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [2024],
       birthDate: '2002-09-20',
       age: 24,
+      weightKg: 81.9,
+      heightCm: 197,
+      guard: 'Izquierda',
       youtubeChannelId: 'UCl8bYBm0XAP23mReE11IBOA',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -301,6 +351,9 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '2002-03-01',
       age: 24,
+      weightKg: 47,
+      heightCm: 149,
+      fightWeightKg: 52,
       youtubeChannelId: 'UCrzySRaber8_-52PPh0GG2g',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -318,6 +371,9 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [2023],
       birthDate: '1998-08-20',
       age: 27,
+      weightKg: 52.6,
+      heightCm: 158,
+      fightWeightKg: 52,
       youtubeChannelId: 'UCW3bX8K5LuQHw8cKc3U8iUg',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -337,6 +393,10 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [],
       birthDate: '2004-08-28',
       age: 21,
+      weightKg: 57,
+      heightCm: 165,
+      fightWeightKg: 57,
+      guard: 'Derecha',
       youtubeChannelId: 'UCZh4XmGTOxSJAsjZLDkZArA',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -354,6 +414,9 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [2025],
       birthDate: '1997-04-24',
       age: 29,
+      weightKg: 72,
+      heightCm: 179,
+      fightWeightKg: 77,
       youtubeChannelId: 'UCCEmjNPpJYhGDgaEqeeA4HA',
       followersUpdatedAt: '2026-05-14',
       socials: [
@@ -372,6 +435,10 @@ export const BOXERS: Boxer[] = [
       previousVeladaWins: [2022, 2024, 2025],
       birthDate: '1992-05-01',
       age: 34,
+      weightKg: 88.5,
+      heightCm: 182,
+      fightWeightKg: 81,
+      guard: 'Izquierda',
       youtubeChannelId: 'UCvGiJYBPgVP7W1ypE3DKOqA',
       followersUpdatedAt: '2026-05-14',
       socials: [
