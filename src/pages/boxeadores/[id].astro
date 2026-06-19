@@ -3,13 +3,11 @@ import type { GetStaticPaths } from 'astro'
 
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
-import ChevronRightIcon from '@/assets/svg/chevron-right.svg'
-import CloseIcon from '@/assets/svg/close.svg'
-import PlayIcon from '@/assets/svg/play.svg'
+import BoxerGallery from '@/components/BoxerGallery.astro'
 import BoxerSocials from '@/components/BoxerSocials.astro'
 import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
+import BoxerWorkoutVideos from '@/components/BoxerWorkoutVideos.astro'
 import CountryFlag from '@/components/CountryFlag.astro'
-import SectionDivider from '@/components/SectionDivider.astro'
 import { battles } from '@/consts/battles'
 import { EVENT_DATE_TIME } from '@/consts/event'
 import {
@@ -24,7 +22,6 @@ import {
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
-import BoxerGallery from '@/components/BoxerGallery.astro'
 
 export const prerender = true
 
@@ -66,7 +63,6 @@ const opponent = opponentId ? BOXERS_BY_ID[opponentId] : null
 const opponentSelectImages = opponent ? getBoxerSelectImages(opponent) : null
 
 const workoutVideos = boxer.workout ?? []
-const [featuredWorkoutVideo, ...secondaryWorkoutVideos] = workoutVideos
 
 const SITE_URL = 'https://www.infolavelada.com'
 const canonical = `${SITE_URL}/boxeadores/${boxer.id}`
@@ -311,251 +307,10 @@ const breadcrumbJsonLd = {
 
       <BoxerGallery boxerId={boxer.id} boxerName={boxer.name} />
 
-      <div class="boxer-detail-coming-soon animate-fade-in-up animate-delay-500 mt-14 w-full sm:mt-16">
-        <SectionDivider size="sm" class="w-full" />
-
-        <p class="boxer-eyebrow mt-6">Ficha en preparación</p>
-
-        <p class="boxer-detail-coming-soon-text mt-3 max-w-xl font-cinzel text-xs font-medium leading-relaxed tracking-[0.18em] text-theme-cream/70 sm:text-sm">
-          Estamos puliendo la ficha completa de {boxer.name}: récord,
-          entrenamientos y rivalidades. Vuelve pronto.
-        </p>
-
-        <div class="mt-6 flex flex-wrap items-center gap-3 sm:gap-4">
-          <a href="/boxeadores" class="boxer-detail-cta boxer-detail-cta-ghost">
-            Todos los boxeadores
-          </a>
-        </div>
-      </div>
-
-      {boxer.ficha && (
-        <>
-          <div class="boxer-detail-ficha-full mt-16 w-full">
-            <div class="flex w-full items-center gap-3 sm:gap-4 mb-6" aria-hidden="true">
-              <span class="size-1 rotate-45 bg-theme-gold/70"></span>
-              <span class="h-px flex-1 bg-linear-to-r from-theme-gold/45 to-transparent"></span>
-            </div>
-            <p class="boxer-detail-ficha-text text-sm leading-relaxed text-theme-cream/75 whitespace-pre-wrap sm:text-base max-w-7xl">
-              {boxer.ficha}
-            </p>
-          </div>
-
-          <BoxerGallery boxerId={boxer.id} boxerName={boxer.name} />
-        </>
-      )}
     </div>  
   </section>
 
-  {featuredWorkoutVideo && (
-    <section id="workout" class="boxer-workout relative w-full px-4 pb-20 sm:px-6 lg:pb-28">
-      <div class="mx-auto flex w-full max-w-7xl flex-col">
-        <div class="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-theme-navy/30 shadow-[0_25px_60px_-30px_rgba(0,0,0,0.8)]">
-          <header class="flex items-center justify-between gap-3 border-b border-white/10 bg-black/30 px-4 py-3 sm:px-6">
-            <div class="flex flex-col">
-              <span class="font-cinzel text-xs font-bold tracking-[0.2em] text-theme-cream sm:text-sm">
-                ENTRENAMIENTOS DE {boxer.name.toUpperCase()}
-              </span>
-            </div>
-            <span class="hidden font-cinzel text-[0.6rem] tracking-[0.25em] text-white/45 sm:inline-block">
-              {workoutVideos.length} VÍDEO{workoutVideos.length === 1 ? '' : 'S'}
-            </span>
-          </header>
-
-          <div
-            class:list={[
-              '@container grid gap-px bg-white/10',
-              secondaryWorkoutVideos.length > 0
-                ? 'lg:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)]'
-                : 'lg:grid-cols-1',
-            ]}
-          >
-            {featuredWorkoutVideo && (
-              <button
-                type="button"
-                data-video-tile
-                data-video-id={featuredWorkoutVideo.videoId}
-                data-video-title={featuredWorkoutVideo.title}
-                aria-label={`Reproducir entrenamiento destacado: ${featuredWorkoutVideo.title}`}
-                class="group relative isolate flex aspect-video w-full cursor-pointer self-start overflow-hidden border border-white/10 bg-theme-navy/40 text-left transition duration-500 outline-none hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 lg:aspect-auto lg:h-[31.5cqw]"
-              >
-                <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
-                  <source srcset={featuredWorkoutVideo.thumbnail.avif} type="image/avif" />
-                  <source srcset={featuredWorkoutVideo.thumbnail.webp} type="image/webp" />
-                  <img
-                    src={featuredWorkoutVideo.thumbnail.webp}
-                    alt=""
-                    aria-hidden="true"
-                    loading="eager"
-                    decoding="async"
-                    fetchpriority="high"
-                    class="h-full w-full object-cover"
-                  />
-                </picture>
-                <div aria-hidden="true" class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20" />
-                <div aria-hidden="true" class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
-
-                <span class="absolute top-5 right-5 z-10 rounded-full border border-theme-gold/35 bg-black/35 px-3 py-1 font-cinzel text-[0.58rem] font-bold tracking-[0.24em] text-theme-gold backdrop-blur" aria-hidden="true">
-                  VÍDEO DESTACADO
-                </span>
-
-                <span aria-hidden="true" class="absolute inset-0 -z-10 flex items-center justify-center">
-                  <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
-                    <PlayIcon class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7" aria-hidden="true" />
-                  </span>
-                </span>
-
-                <div class="relative mt-auto flex w-full flex-col gap-2 p-5 sm:p-8">
-                  <h3 class="max-w-2xl font-cinzel text-2xl leading-tight font-bold tracking-[0.05em] text-balance text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl">
-                    {featuredWorkoutVideo.title}
-                  </h3>
-                  <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
-                    VER VÍDEO
-                    <ArrowRightIcon class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1" stroke-width="2.5" aria-hidden="true" />
-                  </span>
-                </div>
-              </button>
-            )}
-
-            {secondaryWorkoutVideos.length > 0 && (
-              <ul class="podcast-scroll grid max-h-[34rem] gap-px overflow-y-auto sm:grid-cols-2 lg:max-h-[31.5cqw] lg:grid-cols-1">
-                {secondaryWorkoutVideos.map((video) => (
-                  <li>
-                    <button
-                      type="button"
-                      data-video-tile
-                      data-video-id={video.videoId}
-                      data-video-title={video.title}
-                      aria-label={`Reproducir vídeo: ${video.title}`}
-                      class="group grid h-full w-full grid-cols-[5rem_1fr] gap-3 bg-theme-midnight/60 p-3 text-left transition duration-300 outline-none hover:bg-theme-navy/55 focus-visible:bg-theme-navy/55 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-inset sm:grid-cols-[6rem_1fr] sm:p-4 lg:grid-cols-[7.5rem_1fr] cursor-pointer"
-                    >
-                      <span class="relative block aspect-video overflow-hidden rounded-lg border border-white/10 bg-black/30">
-                        <picture class="absolute inset-0 transition duration-500 group-hover:scale-105 group-focus-visible:scale-105">
-                          <source srcset={video.thumbnail.avif} type="image/avif" />
-                          <source srcset={video.thumbnail.webp} type="image/webp" />
-                          <img
-                            src={video.thumbnail.webp}
-                            alt=""
-                            aria-hidden="true"
-                            loading="lazy"
-                            decoding="async"
-                            class="h-full w-full object-cover"
-                          />
-                        </picture>
-                        <span class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
-                          <span class="flex size-7 items-center justify-center rounded-full bg-theme-gold/90 text-theme-midnight">
-                            <PlayIcon class="size-3.5 translate-x-[1px]" aria-hidden="true" />
-                          </span>
-                        </span>
-                      </span>
-
-                      <div class="flex min-w-0 flex-col justify-between gap-3">
-                        <span class="flex items-start justify-between gap-3">
-                          <span class="font-cinzel text-[0.62rem] font-bold tracking-[0.22em] text-theme-gold/75">
-                            VÍDEO
-                          </span>
-                          <ChevronRightIcon
-                            aria-hidden="true"
-                            class="size-4 shrink-0 text-white/30 transition duration-300 group-hover:translate-x-1 group-hover:text-theme-gold group-focus-visible:translate-x-1 group-focus-visible:text-theme-gold"
-                          />
-                        </span>
-
-                        <div class="flex flex-col gap-1">
-                          <h3 class="line-clamp-2 font-cinzel text-sm leading-tight font-bold tracking-[0.04em] text-balance text-white transition duration-300 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-base">
-                            {video.title}
-                          </h3>
-                        </div>
-                      </div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <dialog
-        id="video-dialog"
-        aria-labelledby="video-dialog-title"
-        class="m-0 w-screen max-w-none bg-transparent p-0 backdrop:bg-black/85 backdrop:backdrop-blur-sm open:flex open:h-screen open:items-center open:justify-center"
-      >
-        <div class="relative mx-4 w-full max-w-5xl">
-          <div class="mb-4 flex items-center justify-between gap-4">
-            <h3
-              id="video-dialog-title"
-              data-video-dialog-title
-              class="font-cinzel text-base font-bold tracking-[0.18em] text-theme-cream sm:text-xl"
-            ></h3>
-            <button
-              type="button"
-              data-video-dialog-close
-              aria-label="Cerrar vídeo"
-              class="inline-flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white transition outline-none hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
-            >
-              <CloseIcon class="size-5" aria-hidden="true" />
-            </button>
-          </div>
-          <div class="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]">
-            <div data-video-dialog-frame class="absolute inset-0 h-full w-full"></div>
-          </div>
-        </div>
-      </dialog>
-    </section>
-
-    <script>
-      import { $, $$ } from '@/lib/dom-selector'
-
-      function initVideoDialog() {
-        const dialog = $<HTMLDialogElement>('#video-dialog')
-        if (!dialog) return
-
-        const tiles = $$<HTMLElement>('[data-video-tile]')
-        const closeBtn = $<HTMLButtonElement>('[data-video-dialog-close]', dialog)
-        const titleEl = $<HTMLElement>('[data-video-dialog-title]', dialog)
-        const frame = $<HTMLElement>('[data-video-dialog-frame]', dialog)
-        if (!frame) return
-
-        function openVideo(videoId: string, title: string) {
-          if (titleEl) titleEl.textContent = title
-          const iframe = document.createElement('iframe')
-          iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&playsinline=1`
-          iframe.allow =
-            'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen'
-          iframe.setAttribute('allowfullscreen', '')
-          iframe.title = title
-          iframe.className = 'h-full w-full border-0'
-          frame!.replaceChildren(iframe)
-          dialog!.showModal()
-        }
-
-        function closeVideo() {
-          if (!dialog!.open) return
-          dialog!.close()
-        }
-
-        tiles.forEach((tile) => {
-          tile.addEventListener('click', () => {
-            const videoId = tile.getAttribute('data-video-id')
-            const title = tile.getAttribute('data-video-title') ?? ''
-            if (!videoId) return
-            openVideo(videoId, title)
-          })
-        })
-
-        closeBtn?.addEventListener('click', closeVideo)
-
-        dialog.addEventListener('click', (event) => {
-          if (event.target === dialog) closeVideo()
-        })
-
-        dialog.addEventListener('close', () => {
-          frame.replaceChildren()
-        })
-      }
-
-      document.addEventListener('astro:page-load', initVideoDialog)
-    </script>
-  )}
+  <BoxerWorkoutVideos boxerId={boxer.id} boxerName={boxer.name} videos={workoutVideos} />
 
   <Sponsors />
   <Footer />
@@ -966,29 +721,4 @@ const breadcrumbJsonLd = {
     }
   }
 
-  .podcast-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-theme-gold) transparent;
-    scrollbar-gutter: stable;
-  }
-
-  .podcast-scroll::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  .podcast-scroll::-webkit-scrollbar-track {
-    background: transparent;
-    border-left: 1px solid color-mix(in srgb, white 6%, transparent);
-  }
-
-  .podcast-scroll::-webkit-scrollbar-thumb {
-    background-color: var(--color-theme-gold);
-    border-radius: 999px;
-    border: 2px solid transparent;
-    background-clip: content-box;
-  }
-
-  .podcast-scroll::-webkit-scrollbar-thumb:hover {
-    background-color: var(--color-theme-cream);
-  }
 </style>
