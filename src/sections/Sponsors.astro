@@ -176,12 +176,12 @@ const SPONSORS: Sponsor[] = [
   </div>
 
   <div class="relative mx-auto flex max-w-6xl flex-col items-center">
-    <div class="sponsors-header motion-hidden">
+    <div class="sponsors-header">
       <SectionHeader
         titleId="sponsors-title"
         title="PATROCINADORES"
         subtitle="Las marcas que hacen posible La Velada del Año VI"
-        subtitleClass="mb-10 max-w-xl tracking-[0.25em] sm:mb-12 sm:text-sm"
+        subtitleClass="mb-10 max-w-xl tracking-[0.16em] sm:mb-12 sm:text-sm"
         hideDivider
       />
     </div>
@@ -189,47 +189,45 @@ const SPONSORS: Sponsor[] = [
     <div class="sponsors-promos mb-16 flex w-full max-w-[760px] flex-col gap-5 sm:mb-20">
       {
         PROMO_BANNERS.map(
-          (
-            {
-              name,
-              slug,
-              url,
-              label,
-              alt,
-              avifSrc,
-              webpSrc,
-              mobileAvifSrc,
-              mobileWebpSrc,
-              width,
-              height,
-            },
-            index,
-          ) => (
-            <a
-              href={withUtm(url, { medium: 'promo_banner', content: slug })}
-              target="_blank"
-              rel="sponsored noopener noreferrer"
-              aria-label={label}
-              title={name}
-              class="promo-banner motion-hidden group relative block w-full overflow-hidden rounded-md ring-1 ring-theme-gold/25 outline-none hover:ring-theme-gold/45 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
-              style={`animation-delay:${850 + index * 90}ms`}
-            >
-              <picture>
-                <source srcset={mobileAvifSrc} media="(max-width: 639px)" type="image/avif" />
-                <source srcset={mobileWebpSrc} media="(max-width: 639px)" type="image/webp" />
-                <source srcset={avifSrc} type="image/avif" />
-                <source srcset={webpSrc} type="image/webp" />
-                <img
-                  src={webpSrc}
-                  alt={alt}
-                  width={width}
-                  height={height}
-                  loading="lazy"
-                  decoding="async"
-                  class="banner-img block h-auto w-full origin-center"
-                />
-              </picture>
-            </a>
+          ({
+            name,
+            slug,
+            url,
+            label,
+            alt,
+            avifSrc,
+            webpSrc,
+            mobileAvifSrc,
+            mobileWebpSrc,
+            width,
+            height,
+          }) => (
+            <div class="promo-banner">
+              <a
+                href={withUtm(url, { medium: 'promo_banner', content: slug })}
+                target="_blank"
+                rel="sponsored noopener noreferrer"
+                aria-label={label}
+                title={name}
+                class="group relative block w-full overflow-hidden rounded-md bg-black shadow-[0_14px_40px_rgba(0,0,0,0.3)] ring-1 ring-white/10 transition-transform duration-500 outline-none hover:-translate-y-1 hover:ring-theme-gold/45 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+              >
+                <picture>
+                  <source srcset={mobileAvifSrc} media="(max-width: 639px)" type="image/avif" />
+                  <source srcset={mobileWebpSrc} media="(max-width: 639px)" type="image/webp" />
+                  <source srcset={avifSrc} type="image/avif" />
+                  <source srcset={webpSrc} type="image/webp" />
+                  <img
+                    src={webpSrc}
+                    alt={alt}
+                    width={width}
+                    height={height}
+                    loading="lazy"
+                    decoding="async"
+                    class="block h-auto w-full transition duration-500 group-hover:scale-[1.01] group-hover:brightness-105 group-focus-visible:scale-[1.01] group-focus-visible:brightness-105"
+                  />
+                </picture>
+              </a>
+            </div>
           ),
         )
       }
@@ -239,14 +237,14 @@ const SPONSORS: Sponsor[] = [
       <ul class="sponsors-grid" role="list">
         {
           SPONSORS.map(({ name, slug, url, label, Logo, logoClass }, index) => (
-            <li class="motion-hidden" style={`animation-delay:${1100 + index * 65}ms`}>
+            <li>
               <a
                 href={withUtm(url, { medium: 'sponsor_card', content: slug })}
                 target="_blank"
                 rel="sponsored noopener noreferrer"
                 aria-label={label}
                 title={name}
-                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white outline-none transition duration-500 hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white transition duration-500 outline-none hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               >
                 <span
                   aria-hidden="true"
@@ -262,7 +260,7 @@ const SPONSORS: Sponsor[] = [
                 />
                 <span
                   aria-hidden="true"
-                  class="pointer-events-none absolute bottom-1.5 right-1.5 size-2.5 border-b border-r border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:bottom-2 sm:right-2 sm:size-3"
+                  class="pointer-events-none absolute right-1.5 bottom-1.5 size-2.5 border-r border-b border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:right-2 sm:bottom-2 sm:size-3"
                 />
 
                 <Logo
@@ -276,25 +274,14 @@ const SPONSORS: Sponsor[] = [
                 <span class="sr-only">{name}</span>
               </a>
             </li>
-          )
-        )
-      }
+          ))
+        }
       </ul>
     </div>
-
   </div>
 </section>
 
 <style>
-  .promo-banner img {
-    scale: 1.02;
-  }
-
-  .motion-hidden {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
   .sponsors-grid {
     display: grid;
     width: 100%;
@@ -347,48 +334,10 @@ const SPONSORS: Sponsor[] = [
       transform: none;
     }
 
-    [class*='animate-fade-in-up'],
-    .motion-hidden {
+    [class*='animate-fade-in-up'] {
       animation: none !important;
       opacity: 1 !important;
       transform: none !important;
     }
   }
 </style>
-
-<script>
-  import { $, $$ } from '@/lib/dom-selector'
-  import { animate, hover, inView } from 'motion'
-
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-  const header = $('.sponsors-header')
-  const promoBanners = $$('.sponsors-promos .promo-banner')
-  const sponsorItems = $$('.sponsors-grid li')
-
-  if (!reducedMotion.matches) {
-    const reveal = (elements: Element[], delayStep = 0.05) => {
-      elements.forEach((el, i) => {
-        animate(el, { opacity: [0, 1], y: [20, 0] }, { duration: 0.6, delay: i * delayStep, ease: 'ease-out' })
-      })
-    }
-
-    if (header) {
-      inView(header, (el) => {
-        animate(el, { opacity: [0, 1], y: [16, 0] }, { duration: 0.7, ease: 'ease-out' })
-      })
-    }
-
-    inView('.sponsors-promos', () => reveal(promoBanners, 0.08))
-    inView('.sponsors-grid', () => reveal(sponsorItems, 0.045))
-
-    hover('.promo-banner', (banner) => {
-      const img = $<HTMLImageElement>('.banner-img', banner)
-      if (!img) return
-      animate(img, { scale: 1 }, { duration: 0.3 })
-
-      return () => {
-        animate(img, { scale: 1.02 }, { duration: 0.3 })
-      }
-    })
-  }
-</script>
