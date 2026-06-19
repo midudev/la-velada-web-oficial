@@ -1,0 +1,259 @@
+---
+import CountryFlag from '@/components/CountryFlag.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
+import type { Boxer, BoxerImageVariants } from '@/consts/boxers'
+
+interface CombatStat {
+  label: string
+  a: string
+  b: string
+  flagA?: string
+  flagB?: string
+}
+
+interface Props {
+  boxer1: Boxer
+  boxer2: Boxer
+  boxer1Select: BoxerImageVariants
+  boxer2Select: BoxerImageVariants
+  stats: CombatStat[]
+}
+
+const { boxer1, boxer2, boxer1Select, boxer2Select, stats } = Astro.props
+---
+
+<section class="combat-section px-4 pt-16 pb-20 sm:px-6" aria-labelledby="features-title">
+  <div class="mx-auto w-full max-w-3xl">
+    <div class="mb-10 flex flex-col items-center gap-2 text-center">
+      <SectionDivider size="sm" class="w-full" />
+      <h2
+        id="features-title"
+        class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm"
+      >
+        CARACTERÍSTICAS
+      </h2>
+      <p class="font-cinzel text-[0.6rem] tracking-[0.22em] text-white/42 uppercase">
+        Datos relevantes de los boxeadores
+      </p>
+    </div>
+
+    <div class="mb-6 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+      <a
+        href={`/boxeadores/${boxer1.id}`}
+        class="boxer-stat-link flex flex-col items-center gap-2"
+        aria-label={`Ver el perfil de ${boxer1.name}`}
+      >
+        <div class="boxer-avatar">
+          <picture>
+            <source type="image/avif" srcset={boxer1Select.avif} />
+            <source type="image/webp" srcset={boxer1Select.webp} />
+            <img
+              src={boxer1Select.webp}
+              alt={boxer1.name}
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover object-top"
+            />
+          </picture>
+        </div>
+        <span
+          class="text-center font-cinzel text-[0.65rem] font-bold tracking-[0.16em] text-theme-cream/90 uppercase"
+        >
+          {boxer1.name}
+        </span>
+      </a>
+
+      <div class="flex items-center justify-center">
+        <span class="font-fantasy text-2xl text-theme-gold/70">VS</span>
+      </div>
+
+      <a
+        href={`/boxeadores/${boxer2.id}`}
+        class="boxer-stat-link flex flex-col items-center gap-2"
+        aria-label={`Ver el perfil de ${boxer2.name}`}
+      >
+        <div class="boxer-avatar">
+          <picture>
+            <source type="image/avif" srcset={boxer2Select.avif} />
+            <source type="image/webp" srcset={boxer2Select.webp} />
+            <img
+              src={boxer2Select.webp}
+              alt={boxer2.name}
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover object-top"
+            />
+          </picture>
+        </div>
+        <span
+          class="text-center font-cinzel text-[0.65rem] font-bold tracking-[0.16em] text-theme-cream/90 uppercase"
+        >
+          {boxer2.name}
+        </span>
+      </a>
+    </div>
+
+    <div
+      class="stats-table"
+      role="table"
+      aria-label={`Características: ${boxer1.name} vs ${boxer2.name}`}
+    >
+      {
+        stats.map((stat, i) => (
+          <div class:list={['stats-row', { 'stats-row-first': i === 0 }]} role="row">
+            <div class="stats-cell cell-a" role="cell">
+              {stat.flagA && (
+                <CountryFlag country={stat.flagA} size={16} decorative class="stats-flag" />
+              )}
+              <span class="stats-value">{stat.a}</span>
+            </div>
+
+            <div class="stats-label" role="rowheader">
+              <span class="font-cinzel text-[0.6rem] font-bold tracking-[0.28em] text-white/55 uppercase">
+                {stat.label}
+              </span>
+            </div>
+
+            <div class="stats-cell cell-b" role="cell">
+              <span class="stats-value">{stat.b}</span>
+              {stat.flagB && (
+                <CountryFlag country={stat.flagB} size={16} decorative class="stats-flag" />
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .combat-section {
+    position: relative;
+    z-index: 2;
+    color: var(--color-theme-cream);
+    background: transparent;
+  }
+
+  .boxer-avatar {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 9999px;
+    overflow: hidden;
+    border: 1.5px solid rgba(199, 168, 107, 0.45);
+    background: rgba(5, 8, 22, 0.6);
+    box-shadow:
+      0 0 0 3px rgba(199, 168, 107, 0.12),
+      0 8px 24px rgba(0, 0, 0, 0.5);
+    transition:
+      border-color 220ms ease,
+      box-shadow 220ms ease,
+      transform 220ms ease;
+  }
+
+  .boxer-stat-link {
+    text-decoration: none;
+  }
+
+  .boxer-stat-link:hover .boxer-avatar {
+    border-color: var(--color-theme-gold);
+    transform: translateY(-0.12rem);
+    box-shadow:
+      0 0 0 3px rgba(199, 168, 107, 0.18),
+      0 12px 30px rgba(0, 0, 0, 0.58),
+      0 0 28px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+  }
+
+  .boxer-stat-link:focus-visible {
+    border-radius: 0.5rem;
+    outline: 2px solid var(--color-theme-gold);
+    outline-offset: 0.45rem;
+  }
+
+  .stats-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(199, 168, 107, 0.18);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: rgba(5, 8, 22, 0.45);
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid rgba(199, 168, 107, 0.1);
+    gap: 1rem;
+    transition: background 220ms ease;
+  }
+
+  .stats-row:last-child {
+    border-bottom: none;
+  }
+
+  .stats-row:hover {
+    background: rgba(199, 168, 107, 0.04);
+  }
+
+  .stats-row-first {
+    background: rgba(199, 168, 107, 0.04);
+  }
+
+  .stats-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .cell-a {
+    justify-content: flex-end;
+  }
+
+  .cell-b {
+    justify-content: flex-start;
+  }
+
+  .stats-value {
+    font-family: var(--font-cinzel);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-theme-cream);
+  }
+
+  .stats-row-first .stats-value {
+    font-size: 0.75rem;
+    color: rgba(244, 228, 201, 0.88);
+  }
+
+  .stats-label {
+    text-align: center;
+    min-width: 7.25rem;
+    flex-shrink: 0;
+  }
+
+  :global(.stats-flag) {
+    width: 18px !important;
+    height: 18px !important;
+    flex-shrink: 0;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 639px) {
+    .stats-row {
+      padding: 0.75rem 1rem;
+    }
+
+    .stats-value {
+      font-size: 0.72rem;
+    }
+
+    .boxer-avatar {
+      width: 4rem;
+      height: 4rem;
+    }
+  }
+</style>

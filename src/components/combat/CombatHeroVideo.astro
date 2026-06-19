@@ -1,0 +1,101 @@
+---
+import type { BattleVideoSources } from '@/consts/battle-videos'
+
+interface Props {
+  video: BattleVideoSources | null
+}
+
+const { video } = Astro.props
+---
+
+<div aria-hidden="true" class="combat-hero-video-wrap">
+  <picture class="combat-hero-video-fallback">
+    <source
+      type="image/avif"
+      srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
+      sizes="100vw"
+    />
+    <source
+      type="image/webp"
+      srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+      sizes="100vw"
+    />
+    <img
+      src="/background.webp"
+      srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+      sizes="100vw"
+      alt=""
+      role="presentation"
+      class="combat-hero-video-fallback-img"
+      decoding="async"
+    />
+  </picture>
+
+  {
+    video && (
+      <video
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="metadata"
+        poster="/background.webp"
+        class="combat-hero-video"
+      >
+        <source src={video.desktop.webm} type="video/webm" media="(min-width: 768px)" />
+        <source src={video.desktop.mp4} type="video/mp4" media="(min-width: 768px)" />
+        <source src={video.mobile.webm} type="video/webm" />
+        <source src={video.mobile.mp4} type="video/mp4" />
+      </video>
+    )
+  }
+</div>
+
+<style>
+  .combat-hero-video-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background: var(--color-theme-midnight);
+  }
+
+  .combat-hero-video-fallback {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: block;
+  }
+
+  .combat-hero-video-fallback-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    opacity: 0.78;
+  }
+
+  .combat-hero-video {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.82) contrast(1.04) saturate(1.08);
+    transform: scale(1.2);
+  }
+
+  @media (max-width: 767px) {
+    .combat-hero-video {
+      object-position: center top;
+      transform: scale(1.01);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .combat-hero-video {
+      transform: none;
+    }
+  }
+</style>
