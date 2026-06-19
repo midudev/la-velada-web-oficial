@@ -167,6 +167,50 @@ export const BOXERS: Boxer[] = [
           La Velada VI supone su primer gran reto físico real. Sin experiencia previa en el boxeo profesional, Edu se enfrenta a meses de preparación donde tendrá que demostrar disciplina, resistencia y, sobre todo, capacidad para competir en un terreno totalmente nuevo para él.
           Un perfil competitivo, acostumbrado a la presión mediática… 
           pero que ahora tendrá que demostrarlo con guantes puestos. 🥊`,
+    workout: [
+      {
+        videoId: 'qAVys_o4cD4',
+        title: 'ENTRENO con el EQUIPO NACIONAL de BOXEO ESPAÑOL | Edu Aguirre, camino a La Velada #12',
+      },
+      {
+        videoId: 'XmlJ4gxeylw',
+        title: 'EDU AGUIRRE, camino a LA VELADA #1 | Lo que no se vio de la presentación',
+      },
+      {
+        videoId: '1lGloTjF8_U',
+        title: 'EDU AGUIRRE, camino a LA VELADA #2 | El primer día | Chiringuito Inside',
+      },
+      {
+        videoId: 'qad1F6Yc53I',
+        title:
+          'BOXEANDO con el ENTRENADOR de TOPURIA | Edu Aguirre, camino a La Velada #3 | Chiringuito Inside',
+      },
+      {
+        videoId: 'rLjYpBJoNyw',
+        title: 'BOXEADOR y PADRE | Edu Aguirre, camino a La Velada #4',
+      },
+      {
+        videoId: 'dTE-wmA5Sv0',
+        title: 'OMAR MONTES me manda al HOSPITAL | Edu Aguirre, camino a La Velada #6',
+      },
+      {
+        videoId: '_HCDLUadRFY',
+        title:
+          'Un día con ILIA TOPURIA, PABLO MOTOS y OMAR MONTES | Edu Aguirre, camino a La Velada #7',
+      },
+      {
+        videoId: 'AghX-do5sE4',
+        title: 'NECESITO RECUPERARME | Edu Aguirre, Camino a La Velada #8',
+      },
+      {
+        videoId: 'IE9vwSwqV1U',
+        title: 'Sobreviví a un Entrenamiento con Madelman... | Edu Aguirre, Camino a La Velada #9',
+      },
+      {
+        videoId: 'oNExZ6xDjXk',
+        title: '¿ALFREDO DURO me REVIENTA? | Edu Aguirre, camino a La Velada #13',
+      },
+    ],
   },
   {
     id: 'fabiana-sevillano',
@@ -365,6 +409,24 @@ La Velada VI supone para IlloJuan un reto totalmente distinto, donde tendrá que
 De entretener a miles en streaming… a competir bajo presión real.
 Un perfil acostumbrado al foco y a la exposición constante…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
+    workout: [
+      {
+        videoId: 'UVJ16oc3zaI',
+        title: 'SI TE CAES, TE LEVANTAS 🦍 - LA VELADA #4',
+      },
+      {
+        videoId: 'QkTrqtCr5EY',
+        title: 'MI PRIMER SPARRING 👊🏻 - LA VELADA #3',
+      },
+      {
+        videoId: 'wmpLU5CfrD4',
+        title: 'ENTRENAMIENTO MILITAR 🚀 - LA VELADA #2',
+      },
+      {
+        videoId: '_zwISEtB1rk',
+        title: 'EL RETO DE MI VIDA 🥊 - LA VELADA #1',
+      },
+    ],
   },
   {
     id: 'kidd-keo',
@@ -441,6 +503,16 @@ De los escenarios… al ring.
 La Velada VI supone para Lit Killah un reto totalmente diferente, donde tendrá que enfrentarse a meses de preparación física y mental para competir en un deporte exigente y completamente nuevo para él. Sin experiencia previa en el boxeo, el desafío será adaptarse al ritmo del combate y demostrar disciplina dentro del cuadrilátero.
 Un perfil acostumbrado a la presión de los focos y a grandes audiencias…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
+    workout: [
+      {
+        videoId: 'IU2GF78lnao',
+        title: 'CAMINO A LA VELADA | PARTE 1',
+      },
+      {
+        videoId: 'TCdUZ-_MZtc',
+        title: 'LIT KILLAH vs KIDD KEO, TIENE SENTIDO ESTA PELEA?',
+      },
+    ],
   },
   {
     id: 'marta-diaz',
@@ -516,6 +588,12 @@ La Velada VI supone para Plex un nuevo paso dentro del boxeo amateur, donde ya c
 De recorrer el mundo… a subirse a un cuadrilátero.
 Un perfil acostumbrado a los retos extremos y a la presión constante…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
+    workout: [
+      {
+        videoId: 'FYUozoDoN9c',
+        title: 'GREFG VS PLEX | VELADA DEL AÑO 6',
+      },
+    ],
   },
   {
     id: 'roro',
@@ -656,6 +734,32 @@ Esto ya no es debutar.
 Es rendir al máximo nivel.
 Un perfil acostumbrado a la presión, al foco mediático y a competir frente a millones…
 que ahora tendrá que volver a demostrarlo golpe a golpe. 🥊`,
+    workout: [
+      {
+        videoId: 'URCFTAXdkgY',
+        title: 'Entrenando con Marta, Fabiana y Roro para la Velada - TheGrefg',
+      },
+      {
+        videoId: 'wgq2RBOJ79o',
+        title: 'GREFG VS BOXEADOR NOOB, AMATEUR Y PRO',
+      },
+      {
+        videoId: '3eeK-5l-ess',
+        title: 'GREFG VS VIRUZZ | VELADA DEL AÑO 6',
+      },
+      {
+        videoId: 'UVJXna7nW3A',
+        title: 'GYM GRATIS VS CARO EN ESTADOS UNIDOS - TheGrefg',
+      },
+      {
+        videoId: 'Oso5MnqqYyo',
+        title: 'MI FÍSICO PARA LA VELADA DEL AÑO 6 - TheGrefg',
+      },
+      {
+        videoId: 'zNGq9kbZNF4',
+        title: 'PELEO EN LA VELADA DEL AÑO 6 - TheGrefg',
+      },
+    ],
   },
   {
     id: 'viruzz',
@@ -681,6 +785,16 @@ Con experiencia, presión y expectativas altas.
 La Velada VI supone para Viruzz una nueva oportunidad para seguir consolidándose dentro del boxeo amateur de eventos, donde ya no se trata solo de debutar, sino de mantener el nivel frente a rivales cada vez más preparados.
 Un perfil con recorrido en el ring, acostumbrado al foco mediático y a la exigencia del combate…
 que ahora tendrá que volver a demostrarlo golpe a golpe. 🥊`,
+    workout: [
+      {
+        videoId: 'A_xqXAHX-aE',
+        title: 'MI PRIMER SPARRING DE LA VELADA DEL AÑO 6',
+      },
+      {
+        videoId: 'OiaefT8lSb8',
+        title: 'Gero, no veas este vídeo...',
+      },
+    ],
   },
 ]
 
