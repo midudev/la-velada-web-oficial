@@ -222,6 +222,27 @@ const breadcrumbJsonLd = {
     background: var(--color-theme-midnight);
   }
 
+  /* Costura definida entre la cabecera (hero) y el contenido: una fina
+     línea dorada con un leve halo que marca con claridad dónde acaba el
+     header y empieza la página, mejorando el contraste entre ambos. */
+  .combat-detail-content::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 3;
+    height: 6rem;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        to right,
+        transparent 0%,
+        color-mix(in srgb, var(--color-theme-gold) 60%, transparent) 50%,
+        transparent 100%
+      )
+      top / 100% 1px no-repeat,
+      linear-gradient(180deg, color-mix(in srgb, var(--color-theme-gold) 12%, transparent), transparent 70%);
+  }
+
   .combat-detail-bg {
     position: absolute;
     inset: 0;
