@@ -4,11 +4,11 @@ import type { GetStaticPaths } from 'astro'
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import BoxerGallery from '@/components/BoxerGallery.astro'
+import BoxerHeroStatsCard from '@/components/BoxerHeroStatsCard.astro'
 import BoxerSocials from '@/components/BoxerSocials.astro'
 import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
 import BoxerWorkoutVideos from '@/components/BoxerWorkoutVideos.astro'
 import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
-import CountryFlag from '@/components/CountryFlag.astro'
 import { battles } from '@/consts/battles'
 import { EVENT_DATE_TIME } from '@/consts/event'
 import {
@@ -20,6 +20,7 @@ import {
   getBoxerPhoto,
   getBoxerSelectImages,
 } from '@/consts/boxers'
+import { formatFollowers } from '@/lib/socials'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
@@ -120,6 +121,11 @@ const title = `${boxer.name} — ${roleCapitalized} de La Velada del Año VI`
 const description = opponent
   ? `Conoce a ${boxer.name}, ${role} de ${countryName} en La Velada del Año VI. Se enfrenta a ${opponent.name} en el combate ${String(battle!.number).padStart(2, '0')} el 25 de julio de 2026.`
   : `Conoce a ${boxer.name}, ${role} de ${countryName} en La Velada del Año VI, el 25 de julio de 2026.`
+
+const fightWeight = boxer.fightWeightKg ?? boxer.weightKg
+const fightWeightLabel = fightWeight != null ? `${fightWeight} kg` : null
+const totalFollowers = boxer.socials.reduce((sum, social) => sum + (social.followers ?? 0), 0)
+const totalFollowersLabel = formatFollowers(totalFollowers)
 
 // Usamos la foto principal del boxeador como og:image cuando exista,
 // con fallback al hero recortado.
@@ -292,33 +298,15 @@ const breadcrumbJsonLd = {
             {boxer.name}
           </h1>
 
-          <div class="boxer-meta mt-6 animate-fade-in-up animate-delay-300">
-            {
-              battle && (
-                <span class="boxer-meta-combat">
-                  Combate · {String(battle.number).padStart(2, '0')}
-                </span>
-              )
-            }
-            <span class="boxer-meta-strip">
-              <span class="boxer-meta-item">
-                <CountryFlag country={boxer.country} size={16} decorative class="boxer-meta-flag" />
-                {countryName}
-              </span>
-              <span aria-hidden="true" class="boxer-meta-sep"></span>
-              <span class="boxer-meta-item">{genderLabel}</span>
-              {
-                birthDateLabel && (
-                  <>
-                    <span aria-hidden="true" class="boxer-meta-sep" />
-                    <span class="boxer-meta-item">
-                      <time datetime={boxer.birthDate}>{birthDateLabel}</time>
-                    </span>
-                  </>
-                )
-              }
-            </span>
-          </div>
+          <BoxerHeroStatsCard
+            class="mt-6 animate-fade-in-up animate-delay-200"
+            fightWeightLabel={fightWeightLabel}
+            countryName={countryName}
+            countryCode={boxer.country}
+            totalFollowers={totalFollowersLabel}
+            genderLabel={genderLabel}
+            birthDateLabel={birthDateLabel}
+          />
 
           {
             opponent && opponentSelectImages && (
@@ -491,80 +479,6 @@ const breadcrumbJsonLd = {
   }
 
   /* ---------- Meta (tira editorial) ---------- */
-  .boxer-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.85rem 1rem;
-  }
-
-  .boxer-meta-combat {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 0.85rem;
-    border-radius: 9999px;
-    font-family: 'Cinzel', var(--font-fallback);
-    font-size: 0.55rem;
-    font-weight: 900;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-theme-midnight);
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-theme-gold) 92%, white) 0%,
-      var(--color-theme-gold) 100%
-    );
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
-      0 6px 18px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
-  }
-
-  @media (min-width: 640px) {
-    .boxer-meta-combat {
-      font-size: 0.65rem;
-      padding: 0.45rem 1rem;
-    }
-  }
-
-  .boxer-meta-strip {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.7rem 0.85rem;
-  }
-
-  .boxer-meta-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    font-family: 'Cinzel', var(--font-fallback);
-    font-size: 0.6rem;
-    font-weight: 900;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-theme-cream) 78%, transparent);
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
-  }
-
-  @media (min-width: 640px) {
-    .boxer-meta-item {
-      font-size: 0.68rem;
-    }
-  }
-
-  :global(.boxer-meta-flag) {
-    width: 1.05rem;
-    height: 1.05rem;
-    flex-shrink: 0;
-    border-radius: 3px;
-  }
-
-  .boxer-meta-sep {
-    width: 1px;
-    height: 0.85rem;
-    background: color-mix(in srgb, var(--color-theme-gold) 38%, transparent);
-  }
-
   /* ---------- Rival (VS) ---------- */
   .boxer-versus {
     display: inline-flex;
