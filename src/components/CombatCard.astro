@@ -50,6 +50,10 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
 ---
 
 <article class:list={['combat', { 'is-featured': featured }]}>
+    <h2 class="sr-only">
+        Combate {number}: {a.name} ({a.countryName}) VS {b.name} ({b.countryName})
+    </h2>
+    
     {badge && <span class="combat-badge font-cinzel">{badge}</span>}
 
     <span aria-hidden="true" class="combat-corner tl"></span>
