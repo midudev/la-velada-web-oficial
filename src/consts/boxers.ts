@@ -1,13 +1,16 @@
 export type BoxerGender = 'f' | 'm'
 
+/** Fecha en formato ISO `YYYY-MM-DD`. Evita valores malformados como `'2004'`. */
+export type ISODate = `${number}-${number}-${number}`
+
 export interface Boxer {
   id: string
   name: string
   realName: string
   gender: BoxerGender
-  birthDate: string | null
+  birthDate: ISODate | null
   age: number | null
-  followersUpdatedAt: string
+  followersUpdatedAt: ISODate
   socials: { platform: string; username: string; followers?: number; monthlyListeners?: number }[]
   country: string
   previousVeladaWins: number[]
