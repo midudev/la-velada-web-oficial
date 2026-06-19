@@ -89,27 +89,21 @@ const breadcrumbJsonLd = {
             </div>
             <div class="combates-mains">
               {mainEvents.map((c, i) => (
-                <>
-                  <h2 class="sr-only">
-                    Combate {c.position}: {c.a.name} ({c.a.countryName}) VS {c.b.name} (
-                    {c.b.countryName})
-                  </h2>
-                  <div class="animate-fade-in-up" style={`animation-delay:${i * 70}ms`}>
-                    <CombatCard
-                      number={c.position}
-                      url={c.url}
-                      featured
-                      badge={i === 0 ? 'Main Event' : 'Co-estelar'}
-                      a={c.a}
-                      b={c.b}
-                      imageLoadingStrategy={{
-                        loading: 'eager',
-                        decoding: 'auto',
-                        fetchpriority: 'high',
-                      }}
-                    />
-                  </div>
-                </>
+                <div class="animate-fade-in-up" style={`animation-delay:${i * 70}ms`}>
+                  <CombatCard
+                    number={c.position}
+                    url={c.url}
+                    featured
+                    badge={i === 0 ? 'Main Event' : 'Co-estelar'}
+                    a={c.a}
+                    b={c.b}
+                    imageLoadingStrategy={{
+                      loading: 'eager',
+                      decoding: 'auto',
+                      fetchpriority: 'high',
+                    }}
+                  />
+                </div>
               ))}
             </div>
           </>
@@ -124,15 +118,9 @@ const breadcrumbJsonLd = {
             </div>
             <div class="combates-under">
               {combats.map((c, i) => (
-                <>
-                  <h2 class="sr-only">
-                    Combate {c.position}: {c.a.name} ({c.a.countryName}) VS {c.b.name} (
-                    {c.b.countryName})
-                  </h2>
-                  <div class="animate-fade-in-up" style={`animation-delay:${i * 45}ms`}>
-                    <CombatCard number={c.position} url={c.url} a={c.a} b={c.b} />
-                  </div>
-                </>
+                <div class="animate-fade-in-up" style={`animation-delay:${i * 45}ms`}>
+                  <CombatCard number={c.position} url={c.url} a={c.a} b={c.b} />
+                </div>
               ))}
             </div>
           </>
