@@ -51,8 +51,6 @@ const breadcrumbJsonLd = {
     { '@type': 'ListItem', position: 2, name: 'Combates', item: canonical },
   ],
 }
-
-const EAGER_IMAGE_COUNT = 4
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
@@ -91,21 +89,27 @@ const EAGER_IMAGE_COUNT = 4
             </div>
             <div class="combates-mains">
               {mainEvents.map((c, i) => (
-                <div class="animate-fade-in-up" style={`animation-delay:${i * 70}ms`}>
-                  <CombatCard
-                    number={c.position}
-                    url={c.url}
-                    featured
-                    badge={i === 0 ? 'Main Event' : 'Co-estelar'}
-                    a={c.a}
-                    b={c.b}
-                    imageLoadingStrategy={{
-                        loading: i < EAGER_IMAGE_COUNT ? 'eager' : 'lazy',
-                        decoding: i < EAGER_IMAGE_COUNT ? 'auto' : 'async',
-                        fetchpriority: i < EAGER_IMAGE_COUNT ? 'high' : 'auto',
-                    }}
-                  />
-                </div>
+                <>
+                  <h2 class="sr-only">
+                    Combate {c.position}: {c.a.name} ({c.a.countryName}) VS {c.b.name} (
+                    {c.b.countryName})
+                  </h2>
+                  <div class="animate-fade-in-up" style={`animation-delay:${i * 70}ms`}>
+                    <CombatCard
+                      number={c.position}
+                      url={c.url}
+                      featured
+                      badge={i === 0 ? 'Main Event' : 'Co-estelar'}
+                      a={c.a}
+                      b={c.b}
+                      imageLoadingStrategy={{
+                        loading: 'eager',
+                        decoding: 'auto',
+                        fetchpriority: 'high',
+                      }}
+                    />
+                  </div>
+                </>
               ))}
             </div>
           </>
@@ -120,9 +124,15 @@ const EAGER_IMAGE_COUNT = 4
             </div>
             <div class="combates-under">
               {combats.map((c, i) => (
-                <div class="animate-fade-in-up" style={`animation-delay:${i * 45}ms`}>
-                  <CombatCard number={c.position} url={c.url} a={c.a} b={c.b} />
-                </div>
+                <>
+                  <h2 class="sr-only">
+                    Combate {c.position}: {c.a.name} ({c.a.countryName}) VS {c.b.name} (
+                    {c.b.countryName})
+                  </h2>
+                  <div class="animate-fade-in-up" style={`animation-delay:${i * 45}ms`}>
+                    <CombatCard number={c.position} url={c.url} a={c.a} b={c.b} />
+                  </div>
+                </>
               ))}
             </div>
           </>
