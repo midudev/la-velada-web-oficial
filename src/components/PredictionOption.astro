@@ -86,7 +86,15 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
             {formatPredictionPercent(option.percentage)}
           </span>
         </span>
-        <span class="h-1.5 overflow-hidden rounded-full bg-black/34">
+        <span
+          class="h-1.5 overflow-hidden rounded-full bg-black/34"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow={Math.round(option.percentage)}
+          aria-label={`Apoyo a ${option.boxer.name}`}
+          data-prediction-bar
+        >
           <span aria-hidden="true" class="poll-mini-bar block h-full rounded-full"></span>
         </span>
         <span
