@@ -4,10 +4,8 @@ import type { GetStaticPaths } from 'astro'
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import BoxerGallery from '@/components/BoxerGallery.astro'
-import BoxerGallery from '@/components/BoxerGallery.astro'
 import BoxerSocials from '@/components/BoxerSocials.astro'
 import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
-import BoxerWorkoutVideos from '@/components/BoxerWorkoutVideos.astro'
 import BoxerWorkoutVideos from '@/components/BoxerWorkoutVideos.astro'
 import CountryFlag from '@/components/CountryFlag.astro'
 import { battles } from '@/consts/battles'
@@ -38,6 +36,50 @@ interface Props {
   boxerId: string
 }
 
+interface WorkoutVideo {
+  videoId: string
+  title: string
+  eyebrow?: string
+  thumbnail: {
+    avif?: string
+    webp?: string
+    jpg?: string
+  }
+}
+
+function getYouTubeVideoId(url: string) {
+  try {
+    const parsedUrl = new URL(url)
+    const hostname = parsedUrl.hostname.replace(/^www\./, '')
+
+    if (hostname === 'youtu.be') {
+      return parsedUrl.pathname.split('/').filter(Boolean)[0] ?? null
+    }
+
+    if (hostname === 'youtube.com' || hostname === 'm.youtube.com') {
+      return parsedUrl.searchParams.get('v')
+    }
+  } catch {
+    return null
+  }
+
+  return null
+}
+
+function createFaceToFaceVideo(videoUrl: string, battleTitle: string): WorkoutVideo | null {
+  const videoId = getYouTubeVideoId(videoUrl)
+  if (!videoId) return null
+
+  return {
+    videoId,
+    title: `Cara a cara: ${battleTitle}`,
+    eyebrow: 'CARA A CARA',
+    thumbnail: {
+      jpg: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+    },
+  }
+}
+
 const { boxerId } = Astro.props
 const boxer = BOXERS_BY_ID[boxerId]
 
@@ -64,7 +106,12 @@ const opponentId = battle?.boxerIds.find((id) => id !== boxer.id)
 const opponent = opponentId ? BOXERS_BY_ID[opponentId] : null
 const opponentSelectImages = opponent ? getBoxerSelectImages(opponent) : null
 
-const workoutVideos = boxer.workout ?? []
+const boxerWorkoutVideos: WorkoutVideo[] = boxer.workout ?? []
+const faceToFaceVideo =
+  battle?.faceToFaceVideoUrl ? createFaceToFaceVideo(battle.faceToFaceVideoUrl, battle.title) : null
+const workoutVideos = faceToFaceVideo
+  ? [...boxerWorkoutVideos, faceToFaceVideo]
+  : boxerWorkoutVideos
 
 const SITE_URL = 'https://www.infolavelada.com'
 const canonical = `${SITE_URL}/boxeadores/${boxer.id}`
@@ -321,9 +368,9 @@ const breadcrumbJsonLd = {
     </div>
   </section>
 
-  <BoxerWorkoutVideos boxerId={boxer.id} boxerName={boxer.name} videos={workoutVideos} />
-
-  <BoxerWorkoutVideos boxerId={boxer.id} boxerName={boxer.name} videos={workoutVideos} />
+  {workoutVideos.length > 0 && (
+    <BoxerWorkoutVideos boxerId={boxer.id} boxerName={boxer.name} videos={workoutVideos} />
+  )}
 
   <Sponsors />
   <Footer />
