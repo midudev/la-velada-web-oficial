@@ -32,7 +32,7 @@ const age2 = getBoxerAge(boxer2)
 // detalla; las victorias en Veladas cierran como dato más distintivo.
 const comparableRows = [
   {
-    label: 'Alcance combinado',
+    label: 'Total',
     left: getTotalFollowers(boxer1),
     right: getTotalFollowers(boxer2),
     format: formatFollowers,
@@ -51,8 +51,7 @@ const comparableRows = [
   },
 ]
 
-const valueClass = (won: boolean) =>
-  won ? 'font-black text-theme-gold' : 'text-theme-cream/85'
+const valueClass = (won: boolean) => (won ? 'font-black text-theme-gold' : 'text-theme-cream/85')
 ---
 
 <section aria-labelledby="tape-title" class="mt-14 w-full">
@@ -63,14 +62,14 @@ const valueClass = (won: boolean) =>
     Cara a cara
   </h2>
 
-  <div class="mt-6 overflow-hidden rounded-3xl border border-theme-gold/25 bg-white/[0.03]">
+  <div class="mt-6 overflow-hidden rounded-3xl border border-theme-gold/25 bg-white/3">
     <table class="w-full border-collapse text-sm sm:text-base">
       <caption class="sr-only">
-        Comparativa cara a cara entre {boxer1.name} y {boxer2.name}: edad, país,
-        alcance en redes sociales y victorias en La Velada del Año.
+        Comparativa cara a cara entre {boxer1.name} y {boxer2.name}: edad, país, alcance en redes
+        sociales y victorias en La Velada del Año.
       </caption>
       <thead>
-        <tr class="border-b border-theme-gold/20 bg-white/[0.02]">
+        <tr class="border-b border-theme-gold/20 bg-white/3">
           <th
             scope="col"
             class="px-3 py-4 text-center text-sm font-black tracking-wide text-theme-cream sm:text-base"
@@ -90,35 +89,35 @@ const valueClass = (won: boolean) =>
       </thead>
       <tbody class="divide-y divide-theme-gold/10">
         <tr>
-          <td class="px-3 py-3 text-center tabular-nums text-theme-cream/85">
+          <td class="px-3 py-3 text-center text-theme-cream/85 tabular-nums">
             {age1 == null ? '—' : `${age1} años`}
           </td>
           <th
             scope="row"
-            class="px-2 py-3 text-center text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white/55"
+            class="px-2 py-3 text-center text-[0.7rem] font-bold tracking-[0.12em] text-white/55 uppercase"
           >
             Edad
           </th>
-          <td class="px-3 py-3 text-center tabular-nums text-theme-cream/85">
+          <td class="px-3 py-3 text-center text-theme-cream/85 tabular-nums">
             {age2 == null ? '—' : `${age2} años`}
           </td>
         </tr>
 
         <tr>
           <td class="px-3 py-3 text-theme-cream/85">
-            <span class="inline-flex items-center justify-center gap-2">
+            <span class="flex items-center justify-center gap-2">
               <CountryFlag country={boxer1.country} size={18} decorative />
               {COUNTRY_NAMES[boxer1.country] ?? boxer1.country}
             </span>
           </td>
           <th
             scope="row"
-            class="px-2 py-3 text-center text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white/55"
+            class="px-2 py-3 text-center text-[0.7rem] font-bold tracking-[0.12em] text-white/55 uppercase"
           >
             País
           </th>
           <td class="px-3 py-3 text-theme-cream/85">
-            <span class="inline-flex items-center justify-center gap-2">
+            <span class="flex items-center justify-center gap-2">
               <CountryFlag country={boxer2.country} size={18} decorative />
               {COUNTRY_NAMES[boxer2.country] ?? boxer2.country}
             </span>
@@ -128,17 +127,29 @@ const valueClass = (won: boolean) =>
         {
           comparableRows.map((row) => (
             <tr>
-              <td class:list={['px-3 py-3 text-center tabular-nums', valueClass(row.left > row.right)]}>
+              <td
+                class:list={[
+                  'px-3 py-3 text-center tabular-nums',
+                  valueClass(row.left > row.right),
+                ]}
+              >
                 {row.left > 0 || row.label === 'Victorias en Veladas' ? row.format(row.left) : '—'}
               </td>
               <th
                 scope="row"
-                class="px-2 py-3 text-center text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white/55"
+                class="px-2 py-3 text-center text-[0.7rem] font-bold tracking-[0.12em] text-white/55 uppercase"
               >
                 {row.label}
               </th>
-              <td class:list={['px-3 py-3 text-center tabular-nums', valueClass(row.right > row.left)]}>
-                {row.right > 0 || row.label === 'Victorias en Veladas' ? row.format(row.right) : '—'}
+              <td
+                class:list={[
+                  'px-3 py-3 text-center tabular-nums',
+                  valueClass(row.right > row.left),
+                ]}
+              >
+                {row.right > 0 || row.label === 'Victorias en Veladas'
+                  ? row.format(row.right)
+                  : '—'}
               </td>
             </tr>
           ))
