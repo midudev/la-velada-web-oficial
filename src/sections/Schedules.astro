@@ -1,0 +1,410 @@
+---
+import SectionHeader from '@/components/SectionHeader.astro'
+import CountryFlag from '@/components/CountryFlag.astro'
+
+// Instante fijo de inicio del evento (sede: España peninsular, CEST).
+const EVENT_TIME_ZONE = 'Europe/Madrid'
+const EVENT_DATE = new Date('2026-07-25T20:00:00+02:00')
+const EVENT_END_ISO = new Date(
+  EVENT_DATE.getTime() + 5 * 60 * 60 * 1000,
+).toISOString()
+
+// Países hispanohablantes (Latinoamérica + España) con su zona horaria IANA
+// representativa. Se omite EE. UU. porque abarca varios husos. Orden: España
+// (sede) primero; el resto de oeste a este.
+const SCHEDULE_COUNTRIES: ReadonlyArray<{
+  code: string
+  name: string
+  timeZone: string
+}> = [
+  { code: 'es', name: 'España', timeZone: 'Europe/Madrid' },
+  { code: 'mx', name: 'México', timeZone: 'America/Mexico_City' },
+  { code: 'gt', name: 'Guatemala', timeZone: 'America/Guatemala' },
+  { code: 'sv', name: 'El Salvador', timeZone: 'America/El_Salvador' },
+  { code: 'hn', name: 'Honduras', timeZone: 'America/Tegucigalpa' },
+  { code: 'ni', name: 'Nicaragua', timeZone: 'America/Managua' },
+  { code: 'cr', name: 'Costa Rica', timeZone: 'America/Costa_Rica' },
+  { code: 'pa', name: 'Panamá', timeZone: 'America/Panama' },
+  { code: 'co', name: 'Colombia', timeZone: 'America/Bogota' },
+  { code: 'pe', name: 'Perú', timeZone: 'America/Lima' },
+  { code: 'ec', name: 'Ecuador', timeZone: 'America/Guayaquil' },
+  { code: 've', name: 'Venezuela', timeZone: 'America/Caracas' },
+  { code: 'bo', name: 'Bolivia', timeZone: 'America/La_Paz' },
+  { code: 'pr', name: 'Puerto Rico', timeZone: 'America/Puerto_Rico' },
+  { code: 'do', name: 'Rep. Dominicana', timeZone: 'America/Santo_Domingo' },
+  { code: 'cl', name: 'Chile', timeZone: 'America/Santiago' },
+  { code: 'py', name: 'Paraguay', timeZone: 'America/Asuncion' },
+  { code: 'ar', name: 'Argentina', timeZone: 'America/Argentina/Buenos_Aires' },
+  { code: 'uy', name: 'Uruguay', timeZone: 'America/Montevideo' },
+]
+
+// El evento ocurre en un instante fijo, así que la hora local de cada país se
+// calcula en build con Intl — sin JS de cliente ni dependencias.
+function timeIn(timeZone: string): string {
+  return new Intl.DateTimeFormat('es-ES', {
+    timeZone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(EVENT_DATE)
+}
+
+function offsetIn(timeZone: string): string {
+  const parts = new Intl.DateTimeFormat('es-ES', {
+    timeZone,
+    timeZoneName: 'shortOffset',
+  }).formatToParts(EVENT_DATE)
+  return parts.find((p) => p.type === 'timeZoneName')?.value ?? ''
+}
+
+function dayIn(timeZone: string): number {
+  return Number(
+    new Intl.DateTimeFormat('en-US', { timeZone, day: 'numeric' }).format(EVENT_DATE),
+  )
+}
+
+const hostDay = dayIn(EVENT_TIME_ZONE)
+
+interface Country {
+  code: string
+  name: string
+}
+interface Group {
+  time: string
+  offset: string
+  sameDay: boolean
+  countries: Country[]
+}
+
+// Agrupar países por hora local → muchos comparten huso, así la sección pasa de
+// 19 tarjetas a 5 filas. La sede (España) se extrae para destacarla aparte.
+const host = SCHEDULE_COUNTRIES.find((c) => c.timeZone === EVENT_TIME_ZONE)!
+const groupsByTime = new Map<string, Group>()
+
+for (const { code, name, timeZone } of SCHEDULE_COUNTRIES) {
+  if (timeZone === EVENT_TIME_ZONE) continue
+  const time = timeIn(timeZone)
+  if (!groupsByTime.has(time)) {
+    groupsByTime.set(time, {
+      time,
+      offset: offsetIn(timeZone),
+      sameDay: dayIn(timeZone) === hostDay,
+      countries: [],
+    })
+  }
+  groupsByTime.get(time)!.countries.push({ code, name })
+}
+
+const groups = [...groupsByTime.values()].sort((a, b) => a.time.localeCompare(b.time))
+
+const hostTime = timeIn(host.timeZone)
+const hostOffset = offsetIn(host.timeZone)
+
+// Fichero .ics generado en build para "Añadir al calendario".
+const toICS = (iso: string): string => iso.replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+const stamp = toICS(EVENT_DATE.toISOString())
+const icsHref = `data:text/calendar;charset=utf-8,${encodeURIComponent(
+  [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//infolavelada.com//Velada VI//ES',
+    'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT',
+    'UID:velada-vi-2026@infolavelada.com',
+    `DTSTAMP:${stamp}`,
+    `DTSTART:${stamp}`,
+    `DTEND:${toICS(EVENT_END_ISO)}`,
+    'SUMMARY:La Velada del Año VI',
+    'DESCRIPTION:Evento de boxeo de Ibai Llanos. Gratis en twitch.tv/ibai',
+    'LOCATION:Estadio de La Cartuja, Sevilla, España',
+    'URL:https://www.infolavelada.com',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n'),
+)}`
+---
+
+<section
+  id="horarios"
+  class="relative w-full overflow-hidden px-4 py-20 sm:px-6 lg:py-28"
+  aria-labelledby="schedules-title"
+  data-event-iso={EVENT_DATE.toISOString()}
+>
+  <div class="relative mx-auto flex max-w-4xl flex-col items-center">
+    <SectionHeader
+      titleId="schedules-title"
+      eyebrow="A QUÉ HORA EMPIEZA"
+      title="HORARIOS POR PAÍS"
+      subtitle="Hora local de inicio del 25 de julio de 2026, según tu país"
+      subtitleClass="mb-6 max-w-xl tracking-[0.25em] sm:mb-7 sm:text-sm"
+    />
+
+    {/* Pills rellenadas en cliente (mejora progresiva): cuenta atrás + tu hora */}
+    <div class="mb-8 flex flex-wrap items-center justify-center gap-3 sm:mb-10">
+      <p
+        data-countdown
+        hidden
+        class="flex items-center gap-2 rounded-full border border-theme-gold/40 bg-theme-gold/10 px-4 py-1.5 font-cinzel text-[0.7rem] font-bold tracking-[0.12em] text-theme-cream uppercase"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          width="13"
+          height="13"
+          class="text-theme-gold"
+          aria-hidden="true"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zm13.5 9a1.5 1.5 0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5v7.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5v-7.5z"
+            clip-rule="evenodd"></path>
+        </svg>
+        <span data-countdown-text></span>
+      </p>
+
+      <p
+        data-user-note
+        hidden
+        class="flex items-center gap-2 rounded-full border border-theme-gold/30 bg-theme-gold/[0.06] px-4 py-1.5 font-cinzel text-[0.7rem] tracking-[0.12em] text-theme-cream/80 uppercase"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          width="13"
+          height="13"
+          class="text-theme-gold"
+          aria-hidden="true"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z"
+            clip-rule="evenodd"></path>
+        </svg>
+        Tu hora local: <strong class="text-theme-gold" data-user-time></strong>
+      </p>
+    </div>
+
+    <div data-schedule-list class="flex w-full flex-col gap-3">
+      {/* Sede — fila destacada */}
+      <div
+        data-schedule-row
+        data-time={hostTime}
+        style="--row-index:0"
+        class="relative flex items-center gap-4 rounded-lg border border-theme-gold/50 bg-theme-gold/[0.06] px-4 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:gap-6 sm:px-6"
+      >
+        <div class="flex w-14 shrink-0 flex-col items-center sm:w-16">
+          <span
+            class="font-cinzel text-2xl font-bold tracking-wider text-theme-cream tabular-nums sm:text-3xl"
+          >
+            {hostTime}
+          </span>
+          <span class="font-cinzel text-[0.5rem] tracking-[0.1em] text-white/55 uppercase">
+            {hostOffset}
+          </span>
+        </div>
+
+        <div class="tl-node relative flex w-3 shrink-0 items-center justify-center self-stretch">
+          <span class="tl-line absolute left-1/2 w-px -translate-x-1/2 bg-linear-to-b from-theme-gold/35 via-theme-gold/40 to-theme-gold/35"></span>
+          <span class="tl-dot relative size-2 rounded-full bg-theme-gold ring-2 ring-theme-midnight"></span>
+        </div>
+
+        <div class="flex items-center gap-2.5">
+          <CountryFlag country={host.code} size={26} decorative class="h-6 w-6 rounded-sm" />
+          <span
+            class="font-cinzel text-sm font-bold tracking-[0.12em] text-theme-cream uppercase"
+          >
+            {host.name}
+          </span>
+          <span
+            class="ml-1 rounded-full border border-theme-gold/50 bg-theme-midnight px-2 py-[0.1rem] font-cinzel text-[0.5rem] font-bold tracking-[0.2em] text-theme-gold/90 uppercase"
+          >
+            Sede
+          </span>
+        </div>
+      </div>
+
+      {/* Resto de países, agrupados por hora local */}
+      {
+        groups.map(({ time, offset, sameDay, countries }, i) => (
+          <div
+            data-schedule-row
+            data-time={time}
+            style={`--row-index:${i + 1}`}
+            class="flex items-center gap-4 rounded-lg border border-theme-gold/20 bg-theme-navy/50 px-4 py-4 transition-colors duration-300 hover:border-theme-gold/40 sm:gap-6 sm:px-6"
+          >
+            <div class="flex w-14 shrink-0 flex-col items-center sm:w-16">
+              <span class="font-cinzel text-2xl font-bold tracking-wider text-theme-cream tabular-nums sm:text-3xl">
+                {time}
+              </span>
+              <span class="font-cinzel text-[0.5rem] tracking-[0.1em] text-white/55 uppercase">
+                {offset}
+                {!sameDay && ' · 26'}
+              </span>
+            </div>
+
+            <div class="tl-node relative flex w-3 shrink-0 items-center justify-center self-stretch">
+              <span class="tl-line absolute left-1/2 w-px -translate-x-1/2 bg-linear-to-b from-theme-gold/20 via-theme-gold/30 to-theme-gold/20" />
+              <span class="tl-dot relative size-2 rounded-full bg-theme-gold/70 ring-2 ring-theme-midnight" />
+            </div>
+
+            <ul class="flex flex-wrap items-center gap-x-4 gap-y-2" role="list">
+              {countries.map(({ code, name }) => (
+                <li class="flex items-center gap-2">
+                  <CountryFlag country={code} size={20} decorative class="h-5 w-5 rounded-sm" />
+                  <span class="font-cinzel text-[0.7rem] font-medium tracking-[0.06em] text-white/70 uppercase">
+                    {name}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <a
+      href={icsHref}
+      download="la-velada-del-año-vi.ics"
+      class="mt-9 flex items-center justify-center gap-2 rounded border border-theme-gold/35 px-6 py-[0.7rem] font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-theme-gold uppercase transition-[translate,border-color,background-color,color] duration-300 outline-none hover:-translate-y-px hover:border-theme-gold hover:bg-theme-gold/10 hover:text-theme-cream focus-visible:-translate-y-px focus-visible:border-theme-gold focus-visible:bg-theme-gold/10 focus-visible:text-theme-cream focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        width="14"
+        height="14"
+        aria-hidden="true"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zM12 12.75a.75.75 0 01.75.75v2.69l.97-.97a.75.75 0 111.06 1.06l-2.25 2.25a.75.75 0 01-1.06 0l-2.25-2.25a.75.75 0 111.06-1.06l.97.97V13.5a.75.75 0 01.75-.75z"
+          clip-rule="evenodd"></path>
+      </svg>
+      Añadir al calendario
+    </a>
+
+    <p
+      class="mt-8 max-w-xl text-center font-cinzel text-[0.65rem] leading-[1.8] tracking-[0.08em] text-white/55 uppercase"
+    >
+      Las horas son orientativas y pueden variar según la organización. La
+      retransmisión es gratuita en el canal de Ibai en Twitch.
+    </p>
+  </div>
+</section>
+
+<style>
+  /* Eje de línea de tiempo: la línea cruza el alto de la fila y se solapa en el
+     hueco (gap-3 = 0.75rem) para verse continua; el dot la enmascara. */
+  .tl-line {
+    top: -0.75rem;
+    bottom: -0.75rem;
+  }
+  [data-schedule-row]:first-of-type .tl-line {
+    top: 50%;
+  }
+  [data-schedule-row]:last-of-type .tl-line {
+    bottom: 50%;
+  }
+
+  /* Resalte de la fila que coincide con la zona horaria del visitante */
+  [data-schedule-row][data-current] {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 80%, transparent);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
+      0 8px 32px rgba(0, 0, 0, 0.45);
+  }
+  [data-schedule-row][data-current] .tl-dot {
+    background: var(--color-theme-gold);
+    transform: scale(1.4);
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--color-theme-gold) 25%, transparent),
+      0 0 8px var(--color-theme-gold);
+  }
+
+  /* Entrada escalonada — solo cuando JS la activa (data-animate) y el usuario
+     no pide menos movimiento. Sin JS, las filas se ven desde el inicio. */
+  [data-animate] [data-schedule-row] {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  [data-animate] [data-schedule-row].is-visible {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.5s ease-out,
+      transform 0.5s ease-out;
+    transition-delay: calc(var(--row-index, 0) * 60ms);
+  }
+</style>
+
+<script>
+  function initSchedules() {
+    const section = document.getElementById('horarios')
+    const iso = section?.dataset.eventIso
+    if (!section || !iso) return
+    const eventDate = new Date(iso)
+
+    // 1) Cuenta atrás en días hasta el evento
+    const countdown = section.querySelector<HTMLElement>('[data-countdown]')
+    const countdownText = section.querySelector('[data-countdown-text]')
+    if (countdown && countdownText) {
+      const days = Math.ceil((eventDate.getTime() - Date.now()) / 86_400_000)
+      if (days > 1) countdownText.textContent = `Faltan ${days} días`
+      else if (days === 1) countdownText.textContent = 'Falta 1 día'
+      else if (days === 0) countdownText.textContent = '¡Es hoy!'
+      if (days >= 0) countdown.hidden = false
+    }
+
+    // 2) Hora local del visitante + resalte de su fila
+    const userTime = new Intl.DateTimeFormat('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).format(eventDate)
+
+    const timeEl = section.querySelector('[data-user-time]')
+    const note = section.querySelector<HTMLElement>('[data-user-note]')
+    if (timeEl) timeEl.textContent = userTime
+    if (note) note.hidden = false
+
+    section
+      .querySelectorAll('[data-schedule-row][data-current]')
+      .forEach((el) => el.removeAttribute('data-current'))
+
+    const row = section.querySelector<HTMLElement>(
+      `[data-schedule-row][data-time="${userTime}"]`,
+    )
+    if (row && !row.querySelector('[data-user-pill]')) {
+      row.setAttribute('data-current', 'true')
+      const pill = document.createElement('span')
+      pill.dataset.userPill = ''
+      pill.className =
+        'ml-auto shrink-0 rounded-full border border-theme-gold/60 bg-theme-gold/15 px-2.5 py-[0.15rem] font-cinzel text-[0.5rem] font-bold tracking-[0.2em] text-theme-gold uppercase'
+      pill.textContent = 'Tu hora'
+      row.appendChild(pill)
+    }
+
+    // 3) Entrada escalonada (respetando prefers-reduced-motion)
+    const list = section.querySelector<HTMLElement>('[data-schedule-list]')
+    const rows = section.querySelectorAll<HTMLElement>('[data-schedule-row]')
+    const wantsMotion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (list && wantsMotion && 'IntersectionObserver' in window) {
+      list.setAttribute('data-animate', '')
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue
+            entry.target.classList.add('is-visible')
+            obs.unobserve(entry.target)
+          }
+        },
+        { threshold: 0.2 },
+      )
+      rows.forEach((r) => observer.observe(r))
+    }
+  }
+
+  document.addEventListener('astro:page-load', initSchedules)
+</script>
