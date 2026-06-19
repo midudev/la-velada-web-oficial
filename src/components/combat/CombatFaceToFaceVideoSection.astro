@@ -4,11 +4,12 @@ import ThumbnailPlaceholder from '@/components/ThumbnailPlaceholder.astro'
 import PlayIcon from '@/assets/svg/play.svg'
 
 interface Props {
+  sectionId?: string
   title: string
   videoUrl: string | null
 }
 
-const { title, videoUrl } = Astro.props
+const { sectionId, title, videoUrl } = Astro.props
 
 function getYouTubeVideoId(url: string) {
   try {
@@ -35,6 +36,7 @@ const embedUrl = videoId
 {
   videoId && embedUrl && (
     <section
+      id={sectionId}
       class="combat-section px-4 py-16 sm:px-6 sm:py-20"
       aria-labelledby="face-to-face-title"
     >
