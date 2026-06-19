@@ -4,12 +4,10 @@ import type { GetStaticPaths } from 'astro'
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import BoxerSocials from '@/components/BoxerSocials.astro'
-import BoxerTrainingVideoSection from '@/components/boxer/BoxerTrainingVideoSection.astro'
 import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
 import CountryFlag from '@/components/CountryFlag.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
 import { battles } from '@/consts/battles'
-import { getBoxerTrainingVideoUrl } from '@/consts/boxer-training-videos'
 import { EVENT_DATE_TIME } from '@/consts/event'
 import {
   BOXERS,
@@ -63,9 +61,6 @@ const battle = battles.find((b) => b.boxerIds.includes(boxer.id))
 const opponentId = battle?.boxerIds.find((id) => id !== boxer.id)
 const opponent = opponentId ? BOXERS_BY_ID[opponentId] : null
 const opponentSelectImages = opponent ? getBoxerSelectImages(opponent) : null
-
-// Vídeo de YouTube del entrenamiento del boxeador, si lo hay.
-const trainingVideoUrl = getBoxerTrainingVideoUrl(boxer.id)
 
 const SITE_URL = 'https://www.infolavelada.com'
 const canonical = `${SITE_URL}/boxeadores/${boxer.id}`
@@ -314,10 +309,6 @@ const breadcrumbJsonLd = {
 
           <BoxerGallery boxerId={boxer.id} boxerName={boxer.name} />
 
-          {trainingVideoUrl && (
-            <BoxerTrainingVideoSection boxerName={boxer.name} videoUrl={trainingVideoUrl} />
-          )}
-
           <div
             class="boxer-detail-coming-soon animate-fade-in-up animate-delay-500 mt-10 w-full"
           >
@@ -332,9 +323,8 @@ const breadcrumbJsonLd = {
             <p
               class="boxer-detail-coming-soon-text mt-3 max-w-xl font-cinzel text-xs font-medium leading-relaxed tracking-[0.18em] text-theme-cream/70 sm:text-sm"
             >
-              {trainingVideoUrl
-                ? `Seguimos completando la ficha de ${boxer.name}: récord, datos y rivalidades. Vuelve pronto.`
-                : `Estamos puliendo la ficha completa de ${boxer.name}: récord, entrenamientos y rivalidades. Vuelve pronto.`}
+              Estamos puliendo la ficha completa de {boxer.name}: récord,
+              entrenamientos y rivalidades. Vuelve pronto.
             </p>
 
             <div
