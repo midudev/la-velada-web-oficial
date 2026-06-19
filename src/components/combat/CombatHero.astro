@@ -228,6 +228,7 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
   }
 
   .fighter-name {
+    position: relative;
     display: block;
     font-size: clamp(2.2rem, 4.5vw + 1rem, 4.5rem);
     font-weight: 900;
@@ -247,19 +248,17 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
     &::before {
       content: '';
       position: absolute;
+      inset-inline: 0;
       bottom: 0;
-
-      z-index: -1;
-
       display: block;
-      width: 0;
-      height: 2px;
+      height: 1px;
       margin: 0 auto;
-      background: linear-gradient(to left, rgba(199, 168, 107, 0.7), transparent);
-
-      transition:
-        width 350ms ease,
-        background 350ms ease;
+      pointer-events: none;
+      background: linear-gradient(to right, transparent, var(--color-theme-gold), transparent);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 150ms ease-out;
+      transition-delay: 0ms;
     }
   }
 
@@ -276,7 +275,8 @@ const { boxer1, boxer2, boxer1Hero, boxer2Hero, video } = Astro.props
       0 4px 24px rgba(0, 0, 0, 0.9);
 
     &::before {
-      width: 100%;
+      transform: scaleX(1);
+      transition-delay: 125ms;
     }
   }
 
