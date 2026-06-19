@@ -1,0 +1,149 @@
+---
+import CountryFlag from '@/components/CountryFlag.astro'
+import { type Boxer, COUNTRY_NAMES, getBoxerAge } from '@/consts/boxers'
+import {
+  formatFollowers,
+  getFollowersByPlatform,
+  getSocialLabel,
+  getTotalFollowers,
+} from '@/lib/socials'
+
+interface Props {
+  boxer1: Boxer
+  boxer2: Boxer
+}
+
+const { boxer1, boxer2 } = Astro.props
+
+// Orden fijo para las redes; solo se muestran las que tenga al menos uno.
+const PLATFORM_ORDER = ['youtube', 'instagram', 'tiktok', 'twitch', 'kick', 'x', 'spotify']
+
+const followers1 = getFollowersByPlatform(boxer1)
+const followers2 = getFollowersByPlatform(boxer2)
+const platforms = PLATFORM_ORDER.filter(
+  (platform) => (followers1[platform] ?? 0) > 0 || (followers2[platform] ?? 0) > 0,
+)
+
+const age1 = getBoxerAge(boxer1)
+const age2 = getBoxerAge(boxer2)
+
+// Filas numéricas comparables: se resalta el valor más alto. El alcance
+// combinado abre la sección de redes y el desglose por plataforma la
+// detalla; las victorias en Veladas cierran como dato más distintivo.
+const comparableRows = [
+  {
+    label: 'Alcance combinado',
+    left: getTotalFollowers(boxer1),
+    right: getTotalFollowers(boxer2),
+    format: formatFollowers,
+  },
+  ...platforms.map((platform) => ({
+    label: getSocialLabel(platform),
+    left: followers1[platform] ?? 0,
+    right: followers2[platform] ?? 0,
+    format: formatFollowers,
+  })),
+  {
+    label: 'Victorias en Veladas',
+    left: boxer1.previousVeladaWins.length,
+    right: boxer2.previousVeladaWins.length,
+    format: (value: number) => String(value),
+  },
+]
+
+const valueClass = (won: boolean) =>
+  won ? 'font-black text-theme-gold' : 'text-theme-cream/85'
+---
+
+<section aria-labelledby="tape-title" class="mt-14 w-full">
+  <h2
+    id="tape-title"
+    class="text-center font-cinzel text-3xl font-black tracking-[0.08em] text-theme-gold sm:text-4xl"
+  >
+    Cara a cara
+  </h2>
+
+  <div class="mt-6 overflow-hidden rounded-3xl border border-theme-gold/25 bg-white/[0.03]">
+    <table class="w-full border-collapse text-sm sm:text-base">
+      <caption class="sr-only">
+        Comparativa cara a cara entre {boxer1.name} y {boxer2.name}: edad, país,
+        alcance en redes sociales y victorias en La Velada del Año.
+      </caption>
+      <thead>
+        <tr class="border-b border-theme-gold/20 bg-white/[0.02]">
+          <th
+            scope="col"
+            class="px-3 py-4 text-center text-sm font-black tracking-wide text-theme-cream sm:text-base"
+          >
+            {boxer1.name}
+          </th>
+          <th scope="col" class="px-2 py-4">
+            <span class="sr-only">Estadística</span>
+          </th>
+          <th
+            scope="col"
+            class="px-3 py-4 text-center text-sm font-black tracking-wide text-theme-cream sm:text-base"
+          >
+            {boxer2.name}
+          </th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-theme-gold/10">
+        <tr>
+          <td class="px-3 py-3 text-center tabular-nums text-theme-cream/85">
+            {age1 == null ? '—' : `${age1} años`}
+          </td>
+          <th
+            scope="row"
+            class="px-2 py-3 text-center text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white/55"
+          >
+            Edad
+          </th>
+          <td class="px-3 py-3 text-center tabular-nums text-theme-cream/85">
+            {age2 == null ? '—' : `${age2} años`}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="px-3 py-3 text-theme-cream/85">
+            <span class="inline-flex items-center justify-center gap-2">
+              <CountryFlag country={boxer1.country} size={18} decorative />
+              {COUNTRY_NAMES[boxer1.country] ?? boxer1.country}
+            </span>
+          </td>
+          <th
+            scope="row"
+            class="px-2 py-3 text-center text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white/55"
+          >
+            País
+          </th>
+          <td class="px-3 py-3 text-theme-cream/85">
+            <span class="inline-flex items-center justify-center gap-2">
+              <CountryFlag country={boxer2.country} size={18} decorative />
+              {COUNTRY_NAMES[boxer2.country] ?? boxer2.country}
+            </span>
+          </td>
+        </tr>
+
+        {
+          comparableRows.map((row) => (
+            <tr>
+              <td class:list={['px-3 py-3 text-center tabular-nums', valueClass(row.left > row.right)]}>
+                {row.left > 0 || row.label === 'Victorias en Veladas' ? row.format(row.left) : '—'}
+              </td>
+              <th
+                scope="row"
+                class="px-2 py-3 text-center text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white/55"
+              >
+                {row.label}
+              </th>
+              <td class:list={['px-3 py-3 text-center tabular-nums', valueClass(row.right > row.left)]}>
+                {row.right > 0 || row.label === 'Victorias en Veladas' ? row.format(row.right) : '—'}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
