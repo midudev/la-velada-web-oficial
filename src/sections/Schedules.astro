@@ -8,15 +8,19 @@ import { EVENT_DATE, EVENT_TIME_ZONE } from '@/consts/event'
 // resto del sitio (subtítulos, JSON-LD, etc.).
 
 // Países hispanohablantes (Latinoamérica + España) con su zona horaria IANA
-// representativa. Se omite EE. UU. porque abarca varios husos. Orden: España
-// (sede) primero; el resto de oeste a este.
+// representativa. EE. UU. abarca varios husos, así que se añade por costa con
+// una zona de cada huso continental. Orden: España (sede) primero; el resto de
+// oeste a este. Los offsets (incluido el horario de verano) los resuelve Intl.
 const SCHEDULE_COUNTRIES: ReadonlyArray<{
   code: string
   name: string
   timeZone: string
 }> = [
   { code: 'es', name: 'España', timeZone: 'Europe/Madrid' },
+  { code: 'us', name: 'EE. UU. (Oeste)', timeZone: 'America/Los_Angeles' },
+  { code: 'us', name: 'EE. UU. (Montaña)', timeZone: 'America/Denver' },
   { code: 'mx', name: 'México', timeZone: 'America/Mexico_City' },
+  { code: 'us', name: 'EE. UU. (Centro)', timeZone: 'America/Chicago' },
   { code: 'gt', name: 'Guatemala', timeZone: 'America/Guatemala' },
   { code: 'sv', name: 'El Salvador', timeZone: 'America/El_Salvador' },
   { code: 'hn', name: 'Honduras', timeZone: 'America/Tegucigalpa' },
@@ -28,6 +32,7 @@ const SCHEDULE_COUNTRIES: ReadonlyArray<{
   { code: 'ec', name: 'Ecuador', timeZone: 'America/Guayaquil' },
   { code: 've', name: 'Venezuela', timeZone: 'America/Caracas' },
   { code: 'bo', name: 'Bolivia', timeZone: 'America/La_Paz' },
+  { code: 'us', name: 'EE. UU. (Este)', timeZone: 'America/New_York' },
   { code: 'pr', name: 'Puerto Rico', timeZone: 'America/Puerto_Rico' },
   { code: 'do', name: 'Rep. Dominicana', timeZone: 'America/Santo_Domingo' },
   { code: 'cl', name: 'Chile', timeZone: 'America/Santiago' },
