@@ -1397,9 +1397,14 @@ const cardImageEagerAmount = 4
     block-size: var(--block-size);
     font-family: var(--font-cinzel);
     font-weight: 900;
-    font-size: clamp(1.125rem, 0.875rem + 0.313vw, 1.25rem);
+    font-size: 1.125rem;
     color: var(--color-theme-gold);
     background-color: var(--color-theme-midnight);
+    background-image: radial-gradient(
+      ellipse at top,
+      color-mix(in srgb, var(--color-theme-gold), transparent 88%) 0%,
+      transparent 80%
+    );
     border-radius: 4px;
     line-height: normal;
     border: 1px solid color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
@@ -1418,7 +1423,7 @@ const cardImageEagerAmount = 4
     }
   }
 
-  html[data-skip-boxers-enter] :global(.animate-fade-in-up) {
+  html[data-skip-boxers-enter] .boxer-card-wrap {
     animation: none;
     opacity: 1;
     transform: none;
@@ -1535,7 +1540,6 @@ const cardImageEagerAmount = 4
 
     const ANIM_CLASS = 'animate-fade-in-up'
     const ANIM_DELAY = 35
-    let skipCardsAnimation = document.documentElement.hasAttribute('data-skip-boxers-enter')
 
     function retriggerAnimations() {
       let visibleIndex = 0
@@ -1555,6 +1559,12 @@ const cardImageEagerAmount = 4
 
         visibleIndex++
       }
+    }
+
+    // Remueve el atributo 'data-skip-boxers-enter' añádido en el script de 'Layout.astro'
+    // que impide las animaciones de entrada en las tarjetas de los boxeadores
+    function allowBoxerCardAnimations() {
+      document.documentElement.removeAttribute('data-skip-boxers-enter')
     }
 
     // Reordena el DOM (no sólo CSS `order`) para que el orden de
@@ -1584,8 +1594,6 @@ const cardImageEagerAmount = 4
       }
 
       for (const card of ordered) gridEl.appendChild(card)
-
-      if (!skipCardsAnimation) retriggerAnimations()
     }
 
     // Cuenta cards que coinciden con un par (country, gender). Pasar '' en
@@ -1671,8 +1679,6 @@ const cardImageEagerAmount = 4
         btn.disabled = shouldDisable
         btn.dataset.disabled = String(shouldDisable)
       }
-
-      if (!skipCardsAnimation) retriggerAnimations()
     }
 
     for (const btn of filterButtons) {
@@ -1685,6 +1691,8 @@ const cardImageEagerAmount = 4
         if (state[group] === value) return
         state[group] = value
         applyFilters()
+        allowBoxerCardAnimations()
+        retriggerAnimations()
         syncStateToURL()
       })
     }
@@ -1694,6 +1702,8 @@ const cardImageEagerAmount = 4
         state.country = ''
         state.gender = ''
         applyFilters()
+        allowBoxerCardAnimations()
+        retriggerAnimations()
         syncStateToURL()
       })
     }
@@ -1707,6 +1717,8 @@ const cardImageEagerAmount = 4
           b.setAttribute('aria-pressed', String(b.dataset.sort === sortMode))
         }
         applySort()
+        allowBoxerCardAnimations()
+        retriggerAnimations()
         syncStateToURL()
       })
     }
@@ -1718,11 +1730,7 @@ const cardImageEagerAmount = 4
 
     applyFilters()
     applySort()
-
-    if (skipCardsAnimation) {
-      document.documentElement.removeAttribute('data-skip-boxers-enter')
-      skipCardsAnimation = false
-    }
+    retriggerAnimations()
   }
 
   document.addEventListener('astro:page-load', setupBoxersFilters)
