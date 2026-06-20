@@ -10,7 +10,7 @@ interface Props {
 const { totalCombats, totalVotes, closeBattles } = Astro.props
 ---
 
-<dl class="prediction-stats mt-9 grid w-full max-w-3xl grid-cols-3 border-y border-theme-gold/20">
+<dl class="prediction-stats mt-10 grid w-full max-w-2xl grid-cols-3 border-y border-theme-gold/20">
   <div>
     <dt>Combates</dt>
     <dd>{totalCombats}</dd>
@@ -27,7 +27,7 @@ const { totalCombats, totalVotes, closeBattles } = Astro.props
 
 <style>
   .prediction-stats div {
-    padding: 0.85rem 0.35rem;
+    padding: 1rem 0.35rem;
     border-inline-end: 1px solid color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
   }
 
@@ -36,18 +36,18 @@ const { totalCombats, totalVotes, closeBattles } = Astro.props
   }
 
   .prediction-stats dt {
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.4rem;
     font-family: var(--font-cinzel);
     font-size: 0.58rem;
     font-weight: 900;
     letter-spacing: 0.16em;
-    color: rgba(255, 255, 255, 0.48);
+    color: color-mix(in srgb, var(--color-theme-gold) 78%, transparent);
     text-transform: uppercase;
   }
 
   .prediction-stats dd {
     font-family: var(--font-cinzel);
-    font-size: 1.65rem;
+    font-size: 1.75rem;
     font-weight: 900;
     line-height: 1;
     color: var(--color-theme-cream);
@@ -60,7 +60,7 @@ const { totalCombats, totalVotes, closeBattles } = Astro.props
     }
 
     .prediction-stats dd {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
     }
   }
 </style>
