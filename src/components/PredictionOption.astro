@@ -383,9 +383,13 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     filter: saturate(1.3) brightness(1.16);
   }
 
-  .tow-side[data-muted='true'] {
+  /* Atenuamos solo la foto y el texto del lado no elegido; la barra de votos
+     (relleno del bando) se mantiene vívida porque representa a la comunidad. */
+  .tow-side[data-muted='true'] .tow-pic-img {
+    filter: saturate(0.6) brightness(0.6);
+  }
+  .tow-side[data-muted='true'] .tow-caption {
     opacity: 0.6;
-    filter: saturate(0.6) brightness(0.76);
   }
 
   @keyframes tow-pop {
