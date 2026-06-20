@@ -1,6 +1,6 @@
 ---
-import ResetIcon from '@/assets/svg/reset.svg'
 import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
+import BoxersFilterBar from '@/components/BoxersFilterBar.astro'
 import CountryFlag from '@/components/CountryFlag.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
 import Layout from '@/layouts/Layout.astro'
@@ -129,7 +129,7 @@ const cardImageEagerAmount = 4
     <div aria-hidden="true" class="boxers-bg absolute inset-0 -z-20"></div>
     <div aria-hidden="true" class="boxers-grain pointer-events-none absolute inset-0 -z-10"></div>
 
-    <div class="boxers-layout mx-auto w-full max-w-7xl">
+    <div class="boxers-layout mx-auto w-full max-w-[88rem]">
       <header class="boxers-page-header">
         <h1
           class="boxers-page-title mb-3 font-cinzel text-3xl font-black tracking-[0.12em] text-theme-cream not-motion-reduce:animate-fade-in-up sm:text-4xl sm:tracking-[0.16em] md:text-6xl"
@@ -145,178 +145,16 @@ const cardImageEagerAmount = 4
         </p>
       </header>
 
-      <form
-        data-boxers-filters
-        class="boxer-filters-panel relative w-full not-motion-reduce:animate-fade-in-up not-motion-reduce:animate-delay-300"
-        aria-label="Filtros de boxeadores"
-        onsubmit="return false"
-      >
-        <span aria-hidden="true" class="boxer-filters-corner boxer-filters-corner-tl"></span>
-        <span aria-hidden="true" class="boxer-filters-corner boxer-filters-corner-tr"></span>
-        <span aria-hidden="true" class="boxer-filters-corner boxer-filters-corner-bl"></span>
-        <span aria-hidden="true" class="boxer-filters-corner boxer-filters-corner-br"></span>
-
-        <div
-          class="boxer-filters-eyebrow absolute -top-3 left-1/2 flex -translate-x-1/2 items-center gap-2 px-3 py-1"
-          aria-hidden="true"
-        >
-          <span class="size-1 rotate-45 bg-theme-gold/85"></span>
-          <span
-            class="font-cinzel text-[0.55rem] font-black tracking-[0.26em] text-theme-gold/95 sm:text-[0.65rem]"
-          >
-            FILTROS
-          </span>
-          <span class="size-1 rotate-45 bg-theme-gold/85"></span>
-        </div>
-
-        <div class="boxer-filters-body relative flex flex-col">
-          <fieldset class="boxer-filter-row" data-filter-row="country">
-            <legend class="boxer-filter-row-label">
-              <span aria-hidden="true" class="boxer-filter-row-label-mark"></span>
-              País
-            </legend>
-            <div class="boxer-filter-row-pills" role="group" aria-label="Filtrar por país">
-              <button
-                type="button"
-                data-filter="country"
-                data-value=""
-                aria-pressed="true"
-                class="boxer-filter-pill boxer-filter-pill-all"
-              >
-                <span class="boxer-filter-pill-label">Todos</span>
-                <span class="boxer-filter-pill-count" aria-hidden="true">{totalBoxers}</span>
-              </button>
-              {
-                countryFilters.map(({ code, name, count }) => (
-                  <button
-                    type="button"
-                    data-filter="country"
-                    data-value={code}
-                    aria-pressed="false"
-                    aria-label={`Filtrar por ${name}`}
-                    class="boxer-filter-pill"
-                  >
-                    <CountryFlag
-                      country={code}
-                      size={16}
-                      decorative
-                      class="boxer-filter-pill-flag"
-                    />
-                    <span class="boxer-filter-pill-label">{name}</span>
-                    <span class="boxer-filter-pill-count" aria-hidden="true">
-                      {count}
-                    </span>
-                  </button>
-                ))
-              }
-            </div>
-          </fieldset>
-
-          <fieldset class="boxer-filter-row" data-filter-row="gender">
-            <legend class="boxer-filter-row-label">
-              <span aria-hidden="true" class="boxer-filter-row-label-mark"></span>
-              Género
-            </legend>
-            <div class="boxer-filter-row-pills" role="group" aria-label="Filtrar por género">
-              <button
-                type="button"
-                data-filter="gender"
-                data-value=""
-                aria-pressed="true"
-                class="boxer-filter-pill boxer-filter-pill-all"
-              >
-                <span class="boxer-filter-pill-label">Todos</span>
-                <span class="boxer-filter-pill-count" aria-hidden="true">{totalBoxers}</span>
-              </button>
-              {
-                genderFilters.map(({ code, name, count }) => (
-                  <button
-                    type="button"
-                    data-filter="gender"
-                    data-value={code}
-                    aria-pressed="false"
-                    aria-label={`Filtrar por género ${name}`}
-                    class="boxer-filter-pill"
-                  >
-                    <span class="boxer-filter-pill-label">{name}</span>
-                    <span class="boxer-filter-pill-count" aria-hidden="true">
-                      {count}
-                    </span>
-                  </button>
-                ))
-              }
-            </div>
-          </fieldset>
-
-          <div data-boxers-footer hidden>
-            <span aria-hidden="true" class="boxer-filters-rule"></span>
-            <div class="boxer-filters-footer">
-              <button
-                type="button"
-                data-boxers-reset
-                class="boxer-filter-reset"
-                aria-label="Restablecer filtros"
-              >
-                <ResetIcon class="size-3.5" aria-hidden="true" />
-                Limpiar filtros
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
+      <BoxersFilterBar
+        countryFilters={countryFilters}
+        genderFilters={genderFilters}
+        totalBoxers={totalBoxers}
+      />
 
       <div class="boxers-results w-full">
-        <div
-          data-boxers-sort
-          class="boxer-sort-bar relative not-motion-reduce:animate-fade-in-up not-motion-reduce:animate-delay-300"
-          role="region"
-          aria-label="Ordenar boxeadores"
-        >
-          <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-tl"></span>
-          <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-tr"></span>
-          <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-bl"></span>
-          <span aria-hidden="true" class="boxer-sort-corner boxer-sort-corner-br"></span>
-
-          <div class="boxer-sort-label">
-            <span aria-hidden="true" class="boxer-sort-label-mark"></span>
-            <span>Ordenar por</span>
-          </div>
-
-          <div class="boxer-sort-pills" role="group" aria-label="Modo de ordenación">
-            <button
-              type="button"
-              data-sort="cartel"
-              aria-pressed="true"
-              class="boxer-filter-pill boxer-sort-pill"
-            >
-              <span class="boxer-filter-pill-label">Cartelera</span>
-            </button>
-            <button
-              type="button"
-              data-sort="followers-desc"
-              aria-pressed="false"
-              aria-label="Ordenar por más seguidores en redes sociales"
-              class="boxer-filter-pill boxer-sort-pill"
-            >
-              <span aria-hidden="true" class="boxer-sort-pill-icon">▾</span>
-              <span class="boxer-filter-pill-label">Más seguidores</span>
-            </button>
-            <button
-              type="button"
-              data-sort="followers-asc"
-              aria-pressed="false"
-              aria-label="Ordenar por menos seguidores en redes sociales"
-              class="boxer-filter-pill boxer-sort-pill"
-            >
-              <span aria-hidden="true" class="boxer-sort-pill-icon">▴</span>
-              <span class="boxer-filter-pill-label">Menos seguidores</span>
-            </button>
-          </div>
-        </div>
-
         <ul
           data-boxers-grid
-          class="boxers-grid grid w-full grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 lg:gap-5 xl:grid-cols-4"
+          class="boxers-grid grid w-full grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-5"
           role="list"
         >
           {
@@ -420,13 +258,6 @@ const cardImageEagerAmount = 4
           >
             Ningún contendiente coincide con los filtros seleccionados.
           </p>
-          <button
-            type="button"
-            data-boxers-reset
-            class="boxer-filter-reset boxer-filter-reset-strong"
-          >
-            Limpiar filtros
-          </button>
         </div>
       </div>
     </div>
@@ -739,13 +570,8 @@ const cardImageEagerAmount = 4
     }
   }
 
-  /* ---------- Layout: sidebar + resultados ---------- */
-  /* Usamos `minmax(0, 1fr)` en lugar de `1fr` para que ningún hijo
-     pueda expandir la columna por encima del viewport (clave para que
-     las pills del filtro con scroll horizontal no rompan el ancho del
-     documento entero en mobile). */
+  /* ---------- Layout: top command bar + resultados ---------- */
   .boxers-layout {
-    --boxers-sidebar-width: 236px;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
@@ -758,51 +584,22 @@ const cardImageEagerAmount = 4
   }
 
   @media (min-width: 1024px) {
-    .boxers-layout:not([data-view='combates']) {
-      grid-template-columns: var(--boxers-sidebar-width) minmax(0, 1fr);
-      align-items: start;
+    .boxers-layout {
       gap: 2rem;
-    }
-
-    /* Título en la misma columna que el grid (f4e0c631: justify-self center, no stretch). */
-    .boxers-page-header {
-      display: grid;
-      grid-template-columns: var(--boxers-sidebar-width) minmax(0, 1fr);
-      column-gap: 2rem;
-      grid-column: 1 / -1;
-      grid-row: 1;
-    }
-
-    .boxers-page-header > * {
-      grid-column: 2;
-      justify-self: center;
-    }
-
-    .boxer-filters-panel {
-      grid-column: 1;
-      grid-row: 2;
-    }
-
-    .boxers-results {
-      grid-column: 2;
-      grid-row: 2;
     }
   }
 
   @media (min-width: 1280px) {
-    .boxers-layout:not([data-view='combates']) {
-      --boxers-sidebar-width: 252px;
+    .boxers-layout {
       gap: 2.5rem;
-    }
-
-    .boxers-page-header {
-      column-gap: 2.5rem;
     }
   }
 
   /* Contenedor de resultados con animación al filtrar (queda atado al
      grid del lado derecho). */
   .boxers-results {
+    position: relative;
+    z-index: 1;
     min-width: 0;
   }
 
@@ -812,452 +609,6 @@ const cardImageEagerAmount = 4
   @media (max-width: 639px) {
     .boxers-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  /* ---------- Filtros (command panel) ---------- */
-  .boxer-filters-panel {
-    /* `min-width: 0` evita que el contenido del panel (sobre todo las
-       pills) expanda al panel y, en cascada, al layout y al body. */
-    min-width: 0;
-    background:
-      radial-gradient(
-        ellipse 80% 100% at 50% 0%,
-        color-mix(in srgb, var(--color-theme-gold) 10%, transparent) 0%,
-        transparent 70%
-      ),
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--color-velada-navy) 35%, var(--color-theme-midnight)) 0%,
-        color-mix(in srgb, var(--color-theme-midnight) 92%, black) 100%
-      );
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 26%, transparent),
-      0 24px 60px rgba(0, 0, 0, 0.45),
-      0 0 60px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
-  }
-
-  @media (max-width: 639px) {
-    .boxer-filters-panel {
-      box-shadow:
-        inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
-        0 16px 36px rgba(0, 0, 0, 0.38),
-        0 0 40px color-mix(in srgb, var(--color-theme-gold) 9%, transparent);
-    }
-  }
-
-  /* En desktop el panel viaja con el scroll (sticky) para que los filtros
-     estén siempre accesibles sin perder espacio vertical de resultados. */
-  @media (min-width: 1024px) {
-    .boxer-filters-panel {
-      position: sticky;
-      top: 6rem;
-    }
-  }
-
-  .boxer-filters-eyebrow {
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-velada-navy) 35%, var(--color-theme-midnight)) 0%,
-      color-mix(in srgb, var(--color-theme-midnight) 95%, black) 100%
-    );
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
-    border-radius: 9999px;
-    text-shadow:
-      0 1px 0 rgba(0, 0, 0, 0.6),
-      0 0 14px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
-  }
-
-  .boxer-filters-corner {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border: 1.5px solid color-mix(in srgb, var(--color-theme-gold) 80%, transparent);
-    pointer-events: none;
-  }
-  .boxer-filters-corner-tl {
-    top: -1px;
-    left: -1px;
-    border-right: 0;
-    border-bottom: 0;
-  }
-  .boxer-filters-corner-tr {
-    top: -1px;
-    right: -1px;
-    border-left: 0;
-    border-bottom: 0;
-  }
-  .boxer-filters-corner-bl {
-    bottom: -1px;
-    left: -1px;
-    border-right: 0;
-    border-top: 0;
-  }
-  .boxer-filters-corner-br {
-    bottom: -1px;
-    right: -1px;
-    border-left: 0;
-    border-top: 0;
-  }
-
-  .boxer-filters-body {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1.4rem;
-    padding: 1.3rem 1rem 1rem;
-  }
-  @media (max-width: 639px) {
-    .boxer-filters-body {
-      gap: 0.9rem;
-      padding: 1.1rem 0.7rem 0.7rem;
-    }
-  }
-  @media (min-width: 640px) {
-    .boxer-filters-body {
-      padding: 1.4rem 1rem 1.1rem;
-    }
-  }
-
-  .boxer-filter-row {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-    padding: 0.3rem 0;
-  }
-
-  @media (max-width: 639px) {
-    .boxer-filter-row {
-      gap: 0.45rem;
-      padding: 0.15rem 0;
-    }
-  }
-
-  .boxer-filter-row-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    font-size: 0.6rem;
-    font-weight: 900;
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-theme-gold) 90%, var(--color-theme-cream));
-    text-shadow:
-      0 1px 0 rgba(0, 0, 0, 0.6),
-      0 0 16px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
-  }
-
-  @media (max-width: 639px) {
-    .boxer-filter-row-label {
-      font-size: 0.55rem;
-      letter-spacing: 0.18em;
-    }
-  }
-
-  .boxer-filter-row-label-mark {
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    background: var(--color-theme-gold);
-    transform: rotate(45deg);
-    box-shadow: 0 0 6px color-mix(in srgb, var(--color-theme-gold) 60%, transparent);
-  }
-
-  .boxer-filter-row-pills {
-    min-width: 0;
-    max-width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.4rem;
-  }
-  @media (min-width: 640px) {
-    .boxer-filter-row-pills {
-      gap: 0.5rem;
-    }
-  }
-
-  /* En mobile mantenemos `flex-wrap: wrap` para que las pills nunca
-     ensanchen el panel (un scroll horizontal aquí desbordaba al
-     documento entero porque su padre no podía limitarlas). Compactamos
-     padding y tipografía para que entren bien en 2-3 filas. */
-  @media (max-width: 639px) {
-    .boxer-filter-row-pills {
-      gap: 0.3rem;
-    }
-  }
-
-  .boxer-filters-rule {
-    display: block;
-    height: 1px;
-    margin: 1rem 0 0.9rem;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      color-mix(in srgb, var(--color-theme-gold) 28%, transparent) 50%,
-      transparent 100%
-    );
-  }
-
-  .boxer-filters-footer {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    padding-top: 0.4rem;
-    padding-bottom: 0.2rem;
-  }
-
-  /* ---------- Sort bar ---------- */
-  /* Toolbar de ordenación que vive arriba del grid de resultados. Reusa
-     el lenguaje visual del panel de filtros (esquinas doradas, eyebrow
-     en mayúsculas y pills idénticas) para que ambos controles se sientan
-     parte del mismo "panel de comando". */
-  .boxer-sort-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem 1.25rem;
-    margin-bottom: 1.25rem;
-    padding: 0.75rem 1rem;
-    background:
-      radial-gradient(
-        ellipse 90% 100% at 50% 0%,
-        color-mix(in srgb, var(--color-theme-gold) 8%, transparent) 0%,
-        transparent 70%
-      ),
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--color-velada-navy) 28%, var(--color-theme-midnight)) 0%,
-        color-mix(in srgb, var(--color-theme-midnight) 94%, black) 100%
-      );
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
-      0 14px 36px rgba(0, 0, 0, 0.4);
-  }
-
-  @media (min-width: 640px) {
-    .boxer-sort-bar {
-      padding: 0.85rem 1.25rem;
-      margin-bottom: 1.5rem;
-    }
-  }
-
-  .boxer-sort-corner {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border: 1.5px solid color-mix(in srgb, var(--color-theme-gold) 75%, transparent);
-    pointer-events: none;
-  }
-  .boxer-sort-corner-tl {
-    top: -1px;
-    left: -1px;
-    border-right: 0;
-    border-bottom: 0;
-  }
-  .boxer-sort-corner-tr {
-    top: -1px;
-    right: -1px;
-    border-left: 0;
-    border-bottom: 0;
-  }
-  .boxer-sort-corner-bl {
-    bottom: -1px;
-    left: -1px;
-    border-right: 0;
-    border-top: 0;
-  }
-  .boxer-sort-corner-br {
-    bottom: -1px;
-    right: -1px;
-    border-left: 0;
-    border-top: 0;
-  }
-
-  .boxer-sort-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-size: 0.6rem;
-    font-weight: 900;
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-theme-gold) 92%, var(--color-theme-cream));
-    text-shadow:
-      0 1px 0 rgba(0, 0, 0, 0.6),
-      0 0 14px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
-  }
-
-  @media (max-width: 639px) {
-    .boxer-sort-label {
-      font-size: 0.55rem;
-      letter-spacing: 0.18em;
-    }
-  }
-
-  .boxer-sort-label-mark {
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    background: var(--color-theme-gold);
-    transform: rotate(45deg);
-    box-shadow: 0 0 6px color-mix(in srgb, var(--color-theme-gold) 60%, transparent);
-  }
-
-  .boxer-sort-pills {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  @media (min-width: 640px) {
-    .boxer-sort-pills {
-      gap: 0.5rem;
-    }
-  }
-
-  .boxer-sort-pill-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 0.85rem;
-    font-size: 0.7rem;
-    line-height: 1;
-    color: color-mix(in srgb, var(--color-theme-gold) 85%, var(--color-theme-cream));
-    text-shadow: 0 0 8px color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
-    transition: color 250ms ease;
-  }
-
-  /* Al estar activa la pill (fondo dorado), el glifo invierte color para
-     mantener contraste con el oro brillante. */
-  .boxer-filter-pill[aria-pressed='true'] .boxer-sort-pill-icon {
-    color: var(--color-theme-midnight);
-    text-shadow: none;
-  }
-
-  /* ---------- Pills ---------- */
-  .boxer-filter-pill {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.42rem 0.85rem;
-    border-radius: 4px;
-    background: color-mix(in srgb, var(--color-theme-midnight) 78%, black);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
-    color: color-mix(in srgb, var(--color-theme-cream) 86%, transparent);
-    font-size: 0.6rem;
-    font-weight: 900;
-    letter-spacing: 0.18em;
-    line-height: 1;
-    cursor: pointer;
-    transition:
-      transform 250ms ease,
-      box-shadow 250ms ease,
-      background-color 250ms ease,
-      color 250ms ease;
-  }
-
-  @media (max-width: 639px) {
-    .boxer-filter-pill {
-      gap: 0.3rem;
-      padding: 0.38rem 0.55rem;
-      font-size: 0.52rem;
-      letter-spacing: 0.1em;
-    }
-  }
-
-  @media (min-width: 640px) {
-    .boxer-filter-pill {
-      font-size: 0.68rem;
-      padding: 0.5rem 1rem;
-    }
-  }
-
-  .boxer-filter-pill::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-      ellipse 100% 100% at 50% 0%,
-      color-mix(in srgb, var(--color-theme-gold) 18%, transparent) 0%,
-      transparent 80%
-    );
-    opacity: 0;
-    transition: opacity 250ms ease;
-    pointer-events: none;
-  }
-
-  .boxer-filter-pill:hover::before,
-  .boxer-filter-pill:focus-visible::before {
-    opacity: 1;
-  }
-
-  .boxer-filter-pill:hover,
-  .boxer-filter-pill:focus-visible {
-    color: var(--color-theme-cream);
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 58%, transparent),
-      0 6px 18px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
-    transform: translateY(-1px);
-    outline: none;
-  }
-
-  .boxer-filter-pill[aria-pressed='true'] {
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
-      var(--color-theme-gold) 65%,
-      color-mix(in srgb, var(--color-theme-gold) 75%, black) 100%
-    );
-    color: var(--color-theme-midnight);
-    box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
-      0 8px 24px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
-    transform: translateY(0);
-  }
-
-  .boxer-filter-pill[aria-pressed='true']::before {
-    opacity: 0;
-  }
-
-  .boxer-filter-pill[aria-pressed='true']:hover,
-  .boxer-filter-pill[aria-pressed='true']:focus-visible {
-    transform: translateY(-1px);
-  }
-
-  .boxer-filter-pill:disabled,
-  .boxer-filter-pill[data-disabled='true'] {
-    opacity: 0.32;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
-  }
-
-  .boxer-filter-pill:disabled:hover,
-  .boxer-filter-pill[data-disabled='true']:hover {
-    transform: none;
-    color: color-mix(in srgb, var(--color-theme-cream) 86%, transparent);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
-  }
-
-  :global(.boxer-filter-pill-flag) {
-    width: 1rem;
-    height: 1rem;
-    flex-shrink: 0;
-  }
-
-  @media (max-width: 639px) {
-    :global(.boxer-filter-pill-flag) {
-      width: 0.875rem;
-      height: 0.875rem;
     }
   }
 
@@ -1274,89 +625,12 @@ const cardImageEagerAmount = 4
     }
   }
 
-  .boxer-filter-pill-count {
-    display: inline-flex;
-    min-width: 1.25rem;
-    align-items: center;
-    justify-content: center;
-    padding: 0.18rem 0.35rem;
-    border-radius: 3px;
-    background: color-mix(in srgb, var(--color-theme-midnight) 60%, transparent);
-    color: color-mix(in srgb, var(--color-theme-cream) 75%, transparent);
-    font-size: 0.55rem;
-    font-weight: 900;
-    letter-spacing: 0.04em;
-    font-variant-numeric: tabular-nums;
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
-    transition:
-      transform 250ms ease,
-      background-color 250ms ease,
-      color 250ms ease;
-  }
-
-  @media (max-width: 639px) {
-    .boxer-filter-pill-count {
-      min-width: 0.95rem;
-      padding: 0.12rem 0.24rem;
-      font-size: 0.48rem;
-    }
-  }
-
-  .boxer-filter-pill-count.is-bumping {
-    transform: scale(1.22);
-  }
-
-  .boxer-filter-pill[aria-pressed='true'] .boxer-filter-pill-count {
-    background: color-mix(in srgb, var(--color-theme-midnight) 95%, black);
-    color: var(--color-theme-cream);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-midnight) 100%, transparent);
-  }
-
-  .boxer-filter-reset {
-    appearance: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    background: transparent;
-    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
-    border-radius: 9999px;
-    padding: 0.45rem 0.95rem;
-    color: color-mix(in srgb, var(--color-theme-cream) 80%, transparent);
-    font-size: 0.55rem;
-    font-weight: 900;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition:
-      color 250ms ease,
-      border-color 250ms ease,
-      background-color 250ms ease,
-      transform 250ms ease;
-  }
-
-  @media (min-width: 640px) {
-    .boxer-filter-reset {
-      font-size: 0.65rem;
-    }
-  }
-
-  .boxer-filter-reset:hover,
-  .boxer-filter-reset:focus-visible {
-    color: var(--color-theme-midnight);
-    background: color-mix(in srgb, var(--color-theme-gold) 92%, white);
-    border-color: var(--color-theme-gold);
-    transform: translateY(-1px);
-    outline: none;
-  }
-
-  .boxer-filter-reset-strong {
-    padding: 0.55rem 1.2rem;
-    border-color: color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
-    color: var(--color-theme-cream);
-  }
-
   :global(.js) .boxer-card-wrap {
     opacity: 0;
+  }
+
+  :global(.js) .boxer-card-wrap[data-ready='true'] {
+    opacity: 1;
   }
 
   .boxer-card-wrap {
@@ -1403,7 +677,7 @@ const cardImageEagerAmount = 4
       color-mix(in srgb, var(--color-theme-gold), transparent 88%) 0%,
       transparent 80%
     );
-    border-radius: 4px;
+    border-radius: 2px;
     line-height: normal;
     border: 1px solid color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
     animation: blurred-fade-in 0.4s ease-in-out both calc(var(--animation-delay) + 0.6s);
@@ -1433,11 +707,7 @@ const cardImageEagerAmount = 4
       animation: none;
     }
 
-    .boxer-filter-pill,
-    .boxer-filter-pill-count,
-    .boxer-filter-reset,
-    .boxer-card-wrap,
-    .boxer-filters-panel {
+    .boxer-card-wrap {
       transition: none;
     }
   }
@@ -1452,22 +722,46 @@ const cardImageEagerAmount = 4
     const form = $<HTMLFormElement>('[data-boxers-filters]')
     const grid = $<HTMLElement>('[data-boxers-grid]')
     const empty = $<HTMLElement>('[data-boxers-empty]')
-    const footerBlock = $<HTMLElement>('[data-boxers-footer]')
     const sortBar = $<HTMLElement>('[data-boxers-sort]')
     if (!form || !grid) return
+    if (form.dataset.boxersFiltersReady === 'true') return
+    form.dataset.boxersFiltersReady = 'true'
+
     const gridEl: HTMLElement = grid
 
     const cards = Array.from($$<HTMLElement>('[data-boxer-card]', grid))
+    const countrySelect = $<HTMLSelectElement>('[data-country-select]', form)
+    const countrySelectedLabel = $<HTMLElement>('[data-country-selected-label]', form)
+    const countrySelectedFlags = Array.from($$<HTMLElement>('[data-country-selected-flag]', form))
+    const countryCount = $<HTMLElement>('[data-country-count]', form)
+    const genderSegmented = $<HTMLElement>('[data-gender-segmented]', form)
     const filterButtons = Array.from($$<HTMLButtonElement>('[data-filter]', form))
-    const resetButtons = Array.from($$<HTMLButtonElement>('[data-boxers-reset]'))
-    const sortButtons = sortBar ? Array.from($$<HTMLButtonElement>('[data-sort]', sortBar)) : []
+    const sortCycleButton = sortBar ? $<HTMLButtonElement>('[data-sort-cycle]', sortBar) : null
+    const sortCycleLabel = sortCycleButton
+      ? $<HTMLElement>('[data-sort-cycle-label]', sortCycleButton)
+      : null
 
     const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const SORT_MODES: SortMode[] = ['cartel', 'followers-desc', 'followers-asc']
+    const SORT_META: Record<SortMode, { label: string; aria: string }> = {
+      cartel: {
+        label: 'Cartelera',
+        aria: 'Ordenar por cartelera. Pulsa para ordenar por más seguidores.',
+      },
+      'followers-desc': {
+        label: 'Más seguidores',
+        aria: 'Ordenar por más seguidores. Pulsa para ordenar por menos seguidores.',
+      },
+      'followers-asc': {
+        label: 'Menos seguidores',
+        aria: 'Ordenar por menos seguidores. Pulsa para ordenar por cartelera.',
+      },
+    }
 
     // Lee el estado inicial desde la URL
     function getStateFromURL(buttons: HTMLButtonElement[]) {
       const validCountries = new Set(
-        buttons.filter((b) => b.dataset.filter === 'country').map((b) => b.dataset.value ?? ''),
+        countrySelect ? Array.from(countrySelect.options).map((option) => option.value) : [''],
       )
       const validGenders = new Set(
         buttons.filter((b) => b.dataset.filter === 'gender').map((b) => b.dataset.value ?? ''),
@@ -1538,11 +832,26 @@ const cardImageEagerAmount = 4
 
     const ANIM_CLASS = 'animate-fade-in-up'
     const ANIM_DELAY = 35
+    let cardsReady = false
 
-    function retriggerAnimations() {
+    function prepareCardsForLayoutChange() {
+      if (!cardsReady) return
+
+      for (const card of cards) {
+        card.classList.remove(ANIM_CLASS)
+        card.dataset.ready = 'true'
+      }
+    }
+
+    function revealInitialCards() {
       let visibleIndex = 0
+      allowBoxerCardAnimations()
 
-      if (reduceMotionQuery.matches) return
+      if (reduceMotionQuery.matches) {
+        cardsReady = true
+        for (const card of cards) card.dataset.ready = 'true'
+        return
+      }
 
       for (const card of Array.from(gridEl.children) as HTMLElement[]) {
         if (card.dataset.hidden === 'true') continue
@@ -1557,24 +866,21 @@ const cardImageEagerAmount = 4
 
         visibleIndex++
       }
+
+      cardsReady = true
     }
 
-    // Remueve el atributo 'data-skip-boxers-enter' añádido en el script de 'Layout.astro'
-    // que impide las animaciones de entrada en las tarjetas de los boxeadores
     function allowBoxerCardAnimations() {
       document.documentElement.removeAttribute('data-skip-boxers-enter')
     }
 
-    // Reordena el DOM (no sólo CSS `order`) para que el orden de
-    // tabulación coincida con el visual. Con 20 cards el coste es
-    // despreciable y mantenemos la accesibilidad correcta.
-    function applySort() {
+    function updateGridState() {
       const hasActiveFilter = state.country !== '' || state.gender !== ''
       const isDefaultSortMode = sortMode === 'cartel'
-      const gridState = !hasActiveFilter && isDefaultSortMode ? 'default' : 'modified'
+      setGridState(!hasActiveFilter && isDefaultSortMode ? 'default' : 'modified')
+    }
 
-      setGridState(gridState)
-
+    function updateSortOrder() {
       const ordered = [...cards]
       if (sortMode === 'followers-desc') {
         ordered.sort(
@@ -1592,6 +898,14 @@ const cardImageEagerAmount = 4
       }
 
       for (const card of ordered) gridEl.appendChild(card)
+
+      syncSortCycleControl()
+    }
+
+    function applySort() {
+      prepareCardsForLayoutChange()
+      updateGridState()
+      updateSortOrder()
     }
 
     // Cuenta cards que coinciden con un par (country, gender). Pasar '' en
@@ -1608,7 +922,7 @@ const cardImageEagerAmount = 4
 
     // Animación visual al presionar un filtro.
     function bump(el: HTMLElement | null) {
-      if (!el) return
+      if (!el || reduceMotionQuery.matches) return
       el.classList.remove('is-bumping')
       // Forzamos reflow para reiniciar la transición si se está pulsando rápido.
       void el.offsetWidth
@@ -1616,13 +930,73 @@ const cardImageEagerAmount = 4
       window.setTimeout(() => el.classList.remove('is-bumping'), 260)
     }
 
-    function applyFilters() {
-      const hasActiveFilter = state.country !== '' || state.gender !== ''
-      const isDefaultSortMode = sortMode === 'cartel'
-      const gridState = !hasActiveFilter && isDefaultSortMode ? 'default' : 'modified'
+    function setCountText(el: HTMLElement, value: string) {
+      const countValue = $<HTMLElement>('.boxer-filter-pill-count-value', el)
+      if (countValue) {
+        countValue.textContent = value
+        return
+      }
 
-      setGridState(gridState)
-      // Mantiene el contenido dentro del viewport al aplicar filtros. Esto evita que los cambios en la altura del contenedor de las cards, ya sea por crecimiento o reducción de su contenido, provoquen desplazamientos inesperados que puedan enviar al usuario a la siguiente sección o dejar contenido parcialmente cortado.
+      el.textContent = ''
+      const valueNode = document.createElement('span')
+      valueNode.className = 'boxer-filter-pill-count-value'
+      valueNode.textContent = value
+      el.appendChild(valueNode)
+    }
+
+    function getCountText(el: HTMLElement) {
+      return (
+        $<HTMLElement>('.boxer-filter-pill-count-value', el)?.textContent?.trim() ??
+        el.textContent?.trim()
+      )
+    }
+
+    function syncCountryControl() {
+      if (!countrySelect) return
+
+      countrySelect.value = state.country
+      const selectedOption = countrySelect.selectedOptions[0]
+      if (countrySelectedLabel) {
+        countrySelectedLabel.textContent =
+          selectedOption?.dataset.label ??
+          selectedOption?.textContent?.split('·')[0]?.trim() ??
+          'Todos'
+      }
+
+      for (const flag of countrySelectedFlags) {
+        flag.hidden = (flag.dataset.countrySelectedFlag ?? '') !== state.country
+      }
+
+      for (const option of Array.from(countrySelect.options)) {
+        const value = option.value
+        const label = option.dataset.label ?? option.textContent?.split('·')[0]?.trim() ?? ''
+        const projectedCount = countMatching(value, state.gender)
+        option.textContent = `${label} · ${projectedCount}`
+        option.disabled = projectedCount === 0 && state.country !== value
+      }
+
+      if (countryCount) {
+        const selectedCount = countMatching(state.country, state.gender)
+        const next = String(selectedCount)
+        if (getCountText(countryCount) !== next) {
+          setCountText(countryCount, next)
+          bump(countryCount)
+        }
+      }
+    }
+
+    function syncSortCycleControl() {
+      if (!sortCycleButton) return
+
+      const meta = SORT_META[sortMode]
+      sortCycleButton.dataset.sort = sortMode
+      sortCycleButton.setAttribute('aria-label', meta.aria)
+      if (sortCycleLabel) sortCycleLabel.textContent = meta.label
+    }
+
+    function updateFilters() {
+      updateGridState()
+      // Keep the grid anchored when filtering changes page height.
       keepContentInView(sortBar)
 
       let visible = 0
@@ -1639,14 +1013,13 @@ const cardImageEagerAmount = 4
       if (empty) empty.classList.toggle('hidden', visible !== 0)
       if (empty) empty.classList.toggle('flex', visible === 0)
 
-      // Mostramos el footer (con su separador) y los botones de reset
-      // sólo cuando hay algún filtro activo.
-      if (footerBlock) footerBlock.hidden = !hasActiveFilter
-      for (const btn of resetButtons) btn.hidden = !hasActiveFilter
+      syncCountryControl()
 
       // Para cada pill: recalculamos su conteo SIN aplicar el filtro de su
       // propio grupo (así se muestra cuántos quedarían si se activase
       // sobre los filtros actuales del resto). Y sincronizamos aria-pressed.
+      if (genderSegmented) genderSegmented.dataset.active = state.gender || 'all'
+
       for (const btn of filterButtons) {
         const group = btn.dataset.filter as 'country' | 'gender' | undefined
         const value = btn.dataset.value ?? ''
@@ -1662,10 +1035,9 @@ const cardImageEagerAmount = 4
 
         const countNode = $<HTMLElement>('.boxer-filter-pill-count', btn)
         if (countNode) {
-          const previous = countNode.textContent
           const next = String(projectedCount)
-          if (previous !== next) {
-            countNode.textContent = next
+          if (getCountText(countNode) !== next) {
+            setCountText(countNode, next)
             bump(countNode)
           }
         }
@@ -1679,6 +1051,19 @@ const cardImageEagerAmount = 4
       }
     }
 
+    function applyFilters() {
+      prepareCardsForLayoutChange()
+      updateFilters()
+    }
+
+    if (countrySelect) {
+      countrySelect.addEventListener('change', () => {
+        state.country = countrySelect.value
+        applyFilters()
+        syncStateToURL()
+      })
+    }
+
     for (const btn of filterButtons) {
       btn.addEventListener('click', () => {
         const group = btn.dataset.filter as 'country' | 'gender' | undefined
@@ -1689,46 +1074,22 @@ const cardImageEagerAmount = 4
         if (state[group] === value) return
         state[group] = value
         applyFilters()
-        allowBoxerCardAnimations()
-        retriggerAnimations()
         syncStateToURL()
       })
     }
 
-    for (const btn of resetButtons) {
-      btn.addEventListener('click', () => {
-        state.country = ''
-        state.gender = ''
-        applyFilters()
-        allowBoxerCardAnimations()
-        retriggerAnimations()
-        syncStateToURL()
-      })
-    }
-
-    for (const btn of sortButtons) {
-      btn.addEventListener('click', () => {
-        const next = (btn.dataset.sort as SortMode | undefined) ?? 'cartel'
-        if (sortMode === next) return
-        sortMode = next
-        for (const b of sortButtons) {
-          b.setAttribute('aria-pressed', String(b.dataset.sort === sortMode))
-        }
+    if (sortCycleButton) {
+      sortCycleButton.addEventListener('click', () => {
+        const currentIndex = SORT_MODES.indexOf(sortMode)
+        sortMode = SORT_MODES[(currentIndex + 1) % SORT_MODES.length]
         applySort()
-        allowBoxerCardAnimations()
-        retriggerAnimations()
         syncStateToURL()
       })
     }
 
-    // Sincroniza aria-pressed en los botones de ordenación al cargar
-    for (const b of sortButtons) {
-      b.setAttribute('aria-pressed', String(b.dataset.sort === sortMode))
-    }
-
-    applyFilters()
-    applySort()
-    retriggerAnimations()
+    updateFilters()
+    updateSortOrder()
+    revealInitialCards()
   }
 
   document.addEventListener('astro:page-load', setupBoxersFilters)

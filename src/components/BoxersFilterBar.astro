@@ -1,0 +1,856 @@
+---
+import {
+  ArrowDownUp as SortDefaultIcon,
+  ArrowDownWideNarrow as SortDescIcon,
+  ArrowUpWideNarrow as SortAscIcon,
+  ChevronDown as ChevronDownIcon,
+  Mars as MaleIcon,
+  Venus as FemaleIcon,
+} from '@lucide/astro'
+import type { BoxerGender } from '@/consts/boxers'
+
+type CountryFilter = { code: string; name: string; count: number }
+type GenderFilter = { code: BoxerGender; name: string; count: number }
+type VeladaFlagTheme =
+  | { kind: 'stripe'; emblem?: string; stripes: string[] }
+  | { kind: 'triangle'; emblem?: string; field: string; stripes: string[]; triangle: string }
+
+interface Props {
+  countryFilters: CountryFilter[]
+  genderFilters: GenderFilter[]
+  totalBoxers: number
+}
+
+const { countryFilters, genderFilters, totalBoxers } = Astro.props
+const countryDisplayOptions = [{ code: '', count: totalBoxers, name: 'Todos' }, ...countryFilters]
+
+const GenderIconByCode = {
+  f: FemaleIcon,
+  m: MaleIcon,
+} satisfies Record<BoxerGender, typeof FemaleIcon>
+
+const veladaFlagThemes: Record<string, VeladaFlagTheme> = {
+  all: { kind: 'stripe', emblem: '#080d24', stripes: ['#d7b35d', '#f5e2ad', '#d7b35d'] },
+  ar: { kind: 'stripe', emblem: '#d7a83f', stripes: ['#6fb5df', '#f7f2dd', '#6fb5df'] },
+  co: { kind: 'stripe', stripes: ['#e9c348', '#284e9d', '#b52f32'] },
+  es: { kind: 'stripe', stripes: ['#a9252b', '#d9ae47', '#a9252b'] },
+  mx: { kind: 'stripe', emblem: '#c79d3d', stripes: ['#236c48', '#f4ead2', '#9f252b'] },
+  pr: {
+    kind: 'triangle',
+    emblem: '#f6d778',
+    field: '#f5efe0',
+    stripes: ['#b8202d', '#f7f0df', '#b8202d', '#f7f0df', '#b8202d'],
+    triangle: '#234f92',
+  },
+  sv: { kind: 'stripe', emblem: '#d7a83f', stripes: ['#2757a4', '#f4eedc', '#2757a4'] },
+}
+
+function getVeladaFlagTheme(country: string) {
+  return veladaFlagThemes[country || 'all'] ?? veladaFlagThemes.all
+}
+---
+
+<form
+  data-boxers-filters
+  class="boxer-filters-panel relative w-full not-motion-reduce:animate-fade-in-up not-motion-reduce:animate-delay-300"
+  aria-label="Filtros de boxeadores"
+  onsubmit="return false"
+>
+  <div class="boxer-filters-body relative flex flex-col">
+    <div class="boxer-filter-row" data-filter-row="country">
+      <div class="boxer-filter-row-label">País</div>
+      <div class="boxer-country-select-shell" data-country-dropdown>
+        <select
+          data-country-select
+          class="boxer-country-native-select"
+          aria-label="Filtrar por país"
+        >
+          <option value="" data-label="Todos">Todos · {totalBoxers}</option>
+          {
+            countryFilters.map(({ code, name, count }) => (
+              <option value={code} data-label={name}>
+                {name} · {count}
+              </option>
+            ))
+          }
+        </select>
+        <div class="boxer-country-select" aria-hidden="true">
+          <span class="boxer-country-selected-flags" aria-hidden="true">
+            {
+              countryDisplayOptions.map(({ code }) => {
+                const flag = getVeladaFlagTheme(code)
+                const stripeHeight = flag.kind === 'stripe' ? 18 / flag.stripes.length : 0
+                const bandHeight = flag.kind === 'triangle' ? 18 / flag.stripes.length : 0
+
+                return (
+                  <span
+                    data-country-selected-flag={code}
+                    class="boxer-country-selected-flag"
+                    hidden={code !== ''}
+                  >
+                    <svg viewBox="0 0 32 24" class="boxer-country-flag-svg">
+                      <rect x="1" y="1" width="30" height="22" rx="1.5" fill="#080d24" />
+                      {flag.kind === 'stripe' ? (
+                        flag.stripes.map((color, index) => (
+                          <rect
+                            x="4"
+                            y={3 + index * stripeHeight}
+                            width="24"
+                            height={stripeHeight}
+                            fill={color}
+                          />
+                        ))
+                      ) : (
+                        <>
+                          <rect x="4" y="3" width="24" height="18" fill={flag.field} />
+                          {flag.stripes.map((color, index) => (
+                            <rect
+                              x="4"
+                              y={3 + index * bandHeight}
+                              width="24"
+                              height={bandHeight}
+                              fill={color}
+                            />
+                          ))}
+                          <path d="M4 3 17 12 4 21Z" fill={flag.triangle} />
+                        </>
+                      )}
+                      {flag.emblem && <circle cx="16" cy="12" r="2.1" fill={flag.emblem} />}
+                    </svg>
+                  </span>
+                )
+              })
+            }
+          </span>
+          <span data-country-selected-label class="boxer-country-selected-label">Todos</span>
+          <span
+            data-country-count
+            class="boxer-filter-pill-count boxer-country-select-count"
+            aria-hidden="true"
+          >
+            {totalBoxers}
+          </span>
+          <ChevronDownIcon class="boxer-country-select-arrow" aria-hidden="true" />
+        </div>
+      </div>
+    </div>
+
+    <div class="boxer-filter-row" data-filter-row="gender">
+      <div class="boxer-filter-row-label">Género</div>
+      <div
+        data-gender-segmented
+        data-active="all"
+        class="boxer-segmented"
+        role="group"
+        aria-label="Filtrar por género"
+      >
+        <button
+          type="button"
+          data-filter="gender"
+          data-value=""
+          aria-pressed="true"
+          aria-label="Mostrar todos los géneros"
+          class="boxer-filter-pill boxer-segmented-option boxer-filter-pill-all"
+        >
+          <svg viewBox="0 0 24 24" class="boxer-segmented-icon" aria-hidden="true" fill="none">
+            <path
+              d="M8.5 13.4C6 12.6 4.5 10.5 4.5 8.1C4.5 4.7 7.2 2 10.8 2H12.1C16 2 19 5 19 8.8V12C19 13.7 17.7 15 16 15H14.8"
+            ></path>
+            <path d="M8.4 13.2V17.3C8.4 18.8 9.6 20 11.1 20H15.2C16.7 20 17.9 18.8 17.9 17.3V15"
+            ></path>
+            <path d="M9.7 6.2V10.4"></path>
+            <path d="M13 5.7V10.4"></path>
+            <path d="M16.2 7.1V10.4"></path>
+            <path d="M8.4 17H17.8"></path>
+          </svg>
+          <span class="boxer-filter-pill-label">Todos</span>
+          <span class="boxer-filter-pill-count" aria-hidden="true">{totalBoxers}</span>
+        </button>
+        {
+          genderFilters.map(({ code, name, count }) => {
+            const GenderIcon = GenderIconByCode[code]
+
+            return (
+              <button
+                type="button"
+                data-filter="gender"
+                data-value={code}
+                aria-pressed="false"
+                aria-label={`Filtrar por género ${name}`}
+                class="boxer-filter-pill boxer-segmented-option"
+              >
+                <GenderIcon class="boxer-segmented-icon" aria-hidden="true" />
+                <span class="boxer-filter-pill-label">{name}</span>
+                <span class="boxer-filter-pill-count" aria-hidden="true">
+                  {count}
+                </span>
+              </button>
+            )
+          })
+        }
+      </div>
+    </div>
+
+    <div
+      data-boxers-sort
+      class="boxer-filter-row boxer-sort-row"
+      role="region"
+      aria-label="Ordenar boxeadores"
+    >
+      <div class="boxer-filter-row-label">
+        <span>Ordenar por</span>
+      </div>
+
+      <button
+        type="button"
+        data-sort-cycle
+        data-sort="cartel"
+        class="boxer-sort-cycle"
+        aria-label="Ordenar por cartelera. Pulsa para cambiar el orden."
+      >
+        <span class="boxer-sort-cycle-icon" aria-hidden="true">
+          <SortDefaultIcon class="boxer-sort-icon boxer-sort-icon-default" />
+          <SortDescIcon class="boxer-sort-icon boxer-sort-icon-desc" />
+          <SortAscIcon class="boxer-sort-icon boxer-sort-icon-asc" />
+        </span>
+        <span data-sort-cycle-label class="boxer-sort-cycle-label">Cartelera</span>
+      </button>
+    </div>
+  </div>
+</form>
+
+<style>
+  /* ---------- Filtros (command panel) ---------- */
+  .boxer-filters-panel {
+    /* `min-width: 0` evita que el contenido del panel (sobre todo las
+       pills) expanda al panel y, en cascada, al layout y al body. */
+    min-width: 0;
+    z-index: 20;
+    overflow: visible;
+    width: 100%;
+    background:
+      radial-gradient(
+        ellipse 80% 100% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 10%, transparent) 0%,
+        transparent 70%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-velada-navy) 35%, var(--color-theme-midnight)) 0%,
+        color-mix(in srgb, var(--color-theme-midnight) 92%, black) 100%
+      );
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 26%, transparent),
+      0 24px 60px rgba(0, 0, 0, 0.45),
+      0 0 60px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
+  }
+
+  @media (max-width: 639px) {
+    .boxer-filters-panel {
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
+        0 16px 36px rgba(0, 0, 0, 0.38),
+        0 0 40px color-mix(in srgb, var(--color-theme-gold) 9%, transparent);
+    }
+  }
+
+  .boxer-filters-body {
+    --boxer-filter-control-height: 2.15rem;
+    --boxer-filter-control-font-size: 0.68rem;
+    --boxer-filter-control-letter-spacing: 0.1em;
+    --boxer-filter-label-height: 0.7rem;
+    --boxer-filter-label-gap: 0.5rem;
+    --boxer-filter-radius: 2px;
+    --boxer-filter-inner-radius: 1px;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.4rem;
+    overflow: visible;
+    padding: 1rem;
+  }
+  @media (max-width: 639px) {
+    .boxer-filters-body {
+      gap: 0.9rem;
+      padding: 0.8rem 0.7rem;
+    }
+  }
+  @media (min-width: 640px) {
+    .boxer-filters-body {
+      padding: 1.05rem 1rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .boxer-filters-body {
+      grid-template-columns: minmax(17rem, 1fr) minmax(28rem, 1.55fr) minmax(17rem, 1fr);
+      align-items: start;
+      justify-content: stretch;
+      column-gap: 1.5rem;
+      row-gap: 1rem;
+      padding: 0.8rem 1.25rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .boxer-filters-body {
+      grid-template-columns: minmax(20rem, 1fr) minmax(30rem, 1.55fr) minmax(20rem, 1fr);
+      column-gap: 1.6rem;
+      padding: 0.85rem 1.35rem;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .boxer-filters-body {
+      grid-template-columns: minmax(22rem, 1fr) minmax(34rem, 1.55fr) minmax(22rem, 1fr);
+      column-gap: 1.75rem;
+    }
+  }
+
+  .boxer-filter-row {
+    min-width: 0;
+    min-inline-size: 0;
+    display: grid;
+    grid-template-rows: var(--boxer-filter-label-height) auto;
+    row-gap: var(--boxer-filter-label-gap);
+    align-content: start;
+    align-items: start;
+    border: 0;
+    margin: 0;
+    padding: 0.3rem 0;
+  }
+
+  @media (min-width: 1024px) {
+    .boxer-filter-row {
+      position: relative;
+      min-height: 100%;
+      padding: 0;
+    }
+
+    .boxer-filter-row:not(:first-child)::before {
+      content: '';
+      position: absolute;
+      top: 0.05rem;
+      bottom: 0.05rem;
+      left: -0.75rem;
+      width: 1px;
+      background: color-mix(in srgb, var(--color-theme-gold) 16%, transparent);
+      pointer-events: none;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .boxer-filter-row {
+      padding: 0.15rem 0;
+    }
+  }
+
+  .boxer-filter-row-label {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    height: var(--boxer-filter-label-height);
+    gap: 0.45rem;
+    font-size: 0.6rem;
+    font-weight: 900;
+    letter-spacing: 0.26em;
+    line-height: 1;
+    margin: 0;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 90%, var(--color-theme-cream));
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.6),
+      0 0 16px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
+  }
+
+  @media (max-width: 639px) {
+    .boxer-filter-row-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+    }
+  }
+
+  .boxer-segmented {
+    --segment-count: 3;
+    --segment-gap: 0.8rem;
+    --segment-x: 0px;
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(var(--segment-count), minmax(0, 1fr));
+    gap: var(--segment-gap);
+    width: 100%;
+    min-height: var(--boxer-filter-control-height);
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 26%, transparent);
+    border-radius: var(--boxer-filter-radius);
+    padding: 0.15rem;
+    background: color-mix(in srgb, var(--color-theme-midnight) 82%, black);
+  }
+
+  .boxer-segmented::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 0.15rem;
+    bottom: 0.15rem;
+    left: 0.15rem;
+    width: calc((100% - 0.3rem - var(--segment-gap) - var(--segment-gap)) / var(--segment-count));
+    border-radius: var(--boxer-filter-inner-radius);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 96%, white) 0%,
+      var(--color-theme-gold) 62%,
+      color-mix(in srgb, var(--color-theme-gold) 76%, black) 100%
+    );
+    transform: translateX(var(--segment-x));
+    transition:
+      transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+      width 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .boxer-segmented[data-active='f'] {
+    --segment-x: calc(100% + var(--segment-gap));
+  }
+
+  .boxer-segmented[data-active='m'] {
+    --segment-x: calc(200% + var(--segment-gap) + var(--segment-gap));
+  }
+
+  @media (min-width: 640px) {
+    .boxer-segmented {
+      --segment-gap: 0.85rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .boxer-segmented {
+      --segment-gap: 1rem;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .boxer-segmented {
+      --segment-gap: 0.3rem;
+    }
+  }
+
+  .boxer-country-select-shell {
+    position: relative;
+    display: block;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .boxer-country-native-select {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .boxer-country-select {
+    appearance: none;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    min-height: var(--boxer-filter-control-height);
+    min-width: 0;
+    border: 0;
+    border-radius: var(--boxer-filter-radius);
+    padding: 0.4rem 0.62rem;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-midnight) 88%, black) 0%,
+      color-mix(in srgb, var(--color-velada-navy) 42%, black) 100%
+    );
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+    color: var(--color-theme-cream);
+    font-size: var(--boxer-filter-control-font-size);
+    font-weight: 900;
+    letter-spacing: var(--boxer-filter-control-letter-spacing);
+    line-height: 1;
+    text-align: left;
+    text-transform: uppercase;
+    cursor: pointer;
+    pointer-events: none;
+    transition:
+      box-shadow 250ms ease,
+      background-color 250ms ease,
+      color 250ms ease;
+  }
+
+  .boxer-country-select-shell:hover .boxer-country-select,
+  .boxer-country-select-shell:has(.boxer-country-native-select:focus-visible)
+    .boxer-country-select {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 66%, transparent);
+  }
+
+  .boxer-country-select-arrow {
+    position: static;
+    display: grid;
+    width: 1rem;
+    height: 1rem;
+    place-items: center;
+    color: var(--color-theme-gold);
+    stroke-width: 2.4;
+    pointer-events: none;
+    transition: transform 180ms ease;
+  }
+
+  .boxer-country-selected-flags,
+  .boxer-country-selected-flag {
+    display: inline-grid;
+    width: 2rem;
+    height: 1.5rem;
+    place-items: center;
+    flex: 0 0 auto;
+  }
+
+  .boxer-country-selected-flag[hidden] {
+    display: none;
+  }
+
+  .boxer-country-flag-svg {
+    display: block;
+    width: 2rem;
+    height: 1.5rem;
+    filter: saturate(0.9) contrast(1.05);
+  }
+
+  .boxer-country-selected-label {
+    overflow: hidden;
+    min-width: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .boxer-country-select-shell .boxer-country-select-count {
+    min-height: 1.65rem;
+    min-width: 1.65rem;
+    border-radius: var(--boxer-filter-radius);
+    background: color-mix(in srgb, var(--color-theme-gold) 92%, white);
+    color: var(--color-theme-midnight);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, white 28%, transparent);
+  }
+
+  /* ---------- Pills ---------- */
+  .boxer-filter-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.42rem 0.85rem;
+    border-radius: var(--boxer-filter-inner-radius);
+    background: color-mix(in srgb, var(--color-theme-midnight) 78%, black);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+    color: color-mix(in srgb, var(--color-theme-cream) 86%, transparent);
+    font-size: 0.6rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      transform 250ms ease,
+      box-shadow 250ms ease,
+      background-color 250ms ease,
+      color 250ms ease;
+  }
+
+  @media (max-width: 639px) {
+    .boxer-filter-pill {
+      gap: 0.3rem;
+      padding: 0.38rem 0.55rem;
+      font-size: 0.52rem;
+      letter-spacing: 0.1em;
+    }
+
+    .boxer-segmented {
+      width: 100%;
+    }
+
+    .boxer-segmented-option {
+      padding-inline: 0.35rem;
+    }
+
+    .boxer-segmented-option .boxer-filter-pill-label {
+      font-size: 0.48rem;
+      letter-spacing: 0;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .boxer-filter-pill {
+      font-size: 0.68rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .boxer-filters-body .boxer-filter-pill {
+      gap: 0.55rem;
+      padding: 0.35rem 0.85rem;
+      font-size: var(--boxer-filter-control-font-size);
+      letter-spacing: var(--boxer-filter-control-letter-spacing);
+    }
+  }
+
+  .boxer-filter-pill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      ellipse 100% 100% at 50% 0%,
+      color-mix(in srgb, var(--color-theme-gold) 18%, transparent) 0%,
+      transparent 80%
+    );
+    opacity: 0;
+    transition: opacity 250ms ease;
+    pointer-events: none;
+  }
+
+  .boxer-filter-pill:hover::before,
+  .boxer-filter-pill:focus-visible::before {
+    opacity: 1;
+  }
+
+  .boxer-filter-pill:hover,
+  .boxer-filter-pill:focus-visible {
+    color: var(--color-theme-cream);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 58%, transparent),
+      0 6px 18px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+    transform: translateY(-1px);
+    outline: none;
+  }
+
+  .boxer-filter-pill[aria-pressed='true'] {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
+      var(--color-theme-gold) 65%,
+      color-mix(in srgb, var(--color-theme-gold) 75%, black) 100%
+    );
+    color: var(--color-theme-midnight);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
+      0 8px 24px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    transform: translateY(0);
+  }
+
+  .boxer-filter-pill[aria-pressed='true']::before {
+    opacity: 0;
+  }
+
+  .boxer-filter-pill[aria-pressed='true']:hover,
+  .boxer-filter-pill[aria-pressed='true']:focus-visible {
+    transform: translateY(-1px);
+  }
+
+  .boxer-segmented-option {
+    z-index: 1;
+    min-width: 0;
+    justify-content: center;
+    min-height: calc(var(--boxer-filter-control-height) - 0.3rem);
+    gap: 0.65rem;
+    border-radius: var(--boxer-filter-inner-radius);
+    box-shadow: none;
+    background: transparent;
+    letter-spacing: 0.02em;
+    padding: 0.32rem 0.9rem;
+    white-space: nowrap;
+  }
+
+  .boxer-segmented-option[aria-pressed='true'] {
+    background: transparent;
+    box-shadow: none;
+    color: var(--color-theme-midnight);
+  }
+
+  .boxer-segmented .boxer-filter-pill[aria-pressed='true'],
+  .boxer-segmented .boxer-filter-pill[aria-pressed='true']:hover,
+  .boxer-segmented .boxer-filter-pill[aria-pressed='true']:focus-visible {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .boxer-segmented-option[aria-pressed='true'] .boxer-filter-pill-count {
+    background: color-mix(in srgb, var(--color-theme-midnight) 95%, black);
+    color: var(--color-theme-cream);
+  }
+
+  .boxer-segmented-icon {
+    width: 1rem;
+    height: 1rem;
+    flex: 0 0 auto;
+    stroke: currentColor;
+    stroke-width: 2.35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .boxer-sort-cycle {
+    appearance: none;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    width: 100%;
+    min-height: var(--boxer-filter-control-height);
+    gap: 0.62rem;
+    border: 0;
+    border-radius: var(--boxer-filter-radius);
+    padding: 0.42rem 0.62rem;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-midnight) 84%, black) 0%,
+      color-mix(in srgb, var(--color-velada-navy) 45%, black) 100%
+    );
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+    color: var(--color-theme-cream);
+    cursor: pointer;
+    text-align: left;
+    transition:
+      transform 250ms ease,
+      box-shadow 250ms ease,
+      color 250ms ease;
+  }
+
+  .boxer-sort-cycle:hover,
+  .boxer-sort-cycle:focus-visible {
+    outline: none;
+    color: white;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 66%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .boxer-sort-cycle-icon {
+    display: grid;
+    width: 1.45rem;
+    height: 1.45rem;
+    place-items: center;
+    border-radius: var(--boxer-filter-inner-radius);
+    background: color-mix(in srgb, var(--color-theme-gold) 92%, white);
+    color: var(--color-theme-midnight);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, white 28%, transparent);
+  }
+
+  .boxer-sort-icon {
+    display: none;
+    width: 0.95rem;
+    height: 0.95rem;
+    stroke-width: 2.5;
+  }
+
+  .boxer-sort-cycle[data-sort='cartel'] .boxer-sort-icon-default,
+  .boxer-sort-cycle[data-sort='followers-desc'] .boxer-sort-icon-desc,
+  .boxer-sort-cycle[data-sort='followers-asc'] .boxer-sort-icon-asc {
+    display: block;
+  }
+
+  .boxer-sort-cycle-label {
+    overflow: hidden;
+    font-size: var(--boxer-filter-control-font-size);
+    font-weight: 900;
+    letter-spacing: var(--boxer-filter-control-letter-spacing);
+    line-height: 1;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .boxer-filter-pill:disabled,
+  .boxer-filter-pill[data-disabled='true'] {
+    opacity: 0.32;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
+  }
+
+  .boxer-filter-pill:disabled:hover,
+  .boxer-filter-pill[data-disabled='true']:hover {
+    transform: none;
+    color: color-mix(in srgb, var(--color-theme-cream) 86%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
+  }
+
+  .boxer-filter-pill-count {
+    display: inline-flex;
+    min-width: 1.25rem;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0.18rem 0.35rem;
+    border-radius: var(--boxer-filter-inner-radius);
+    background: color-mix(in srgb, var(--color-theme-midnight) 60%, transparent);
+    color: color-mix(in srgb, var(--color-theme-cream) 75%, transparent);
+    font-size: 0.55rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+    transition:
+      background-color 250ms ease,
+      color 250ms ease;
+  }
+
+  .boxer-filter-pill-count-value {
+    display: inline-block;
+    line-height: 1;
+  }
+
+  @media (max-width: 639px) {
+    .boxer-filter-pill-count {
+      min-width: 0.95rem;
+      padding: 0.12rem 0.24rem;
+      font-size: 0.48rem;
+    }
+  }
+
+  .boxer-filter-pill-count.is-bumping {
+    transform: none;
+  }
+
+  .boxer-filter-pill-count.is-bumping .boxer-filter-pill-count-value {
+    animation: boxer-count-change 180ms ease-out both;
+  }
+
+  @keyframes boxer-count-change {
+    0% {
+      opacity: 0;
+      transform: translateY(-0.35em);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .boxer-filter-pill[aria-pressed='true'] .boxer-filter-pill-count {
+    background: color-mix(in srgb, var(--color-theme-midnight) 95%, black);
+    color: var(--color-theme-cream);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-midnight) 100%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boxer-filter-pill,
+    .boxer-filter-pill-count,
+    .boxer-segmented::before,
+    .boxer-country-select,
+    .boxer-sort-cycle,
+    .boxer-filters-panel {
+      transition: none;
+    }
+
+    .boxer-filter-pill-count.is-bumping .boxer-filter-pill-count-value {
+      animation: none;
+    }
+  }
+</style>
