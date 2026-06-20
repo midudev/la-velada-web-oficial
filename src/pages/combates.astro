@@ -49,10 +49,8 @@ const breadcrumbJsonLd = {
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
     { '@type': 'ListItem', position: 2, name: 'Combates', item: canonical },
-  ],  
+  ],
 }
-
-const EAGER_IMAGE_COUNT = 4
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
@@ -72,7 +70,7 @@ const EAGER_IMAGE_COUNT = 4
       <header class="combates-header">
         <SectionDivider class="mb-8 w-full sm:mb-12" />
         <h1
-          class="mb-3 animate-fade-in-up font-cinzel text-3xl font-bold tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.18em] md:text-6xl"
+          class="mb-3 animate-fade-in-up font-cinzel text-3xl font-black tracking-[0.1em] text-theme-cream sm:text-4xl sm:tracking-[0.14em] md:text-6xl"
         >
           COMBATES
         </h1>
@@ -100,9 +98,9 @@ const EAGER_IMAGE_COUNT = 4
                     a={c.a}
                     b={c.b}
                     imageLoadingStrategy={{
-                        loading: i < EAGER_IMAGE_COUNT ? 'eager' : 'lazy',
-                        decoding: i < EAGER_IMAGE_COUNT ? 'auto' : 'async',
-                        fetchpriority: i < EAGER_IMAGE_COUNT ? 'high' : 'auto',
+                      loading: 'eager',
+                      decoding: 'auto',
+                      fetchpriority: 'high',
                     }}
                   />
                 </div>

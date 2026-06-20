@@ -1,5 +1,6 @@
 ---
 import SectionHeader from '@/components/SectionHeader.astro'
+import { EVENT_HOUR } from '@/consts/event'
 
 const VENUE_NAME = 'Estadio de La Cartuja'
 const VENUE_CITY = 'Sevilla, España'
@@ -63,13 +64,13 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
                   clip-rule="evenodd"></path>
               </svg>
             </span>
-            <p class="text-[0.6rem] leading-normal font-bold tracking-[0.4em] text-theme-gold/75">
-              Recinto
+            <p class="font-cinzel text-[0.6rem] font-black tracking-[0.26em] text-theme-gold/70">
+              RECINTO
             </p>
           </div>
 
           <h3
-            class="mb-2 text-xl leading-snug font-bold tracking-wider text-theme-cream uppercase lg:text-[1.35rem]"
+            class="mb-2 font-cinzel text-xl leading-snug font-black tracking-[0.04em] text-theme-cream uppercase lg:text-[1.35rem]"
           >
             Estadio de La Cartuja
           </h3>
@@ -99,11 +100,13 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
             </span>
             <div>
               <p
-                class="mb-[0.2rem] text-[0.55rem] font-bold tracking-[0.35em] text-theme-gold/75 uppercase"
+                class="mb-[0.2rem] font-cinzel text-[0.55rem] font-black tracking-[0.22em] text-theme-gold/55 uppercase"
               >
                 Fecha
               </p>
-              <p class="text-[0.75rem] font-semibold tracking-[0.08em] text-white/75 uppercase">
+              <p
+                class="font-cinzel text-[0.75rem] font-black tracking-[0.06em] text-white/75 uppercase"
+              >
                 25 de julio de 2026
               </p>
             </div>
@@ -127,12 +130,14 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
             </span>
             <div>
               <p
-                class="mb-[0.2rem] text-[0.55rem] font-bold tracking-[0.35em] text-theme-gold/75 uppercase"
+                class="mb-[0.2rem] font-cinzel text-[0.55rem] font-black tracking-[0.22em] text-theme-gold/55 uppercase"
               >
                 Hora
               </p>
-              <p class="text-[0.75rem] font-semibold tracking-[0.08em] text-white/75 uppercase">
-                20:00h (hora peninsular)
+              <p
+                class="font-cinzel text-[0.75rem] font-black tracking-[0.06em] text-white/75 uppercase"
+              >
+                {EVENT_HOUR}h (hora peninsular)
               </p>
             </div>
           </div>
@@ -158,12 +163,12 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
             </span>
             <div>
               <p
-                class="mb-[0.2rem] font-cinzel text-[0.55rem] font-bold tracking-[0.35em] text-theme-gold/75 uppercase"
+                class="mb-[0.2rem] font-cinzel text-[0.55rem] font-black tracking-[0.22em] text-theme-gold/55 uppercase"
               >
                 Aforo
               </p>
               <p
-                class="font-cinzel text-[0.75rem] font-semibold tracking-[0.08em] text-white/75 uppercase"
+                class="font-cinzel text-[0.75rem] font-black tracking-[0.06em] text-white/75 uppercase"
               >
                 80.000 espectadores
               </p>
@@ -176,7 +181,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
           <a
             href={VENUE_WEB_MAP_URL}
             data-geo-href={VENUE_GEO_URL}
-            class="flex items-center justify-center gap-2 rounded border border-theme-gold/35 py-[0.6rem] text-[0.65rem] font-bold tracking-[0.25em] text-theme-gold transition-[translate,border-color,background-color,color] duration-300 outline-none hover:-translate-y-px hover:border-theme-gold hover:bg-theme-gold/10 hover:text-theme-cream focus-visible:-translate-y-px focus-visible:border-theme-gold focus-visible:bg-theme-gold/10 focus-visible:text-theme-cream focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+            class="flex items-center justify-center gap-2 rounded border border-theme-gold/35 py-[0.6rem] font-cinzel text-[0.65rem] font-black tracking-[0.16em] text-theme-gold uppercase no-underline transition-[translate,border-color,background-color,color] duration-300 outline-none hover:-translate-y-px hover:border-theme-gold hover:bg-theme-gold/10 hover:text-theme-cream focus-visible:-translate-y-px focus-visible:border-theme-gold focus-visible:bg-theme-gold/10 focus-visible:text-theme-cream focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight motion-reduce:transition-none motion-reduce:hover:translate-y-0"
             aria-label="Abrir la ubicación del Estadio de La Cartuja en la aplicación de mapas"
           >
             <svg
@@ -264,7 +269,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
     background: var(--color-theme-midnight) !important;
     color: var(--color-theme-gold) !important;
     border-color: color-mix(in srgb, var(--color-theme-gold) 25%, transparent) !important;
-    font-weight: 700 !important;
+    font-weight: 900 !important;
   }
   :global(.leaflet-control-zoom a:hover) {
     background: var(--color-theme-navy) !important;
@@ -282,6 +287,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
 </style>
 
 <script>
+  import { EVENT_HOUR } from '@/consts/event'
   import { $ } from '@/lib/dom-selector'
 
   const PIN_SVG = `
@@ -379,7 +385,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
       }).setContent(
         `<strong style="color:#c7a86b;display:block;margin-bottom:0.35rem;">Estadio de La Cartuja</strong>
       <span style="color:rgba(244,228,201,0.7);">Sevilla, España</span><br/>
-      <span style="color:rgba(255,255,255,0.5);">25 · 07 · 2026 — 20:00h</span>`,
+      <span style="color:rgba(255,255,255,0.5);">25 · 07 · 2026 — ${EVENT_HOUR}h</span>`,
       )
 
       L.marker([latitude, longitude], { icon: customIcon })

@@ -1,0 +1,307 @@
+---
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import ChevronRightIcon from '@/assets/svg/chevron-right.svg'
+import CloseIcon from '@/assets/svg/close.svg'
+import PlayIcon from '@/assets/svg/play.svg'
+import SectionHeader from '@/components/SectionHeader.astro'
+
+interface WorkoutVideo {
+  videoId: string
+  title: string
+  eyebrow?: string
+}
+
+interface Props {
+  boxerId: string
+  boxerName: string
+  videos: WorkoutVideo[]
+}
+
+const { boxerId, boxerName, videos } = Astro.props
+const [featuredVideo, ...secondaryVideos] = videos
+const titleId = `boxer-workout-title-${boxerId}`
+const dialogTitleId = `boxer-workout-dialog-title-${boxerId}`
+const secondaryCountLabel = `${secondaryVideos.length} VÍDEO${secondaryVideos.length === 1 ? '' : 'S'}`
+
+function getYouTubePosterSrc(videoId: string) {
+  return `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/maxresdefault.jpg`
+}
+
+function getYouTubePosterFallbackSrc(videoId: string) {
+  return `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`
+}
+
+function getPosterErrorHandler(videoId: string) {
+  return `if (this.dataset.posterFallbackUsed === 'true') { this.onerror=null; this.src='/logo.webp'; } else { this.dataset.posterFallbackUsed='true'; this.src='${getYouTubePosterFallbackSrc(videoId)}'; }`
+}
+---
+
+{
+  featuredVideo && (
+    <section
+      id="workout"
+      data-boxer-workout-root
+      class="relative w-full px-4 py-20 sm:px-6 lg:py-28"
+      aria-labelledby={titleId}
+    >
+      <div class="mx-auto flex max-w-7xl flex-col items-center">
+        <SectionHeader
+          titleId={titleId}
+          title="PREPARACIÓN"
+          subtitle={`Entrenamientos y cara a cara de ${boxerName}`}
+          subtitleClass="mb-10 max-w-xl tracking-[0.16em] sm:mb-14 sm:text-sm"
+        />
+
+        <div class="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-theme-navy/30 shadow-[0_25px_60px_-30px_rgba(0,0,0,0.8)]">
+          <div
+            class:list={[
+              '@container grid gap-px bg-white/10',
+              secondaryVideos.length > 0
+                ? 'lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]'
+                : 'lg:grid-cols-1',
+            ]}
+          >
+            <button
+              type="button"
+              data-workout-video-tile
+              data-video-id={featuredVideo.videoId}
+              data-video-title={featuredVideo.title}
+              aria-label={`Reproducir entrenamiento destacado: ${featuredVideo.title}`}
+              class="group relative isolate flex aspect-video w-full cursor-pointer self-start overflow-hidden border border-white/10 bg-theme-navy/40 text-left transition duration-500 outline-none hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 lg:aspect-auto lg:h-[31.5cqw]"
+            >
+              <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
+                <img
+                  src={getYouTubePosterSrc(featuredVideo.videoId)}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+                  onerror={getPosterErrorHandler(featuredVideo.videoId)}
+                />
+              </picture>
+
+              <div
+                aria-hidden="true"
+                class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
+              />
+              <div
+                aria-hidden="true"
+                class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
+              />
+
+              <span
+                aria-hidden="true"
+                class="absolute top-4 right-4 z-10 rounded-full border border-theme-gold/35 bg-black/35 px-3 py-1 font-cinzel text-[0.55rem] font-black tracking-[0.22em] text-theme-gold backdrop-blur sm:top-5 sm:right-5 sm:text-[0.58rem]"
+              >
+                {featuredVideo.eyebrow ?? 'DESTACADO'}
+              </span>
+
+              <span
+                aria-hidden="true"
+                class="absolute inset-0 -z-10 flex items-center justify-center"
+              >
+                <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md backdrop-contrast-125 backdrop-saturate-150 transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
+                  <PlayIcon
+                    class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
+                    aria-hidden="true"
+                  />
+                </span>
+              </span>
+
+              <div class="relative mt-auto flex w-full flex-col gap-2 p-5 sm:p-8">
+                <h3 class="max-w-3xl font-cinzel text-2xl leading-tight font-black tracking-[0.04em] text-balance text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl xl:text-5xl">
+                  {featuredVideo.title}
+                </h3>
+                <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
+                  VER VÍDEO
+                  <ArrowRightIcon
+                    class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  />
+                </span>
+              </div>
+            </button>
+
+            {secondaryVideos.length > 0 && (
+              <ul
+                class="boxer-workout-scroll grid max-h-[34rem] auto-rows-max items-start gap-px overflow-y-auto sm:grid-cols-2 lg:max-h-[31.5cqw] lg:grid-cols-1"
+                aria-label={`${secondaryCountLabel} adicionales de preparación de ${boxerName}`}
+              >
+                {secondaryVideos.map((video, index) => (
+                  <li class="h-fit self-start">
+                    <button
+                      type="button"
+                      data-workout-video-tile
+                      data-workout-video-tab
+                      data-video-id={video.videoId}
+                      data-video-title={video.title}
+                      aria-label={`Reproducir vídeo: ${video.title}`}
+                      class="group grid h-fit w-full cursor-pointer grid-cols-[5.25rem_1fr] gap-3 bg-theme-midnight/60 p-3 text-left transition duration-300 outline-none hover:bg-theme-navy/55 focus-visible:bg-theme-navy/55 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-inset sm:grid-cols-[6rem_1fr] sm:p-4 lg:grid-cols-[7.5rem_1fr]"
+                    >
+                      <span class="relative block aspect-video overflow-hidden rounded-lg border border-white/10 bg-black/30">
+                        <picture class="absolute inset-0 transition duration-500 group-hover:scale-105 group-focus-visible:scale-105">
+                          <img
+                            src={getYouTubePosterSrc(video.videoId)}
+                            alt=""
+                            aria-hidden="true"
+                            loading="lazy"
+                            decoding="async"
+                            class="h-full w-full object-cover"
+                            onerror={getPosterErrorHandler(video.videoId)}
+                          />
+                        </picture>
+                        <span
+                          aria-hidden="true"
+                          class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+                        >
+                          <span class="flex size-7 items-center justify-center rounded-full bg-theme-gold/90 text-theme-midnight">
+                            <PlayIcon class="size-3.5 translate-x-[1px]" aria-hidden="true" />
+                          </span>
+                        </span>
+                      </span>
+
+                      <span class="flex min-w-0 flex-col justify-between gap-3">
+                        <span class="flex items-start justify-between gap-3">
+                          <span class="font-cinzel text-[0.62rem] font-black tracking-[0.16em] text-theme-gold/75">
+                            {video.eyebrow ?? `VÍDEO ${String(index + 2).padStart(2, '0')}`}
+                          </span>
+                          <ChevronRightIcon
+                            aria-hidden="true"
+                            class="size-4 shrink-0 text-white/30 transition duration-300 group-hover:translate-x-1 group-hover:text-theme-gold group-focus-visible:translate-x-1 group-focus-visible:text-theme-gold"
+                          />
+                        </span>
+
+                        <span class="flex flex-col gap-1">
+                          <span class="line-clamp-2 font-cinzel text-sm leading-tight font-black tracking-[0.04em] text-balance text-white transition duration-300 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-base">
+                            {video.title}
+                          </span>
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <dialog
+        data-workout-video-dialog
+        aria-labelledby={dialogTitleId}
+        class="m-0 w-screen max-w-none bg-transparent p-0 backdrop:bg-black/85 backdrop:backdrop-blur-sm backdrop:backdrop-contrast-125 backdrop:backdrop-saturate-150 open:flex open:h-screen open:items-center open:justify-center"
+      >
+        <div class="relative mx-4 w-full max-w-5xl">
+          <div class="mb-4 flex items-center justify-between gap-4">
+            <h3
+              id={dialogTitleId}
+              data-workout-video-dialog-title
+              class="font-cinzel text-base font-black tracking-[0.16em] text-theme-cream sm:text-xl"
+            />
+            <button
+              type="button"
+              data-workout-video-dialog-close
+              aria-label="Cerrar vídeo"
+              class="inline-flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white transition outline-none hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
+            >
+              <CloseIcon class="size-5" aria-hidden="true" />
+            </button>
+          </div>
+          <div class="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]">
+            <div data-workout-video-dialog-frame class="absolute inset-0 h-full w-full" />
+          </div>
+        </div>
+      </dialog>
+    </section>
+  )
+}
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  function initWorkoutVideoDialogs() {
+    const sections = $$<HTMLElement>('[data-boxer-workout-root]')
+
+    sections.forEach((section) => {
+      if (section.dataset.workoutVideoReady === 'true') return
+      section.dataset.workoutVideoReady = 'true'
+
+      const dialog = $<HTMLDialogElement>('[data-workout-video-dialog]', section)
+      const tiles = $$<HTMLElement>('[data-workout-video-tile]', section)
+      const closeBtn = $<HTMLButtonElement>('[data-workout-video-dialog-close]', section)
+      const titleEl = $<HTMLElement>('[data-workout-video-dialog-title]', section)
+      const frame = $<HTMLElement>('[data-workout-video-dialog-frame]', section)
+      if (!dialog || !frame) return
+
+      function openVideo(videoId: string, title: string) {
+        if (dialog.open) return
+        if (titleEl) titleEl.textContent = title
+        const iframe = document.createElement('iframe')
+        iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&playsinline=1`
+        iframe.allow =
+          'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+        iframe.setAttribute('allowfullscreen', '')
+        iframe.title = title
+        iframe.className = 'h-full w-full border-0'
+        frame.replaceChildren(iframe)
+        dialog.showModal()
+      }
+
+      function closeVideo() {
+        if (!dialog.open) return
+        dialog.close()
+      }
+
+      tiles.forEach((tile) => {
+        tile.addEventListener('click', () => {
+          const videoId = tile.getAttribute('data-video-id')
+          const title = tile.getAttribute('data-video-title') ?? ''
+          if (!videoId) return
+          openVideo(videoId, title)
+        })
+      })
+
+      closeBtn?.addEventListener('click', closeVideo)
+
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) closeVideo()
+      })
+
+      dialog.addEventListener('close', () => {
+        frame.replaceChildren()
+      })
+    })
+  }
+
+  document.addEventListener('astro:page-load', initWorkoutVideoDialogs)
+</script>
+
+<style>
+  .boxer-workout-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-theme-gold) transparent;
+    scrollbar-gutter: stable;
+  }
+
+  .boxer-workout-scroll::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .boxer-workout-scroll::-webkit-scrollbar-track {
+    background: transparent;
+    border-left: 1px solid color-mix(in srgb, white 6%, transparent);
+  }
+
+  .boxer-workout-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--color-theme-gold);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  .boxer-workout-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-theme-cream);
+  }
+</style>

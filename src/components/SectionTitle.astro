@@ -1,0 +1,29 @@
+---
+import SectionDivider from '@/components/SectionDivider.astro'
+
+interface Props {
+  title: string
+  subtitle?: string
+  eyebrow?: string
+}
+
+const { title, subtitle, eyebrow } = Astro.props
+---
+
+<SectionDivider class="mb-8" />
+
+{eyebrow && (
+  <p class="mb-3 font-cinzel text-[0.6rem] font-bold tracking-[0.45em] text-theme-gold/80 sm:text-xs">
+    {eyebrow}
+  </p>
+)}
+
+<h2 class="text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl">
+  {title}
+</h2>
+
+{subtitle && (
+  <p class="mt-4 text-center font-cinzel text-xs font-medium text-balance text-white/55 sm:text-sm">
+    {subtitle}
+  </p>
+)}
