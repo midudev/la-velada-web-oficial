@@ -715,6 +715,7 @@ const cardImageEagerAmount = 4
 
 <script>
   import { $, $$ } from '@/lib/dom-selector'
+  import { animate } from 'motion'
 
   type SortMode = 'cartel' | 'followers-desc' | 'followers-asc'
 
@@ -832,6 +833,10 @@ const cardImageEagerAmount = 4
 
     const ANIM_CLASS = 'animate-fade-in-up'
     const ANIM_DELAY = 35
+    const FILTER_LAYOUT_DURATION = 0.26
+    const FILTER_LAYOUT_EASE = [0.77, 0, 0.175, 1] as const
+    const ENTER_OFFSET = 10
+    const activeLayoutAnimations = new Map<HTMLElement, ReturnType<typeof animate>>()
     let cardsReady = false
 
     function prepareCardsForLayoutChange() {
@@ -841,6 +846,60 @@ const cardImageEagerAmount = 4
         card.classList.remove(ANIM_CLASS)
         card.dataset.ready = 'true'
       }
+    }
+
+    function visibleGridCards() {
+      return (Array.from(gridEl.children) as HTMLElement[]).filter(
+        (card) => card.dataset.hidden !== 'true',
+      )
+    }
+
+    function stopLayoutAnimations() {
+      for (const [card, controls] of activeLayoutAnimations) {
+        controls.stop()
+        card.style.transform = ''
+      }
+      activeLayoutAnimations.clear()
+    }
+
+    function animateGridChange(change: () => void) {
+      if (!cardsReady || reduceMotionQuery.matches) {
+        stopLayoutAnimations()
+        prepareCardsForLayoutChange()
+        change()
+        return
+      }
+
+      stopLayoutAnimations()
+
+      const beforeCards = visibleGridCards()
+      const beforeRects = new Map(beforeCards.map((card) => [card, card.getBoundingClientRect()]))
+
+      prepareCardsForLayoutChange()
+      change()
+
+      visibleGridCards().forEach((card) => {
+        const previous = beforeRects.get(card)
+        const current = card.getBoundingClientRect()
+        const x = previous ? previous.left - current.left : 0
+        let y = previous ? previous.top - current.top : ENTER_OFFSET
+
+        if (Math.abs(x) < 0.5 && Math.abs(y) < 0.5) return
+
+        const controls = animate(
+          card,
+          { x: [x, 0], y: [y, 0] },
+          { duration: FILTER_LAYOUT_DURATION, ease: FILTER_LAYOUT_EASE },
+        )
+
+        activeLayoutAnimations.set(card, controls)
+        window.setTimeout(
+          () => {
+            if (activeLayoutAnimations.get(card) === controls) activeLayoutAnimations.delete(card)
+          },
+          FILTER_LAYOUT_DURATION * 1000 + 50,
+        )
+      })
     }
 
     function revealInitialCards() {
@@ -904,9 +963,10 @@ const cardImageEagerAmount = 4
     }
 
     function applySort() {
-      prepareCardsForLayoutChange()
-      updateGridState()
-      updateSortOrder()
+      animateGridChange(() => {
+        updateGridState()
+        updateSortOrder()
+      })
     }
 
     // Cuenta cards que coinciden con un par (country, gender). Pasar '' en
@@ -1053,8 +1113,7 @@ const cardImageEagerAmount = 4
     }
 
     function applyFilters() {
-      prepareCardsForLayoutChange()
-      updateFilters()
+      animateGridChange(updateFilters)
     }
 
     if (countrySelect) {
