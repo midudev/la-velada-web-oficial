@@ -9,7 +9,6 @@ import {
   COUNTRY_NAMES,
   getBoxerHeroImages,
   getBoxerSelectImages,
-  type Boxer,
 } from '@/consts/boxers'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
@@ -38,8 +37,6 @@ const fmt = {
   weight: (kg?: number | null) => (kg != null ? `${kg} kg` : '—'),
   height: (cm?: number | null) => (cm != null ? `${(cm / 100).toFixed(2)} m` : '—'),
   age: (age?: number | null) => (age != null ? `${age} años` : '—'),
-  guard: (guard?: Boxer['guard']) =>
-    guard === 'Derecha' ? 'Diestra' : guard === 'Izquierda' ? 'Izquierda' : '—',
 }
 
 const stats = [
@@ -64,11 +61,6 @@ const stats = [
     label: 'Edad',
     a: fmt.age(boxer1.age),
     b: fmt.age(boxer2.age),
-  },
-  {
-    label: 'Guardia',
-    a: fmt.guard(boxer1.guard),
-    b: fmt.guard(boxer2.guard),
   },
 ]
 
