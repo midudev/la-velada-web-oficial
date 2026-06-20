@@ -50,12 +50,12 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     />
   </picture>
 
-  <span aria-hidden="true" class="tow-spot"></span>
+  <span aria-hidden="true" style="opacity: 0" class="tow-spot"></span>
   <span aria-hidden="true" class="tow-veil"></span>
   <span aria-hidden="true" class="tow-frame"></span>
 
   <span class="tow-caption">
-    <span aria-hidden="true" class="tow-yourvote font-cinzel">
+    <span aria-hidden="true" style="display: none" class="tow-yourvote font-cinzel">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="tow-yourvote-check"><path d="M20 6 9 17l-5-5" /></svg>
       Tu voto
     </span>
@@ -72,7 +72,7 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     </span>
   </span>
 
-  <span aria-hidden="true" class="tow-cue font-cinzel">Votar</span>
+  <span aria-hidden="true" style="opacity: 0" class="tow-cue font-cinzel">Votar</span>
 
   <span aria-hidden="true" class="tow-fill"></span>
 </button>
@@ -140,11 +140,12 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
       color-mix(in srgb, var(--color-theme-gold) 22%, transparent) 46%,
       transparent 72%
     );
-    opacity: 0;
     transition: opacity 340ms ease;
   }
+  /* Oculto por style inline (opacity:0, evita el flash en dev). El líder lo
+     revela con !important para ganar al inline; mantiene el fundido. */
   .tow-side[data-leader='true'] .tow-spot {
-    opacity: 0.55;
+    opacity: 0.55 !important;
   }
   .tow-side[data-leader='true'] .tow-pic-img {
     filter: saturate(1.06) brightness(1.05);
@@ -184,9 +185,10 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     padding: 0 0.7rem 2.4rem;
   }
 
-  /* Indicador explícito "Tu voto" en el boxeador elegido. */
+  /* Indicador explícito "Tu voto" en el boxeador elegido.
+     Oculto por style inline (display:none, evita el flash en dev mientras
+     cargan los estilos); se revela con !important solo cuando hay voto. */
   .tow-yourvote {
-    display: none;
     align-self: center;
     align-items: center;
     gap: 0.28rem;
@@ -206,7 +208,7 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     height: 0.7rem;
   }
   .tow-side[data-selected='true'] .tow-yourvote {
-    display: inline-flex;
+    display: inline-flex !important;
   }
 
   .tow-percent {
@@ -298,7 +300,6 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     line-height: 0.82;
     letter-spacing: 0.01em;
     text-transform: uppercase;
-    opacity: 0;
     pointer-events: none;
     transition: opacity 260ms ease;
   }
@@ -311,14 +312,16 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     justify-self: end;
     padding-right: 0.15rem;
   }
+  /* Oculta por style inline (opacity:0, evita el flash). Se revela al
+     pasar/enfocar con !important (gana al inline) y mantiene el fundido. */
   .tow-side:hover .tow-cue,
   .tow-side:focus-visible .tow-cue {
-    opacity: 0.4;
+    opacity: 0.4 !important;
   }
   /* Una vez votado (elegido o atenuado), ya no se muestra la pista. */
   .tow-side[data-selected='true'] .tow-cue,
   .tow-side[data-muted='true'] .tow-cue {
-    opacity: 0;
+    opacity: 0 !important;
   }
 
   /* Relleno de la barra tug-of-war (A desde izq, B desde der),
