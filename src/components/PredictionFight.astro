@@ -5,9 +5,12 @@ import type { PredictionBattle } from '@/consts/predictions'
 interface Props {
   prediction: PredictionBattle
   selectedBoxerId?: string
+  index?: number
 }
 
-const { prediction, selectedBoxerId } = Astro.props
+const { prediction, selectedBoxerId, index = 0 } = Astro.props
+// Entrada escalonada (mismo patrón que /combates).
+const animationDelay = `${index * 60}ms`
 const { battle, options } = prediction
 const [optionA, optionB] = options
 
@@ -16,7 +19,10 @@ const hasLeader = prediction.totalVotes > 0 && optionA.percentage !== optionB.pe
 const leaderBoxerId = hasLeader ? prediction.leader.boxer.id : undefined
 ---
 
-<li class="tow-item scroll-mt-28">
+<li
+  class="tow-item scroll-mt-28 not-motion-reduce:animate-fade-in-up"
+  style={`animation-delay:${animationDelay}`}
+>
   <article data-battle-id={battle.id} data-prediction-fight>
     <h2 class="sr-only">
       Combate {battle.number}: {optionA.boxer.name} ({optionA.countryName}) contra {
