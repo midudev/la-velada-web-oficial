@@ -132,14 +132,14 @@ const cardImageEagerAmount = 4
     <div class="boxers-layout mx-auto w-full max-w-7xl">
       <header class="boxers-page-header">
         <h1
-          class="boxers-page-title mb-3 font-cinzel text-3xl font-black tracking-[0.12em] text-theme-cream not-motion-reduce:animate-fade-in-up sm:text-4xl sm:tracking-[0.16em] md:text-6xl"
+          class="boxers-page-title mb-3 animate-fade-in-up font-cinzel text-3xl font-black tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.16em] md:text-6xl"
         >
           <SectionDivider class="boxers-page-header-ornament mb-8 w-full sm:mb-12" />
 
           BOXEADORES
         </h1>
         <p
-          class="boxers-page-lead mb-8 font-cinzel text-xs font-medium tracking-[0.14em] text-balance text-white/55 animate-delay-200 not-motion-reduce:animate-fade-in-up sm:mb-12 sm:text-sm"
+          class="boxers-page-lead mb-8 animate-fade-in-up font-cinzel text-xs font-medium tracking-[0.14em] text-balance text-white/55 animate-delay-200 sm:mb-12 sm:text-sm"
         >
           Los {totalBoxers} contendientes de La Velada del Año VI
         </p>
@@ -722,6 +722,11 @@ const cardImageEagerAmount = 4
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .boxers-page-title,
+    .boxers-page-lead {
+      animation: none;
+    }
+
     .boxer-card,
     .boxer-card-img,
     .boxer-card-bg-gold,
