@@ -226,6 +226,9 @@ const SPAN_CLASSES: Record<Span, string> = {
     const frame = $<HTMLElement>('[data-video-dialog-frame]', dialog)
     if (!frame) return
 
+    // Elemento que abrió el modal, para devolverle el foco al cerrar (a11y).
+    let lastOpener: HTMLElement | null = null
+
     function openVideo(videoId: string, title: string) {
       if (titleEl) titleEl.textContent = title
       const iframe = document.createElement('iframe')
@@ -249,6 +252,7 @@ const SPAN_CLASSES: Record<Span, string> = {
         const videoId = tile.getAttribute('data-video-id')
         const title = tile.getAttribute('data-video-title') ?? ''
         if (!videoId) return
+        lastOpener = tile
         openVideo(videoId, title)
       })
     })
@@ -261,6 +265,9 @@ const SPAN_CLASSES: Record<Span, string> = {
 
     dialog.addEventListener('close', () => {
       frame.replaceChildren()
+      // Devolvemos el foco al tile que abrió el vídeo (SC 2.4.3).
+      lastOpener?.focus()
+      lastOpener = null
     })
   }
 
