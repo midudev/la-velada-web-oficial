@@ -1,0 +1,208 @@
+---
+import CountryFlag from '@/components/CountryFlag.astro'
+
+interface Props {
+  class?: string
+  fightWeightLabel: string | null
+  countryName: string
+  countryCode: string
+  totalFollowers: string
+  genderLabel: string
+  birthDateLabel: string | null
+}
+
+const {
+  class: className,
+  fightWeightLabel,
+  countryName,
+  countryCode,
+  totalFollowers,
+  genderLabel,
+  birthDateLabel,
+} = Astro.props
+---
+
+<div class:list={['boxer-highlight-card', className]}>
+  <div class="boxer-highlight-card-top">
+    <span class="boxer-highlight-label">Seguidores</span>
+    <span class="boxer-highlight-followers">{totalFollowers}</span>
+  </div>
+
+  <div class="boxer-highlight-grid">
+    <div class="boxer-highlight-country">
+      <CountryFlag country={countryCode} size={18} decorative class="boxer-highlight-flag" />
+      <span class="boxer-highlight-country-name">{countryName}</span>
+    </div>
+    <div class="boxer-highlight-item">
+      <span class="boxer-highlight-kicker">Peso pactado</span>
+      <span class="boxer-highlight-weight">{fightWeightLabel ?? '-'}</span>
+    </div>
+    <div class="boxer-highlight-item">
+      <span class="boxer-highlight-kicker">Categoría</span>
+      <span class="boxer-highlight-value">{genderLabel}</span>
+    </div>
+    <div class="boxer-highlight-item">
+      <span class="boxer-highlight-kicker">Nacimiento</span>
+      <span class="boxer-highlight-value">{birthDateLabel ?? '—'}</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .boxer-highlight-card {
+    position: relative;
+    overflow: hidden;
+    width: min(100%, 34rem);
+    padding: 1rem 1rem 0.95rem;
+    border-radius: 1.4rem;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 44%, transparent);
+    background: linear-gradient(180deg, rgba(15, 18, 36, 0.84) 0%, rgba(7, 10, 21, 0.95) 100%);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, white 7%, transparent),
+      0 18px 44px rgba(0, 0, 0, 0.35),
+      0 0 36px color-mix(in srgb, var(--color-theme-gold) 16%, transparent);
+    backdrop-filter: blur(14px);
+  }
+
+  .boxer-highlight-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.12), transparent 30%),
+      radial-gradient(
+        circle at 82% 14%,
+        color-mix(in srgb, var(--color-theme-gold) 28%, transparent),
+        transparent 34%
+      ),
+      linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.06) 50%, transparent 72%);
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+
+  .boxer-highlight-card::after {
+    content: '';
+    position: absolute;
+    inset: auto -18% -52% auto;
+    width: 14rem;
+    height: 14rem;
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-theme-gold) 24%, transparent),
+      transparent 68%
+    );
+    opacity: 0.7;
+    filter: blur(10px);
+    pointer-events: none;
+  }
+
+  .boxer-highlight-card-top {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.35rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+    text-align: center;
+  }
+
+  .boxer-highlight-label {
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 62%, transparent);
+  }
+
+  .boxer-highlight-followers {
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: clamp(2rem, 3.4vw, 3rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+    text-shadow:
+      0 0 18px color-mix(in srgb, var(--color-theme-gold) 42%, transparent),
+      0 2px 16px rgba(0, 0, 0, 0.6);
+  }
+
+  .boxer-highlight-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 0.8rem 1rem;
+    padding-top: 0.9rem;
+  }
+
+  .boxer-highlight-country {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .boxer-highlight-flag {
+    width: 1.65rem;
+    height: 1.65rem;
+    flex-shrink: 0;
+    border-radius: 0.35rem;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, white 14%, transparent),
+      0 8px 16px rgba(0, 0, 0, 0.35);
+  }
+
+  .boxer-highlight-country-name {
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: 0.9rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
+  }
+
+  .boxer-highlight-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.22rem;
+  }
+
+  .boxer-highlight-kicker {
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: 0.5rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 48%, transparent);
+  }
+
+  .boxer-highlight-weight {
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
+  }
+
+  @media (max-width: 639px) {
+    .boxer-highlight-card {
+      width: 100%;
+    }
+
+    .boxer-highlight-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .boxer-highlight-item--wide {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

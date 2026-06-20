@@ -3,264 +3,290 @@ import CountryFlag from '@/components/CountryFlag.astro'
 import type { BoxerImageVariants } from '@/consts/boxers'
 
 interface CardBoxer {
-    id: string
-    name: string
-    country: string
-    countryName: string
-    heroImages: BoxerImageVariants
+  id: string
+  name: string
+  country: string
+  countryName: string
+  heroImages: BoxerImageVariants
 }
 
 interface Props {
-    number: number
-    url: string // /combate/[id] → destino real cuando la landing esté lista
-    featured?: boolean
-    badge?: string
-    a: CardBoxer
-    b: CardBoxer
-    imageLoadingStrategy?: {
-        loading?: astroHTML.JSX.ImgHTMLAttributes["loading"]
-        decoding?: astroHTML.JSX.ImgHTMLAttributes["decoding"]
-        fetchpriority?: astroHTML.JSX.ImgHTMLAttributes["fetchpriority"]
-    }
+  number: number
+  url: string
+  featured?: boolean
+  badge?: string
+  a: CardBoxer
+  b: CardBoxer
+  imageLoadingStrategy?: {
+    loading?: astroHTML.JSX.ImgHTMLAttributes['loading']
+    decoding?: astroHTML.JSX.ImgHTMLAttributes['decoding']
+    fetchpriority?: astroHTML.JSX.ImgHTMLAttributes['fetchpriority']
+  }
 }
 
 const { number, url, featured = false, badge, a, b, imageLoadingStrategy } = Astro.props
 
 const { loading = 'lazy', decoding = 'async', fetchpriority = 'auto' } = imageLoadingStrategy || {}
 
-// TEMPORAL: la landing individual de cada combate (/combate/[id]) todavía
-// no está hecha, así que el enlace del combate apunta al 404 a propósito.
-// Cuando esas vistas estén listas, cambiá `combatHref` por `url`.
-const combatHref = '/404'
-void url // (se conserva en props para reactivar el enlace real más adelante)
-
-// Mientras el combate apunta al 404 temporal no debe ser un enlace real:
-// un `<a aria-disabled>` sigue siendo enfocable por teclado y navegable con
-// Enter, llevando al usuario a un 404 a propósito. Cuando está «próximamente»
-// renderizamos un elemento no interactivo (no enfocable, sin href) y exponemos
-// el estado mediante role="img" + aria-label para lectores de pantalla.
-const isComingSoon = combatHref === '/404'
-const CombatTag = isComingSoon ? 'span' : 'a'
-const combatAriaLabel = `Combate: ${a.name} contra ${b.name}${isComingSoon ? ' (próximamente)' : ''}`
-
 const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
-    { ...a, side: 'a' },
-    { ...b, side: 'b' },
+  { ...a, side: 'a' },
+  { ...b, side: 'b' },
 ]
+
+const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b.countryName})`
 ---
 
 <article class:list={['combat', { 'is-featured': featured }]}>
-    <h2 class="sr-only">
-        Combate {number}: {a.name} ({a.countryName}) VS {b.name} ({b.countryName})
-    </h2>
-    
-    {badge && <span class="combat-badge font-cinzel">{badge}</span>}
+  <h2 class="sr-only">{title}</h2>
 
+  <a
+    class="absolute inset-0 z-10 text-[0px]"
+    href={url}
+    aria-label={`Ir al combate ${a.name} contra ${b.name}`}
+  >
+    <span aria-hidden="true">{title}</span>
+  </a>
+
+  {badge && <span class="combat-badge">{badge}</span>}
+
+  <div class="combat-stage">
     <span aria-hidden="true" class="combat-corner tl"></span>
     <span aria-hidden="true" class="combat-corner tr"></span>
     <span aria-hidden="true" class="combat-corner bl"></span>
     <span aria-hidden="true" class="combat-corner br"></span>
 
-    <div class="combat-stage">
     {
-        boxers.map((boxer) => (
-        <a
-            class:list={['boxer', boxer.side]}
-            href={`/boxeadores/${boxer.id}`}
-            aria-label={`Ver perfil de ${boxer.name}`}
-        >
-            <span aria-hidden="true" class="boxer-spot" />
-            <picture class="boxer-pic" transition:name={`boxer-hero-${boxer.id}`}>
+      boxers.map((boxer) => (
+        <div class:list={['boxer', boxer.side]}>
+          <span aria-hidden="true" class="boxer-spot" />
+          <picture class="boxer-pic" transition:name={`boxer-hero-${boxer.id}`}>
             <source type="image/avif" srcset={boxer.heroImages.avif} />
             <source type="image/webp" srcset={boxer.heroImages.webp} />
             <img
-                src={boxer.heroImages.webp}
-                alt={`Recorte fotográfico de ${boxer.name}`}
-                loading={loading}
-                decoding={decoding}
-                fetchpriority={fetchpriority}
-                class="boxer-img"
+              src={boxer.heroImages.webp}
+              alt={`Recorte fotográfico de ${boxer.name}`}
+              loading={loading}
+              decoding={decoding}
+              fetchpriority={fetchpriority}
+              class="boxer-img"
             />
-            </picture>
-            <span aria-hidden="true" class="boxer-veil" />
-            <div class="boxer-caption">
-            <h3 class="boxer-name font-cinzel">{boxer.name}</h3>
-            <p class="boxer-country font-cinzel">
-                <CountryFlag country={boxer.country} size={14} decorative class="boxer-flag" />
-                <span>{boxer.countryName}</span>
+          </picture>
+          <span aria-hidden="true" class="boxer-veil" />
+          <div class="boxer-caption">
+            <h3 class="boxer-name">{boxer.name}</h3>
+            <p class="boxer-country">
+              <CountryFlag country={boxer.country} size={14} decorative class="boxer-flag" />
+              <span>{boxer.countryName}</span>
             </p>
-            </div>
-        </a>
-        ))
+          </div>
+        </div>
+      ))
     }
 
-    {/* Enlace del combate → 404 temporal (ver nota arriba: cambiar combatHref por url). */}
-    <CombatTag
-        class={isComingSoon ? 'vslink pointer-events-none' : 'vslink'}
-        href={isComingSoon ? undefined : combatHref}
-        role={isComingSoon ? 'img' : undefined}
-        aria-label={combatAriaLabel}
-    >
-        <span class="vsmedal font-cinzel"><b>VS</b></span>
-    </CombatTag>
-    </div>
+    <span class="vs-medal">
+      <span>VS</span>
+    </span>
+  </div>
 
-    <CombatTag
-        class={isComingSoon ? 'combat-foot pointer-events-none' : 'combat-foot'}
-        href={isComingSoon ? undefined : combatHref}
-        role={isComingSoon ? 'img' : undefined}
-        aria-label={combatAriaLabel}
-    >
-    <span class="combat-no font-cinzel">Combate {String(number).padStart(2, '0')}</span>
-    <span class="combat-cta font-cinzel">Ver cara a cara <span aria-hidden="true">&rarr;</span></span>
-    </CombatTag>
+  <span class="combat-footer">
+    <span class="combat-number">
+      Combate {String(number).padStart(2, '0')}
+    </span>
+    <span class="combat-cta">Ir al cara a cara</span>
+  </span>
 </article>
 
 <style>
-.combat {
+  .combat {
     position: relative;
     display: block;
     overflow: hidden;
     border-radius: 6px;
     background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
     box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 24%, transparent),
-        0 16px 40px rgba(0, 0, 0, 0.45);
-    transition: transform 400ms ease, box-shadow 400ms ease;
-}
-.combat:hover {
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 24%, transparent),
+      0 16px 40px rgba(0, 0, 0, 0.45);
+    transition:
+      transform 400ms ease,
+      box-shadow 400ms ease;
+  }
+
+  .combat:hover,
+  .combat:focus-within {
     transform: translateY(-4px);
     box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
-        0 28px 60px rgba(0, 0, 0, 0.6);
-}
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 75%, transparent),
+      0 28px 60px rgba(0, 0, 0, 0.6),
+      0 0 36px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+  }
 
-.combat:has(.vslink:hover),
-.combat:has(.combat-foot:hover) {
-    box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 75%, transparent),
-        0 28px 60px rgba(0, 0, 0, 0.6),
-        0 0 36px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
-}
-.combat:has(.vslink:hover) .boxer-img,
-.combat:has(.combat-foot:hover) .boxer-img {
+  .combat:focus-visible {
+    outline: none;
+  }
+
+  .combat:hover .boxer-img,
+  .combat:focus-within .boxer-img {
     filter: saturate(1.08) brightness(1.04);
-}
+  }
 
-.combat-badge {
+  .combat-badge {
     position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
     z-index: 7;
     padding: 0.4rem 1.4rem;
-    font-size: 0.55rem;
+    font-size: clamp(0.5rem, 0.476rem + 0.104vw, 0.6rem);
     font-weight: 900;
     letter-spacing: 0.2em;
-    text-transform: uppercase;
     color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
-    background: linear-gradient(180deg, color-mix(in srgb, var(--color-theme-gold) 18%, transparent), transparent);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
+      transparent
+    );
     border-bottom: 1px solid var(--color-theme-gold);
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
-}
+  }
 
-.combat-corner {
+  .combat-corner {
     position: absolute;
     width: 14px;
     height: 14px;
     z-index: 6;
     border: 1.5px solid color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
     opacity: 0.65;
-    transition: opacity 400ms ease, width 400ms ease, height 400ms ease;
+    transition:
+      opacity 400ms ease,
+      width 400ms ease,
+      height 400ms ease;
     pointer-events: none;
-}
-.combat:hover .combat-corner { opacity: 1; width: 20px; height: 20px; }
-.combat-corner.tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
-.combat-corner.tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
-.combat-corner.bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
-.combat-corner.br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+  }
 
-.combat-stage {
+  .combat:hover .combat-corner,
+  .combat:focus-within .combat-corner {
+    opacity: 1;
+    width: 20px;
+    height: 20px;
+  }
+
+  .combat-corner.tl {
+    top: 10px;
+    left: 10px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+
+  .combat-corner.tr {
+    top: 10px;
+    right: 10px;
+    border-left: 0;
+    border-bottom: 0;
+  }
+
+  .combat-corner.bl {
+    bottom: 10px;
+    left: 10px;
+    border-right: 0;
+    border-top: 0;
+  }
+
+  .combat-corner.br {
+    bottom: 10px;
+    right: 10px;
+    border-left: 0;
+    border-top: 0;
+  }
+
+  .combat-stage {
     position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr;
-}
+  }
 
-.boxer {
+  .boxer {
     position: relative;
     display: block;
-    aspect-ratio: 3 / 4;
     overflow: hidden;
-    text-decoration: none;
-    transition: opacity 350ms ease, filter 350ms ease;
-}
-.is-featured .boxer { aspect-ratio: 4 / 5; }
-.boxer:focus-visible { outline: 2px solid var(--color-theme-gold); outline-offset: -3px; }
+    aspect-ratio: 4 / 5;
+  }
 
-.combat-stage:has(.boxer:hover) .boxer:not(:hover) {
-    opacity: 0.45;
-    filter: saturate(0.5) brightness(0.7);
-}
-
-.boxer-spot {
+  .boxer-spot {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: radial-gradient(70% 60% at 50% 18%, color-mix(in srgb, var(--color-theme-gold) 26%, transparent), transparent 62%);
+    background: radial-gradient(
+      70% 60% at 50% 18%,
+      color-mix(in srgb, var(--color-theme-gold) 26%, transparent),
+      transparent 62%
+    );
     opacity: 0.5;
-    transition: opacity 500ms ease;
-}
-.boxer.b .boxer-spot {
-    background: radial-gradient(70% 60% at 50% 18%, color-mix(in srgb, var(--color-velada-navy) 80%, var(--color-theme-cream)), transparent 62%);
-    opacity: 0.4;
-}
-.boxer:hover .boxer-spot { opacity: 0.95; }
+  }
 
-.boxer-pic {
+  .boxer-pic {
     position: absolute;
     inset: 0;
     z-index: 2;
     display: block;
-}
-.boxer-img {
+  }
+
+  .boxer-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top center;
     filter: saturate(0.92) brightness(0.92);
-    transition: scale 600ms ease, filter 500ms ease;
-}
-.boxer.b .boxer-img { transform: scaleX(-1); }
-.boxer:hover .boxer-img { scale: 1.06; filter: saturate(1.1) brightness(1.05); }
+    transition: filter 500ms ease;
+  }
 
-.boxer-veil {
+  .boxer.b .boxer-img {
+    transform: scaleX(-1);
+  }
+
+  .boxer-veil {
     position: absolute;
     inset: 0;
     z-index: 3;
-    background: linear-gradient(180deg, transparent 42%, rgba(5, 8, 15, 0.55) 72%, rgba(5, 8, 15, 0.95) 100%);
-}
+    background: linear-gradient(
+      180deg,
+      transparent 42%,
+      rgba(5, 8, 15, 0.55) 72%,
+      rgba(5, 8, 15, 0.95) 100%
+    );
+  }
 
-.boxer-caption {
+  .boxer-caption {
     position: absolute;
     inset-inline: 0;
     bottom: 0;
     z-index: 4;
     padding: 0.6rem 0.7rem 1rem;
     text-align: center;
-}
-.boxer.a .boxer-caption { padding-right: 1.7rem; }
-.boxer.b .boxer-caption { padding-left: 1.7rem; }
+  }
 
-.boxer-name {
+  .boxer.a .boxer-caption {
+    padding-right: 1.7rem;
+  }
+
+  .boxer.b .boxer-caption {
+    padding-left: 1.7rem;
+  }
+
+  .boxer-name {
     font-size: clamp(0.8rem, 0.6rem + 0.9vw, 1.25rem);
     font-weight: 900;
     letter-spacing: 0.035em;
     line-height: 1.05;
-    text-transform: uppercase;
     color: var(--color-theme-cream);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 2px 12px rgba(0, 0, 0, 0.7);
-}
-.boxer-country {
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.9),
+      0 2px 12px rgba(0, 0, 0, 0.7);
+  }
+
+  .boxer-country {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
@@ -268,90 +294,88 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     font-size: 0.55rem;
     font-weight: 900;
     letter-spacing: 0.14em;
-    text-transform: uppercase;
     color: color-mix(in srgb, var(--color-theme-cream) 78%, transparent);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
-}
-:global(.boxer-flag) { width: 14px; height: 14px; flex-shrink: 0; }
+  }
 
-.vslink {
+  .vs-medal {
+    --size: 3em;
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 5;
+    inset: 0;
+    margin: auto;
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-decoration: none;
-}
-.vslink:focus-visible { outline: 2px solid var(--color-theme-gold); outline-offset: 4px; }
-.vsmedal {
-    width: 46px;
-    height: 46px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    inline-size: var(--size);
+    block-size: var(--size);
+    font-weight: 900;
+    font-size: clamp(0.75rem, 0.689rem + 0.259vw, 1rem);
+    color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
     transform: rotate(45deg);
     border: 1px solid var(--color-theme-gold);
-    background: radial-gradient(circle, color-mix(in srgb, var(--color-theme-gold) 22%, transparent), rgba(5, 8, 15, 0.85));
-    transition: box-shadow 300ms ease, background 300ms ease;
-}
-.is-featured .vsmedal { width: 56px; height: 56px; }
-.vsmedal b {
-    transform: rotate(-45deg);
-    font-weight: 900;
-    font-size: 0.9rem;
-    color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
-}
-.is-featured .vsmedal b { font-size: 1.05rem; }
-.vslink:hover .vsmedal {
-    background: radial-gradient(circle, color-mix(in srgb, var(--color-theme-gold) 40%, transparent), rgba(5, 8, 15, 0.85));
-    animation: vspulse 1.3s ease infinite;
-}
-@keyframes vspulse {
-    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-theme-gold) 45%, transparent); }
-    50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-theme-gold) 0%, transparent); }
-}
+    pointer-events: none;
+  }
 
-.combat-foot {
+  .vs-medal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-theme-gold) 32%, transparent),
+      #05080fd9
+    );
+    opacity: 0.6;
+    transition: opacity 300ms;
+  }
+
+  .combat:hover .vs-medal::before,
+  .combat:focus-visible .vs-medal::before {
+    opacity: 1;
+  }
+
+  .vs-medal span {
+    transform: rotate(-45deg);
+  }
+
+  .combat-footer {
     position: relative;
     z-index: 4;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    font-size: clamp(0.531rem, 0.519rem + 0.05vw, 0.58rem);
     padding: 0.85rem 1.1rem;
     border-top: 1px solid color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
-    background: rgba(5, 8, 15, 0.55);
+    background: #05080f8c;
     text-decoration: none;
-    transition: background 300ms ease;
-}
-.combat-foot:hover { background: rgba(5, 8, 15, 0.75); }
-.combat-foot:focus-visible { outline: 2px solid var(--color-theme-gold); outline-offset: -3px; }
-.combat-no {
-    font-size: 0.58rem;
+  }
+
+  @media screen and (max-width: 425px) {
+    .combat-footer {
+      padding: 0.7rem 0.8rem;
+    }
+  }
+
+  .combat-number,
+  .combat-cta {
     font-weight: 900;
     letter-spacing: 0.18em;
-    text-transform: uppercase;
     color: var(--color-theme-gold);
-}
-.combat-cta {
-    font-size: 0.55rem;
-    font-weight: 900;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-theme-cream) 72%, transparent);
-    transition: color 250ms ease;
-}
-.combat-foot:hover .combat-cta { color: color-mix(in srgb, var(--color-theme-gold) 92%, white); }
+  }
 
-@media (prefers-reduced-motion: reduce) {
-    .combat, .boxer, .boxer-img, .boxer-spot, .combat-corner, .combat-cta, .combat-foot, .vsmedal {
-    transition: none;
+  @media (prefers-reduced-motion: reduce) {
+    .combat,
+    .boxer-img,
+    .combat-corner,
+    .vs-medal::before {
+      transition: none;
     }
-    .combat:hover { transform: none; }
-    .combat:hover .boxer-img, .boxer:hover .boxer-img { scale: 1; }
-    .vslink:hover .vsmedal { animation: none; }
-}
+
+    .combat:hover,
+    .combat:focus-within {
+      transform: none;
+    }
+  }
 </style>

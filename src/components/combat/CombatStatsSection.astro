@@ -1,0 +1,391 @@
+---
+import CountryFlag from '@/components/CountryFlag.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
+import type { Boxer, BoxerImageVariants } from '@/consts/boxers'
+import { formatFollowers, getSocialMetricValue } from '@/lib/socials'
+
+interface CombatStat {
+  label: string
+  a: string
+  b: string
+  flagA?: string
+  flagB?: string
+}
+
+interface Props {
+  boxer1: Boxer
+  boxer2: Boxer
+  boxer1Select: BoxerImageVariants
+  boxer2Select: BoxerImageVariants
+  stats: CombatStat[]
+}
+
+const { boxer1, boxer2, boxer1Select, boxer2Select, stats } = Astro.props
+
+// Seguidores totales sumando todas las redes (followers o oyentes/mes).
+const sumFollowers = (boxer: Boxer) =>
+  boxer.socials.reduce((total, social) => total + getSocialMetricValue(social), 0)
+
+const followers1 = sumFollowers(boxer1)
+const followers2 = sumFollowers(boxer2)
+const followersTotal = followers1 + followers2
+// Punto de corte de la barra: ancho del segmento izquierdo (boxer A). Es la
+// geometría real del reparto y no depende de quién lidere.
+const followersShareA = followersTotal > 0 ? (followers1 / followersTotal) * 100 : 50
+// Lado que se pinta en oro sólido = el de mayor alcance, igual que el realce del
+// número. La geometría (corte) no cambia; solo qué segmento va iluminado.
+const followersLeaderSide = followers1 >= followers2 ? 'a' : 'b'
+const hasFollowers = followersTotal > 0
+---
+
+<section class="combat-section px-4 pt-16 pb-20 sm:px-6" aria-labelledby="features-title">
+  <div class="mx-auto w-full max-w-3xl">
+    <div class="mb-10 flex flex-col items-center gap-2 text-center">
+      <SectionDivider size="sm" class="w-full" />
+      <h2
+        id="features-title"
+        class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm"
+      >
+        CARACTERÍSTICAS
+      </h2>
+      <p class="font-cinzel text-[0.6rem] tracking-[0.22em] text-white/42 uppercase">
+        Datos relevantes de los boxeadores
+      </p>
+    </div>
+
+    <div class="mb-6 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+      <a
+        href={`/boxeadores/${boxer1.id}`}
+        class="boxer-stat-link flex flex-col items-center gap-2"
+        aria-label={`Ver el perfil de ${boxer1.name}`}
+      >
+        <div class="boxer-avatar">
+          <picture>
+            <source type="image/avif" srcset={boxer1Select.avif} />
+            <source type="image/webp" srcset={boxer1Select.webp} />
+            <img
+              src={boxer1Select.webp}
+              alt={boxer1.name}
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover object-top"
+            />
+          </picture>
+        </div>
+        <span
+          class="text-center font-cinzel text-[0.65rem] font-bold tracking-[0.16em] text-theme-cream/90 uppercase"
+        >
+          {boxer1.name}
+        </span>
+      </a>
+
+      <div class="flex items-center justify-center">
+        <span class="font-fantasy text-2xl text-theme-gold/70">VS</span>
+      </div>
+
+      <a
+        href={`/boxeadores/${boxer2.id}`}
+        class="boxer-stat-link flex flex-col items-center gap-2"
+        aria-label={`Ver el perfil de ${boxer2.name}`}
+      >
+        <div class="boxer-avatar">
+          <picture>
+            <source type="image/avif" srcset={boxer2Select.avif} />
+            <source type="image/webp" srcset={boxer2Select.webp} />
+            <img
+              src={boxer2Select.webp}
+              alt={boxer2.name}
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover object-top"
+            />
+          </picture>
+        </div>
+        <span
+          class="text-center font-cinzel text-[0.65rem] font-bold tracking-[0.16em] text-theme-cream/90 uppercase"
+        >
+          {boxer2.name}
+        </span>
+      </a>
+    </div>
+
+    <div
+      class="stats-table"
+      role="table"
+      aria-label={`Características: ${boxer1.name} vs ${boxer2.name}`}
+    >
+      {
+        hasFollowers && (
+          <div class="stats-row stats-row-followers" role="row">
+            <div class="stats-cell cell-a" role="cell">
+              <span class="followers-value" data-leader={followers1 > followers2 ? 'true' : 'false'}>
+                {formatFollowers(followers1)}
+              </span>
+            </div>
+
+            <div class="stats-label" role="rowheader">
+              <span class="font-cinzel text-[0.6rem] font-bold tracking-[0.28em] text-theme-gold/85 uppercase">
+                Seguidores
+              </span>
+            </div>
+
+            <div class="stats-cell cell-b" role="cell">
+              <span class="followers-value" data-leader={followers2 > followers1 ? 'true' : 'false'}>
+                {formatFollowers(followers2)}
+              </span>
+            </div>
+
+            <div
+              class="followers-bar"
+              data-leader={followersLeaderSide}
+              style={`--share-a: ${followersShareA}%`}
+              aria-hidden="true"
+            />
+          </div>
+        )
+      }
+      {
+        stats.map((stat, i) => (
+          <div class:list={['stats-row', { 'stats-row-first': i === 0 }]} role="row">
+            <div class="stats-cell cell-a" role="cell">
+              {stat.flagA && (
+                <CountryFlag country={stat.flagA} size={16} decorative class="stats-flag" />
+              )}
+              <span class="stats-value">{stat.a}</span>
+            </div>
+
+            <div class="stats-label" role="rowheader">
+              <span class="font-cinzel text-[0.6rem] font-bold tracking-[0.28em] text-white/55 uppercase">
+                {stat.label}
+              </span>
+            </div>
+
+            <div class="stats-cell cell-b" role="cell">
+              <span class="stats-value">{stat.b}</span>
+              {stat.flagB && (
+                <CountryFlag country={stat.flagB} size={16} decorative class="stats-flag" />
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .combat-section {
+    position: relative;
+    z-index: 2;
+    color: var(--color-theme-cream);
+    background: transparent;
+  }
+
+  .boxer-avatar {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 9999px;
+    overflow: hidden;
+    border: 1.5px solid rgba(199, 168, 107, 0.45);
+    background: rgba(5, 8, 22, 0.6);
+    box-shadow:
+      0 0 0 3px rgba(199, 168, 107, 0.12),
+      0 8px 24px rgba(0, 0, 0, 0.5);
+    transition:
+      border-color 220ms ease,
+      box-shadow 220ms ease,
+      transform 220ms ease;
+  }
+
+  .boxer-stat-link {
+    text-decoration: none;
+  }
+
+  .boxer-stat-link:hover .boxer-avatar {
+    border-color: var(--color-theme-gold);
+    transform: translateY(-0.12rem);
+    box-shadow:
+      0 0 0 3px rgba(199, 168, 107, 0.18),
+      0 12px 30px rgba(0, 0, 0, 0.58),
+      0 0 28px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+  }
+
+  .boxer-stat-link:focus-visible {
+    border-radius: 0.5rem;
+    outline: 2px solid var(--color-theme-gold);
+    outline-offset: 0.45rem;
+  }
+
+  .stats-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(199, 168, 107, 0.18);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: rgba(5, 8, 22, 0.45);
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid rgba(199, 168, 107, 0.1);
+    gap: 1rem;
+    transition: background 220ms ease;
+  }
+
+  .stats-row:last-child {
+    border-bottom: none;
+  }
+
+  .stats-row:hover {
+    background: rgba(199, 168, 107, 0.04);
+  }
+
+  .stats-row-first {
+    background: rgba(199, 168, 107, 0.04);
+  }
+
+  /* Fila destacada de seguidores: el dato estrella de la comparativa. */
+  .stats-row-followers {
+    row-gap: 0.85rem;
+    padding-top: 1.1rem;
+    padding-bottom: 1.1rem;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 11%, transparent),
+      color-mix(in srgb, var(--color-theme-gold) 4%, transparent)
+    );
+  }
+
+  .followers-value {
+    font-family: var(--font-cinzel);
+    font-size: 1.65rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+    color: rgba(244, 228, 201, 0.92);
+    transition:
+      color 220ms ease,
+      text-shadow 220ms ease;
+  }
+
+  /* El de mayor alcance se ilumina en oro. */
+  .followers-value[data-leader='true'] {
+    color: var(--color-theme-gold);
+    text-shadow: 0 0 20px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+  }
+
+  /* Barra comparativa (tale of the tape): dos colores en vez de uno para que se
+     lea como enfrentamiento y no como barra de progreso. Oro para el de mayor
+     alcance, azul (familia navy de marca, aclarado para contrastar sobre el
+     fondo oscuro) para el rival. El corte (--share-a) es la geometría real del
+     reparto; solo se intercambia qué lado va en oro según el líder. */
+  .followers-bar {
+    grid-column: 1 / -1;
+    height: 6px;
+    border-radius: 9999px;
+    --bar-gold: var(--color-theme-gold);
+    --bar-blue: #284f9e;
+    --bar-left: var(--bar-gold);
+    --bar-right: var(--bar-blue);
+    background: linear-gradient(
+      90deg,
+      var(--bar-left) 0 var(--share-a),
+      var(--bar-right) var(--share-a) 100%
+    );
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .followers-bar[data-leader='b'] {
+    --bar-left: var(--bar-blue);
+    --bar-right: var(--bar-gold);
+  }
+
+  .stats-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .cell-a {
+    justify-content: flex-end;
+  }
+
+  .cell-b {
+    justify-content: flex-start;
+  }
+
+  .stats-value {
+    font-family: var(--font-cinzel);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-theme-cream);
+  }
+
+  .stats-row-first .stats-value {
+    font-size: 0.75rem;
+    color: rgba(244, 228, 201, 0.88);
+  }
+
+  .stats-label {
+    text-align: center;
+    min-width: 7.25rem;
+    flex-shrink: 0;
+  }
+
+  :global(.stats-flag) {
+    width: 18px !important;
+    height: 18px !important;
+    flex-shrink: 0;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 639px) {
+    .stats-row {
+      padding: 0.75rem 0.85rem;
+      gap: 0.5rem;
+    }
+
+    /* En móvil el label central fijo a 7.25rem ahogaba las celdas laterales y el
+       país + bandera se salían de la tarjeta. Le damos menos ancho, dejamos que
+       las celdas encojan y reducimos el valor y la bandera para que el nombre
+       del país quepa en una sola línea (sin partir la palabra). */
+    .stats-label {
+      min-width: 5.25rem;
+    }
+
+    .stats-cell {
+      min-width: 0;
+    }
+
+    .stats-value {
+      font-size: 0.66rem;
+      letter-spacing: 0.02em;
+    }
+
+    .followers-value {
+      font-size: 1.3rem;
+    }
+
+    .boxer-avatar {
+      width: 4rem;
+      height: 4rem;
+    }
+
+    :global(.stats-flag) {
+      width: 15px !important;
+      height: 15px !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .followers-value {
+      transition: none;
+    }
+  }
+</style>
