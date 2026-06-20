@@ -764,7 +764,8 @@ const cardImageEagerAmount = 4
       gap: 2rem;
     }
 
-    /* Título en la misma columna que el grid (f4e0c631: justify-self center, no stretch). */
+    /* Cabecera a todo el ancho: título y subtítulo centrados respecto a la
+       página completa (no solo sobre la columna del grid). */
     .boxers-page-header {
       display: grid;
       grid-template-columns: var(--boxers-sidebar-width) minmax(0, 1fr);
@@ -774,7 +775,7 @@ const cardImageEagerAmount = 4
     }
 
     .boxers-page-header > * {
-      grid-column: 2;
+      grid-column: 1 / -1;
       justify-self: center;
     }
 
