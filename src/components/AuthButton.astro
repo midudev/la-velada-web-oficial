@@ -11,7 +11,7 @@ const { user } = Astro.props
 
 {
   user ? (
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3 not-motion-reduce:animate-fade-in-up" style="animation-delay:280ms">
       {user.image && (
         <img
           src={user.image}
@@ -33,7 +33,10 @@ const { user } = Astro.props
     </div>
   ) : (
     <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
-      <span class="font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-theme-cream/55 uppercase">
+      <span
+        class="font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-theme-cream/55 uppercase not-motion-reduce:animate-fade-in-up"
+        style="animation-delay:280ms"
+      >
         Inicia sesión para votar
       </span>
 
@@ -41,7 +44,8 @@ const { user } = Astro.props
         <button
           id="sign-in-twitch-btn"
           aria-label="Iniciar sesión con Twitch"
-          class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-theme-gold/35 bg-theme-gold/10 px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+          style="animation-delay:360ms"
+          class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-theme-gold/35 bg-theme-gold/10 px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 not-motion-reduce:animate-fade-in-up hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +64,8 @@ const { user } = Astro.props
         <button
           id="sign-in-google-btn"
           aria-label="Iniciar sesión con Google"
-          class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 hover:border-theme-gold/60 hover:bg-white/[0.1] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+          style="animation-delay:440ms"
+          class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 not-motion-reduce:animate-fade-in-up hover:border-theme-gold/60 hover:bg-white/[0.1] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
