@@ -4,14 +4,20 @@ interface Props {
     name: string
     image?: string | null
   } | null
+  callbackURL?: string
 }
 
-const { user } = Astro.props
+const { user, callbackURL = '/pronosticos' } = Astro.props
 ---
 
 {
   user ? (
-    <div class="flex items-center gap-3 not-motion-reduce:animate-fade-in-up" style="animation-delay:280ms">
+    <div
+      class="flex items-center gap-3 not-motion-reduce:animate-fade-in-up"
+      style="animation-delay:280ms"
+      data-auth-button
+      data-auth-callback-url={callbackURL}
+    >
       {user.image && (
         <img
           src={user.image}
@@ -25,14 +31,19 @@ const { user } = Astro.props
         {user.name}
       </span>
       <button
-        id="sign-out-btn"
+        type="button"
+        data-auth-sign-out
         class="inline-flex min-h-11 cursor-pointer items-center rounded-full border border-white/15 bg-black/20 px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-white/70 backdrop-blur-md transition duration-300 hover:border-theme-gold/60 hover:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
       >
         SALIR
       </button>
     </div>
   ) : (
-    <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+    <div
+      class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2"
+      data-auth-button
+      data-auth-callback-url={callbackURL}
+    >
       <span
         class="font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-theme-cream/55 uppercase not-motion-reduce:animate-fade-in-up"
         style="animation-delay:280ms"
@@ -42,7 +53,8 @@ const { user } = Astro.props
 
       <div class="flex items-center gap-2">
         <button
-          id="sign-in-twitch-btn"
+          type="button"
+          data-auth-provider="twitch"
           aria-label="Iniciar sesión con Twitch"
           style="animation-delay:360ms"
           class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-theme-gold/35 bg-theme-gold/10 px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 not-motion-reduce:animate-fade-in-up hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
@@ -62,7 +74,8 @@ const { user } = Astro.props
         </button>
 
         <button
-          id="sign-in-google-btn"
+          type="button"
+          data-auth-provider="google"
           aria-label="Iniciar sesión con Google"
           style="animation-delay:440ms"
           class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 not-motion-reduce:animate-fade-in-up hover:border-theme-gold/60 hover:bg-white/[0.1] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
@@ -100,20 +113,34 @@ const { user } = Astro.props
 }
 
 <script>
-  import { createAuthClient } from "better-auth/client"
+  import { $, $$ } from '@/lib/dom-selector'
+  import { createAuthClient } from 'better-auth/client'
 
   const authClient = createAuthClient()
 
-  document.getElementById("sign-in-twitch-btn")?.addEventListener("click", () => {
-    authClient.signIn.social({ provider: "twitch", callbackURL: "/pronosticos" })
-  })
+  function setupAuthButtons() {
+    $$<HTMLElement>('[data-auth-button]').forEach((root) => {
+      if (root.dataset.authReady === 'true') return
 
-  document.getElementById("sign-in-google-btn")?.addEventListener("click", () => {
-    authClient.signIn.social({ provider: "google", callbackURL: "/pronosticos" })
-  })
+      root.dataset.authReady = 'true'
+      const callbackURL = root.dataset.authCallbackUrl || window.location.pathname
 
-  document.getElementById("sign-out-btn")?.addEventListener("click", async () => {
-    await authClient.signOut()
-    window.location.reload()
-  })
+      $$<HTMLButtonElement>('[data-auth-provider]', root).forEach((button) => {
+        button.addEventListener('click', () => {
+          const provider = button.dataset.authProvider
+          if (provider !== 'twitch' && provider !== 'google') return
+
+          void authClient.signIn.social({ provider, callbackURL })
+        })
+      })
+
+      $<HTMLButtonElement>('[data-auth-sign-out]', root)?.addEventListener('click', async () => {
+        await authClient.signOut()
+        window.location.reload()
+      })
+    })
+  }
+
+  setupAuthButtons()
+  document.addEventListener('astro:page-load', setupAuthButtons)
 </script>
