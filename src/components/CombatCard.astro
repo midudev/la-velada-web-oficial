@@ -12,7 +12,7 @@ interface CardBoxer {
 
 interface Props {
   number: number
-  url: string // /combate/[id] → destino real cuando la landing esté lista
+  url: string
   featured?: boolean
   badge?: string
   a: CardBoxer
@@ -32,21 +32,29 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
   { ...a, side: 'a' },
   { ...b, side: 'b' },
 ]
+
+const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b.countryName})`
 ---
 
-<a
-  class:list={['combat', { 'is-featured': featured }]}
-  href={url}
-  aria-label={`Ver combate: ${a.name} contra ${b.name}`}
->
-  {badge && <span class="combat-badge font-cinzel">{badge}</span>}
+<article class:list={['combat', { 'is-featured': featured }]}>
+  <h2 class="sr-only">{title}</h2>
 
-  <span aria-hidden="true" class="combat-corner tl"></span>
-  <span aria-hidden="true" class="combat-corner tr"></span>
-  <span aria-hidden="true" class="combat-corner bl"></span>
-  <span aria-hidden="true" class="combat-corner br"></span>
+  <a
+    class="absolute inset-0 z-10 text-[0px]"
+    href={url}
+    aria-label={`Ir al combate ${a.name} contra ${b.name}`}
+  >
+    <span aria-hidden="true">{title}</span>
+  </a>
+
+  {badge && <span class="combat-badge">{badge}</span>}
 
   <div class="combat-stage">
+    <span aria-hidden="true" class="combat-corner tl"></span>
+    <span aria-hidden="true" class="combat-corner tr"></span>
+    <span aria-hidden="true" class="combat-corner bl"></span>
+    <span aria-hidden="true" class="combat-corner br"></span>
+
     {
       boxers.map((boxer) => (
         <div class:list={['boxer', boxer.side]}>
@@ -65,8 +73,8 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
           </picture>
           <span aria-hidden="true" class="boxer-veil" />
           <div class="boxer-caption">
-            <h3 class="boxer-name font-cinzel">{boxer.name}</h3>
-            <p class="boxer-country font-cinzel">
+            <h3 class="boxer-name">{boxer.name}</h3>
+            <p class="boxer-country">
               <CountryFlag country={boxer.country} size={14} decorative class="boxer-flag" />
               <span>{boxer.countryName}</span>
             </p>
@@ -75,18 +83,18 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
       ))
     }
 
-    <span class="vslink" aria-hidden="true">
-      <span class="vsmedal font-cinzel"><b>VS</b></span>
+    <span class="vs-medal">
+      <span>VS</span>
     </span>
   </div>
 
-  <span class="combat-foot">
-    <span class="combat-no font-cinzel">Combate {String(number).padStart(2, '0')}</span>
-    <span class="combat-cta font-cinzel"
-      >Ver cara a cara <span aria-hidden="true">&rarr;</span></span
-    >
+  <span class="combat-footer">
+    <span class="combat-number">
+      Combate {String(number).padStart(2, '0')}
+    </span>
+    <span class="combat-cta">Ir al cara a cara</span>
   </span>
-</a>
+</article>
 
 <style>
   .combat {
@@ -105,23 +113,22 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
       transform 400ms ease,
       box-shadow 400ms ease;
   }
-  /* Toda la card es un único enlace: un solo estado de hover/focus
-     coherente sea cual sea la zona sobre la que se pase el cursor. */
+
   .combat:hover,
-  .combat:focus-visible {
+  .combat:focus-within {
     transform: translateY(-4px);
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 75%, transparent),
       0 28px 60px rgba(0, 0, 0, 0.6),
       0 0 36px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
   }
+
   .combat:focus-visible {
-    outline: 2px solid var(--color-theme-gold);
-    outline-offset: 4px;
+    outline: none;
   }
 
   .combat:hover .boxer-img,
-  .combat:focus-visible .boxer-img {
+  .combat:focus-within .boxer-img {
     filter: saturate(1.08) brightness(1.04);
   }
 
@@ -132,10 +139,9 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     transform: translateX(-50%);
     z-index: 7;
     padding: 0.4rem 1.4rem;
-    font-size: 0.55rem;
+    font-size: clamp(0.5rem, 0.476rem + 0.104vw, 0.6rem);
     font-weight: 900;
     letter-spacing: 0.2em;
-    text-transform: uppercase;
     color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
     background: linear-gradient(
       180deg,
@@ -159,30 +165,35 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
       height 400ms ease;
     pointer-events: none;
   }
+
   .combat:hover .combat-corner,
-  .combat:focus-visible .combat-corner {
+  .combat:focus-within .combat-corner {
     opacity: 1;
     width: 20px;
     height: 20px;
   }
+
   .combat-corner.tl {
     top: 10px;
     left: 10px;
     border-right: 0;
     border-bottom: 0;
   }
+
   .combat-corner.tr {
     top: 10px;
     right: 10px;
     border-left: 0;
     border-bottom: 0;
   }
+
   .combat-corner.bl {
     bottom: 10px;
     left: 10px;
     border-right: 0;
     border-top: 0;
   }
+
   .combat-corner.br {
     bottom: 10px;
     right: 10px;
@@ -199,14 +210,7 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
   .boxer {
     position: relative;
     display: block;
-    aspect-ratio: 3 / 4;
     overflow: hidden;
-    text-decoration: none;
-    transition:
-      opacity 350ms ease,
-      filter 350ms ease;
-  }
-  .is-featured .boxer {
     aspect-ratio: 4 / 5;
   }
 
@@ -220,15 +224,6 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
       transparent 62%
     );
     opacity: 0.5;
-    transition: opacity 500ms ease;
-  }
-  .boxer.b .boxer-spot {
-    background: radial-gradient(
-      70% 60% at 50% 18%,
-      color-mix(in srgb, var(--color-velada-navy) 80%, var(--color-theme-cream)),
-      transparent 62%
-    );
-    opacity: 0.4;
   }
 
   .boxer-pic {
@@ -237,16 +232,16 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     z-index: 2;
     display: block;
   }
+
   .boxer-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top center;
     filter: saturate(0.92) brightness(0.92);
-    transition:
-      scale 600ms ease,
-      filter 500ms ease;
+    transition: filter 500ms ease;
   }
+
   .boxer.b .boxer-img {
     transform: scaleX(-1);
   }
@@ -271,9 +266,11 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     padding: 0.6rem 0.7rem 1rem;
     text-align: center;
   }
+
   .boxer.a .boxer-caption {
     padding-right: 1.7rem;
   }
+
   .boxer.b .boxer-caption {
     padding-left: 1.7rem;
   }
@@ -283,12 +280,12 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     font-weight: 900;
     letter-spacing: 0.035em;
     line-height: 1.05;
-    text-transform: uppercase;
     color: var(--color-theme-cream);
     text-shadow:
       0 1px 2px rgba(0, 0, 0, 0.9),
       0 2px 12px rgba(0, 0, 0, 0.7);
   }
+
   .boxer-country {
     display: inline-flex;
     align-items: center;
@@ -297,134 +294,88 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
     font-size: 0.55rem;
     font-weight: 900;
     letter-spacing: 0.14em;
-    text-transform: uppercase;
     color: color-mix(in srgb, var(--color-theme-cream) 78%, transparent);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
   }
-  :global(.boxer-flag) {
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
-  }
 
-  .vslink {
+  .vs-medal {
+    --size: 3em;
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 5;
+    inset: 0;
+    margin: auto;
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-decoration: none;
-    pointer-events: none;
-  }
-  .vsmedal {
-    width: 46px;
-    height: 46px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    inline-size: var(--size);
+    block-size: var(--size);
+    font-weight: 900;
+    font-size: clamp(0.75rem, 0.689rem + 0.259vw, 1rem);
+    color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
     transform: rotate(45deg);
     border: 1px solid var(--color-theme-gold);
-    background: radial-gradient(
-      circle,
-      color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
-      rgba(5, 8, 15, 0.85)
-    );
-    transition:
-      box-shadow 300ms ease,
-      background 300ms ease;
-  }
-  .is-featured .vsmedal {
-    width: 56px;
-    height: 56px;
-  }
-  .vsmedal b {
-    transform: rotate(-45deg);
-    font-weight: 900;
-    font-size: 0.9rem;
-    color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
-  }
-  .is-featured .vsmedal b {
-    font-size: 1.05rem;
-  }
-  .combat:hover .vsmedal,
-  .combat:focus-visible .vsmedal {
-    background: radial-gradient(
-      circle,
-      color-mix(in srgb, var(--color-theme-gold) 40%, transparent),
-      rgba(5, 8, 15, 0.85)
-    );
-    animation: vspulse 1.3s ease infinite;
-  }
-  @keyframes vspulse {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
-    }
-    50% {
-      box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-theme-gold) 0%, transparent);
-    }
+    pointer-events: none;
   }
 
-  .combat-foot {
+  .vs-medal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-theme-gold) 32%, transparent),
+      #05080fd9
+    );
+    opacity: 0.6;
+    transition: opacity 300ms;
+  }
+
+  .combat:hover .vs-medal::before,
+  .combat:focus-visible .vs-medal::before {
+    opacity: 1;
+  }
+
+  .vs-medal span {
+    transform: rotate(-45deg);
+  }
+
+  .combat-footer {
     position: relative;
     z-index: 4;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    font-size: clamp(0.531rem, 0.519rem + 0.05vw, 0.58rem);
     padding: 0.85rem 1.1rem;
     border-top: 1px solid color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
-    background: rgba(5, 8, 15, 0.55);
+    background: #05080f8c;
     text-decoration: none;
-    transition: background 300ms ease;
   }
-  .combat:hover .combat-foot,
-  .combat:focus-visible .combat-foot {
-    background: rgba(5, 8, 15, 0.75);
+
+  @media screen and (max-width: 425px) {
+    .combat-footer {
+      padding: 0.7rem 0.8rem;
+    }
   }
-  .combat-no {
-    font-size: 0.58rem;
+
+  .combat-number,
+  .combat-cta {
     font-weight: 900;
     letter-spacing: 0.18em;
-    text-transform: uppercase;
     color: var(--color-theme-gold);
-  }
-  .combat-cta {
-    font-size: 0.55rem;
-    font-weight: 900;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-theme-cream) 72%, transparent);
-    transition: color 250ms ease;
-  }
-  .combat:hover .combat-cta,
-  .combat:focus-visible .combat-cta {
-    color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .combat,
-    .boxer,
     .boxer-img,
-    .boxer-spot,
     .combat-corner,
-    .combat-cta,
-    .combat-foot,
-    .vsmedal {
+    .vs-medal::before {
       transition: none;
     }
-    .combat:hover {
+
+    .combat:hover,
+    .combat:focus-within {
       transform: none;
-    }
-    .combat:hover .boxer-img {
-      scale: 1;
-    }
-    .combat:hover .vsmedal,
-    .combat:focus-visible .vsmedal {
-      animation: none;
     }
   }
 </style>
