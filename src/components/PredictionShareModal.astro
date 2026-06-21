@@ -835,6 +835,9 @@ const { totalFights } = Astro.props
       if (modal?.open) return
       resetModalState()
       modal?.showModal()
+      // El foco inicial debe aterrizar en un control real, no en el backdrop
+      // (SC 2.4.3). El botón de cierre es el primer paso lógico del modal.
+      $<HTMLButtonElement>('.prediction-share-close', modal)?.focus()
     }
 
     refs.downloadBtn?.addEventListener('click', () => void handleDownload())

@@ -23,6 +23,8 @@ const controllerConfig = JSON.stringify({
 
 <script id="prediction-vote-config" type="application/json" set:html={controllerConfig} />
 <div class="prediction-reaction-layer" data-prediction-reaction-layer aria-hidden="true"></div>
+<!-- Anuncia a lectores de pantalla el resultado del voto propio (SC 4.1.3). -->
+<div class="sr-only" role="status" aria-live="polite" data-prediction-announcer></div>
 
 <script>
   import { $, $$ } from '@/lib/dom-selector'
@@ -111,12 +113,14 @@ const controllerConfig = JSON.stringify({
     const previousPercentage = readVotePercentage(option)
     const percentNode = $<HTMLElement>('[data-prediction-percent]', option)
     const votesNode = $<HTMLElement>('[data-prediction-votes]', option)
+    const barNode = $<HTMLElement>('[data-prediction-bar]', option)
 
     option.dataset.voteCount = String(safeVotes)
     option.dataset.votePercentage = String(safePercentage)
     option.style.setProperty('--vote-share', `${safePercentage.toFixed(2)}%`)
     if (percentNode) percentNode.textContent = formatPredictionPercent(safePercentage)
     if (votesNode) votesNode.textContent = formatPredictionSupport(safeVotes)
+    if (barNode) barNode.setAttribute('aria-valuenow', String(Math.round(safePercentage)))
 
     const voteDelta = safeVotes - previousVotes
     const percentageDelta = safePercentage - previousPercentage
@@ -251,6 +255,20 @@ const controllerConfig = JSON.stringify({
     badge.textContent = 'A cara de perro'
     badge.classList.remove('prediction-badge-calm')
     badge.classList.add('prediction-badge-hot')
+  }
+
+  function announceVote(fight: HTMLElement, boxerId: string) {
+    const announcer = $<HTMLElement>('[data-prediction-announcer]')
+    const option = $<HTMLButtonElement>(
+      `[data-prediction-option][data-boxer-id="${boxerId}"]`,
+      fight,
+    )
+    if (!announcer || !option) return
+
+    const name = option.dataset.boxerName ?? ''
+    announcer.textContent = `Has pronosticado a ${name}. Lleva el ${formatPredictionPercent(
+      readVotePercentage(option),
+    )} de los votos.`
   }
 
   function getReactionOrigin(option: HTMLButtonElement, event: MouseEvent) {
@@ -473,6 +491,9 @@ const controllerConfig = JSON.stringify({
 
       setBattleVote(battleId, boxerId)
       if (data.prediction) applyPredictionData(data.prediction)
+      // Anunciamos solo tras confirmar el servidor, con el porcentaje real, para
+      // no informar de un voto que luego se revierte (p. ej. sesión caducada).
+      announceVote(fight, boxerId)
       checkAllPredictionsComplete()
     } catch (error) {
       if (latestVoteRequestByBattle.get(battleId) === requestId && snapshot) {
