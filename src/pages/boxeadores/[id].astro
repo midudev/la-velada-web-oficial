@@ -3,19 +3,25 @@ import type { GetStaticPaths } from 'astro'
 
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import BoxerGallery from '@/components/BoxerGallery.astro'
+import BoxerHeroStatsCard from '@/components/BoxerHeroStatsCard.astro'
+import BoxerSocials from '@/components/BoxerSocials.astro'
+import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
+import BoxerWorkoutVideos from '@/components/BoxerWorkoutVideos.astro'
+import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
 import { battles } from '@/consts/battles'
+import { EVENT_DATE_TIME } from '@/consts/event'
 import {
   BOXERS,
   BOXERS_BY_ID,
-  COUNTRY_FLAGS,
   COUNTRY_NAMES,
   GENDER_LABELS,
   getBoxerHeroImages,
   getBoxerPhoto,
   getBoxerSelectImages,
 } from '@/consts/boxers'
+import { formatFollowers } from '@/lib/socials'
 import Layout from '@/layouts/Layout.astro'
-import Header from '@/sections/Header.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 
@@ -32,6 +38,42 @@ interface Props {
   boxerId: string
 }
 
+interface WorkoutVideo {
+  videoId: string
+  title: string
+  eyebrow?: string
+}
+
+function getYouTubeVideoId(url: string) {
+  try {
+    const parsedUrl = new URL(url)
+    const hostname = parsedUrl.hostname.replace(/^www\./, '')
+
+    if (hostname === 'youtu.be') {
+      return parsedUrl.pathname.split('/').filter(Boolean)[0] ?? null
+    }
+
+    if (hostname === 'youtube.com' || hostname === 'm.youtube.com') {
+      return parsedUrl.searchParams.get('v')
+    }
+  } catch {
+    return null
+  }
+
+  return null
+}
+
+function createFaceToFaceVideo(videoUrl: string, battleTitle: string): WorkoutVideo | null {
+  const videoId = getYouTubeVideoId(videoUrl)
+  if (!videoId) return null
+
+  return {
+    videoId,
+    title: `Cara a cara: ${battleTitle}`,
+    eyebrow: 'CARA A CARA',
+  }
+}
+
 const { boxerId } = Astro.props
 const boxer = BOXERS_BY_ID[boxerId]
 
@@ -39,15 +81,35 @@ if (!boxer) return Astro.redirect('/404')
 
 const heroImages = getBoxerHeroImages(boxer)
 const photo = getBoxerPhoto(boxer)
-const flag = COUNTRY_FLAGS[boxer.country] ?? ''
 const countryName = COUNTRY_NAMES[boxer.country] ?? boxer.country
 const genderLabel = GENDER_LABELS[boxer.gender]
+
+// Fecha de nacimiento formateada en español (p. ej. "28 de agosto de 2004").
+// Se construye con hora local para evitar desfases de día por zona horaria.
+const birthDateLabel = boxer.birthDate
+  ? new Intl.DateTimeFormat('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(`${boxer.birthDate}T00:00:00`))
+  : null
 
 // Buscamos su combate para enlazar y mostrar el número.
 const battle = battles.find((b) => b.boxerIds.includes(boxer.id))
 const opponentId = battle?.boxerIds.find((id) => id !== boxer.id)
 const opponent = opponentId ? BOXERS_BY_ID[opponentId] : null
 const opponentSelectImages = opponent ? getBoxerSelectImages(opponent) : null
+
+const boxerWorkoutVideos: WorkoutVideo[] = boxer.workout ?? []
+const hasBoxerWorkoutVideos = boxerWorkoutVideos.length > 0
+const faceToFaceVideoUrl = battle?.faceToFaceVideoUrl ?? null
+const faceToFaceVideo =
+  hasBoxerWorkoutVideos && faceToFaceVideoUrl && battle
+    ? createFaceToFaceVideo(faceToFaceVideoUrl, battle.title)
+    : null
+const workoutVideos = faceToFaceVideo
+  ? [...boxerWorkoutVideos, faceToFaceVideo]
+  : boxerWorkoutVideos
 
 const SITE_URL = 'https://www.infolavelada.com'
 const canonical = `${SITE_URL}/boxeadores/${boxer.id}`
@@ -59,6 +121,11 @@ const title = `${boxer.name} — ${roleCapitalized} de La Velada del Año VI`
 const description = opponent
   ? `Conoce a ${boxer.name}, ${role} de ${countryName} en La Velada del Año VI. Se enfrenta a ${opponent.name} en el combate ${String(battle!.number).padStart(2, '0')} el 25 de julio de 2026.`
   : `Conoce a ${boxer.name}, ${role} de ${countryName} en La Velada del Año VI, el 25 de julio de 2026.`
+
+const fightWeight = boxer.fightWeightKg ?? boxer.weightKg
+const fightWeightLabel = fightWeight != null ? `${fightWeight} kg` : null
+const totalFollowers = boxer.socials.reduce((sum, social) => sum + (social.followers ?? 0), 0)
+const totalFollowersLabel = formatFollowers(totalFollowers)
 
 // Usamos la foto principal del boxeador como og:image cuando exista,
 // con fallback al hero recortado.
@@ -79,7 +146,7 @@ const personJsonLd = {
   performerIn: {
     '@type': 'SportsEvent',
     name: 'La Velada del Año VI',
-    startDate: '2026-07-25T20:00:00+02:00',
+    startDate: EVENT_DATE_TIME,
     location: {
       '@type': 'Place',
       name: 'Estadio de La Cartuja',
@@ -144,15 +211,13 @@ const breadcrumbJsonLd = {
     slot="head"
   />
 
-  <Header />
-
   <section
-    class="boxer-detail relative isolate w-full overflow-x-clip bg-theme-midnight px-4 pb-24 pt-24 text-theme-cream sm:px-6 sm:pt-28 md:pt-32"
+    class="boxer-detail relative isolate w-full overflow-x-clip bg-theme-midnight px-4 pt-24 pb-24 text-theme-cream sm:px-6 sm:pt-28 md:pt-32"
     aria-labelledby="boxer-name"
   >
     <picture
       data-boxer-detail-bg
-      class="pointer-events-none absolute inset-0 -z-20"
+      class="pointer-events-none absolute inset-0 -z-20 max-h-svh"
       aria-hidden="true"
     >
       <source
@@ -182,23 +247,32 @@ const breadcrumbJsonLd = {
     </div>
 
     <div class="mx-auto flex w-full max-w-6xl flex-col">
-      <a
-        href="/boxeadores"
-        class="boxer-detail-back inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-bold tracking-[0.32em] text-theme-gold/80 sm:text-xs"
-      >
-        <ArrowLeftIcon class="size-3.5" aria-hidden="true" />
-        Volver a boxeadores
+      <a href="/boxeadores" class="boxer-back group inline-flex w-fit items-center gap-2">
+        <ArrowLeftIcon class="boxer-back-arrow size-3" aria-hidden="true" />
+        <span class="boxer-back-label">Volver a boxeadores</span>
       </a>
 
-      <div class="boxer-detail-grid mt-8 grid gap-8 sm:mt-10 md:gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start lg:gap-12">
-        <div class="boxer-detail-portrait-wrap relative">
+      <div
+        class="boxer-hero mt-8 grid items-center gap-10 sm:mt-10 md:grid-cols-[0.82fr_1fr] md:gap-10 lg:gap-14"
+      >
+        <div class="boxer-portrait-wrap relative flex flex-col items-center md:order-1">
           <span aria-hidden="true" class="boxer-detail-aura"></span>
 
-          <picture class="boxer-detail-portrait-picture relative z-10 flex w-full items-start justify-center">
+          <BoxerWinsBadge
+            wins={boxer.previousVeladaWins}
+            boxerName={boxer.name}
+            variant="detail"
+            defaultExpanded
+            class="boxer-detail-wins"
+          />
+
+          <picture
+            class="boxer-detail-portrait-picture relative z-10 flex w-full items-start justify-center"
+          >
             <source type="image/avif" srcset={heroImages.avif} />
             <source type="image/webp" srcset={heroImages.webp} />
             <img
-              src={heroImages.png}
+              src={heroImages.webp}
               alt={`Foto principal de ${boxer.name}`}
               transition:name={`boxer-hero-${boxer.id}`}
               class="boxer-detail-portrait relative z-10 h-auto w-auto max-w-full object-contain object-top"
@@ -208,179 +282,182 @@ const breadcrumbJsonLd = {
               height="800"
             />
           </picture>
+
+          <div
+            class="boxer-detail-socias relative z-10 mt-6 w-full animate-fade-in-up animate-delay-300"
+          >
+            <BoxerSocials boxer={boxer} />
+          </div>
         </div>
 
-        <div class="boxer-detail-info relative flex flex-col items-start">
-          <div class="boxer-detail-tags animate-fade-in-up flex flex-wrap items-center gap-2">
-            {battle && (
-              <span class="boxer-detail-chip boxer-detail-chip-strong">
-                Combate · {String(battle.number).padStart(2, '0')}
-              </span>
-            )}
-            <span class="boxer-detail-chip">
-              <span aria-hidden="true">{flag}</span>
-              {countryName}
-            </span>
-            <span class="boxer-detail-chip">{genderLabel}</span>
-          </div>
-
+        <div class="boxer-info relative flex flex-col items-start md:order-2">
           <h1
             id="boxer-name"
-            class="boxer-detail-name animate-fade-in-up animate-delay-150 mt-5 text-balance font-cinzel text-5xl font-black uppercase leading-[0.95] tracking-[0.04em] sm:text-6xl md:text-7xl lg:text-8xl"
+            class="boxer-detail-name animate-fade-in-up font-cinzel text-5xl leading-[0.92] font-black tracking-[0.02em] text-balance uppercase sm:text-6xl md:text-7xl lg:text-8xl"
           >
             {boxer.name}
           </h1>
 
-          {opponent && opponentSelectImages && (
-            <a
-              href={`/boxeadores/${opponent.id}`}
-              class="boxer-detail-versus animate-fade-in-up animate-delay-300 group mt-5 inline-flex items-center gap-3"
-              aria-label={`Ver el perfil de ${opponent.name}`}
-            >
-              <span
-                class="boxer-detail-versus-label font-cinzel text-[0.55rem] font-bold tracking-[0.45em] text-theme-gold/85 sm:text-[0.65rem]"
-                aria-hidden="true"
+          <BoxerHeroStatsCard
+            class="mt-6 animate-fade-in-up animate-delay-200"
+            fightWeightLabel={fightWeightLabel}
+            countryName={countryName}
+            countryCode={boxer.country}
+            totalFollowers={totalFollowersLabel}
+            genderLabel={genderLabel}
+            birthDateLabel={birthDateLabel}
+          />
+
+          {
+            opponent && opponentSelectImages && (
+              <a
+                href={`/boxeadores/${opponent.id}`}
+                class="boxer-versus group mt-8 animate-fade-in-up animate-delay-500"
+                aria-label={`Ver el perfil de ${opponent.name}, su rival`}
               >
-                VS
-              </span>
-              <span class="boxer-detail-versus-photo relative inline-flex size-11 shrink-0 overflow-hidden rounded-full sm:size-12">
-                <picture class="absolute inset-0">
-                  <source type="image/avif" srcset={opponentSelectImages.avif} />
-                  <source type="image/webp" srcset={opponentSelectImages.webp} />
-                  <img
-                    src={opponentSelectImages.png}
-                    alt=""
-                    role="presentation"
-                    decoding="async"
-                    loading="lazy"
-                    width="80"
-                    height="80"
-                    class="size-full object-cover object-top"
-                  />
-                </picture>
-              </span>
-              <span class="boxer-detail-versus-name font-cinzel text-xs font-bold tracking-[0.22em] text-theme-cream sm:text-sm">
-                {opponent.name}
-              </span>
-              <ArrowRightIcon
-                class="boxer-detail-versus-arrow size-3.5 text-theme-gold/70"
-                aria-hidden="true"
-              />
-            </a>
-          )}
-
-          <div
-            class="boxer-detail-coming-soon animate-fade-in-up animate-delay-500 mt-10 w-full"
-          >
-            <div
-              class="flex w-full items-center gap-3 sm:gap-4"
-              aria-hidden="true"
-            >
-              <span class="size-1 rotate-45 bg-theme-gold/70"></span>
-              <span class="h-px flex-1 bg-linear-to-r from-theme-gold/45 to-transparent"></span>
-            </div>
-
-            <p
-              class="boxer-detail-coming-soon-eyebrow mt-5 font-cinzel text-[0.55rem] font-bold tracking-[0.45em] text-theme-gold/80 sm:text-[0.65rem]"
-            >
-              FICHA EN PREPARACIÓN
-            </p>
-
-            <p
-              class="boxer-detail-coming-soon-text mt-3 max-w-xl font-cinzel text-xs font-medium leading-relaxed tracking-[0.18em] text-theme-cream/70 sm:text-sm"
-            >
-              Estamos puliendo la ficha completa de {boxer.name}: récord,
-              entrenamientos y rivalidades. Vuelve pronto.
-            </p>
-
-            <div
-              class="mt-6 flex flex-wrap items-center gap-3 sm:gap-4"
-            >
-              <a href="/boxeadores" class="boxer-detail-cta boxer-detail-cta-ghost">
-                Todos los boxeadores
+                <span class="boxer-versus-tag" aria-hidden="true">
+                  VS
+                </span>
+                <span class="boxer-versus-photo relative inline-flex size-12 shrink-0 overflow-hidden rounded-full sm:size-14">
+                  <picture class="absolute inset-0">
+                    <source type="image/avif" srcset={opponentSelectImages.avif} />
+                    <source type="image/webp" srcset={opponentSelectImages.webp} />
+                    <img
+                      src={opponentSelectImages.webp}
+                      alt=""
+                      role="presentation"
+                      transition:name={`boxer-hero-${opponent.id}`}
+                      decoding="async"
+                      loading="lazy"
+                      width="80"
+                      height="80"
+                      class="size-full object-cover object-top"
+                    />
+                  </picture>
+                </span>
+                <span class="boxer-versus-text">
+                  <span class="boxer-versus-label">Su rival</span>
+                  <span class="boxer-versus-name">{opponent.name}</span>
+                </span>
+                <ArrowRightIcon
+                  class="boxer-versus-arrow size-4 text-theme-gold/70"
+                  aria-hidden="true"
+                />
               </a>
-            </div>
-          </div>
+            )
+          }
         </div>
       </div>
+
+      <BoxerGallery boxerId={boxer.id} boxerName={boxer.name} />
     </div>
   </section>
+
+  {hasBoxerWorkoutVideos && (
+    <BoxerWorkoutVideos boxerId={boxer.id} boxerName={boxer.name} videos={workoutVideos} />
+  )}
+  {!hasBoxerWorkoutVideos && battle && faceToFaceVideoUrl && (
+    <CombatFaceToFaceVideoSection
+      sectionId="workout"
+      title={`${battle.title} | Cara a cara`}
+      videoUrl={faceToFaceVideoUrl}
+    />
+  )}
 
   <Sponsors />
   <Footer />
 </Layout>
 
 <style>
+  /* ---------- Layout base ---------- */
   .boxer-detail {
     min-height: 100svh;
   }
 
   [data-boxer-detail-bg] {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 60%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 60%,
-      transparent 100%
-    );
+    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
   }
 
   [data-boxer-detail-bg] img {
     filter: saturate(0.8) brightness(0.6);
   }
 
-  .boxer-detail-back {
-    transition:
-      color 250ms ease,
-      transform 250ms ease;
-  }
-
-  .boxer-detail-back:hover,
-  .boxer-detail-back:focus-visible {
-    color: var(--color-theme-cream);
-    transform: translateX(-2px);
-    outline: none;
-  }
-
-  /* ---------- Chips ---------- */
-  .boxer-detail-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 9999px;
-    background: color-mix(in srgb, var(--color-theme-midnight) 80%, black);
-    color: color-mix(in srgb, var(--color-theme-cream) 88%, transparent);
+  /* ---------- Volver (sutil) ---------- */
+  .boxer-back {
     font-family: 'Cinzel', var(--font-fallback);
-    font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 0.32em;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+    color: color-mix(in srgb, var(--color-theme-cream) 50%, transparent);
+    transition: color 250ms ease;
   }
 
   @media (min-width: 640px) {
-    .boxer-detail-chip {
-      font-size: 0.65rem;
-      padding: 0.45rem 0.95rem;
+    .boxer-back {
+      font-size: 0.7rem;
     }
   }
 
-  .boxer-detail-chip-strong {
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-theme-gold) 90%, white) 0%,
-      var(--color-theme-gold) 100%
-    );
-    color: var(--color-theme-midnight);
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
-      0 6px 18px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+  .boxer-back:hover,
+  .boxer-back:focus-visible {
+    color: color-mix(in srgb, var(--color-theme-cream) 90%, transparent);
+    outline: none;
+  }
+
+  .boxer-back-arrow {
+    color: color-mix(in srgb, var(--color-theme-cream) 42%, transparent);
+    transition:
+      transform 250ms ease,
+      color 250ms ease;
+  }
+
+  .boxer-back:hover .boxer-back-arrow,
+  .boxer-back:focus-visible .boxer-back-arrow {
+    transform: translateX(-3px);
+    color: var(--color-theme-gold);
+  }
+
+  .boxer-back-label {
+    position: relative;
+  }
+
+  /* Subrayado fino que aparece solo al interactuar */
+  .boxer-back-label::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    height: 1px;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    background: color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    transition: transform 280ms var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .boxer-back:hover .boxer-back-label::after,
+  .boxer-back:focus-visible .boxer-back-label::after {
+    transform: scaleX(1);
+  }
+
+  /* ---------- Eyebrow de sección ---------- */
+  .boxer-eyebrow {
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: 0.55rem;
+    font-weight: 900;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 82%, transparent);
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.5),
+      0 0 12px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+  }
+
+  @media (min-width: 640px) {
+    .boxer-eyebrow {
+      font-size: 0.65rem;
+    }
   }
 
   /* ---------- Nombre del boxer ---------- */
@@ -389,7 +466,7 @@ const breadcrumbJsonLd = {
     background: linear-gradient(
       180deg,
       var(--color-theme-cream) 0%,
-      var(--color-theme-cream) 50%,
+      var(--color-theme-cream) 48%,
       color-mix(in srgb, var(--color-theme-gold) 95%, var(--color-theme-cream)) 100%
     );
     -webkit-background-clip: text;
@@ -401,73 +478,104 @@ const breadcrumbJsonLd = {
       0 6px 40px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
   }
 
-  /* ---------- Versus con contrincante ---------- */
-  .boxer-detail-versus {
+  /* ---------- Meta (tira editorial) ---------- */
+  /* ---------- Rival (VS) ---------- */
+  .boxer-versus {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.55rem 1.1rem 0.55rem 0.6rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--color-theme-midnight) 72%, black);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
     transition:
       transform 250ms ease,
-      color 250ms ease;
+      box-shadow 250ms ease;
   }
 
-  .boxer-detail-versus:hover,
-  .boxer-detail-versus:focus-visible {
-    transform: translateX(2px);
+  .boxer-versus:hover,
+  .boxer-versus:focus-visible {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 65%, transparent),
+      0 14px 30px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
     outline: none;
   }
 
-  .boxer-detail-versus-label {
+  .boxer-versus-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.5rem;
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: 0.6rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    color: color-mix(in srgb, var(--color-theme-gold) 90%, transparent);
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
   }
 
-  .boxer-detail-versus-photo {
+  .boxer-versus-photo {
     background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
     box-shadow:
       inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
       0 6px 16px rgba(0, 0, 0, 0.45);
-    transition:
-      box-shadow 300ms ease,
-      transform 300ms ease;
+    transition: box-shadow 300ms ease;
   }
 
-  .boxer-detail-versus:hover .boxer-detail-versus-photo,
-  .boxer-detail-versus:focus-visible .boxer-detail-versus-photo {
+  .boxer-versus:hover .boxer-versus-photo,
+  .boxer-versus:focus-visible .boxer-versus-photo {
     box-shadow:
       inset 0 0 0 1px var(--color-theme-gold),
       0 10px 22px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
   }
 
-  .boxer-detail-versus-name {
-    text-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.55),
-      0 0 12px rgba(0, 0, 0, 0.35);
+  .boxer-versus-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+    line-height: 1.1;
+  }
+
+  .boxer-versus-label {
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: 0.5rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
+  }
+
+  .boxer-versus-name {
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    color: var(--color-theme-cream);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
     transition: color 250ms ease;
   }
 
-  .boxer-detail-versus:hover .boxer-detail-versus-name,
-  .boxer-detail-versus:focus-visible .boxer-detail-versus-name {
+  .boxer-versus:hover .boxer-versus-name,
+  .boxer-versus:focus-visible .boxer-versus-name {
     color: var(--color-theme-gold);
   }
 
-  .boxer-detail-versus-arrow {
+  .boxer-versus-arrow {
     transition: transform 250ms ease;
   }
 
-  .boxer-detail-versus:hover .boxer-detail-versus-arrow,
-  .boxer-detail-versus:focus-visible .boxer-detail-versus-arrow {
+  .boxer-versus:hover .boxer-versus-arrow,
+  .boxer-versus:focus-visible .boxer-versus-arrow {
     transform: translateX(3px);
   }
 
-  /* ---------- Bloque "Próximamente" (minimalista) ---------- */
-  .boxer-detail-coming-soon-eyebrow {
-    text-shadow:
-      0 1px 0 rgba(0, 0, 0, 0.5),
-      0 0 12px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
-  }
-
+  /* ---------- Bloque "Ficha en preparación" ---------- */
   .boxer-detail-coming-soon-text {
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
   }
 
-  /* ---------- CTAs ---------- */
+  /* ---------- CTA ---------- */
   .boxer-detail-cta {
     display: inline-flex;
     align-items: center;
@@ -476,13 +584,12 @@ const breadcrumbJsonLd = {
     border-radius: 9999px;
     font-family: 'Cinzel', var(--font-fallback);
     font-size: 0.6rem;
-    font-weight: 800;
-    letter-spacing: 0.32em;
+    font-weight: 900;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     cursor: pointer;
     transition:
       transform 250ms ease,
-      background-color 250ms ease,
       color 250ms ease,
       box-shadow 250ms ease;
   }
@@ -492,36 +599,6 @@ const breadcrumbJsonLd = {
       font-size: 0.7rem;
       padding: 0.8rem 1.5rem;
     }
-  }
-
-  .boxer-detail-cta-primary {
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
-      var(--color-theme-gold) 100%
-    );
-    color: var(--color-theme-midnight);
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
-      0 10px 26px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
-  }
-
-  .boxer-detail-cta-primary:hover,
-  .boxer-detail-cta-primary:focus-visible {
-    transform: translateY(-1px);
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
-      0 14px 32px color-mix(in srgb, var(--color-theme-gold) 50%, transparent);
-    outline: none;
-  }
-
-  .boxer-detail-cta-primary svg {
-    transition: transform 250ms ease;
-  }
-
-  .boxer-detail-cta-primary:hover svg,
-  .boxer-detail-cta-primary:focus-visible svg {
-    transform: translateX(2px);
   }
 
   .boxer-detail-cta-ghost {
@@ -539,48 +616,56 @@ const breadcrumbJsonLd = {
   }
 
   /* ---------- Retrato del boxer ---------- */
-  .boxer-detail-portrait-wrap {
+  .boxer-portrait-wrap {
     position: relative;
     display: flex;
     align-items: start;
     justify-content: center;
+    filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.55));
+  }
+
+  /* Badge de "Campeón previo": arriba a la izquierda del retrato,
+     por encima del aura dorada. El componente ya es position:absolute. */
+  :global(.boxer-detail-wins) {
+    top: 0;
+    left: 0;
+    z-index: 20;
+  }
+
+  @media (min-width: 640px) {
+    :global(.boxer-detail-wins) {
+      top: 4px;
+      left: 8px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :global(.boxer-detail-wins) {
+      top: 8px;
+      left: 16px;
+    }
   }
 
   .boxer-detail-aura {
     position: absolute;
-    inset: -8% -35% auto -35%;
-    height: 90%;
+    top: -22%;
+    left: 50%;
+    width: min(180vw, 64rem);
+    height: 125%;
+    transform: translateX(-50%);
+    border-radius: 9999px;
     background: radial-gradient(
-      ellipse 55% 60% at 50% 38%,
+      ellipse 42% 42% at 50% 50%,
       color-mix(in srgb, var(--color-theme-gold) 38%, transparent) 0%,
-      color-mix(in srgb, var(--color-theme-gold) 12%, transparent) 45%,
-      transparent 75%
+      color-mix(in srgb, var(--color-theme-gold) 12%, transparent) 32%,
+      transparent 62%
     );
     z-index: 0;
     pointer-events: none;
-    -webkit-mask-image: radial-gradient(
-      ellipse 70% 75% at 50% 38%,
-      black 0%,
-      black 55%,
-      transparent 100%
-    );
-    mask-image: radial-gradient(
-      ellipse 70% 75% at 50% 38%,
-      black 0%,
-      black 55%,
-      transparent 100%
-    );
   }
 
   .boxer-detail-portrait {
     max-height: 70vh;
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      black 0%,
-      black 78%,
-      color-mix(in srgb, black 60%, transparent) 90%,
-      transparent 100%
-    );
     mask-image: linear-gradient(
       to bottom,
       black 0%,
@@ -588,21 +673,22 @@ const breadcrumbJsonLd = {
       color-mix(in srgb, black 60%, transparent) 90%,
       transparent 100%
     );
-    filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.55));
   }
 
-  @media (max-width: 1023px) {
+  @media (max-width: 767px) {
     .boxer-detail-portrait {
-      max-height: 55vh;
+      max-height: 58vh;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .boxer-detail-back,
+    .boxer-back,
+    .boxer-back-arrow,
+    .boxer-back-label::after,
     .boxer-detail-cta,
-    .boxer-detail-versus,
-    .boxer-detail-versus-photo,
-    .boxer-detail-versus-arrow {
+    .boxer-versus,
+    .boxer-versus-photo,
+    .boxer-versus-arrow {
       animation: none !important;
       transition: none !important;
     }

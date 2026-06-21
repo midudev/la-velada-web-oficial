@@ -1,3 +1,9 @@
+import { battleVideosById, type BattleVideoSources } from '@/consts/battle-videos'
+import { battlePairs } from '@/consts/battle-pairs'
+import {
+  battleFaceToFaceVideoUrlsById,
+  type BattleFaceToFaceVideoUrl,
+} from '@/consts/battle-face-to-face-videos'
 import { BOXERS_BY_ID } from '@/consts/boxers'
 
 export interface Battle {
@@ -6,20 +12,9 @@ export interface Battle {
   boxerIds: readonly [string, string]
   title: string
   url: `/combate/${string}`
+  video: BattleVideoSources | null
+  faceToFaceVideoUrl: BattleFaceToFaceVideoUrl | null
 }
-
-const battlePairs = [
-  ['edu-aguirre', 'gaston-edul'],
-  ['la-parce', 'fabiana-sevillano'],
-  ['clersss', 'natalia-mx'],
-  ['lit-killah', 'kidd-keo'],
-  ['alondrissa', 'angie-velasco'],
-  ['viruzz', 'gero-arias'],
-  ['samy-rivers', 'roro'],
-  ['marta-diaz', 'tatiana-kaer'],
-  ['plex', 'fernanfloo'],
-  ['illojuan', 'thegrefg'],
-] as const
 
 function getBoxerName(id: string): string {
   const boxer = BOXERS_BY_ID[id]
@@ -36,6 +31,8 @@ export const battles: Battle[] = battlePairs.map(([boxer1Id, boxer2Id], index) =
     boxerIds: [boxer1Id, boxer2Id],
     title: `${getBoxerName(boxer1Id)} vs ${getBoxerName(boxer2Id)}`,
     url: `/combate/${id}`,
+    video: battleVideosById[id] ?? null,
+    faceToFaceVideoUrl: battleFaceToFaceVideoUrlsById[id] ?? null,
   }
 })
 

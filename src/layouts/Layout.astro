@@ -5,6 +5,7 @@ import Analytics from '@vercel/analytics/astro'
 import '@/styles/global.css'
 
 import { fixedTitle } from '@/consts/pageTitles'
+import Header from '@/sections/Header.astro'
 
 const SITE_URL = 'https://www.infolavelada.com'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og.jpg`
@@ -19,18 +20,26 @@ interface Props {
   ogImageAlt?: string
   ogUrl?: string
   ogType?: 'website' | 'article' | 'profile'
+  /** Site chrome; disable on full-bleed routes (e.g. combate detail). */
+  showHeader?: boolean
 }
 
 const {
   title = fixedTitle,
-  description = 'La Velada del Año VI: evento de boxeo amateur entre streamers y creadores de contenido, organizado por Ibai Llanos el 25 de julio de 2026 en el Estadio de La Cartuja de Sevilla.',
+  description = 'La Velada del Año VI: evento de boxeo amateur de Ibai Llanos. Toda la información sobre fecha, combates y participantes en Sevilla el 25 de julio de 2026.',
   canonical,
   robots,
   ogImage = DEFAULT_OG_IMAGE,
   ogImageAlt = DEFAULT_OG_ALT,
-  ogUrl = canonical ?? SITE_URL,
+  ogUrl,
   ogType = 'website',
+  showHeader = true,
 } = Astro.props
+
+const cleanPathname = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\/$/, '')
+const canonicalURL = canonical ?? `${SITE_URL}${cleanPathname}`
+const finalOgUrl = ogUrl ?? canonicalURL
+const finalRobots = robots ?? 'index, follow'
 
 // Datos estructurados globales (válidos para todas las páginas).
 // El SportsEvent específico vive en la home para evitar duplicar JSON-LD
@@ -54,7 +63,7 @@ const organizationJsonLd = {
   '@id': `${SITE_URL}/#organization`,
   name: 'La Velada del Año',
   url: `${SITE_URL}/`,
-  logo: `${SITE_URL}/logo.png`,
+  logo: `${SITE_URL}/logo.webp`,
   sameAs: [
     'https://x.com/infoLaVelada',
     'https://www.twitch.tv/ibai',
@@ -79,17 +88,24 @@ const organizationJsonLd = {
     </title>
 
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
     <link
       rel="preload"
-      href="/fonts/cinzel-regular.woff2"
+      href="/fonts/cinzel-medium.woff2"
       as="font"
       type="font/woff2"
       crossorigin="anonymous"
-      fetchpriority="low"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      href="/fonts/cinzel-black.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
     />
     <link
       rel="preload"
@@ -118,10 +134,10 @@ const organizationJsonLd = {
     <meta name="description" content={description} />
     <meta name="author" content="Ibai Llanos" />
     <meta name="theme-color" content="#0a1024" />
-    {canonical && <link rel="canonical" href={canonical} />}
-    {robots && <meta name="robots" content={robots} />}
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="robots" content={finalRobots} />
 
-    <meta property="og:url" content={ogUrl} />
+    <meta property="og:url" content={finalOgUrl} />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -168,7 +184,12 @@ const organizationJsonLd = {
 
       const SKIP_BOXERS_ENTER_ATTR = 'data-skip-boxers-enter'
       const BOXERS_INDEX_PATH = '/boxeadores'
+      const COMBATS_INDEX_PATH = '/combates'
       const BOXER_DETAIL_PATH_RE = /^\/boxeadores\/[^/]+$/
+
+      // Imágenes que comparten `transition:name="boxer-hero-*"` entre páginas:
+      // los recortes de los combates y las tarjetas del listado de boxeadores.
+      const SHARED_HERO_SELECTOR = '.boxer-pic, .boxer-card-img'
 
       const getNormalizedPathname = (url: URL | string) => {
         const pathname =
@@ -183,6 +204,35 @@ const organizationJsonLd = {
         return toPath === BOXERS_INDEX_PATH && BOXER_DETAIL_PATH_RE.test(fromPath)
       }
 
+      // Navegación directa entre los dos listados (combates ↔ boxeadores). Ahí
+      // las decenas de imágenes con el mismo `transition:name` provocan que
+      // todas vuelen a la vez y queda fatal: lo evitamos para dejar solo el
+      // fundido de la raíz entre ambas páginas.
+      const isListingCrossfade = (event: AstroNavigationEvent) => {
+        const fromPath = getNormalizedPathname(event.from)
+        const toPath = getNormalizedPathname(event.to)
+        const endpoints = new Set([fromPath, toPath])
+
+        return endpoints.has(BOXERS_INDEX_PATH) && endpoints.has(COMBATS_INDEX_PATH)
+      }
+
+      // Quita el `view-transition-name` para que esas imágenes no se capturen
+      // como elementos compartidos y formen parte del fundido de la raíz.
+      const dropSharedHeroNames = (root: Document) => {
+        root.querySelectorAll<HTMLElement>(SHARED_HERO_SELECTOR).forEach((el) => {
+          el.style.setProperty('view-transition-name', 'none', 'important')
+        })
+      }
+
+      // El snapshot «antiguo» se captura al arrancar la view transition, antes
+      // de `before-swap`, así que la página saliente hay que limpiarla aquí.
+      document.addEventListener('astro:before-preparation', (event) => {
+        const navigationEvent = event as AstroNavigationEvent
+        if (isListingCrossfade(navigationEvent)) {
+          dropSharedHeroNames(document)
+        }
+      })
+
       document.addEventListener('astro:before-swap', (event) => {
         const transitionEvent = event as AstroBeforeSwapEvent
         const shouldSkipBoxersEnter = isReturningFromBoxerDetail(transitionEvent)
@@ -191,6 +241,14 @@ const organizationJsonLd = {
           SKIP_BOXERS_ENTER_ATTR,
           shouldSkipBoxersEnter,
         )
+
+        // Y la página entrante se limpia antes de capturar el snapshot «nuevo».
+        // (No tocamos la animación de entrada de las tarjetas: el listado de
+        // boxeadores las revela con `animate-fade-in-up`, así que dejamos que
+        // aparezcan con normalidad sobre el fundido.)
+        if (isListingCrossfade(transitionEvent)) {
+          dropSharedHeroNames(transitionEvent.newDocument)
+        }
       })
     </script>
   </head>
@@ -198,6 +256,7 @@ const organizationJsonLd = {
     <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-black focus:outline-none">
       Saltar al contenido principal
     </a>
+    {showHeader && <Header />}
     <main id="main-content">
       <slot />
     </main>

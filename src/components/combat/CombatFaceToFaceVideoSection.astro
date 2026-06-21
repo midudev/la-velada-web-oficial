@@ -1,0 +1,183 @@
+---
+import SectionDivider from '@/components/SectionDivider.astro'
+import ThumbnailPlaceholder from '@/components/ThumbnailPlaceholder.astro'
+import PlayIcon from '@/assets/svg/play.svg'
+
+interface Props {
+  sectionId?: string
+  title: string
+  videoUrl: string | null
+}
+
+const { sectionId, title, videoUrl } = Astro.props
+
+function getYouTubeVideoId(url: string) {
+  try {
+    const parsedUrl = new URL(url)
+
+    if (parsedUrl.hostname === 'youtu.be') {
+      return parsedUrl.pathname.split('/').filter(Boolean)[0] ?? null
+    }
+
+    return parsedUrl.searchParams.get('v')
+  } catch {
+    return null
+  }
+}
+
+const videoId = videoUrl ? getYouTubeVideoId(videoUrl) : null
+const posterWebp = videoId ? `https://i.ytimg.com/vi_webp/${videoId}/maxresdefault.webp` : null
+const posterJpg = videoId ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg` : null
+const embedUrl = videoId
+  ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&playsinline=1`
+  : null
+---
+
+{
+  videoId && embedUrl && (
+    <section
+      id={sectionId}
+      class="combat-section px-4 py-16 sm:px-6 sm:py-20"
+      aria-labelledby="face-to-face-title"
+    >
+      <div class="mx-auto w-full max-w-5xl">
+        <div class="mb-8 flex flex-col items-center gap-2 text-center">
+          <SectionDivider size="sm" class="w-full" />
+          <h2
+            id="face-to-face-title"
+            class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm"
+          >
+            CARA A CARA
+          </h2>
+        </div>
+
+        <div class="face-video-shell" data-face-video>
+          <button
+            type="button"
+            class="face-video-trigger group"
+            data-face-video-trigger
+            data-face-video-embed={embedUrl}
+            data-face-video-title={title}
+            aria-label={`Reproducir cara a cara: ${title}`}
+          >
+            <ThumbnailPlaceholder />
+            <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
+              {posterWebp && <source srcset={posterWebp} type="image/webp" />}
+              {posterJpg && (
+                <img
+                  src={posterJpg}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+                  onerror={`this.onerror=null;this.src='https://i.ytimg.com/vi/${videoId}/hqdefault.jpg'`}
+                />
+              )}
+            </picture>
+
+            <span
+              aria-hidden="true"
+              class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/42 to-black/18"
+            />
+            <span
+              aria-hidden="true"
+              class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(199,168,107,0.18),_transparent_55%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
+            />
+
+            <span aria-hidden="true" class="absolute inset-0 flex items-center justify-center">
+              <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md backdrop-contrast-125 backdrop-saturate-150 transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
+                <PlayIcon
+                  class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
+                  aria-hidden="true"
+                />
+              </span>
+            </span>
+
+            <span class="relative flex h-full w-full flex-col justify-end gap-1 p-5 sm:p-6 lg:p-7">
+              <span class="font-cinzel text-2xl leading-tight font-bold tracking-[0.04em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl">
+                {title}
+              </span>
+              <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-semibold tracking-[0.3em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
+                VER VÍDEO
+              </span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  function initFaceToFaceVideos() {
+    $$<HTMLElement>('[data-face-video]').forEach((root) => {
+      if (root.dataset.faceVideoReady === 'true') return
+
+      const trigger = $<HTMLButtonElement>('[data-face-video-trigger]', root)
+      if (!trigger) return
+
+      root.dataset.faceVideoReady = 'true'
+      trigger.addEventListener('click', () => {
+        const embedUrl = trigger.dataset.faceVideoEmbed
+        if (!embedUrl) return
+
+        const iframe = document.createElement('iframe')
+        iframe.src = embedUrl
+        iframe.allow =
+          'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+        iframe.setAttribute('allowfullscreen', '')
+        iframe.title = trigger.dataset.faceVideoTitle ?? 'Cara a cara'
+        iframe.className = 'h-full w-full border-0'
+
+        root.replaceChildren(iframe)
+      })
+    })
+  }
+
+  document.addEventListener('astro:page-load', initFaceToFaceVideos)
+</script>
+
+<style>
+  .combat-section {
+    position: relative;
+    z-index: 2;
+    color: var(--color-theme-cream);
+    background: transparent;
+  }
+
+  .face-video-shell {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    background: black;
+    box-shadow: 0 28px 80px -28px rgba(0, 0, 0, 0.74);
+  }
+
+  .face-video-trigger {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border: 0;
+    padding: 0;
+    background: color-mix(in srgb, var(--color-theme-navy) 40%, black);
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .face-video-trigger:focus-visible {
+    box-shadow:
+      inset 0 0 0 2px color-mix(in srgb, var(--color-theme-gold) 78%, transparent),
+      inset 0 0 0 6px rgba(5, 8, 22, 0.82);
+  }
+</style>

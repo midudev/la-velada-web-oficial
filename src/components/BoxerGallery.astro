@@ -1,269 +1,264 @@
 ---
-import { fighterGallery } from '@/utils/get-image-count'
-import { Icons } from '@/components/Icons'
+import SectionDivider from '@/components/SectionDivider.astro'
+import { getBoxerGallery } from '@/consts/boxer-gallery'
 
 interface Props {
-  id: string
-  name: string
+  boxerId: string
+  boxerName?: string
 }
 
-const { id, name } = Astro.props
-
-const gallery = fighterGallery(id)
-const IMAGES_TO_LOAD = Math.min(gallery, 3)
+const { boxerId, boxerName } = Astro.props
+const images = getBoxerGallery(boxerId, boxerName)
 ---
 
-<div id="boxer-gallery" class={`grid gap-3 grid-rows-2 grid-cols-2`}>
-  {
-    Array.from({ length: IMAGES_TO_LOAD }).map((_, index) => {
-      const currentIndex = ++index
-      const href = `/images/fighters/gallery/${id}/${currentIndex}.webp`
-
-      return (
-        <a
-          class:list={[
-            'boxer-image aspect-square transition hover:scale-105 hover:brightness-110',
-            'col-span-1 row-span-1',
-            'animate-fade-in animate-delay-[1000ms]',
-          ]}
-          href={href}
-          title={`Abrir imagen ${currentIndex} de la galería de ${name}`}
-        >
-          <figure class="h-full w-full">
-            <picture class="block h-full w-full">
-              <img
-                loading="lazy"
-                decoding="async"
-                class="aspect-square h-full w-full rounded object-cover object-top"
-                alt={`Imagen de la galería de fotos de ${name}`}
-                src={href}
-              />
-            </picture>
-          </figure>
-        </a>
-      )
-    })
-  }
-  <dialog
-    id="lightbox"
-    class="mx-auto my-auto h-screen w-full border-none bg-transparent outline-none ring-0 backdrop:bg-black/90 md:mt-20"
-  >
-    <div
-      class="animate-zoom-in mx-auto flex h-[80%] w-[80%] items-center justify-center overflow-hidden"
+{
+  images.length > 0 && (
+    <section
+      data-boxer-gallery
+      class="boxer-gallery mt-10 w-full animate-fade-in-up animate-delay-500"
     >
-      <div class="absolute h-full w-full bg-transparent" data-dialog-bg></div>
-      <p
-        class="font-primary pointer-events-none absolute bottom-0 text-center text-xs text-white/50 md:hidden"
-      >
-        Desliza para la siguiente
+      <SectionDivider size="sm" class="w-full" />
+
+      <p class="mt-5 font-cinzel text-[0.55rem] font-black tracking-[0.26em] text-theme-gold/80 sm:text-[0.65rem]">
+        GALERÍA
       </p>
-      <button
-        data-btn-prev
-        class="group absolute left-[10px] z-10 hidden cursor-pointer select-none text-transparent transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:left-0 md:flex md:items-center md:justify-center"
-        id="btn-prev"
+
+      <ul class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+        {images.map((image, i) => (
+          <li>
+            <button
+              type="button"
+              data-gallery-item
+              data-index={i}
+              data-md-avif={image.md.avif}
+              data-md-webp={image.md.webp}
+              data-alt={image.alt}
+              aria-label={`Ampliar ${image.alt}`}
+              class="group relative block aspect-[3/4] w-full overflow-hidden rounded-lg ring-1 ring-theme-cream/10 transition duration-300 hover:ring-theme-gold/50 focus-visible:ring-2 focus-visible:ring-theme-gold focus-visible:outline-none"
+            >
+              <picture>
+                <source type="image/avif" srcset={image.sm.avif} />
+                <source type="image/webp" srcset={image.sm.webp} />
+                <img
+                  src={image.sm.webp}
+                  alt={image.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="size-full object-cover transition duration-300 group-hover:scale-105"
+                />
+              </picture>
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <dialog
+        data-gallery-dialog
+        class="boxer-gallery-dialog"
+        aria-label="Galería de fotos ampliada"
       >
-        <Icons.ChevronLeft
-          class="stroke-theme-cream group-hover:stroke-theme-gold h-20 w-20 bg-transparent fill-transparent"
-        />
-      </button>
-      <div class="z-8 relative h-fit rounded md:h-full">
-        <button
-          data-btn-close
-          id="btn-close"
-          type="button"
-          class="hover:text-theme-gold text-theme-cream absolute right-2 top-2 z-10 hidden cursor-pointer rounded bg-black/60 p-4 transition hover:scale-110 md:block"
-        >
-          <Icons.XIcon class="h-5 w-5" aria-hidden="true" fill="none" />
-        </button>
-        <img
-          loading="lazy"
-          decoding="async"
-          class="boxer-gallery-img z-8 h-fit rounded object-contain object-center md:h-full"
-          alt={`Imagen de la galería de fotos de ${name}`}
-          src={`/images/fighters/gallery/${id}/1.webp`}
-        />
-      </div>
-      <button
-        data-btn-next
-        class="group absolute right-[10px] z-10 hidden cursor-pointer select-none text-transparent transition hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 md:relative md:right-0 md:flex md:items-center md:justify-center"
-        id="btn-next"
-      >
-        <Icons.ChevronRight
-          class="stroke-theme-cream group-hover:stroke-theme-gold h-20 w-20 bg-transparent fill-transparent"
-        />
-      </button>
-    </div>
-  </dialog>
-</div>
+        <div data-gallery-backdrop class="boxer-gallery-dialog-inner">
+          <button
+            type="button"
+            data-gallery-close
+            class="boxer-gallery-btn boxer-gallery-close"
+            aria-label="Cerrar"
+          >
+            ✕
+          </button>
+          <button
+            type="button"
+            data-gallery-prev
+            class="boxer-gallery-btn boxer-gallery-nav boxer-gallery-prev"
+            aria-label="Foto anterior"
+          >
+            ‹
+          </button>
+          <img data-gallery-dialog-img class="boxer-gallery-dialog-img" alt="" decoding="async" />
+          <button
+            type="button"
+            data-gallery-next
+            class="boxer-gallery-btn boxer-gallery-nav boxer-gallery-next"
+            aria-label="Foto siguiente"
+          >
+            ›
+          </button>
+          <span data-gallery-counter class="boxer-gallery-counter" aria-hidden="true" />
+        </div>
+      </dialog>
+    </section>
+  )
+}
 
 <script>
-  import { $, $$ } from '@/lib/dom-selector'
+  function initBoxerGallery() {
+    const gallery = document.querySelector('[data-boxer-gallery]')
+    if (!gallery) return
 
-  document.addEventListener('astro:page-load', () => {
-    const $lightbox = $('#lightbox') as HTMLDialogElement
-    const $gallery = $('#boxer-gallery') as HTMLElement
-    const $btnPrev = $('#btn-prev') as HTMLButtonElement
-    const $btnNext = $('#btn-next') as HTMLButtonElement
-    const $btnClose = $('#btn-close') as HTMLButtonElement
-    if (!$gallery) return
+    const dialog = gallery.querySelector('[data-gallery-dialog]') as HTMLDialogElement | null
+    const dialogImg = gallery.querySelector('[data-gallery-dialog-img]') as HTMLImageElement | null
+    const counter = gallery.querySelector('[data-gallery-counter]') as HTMLElement | null
+    const items = Array.from(gallery.querySelectorAll('[data-gallery-item]')) as HTMLElement[]
+    if (!dialog || !dialogImg || items.length === 0) return
 
-    const $links = $$<HTMLAnchorElement>('a', $gallery)
+    let current = 0
 
-    const updateImg = (link: HTMLElement) => {
-      const img = $<HTMLImageElement>('.boxer-gallery-img', $lightbox)
-      const newImg = $<HTMLImageElement>('img', link)
-      if (img && newImg) {
-        resetMainImageAnimation(img)
-        img.src = newImg.src
-        img.classList.add('animate-fade-in')
-
-        img.style.transition = '0.2s ease transform'
-        img.style.transform = 'translateX(0)'
+    const show = (index: number) => {
+      current = (index + items.length) % items.length
+      const btn = items[current]
+      const webp = btn.dataset.mdWebp ?? ''
+      dialogImg.onerror = () => {
+        dialogImg.onerror = null
+        dialogImg.src = webp
       }
+      dialogImg.src = btn.dataset.mdAvif ?? webp
+      dialogImg.alt = btn.dataset.alt ?? ''
+      if (counter) counter.textContent = `${current + 1} / ${items.length}`
     }
 
-    const close = () => {
-      $lightbox.close()
-      document.body.style.overflow = ''
-    }
-
-    $btnClose?.addEventListener('click', close)
-
-    const resetMainImageAnimation = (mainImage: HTMLImageElement) => {
-      mainImage.style.animation = 'none'
-      mainImage.offsetWidth // trigger reflow
-      mainImage.style.animation = ''
-    }
-
-    const showPrevImage = () => {
-      const current = $<HTMLAnchorElement>('a[data-current=true]', $gallery)!
-      const prev = (current.previousElementSibling ||
-        $<HTMLAnchorElement>('a:last-of-type', $gallery)) as HTMLAnchorElement
-      prev.click()
-    }
-
-    const showNextImage = () => {
-      const current = $<HTMLAnchorElement>('a[data-current=true]', $gallery)!
-      const next = (
-        current.nextElementSibling?.nodeName === 'A'
-          ? current.nextElementSibling
-          : $<HTMLAnchorElement>('a:first-of-type', $gallery)
-      ) as HTMLAnchorElement
-      next.click()
-    }
-
-    let isAnimating = false
-
-    const startSwipeDrag = (startEvent: MouseEvent | TouchEvent) => {
-      let initialTouchX: number
-      let swipeDeltaX: number = 0
-
-      const getTouchX = (e: MouseEvent | TouchEvent) =>
-        e instanceof MouseEvent ? e.pageX : e.touches[0].pageX
-
-      const handleSwipeMove = (moveEvent: MouseEvent | TouchEvent) => {
-        const currentTouchX = getTouchX(moveEvent)
-        swipeDeltaX = currentTouchX - initialTouchX
-        const $lightboxImg = $<HTMLImageElement>('.boxer-gallery-img', $lightbox)
-        if ($lightboxImg) {
-          $lightboxImg.style.transform = `translateX(${swipeDeltaX}px)`
-        }
-      }
-
-      const handleSwipeDecision = () => {
-        if (isAnimating) return
-
-        const $lightboxImg = $<HTMLImageElement>('.boxer-gallery-img', $lightbox)
-        if (!$lightboxImg) return
-
-        if (swipeDeltaX > $lightboxImg.offsetWidth * 0.5) {
-          isAnimating = true
-          showPrevImage()
-        } else if (swipeDeltaX < -$lightboxImg.offsetWidth * 0.5) {
-          isAnimating = true
-          showNextImage()
-        } else {
-          $lightboxImg.style.transition = '0.2s ease transform'
-          $lightboxImg.style.transform = 'translateX(0)'
-        }
-
-        document.removeEventListener('mousemove', handleSwipeMove)
-        document.removeEventListener('mouseup', handleSwipeDecision)
-        document.removeEventListener('touchmove', handleSwipeMove)
-        document.removeEventListener('touchend', handleSwipeDecision)
-      }
-
-      initialTouchX = getTouchX(startEvent)
-
-      document.addEventListener('mousemove', handleSwipeMove)
-      document.addEventListener('mouseup', handleSwipeDecision)
-      document.addEventListener('touchmove', handleSwipeMove, { passive: true })
-      document.addEventListener('touchend', handleSwipeDecision, { passive: true })
-    }
-
-    const $lightboxImg = $<HTMLImageElement>('.boxer-gallery-img', $lightbox)
-    if ($lightboxImg) {
-      $lightboxImg.addEventListener('mousedown', (e) => startSwipeDrag(e))
-      $lightboxImg.addEventListener('touchstart', (e) => startSwipeDrag(e))
-      $lightboxImg.addEventListener('animationend', () => {
-        isAnimating = false
-      })
-    }
-
-    $btnPrev.addEventListener('click', () => {
-      if (!$lightbox.open) return
-      showPrevImage()
-    })
-
-    $btnNext.addEventListener('click', () => {
-      if (!$lightbox.open) return
-      showNextImage()
-    })
-
-    document.addEventListener('keydown', (event) => {
-      if (!$lightbox.open) return
-
-      if (event.key === 'Escape') {
-        close()
-      }
-
-      if (event.key === 'ArrowRight') {
-        showNextImage()
-      }
-
-      if (event.key === 'ArrowLeft') {
-        showPrevImage()
-      }
-    })
-
-    $lightbox?.addEventListener('click', (event) => {
-      const $dialogBg = $('[data-dialog-bg]') as HTMLDivElement
-      const canClose = event.target === $dialogBg || event.target === $lightbox
-      if (canClose) close()
-    })
-
-    // When clicking on a lightbox link
-    // use the link image as the main image.
-    $links.forEach((link) =>
-      link.addEventListener('click', (event) => {
-        event.preventDefault()
-        // remove current data atribute
-        $<HTMLAnchorElement>('a[data-current=true]', $gallery)?.removeAttribute('data-current')
-        // set current data atribute
-        link.setAttribute('data-current', 'true')
-
-        // update image before show lightbox
-        if ($lightbox.open) {
-          updateImg(link)
-        }
-
-        // add lightbox
-        if (!$lightbox.open) {
-          updateImg(link)
-          $lightbox.showModal()
-          document.body.style.overflow = 'hidden'
-        }
+    items.forEach((btn, i) =>
+      btn.addEventListener('click', () => {
+        show(i)
+        dialog.showModal()
+        document.documentElement.style.overflow = 'hidden'
       }),
     )
-  })
+
+    gallery.querySelector('[data-gallery-prev]')?.addEventListener('click', () => show(current - 1))
+    gallery.querySelector('[data-gallery-next]')?.addEventListener('click', () => show(current + 1))
+    gallery.querySelector('[data-gallery-close]')?.addEventListener('click', () => dialog.close())
+
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        show(current - 1)
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        show(current + 1)
+      }
+    })
+
+    dialog.addEventListener('click', (e) => {
+      const t = e.target as Element
+      if (t === dialog || t.hasAttribute('data-gallery-backdrop')) dialog.close()
+    })
+
+    dialog.addEventListener('close', () => {
+      document.documentElement.style.overflow = ''
+    })
+  }
+
+  document.addEventListener('astro:page-load', initBoxerGallery)
 </script>
+
+<style>
+  .boxer-gallery-dialog {
+    max-width: 100vw;
+    max-height: 100dvh;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  .boxer-gallery-dialog::backdrop {
+    background: rgba(3, 6, 16, 0.82);
+    backdrop-filter: blur(6px);
+  }
+
+  .boxer-gallery-dialog-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: clamp(0.5rem, 2vw, 1.5rem); /* small padding for controls */
+  }
+
+  .boxer-gallery-dialog-img {
+    max-width: 100%;
+    max-height: 100dvh;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* show whole image without cropping */
+    border-radius: 0.5rem;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  }
+
+  .boxer-gallery-btn {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-theme-cream);
+    background: color-mix(in srgb, var(--color-theme-midnight) 70%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    border-radius: 9999px;
+    transition:
+      background-color 250ms ease,
+      box-shadow 250ms ease,
+      transform 250ms ease;
+  }
+
+  .boxer-gallery-btn:hover,
+  .boxer-gallery-btn:focus-visible {
+    background: color-mix(in srgb, var(--color-theme-midnight) 90%, black);
+    box-shadow: inset 0 0 0 1px var(--color-theme-gold);
+    outline: none;
+  }
+
+  .boxer-gallery-close {
+    top: clamp(0.75rem, 3vw, 1.5rem);
+    right: clamp(0.75rem, 3vw, 1.5rem);
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1rem;
+  }
+
+  .boxer-gallery-nav {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.75rem;
+    line-height: 1;
+  }
+
+  .boxer-gallery-nav:hover,
+  .boxer-gallery-nav:focus-visible {
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  .boxer-gallery-prev {
+    left: clamp(0.5rem, 3vw, 2rem);
+  }
+  .boxer-gallery-next {
+    right: clamp(0.5rem, 3vw, 2rem);
+  }
+
+  .boxer-gallery-counter {
+    position: absolute;
+    bottom: clamp(0.75rem, 3vw, 1.75rem);
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', var(--font-fallback);
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    color: color-mix(in srgb, var(--color-theme-cream) 80%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boxer-gallery-btn,
+    .boxer-gallery-dialog-img,
+    .boxer-gallery img {
+      transition: none !important;
+    }
+  }
+</style>

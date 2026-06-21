@@ -1,6 +1,6 @@
-# API de Predicciones - La Velada del Año V
+# API de Predicciones - La Velada del Año VI
 
-Esta API permite gestionar las predicciones de los combates de La Velada del Año V usando Turso como base de datos. Incluye tracking de usuarios para evitar votos duplicados y permitir cambios de voto. El `user_id` se obtiene automáticamente de la sesión del usuario autenticado. La validación de combates se realiza usando los datos locales para mayor eficiencia.
+Esta API permite gestionar las predicciones de los combates de La Velada del Año VI usando Turso como base de datos. Incluye tracking de usuarios para evitar votos duplicados y permitir cambios de voto. El `user_id` se obtiene automáticamente de la sesión del usuario autenticado. La validación de combates se realiza usando los datos locales para mayor eficiencia.
 
 ## Endpoints
 

@@ -1,4 +1,5 @@
 ---
+import SectionHeader from '@/components/SectionHeader.astro'
 import AlsaLogo from '@/assets/sponsors/alsa.svg'
 import CeraveLogo from '@/assets/sponsors/cerave.svg'
 import CocaColaLogo from '@/assets/sponsors/cocacola.svg'
@@ -10,9 +11,11 @@ import MaxibonLogo from '@/assets/sponsors/maxibon.svg'
 import McDonaldsLogo from '@/assets/sponsors/mcdonalds.svg'
 import RevolutLogo from '@/assets/sponsors/revolut.svg'
 import SpotifyLogo from '@/assets/sponsors/spotify.svg'
+import { withUtm } from '@/lib/utm'
 
 interface Sponsor {
   name: string
+  slug: string
   url: string
   label: string
   Logo: typeof MaxibonLogo
@@ -20,9 +23,53 @@ interface Sponsor {
   logoClass: string
 }
 
+interface PromoBanner {
+  name: string
+  slug: string
+  url: string
+  label: string
+  alt: string
+  avifSrc: string
+  webpSrc: string
+  mobileAvifSrc: string
+  mobileWebpSrc: string
+  width: number
+  height: number
+}
+
+const PROMO_BANNERS: PromoBanner[] = [
+  {
+    name: 'Revolut',
+    slug: 'revolut',
+    url: 'https://www.revolut.com/en-ES/velada-6-web-velada/',
+    label: 'Ir al sorteo de entradas de La Velada VI con Revolut',
+    alt: 'Únete a Revolut y entra en el sorteo de 4 entradas y 1.000 euros',
+    avifSrc: '/sponsor-banners/revolut-la-velada-vi.avif',
+    webpSrc: '/sponsor-banners/revolut-la-velada-vi.webp',
+    mobileAvifSrc: '/sponsor-banners/revolut-la-velada-vi-mobile.avif',
+    mobileWebpSrc: '/sponsor-banners/revolut-la-velada-vi-mobile.webp',
+    width: 1024,
+    height: 151,
+  },
+  {
+    name: 'Alsa',
+    slug: 'alsa',
+    url: 'https://buslavelada.alsa.es/',
+    label: 'Comprar buses directos a La Velada VI con Alsa',
+    alt: 'Buses directos a La Velada VI con Alsa',
+    avifSrc: '/sponsor-banners/alsa-la-velada-vi.avif',
+    webpSrc: '/sponsor-banners/alsa-la-velada-vi.webp',
+    mobileAvifSrc: '/sponsor-banners/alsa-la-velada-vi-mobile.avif',
+    mobileWebpSrc: '/sponsor-banners/alsa-la-velada-vi-mobile.webp',
+    width: 1024,
+    height: 150,
+  },
+]
+
 const SPONSORS: Sponsor[] = [
   {
     name: 'Maxibon',
+    slug: 'maxibon',
     url: 'https://froneri.es/nuestras-marcas/maxibon',
     label: 'Ir a la página web de Maxibon',
     Logo: MaxibonLogo,
@@ -30,6 +77,7 @@ const SPONSORS: Sponsor[] = [
   },
   {
     name: 'Coca-Cola',
+    slug: 'coca-cola',
     url: 'https://www.cocacola.es/',
     label: 'Ir a la página web de Coca-Cola',
     Logo: CocaColaLogo,
@@ -37,6 +85,7 @@ const SPONSORS: Sponsor[] = [
   },
   {
     name: 'Revolut',
+    slug: 'revolut',
     url: 'https://www.revolut.com/',
     label: 'Ir a la página web de Revolut',
     Logo: RevolutLogo,
@@ -44,6 +93,7 @@ const SPONSORS: Sponsor[] = [
   },
   {
     name: 'Spotify',
+    slug: 'spotify',
     url: 'https://www.spotify.com/',
     label: 'Ir a la página web de Spotify',
     Logo: SpotifyLogo,
@@ -51,6 +101,7 @@ const SPONSORS: Sponsor[] = [
   },
   {
     name: 'InfoJobs',
+    slug: 'infojobs',
     url: 'https://www.infojobs.net/',
     label: 'Ir a la página web de InfoJobs',
     Logo: InfojobsLogo,
@@ -58,6 +109,7 @@ const SPONSORS: Sponsor[] = [
   },
   {
     name: 'Mahou',
+    slug: 'mahou',
     url: 'https://www.mahou.es/',
     label: 'Ir a la página web de Mahou',
     Logo: MahouLogo,
@@ -65,6 +117,7 @@ const SPONSORS: Sponsor[] = [
   },
   {
     name: 'idealo',
+    slug: 'idealo',
     url: 'https://www.idealo.es/',
     label: 'Ir a la página web de idealo',
     Logo: IdealoLogo,
@@ -72,6 +125,7 @@ const SPONSORS: Sponsor[] = [
   },
   {
     name: "McDonald's",
+    slug: 'mcdonalds',
     url: 'https://www.mcdonalds.es/',
     label: "Ir a la página web de McDonald's",
     Logo: McDonaldsLogo,
@@ -79,6 +133,7 @@ const SPONSORS: Sponsor[] = [
   },
   {
     name: 'Grefusa',
+    slug: 'grefusa',
     url: 'https://www.grefusa.com/',
     label: 'Ir a la página web de Grefusa',
     Logo: GrefusaLogo,
@@ -86,6 +141,7 @@ const SPONSORS: Sponsor[] = [
   },
   {
     name: 'CeraVe',
+    slug: 'cerave',
     url: 'https://www.cerave.es/',
     label: 'Ir a la página web de CeraVe',
     Logo: CeraveLogo,
@@ -93,6 +149,7 @@ const SPONSORS: Sponsor[] = [
   },
   {
     name: 'Alsa',
+    slug: 'alsa',
     url: 'https://www.alsa.es/',
     label: 'Ir a la página web de Alsa',
     Logo: AlsaLogo,
@@ -119,36 +176,75 @@ const SPONSORS: Sponsor[] = [
   </div>
 
   <div class="relative mx-auto flex max-w-6xl flex-col items-center">
-    <div class="mb-8 flex items-center gap-4 sm:mb-12" aria-hidden="true">
-      <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/40 sm:w-24"></span>
-      <span class="size-1.5 rotate-45 bg-theme-gold/70"></span>
-      <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/40 sm:w-24"></span>
+    <div class="sponsors-header">
+      <SectionHeader
+        titleId="sponsors-title"
+        title="PATROCINADORES"
+        subtitle="Las marcas que hacen posible La Velada del Año VI"
+        subtitleClass="mb-10 max-w-xl tracking-[0.16em] sm:mb-12 sm:text-sm"
+        hideDivider
+      />
     </div>
 
-    <h2
-      id="sponsors-title"
-      class="mb-3 text-center font-cinzel text-3xl font-bold tracking-[0.18em] text-theme-cream sm:text-4xl md:text-5xl"
-    >
-      PATROCINADORES
-    </h2>
-    <p
-      class="mb-12 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.25em] text-balance text-white/55 sm:mb-16 sm:text-sm"
-    >
-      Las marcas que hacen posible La Velada del Año VI
-    </p>
+    <div class="sponsors-promos mb-16 flex w-full max-w-[760px] flex-col gap-5 sm:mb-20">
+      {
+        PROMO_BANNERS.map(
+          ({
+            name,
+            slug,
+            url,
+            label,
+            alt,
+            avifSrc,
+            webpSrc,
+            mobileAvifSrc,
+            mobileWebpSrc,
+            width,
+            height,
+          }) => (
+            <div class="promo-banner">
+              <a
+                href={withUtm(url, { medium: 'promo_banner', content: slug })}
+                target="_blank"
+                rel="sponsored noopener noreferrer"
+                aria-label={label}
+                title={name}
+                class="group relative block w-full overflow-hidden rounded-md bg-black shadow-[0_14px_40px_rgba(0,0,0,0.3)] ring-1 ring-white/10 transition-transform duration-500 outline-none hover:-translate-y-1 hover:ring-theme-gold/45 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+              >
+                <picture>
+                  <source srcset={mobileAvifSrc} media="(max-width: 639px)" type="image/avif" />
+                  <source srcset={mobileWebpSrc} media="(max-width: 639px)" type="image/webp" />
+                  <source srcset={avifSrc} type="image/avif" />
+                  <source srcset={webpSrc} type="image/webp" />
+                  <img
+                    src={webpSrc}
+                    alt={alt}
+                    width={width}
+                    height={height}
+                    loading="lazy"
+                    decoding="async"
+                    class="block h-auto w-full transition duration-500 group-hover:scale-[1.01] group-hover:brightness-105 group-focus-visible:scale-[1.01] group-focus-visible:brightness-105"
+                  />
+                </picture>
+              </a>
+            </div>
+          ),
+        )
+      }
+    </div>
 
     <div class="relative w-full">
       <ul class="sponsors-grid" role="list">
         {
-          SPONSORS.map(({ name, url, label, Logo, logoClass }, index) => (
-            <li class="animate-fade-in-up" style={`animation-delay:${1100 + index * 65}ms`}>
+          SPONSORS.map(({ name, slug, url, label, Logo, logoClass }, index) => (
+            <li>
               <a
-                href={url}
+                href={withUtm(url, { medium: 'sponsor_card', content: slug })}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="sponsored noopener noreferrer"
                 aria-label={label}
                 title={name}
-                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white outline-none transition duration-500 hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
+                class="sponsor-card group relative isolate flex aspect-[16/10] w-full items-center justify-center rounded-md text-white transition duration-500 outline-none hover:-translate-y-1 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               >
                 <span
                   aria-hidden="true"
@@ -164,7 +260,7 @@ const SPONSORS: Sponsor[] = [
                 />
                 <span
                   aria-hidden="true"
-                  class="pointer-events-none absolute bottom-1.5 right-1.5 size-2.5 border-b border-r border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:bottom-2 sm:right-2 sm:size-3"
+                  class="pointer-events-none absolute right-1.5 bottom-1.5 size-2.5 border-r border-b border-theme-gold/35 transition duration-500 group-hover:border-theme-gold group-focus-visible:border-theme-gold sm:right-2 sm:bottom-2 sm:size-3"
                 />
 
                 <Logo
@@ -182,7 +278,6 @@ const SPONSORS: Sponsor[] = [
         }
       </ul>
     </div>
-
   </div>
 </section>
 
@@ -224,10 +319,16 @@ const SPONSORS: Sponsor[] = [
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .promo-banner,
+    .promo-banner img,
     .sponsor-card {
       transition: none;
     }
 
+    .promo-banner:hover,
+    .promo-banner:focus-visible,
+    .promo-banner:hover img,
+    .promo-banner:focus-visible img,
     .sponsor-card:hover,
     .sponsor-card:focus-visible {
       transform: none;

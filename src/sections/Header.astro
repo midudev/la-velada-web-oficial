@@ -1,100 +1,71 @@
 ---
-const NAV_ITEMS = [
-  {
-    label: 'COMBATES',
-    href: '/#cartelera',
-    disabled: true,
-    note: 'PRÓXIMAMENTE',
-  },
-  {
-    label: 'BOXEADORES',
-    href: '/boxeadores',
-    disabled: false,
-  },
-  {
-    label: 'PRONÓSTICOS',
-    href: '/pronosticos',
-    disabled: true,
-    note: 'PRÓXIMAMENTE',
-  },
-] as const
-
-const currentPath = Astro.url.pathname
-const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/boxeadores'
+import HeaderNav from '@/components/HeaderNav.astro'
 ---
 
 <header
   data-header
-  data-menu-open="false"
-  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent backdrop-blur-[0px] transition-[background-color,backdrop-filter,border-color] duration-500 ease-out data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md"
+  class:list={[
+    'fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent transition-[background-color,backdrop-filter,border-color] duration-500 ease-out',
+    'data-[scrolled=true]:border-white/5 data-[scrolled=true]:bg-theme-midnight/40 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:backdrop-contrast-125 data-[scrolled=true]:backdrop-saturate-150',
+  ]}
 >
   <div
     class="relative z-50 mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4"
   >
     <a
       href="/"
-      class="group flex items-center gap-3 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+      class="home-link group flex items-center gap-3 focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
       aria-label="La Velada del Año VI - Inicio"
     >
-      <img
-        src="/logo.svg"
-        alt=""
-        class="h-9 w-auto transition duration-500 group-hover:rotate-[-2deg] sm:h-10"
+      <svg
+        class="transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-105 group-[.active]:scale-103"
+        xmlns="http://www.w3.org/2000/svg"
         width="40"
         height="40"
-        decoding="async"
-      />
-      <span
-        class="hidden font-cinzel text-[0.6rem] font-bold tracking-[0.32em] text-theme-cream/85 sm:inline-block sm:text-xs"
+        viewBox="0 0 303 303"
       >
-        LA VELADA <span class="text-theme-gold">VI</span>
+        <path
+          class="transition-[stroke-width] duration-700 ease-[cubic-bezier(0.15,1,0.3,1)] group-hover:stroke-8 group-[.active]:stroke-10"
+          fill="url(#gold-gradient)"
+          stroke="url(#gold-gradient)"
+          stroke-width="1"
+          stroke-linejoin="round"
+          d="m188.1 150.2 90.6 137.4-34.9-16c-7.7-3.5-15.1-7.7-21.9-12.3-15.3-10.4-29-25.3-39.6-43.1L164.5 186l-12 18.2-12-18.2-17.7 30.2c-10.6 17.8-24.4 32.7-39.7 43.1-6.8 4.6-14.2 8.8-21.9 12.3l-34.9 16 90.6-137.4L26.3 12.8l34.9 16c7.7 3.5 15.1 7.7 21.9 12.3 15.3 10.4 29.1 25.3 39.7 43.1l17.7 30.2 12-18.2 12 18.2 17.8-30.2c10.6-17.8 24.3-32.7 39.6-43.1 6.8-4.6 14.2-8.8 21.9-12.3l34.9-16zm-21-31.8 18.4 27.9L266.8 23l-21.2 9.7c-7.5 3.5-14.7 7.5-21.3 12-14.8 10-28 24.5-38.3 41.8zM38.2 23l81.2 123.2 18.4-27.8-18.8-32c-10.3-17.3-23.6-31.7-38.4-41.8-6.6-4.5-13.8-8.5-21.3-11.9zm147.3 131.1L162 118.5l-9.5-14.5-9.6 14.5-23.4 35.6-81.3 123.2 21.2-9.7c7.5-3.4 14.6-7.4 21.2-11.9 14.8-10.1 28.1-24.5 38.4-41.8l19.5-33.1 14-23.7 13.9 23.7 19.5 33.1c10.3 17.3 23.6 31.7 38.4 41.8 6.6 4.5 13.8 8.5 21.3 11.9l21.1 9.7zm-23.4 27.8-9.6-16.2-9.5 16.2 9.5 14.4z"
+        ></path>
+
+        <defs>
+          <linearGradient id="gold-gradient" x1="15%" y1="5%" x2="90%" y2="95%">
+            <stop
+              class="transition-[stop-color] duration-600 ease-in"
+              offset="0%"
+              stop-color="#c6ad9c"></stop>
+            <stop
+              class="transition-[stop-color] duration-600 ease-in"
+              offset="50%"
+              stop-color="#c6ad9c"></stop>
+            <stop
+              class="transition-[stop-color] duration-600 ease-in"
+              offset="100%"
+              stop-color="#c6ad9c"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <span
+        class="hidden font-cinzel text-[0.6rem] leading-none font-black tracking-[0.26em] text-theme-cream/85 sm:inline sm:text-xs"
+      >
+        La Velada <span class="text-theme-gold">VI</span>
       </span>
     </a>
 
-    <nav class="hidden md:block" aria-label="Navegación principal">
-      <ul class="flex items-center gap-1 sm:gap-2">
-        {
-          NAV_ITEMS.map((item) =>
-            item.disabled ? (
-              <li>
-                <span
-                  role="link"
-                  aria-disabled="true"
-                  class="relative inline-flex select-none items-center px-3 py-2 font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-white/40 sm:px-4 sm:text-xs"
-                  title="Próximamente"
-                >
-                  {item.label}
-                  {item.note && (
-                    <span class="pointer-events-none absolute left-1/2 top-full hidden -translate-x-1/2 -translate-y-2 whitespace-nowrap rounded-full border border-theme-gold/40 bg-theme-gold/5 px-2 py-0.5 font-cinzel text-[0.5rem] font-semibold tracking-[0.22em] text-theme-gold/85 sm:inline-block sm:text-[0.55rem]">
-                      {item.note}
-                    </span>
-                  )}
-                </span>
-              </li>
-            ) : (
-              <li>
-                <a
-                  href={item.href}
-                  data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
-                  class="group relative inline-flex items-center px-3 py-2 font-cinzel text-[0.65rem] font-bold tracking-[0.25em] text-white/85 transition duration-300 outline-none hover:text-theme-cream focus-visible:text-theme-cream sm:px-4 sm:text-xs"
-                >
-                  <span
-                    aria-hidden="true"
-                    class="pointer-events-none absolute inset-x-3 -bottom-px h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100 sm:inset-x-4"
-                  />
-                  {item.label}
-                </a>
-              </li>
-            )
-          )
-        }
-      </ul>
-    </nav>
+    <HeaderNav variant="desktop" />
 
     <button
       type="button"
       data-mobile-menu-button
-      class="group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] outline-none backdrop-blur-md transition duration-300 hover:border-theme-gold/50 hover:bg-theme-gold/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden"
+      class:list={[
+        'group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] backdrop-blur-md backdrop-contrast-125 backdrop-saturate-150 transition duration-300 outline-none hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden',
+      ]}
       aria-controls="mobile-menu"
       aria-expanded="false"
       aria-label="Abrir menú"
@@ -120,139 +91,93 @@ const shouldReloadNavItem = (href: string) => currentPath === '/' && href === '/
     data-mobile-menu
     aria-hidden="true"
     inert
-    class="fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl transition duration-300 ease-out pointer-events-none data-[open=true]:translate-y-0 data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto md:hidden"
+    class:list={[
+      'pointer-events-none fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-150 transition duration-300 ease-out data-[open=true]:pointer-events-auto data-[open=true]:translate-y-0 data-[open=true]:opacity-100 md:hidden',
+    ]}
   >
     <div
       aria-hidden="true"
-      class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_50%_0%,rgba(201,164,107,0.22),transparent_62%)]"
-    ></div>
-    <nav aria-label="Menú principal móvil" class="relative w-full max-w-sm">
-      <ul class="flex flex-col items-center gap-6">
-        {
-          NAV_ITEMS.map((item) =>
-            item.disabled ? (
-              <li class="w-full">
-                <span
-                  role="link"
-                  aria-disabled="true"
-                  class="flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-white/35"
-                  title="Próximamente"
-                >
-                  {item.label}
-                  {item.note && (
-                    <span class="rounded-full border border-theme-gold/35 bg-theme-gold/10 px-3 py-1 text-[0.55rem] font-semibold tracking-[0.24em] text-theme-gold/80">
-                      {item.note}
-                    </span>
-                  )}
-                </span>
-              </li>
-            ) : (
-              <li class="w-full">
-                <a
-                  href={item.href}
-                  data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
-                  data-mobile-menu-link
-                  class="group relative flex items-center justify-center rounded-2xl border border-theme-gold/35 bg-theme-gold/10 px-5 py-5 text-center font-cinzel text-lg font-bold tracking-[0.28em] text-theme-cream outline-none transition duration-300 hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
-                >
-                  <span
-                    aria-hidden="true"
-                    class="pointer-events-none absolute inset-x-6 bottom-3 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100"
-                  />
-                  {item.label}
-                </a>
-              </li>
-            )
-          )
-        }
-      </ul>
-    </nav>
+      class="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_50%_0%,color-mix(in_srgb,var(--color-theme-gold)_18%,transparent),transparent_62%)]"
+    >
+    </div>
+    <HeaderNav variant="mobile" />
   </div>
 </header>
+
+<style>
+  #gold-gradient stop {
+    transition: stop-color 600ms ease;
+  }
+
+  .home-link:hover #gold-gradient stop:nth-child(1),
+  .home-link.active #gold-gradient stop:nth-child(1) {
+    stop-color: #f5cfb5;
+  }
+
+  .home-link:hover #gold-gradient stop:nth-child(2),
+  .home-link.active #gold-gradient stop:nth-child(2) {
+    stop-color: #ca9066;
+  }
+
+  .home-link:hover #gold-gradient stop:nth-child(3),
+  .home-link.active #gold-gradient stop:nth-child(3) {
+    stop-color: #594233;
+  }
+</style>
 
 <script>
   import { $, $$ } from '@/lib/dom-selector'
 
-  const SCROLL_THRESHOLD = 24
+  let headerAbort: AbortController | null = null
 
-  let scrollAbortController: AbortController | null = null
-  let menuAbortController: AbortController | null = null
-
-  function setupHeaderScroll() {
-    const header = $<HTMLElement>('[data-header]')
-    if (!header) return
-
-    scrollAbortController?.abort()
-    scrollAbortController = new AbortController()
-
+  function setupHeaderScroll(header: HTMLElement, signal: AbortSignal) {
     const update = () => {
-      const scrolled = window.scrollY > SCROLL_THRESHOLD
-      if (scrolled) {
-        header.setAttribute('data-scrolled', 'true')
-      } else {
-        header.removeAttribute('data-scrolled')
-      }
+      if (window.scrollY > 24) header.setAttribute('data-scrolled', 'true')
+      else header.removeAttribute('data-scrolled')
     }
-
     update()
-
-    window.addEventListener('scroll', update, {
-      passive: true,
-      signal: scrollAbortController.signal,
-    })
+    window.addEventListener('scroll', update, { passive: true, signal })
   }
 
-  function setupMobileMenu() {
-    const header = $<HTMLElement>('[data-header]')
+  function setupMobileMenu(signal: AbortSignal) {
     const menu = $<HTMLElement>('[data-mobile-menu]')
     const button = $<HTMLButtonElement>('[data-mobile-menu-button]')
     const links = $$<HTMLAnchorElement>('[data-mobile-menu-link]')
+    const homeLink = $<HTMLElement>('.home-link')
 
-    if (!header || !menu || !button) return
+    if (!menu || !button) return
 
-    menuAbortController?.abort()
-    menuAbortController = new AbortController()
-    const { signal } = menuAbortController
-
-    const setMenuOpen = (isOpen: boolean) => {
-      header.dataset.menuOpen = String(isOpen)
-      menu.dataset.open = String(isOpen)
-      button.dataset.open = String(isOpen)
-      menu.setAttribute('aria-hidden', String(!isOpen))
-      menu.inert = !isOpen
-      button.setAttribute('aria-expanded', String(isOpen))
-      button.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú')
+    const setMenuOpen = (open: boolean) => {
+      menu.dataset.open = String(open)
+      button.dataset.open = String(open)
+      menu.setAttribute('aria-hidden', open ? 'false' : 'true')
+      menu.inert = !open
+      button.setAttribute('aria-expanded', String(open))
+      button.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú')
       const label = $<HTMLElement>('.sr-only', button)
-      if (label) label.textContent = isOpen ? 'Cerrar menú' : 'Abrir menú'
-      document.documentElement.classList.toggle('overflow-hidden', isOpen)
+      if (label) label.textContent = open ? 'Cerrar menú' : 'Abrir menú'
+      document.documentElement.classList.toggle('overflow-hidden', open)
+      homeLink?.classList.toggle('active', open)
     }
 
     setMenuOpen(false)
 
-    button.addEventListener(
-      'click',
-      () => {
-        setMenuOpen(button.getAttribute('aria-expanded') !== 'true')
-      },
-      { signal }
-    )
-
-    links.forEach((link) => {
-      link.addEventListener('click', () => setMenuOpen(false), {
-        signal,
-      })
+    button.addEventListener('click', () => setMenuOpen(button.ariaExpanded !== 'true'), {
+      signal,
     })
-
-    window.addEventListener(
-      'keydown',
-      (event) => {
-        if (event.key === 'Escape') setMenuOpen(false)
-      },
-      { signal }
-    )
+    links.forEach((link) => link.addEventListener('click', () => setMenuOpen(false), { signal }))
+    window.addEventListener('keydown', (e) => e.key === 'Escape' && setMenuOpen(false), {
+      signal,
+    })
   }
 
   document.addEventListener('astro:page-load', () => {
-    setupHeaderScroll()
-    setupMobileMenu()
+    headerAbort?.abort()
+    headerAbort = new AbortController()
+    const { signal } = headerAbort
+
+    const header = $<HTMLElement>('[data-header]')
+    if (header) setupHeaderScroll(header, signal)
+    setupMobileMenu(signal)
   })
 </script>

@@ -2,14 +2,13 @@
 import ArrowDownIcon from '@/assets/svg/arrow-down.svg'
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import CountryFlag from '@/components/CountryFlag.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 import Layout from '@/layouts/Layout.astro'
-import Header from '@/sections/Header.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
-import { battles } from '@/consts/battles'
 import {
   BOXERS,
-  COUNTRY_FLAGS,
   COUNTRY_NAMES,
   getBoxerHeroImages,
   getBoxerSelectImages,
@@ -22,13 +21,6 @@ export const prerender = true
 const knockoutBoxer = BOXERS[Math.floor(Math.random() * BOXERS.length)]!
 const knockoutImages = getBoxerHeroImages(knockoutBoxer)
 
-// Mapa boxer → combate, para que cada miniatura del rescate enlace al
-// combate donde participa (la única ruta de detalle ya existente).
-const battleByBoxer = new Map<string, string>()
-for (const battle of battles) {
-  for (const id of battle.boxerIds) battleByBoxer.set(id, battle.id)
-}
-
 // Rescatamos siempre los 20 boxeadores, pero ponemos al "noqueado" al
 // final para que el usuario pueda elegir cualquier otro antes (sin
 // excluirlo: sigue siendo navegación válida si lo quiere).
@@ -38,8 +30,6 @@ const rescueBoxers = [
 ].map((boxer) => ({
   ...boxer,
   thumbs: getBoxerSelectImages(boxer),
-  battleId: battleByBoxer.get(boxer.id) ?? '',
-  flag: COUNTRY_FLAGS[boxer.country] ?? '',
   countryName: COUNTRY_NAMES[boxer.country] ?? boxer.country,
   isKnockout: boxer.id === knockoutBoxer.id,
 }))
@@ -48,11 +38,8 @@ const rescueBoxers = [
 <Layout
   title="404 - La Velada del Año VI"
   description="Página no encontrada en La Velada del Año VI. Vuelve al inicio para seguir disfrutando del evento de boxeo de Ibai Llanos."
-  canonical="https://www.infolavelada.com/404"
   robots="noindex, follow"
 >
-  <Header />
-
   <section
     data-not-found
     class="not-found-hero relative flex w-full flex-col items-center justify-center overflow-hidden bg-theme-midnight px-4 pb-24 pt-28 text-center sm:pt-32"
@@ -91,13 +78,13 @@ const rescueBoxers = [
 
     <div class="relative z-10 flex w-full max-w-3xl flex-col items-center">
       <span
-        class="animate-fade-in animate-delay-200 font-cinzel text-[0.6rem] font-semibold tracking-[0.45em] text-theme-cream/65 sm:text-xs"
+        class="animate-fade-in animate-delay-200 font-cinzel text-[0.6rem] font-black tracking-[0.26em] text-theme-cream/65 sm:text-xs"
       >
         ERROR 404
       </span>
 
       <p
-        class="not-found-code animate-blurred-fade-in animate-delay-300 mt-3 font-cinzel text-[28vw] font-black leading-[0.85] tracking-[-0.04em] sm:text-[18vw] md:text-[14rem]"
+        class="not-found-code animate-blurred-fade-in animate-delay-300 mt-3 font-cinzel text-[28vw] font-black leading-[0.85] tracking-[-0.02em] sm:text-[18vw] md:text-[14rem]"
         aria-hidden="true"
       >
         404
@@ -110,17 +97,10 @@ const rescueBoxers = [
         ¡Fuera de combate!
       </h1>
 
-      <div
-        class="animate-fade-in animate-delay-700 mt-6 flex w-full items-center justify-center gap-3 sm:gap-4"
-        aria-hidden="true"
-      >
-        <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/60 sm:w-24"></span>
-        <span class="size-1.5 rotate-45 bg-theme-gold/85"></span>
-        <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/60 sm:w-24"></span>
-      </div>
+      <SectionDivider class="animate-fade-in animate-delay-700 mt-6 w-full" />
 
       <p
-        class="animate-fade-in-up animate-delay-900 mt-6 max-w-xl font-cinzel text-sm font-medium tracking-[0.18em] text-theme-cream/85 sm:text-base"
+        class="animate-fade-in-up animate-delay-900 mt-6 max-w-xl font-cinzel text-sm font-medium tracking-[0.14em] text-theme-cream/85 sm:text-base"
       >
         Te han noqueado. Esta página no existe o ya ha colgado los guantes.
       </p>
@@ -130,7 +110,7 @@ const rescueBoxers = [
       >
         <a
           href="/"
-          class="not-found-cta group inline-flex items-center gap-3 rounded-full border border-theme-gold/55 bg-theme-cream px-8 py-4 font-cinzel text-xs font-bold tracking-[0.32em] text-theme-midnight transition-all duration-300 ease-out hover:-translate-y-0.5 hover:rotate-[-1deg] hover:bg-theme-gold hover:text-theme-midnight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-gold focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight active:scale-95 sm:text-sm"
+          class="not-found-cta group inline-flex items-center gap-3 rounded-full border border-theme-gold/55 bg-theme-cream px-8 py-4 font-cinzel text-xs font-black tracking-[0.26em] text-theme-midnight transition-all duration-300 ease-out hover:-translate-y-0.5 hover:rotate-[-1deg] hover:bg-theme-gold hover:text-theme-midnight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-gold focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight active:scale-95 sm:text-sm"
           aria-label="Volver al inicio de La Velada del Año VI"
         >
           <ArrowLeftIcon
@@ -143,7 +123,7 @@ const rescueBoxers = [
 
         <a
           href="#rescate"
-          class="not-found-secondary group inline-flex items-center gap-2 rounded-full border border-theme-gold/40 bg-transparent px-7 py-3.5 font-cinzel text-[0.65rem] font-bold tracking-[0.32em] text-theme-cream/85 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-theme-gold hover:text-theme-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-gold focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight active:scale-95 sm:text-xs"
+          class="not-found-secondary group inline-flex items-center gap-2 rounded-full border border-theme-gold/40 bg-transparent px-7 py-3.5 font-cinzel text-[0.65rem] font-black tracking-[0.26em] text-theme-cream/85 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-theme-gold hover:text-theme-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-theme-gold focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight active:scale-95 sm:text-xs"
         >
           Elegir boxeador
           <ArrowDownIcon
@@ -163,17 +143,10 @@ const rescueBoxers = [
     <div aria-hidden="true" class="rescue-bg absolute inset-0 -z-10"></div>
 
     <div class="relative mx-auto flex w-full max-w-6xl flex-col items-center">
-      <div
-        class="flex w-full items-center justify-center gap-3 sm:gap-4"
-        aria-hidden="true"
-      >
-        <span class="h-px w-12 bg-linear-to-r from-transparent to-theme-gold/55 sm:w-24"></span>
-        <span class="size-1.5 rotate-45 bg-theme-gold/85"></span>
-        <span class="h-px w-12 bg-linear-to-l from-transparent to-theme-gold/55 sm:w-24"></span>
-      </div>
+      <SectionDivider class="w-full" />
 
       <span
-        class="mt-5 font-cinzel text-[0.6rem] font-semibold tracking-[0.45em] text-theme-gold/85 sm:text-xs"
+        class="mt-5 font-cinzel text-[0.6rem] font-black tracking-[0.26em] text-theme-gold/85 sm:text-xs"
       >
         SIGUE EN PIE
       </span>
@@ -186,7 +159,7 @@ const rescueBoxers = [
       </h2>
 
       <p
-        class="mt-4 max-w-xl text-balance font-cinzel text-xs font-medium tracking-[0.22em] text-theme-cream/70 sm:text-sm"
+        class="mt-4 max-w-xl text-balance font-cinzel text-xs font-medium tracking-[0.14em] text-theme-cream/70 sm:text-sm"
       >
         Vuelve al ring eligiendo a cualquiera de los {BOXERS.length} contendientes
         de La Velada del Año VI.
@@ -203,9 +176,9 @@ const rescueBoxers = [
               style={`animation-delay: ${Math.min(index * 35, 800)}ms`}
             >
               <a
-                href={boxer.battleId ? `/combate/${boxer.battleId}` : '/'}
+                href={`/boxeadores/${boxer.id}`}
                 class="rescue-card group relative block aspect-[3/4] w-full overflow-hidden rounded-md focus-visible:outline-none"
-                aria-label={`Ir al combate de ${boxer.name}`}
+                aria-label={`Ver perfil de ${boxer.name}`}
                 data-knockout={boxer.isKnockout ? 'true' : 'false'}
               >
                 <span
@@ -217,7 +190,7 @@ const rescueBoxers = [
                   <source type="image/avif" srcset={boxer.thumbs.avif} />
                   <source type="image/webp" srcset={boxer.thumbs.webp} />
                   <img
-                    src={boxer.thumbs.png}
+                    src={boxer.thumbs.webp}
                     alt=""
                     role="presentation"
                     loading="lazy"
@@ -240,7 +213,7 @@ const rescueBoxers = [
 
                 {boxer.isKnockout && (
                   <span
-                    class="rescue-card-badge pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-theme-midnight/85 px-2.5 py-1 font-cinzel text-[0.5rem] font-bold tracking-[0.28em] text-theme-gold/95 sm:text-[0.55rem]"
+                    class="rescue-card-badge pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-theme-midnight/85 px-2.5 py-1 font-cinzel text-[0.5rem] font-black tracking-[0.2em] text-theme-gold/95 sm:text-[0.55rem]"
                     aria-hidden="true"
                   >
                     <span class="size-1 rotate-45 bg-theme-gold/95" />
@@ -253,13 +226,16 @@ const rescueBoxers = [
                     aria-hidden="true"
                     class="rescue-card-divider mb-0.5 h-px w-6 bg-theme-gold/60 transition-all duration-500"
                   />
-                  <h3 class="rescue-card-name font-cinzel text-[0.65rem] font-bold uppercase leading-[1.05] tracking-[0.14em] text-theme-cream text-balance sm:text-xs md:text-sm">
+                  <h3 class="rescue-card-name font-cinzel text-[0.65rem] font-black uppercase leading-[1.05] tracking-[0.14em] text-theme-cream text-balance sm:text-xs md:text-sm">
                     {boxer.name}
                   </h3>
-                  <p class="rescue-card-country flex items-center gap-1 font-cinzel text-[0.5rem] font-semibold tracking-[0.28em] text-theme-cream/75 sm:text-[0.55rem]">
-                    <span class="text-xs leading-none" aria-hidden="true">
-                      {boxer.flag}
-                    </span>
+                  <p class="rescue-card-country flex items-center gap-1 font-cinzel text-[0.5rem] font-black tracking-[0.18em] text-theme-cream/75 sm:text-[0.55rem]">
+                    <CountryFlag
+                      country={boxer.country}
+                      size={12}
+                      decorative
+                      class="rescue-card-flag"
+                    />
                     <span>{boxer.countryName}</span>
                   </p>
                 </div>
@@ -271,7 +247,7 @@ const rescueBoxers = [
 
       <a
         href="/boxeadores"
-        class="rescue-all mt-12 inline-flex items-center gap-2 font-cinzel text-[0.6rem] font-bold tracking-[0.32em] text-theme-cream/75 underline-offset-[6px] transition-colors duration-300 hover:text-theme-cream hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold sm:text-xs"
+        class="rescue-all mt-12 inline-flex items-center gap-2 font-cinzel text-[0.6rem] font-black tracking-[0.26em] text-theme-cream/75 underline-offset-[6px] transition-colors duration-300 hover:text-theme-cream hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold sm:text-xs"
       >
         Ver a todos los boxeadores
         <ArrowRightIcon
@@ -288,7 +264,6 @@ const rescueBoxers = [
 
 <style>
   [data-bg-wrap] {
-    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
   }
 
@@ -308,19 +283,9 @@ const rescueBoxers = [
         transparent 70%
       );
     mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   }
 
   .knockout-boxer {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      transparent 0%,
-      color-mix(in srgb, black 40%, transparent) 18%,
-      color-mix(in srgb, black 70%, transparent) 35%,
-      black 60%,
-      black 82%,
-      transparent 100%
-    );
     mask-image: linear-gradient(
       to bottom,
       transparent 0%,
@@ -576,6 +541,12 @@ const rescueBoxers = [
     text-shadow:
       0 1px 2px rgba(0, 0, 0, 0.85),
       0 0 8px rgba(0, 0, 0, 0.65);
+  }
+
+  :global(.rescue-card-flag) {
+    width: 0.75rem;
+    height: 0.75rem;
+    flex-shrink: 0;
   }
 
   .rescue-card-badge {
