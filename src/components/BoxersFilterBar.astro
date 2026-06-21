@@ -224,10 +224,14 @@ function getVeladaFlagTheme(country: string) {
   .boxer-filters-panel {
     /* `min-width: 0` evita que el contenido del panel (sobre todo las
        pills) expanda al panel y, en cascada, al layout y al body. */
+    box-sizing: border-box;
+    inline-size: 100%;
+    width: 100%;
+    max-width: 100%;
+    justify-self: center;
     min-width: 0;
     z-index: 20;
     overflow: visible;
-    width: 100%;
     background:
       radial-gradient(
         ellipse 80% 100% at 50% 0%,
@@ -245,66 +249,28 @@ function getVeladaFlagTheme(country: string) {
       0 0 60px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
   }
 
-  @media (max-width: 639px) {
-    .boxer-filters-panel {
-      box-shadow:
-        inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
-        0 16px 36px rgba(0, 0, 0, 0.38),
-        0 0 40px color-mix(in srgb, var(--color-theme-gold) 9%, transparent);
-    }
-  }
-
   .boxer-filters-body {
     --boxer-filter-control-height: 2.15rem;
-    --boxer-filter-control-font-size: 0.68rem;
-    --boxer-filter-control-letter-spacing: 0.1em;
+    --boxer-filter-control-font-size: clamp(0.4rem, 0.25rem + 0.65vi, 0.68rem);
+    --boxer-filter-control-letter-spacing: clamp(0em, 0.06vi, 0.1em);
     --boxer-filter-label-height: 0.7rem;
-    --boxer-filter-label-gap: 0.5rem;
+    --boxer-filter-label-gap: clamp(0.42rem, 0.34rem + 0.22vw, 0.5rem);
     --boxer-filter-radius: 2px;
     --boxer-filter-inner-radius: 1px;
+    --boxer-filter-column-min: min(100%, 18rem);
+    --boxer-filter-panel-gap: clamp(0.85rem, 0.52rem + 1.1vw, 1.6rem);
+    --boxer-filter-panel-padding-block: clamp(0.8rem, 0.7rem + 0.35vw, 1rem);
+    --boxer-filter-panel-padding-inline: clamp(0.7rem, 0.48rem + 0.75vw, 1.35rem);
+    --boxer-filter-pill-gap: clamp(0.14rem, 0.55vw, 0.55rem);
+    --boxer-filter-pill-padding-block: clamp(0.35rem, 0.32rem + 0.15vw, 0.42rem);
+    --boxer-filter-pill-padding-inline: clamp(0.14rem, 0.7vi, 0.9rem);
+    --segment-gap: clamp(0.1rem, 0.7vi, 1rem);
     min-width: 0;
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1.4rem;
+    grid-template-columns: repeat(auto-fit, minmax(var(--boxer-filter-column-min), 1fr));
+    gap: var(--boxer-filter-panel-gap);
     overflow: visible;
-    padding: 1rem;
-  }
-  @media (max-width: 639px) {
-    .boxer-filters-body {
-      gap: 0.9rem;
-      padding: 0.8rem 0.7rem;
-    }
-  }
-  @media (min-width: 640px) {
-    .boxer-filters-body {
-      padding: 1.05rem 1rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .boxer-filters-body {
-      grid-template-columns: minmax(17rem, 1fr) minmax(28rem, 1.55fr) minmax(17rem, 1fr);
-      align-items: start;
-      justify-content: stretch;
-      column-gap: 1.5rem;
-      row-gap: 1rem;
-      padding: 0.8rem 1.25rem;
-    }
-  }
-
-  @media (min-width: 1280px) {
-    .boxer-filters-body {
-      grid-template-columns: minmax(20rem, 1fr) minmax(30rem, 1.55fr) minmax(20rem, 1fr);
-      column-gap: 1.6rem;
-      padding: 0.85rem 1.35rem;
-    }
-  }
-
-  @media (min-width: 1440px) {
-    .boxer-filters-body {
-      grid-template-columns: minmax(22rem, 1fr) minmax(34rem, 1.55fr) minmax(22rem, 1fr);
-      column-gap: 1.75rem;
-    }
+    padding: var(--boxer-filter-panel-padding-block) var(--boxer-filter-panel-padding-inline);
   }
 
   .boxer-filter-row {
@@ -317,32 +283,7 @@ function getVeladaFlagTheme(country: string) {
     align-items: start;
     border: 0;
     margin: 0;
-    padding: 0.3rem 0;
-  }
-
-  @media (min-width: 1024px) {
-    .boxer-filter-row {
-      position: relative;
-      min-height: 100%;
-      padding: 0;
-    }
-
-    .boxer-filter-row:not(:first-child)::before {
-      content: '';
-      position: absolute;
-      top: 0.05rem;
-      bottom: 0.05rem;
-      left: -0.75rem;
-      width: 1px;
-      background: color-mix(in srgb, var(--color-theme-gold) 16%, transparent);
-      pointer-events: none;
-    }
-  }
-
-  @media (max-width: 639px) {
-    .boxer-filter-row {
-      padding: 0.15rem 0;
-    }
+    padding: 0;
   }
 
   .boxer-filter-row-label {
@@ -351,9 +292,9 @@ function getVeladaFlagTheme(country: string) {
     min-width: 0;
     height: var(--boxer-filter-label-height);
     gap: 0.45rem;
-    font-size: 0.6rem;
+    font-size: clamp(0.55rem, 0.49rem + 0.18vw, 0.6rem);
     font-weight: 900;
-    letter-spacing: 0.26em;
+    letter-spacing: clamp(0.18em, 0.08em + 0.22vw, 0.26em);
     line-height: 1;
     margin: 0;
     text-transform: uppercase;
@@ -363,16 +304,8 @@ function getVeladaFlagTheme(country: string) {
       0 0 16px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
   }
 
-  @media (max-width: 639px) {
-    .boxer-filter-row-label {
-      font-size: 0.55rem;
-      letter-spacing: 0.18em;
-    }
-  }
-
   .boxer-segmented {
     --segment-count: 3;
-    --segment-gap: 0.8rem;
     --segment-x: 0px;
     position: relative;
     overflow: hidden;
@@ -416,24 +349,6 @@ function getVeladaFlagTheme(country: string) {
     --segment-x: calc(200% + var(--segment-gap) + var(--segment-gap));
   }
 
-  @media (min-width: 640px) {
-    .boxer-segmented {
-      --segment-gap: 0.85rem;
-    }
-  }
-
-  @media (min-width: 1280px) {
-    .boxer-segmented {
-      --segment-gap: 1rem;
-    }
-  }
-
-  @media (max-width: 639px) {
-    .boxer-segmented {
-      --segment-gap: 0.3rem;
-    }
-  }
-
   .boxer-country-select-shell {
     position: relative;
     display: block;
@@ -455,7 +370,8 @@ function getVeladaFlagTheme(country: string) {
     appearance: none;
     position: relative;
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-columns: auto auto auto auto;
+    justify-content: start;
     align-items: center;
     gap: 0.55rem;
     width: 100%;
@@ -544,15 +460,15 @@ function getVeladaFlagTheme(country: string) {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.42rem 0.85rem;
+    gap: var(--boxer-filter-pill-gap);
+    padding: var(--boxer-filter-pill-padding-block) var(--boxer-filter-pill-padding-inline);
     border-radius: var(--boxer-filter-inner-radius);
     background: color-mix(in srgb, var(--color-theme-midnight) 78%, black);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
     color: color-mix(in srgb, var(--color-theme-cream) 86%, transparent);
-    font-size: 0.6rem;
+    font-size: var(--boxer-filter-control-font-size);
     font-weight: 900;
-    letter-spacing: 0.18em;
+    letter-spacing: var(--boxer-filter-control-letter-spacing);
     line-height: 1;
     cursor: pointer;
     transition:
@@ -560,44 +476,6 @@ function getVeladaFlagTheme(country: string) {
       box-shadow 250ms ease,
       background-color 250ms ease,
       color 250ms ease;
-  }
-
-  @media (max-width: 639px) {
-    .boxer-filter-pill {
-      gap: 0.3rem;
-      padding: 0.38rem 0.55rem;
-      font-size: 0.52rem;
-      letter-spacing: 0.1em;
-    }
-
-    .boxer-segmented {
-      width: 100%;
-    }
-
-    .boxer-segmented-option {
-      padding-inline: 0.35rem;
-    }
-
-    .boxer-segmented-option .boxer-filter-pill-label {
-      font-size: 0.48rem;
-      letter-spacing: 0;
-    }
-  }
-
-  @media (min-width: 640px) {
-    .boxer-filter-pill {
-      font-size: 0.68rem;
-      padding: 0.5rem 1rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .boxer-filters-body .boxer-filter-pill {
-      gap: 0.55rem;
-      padding: 0.35rem 0.85rem;
-      font-size: var(--boxer-filter-control-font-size);
-      letter-spacing: var(--boxer-filter-control-letter-spacing);
-    }
   }
 
   .boxer-filter-pill::before {
@@ -659,12 +537,19 @@ function getVeladaFlagTheme(country: string) {
     min-width: 0;
     justify-content: center;
     min-height: calc(var(--boxer-filter-control-height) - 0.3rem);
-    gap: 0.65rem;
+    gap: var(--boxer-filter-pill-gap);
     border-radius: var(--boxer-filter-inner-radius);
     box-shadow: none;
     background: transparent;
     letter-spacing: 0.02em;
-    padding: 0.32rem 0.9rem;
+    padding: 0.32rem clamp(0.12rem, 0.62vw, 0.9rem);
+    white-space: nowrap;
+  }
+
+  .boxer-segmented-option .boxer-filter-pill-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: clip;
     white-space: nowrap;
   }
 
@@ -687,8 +572,8 @@ function getVeladaFlagTheme(country: string) {
   }
 
   .boxer-segmented-icon {
-    width: 1rem;
-    height: 1rem;
+    width: clamp(0.62rem, 2vw, 1rem);
+    height: clamp(0.62rem, 2vw, 1rem);
     flex: 0 0 auto;
     stroke: currentColor;
     stroke-width: 2.35;
@@ -783,15 +668,15 @@ function getVeladaFlagTheme(country: string) {
 
   .boxer-filter-pill-count {
     display: inline-flex;
-    min-width: 1.25rem;
+    min-width: clamp(0.7rem, 2.4vw, 1.25rem);
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 0.18rem 0.35rem;
+    padding: clamp(0.08rem, 0.3vw, 0.18rem) clamp(0.14rem, 0.7vw, 0.35rem);
     border-radius: var(--boxer-filter-inner-radius);
     background: color-mix(in srgb, var(--color-theme-midnight) 60%, transparent);
     color: color-mix(in srgb, var(--color-theme-cream) 75%, transparent);
-    font-size: 0.55rem;
+    font-size: clamp(0.38rem, 1.15vw, 0.55rem);
     font-weight: 900;
     letter-spacing: 0.04em;
     font-variant-numeric: tabular-nums;
@@ -804,14 +689,6 @@ function getVeladaFlagTheme(country: string) {
   .boxer-filter-pill-count-value {
     display: inline-block;
     line-height: 1;
-  }
-
-  @media (max-width: 639px) {
-    .boxer-filter-pill-count {
-      min-width: 0.95rem;
-      padding: 0.12rem 0.24rem;
-      font-size: 0.48rem;
-    }
   }
 
   .boxer-filter-pill-count.is-bumping {
