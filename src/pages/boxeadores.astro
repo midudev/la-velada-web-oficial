@@ -856,6 +856,7 @@ const cardImageEagerAmount = 4
       for (const card of Array.from(gridEl.children) as HTMLElement[]) {
         if (card.dataset.hidden === 'true') continue
 
+        card.dataset.ready = 'true'
         card.classList.remove(ANIM_CLASS)
 
         void card.offsetWidth
