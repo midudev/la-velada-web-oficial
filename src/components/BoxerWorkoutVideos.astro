@@ -32,7 +32,7 @@ function getYouTubePosterFallbackSrc(videoId: string) {
 }
 
 function getPosterErrorHandler(videoId: string) {
-  return `if (this.dataset.posterFallbackUsed === 'true') { this.onerror=null; this.src='/logo.webp'; } else { this.dataset.posterFallbackUsed='true'; this.src='${getYouTubePosterFallbackSrc(videoId)}'; }`
+  return `if (this.dataset.posterFallbackUsed === 'true') { this.onerror=null; this.src='https://cdn.infolavelada.com/logo/logo.webp'; } else { this.dataset.posterFallbackUsed='true'; this.src='${getYouTubePosterFallbackSrc(videoId)}'; }`
 }
 ---
 
