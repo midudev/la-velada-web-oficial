@@ -101,7 +101,7 @@ const carouselState = {
       </div>
     </header>
 
-    <div class="videos-stage relative flex min-h-[64svh] w-full flex-col items-center justify-center gap-4 lg:min-h-[68svh]" data-video-stage>
+    <div class="videos-stage relative flex min-h-0 w-full flex-col items-center justify-start gap-5 pt-8 lg:min-h-[68svh] lg:justify-center lg:gap-4 lg:pt-0" data-video-stage>
       <canvas class="video-carousel-canvas pointer-events-none absolute inset-0 z-[1] hidden h-full w-full lg:block" data-video-webgl aria-hidden="true"></canvas>
 
       <button
@@ -162,7 +162,7 @@ const carouselState = {
               </div>
             </div>
             <article
-              class="video-main-tile video-tile video-tile-active group relative order-1 isolate mx-auto flex aspect-video min-h-[22rem] w-full max-w-6xl overflow-hidden rounded-xl border border-theme-gold/45 bg-theme-navy/40 text-left outline-none transition duration-500 hover:border-theme-gold/70 focus-within:border-theme-gold/70 lg:z-10 lg:min-h-0 lg:w-[68%] lg:max-w-[70rem] xl:w-[66%]"
+              class="video-main-tile video-tile video-tile-active group relative order-1 isolate mx-auto flex aspect-video min-h-0 w-full max-w-6xl overflow-hidden rounded-xl border border-theme-gold/45 bg-theme-navy/40 text-left outline-none transition duration-500 hover:border-theme-gold/70 focus-within:border-theme-gold/70 lg:z-10 lg:w-[68%] lg:max-w-[70rem] xl:w-[66%]"
               data-video-carousel
               data-video-tile
               data-video-status={video.status}
@@ -172,6 +172,7 @@ const carouselState = {
               data-preview-columns={video.preview?.columns ?? 0}
               data-preview-rows={video.preview?.rows ?? 0}
               data-preview-fps={video.preview?.fps ?? 0}
+              data-preview-sheet={tileStyle.frameCount > 0 ? video.previewSheet : ''}
               aria-label={`Reproducir vídeo: ${video.title}`}
               style={tileStyle.style}
             >
@@ -192,10 +193,6 @@ const carouselState = {
                 )
               }
             </div>
-            <div
-              aria-hidden="true"
-              class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
-            />
             <div aria-hidden="true" class="video-hover-wash absolute inset-0 -z-10"></div>
             <div class="video-locked-layer absolute inset-0 z-30 flex items-center justify-center opacity-0 transition duration-500" data-video-locked-layer aria-hidden={video.status === 'available' ? 'true' : 'false'}>
               <span class="rounded-full border border-theme-gold/35 bg-theme-midnight/65 px-4 py-2 font-cinzel text-[0.62rem] font-black tracking-[0.28em] text-theme-gold backdrop-blur">
@@ -487,8 +484,9 @@ const carouselState = {
 
   .video-preview {
     overflow: hidden;
+    background-color: color-mix(in srgb, var(--color-theme-midnight) 92%, black);
     background-image:
-      linear-gradient(to top, rgba(0, 0, 0, 0.66), rgba(0, 0, 0, 0.08)),
+      linear-gradient(to top, rgba(0, 0, 0, 0.46), rgba(0, 0, 0, 0.1) 42%, transparent 74%),
       var(--video-poster);
     background-position:
       center,
@@ -496,13 +494,11 @@ const carouselState = {
     background-repeat: no-repeat;
     background-size:
       cover,
-      cover;
+      contain;
     contain: paint;
-    filter: saturate(0.95) brightness(0.9);
-    transform: scale(1.03);
+    filter: saturate(0.98) brightness(0.94);
     transition:
-      filter 0.7s ease,
-      transform 0.7s ease;
+      filter 0.7s ease;
   }
 
   .video-preview::after {
@@ -510,7 +506,7 @@ const carouselState = {
     inset: 0;
     content: '';
     background-image:
-      linear-gradient(to top, rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.04)),
+      linear-gradient(to top, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.04) 62%, transparent),
       var(--video-preview-sheet);
     background-position:
       center,
@@ -524,7 +520,7 @@ const carouselState = {
     will-change: opacity;
   }
 
-  .video-tile[data-previewing='true'] .video-preview::after {
+  .video-tile[data-preview-mode='sprite'] .video-preview::after {
     opacity: 1;
   }
 
@@ -533,7 +529,7 @@ const carouselState = {
     transition: opacity 0.22s ease;
   }
 
-  .video-tile[data-previewing='true'] .video-preview-motion {
+  .video-tile[data-preview-mode='video'] .video-preview-motion {
     opacity: 1;
   }
 
@@ -568,22 +564,22 @@ const carouselState = {
 
   .video-tile-active:hover .video-preview,
   .video-tile-active:focus-within .video-preview,
-  .video-tile-active[data-previewing='true'] .video-preview {
-    filter: saturate(1.16) brightness(1.12);
-    transform: scale(1);
+  .video-tile-active[data-preview-mode='video'] .video-preview,
+  .video-tile-active[data-preview-mode='sprite'] .video-preview {
+    filter: saturate(1.08) brightness(1.04);
   }
 
   .video-hover-wash {
     background:
       radial-gradient(
-        ellipse at center,
-        color-mix(in srgb, var(--color-theme-gold) 20%, transparent),
-        transparent 42%
+        ellipse at 34% 70%,
+        color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
+        transparent 46%
       ),
       linear-gradient(
         180deg,
         transparent 0%,
-        color-mix(in srgb, var(--color-theme-gold) 12%, transparent) 100%
+        color-mix(in srgb, var(--color-theme-midnight) 24%, transparent) 100%
       );
     opacity: 0;
     transition: opacity 0.45s ease;
@@ -591,7 +587,7 @@ const carouselState = {
 
   .video-tile-active:hover .video-hover-wash,
   .video-tile-active:focus-within .video-hover-wash {
-    opacity: 0.68;
+    opacity: 0.32;
   }
 
   .video-side-rail {
@@ -607,23 +603,35 @@ const carouselState = {
   .video-nav-label-left {
     --video-label-nudge: 0.45rem;
     --video-label-rotation: 180deg;
-    left: clamp(0.5rem, 1.2vw, 1.25rem);
-    transform: translateY(-50%) rotate(180deg);
-    writing-mode: vertical-rl;
   }
 
   .video-nav-label-right {
     --video-label-nudge: 0.45rem;
     --video-label-rotation: 0deg;
-    right: clamp(0.5rem, 1.2vw, 1.25rem);
-    transform: translateY(-50%);
-    writing-mode: vertical-rl;
   }
 
   .video-side-rail:hover .video-nav-label,
   .video-side-rail:focus-visible .video-nav-label {
     opacity: 1;
-    transform: translateY(-50%) translateX(var(--video-label-nudge, 0)) rotate(var(--video-label-rotation, 0deg));
+  }
+
+  @media (min-width: 1024px) {
+    .video-nav-label-left {
+      left: clamp(0.5rem, 1.2vw, 1.25rem);
+      transform: translateY(-50%) rotate(180deg);
+      writing-mode: vertical-rl;
+    }
+
+    .video-nav-label-right {
+      right: clamp(0.5rem, 1.2vw, 1.25rem);
+      transform: translateY(-50%);
+      writing-mode: vertical-rl;
+    }
+
+    .video-side-rail:hover .video-nav-label,
+    .video-side-rail:focus-visible .video-nav-label {
+      transform: translateY(-50%) translateX(var(--video-label-nudge, 0)) rotate(var(--video-label-rotation, 0deg));
+    }
   }
 
   .video-main-tile {

@@ -3,6 +3,9 @@ import { $, $$ } from '@/lib/dom-selector'
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
 const CAROUSEL_SWAP_MS = 280
 const CAROUSEL_SETTLE_MS = 760
+const DEFAULT_PREVIEW_DURATION_SECONDS = 12
+
+type PreviewMode = 'poster' | 'video' | 'sprite'
 
 type VideoTile = HTMLElement & {
   dataset: HTMLElement['dataset'] & {
@@ -17,7 +20,10 @@ type VideoTile = HTMLElement & {
     previewColumns?: string
     previewRows?: string
     previewFps?: string
-    previewMode?: string
+    previewMode?: PreviewMode
+    previewRequested?: string
+    previewToken?: string
+    previewSheet?: string
   }
 }
 
@@ -47,9 +53,13 @@ interface PreviewState {
   frameId: number
   startedAt: number
   lastFrame: number
+  frameOffset: number
 }
 
 const states = new WeakMap<VideoTile, PreviewState>()
+const failedPreviewSheets = new Set<string>()
+const failedPreviewVideos = new Set<string>()
+let previewRequestId = 0
 
 export function initVideoPreview(root: Document | HTMLElement = document) {
   const section = $<HTMLElement>('[data-videos-section]', root)
@@ -65,6 +75,17 @@ export function initVideoPreview(root: Document | HTMLElement = document) {
     initCarousel(section, carouselTile, carouselState, webgl)
     preloadPreviewSheets(carouselState.videos)
   }
+
+  document.addEventListener(
+    'astro:before-swap',
+    () => {
+      for (const tile of $$<VideoTile>('[data-video-tile]', section)) {
+        stopPreview(tile)
+      }
+      webgl?.destroy()
+    },
+    { once: true },
+  )
 
   for (const tile of $$<VideoTile>('[data-video-tile]', section)) {
     if (tile.dataset.videoStatus !== 'available') continue
@@ -88,6 +109,7 @@ export function initVideoPreview(root: Document | HTMLElement = document) {
         return
       }
 
+      stopPreview(tile)
       tile.dataset.unwrapping = 'true'
       setTimeout(() => {
         loadIframe(tile, button)
@@ -204,10 +226,12 @@ function updateCarousel(
   tile.dataset.previewColumns = String(active.columns)
   tile.dataset.previewRows = String(active.rows)
   tile.dataset.previewFps = String(active.fps)
+  tile.dataset.previewSheet = active.frameCount > 0 ? active.previewSheet : ''
   tile.style.setProperty('--video-poster', `url('${active.poster}')`)
   tile.style.setProperty('--video-preview-sheet', `url('${active.previewSheet}')`)
   tile.style.setProperty('--video-preview-size', active.previewSize)
   tile.style.setProperty('--video-preview-position', '0% 0%')
+  setPreviewMode(tile, 'poster')
   updatePreviewVideo(previewVideo, active)
   tile.setAttribute('aria-label', `${active.status === 'available' ? 'Reproducir' : 'Próximamente'}: ${active.title}`)
 
@@ -256,43 +280,63 @@ function wrapIndex(index: number, length: number) {
 }
 
 function startPreview(tile: VideoTile, reducedMotion: boolean) {
-  if (reducedMotion || tile.dataset.videoReady === 'true' || states.has(tile)) return
+  if (
+    reducedMotion ||
+    tile.dataset.videoReady === 'true' ||
+    tile.dataset.unwrapping === 'true' ||
+    states.has(tile)
+  ) return
 
+  const token = String(++previewRequestId)
+  tile.dataset.previewRequested = 'true'
+  tile.dataset.previewToken = token
   const video = $<HTMLVideoElement>('[data-video-preview-video]', tile)
-  if (video?.src) {
-    tile.dataset.previewing = 'true'
-    tile.dataset.previewMode = 'video'
-    video.currentTime = 0
-    void video.play().catch(() => {
-      tile.dataset.previewing = 'false'
-      tile.dataset.previewMode = 'sprite'
-      startSpritePreview(tile)
-    })
+  if (video?.src && !failedPreviewVideos.has(video.currentSrc || video.src)) {
+    seekPreviewVideo(video)
+    void video.play().then(
+      () => {
+        if (isCurrentPreviewRequest(tile, token)) {
+          setPreviewMode(tile, 'video')
+        }
+      },
+      (error) => {
+        if (!isCurrentPreviewRequest(tile, token)) return
+
+        if (!isInterruptedPlayback(error)) {
+          failedPreviewVideos.add(video.currentSrc || video.src)
+        }
+        startSpritePreview(tile, token)
+      },
+    )
     return
   }
 
-  startSpritePreview(tile)
+  startSpritePreview(tile, token)
 }
 
-function startSpritePreview(tile: VideoTile) {
+function startSpritePreview(tile: VideoTile, token = tile.dataset.previewToken) {
   if (states.has(tile)) return
+  if (!token || !isCurrentPreviewRequest(tile, token)) return
+
+  const previewSheet = tile.dataset.previewSheet
+  if (!previewSheet || failedPreviewSheets.has(previewSheet)) return
 
   const frameCount = toNumber(tile.dataset.previewFrameCount)
   const fps = toNumber(tile.dataset.previewFps)
   if (frameCount <= 1 || fps <= 0) return
 
-  tile.dataset.previewing = 'true'
-  tile.dataset.previewMode = 'sprite'
+  setPreviewMode(tile, 'sprite')
 
   const state = {
     frameId: 0,
     startedAt: performance.now(),
     lastFrame: -1,
+    frameOffset: getRandomFrameOffset(frameCount),
   }
 
   const tick = (now: number) => {
     const elapsed = now - state.startedAt
-    const frame = Math.floor((elapsed / 1000) * fps) % frameCount
+    const frame = (state.frameOffset + Math.floor((elapsed / 1000) * fps)) % frameCount
     if (frame !== state.lastFrame) {
       setFrame(tile, frame)
       state.lastFrame = frame
@@ -305,6 +349,10 @@ function startSpritePreview(tile: VideoTile) {
 }
 
 function stopPreview(tile: VideoTile) {
+  delete tile.dataset.previewRequested
+  delete tile.dataset.previewToken
+  setPreviewMode(tile, 'poster')
+
   const video = $<HTMLVideoElement>('[data-video-preview-video]', tile)
   if (video) {
     video.pause()
@@ -313,17 +361,21 @@ function stopPreview(tile: VideoTile) {
 
   const state = states.get(tile)
   if (!state) {
-    tile.dataset.previewing = 'false'
-    tile.dataset.previewMode = ''
     tile.style.setProperty('--video-preview-position', '0% 0%')
     return
   }
 
   cancelAnimationFrame(state.frameId)
   states.delete(tile)
-  tile.dataset.previewing = 'false'
-  tile.dataset.previewMode = ''
   tile.style.setProperty('--video-preview-position', '0% 0%')
+}
+
+function setPreviewMode(tile: VideoTile, mode: PreviewMode) {
+  tile.dataset.previewMode = mode
+}
+
+function isCurrentPreviewRequest(tile: VideoTile, token: string) {
+  return tile.dataset.previewRequested === 'true' && tile.dataset.previewToken === token
 }
 
 function setFrame(tile: VideoTile, frame: number) {
@@ -350,8 +402,9 @@ function preloadPreviewSheets(videos: CarouselVideo[]) {
     for (const sheet of sheets) {
       const image = new Image()
       image.decoding = 'async'
+      image.onerror = () => failedPreviewSheets.add(sheet)
       image.src = sheet
-      void image.decode?.().catch(() => undefined)
+      void image.decode?.().catch(() => failedPreviewSheets.add(sheet))
     }
   }
 
@@ -376,10 +429,32 @@ function updatePreviewVideo(video: HTMLVideoElement | null, active: CarouselVide
     return
   }
 
+  video.onerror = () => failedPreviewVideos.add(video.currentSrc || video.src)
+
   if (!video.src.endsWith(active.previewVideo)) {
     video.src = active.previewVideo
     video.load()
   }
+}
+
+function seekPreviewVideo(video: HTMLVideoElement) {
+  const duration = Number.isFinite(video.duration) && video.duration > 1
+    ? video.duration
+    : DEFAULT_PREVIEW_DURATION_SECONDS
+
+  try {
+    video.currentTime = Math.random() * Math.max(0, duration - 1)
+  } catch {
+    // Some browsers reject seeks before metadata is available; play from poster frame.
+  }
+}
+
+function getRandomFrameOffset(frameCount: number) {
+  return Math.floor(Math.random() * frameCount)
+}
+
+function isInterruptedPlayback(error: unknown) {
+  return error instanceof DOMException && error.name === 'AbortError'
 }
 
 function loadIframe(tile: VideoTile, button: HTMLButtonElement) {
@@ -408,7 +483,7 @@ function loadIframe(tile: VideoTile, button: HTMLButtonElement) {
   mount.replaceChildren(iframe)
   tile.dataset.videoReady = 'true'
   tile.dataset.isPlaying = 'true'
-  setButton(button, true)
+  setButton(button, true, tile.dataset.videoTitle)
 }
 
 function initWebglCarousel(tile: HTMLElement) {
@@ -552,13 +627,13 @@ function togglePlayback(tile: VideoTile, button: HTMLButtonElement) {
   )
 
   tile.dataset.isPlaying = String(shouldPlay)
-  setButton(button, shouldPlay)
+  setButton(button, shouldPlay, tile.dataset.videoTitle)
 }
 
-function setButton(button: HTMLButtonElement, isPlaying: boolean) {
+function setButton(button: HTMLButtonElement, isPlaying: boolean, title = 'La Presentación') {
   button.setAttribute(
     'aria-label',
-    isPlaying ? 'Pausar La Presentación' : 'Reproducir La Presentación',
+    `${isPlaying ? 'Pausar' : 'Reproducir'} ${title}`,
   )
 }
 
