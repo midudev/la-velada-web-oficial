@@ -27,7 +27,7 @@ const checks = [
   ['slot hover nudges both labels toward center', compactHtml.includes('--video-label-nudge:0.45rem')],
   ['keeps Cara a Cara visible', html.includes('CARA A CARA')],
   ['keeps Pesaje visible', html.includes('PESAJE')],
-  ['uses the generated poster as the resting image', html.includes('/videos/presentacion/poster.webp')],
+  ['uses the Ibai thumbnail as the resting image', html.includes('/videos/thumbnails/presentacion.webp')],
   ['uses generated smooth hover preview video', html.includes('/videos/presentacion/preview.mp4')],
   ['uses generated hover preview spritesheet', html.includes('/videos/presentacion/preview-sheet.webp')],
   ['enables animated hover preview frames', html.includes('data-preview-frame-count="96"')],

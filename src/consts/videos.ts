@@ -34,7 +34,7 @@ export const VIDEOS = [
     span: 'big',
     duration: '01:28',
     videoId: 'h-jWhM3ne5U',
-    poster: '/videos/presentacion/poster.webp',
+    poster: '/videos/thumbnails/presentacion.webp',
     previewVideo: '/videos/presentacion/preview.mp4',
     previewSheet: '/videos/presentacion/preview-sheet.webp',
     preview: {
