@@ -32,7 +32,7 @@ export const VIDEOS = [
     cta: 'VER VÍDEO',
     status: 'available',
     span: 'big',
-    duration: '01:28',
+    duration: '4:27',
     videoId: 'h-jWhM3ne5U',
     poster: '/videos/thumbnails/presentacion.webp',
     previewVideo: '/videos/presentacion/preview.mp4',

@@ -217,20 +217,20 @@ const carouselState = {
 
             <div data-video-frame class="absolute inset-0 z-20"></div>
 
-            <div class="relative z-30 flex h-full w-full items-center justify-center p-5 sm:p-6 lg:p-7">
-              <div class="relative flex flex-col items-center gap-4">
+            <div class="video-control-shell pointer-events-none absolute z-30">
+              <div class="video-control-dock pointer-events-auto inline-flex flex-col items-center text-theme-cream transition duration-300">
                 <button
                   type="button"
                   data-video-play
                   aria-label={`Reproducir ${video.title}`}
-                  class="video-play-button flex size-18 items-center justify-center rounded-full border border-theme-cream/80 bg-black/35 text-theme-cream outline-none backdrop-blur-md transition duration-500 hover:scale-105 hover:border-theme-gold hover:bg-theme-gold/15 focus-visible:scale-105 focus-visible:border-theme-gold focus-visible:bg-theme-gold/15 focus-visible:ring-2 focus-visible:ring-theme-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight sm:size-24"
+                  class="video-play-button group/play inline-flex shrink-0 items-center justify-center rounded-full text-theme-gold outline-none transition duration-300 hover:scale-[1.035] focus-visible:scale-[1.035] focus-visible:ring-2 focus-visible:ring-theme-gold/65 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
                 >
                   <span class="video-button-glyph" aria-hidden="true"></span>
                 </button>
                 {
                   video.duration && (
-                    <span class="rounded-full border border-theme-gold/35 bg-black/45 px-3 py-1 font-cinzel text-[0.62rem] font-bold tracking-[0.24em] text-theme-cream backdrop-blur sm:text-xs" data-video-duration>
-                      {video.duration}
+                    <span class="video-duration-badge inline-flex shrink-0 items-center justify-center font-cinzel font-black text-theme-cream" data-video-duration>
+                      <span>{video.duration}</span>
                     </span>
                   )
                 }
@@ -590,6 +590,72 @@ const carouselState = {
     opacity: 0.32;
   }
 
+  .video-control-shell {
+    top: 50%;
+    left: 52.5%;
+    transform: translate(-50%, -50%);
+    --video-control-gold: var(--color-theme-gold);
+  }
+
+  .video-control-dock {
+    gap: clamp(1rem, 1.6vw, 1.35rem);
+    opacity: 0.94;
+  }
+
+  .video-tile-active:hover .video-control-dock,
+  .video-tile-active:focus-within .video-control-dock {
+    opacity: 1;
+  }
+
+  .video-play-button {
+    width: clamp(6.4rem, 10vw, 7.75rem);
+    height: clamp(6.4rem, 10vw, 7.75rem);
+    border: 2px solid var(--video-control-gold);
+    background: color-mix(in srgb, var(--color-theme-midnight) 82%, black);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-cream) 13%, transparent),
+      0 16px 36px -24px rgba(0, 0, 0, 0.95),
+      0 0 26px -18px color-mix(in srgb, var(--video-control-gold) 80%, transparent);
+  }
+
+  .video-play-button:hover,
+  .video-play-button:focus-visible {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-cream) 18%, transparent),
+      0 20px 42px -24px rgba(0, 0, 0, 1),
+      0 0 34px -17px color-mix(in srgb, var(--video-control-gold) 90%, transparent);
+  }
+
+  .video-duration-badge {
+    min-width: clamp(6.4rem, 10vw, 7.75rem);
+    color: var(--video-control-gold);
+    font-size: clamp(2.9rem, 5.3vw, 4.35rem);
+    letter-spacing: 0.03em;
+    line-height: 0.86;
+    -webkit-text-stroke: 1.25px color-mix(in srgb, var(--color-theme-midnight) 86%, black);
+    paint-order: stroke fill;
+    text-shadow:
+      0 2px 0 rgba(0, 0, 0, 0.72),
+      0 8px 26px rgba(0, 0, 0, 0.98),
+      0 0 20px color-mix(in srgb, var(--video-control-gold) 34%, transparent);
+  }
+
+  @media (max-width: 639px) {
+    .video-control-shell {
+      left: 54%;
+    }
+
+    .video-control-dock {
+      flex-direction: row;
+      gap: clamp(0.9rem, 4vw, 1.2rem);
+    }
+
+    .video-duration-badge {
+      min-width: auto;
+      font-size: clamp(2.3rem, 10vw, 3.15rem);
+    }
+  }
+
   .video-side-rail {
     cursor: pointer;
     opacity: 1;
@@ -653,15 +719,16 @@ const carouselState = {
   .video-button-glyph {
     width: 0;
     height: 0;
-    margin-left: 0.2rem;
-    border-top: 0.78rem solid transparent;
-    border-bottom: 0.78rem solid transparent;
-    border-left: 1.05rem solid currentColor;
+    margin-left: 0.34rem;
+    border-top: 1.42rem solid transparent;
+    border-bottom: 1.42rem solid transparent;
+    border-left: 2.08rem solid currentColor;
+    filter: drop-shadow(0 1px 8px color-mix(in srgb, var(--video-control-gold) 34%, transparent));
   }
 
   .video-tile[data-video-ready='true'] .video-button-glyph {
-    width: 1rem;
-    height: 1.25rem;
+    width: 1.55rem;
+    height: 1.92rem;
     margin-left: 0;
     border: 0;
     background: linear-gradient(
