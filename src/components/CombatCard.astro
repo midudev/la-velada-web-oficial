@@ -68,6 +68,8 @@ const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b
               loading={loading}
               decoding={decoding}
               fetchpriority={fetchpriority}
+              width="1066"
+              height="1600"
               class="boxer-img"
             />
           </picture>
@@ -159,18 +161,17 @@ const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b
     z-index: 6;
     border: 1.5px solid color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
     opacity: 0.65;
+    /* Crece con scale (compositor) en vez de width/height para evitar reflow. */
     transition:
       opacity 400ms ease,
-      width 400ms ease,
-      height 400ms ease;
+      transform 400ms ease;
     pointer-events: none;
   }
 
   .combat:hover .combat-corner,
   .combat:focus-within .combat-corner {
     opacity: 1;
-    width: 20px;
-    height: 20px;
+    transform: scale(1.43);
   }
 
   .combat-corner.tl {
@@ -178,6 +179,7 @@ const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b
     left: 10px;
     border-right: 0;
     border-bottom: 0;
+    transform-origin: top left;
   }
 
   .combat-corner.tr {
@@ -185,6 +187,7 @@ const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b
     right: 10px;
     border-left: 0;
     border-bottom: 0;
+    transform-origin: top right;
   }
 
   .combat-corner.bl {
@@ -192,6 +195,7 @@ const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b
     left: 10px;
     border-right: 0;
     border-top: 0;
+    transform-origin: bottom left;
   }
 
   .combat-corner.br {
@@ -199,6 +203,7 @@ const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b
     right: 10px;
     border-left: 0;
     border-top: 0;
+    transform-origin: bottom right;
   }
 
   .combat-stage {
