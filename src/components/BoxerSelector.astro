@@ -123,10 +123,10 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       <div class="boxer-default-lockup flex w-full max-w-full flex-col items-center">
         <div class="animate-blurred-fade-in animate-delay-300 relative leading-none">
           <picture class="block">
-            <source srcset="/logo.avif" type="image/avif" />
-            <source srcset="/logo.webp" type="image/webp" />
+            <source srcset="https://cdn.infolavelada.com/logo/logo.avif" type="image/avif" />
+            <source srcset="https://cdn.infolavelada.com/logo/logo.webp" type="image/webp" />
             <img
-              src="/logo.webp"
+              src="https://cdn.infolavelada.com/logo/logo.webp"
               alt="Logo de La Velada del Año VI"
               class="boxer-default-logo relative block h-auto w-[58vw] max-w-[360px] sm:w-[44vw] md:w-[36vw] lg:w-[28vw]"
               width="512"
@@ -241,7 +241,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         >
           <img
             data-active-flag
-            src={`/flags/${fallback.country}.svg`}
+            src={`https://cdn.infolavelada.com/flags/${fallback.country}.svg`}
             alt=""
             aria-hidden="true"
             width="20"
@@ -1755,7 +1755,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         node.textContent = name
       })
 
-      if (flagNode && countryCode) flagNode.src = `/flags/${countryCode}.svg`
+      if (flagNode && countryCode) flagNode.src = `https://cdn.infolavelada.com/flags/${countryCode}.svg`
       if (countryNode && country) countryNode.textContent = country
     }
 

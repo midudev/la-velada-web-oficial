@@ -4,7 +4,7 @@
   "version": "0.0.2",
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "pnpm generate:thumbnails && pnpm generate:blur-images",
+    "prebuild": "pnpm generate:thumbnails && pnpm generate:blur-images && bun run upload:r2",
     "build": "astro build",
     "preview": "astro preview",
     "start": "astro",
@@ -14,6 +14,8 @@
     "generate:blur-images": "node scripts/generate-blur-placeholders.mjs",
     "generate:favicon": "node scripts/generate-favicon.mjs",
     "generate:character-images": "node scripts/convert-character-images.mjs",
+    "upload:r2": "node --env-file-if-exists=.env scripts/upload-to-r2.mjs",
+    "db:migrate": "node scripts/migrate.mjs",
     "db:init": "node scripts/init-predictions-db.mjs",
     "db:check": "node scripts/check-predictions-db.mjs",
     "db:test": "node scripts/test-predictions.mjs"
@@ -36,11 +38,11 @@
     "tailwindcss": "4.3.0"
   },
   "devDependencies": {
-    "@astrojs/react": "^5.0.7",
     "@types/canvas-confetti": "1.9.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@typescript-eslint/parser": "8.59.3",
+    "aws4fetch": "^1.0.20",
     "eslint": "10.3.0",
     "eslint-plugin-astro": "1.7.0",
     "png-to-ico": "3.0.1",
