@@ -28,7 +28,7 @@ const sportsEventJsonLd = {
   alternateName: ['La Velada VI', 'La Velada del Año 6'],
   description,
   url: canonical,
-  image: [`${SITE_URL}/og.jpg`, `${SITE_URL}/logo.webp`],
+  image: ['https://cdn.infolavelada.com/og.jpg', `https://cdn.infolavelada.com/logo/logo.webp`],
   sport: 'Boxing',
   startDate: EVENT_ISO,
   endDate: EVENT_END_ISO,
@@ -128,6 +128,36 @@ export const prerender = true
     slot="head"
   />
   <script type="application/ld+json" is:inline set:html={JSON.stringify(faqJsonLd)} slot="head" />
+
+  {/* Preload del fondo del hero: es el LCP de la home, por eso vive aquí y no
+      en el Layout (donde se descargaría en rutas que no tienen hero). */}
+  <link
+    rel="preload"
+    as="image"
+    href="https://cdn.infolavelada.com/hero-bg/background-1280.avif"
+    type="image/avif"
+    media="(max-width: 768px)"
+    fetchpriority="high"
+    slot="head"
+  />
+  <link
+    rel="preload"
+    as="image"
+    href="https://cdn.infolavelada.com/hero-bg/background-2048.avif"
+    type="image/avif"
+    media="(min-width: 769px) and (max-width: 1920px)"
+    fetchpriority="high"
+    slot="head"
+  />
+  <link
+    rel="preload"
+    as="image"
+    href="https://cdn.infolavelada.com/hero-bg/background.avif"
+    type="image/avif"
+    media="(min-width: 1921px)"
+    fetchpriority="high"
+    slot="head"
+  />
 
   <Hero />
 

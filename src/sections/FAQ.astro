@@ -186,10 +186,14 @@ const EVENT_TIMESTAMP = new Date(EVENT_DATE_TIME).getTime()
 
       const userLabel = regionMap[userTz] ?? userTz.replace(/_/g, ' ').split('/').pop() ?? userTz
 
-      container.innerHTML = `
-        <span>En tu zona (${userLabel}):</span>
-        <time class="font-cinzel font-black text-theme-gold tabular-nums">${time}h</time>
-      `
+      const labelElement = document.createElement('span')
+      labelElement.textContent = `En tu zona (${userLabel}):`
+
+      const timeElement = document.createElement('time')
+      timeElement.className = 'font-cinzel font-black text-theme-gold tabular-nums'
+      timeElement.textContent = `${time}h`
+
+      container.replaceChildren(labelElement, timeElement)
       container.classList.remove('hidden')
       container.classList.add('inline-flex')
     } catch {

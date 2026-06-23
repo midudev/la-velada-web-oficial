@@ -25,8 +25,8 @@ const episodes: PodcastEpisode[] = rawEpisodes
     title: data.title,
     published: new Date(data.published),
     thumbnail: {
-      avif: `/podcast/thumbnails/${data.videoId}.avif`,
-      webp: `/podcast/thumbnails/${data.videoId}.webp`,
+      avif: `https://cdn.infolavelada.com/podcast/thumbnails/${data.videoId}.avif`,
+      webp: `https://cdn.infolavelada.com/podcast/thumbnails/${data.videoId}.webp`,
     },
   }))
   .sort((a, b) => b.published.getTime() - a.published.getTime())

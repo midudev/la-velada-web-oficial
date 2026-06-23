@@ -8,7 +8,7 @@ import { fixedTitle } from '@/consts/pageTitles'
 import Header from '@/sections/Header.astro'
 
 const SITE_URL = 'https://www.infolavelada.com'
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og.jpg`
+const DEFAULT_OG_IMAGE = `https://cdn.infolavelada.com/og.jpg`
 const DEFAULT_OG_ALT = 'La Velada del Año VI — Evento de boxeo organizado por Ibai Llanos'
 
 interface Props {
@@ -63,7 +63,7 @@ const organizationJsonLd = {
   '@id': `${SITE_URL}/#organization`,
   name: 'La Velada del Año',
   url: `${SITE_URL}/`,
-  logo: `${SITE_URL}/logo.webp`,
+  logo: `https://cdn.infolavelada.com/logo/logo.webp`,
   sameAs: [
     'https://x.com/infoLaVelada',
     'https://www.twitch.tv/ibai',
@@ -94,7 +94,7 @@ const organizationJsonLd = {
 
     <link
       rel="preload"
-      href="/fonts/cinzel-medium.woff2"
+      href="https://cdn.infolavelada.com/fonts/cinzel-medium.woff2"
       as="font"
       type="font/woff2"
       crossorigin="anonymous"
@@ -102,35 +102,13 @@ const organizationJsonLd = {
     />
     <link
       rel="preload"
-      href="/fonts/cinzel-black.woff2"
+      href="https://cdn.infolavelada.com/fonts/cinzel-black.woff2"
       as="font"
       type="font/woff2"
       crossorigin="anonymous"
     />
-    <link
-      rel="preload"
-      as="image"
-      href="/background-1280.avif"
-      type="image/avif"
-      media="(max-width: 768px)"
-      fetchpriority="high"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="/background-2048.avif"
-      type="image/avif"
-      media="(min-width: 769px) and (max-width: 1920px)"
-      fetchpriority="high"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="/background.avif"
-      type="image/avif"
-      media="(min-width: 1921px)"
-      fetchpriority="high"
-    />
+    {/* El preload del fondo del hero solo aplica a la home (su LCP); las demás
+        rutas lo inyectan vía `slot="head"` si lo necesitan. */}
     <meta name="description" content={description} />
     <meta name="author" content="Ibai Llanos" />
     <meta name="theme-color" content="#0a1024" />

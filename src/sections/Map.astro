@@ -15,19 +15,12 @@ const VENUE_GEO_URL = `geo:0,0?q=${VENUE_LOCATION}(${VENUE_GEO_LABEL})`
 const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VENUE_LOCATION}`
 ---
 
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-  crossorigin=""
-/>
-
 <section
   id="sede"
   class="relative w-full overflow-hidden px-4 py-20 sm:px-6 lg:py-28"
   aria-labelledby="map-title"
 >
-  <div class="relative mx-auto flex max-w-6xl flex-col items-center">
+  <div class="relative mx-auto flex max-w-7xl flex-col items-center">
     <SectionHeader
       titleId="map-title"
       eyebrow="SEDE DEL EVENTO"
@@ -312,6 +305,22 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
   `
 
   let mapInstance: any = null
+  let mapObserver: IntersectionObserver | null = null
+  let leafletCssLoaded = false
+
+  // El CSS de Leaflet se inyecta solo cuando el mapa va a inicializarse, en
+  // lugar de bloquear el render de la página entera desde el <head>.
+  function loadLeafletCss() {
+    if (leafletCssLoaded) return
+    leafletCssLoaded = true
+
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+    link.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY='
+    link.crossOrigin = 'anonymous'
+    document.head.appendChild(link)
+  }
 
   function isAndroid() {
     return /android/i.test(navigator.userAgent)
@@ -347,7 +356,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
           const s = document.createElement('script')
           s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
           s.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo='
-          s.crossOrigin = ''
+          s.crossOrigin = 'anonymous'
           s.onload = () => resolve()
           s.onerror = () => reject(new Error('No se pudo cargar Leaflet'))
           document.head.appendChild(s)
@@ -399,10 +408,36 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
     }
   }
 
+  // No cargamos Leaflet (ni su CSS ni su JS, ~170 KB) hasta que la sede está a
+  // punto de entrar en pantalla. La mayoría de visitas no llegan tan abajo.
+  function setupMap() {
+    const container = $<HTMLElement>('#velada-map')
+    if (!container) return
+
+    mapObserver?.disconnect()
+    mapObserver = new IntersectionObserver(
+      (entries, observer) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return
+        observer.disconnect()
+        mapObserver = null
+        loadLeafletCss()
+        void initMap()
+      },
+      { rootMargin: '300px' },
+    )
+    mapObserver.observe(container)
+  }
+
+  function teardownMap() {
+    mapObserver?.disconnect()
+    mapObserver = null
+    destroyMap()
+  }
+
   document.addEventListener('astro:page-load', () => {
     updateVenueMapLink()
-    initMap()
+    setupMap()
   })
 
-  document.addEventListener('astro:before-preparation', destroyMap)
+  document.addEventListener('astro:before-preparation', teardownMap)
 </script>

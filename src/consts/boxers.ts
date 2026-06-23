@@ -843,8 +843,8 @@ export interface BoxerImageVariants {
 /** Variantes de la miniatura del selector (carpeta `character-select`). */
 export function getBoxerSelectImages(boxer: Boxer): BoxerImageVariants {
   return {
-    avif: `/character-select/${boxer.id}.avif`,
-    webp: `/character-select/${boxer.id}.webp`,
+    avif: `https://cdn.infolavelada.com/character-select/${boxer.id}.avif`,
+    webp: `https://cdn.infolavelada.com/character-select/${boxer.id}.webp`,
   }
 }
 
@@ -857,8 +857,8 @@ export function getBoxerSelectImage(boxer: Boxer): string {
 /** Variantes del recorte grande para el hero (carpeta `character-hero`). */
 export function getBoxerHeroImages(boxer: Boxer): BoxerImageVariants {
   return {
-    avif: `/character-hero/${boxer.id}.avif`,
-    webp: `/character-hero/${boxer.id}.webp`,
+    avif: `https://cdn.infolavelada.com/character-hero/${boxer.id}.avif`,
+    webp: `https://cdn.infolavelada.com/character-hero/${boxer.id}.webp`,
   }
 }
 
