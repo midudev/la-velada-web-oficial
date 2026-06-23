@@ -13,6 +13,13 @@
   --color-velada-forest: #1d3524;
   --color-velada-navy: #142346;
   --color-velada-midnight: #0a1024;
+  --color-velada-blood: #c63030;
+  --color-velada-neon-cyan: #00aba5;
+  --color-velada-neon-pink: #ff4f9f;
+
+  --radius-sharp: 0;
+  --radius-card: 0.375rem;
+  --radius-pill: 9999px;
 
   --color-theme-cream: var(--color-velada-cream);
   --color-theme-gold: var(--color-velada-gold);
@@ -79,8 +86,8 @@
     color: #fff;
     text-shadow:
       0 4px 18px rgba(0, 0, 0, 1),
-      0 0 2px #00aba5,
-      0 0 4px #ff4f9f;
+      0 0 2px var(--color-velada-neon-cyan),
+      0 0 4px var(--color-velada-neon-pink);
     animation: neon-flicker 2.2s infinite both;
     transition: text-shadow 0.3s;
   }
@@ -91,72 +98,72 @@
       opacity: 1;
       text-shadow:
         0 2px 8px rgba(0, 0, 0, 1),
-        0 0 2px #00aba5,
-        0 0 4px #ff4f9f;
+        0 0 2px var(--color-velada-neon-cyan),
+        0 0 4px var(--color-velada-neon-pink);
     }
     10% {
       opacity: 0.95;
       text-shadow:
         0 2px 8px rgba(0, 0, 0, 1),
-        0 0 3px #00aba5,
-        0 0 6px #ff4f9f;
+        0 0 3px var(--color-velada-neon-cyan),
+        0 0 6px var(--color-velada-neon-pink);
     }
     18% {
       opacity: 0.85;
       text-shadow:
         0 2px 8px rgba(0, 0, 0, 1),
-        0 0 1px #00aba5,
-        0 0 2px #ff4f9f;
+        0 0 1px var(--color-velada-neon-cyan),
+        0 0 2px var(--color-velada-neon-pink);
     }
     20% {
       opacity: 0.95;
       text-shadow:
         0 2px 8px rgba(0, 0, 0, 1),
-        0 0 3px #00aba5,
-        0 0 6px #ff4f9f;
+        0 0 3px var(--color-velada-neon-cyan),
+        0 0 6px var(--color-velada-neon-pink);
     }
     25% {
       opacity: 0.9;
       text-shadow:
         0 2px 8px rgba(0, 0, 0, 1),
-        0 0 1px #00aba5,
-        0 0 2px #ff4f9f;
+        0 0 1px var(--color-velada-neon-cyan),
+        0 0 2px var(--color-velada-neon-pink);
     }
     30% {
       opacity: 1;
       text-shadow:
         0 2px 8px rgba(0, 0, 0, 1),
-        0 0 2px #00aba5,
-        0 0 4px #ff4f9f;
+        0 0 2px var(--color-velada-neon-cyan),
+        0 0 4px var(--color-velada-neon-pink);
     }
     70% {
       opacity: 0.97;
       text-shadow:
         0 2px 8px rgba(0, 0, 0, 1),
-        0 0 2px #00aba5,
-        0 0 4px #ff4f9f;
+        0 0 2px var(--color-velada-neon-cyan),
+        0 0 4px var(--color-velada-neon-pink);
     }
     80% {
       opacity: 0.85;
       text-shadow:
         0 2px 8px rgba(0, 0, 0, 1),
-        0 0 1px #00aba5,
-        0 0 2px #ff4f9f;
+        0 0 1px var(--color-velada-neon-cyan),
+        0 0 2px var(--color-velada-neon-pink);
     }
     90% {
       opacity: 1;
       text-shadow:
         0 2px 8px rgba(0, 0, 0, 1),
-        0 0 2px #00aba5,
-        0 0 4px #ff4f9f;
+        0 0 2px var(--color-velada-neon-cyan),
+        0 0 4px var(--color-velada-neon-pink);
     }
   }
 
   .neon-text:hover {
     text-shadow:
       0 2px 8px rgba(0, 0, 0, 1),
-      0 0 4px #00aba5,
-      0 0 8px #ff4f9f;
+      0 0 4px var(--color-velada-neon-cyan),
+      0 0 8px var(--color-velada-neon-pink);
     animation: none;
   }
 
@@ -214,7 +221,7 @@
 html {
   font-family: 'Cinzel', var(--font-fallback);
   font-weight: 500;
-  text-transform: uppercase;
+  text-transform: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -254,6 +261,7 @@ dialog {
 }
 
 .font-cinzel {
+  text-transform: uppercase;
   text-rendering: optimizeLegibility;
 }
 

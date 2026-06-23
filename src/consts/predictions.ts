@@ -64,7 +64,7 @@ export function formatPredictionSupport(votes: number) {
 
 const sideStyles: Record<PredictionSide, { color: string }> = {
   a: {
-    color: '#c63030',
+    color: 'var(--color-velada-blood)',
   },
   b: {
     color: 'var(--color-theme-gold)',
