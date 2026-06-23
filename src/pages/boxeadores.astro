@@ -1367,6 +1367,10 @@ const cardImageEagerAmount = 4
     opacity: 0;
   }
 
+  :global(.js) .boxer-card-wrap[data-ready='true'] {
+    opacity: 1;
+  }
+
   .boxer-card-wrap {
     animation-delay: var(--animation-delay);
   }
@@ -1463,6 +1467,8 @@ const cardImageEagerAmount = 4
     const footerBlock = $<HTMLElement>('[data-boxers-footer]')
     const sortBar = $<HTMLElement>('[data-boxers-sort]')
     if (!form || !grid) return
+    if (form.dataset.boxersFiltersReady === 'true') return
+    form.dataset.boxersFiltersReady = 'true'
     const gridEl: HTMLElement = grid
 
     const cards = Array.from($$<HTMLElement>('[data-boxer-card]', grid))
@@ -1546,15 +1552,96 @@ const cardImageEagerAmount = 4
 
     const ANIM_CLASS = 'animate-fade-in-up'
     const ANIM_DELAY = 35
+    const FILTER_LAYOUT_DURATION = 260
+    const FILTER_LAYOUT_EASING = 'cubic-bezier(0.77, 0, 0.175, 1)'
+    const ENTER_OFFSET = 10
+    const activeLayoutAnimations = new Map<HTMLElement, Animation>()
+    let cardsReady = false
 
-    function retriggerAnimations() {
+    function prepareCardsForLayoutChange() {
+      if (!cardsReady) return
+
+      for (const card of cards) {
+        card.classList.remove(ANIM_CLASS)
+        card.dataset.ready = 'true'
+      }
+    }
+
+    function visibleGridCards() {
+      return (Array.from(gridEl.children) as HTMLElement[]).filter(
+        (card) => card.dataset.hidden !== 'true',
+      )
+    }
+
+    function stopLayoutAnimations() {
+      for (const [card, animation] of activeLayoutAnimations) {
+        animation.cancel()
+        card.style.transform = ''
+      }
+      activeLayoutAnimations.clear()
+    }
+
+    function animateGridChange(change: () => void) {
+      if (!cardsReady || reduceMotionQuery.matches) {
+        stopLayoutAnimations()
+        prepareCardsForLayoutChange()
+        change()
+        return
+      }
+
+      stopLayoutAnimations()
+
+      const beforeCards = visibleGridCards()
+      const beforeRects = new Map(beforeCards.map((card) => [card, card.getBoundingClientRect()]))
+      const beforeScrollX = window.scrollX
+      const beforeScrollY = window.scrollY
+
+      prepareCardsForLayoutChange()
+      change()
+
+      const scrollDeltaX = window.scrollX - beforeScrollX
+      const scrollDeltaY = window.scrollY - beforeScrollY
+
+      for (const card of visibleGridCards()) {
+        const previous = beforeRects.get(card)
+        const current = card.getBoundingClientRect()
+        const x = previous ? previous.left - current.left - scrollDeltaX : 0
+        const y = previous ? previous.top - current.top - scrollDeltaY : ENTER_OFFSET
+
+        if (Math.abs(x) < 0.5 && Math.abs(y) < 0.5) continue
+
+        const animation = card.animate(
+          [{ transform: `translate(${x}px, ${y}px)` }, { transform: 'translate(0, 0)' }],
+          {
+            duration: FILTER_LAYOUT_DURATION,
+            easing: FILTER_LAYOUT_EASING,
+          },
+        )
+
+        activeLayoutAnimations.set(card, animation)
+        animation.addEventListener('finish', () => {
+          if (activeLayoutAnimations.get(card) === animation) activeLayoutAnimations.delete(card)
+        })
+        animation.addEventListener('cancel', () => {
+          if (activeLayoutAnimations.get(card) === animation) activeLayoutAnimations.delete(card)
+        })
+      }
+    }
+
+    function revealInitialCards() {
       let visibleIndex = 0
+      allowBoxerCardAnimations()
 
-      if (reduceMotionQuery.matches) return
+      if (reduceMotionQuery.matches) {
+        cardsReady = true
+        for (const card of cards) card.dataset.ready = 'true'
+        return
+      }
 
       for (const card of Array.from(gridEl.children) as HTMLElement[]) {
         if (card.dataset.hidden === 'true') continue
 
+        card.dataset.ready = 'true'
         card.classList.remove(ANIM_CLASS)
 
         void card.offsetWidth
@@ -1565,6 +1652,8 @@ const cardImageEagerAmount = 4
 
         visibleIndex++
       }
+
+      cardsReady = true
     }
 
     // Remueve el atributo 'data-skip-boxers-enter' añádido en el script de 'Layout.astro'
@@ -1616,7 +1705,7 @@ const cardImageEagerAmount = 4
 
     // Animación visual al presionar un filtro.
     function bump(el: HTMLElement | null) {
-      if (!el) return
+      if (!el || reduceMotionQuery.matches) return
       el.classList.remove('is-bumping')
       // Forzamos reflow para reiniciar la transición si se está pulsando rápido.
       void el.offsetWidth
@@ -1696,9 +1785,10 @@ const cardImageEagerAmount = 4
         // "todos"; mantenemos la UX simple: una activa siempre por grupo.
         if (state[group] === value) return
         state[group] = value
-        applyFilters()
-        allowBoxerCardAnimations()
-        retriggerAnimations()
+        animateGridChange(() => {
+          applyFilters()
+          applySort()
+        })
         syncStateToURL()
       })
     }
@@ -1707,9 +1797,10 @@ const cardImageEagerAmount = 4
       btn.addEventListener('click', () => {
         state.country = ''
         state.gender = ''
-        applyFilters()
-        allowBoxerCardAnimations()
-        retriggerAnimations()
+        animateGridChange(() => {
+          applyFilters()
+          applySort()
+        })
         syncStateToURL()
       })
     }
@@ -1722,9 +1813,7 @@ const cardImageEagerAmount = 4
         for (const b of sortButtons) {
           b.setAttribute('aria-pressed', String(b.dataset.sort === sortMode))
         }
-        applySort()
-        allowBoxerCardAnimations()
-        retriggerAnimations()
+        animateGridChange(applySort)
         syncStateToURL()
       })
     }
@@ -1736,7 +1825,7 @@ const cardImageEagerAmount = 4
 
     applyFilters()
     applySort()
-    retriggerAnimations()
+    revealInitialCards()
   }
 
   document.addEventListener('astro:page-load', setupBoxersFilters)
