@@ -51,6 +51,39 @@ const { video } = Astro.props
   }
 </div>
 
+<script>
+  // Con el ClientRouter de Astro, el <video> entra en el DOM por swap (no por
+  // parseo de la página), y el navegador no respeta el atributo `autoplay` en
+  // ese caso. Lo arrancamos a mano en cada navegación.
+  function playCombatHeroVideo() {
+    const video = document.querySelector<HTMLVideoElement>('.combat-hero-video')
+    if (!video) return
+
+    // `muted` debe estar activo para que el autoplay sea permitido; el atributo
+    // a veces no se refleja a la propiedad tras un swap, así que lo forzamos.
+    video.muted = true
+
+    const playback = video.play()
+    if (!playback) return
+
+    playback.catch(() => {
+      // Tras un swap, las fuentes pueden quedar sin enganchar: recargamos y
+      // reintentamos una sola vez cuando el navegador tenga datos.
+      video.addEventListener(
+        'loadeddata',
+        () => {
+          const retry = video.play()
+          if (retry) retry.catch(() => {})
+        },
+        { once: true },
+      )
+      video.load()
+    })
+  }
+
+  document.addEventListener('astro:page-load', playCombatHeroVideo)
+</script>
+
 <style>
   .combat-hero-video-wrap {
     position: absolute;
