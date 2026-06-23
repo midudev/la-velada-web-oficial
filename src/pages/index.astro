@@ -129,6 +129,36 @@ export const prerender = true
   />
   <script type="application/ld+json" is:inline set:html={JSON.stringify(faqJsonLd)} slot="head" />
 
+  {/* Preload del fondo del hero: es el LCP de la home, por eso vive aquí y no
+      en el Layout (donde se descargaría en rutas que no tienen hero). */}
+  <link
+    rel="preload"
+    as="image"
+    href="https://cdn.infolavelada.com/hero-bg/background-1280.avif"
+    type="image/avif"
+    media="(max-width: 768px)"
+    fetchpriority="high"
+    slot="head"
+  />
+  <link
+    rel="preload"
+    as="image"
+    href="https://cdn.infolavelada.com/hero-bg/background-2048.avif"
+    type="image/avif"
+    media="(min-width: 769px) and (max-width: 1920px)"
+    fetchpriority="high"
+    slot="head"
+  />
+  <link
+    rel="preload"
+    as="image"
+    href="https://cdn.infolavelada.com/hero-bg/background.avif"
+    type="image/avif"
+    media="(min-width: 1921px)"
+    fetchpriority="high"
+    slot="head"
+  />
+
   <Hero />
 
   <Sponsors />
