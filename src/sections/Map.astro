@@ -403,6 +403,13 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
         .openPopup()
 
       setTimeout(() => mapInstance?.invalidateSize(), 200)
+
+      container.addEventListener('mouseenter', () => {
+        mapInstance?.scrollWheelZoom.enable()
+      })
+      container.addEventListener('mouseleave', () => {
+        mapInstance?.scrollWheelZoom.disable()
+      })
     } catch (error) {
       console.error('No se pudo inicializar el mapa:', error)
     }
