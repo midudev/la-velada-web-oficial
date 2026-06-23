@@ -953,6 +953,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     /* Mismo motivo que .boxer-mobile-slide: aislar para que la imagen
        promocionada en hover/activo nunca pinte sobre su propio nombre. */
     isolation: isolate;
+    border-radius: var(--radius-sharp);
     background: color-mix(in srgb, var(--color-theme-midnight) 92%, var(--color-theme-navy));
     /* Cada celda lleva su propio borde dorado para que, al estar opacity:0
        durante el cascade inicial, no quede ningún "bloque" visible debajo.
@@ -1036,9 +1037,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
        del activo. */
     background: radial-gradient(
       ellipse 90% 90% at 50% 35%,
-      #c63030 0%,
-      #9c1f1f 50%,
-      #5a1414 100%
+      var(--color-velada-blood) 0%,
+      color-mix(in srgb, var(--color-velada-blood) 78%, black) 50%,
+      color-mix(in srgb, var(--color-velada-blood) 45%, black) 100%
     );
   }
 
@@ -1148,8 +1149,8 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(:focus-visible) {
     z-index: 2;
     box-shadow:
-      0 0 0 1px color-mix(in srgb, #c63030 55%, transparent),
-      0 0 14px 0 color-mix(in srgb, #c63030 45%, transparent);
+      0 0 0 1px color-mix(in srgb, var(--color-velada-blood) 55%, transparent),
+      0 0 14px 0 color-mix(in srgb, var(--color-velada-blood) 45%, transparent);
   }
 
   .boxer-cell[data-opponent='true']:not([data-active='true']):not(:hover):not(:focus-visible)::after {
@@ -1409,13 +1410,13 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     color: var(--color-theme-cream);
     background: linear-gradient(
       135deg,
-      color-mix(in srgb, #c63030 85%, black) 0%,
+      color-mix(in srgb, var(--color-velada-blood) 85%, black) 0%,
       var(--color-velada-maroon) 100%
     );
     padding: 0.28em 0.5em;
     border: 1px solid color-mix(in srgb, var(--color-theme-gold) 60%, transparent);
-    border-radius: 0.25rem;
-    box-shadow: 0 0 12px color-mix(in srgb, #c63030 45%, transparent);
+    border-radius: var(--radius-card);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--color-velada-blood) 45%, transparent);
   }
 
   .boxer-vs-name {
