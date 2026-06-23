@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro'
 
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import VeladaLogoIcon from '@/assets/svg/logo.svg'
 import BoxerGallery from '@/components/BoxerGallery.astro'
 import BoxerHeroStatsCard from '@/components/BoxerHeroStatsCard.astro'
 import BoxerSocials from '@/components/BoxerSocials.astro'
@@ -222,16 +223,16 @@ const breadcrumbJsonLd = {
     >
       <source
         type="image/avif"
-        srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
+        srcset="https://cdn.infolavelada.com/hero-bg/background-1280.avif 1280w, https://cdn.infolavelada.com/hero-bg/background-2048.avif 2048w, https://cdn.infolavelada.com/hero-bg/background.avif 3840w"
         sizes="100vw"
       />
       <source
         type="image/webp"
-        srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+        srcset="https://cdn.infolavelada.com/hero-bg/background-1280.webp 1280w, https://cdn.infolavelada.com/hero-bg/background-2048.webp 2048w, https://cdn.infolavelada.com/hero-bg/background.webp 3840w"
         sizes="100vw"
       />
       <img
-        src="/background.webp"
+        src="https://cdn.infolavelada.com/hero-bg/background.webp"
         alt=""
         role="presentation"
         class="h-full w-full object-cover object-center"
@@ -253,7 +254,7 @@ const breadcrumbJsonLd = {
       </a>
 
       <div
-        class="boxer-hero mt-8 grid items-center gap-10 sm:mt-10 md:grid-cols-[0.82fr_1fr] md:gap-10 lg:gap-14"
+        class="boxer-hero mt-8 grid items-center gap-10 sm:mt-10 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1fr)] md:items-start md:gap-10 lg:gap-14"
       >
         <div class="boxer-portrait-wrap relative flex flex-col items-center md:order-1">
           <span aria-hidden="true" class="boxer-detail-aura"></span>
@@ -290,10 +291,10 @@ const breadcrumbJsonLd = {
           </div>
         </div>
 
-        <div class="boxer-info relative flex flex-col items-start md:order-2">
+        <div class="boxer-info relative flex flex-col items-start md:order-2 md:mt-8 lg:mt-12">
           <h1
             id="boxer-name"
-            class="boxer-detail-name animate-fade-in-up font-cinzel text-5xl leading-[0.92] font-black tracking-[0.02em] text-balance uppercase sm:text-6xl md:text-7xl lg:text-8xl"
+            class="boxer-detail-name animate-fade-in-up font-cinzel text-5xl leading-[0.92] font-black tracking-[0.02em] text-balance uppercase sm:text-6xl md:text-[clamp(2.5rem,5.6vw,4.5rem)]"
           >
             {boxer.name}
           </h1>
@@ -309,41 +310,57 @@ const breadcrumbJsonLd = {
           />
 
           {
-            opponent && opponentSelectImages && (
-              <a
-                href={`/boxeadores/${opponent.id}`}
-                class="boxer-versus group mt-8 animate-fade-in-up animate-delay-500"
-                aria-label={`Ver el perfil de ${opponent.name}, su rival`}
-              >
-                <span class="boxer-versus-tag" aria-hidden="true">
-                  VS
-                </span>
-                <span class="boxer-versus-photo relative inline-flex size-12 shrink-0 overflow-hidden rounded-full sm:size-14">
-                  <picture class="absolute inset-0">
-                    <source type="image/avif" srcset={opponentSelectImages.avif} />
-                    <source type="image/webp" srcset={opponentSelectImages.webp} />
-                    <img
-                      src={opponentSelectImages.webp}
-                      alt=""
-                      role="presentation"
-                      transition:name={`boxer-hero-${opponent.id}`}
-                      decoding="async"
-                      loading="lazy"
-                      width="80"
-                      height="80"
-                      class="size-full object-cover object-top"
-                    />
-                  </picture>
-                </span>
-                <span class="boxer-versus-text">
-                  <span class="boxer-versus-label">Su rival</span>
-                  <span class="boxer-versus-name">{opponent.name}</span>
-                </span>
-                <ArrowRightIcon
-                  class="boxer-versus-arrow size-4 text-theme-gold/70"
-                  aria-hidden="true"
-                />
-              </a>
+            opponent && opponentSelectImages && battle && (
+              <div class="boxer-versus-card mt-8 animate-fade-in-up animate-delay-500">
+                <a
+                  href={`/boxeadores/${opponent.id}`}
+                  class="boxer-versus-half group"
+                  aria-label={`Ver el perfil de ${opponent.name}, su rival`}
+                >
+                  <span class="boxer-versus-tag" aria-hidden="true">
+                    VS
+                  </span>
+                  <span class="boxer-versus-photo relative inline-flex size-11 shrink-0 overflow-hidden rounded-full sm:size-12">
+                    <picture class="absolute inset-0">
+                      <source type="image/avif" srcset={opponentSelectImages.avif} />
+                      <source type="image/webp" srcset={opponentSelectImages.webp} />
+                      <img
+                        src={opponentSelectImages.webp}
+                        alt=""
+                        role="presentation"
+                        transition:name={`boxer-hero-${opponent.id}`}
+                        decoding="async"
+                        loading="lazy"
+                        width="80"
+                        height="80"
+                        class="size-full object-cover object-top"
+                      />
+                    </picture>
+                  </span>
+                  <span class="boxer-versus-text">
+                    <span class="boxer-versus-label">Su rival</span>
+                    <span class="boxer-versus-name">{opponent.name}</span>
+                  </span>
+                </a>
+
+                <a
+                  href={battle.url}
+                  class="boxer-versus-half group"
+                  aria-label={`Ver el combate ${String(battle.number).padStart(2, '0')}: ${battle.title}`}
+                >
+                  <VeladaLogoIcon class="boxer-combat-icon" aria-hidden="true" />
+                  <span class="boxer-versus-text">
+                    <span class="boxer-versus-label">
+                      Combate {String(battle.number).padStart(2, '0')}
+                    </span>
+                    <span class="boxer-versus-name">Ver el combate</span>
+                  </span>
+                  <ArrowRightIcon
+                    class="boxer-versus-arrow size-4 text-theme-gold/70"
+                    aria-hidden="true"
+                  />
+                </a>
+              </div>
             )
           }
         </div>
@@ -480,26 +497,66 @@ const breadcrumbJsonLd = {
 
   /* ---------- Meta (tira editorial) ---------- */
   /* ---------- Rival (VS) ---------- */
-  .boxer-versus {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.85rem;
-    padding: 0.55rem 1.1rem 0.55rem 0.6rem;
-    border-radius: 9999px;
-    background: color-mix(in srgb, var(--color-theme-midnight) 72%, black);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
-    transition:
-      transform 250ms ease,
-      box-shadow 250ms ease;
+  .boxer-versus-card {
+    display: flex;
+    flex-direction: column;
+    width: min(100%, 34rem);
+    border-radius: 1.4rem;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(15, 18, 36, 0.5) 0%, rgba(7, 10, 21, 0.62) 100%);
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 24%, transparent);
+    transition: border-color 250ms ease;
   }
 
-  .boxer-versus:hover,
-  .boxer-versus:focus-visible {
-    transform: translateY(-2px);
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 65%, transparent),
-      0 14px 30px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+  .boxer-versus-card:hover {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
+  }
+
+  .boxer-versus-half {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 1rem;
+    transition: background-color 250ms ease;
+  }
+
+  .boxer-versus-half:hover,
+  .boxer-versus-half:focus-visible {
+    background-color: color-mix(in srgb, var(--color-theme-gold) 9%, transparent);
     outline: none;
+  }
+
+  /* Separador entre las dos mitades */
+  .boxer-versus-card > .boxer-versus-half + .boxer-versus-half {
+    border-top: 1px solid color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+  }
+
+  @media (min-width: 640px) {
+    .boxer-versus-card {
+      flex-direction: row;
+      align-items: stretch;
+    }
+
+    .boxer-versus-card > .boxer-versus-half + .boxer-versus-half {
+      border-top: none;
+      border-left: 1px solid color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+    }
+  }
+
+  .boxer-combat-icon {
+    width: 1.45rem;
+    height: 1.45rem;
+    flex-shrink: 0;
+    color: color-mix(in srgb, var(--color-theme-gold) 82%, transparent);
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-theme-gold) 30%, transparent));
+    transition: transform 250ms ease;
+  }
+
+  .boxer-versus-half:hover .boxer-combat-icon,
+  .boxer-versus-half:focus-visible .boxer-combat-icon {
+    transform: scale(1.08);
   }
 
   .boxer-versus-tag {
@@ -517,17 +574,13 @@ const breadcrumbJsonLd = {
 
   .boxer-versus-photo {
     background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
-      0 6px 16px rgba(0, 0, 0, 0.45);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
     transition: box-shadow 300ms ease;
   }
 
-  .boxer-versus:hover .boxer-versus-photo,
-  .boxer-versus:focus-visible .boxer-versus-photo {
-    box-shadow:
-      inset 0 0 0 1px var(--color-theme-gold),
-      0 10px 22px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+  .boxer-versus-half:hover .boxer-versus-photo,
+  .boxer-versus-half:focus-visible .boxer-versus-photo {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
   }
 
   .boxer-versus-text {
@@ -556,17 +609,18 @@ const breadcrumbJsonLd = {
     transition: color 250ms ease;
   }
 
-  .boxer-versus:hover .boxer-versus-name,
-  .boxer-versus:focus-visible .boxer-versus-name {
+  .boxer-versus-half:hover .boxer-versus-name,
+  .boxer-versus-half:focus-visible .boxer-versus-name {
     color: var(--color-theme-gold);
   }
 
   .boxer-versus-arrow {
+    margin-left: auto;
     transition: transform 250ms ease;
   }
 
-  .boxer-versus:hover .boxer-versus-arrow,
-  .boxer-versus:focus-visible .boxer-versus-arrow {
+  .boxer-versus-half:hover .boxer-versus-arrow,
+  .boxer-versus-half:focus-visible .boxer-versus-arrow {
     transform: translateX(3px);
   }
 
@@ -686,8 +740,9 @@ const breadcrumbJsonLd = {
     .boxer-back-arrow,
     .boxer-back-label::after,
     .boxer-detail-cta,
-    .boxer-versus,
+    .boxer-versus-half,
     .boxer-versus-photo,
+    .boxer-combat-icon,
     .boxer-versus-arrow {
       animation: none !important;
       transition: none !important;

@@ -44,6 +44,8 @@ const images = getBoxerGallery(boxerId, boxerName)
                   alt={image.alt}
                   loading="lazy"
                   decoding="async"
+                  width="300"
+                  height="400"
                   class="size-full object-cover transition duration-300 group-hover:scale-105"
                 />
               </picture>
@@ -102,25 +104,67 @@ const images = getBoxerGallery(boxerId, boxerName)
     if (!dialog || !dialogImg || items.length === 0) return
 
     let current = 0
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const reveal = () => {
+      dialogImg.style.opacity = '1'
+    }
 
     const show = (index: number) => {
       current = (index + items.length) % items.length
       const btn = items[current]
       const webp = btn.dataset.mdWebp ?? ''
+      // Ocultamos hasta que la NUEVA imagen esté lista; si no, el <img>
+      // sigue mostrando la imagen anterior mientras carga la nueva.
+      dialogImg.style.opacity = '0'
+      dialogImg.onload = reveal
       dialogImg.onerror = () => {
         dialogImg.onerror = null
         dialogImg.src = webp
       }
       dialogImg.src = btn.dataset.mdAvif ?? webp
       dialogImg.alt = btn.dataset.alt ?? ''
+      // Imagen en caché: `load` puede no dispararse, así que revelamos ya.
+      if (dialogImg.complete && dialogImg.naturalWidth) reveal()
       if (counter) counter.textContent = `${current + 1} / ${items.length}`
+    }
+
+    // FLIP: la miniatura clicada crece hasta la posición de la imagen ampliada.
+    const animateFromThumb = (fromRect: DOMRect) => {
+      if (prefersReducedMotion) return
+      const run = () => {
+        const toRect = dialogImg.getBoundingClientRect()
+        if (!toRect.width || !toRect.height) return
+        const dx = fromRect.left - toRect.left
+        const dy = fromRect.top - toRect.top
+        const sx = fromRect.width / toRect.width
+        const sy = fromRect.height / toRect.height
+        dialogImg.animate(
+          [
+            {
+              transformOrigin: 'top left',
+              transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`,
+              opacity: 0.6,
+            },
+            { transformOrigin: 'top left', transform: 'none', opacity: 1 },
+          ],
+          { duration: 320, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
+        )
+      }
+      if (dialogImg.complete && dialogImg.naturalWidth) {
+        requestAnimationFrame(run)
+      } else {
+        dialogImg.addEventListener('load', () => requestAnimationFrame(run), { once: true })
+      }
     }
 
     items.forEach((btn, i) =>
       btn.addEventListener('click', () => {
+        const fromRect = btn.querySelector('img')?.getBoundingClientRect() ?? null
         show(i)
         dialog.showModal()
         document.documentElement.style.overflow = 'hidden'
+        if (fromRect) animateFromThumb(fromRect)
       }),
     )
 
@@ -153,6 +197,16 @@ const images = getBoxerGallery(boxerId, boxerName)
 </script>
 
 <style>
+  /*
+    Anulamos la animación global de `dialog` (scale 0→1 desde el centro):
+    aquí la transición la hace la propia miniatura al ampliarse (FLIP en JS).
+  */
+  .boxer-gallery-dialog,
+  .boxer-gallery-dialog[open] {
+    scale: 1;
+    transition: none;
+  }
+
   .boxer-gallery-dialog {
     max-width: 100vw;
     max-height: 100dvh;
