@@ -1,230 +1,31 @@
 ---
+import { HOME_FAQS } from '@/consts/home-faq'
+import { HOME_CANONICAL, HOME_DESCRIPTION, HOME_TITLE } from '@/consts/home-seo'
 import Layout from '@/layouts/Layout.astro'
-import Header from '@/sections/Header.astro'
-import Hero from '@/sections/Hero.astro'
-import Videos from '@/sections/Videos.astro'
-import Podcast from '@/sections/Podcast.astro'
-import Sponsors from '@/sections/Sponsors.astro'
-import Map from '@/sections/Map.astro'
-import Schedules from '@/sections/Schedules.astro'
+import EventDetails from '@/sections/EventDetails.astro'
 import FAQ from '@/sections/FAQ.astro'
 import Footer from '@/sections/Footer.astro'
-import { battles } from '@/consts/battles'
-import { BOXERS, BOXERS_BY_ID, COUNTRY_NAMES, getBoxerPhoto } from '@/consts/boxers'
-import { EVENT_END_ISO, EVENT_HOUR, EVENT_ISO } from '@/consts/event'
-import { HOME_FAQS } from '@/consts/home-faq'
-
-const SITE_URL = 'https://www.infolavelada.com'
-const title = 'La Velada del Año VI 2026 | Fecha, sede y combates'
-const description =
-  'Toda la información de La Velada del Año VI: fecha, sede, combates y participantes del evento de boxeo de Ibai Llanos en La Cartuja de Sevilla.'
-const canonical = `${SITE_URL}/`
-
-const sportsEventJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'SportsEvent',
-  '@id': `${SITE_URL}/#event`,
-  name: 'La Velada del Año VI',
-  alternateName: ['La Velada VI', 'La Velada del Año 6'],
-  description,
-  url: canonical,
-  image: ['https://cdn.infolavelada.com/og.jpg', `https://cdn.infolavelada.com/logo/logo.webp`],
-  sport: 'Boxing',
-  startDate: EVENT_ISO,
-  endDate: EVENT_END_ISO,
-  eventStatus: 'https://schema.org/EventScheduled',
-  eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
-  inLanguage: 'es-ES',
-  location: [
-    {
-      '@type': 'Place',
-      name: 'Estadio de La Cartuja',
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'Sevilla',
-        addressRegion: 'Andalucía',
-        addressCountry: 'ES',
-      },
-    },
-    {
-      '@type': 'VirtualLocation',
-      url: 'https://www.twitch.tv/ibai',
-    },
-  ],
-  organizer: {
-    '@type': 'Person',
-    name: 'Ibai Llanos',
-    url: 'https://www.twitch.tv/ibai',
-  },
-  performer: BOXERS.map((boxer) => ({
-    '@type': 'Person',
-    name: boxer.name,
-    url: `${SITE_URL}/boxeadores/${boxer.id}`,
-    nationality: {
-      '@type': 'Country',
-      name: COUNTRY_NAMES[boxer.country] ?? boxer.country,
-    },
-  })),
-  subEvent: battles.map((battle) => {
-    const [a, b] = battle.boxerIds
-    const boxer1 = BOXERS_BY_ID[a]
-    const boxer2 = BOXERS_BY_ID[b]
-    return {
-      '@type': 'SportsEvent',
-      name: battle.title,
-      url: `${SITE_URL}${battle.url}`,
-      sport: 'Boxing',
-      startDate: EVENT_ISO,
-      eventStatus: 'https://schema.org/EventScheduled',
-      eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
-      location: {
-        '@type': 'Place',
-        name: 'Estadio de La Cartuja',
-        address: {
-          '@type': 'PostalAddress',
-          addressLocality: 'Sevilla',
-          addressCountry: 'ES',
-        },
-      },
-      competitor: [
-        {
-          '@type': 'Person',
-          name: boxer1.name,
-          image: `${SITE_URL}${getBoxerPhoto(boxer1)}`,
-          url: `${SITE_URL}/boxeadores/${boxer1.id}`,
-        },
-        {
-          '@type': 'Person',
-          name: boxer2.name,
-          image: `${SITE_URL}${getBoxerPhoto(boxer2)}`,
-          url: `${SITE_URL}/boxeadores/${boxer2.id}`,
-        },
-      ],
-    }
-  }),
-}
-
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: HOME_FAQS.map(({ question, answer }) => ({
-    '@type': 'Question',
-    name: question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: answer,
-    },
-  })),
-}
+import HeroPreload from '@/sections/HeroPreload.astro'
+import Hero from '@/sections/Hero.astro'
+import HomeStructuredData from '@/sections/HomeStructuredData.astro'
+import Map from '@/sections/Map.astro'
+import Podcast from '@/sections/Podcast.astro'
+import Schedules from '@/sections/Schedules.astro'
+import Sponsors from '@/sections/Sponsors.astro'
+import Videos from '@/sections/Videos.astro'
 
 export const prerender = true
 ---
 
-<Layout title={title} description={description} canonical={canonical}>
-  <script
-    type="application/ld+json"
-    is:inline
-    set:html={JSON.stringify(sportsEventJsonLd)}
-    slot="head"
-  />
-  <script type="application/ld+json" is:inline set:html={JSON.stringify(faqJsonLd)} slot="head" />
-
-  {/* Preload del fondo del hero: es el LCP de la home, por eso vive aquí y no
-      en el Layout (donde se descargaría en rutas que no tienen hero). */}
-  <link
-    rel="preload"
-    as="image"
-    href="https://cdn.infolavelada.com/hero-bg/background-1280.avif"
-    type="image/avif"
-    media="(max-width: 768px)"
-    fetchpriority="high"
-    slot="head"
-  />
-  <link
-    rel="preload"
-    as="image"
-    href="https://cdn.infolavelada.com/hero-bg/background-2048.avif"
-    type="image/avif"
-    media="(min-width: 769px) and (max-width: 1920px)"
-    fetchpriority="high"
-    slot="head"
-  />
-  <link
-    rel="preload"
-    as="image"
-    href="https://cdn.infolavelada.com/hero-bg/background.avif"
-    type="image/avif"
-    media="(min-width: 1921px)"
-    fetchpriority="high"
-    slot="head"
-  />
+<Layout title={HOME_TITLE} description={HOME_DESCRIPTION} canonical={HOME_CANONICAL}>
+  <HomeStructuredData slot="head" />
+  <HeroPreload slot="head" />
 
   <Hero />
-
   <Sponsors />
   <Videos />
   <Podcast />
-
-  {
-    /*
-    Bloque informativo accesible (lectores de pantalla) y rastreable por
-    motores de búsqueda. Aporta el texto completo del evento que el resto
-    de la home expresa visualmente con imágenes (logo, selector, fondos).
-  */
-  }
-  <aside class="sr-only" aria-labelledby="event-details-title">
-    <h2 id="event-details-title">Información de La Velada del Año VI</h2>
-    <p>
-      La Velada del Año VI es la sexta edición del mayor evento de boxeo amateur entre streamers y
-      creadores de contenido en habla hispana, organizado por el streamer Ibai Llanos. El evento se
-      celebra el sábado 25 de julio de 2026 a partir de las {EVENT_HOUR} horas (horario peninsular español)
-      en el Estadio de La Cartuja de Sevilla, España, y se retransmite en directo y de forma gratuita
-      en el canal oficial de Ibai Llanos en Twitch.
-    </p>
-
-    <h3>Cartelera de combates</h3>
-    <p>
-      Esta edición cuenta con {battles.length} combates de boxeo entre {BOXERS.length}
-      contendientes procedentes de España, México, Argentina, Colombia, El Salvador y Puerto Rico.
-    </p>
-    <ol>
-      {
-        battles.map((battle) => {
-          const [aId, bId] = battle.boxerIds
-          const a = BOXERS_BY_ID[aId]
-          const b = BOXERS_BY_ID[bId]
-          return (
-            <li>
-              Combate {battle.number}:{' '}
-              <a href={`/boxeadores/${a.id}`} tabindex="-1">
-                {a.name}
-              </a>{' '}
-              ({COUNTRY_NAMES[a.country] ?? a.country}){' vs '}
-              <a href={`/boxeadores/${b.id}`} tabindex="-1">
-                {b.name}
-              </a>{' '}
-              ({COUNTRY_NAMES[b.country] ?? b.country})
-            </li>
-          )
-        })
-      }
-    </ol>
-
-    <h3>Boxeadores y boxeadoras</h3>
-    <ul>
-      {
-        BOXERS.map((boxer) => (
-          <li>
-            <a href={`/boxeadores/${boxer.id}`} tabindex="-1">
-              {boxer.name}
-            </a>{' '}
-            — {COUNTRY_NAMES[boxer.country] ?? boxer.country}
-          </li>
-        ))
-      }
-    </ul>
-  </aside>
-
+  <EventDetails />
   <Map />
   <Schedules />
   <FAQ faqs={HOME_FAQS} />

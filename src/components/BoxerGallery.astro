@@ -110,6 +110,11 @@ const images = getBoxerGallery(boxerId, boxerName)
       dialogImg.style.opacity = '1'
     }
 
+    // Oscurece el fondo (::backdrop) con un fade-in. Lo lanzamos DESPUÉS de la
+    // animación FLIP para que la imagen despegue desde la página y luego el
+    // fondo se integre, en vez de aparecer negro de golpe.
+    const darkenBackdrop = () => dialog.setAttribute('data-backdrop-in', '')
+
     const show = (index: number) => {
       current = (index + items.length) % items.length
       const btn = items[current]
@@ -130,11 +135,15 @@ const images = getBoxerGallery(boxerId, boxerName)
     }
 
     // FLIP: la miniatura clicada crece hasta la posición de la imagen ampliada.
+    // El fade-in del fondo arranca casi a la vez que el movimiento, para que
+    // ambos se sientan parte de la misma animación.
     const animateFromThumb = (fromRect: DOMRect) => {
-      if (prefersReducedMotion) return
       const run = () => {
         const toRect = dialogImg.getBoundingClientRect()
-        if (!toRect.width || !toRect.height) return
+        if (!toRect.width || !toRect.height) {
+          darkenBackdrop()
+          return
+        }
         const dx = fromRect.left - toRect.left
         const dy = fromRect.top - toRect.top
         const sx = fromRect.width / toRect.width
@@ -150,6 +159,7 @@ const images = getBoxerGallery(boxerId, boxerName)
           ],
           { duration: 320, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' },
         )
+        darkenBackdrop()
       }
       if (dialogImg.complete && dialogImg.naturalWidth) {
         requestAnimationFrame(run)
@@ -164,7 +174,11 @@ const images = getBoxerGallery(boxerId, boxerName)
         show(i)
         dialog.showModal()
         document.documentElement.style.overflow = 'hidden'
-        if (fromRect) animateFromThumb(fromRect)
+        if (fromRect && !prefersReducedMotion) {
+          animateFromThumb(fromRect)
+        } else {
+          darkenBackdrop()
+        }
       }),
     )
 
@@ -190,6 +204,9 @@ const images = getBoxerGallery(boxerId, boxerName)
 
     dialog.addEventListener('close', () => {
       document.documentElement.style.overflow = ''
+      // Reseteamos para que la próxima apertura vuelva a encadenar
+      // animación → fade-in del fondo desde cero.
+      dialog.removeAttribute('data-backdrop-in')
     })
   }
 
@@ -219,7 +236,20 @@ const images = getBoxerGallery(boxerId, boxerName)
     overflow: hidden;
   }
 
+  /*
+    El fondo arranca transparente y se oscurece con un fade-in (JS añade
+    `data-backdrop-in`) casi a la vez que el FLIP de la imagen, para que ambos
+    se sientan parte de la misma animación. Duración alineada con el FLIP.
+  */
   .boxer-gallery-dialog::backdrop {
+    background: rgba(3, 6, 16, 0);
+    backdrop-filter: blur(0);
+    transition:
+      background-color 340ms ease,
+      backdrop-filter 340ms ease;
+  }
+
+  .boxer-gallery-dialog[data-backdrop-in]::backdrop {
     background: rgba(3, 6, 16, 0.82);
     backdrop-filter: blur(6px);
   }
@@ -242,6 +272,14 @@ const images = getBoxerGallery(boxerId, boxerName)
     object-fit: contain; /* show whole image without cropping */
     border-radius: 0.5rem;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    /*
+      Mantenemos la imagen en su propia capa de composición. Al terminar el
+      FLIP, el navegador no destruye la capa ni re-rasteriza, lo que evita el
+      parpadeo del borde inferior por diferencias de sub-píxel.
+    */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
   }
 
   .boxer-gallery-btn {
@@ -312,6 +350,10 @@ const images = getBoxerGallery(boxerId, boxerName)
     .boxer-gallery-btn,
     .boxer-gallery-dialog-img,
     .boxer-gallery img {
+      transition: none !important;
+    }
+
+    .boxer-gallery-dialog::backdrop {
       transition: none !important;
     }
   }
