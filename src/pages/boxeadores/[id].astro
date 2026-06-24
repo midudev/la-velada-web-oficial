@@ -25,6 +25,7 @@ import { formatFollowers } from '@/lib/socials'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
+import { serializeJsonLd } from '@/utils/serialize-json-ld'
 
 export const prerender = true
 
@@ -202,13 +203,13 @@ const breadcrumbJsonLd = {
   <script
     type="application/ld+json"
     is:inline
-    set:html={JSON.stringify(personJsonLd)}
+    set:html={serializeJsonLd(personJsonLd)}
     slot="head"
   />
   <script
     type="application/ld+json"
     is:inline
-    set:html={JSON.stringify(breadcrumbJsonLd)}
+    set:html={serializeJsonLd(breadcrumbJsonLd)}
     slot="head"
   />
 
