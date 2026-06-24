@@ -6,15 +6,21 @@ import {
   PredictionDataError,
   registerVote,
 } from '@/lib/predictions'
+import { rateLimit } from '@/lib/rate-limit'
 import type { APIRoute } from 'astro'
 
 export const prerender = false
 
-function json(data: unknown, status = 200) {
+// Un usuario honesto pronostica 10 combates y rara vez cambia de opinión más de
+// un par de veces; 20 votos por minuto deja margen de sobra y corta los bucles.
+const VOTE_RATE_LIMIT = { limit: 20, windowMs: 60_000 }
+
+function json(data: unknown, status = 200, headers: Record<string, string> = {}) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       'Content-Type': 'application/json',
+      ...headers,
     },
   })
 }
@@ -64,6 +70,16 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (!userId) {
       return json({ error: 'Usuario no autenticado' }, 401)
+    }
+
+    const { allowed, retryAfter } = rateLimit(`predictions:${userId}`, VOTE_RATE_LIMIT)
+
+    if (!allowed) {
+      return json(
+        { error: 'Demasiados votos en poco tiempo. Espera unos segundos e inténtalo de nuevo.' },
+        429,
+        { 'Retry-After': String(retryAfter) },
+      )
     }
 
     const body = await request.json().catch(() => null)
