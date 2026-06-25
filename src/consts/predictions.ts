@@ -47,7 +47,7 @@ export interface PredictionVotesInput {
 
 const sideStyles: Record<PredictionSide, { color: string }> = {
   a: {
-    color: 'var(--color-velada-blood)',
+    color: 'var(--color-theme-navy)',
   },
   b: {
     color: 'var(--color-theme-gold)',
