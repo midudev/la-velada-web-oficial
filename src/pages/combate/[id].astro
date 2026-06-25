@@ -13,6 +13,7 @@ import {
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
+import { serializeJsonLd } from '@/utils/serialize-json-ld'
 
 const { id = '' } = Astro.params
 const battle = battlesById[id]
@@ -116,13 +117,13 @@ const breadcrumbJsonLd = {
   <script
     type="application/ld+json"
     is:inline
-    set:html={JSON.stringify(sportsEventJsonLd)}
+    set:html={serializeJsonLd(sportsEventJsonLd)}
     slot="head"
   />
   <script
     type="application/ld+json"
     is:inline
-    set:html={JSON.stringify(breadcrumbJsonLd)}
+    set:html={serializeJsonLd(breadcrumbJsonLd)}
     slot="head"
   />
 

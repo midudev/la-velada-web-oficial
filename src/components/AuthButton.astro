@@ -12,7 +12,12 @@ const { user, callbackURL = '/pronosticos' } = Astro.props
 
 {
   user ? (
-    <div class="flex items-center gap-3" data-auth-button data-auth-callback-url={callbackURL}>
+    <div
+      class="flex items-center gap-3 not-motion-reduce:animate-fade-in-up"
+      style="animation-delay:280ms"
+      data-auth-button
+      data-auth-callback-url={callbackURL}
+    >
       {user.image && (
         <img
           src={user.image}
@@ -35,61 +40,74 @@ const { user, callbackURL = '/pronosticos' } = Astro.props
     </div>
   ) : (
     <div
-      class="grid w-full max-w-xl gap-3 sm:grid-cols-2"
+      class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2"
       data-auth-button
       data-auth-callback-url={callbackURL}
     >
-      <button
-        type="button"
-        data-auth-provider="twitch"
-        class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2.5 rounded-card border border-theme-gold/35 bg-theme-gold/10 px-4 py-3 font-cinzel text-[0.62rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+      <span
+        class="font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-theme-cream/55 uppercase not-motion-reduce:animate-fade-in-up"
+        style="animation-delay:280ms"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          aria-hidden="true"
-          class="shrink-0"
-        >
-          <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
-        </svg>
-        INICIAR SESIÓN CON TWITCH
-      </button>
+        Inicia sesión para votar
+      </span>
 
-      <button
-        type="button"
-        data-auth-provider="google"
-        class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2.5 rounded-card border border-white/20 bg-white px-4 py-3 font-cinzel text-[0.62rem] font-black tracking-[0.14em] text-theme-midnight transition duration-300 hover:border-theme-gold hover:bg-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="15"
-          height="15"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-          class="shrink-0"
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          data-auth-provider="twitch"
+          aria-label="Iniciar sesión con Twitch"
+          style="animation-delay:360ms"
+          class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-theme-gold/35 bg-theme-gold/10 px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 not-motion-reduce:animate-fade-in-up hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
         >
-          <path
-            fill="#4285F4"
-            d="M23.49 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47a5.54 5.54 0 0 1-2.4 3.64v2.98h3.83c2.24-2.06 3.54-5.1 3.54-8.86Z"
-          />
-          <path
-            fill="#34A853"
-            d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.83-2.98c-1.07.72-2.43 1.14-4.11 1.14-3.15 0-5.82-2.13-6.78-4.99H1.26v3.07A12 12 0 0 0 12 24Z"
-          />
-          <path
-            fill="#FBBC05"
-            d="M5.22 14.26a7.22 7.22 0 0 1 0-4.52V6.67H1.26a12 12 0 0 0 0 10.66l3.96-3.07Z"
-          />
-          <path
-            fill="#EA4335"
-            d="M12 4.75c1.76 0 3.34.61 4.58 1.8l3.44-3.44A11.56 11.56 0 0 0 12 0 12 12 0 0 0 1.26 6.67l3.96 3.07C6.18 6.87 8.85 4.75 12 4.75Z"
-          />
-        </svg>
-        INICIAR SESIÓN CON GOOGLE
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+            class="shrink-0"
+          >
+            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
+          </svg>
+          Twitch
+        </button>
+
+        <button
+          type="button"
+          data-auth-provider="google"
+          aria-label="Iniciar sesión con Google"
+          style="animation-delay:440ms"
+          class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 not-motion-reduce:animate-fade-in-up hover:border-theme-gold/60 hover:bg-white/[0.1] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            class="shrink-0"
+          >
+            <path
+              fill="#4285F4"
+              d="M23.49 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47a5.54 5.54 0 0 1-2.4 3.64v2.98h3.83c2.24-2.06 3.54-5.1 3.54-8.86Z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.83-2.98c-1.07.72-2.43 1.14-4.11 1.14-3.15 0-5.82-2.13-6.78-4.99H1.26v3.07A12 12 0 0 0 12 24Z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.22 14.26a7.22 7.22 0 0 1 0-4.52V6.67H1.26a12 12 0 0 0 0 10.66l3.96-3.07Z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 4.75c1.76 0 3.34.61 4.58 1.8l3.44-3.44A11.56 11.56 0 0 0 12 0 12 12 0 0 0 1.26 6.67l3.96 3.07C6.18 6.87 8.85 4.75 12 4.75Z"
+            />
+          </svg>
+          Google
+        </button>
+      </div>
     </div>
   )
 }
