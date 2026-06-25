@@ -71,6 +71,14 @@ const userVotesByCombat = Object.fromEntries(
         <AuthButton user={user} />
       </div>
 
+      <div class="mt-4 flex justify-center">
+        <PredictionShareController
+          variant="top"
+          isLoggedIn={Boolean(user)}
+          totalFights={predictionBattles.length}
+        />
+      </div>
+
       <ol class="mt-5 grid gap-5 sm:gap-6" role="list" data-prediction-list>
         {
           predictionBattles

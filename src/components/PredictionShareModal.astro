@@ -34,9 +34,18 @@ const { totalFights } = Astro.props
       </svg>
     </button>
 
-    <h2 class="prediction-share-title animate-fade-in-up animate-delay-300">
-      ¡Hiciste tu pronóstico para la velada!
-    </h2>
+    <figure class="prediction-share-figure" data-share-figure aria-hidden="true">
+      <div class="prediction-share-figure-frame">
+        <img class="prediction-share-figure-img" data-share-preview-img alt="" />
+        <span class="prediction-share-figure-loading">Preparando tu imagen…</span>
+      </div>
+      <figcaption class="prediction-share-figure-caption">Así se verá tu pronóstico</figcaption>
+    </figure>
+
+    <div class="prediction-share-main">
+      <h2 class="prediction-share-title animate-fade-in-up animate-delay-300">
+        ¡Hiciste tu pronóstico para la velada!
+      </h2>
 
     <p
       class="prediction-share-description animate-fade-in animate-delay-500"
@@ -203,12 +212,13 @@ const { totalFights } = Astro.props
       </div>
     </div>
 
-    <p
-      class="prediction-share-status animate-fade-in animate-delay-1100"
-      data-share-status
-      aria-live="polite"
-    >
-    </p>
+      <p
+        class="prediction-share-status animate-fade-in animate-delay-1100"
+        data-share-status
+        aria-live="polite"
+      >
+      </p>
+    </div>
   </div>
 </dialog>
 
@@ -296,6 +306,106 @@ const { totalFights } = Astro.props
   @media (min-width: 640px) {
     .prediction-share-content {
       padding: 2.75rem 2rem 2rem;
+    }
+  }
+
+  /* ── Vista previa de la imagen a compartir ──
+     Oculta en móvil (el modal ya es alto); en escritorio se muestra en un
+     lateral para que se vea exactamente lo que se va a compartir. */
+  .prediction-share-figure {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .prediction-share-content {
+      max-width: 52rem;
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
+      gap: 2.25rem;
+      align-items: center;
+    }
+
+    .prediction-share-figure {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+  }
+
+  .prediction-share-figure-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 718 / 828;
+    border-radius: 0.4rem;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--color-theme-midnight) 85%, black);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 30%, transparent),
+      0 18px 44px rgba(0, 0, 0, 0.5);
+  }
+
+  .prediction-share-figure-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+
+  .prediction-share-figure[data-ready] .prediction-share-figure-img {
+    opacity: 1;
+  }
+
+  .prediction-share-figure-loading {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    text-align: center;
+    font-family: var(--font-cinzel);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
+    animation: prediction-share-pulse 1.4s ease-in-out infinite;
+  }
+
+  .prediction-share-figure[data-ready] .prediction-share-figure-loading,
+  .prediction-share-figure[data-error] .prediction-share-figure-loading {
+    display: none;
+  }
+
+  .prediction-share-figure-caption {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-cinzel);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 72%, transparent);
+  }
+
+  @keyframes prediction-share-pulse {
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .prediction-share-figure-img {
+      transition: none;
+    }
+    .prediction-share-figure-loading {
+      animation: none;
     }
   }
 
@@ -740,6 +850,8 @@ const { totalFights } = Astro.props
     nativeShareBtn: HTMLButtonElement | null
     shareSteps: HTMLElement | null
     description: HTMLElement | null
+    figure: HTMLElement | null
+    previewImg: HTMLImageElement | null
   }
 
   function collectRefs(modal: HTMLDialogElement): ModalRefs {
@@ -755,6 +867,8 @@ const { totalFights } = Astro.props
       nativeShareBtn: $<HTMLButtonElement>('[data-native-share-btn]', modal),
       shareSteps: $<HTMLElement>('[data-share-steps]', modal),
       description: $<HTMLElement>('[data-share-description]', modal),
+      figure: $<HTMLElement>('[data-share-figure]', modal),
+      previewImg: $<HTMLImageElement>('[data-share-preview-img]', modal),
     }
   }
 
@@ -834,12 +948,33 @@ const { totalFights } = Astro.props
     const close = createModalCloser(modal, refs.content)
 
     let cachedBlob: Blob | null = null
+    let previewObjectUrl: string | null = null
 
     function resetModalState() {
       cachedBlob = null
       if (refs.step2) refs.step2.dataset.state = 'locked'
       if (refs.shareBtn) refs.shareBtn.disabled = true
+      // Volvemos el preview a su estado de carga para regenerarlo al abrir.
+      refs.figure?.removeAttribute('data-ready')
+      refs.figure?.removeAttribute('data-error')
       setStatus('', 'info')
+    }
+
+    // Genera la imagen real y la muestra en el lateral del modal (escritorio),
+    // así se ve exactamente lo que se va a compartir. Reutiliza el mismo blob
+    // cacheado que usan descargar/copiar, por lo que no duplica trabajo.
+    async function renderPreview() {
+      if (!refs.previewImg || !refs.figure) return
+      try {
+        const blob = await getImageBlob()
+        if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl)
+        previewObjectUrl = URL.createObjectURL(blob)
+        refs.previewImg.src = previewObjectUrl
+        refs.figure.setAttribute('data-ready', '')
+      } catch (err) {
+        refs.figure.setAttribute('data-error', '')
+        console.error(err)
+      }
     }
 
     function unlockStep2(attachmentLabel: string) {
@@ -946,6 +1081,9 @@ const { totalFights } = Astro.props
       // El foco inicial debe aterrizar en un control real, no en el backdrop
       // (SC 2.4.3). El botón de cierre es el primer paso lógico del modal.
       $<HTMLButtonElement>('.prediction-share-close', modal)?.focus()
+      // Generamos la vista previa en cuanto se abre (también precalienta el
+      // blob, dejando la descarga lista al instante).
+      void renderPreview()
     }
 
     refs.downloadBtn?.addEventListener('click', () => void handleDownload())

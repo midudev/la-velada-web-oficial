@@ -168,6 +168,16 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     z-index: 4;
     pointer-events: none;
   }
+  /* Redondeamos solo las esquinas EXTERIORES del marco para que sigan el
+     border-radius del contenedor (.tow-stage, 10px) y no asome un ángulo recto
+     dorado sobre la esquina curva de la card. El borde central (junto al VS) se
+     mantiene recto. */
+  .tow-side.a .tow-frame {
+    border-radius: 10px 0 0 10px;
+  }
+  .tow-side.b .tow-frame {
+    border-radius: 0 10px 10px 0;
+  }
   .tow-side[data-selected='true'] .tow-frame {
     box-shadow:
       inset 0 0 0 3px var(--color-theme-gold),
@@ -277,9 +287,8 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     color: color-mix(in srgb, var(--color-theme-cream) 52%, transparent);
   }
 
-  /* Vista limpia: ocultamos país y total de votos en todas las resoluciones. */
-  .tow-country,
-  .tow-votes {
+  /* Vista limpia: ocultamos el país en todas las resoluciones. */
+  .tow-country {
     display: none;
   }
 
@@ -303,14 +312,15 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     pointer-events: none;
     transition: opacity 260ms ease;
   }
-  /* Pegada al borde exterior de cada foto (zona transparente, sin cuerpo). */
+  /* Pegada al borde exterior de cada foto (zona transparente, sin cuerpo),
+     con un respiro para que no quede lamida al borde de la card. */
   .tow-side.a .tow-cue {
     justify-self: start;
-    padding-left: 0.15rem;
+    padding-left: 0.85rem;
   }
   .tow-side.b .tow-cue {
     justify-self: end;
-    padding-right: 0.15rem;
+    padding-right: 0.85rem;
   }
   /* Oculta por style inline (opacity:0, evita el flash). Se revela al
      pasar/enfocar con !important (gana al inline) y mantiene el fundido. */
