@@ -43,6 +43,7 @@ export interface Boxer {
 export const BOXERS: Boxer[] = [
   {
     id: 'alondrissa',
+    heightCm: 160,
     name: 'Alondrissa',
     gender: 'f',
     realName: 'Alondra Michelle',
@@ -91,6 +92,7 @@ export const BOXERS: Boxer[] = [
   },
   {
     id: 'angie-velasco',
+    heightCm: 156,
     name: 'Angie Velasco',
     gender: 'f',
     realName: 'Angie Rocío Velasco',
@@ -121,13 +123,14 @@ export const BOXERS: Boxer[] = [
   },
   {
     id: 'clersss',
+    heightCm: 167,
     name: 'Clersss',
     realName: 'Clara Merino',
     country: 'es',
     previousVeladaWins: [],
-    birthDate: null,
+    birthDate: '2001-09-15',
     gender: 'f',
-    age: null,
+    age: 24,
     youtubeChannelId: 'UCYa7uV_ICFXbho_JRyv0nFA',
     followersUpdatedAt: '2026-05-14',
     socials: [
@@ -145,6 +148,7 @@ export const BOXERS: Boxer[] = [
   },
   {
     id: 'edu-aguirre',
+    heightCm: 180,
     name: 'Edu Aguirre',
     realName: 'Eduardo Aguirre',
     country: 'es',
@@ -212,13 +216,14 @@ export const BOXERS: Boxer[] = [
   },
   {
     id: 'fabiana-sevillano',
+    heightCm: 165,
     name: 'Fabiana Sevillano',
     realName: 'Fabiana Sevillano',
     country: 'es',
     previousVeladaWins: [],
     gender: 'f',
-    birthDate: '2002-08-08',
-    age: 23,
+    birthDate: '2002-01-08',
+    age: 24,
     youtubeChannelId: 'UCcV3n8U3gkPKYxHerfsrk7A',
     followersUpdatedAt: '2026-05-14',
     socials: [
@@ -255,6 +260,7 @@ pero que ahora tendrá que demostrarlo todo bajo los focos del ring. 🥊
   },
   {
     id: 'fernanfloo',
+    heightCm: 186,
     name: 'Fernanfloo',
     gender: 'm',
     realName: 'Luis Fernando Flores Alvarado',
@@ -287,6 +293,7 @@ pero que ahora tendría que demostrarlo golpe a golpe. 🥊`,
 
   {
     id: 'gaston-edul',
+    heightCm: 170,
     name: 'Gastón Edul',
     realName: 'Gastón Edul',
     gender: 'm',
@@ -333,6 +340,7 @@ pero que ahora tendrá que responder golpe a golpe. 🥊`,
 
   {
     id: 'gero-arias',
+    heightCm: 172,
     name: 'Gero Arias',
     realName: 'Gerónimo Arias',
     gender: 'm',
@@ -383,6 +391,7 @@ pero que ahora tendrá que demostrarlo bajo presión y frente a un rival. 🥊`,
   },
   {
     id: 'illojuan',
+    heightCm: 182,
     name: 'IlloJuan',
     realName: 'Juan Alberto García Gámez',
     gender: 'm',
@@ -429,6 +438,7 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   },
   {
     id: 'kidd-keo',
+    heightCm: 170,
     name: 'Kidd Keo',
     realName: 'Padua Keoma Salas Sánchez',
     gender: 'm',
@@ -455,6 +465,7 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   },
   {
     id: 'la-parce',
+    heightCm: 158,
     name: 'La Parce',
     realName: 'Valeria',
     gender: 'f',
@@ -486,6 +497,7 @@ Un perfil en pleno crecimiento, con ambición y proyección… pero que ahora te
   },
   {
     id: 'lit-killah',
+    heightCm: 172,
     name: 'Lit Killah',
     realName: 'Mauro Román Monzón',
     gender: 'm',
@@ -521,6 +533,7 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   },
   {
     id: 'marta-diaz',
+    heightCm: 168,
     name: 'Marta Díaz',
     realName: 'Marta Díaz García',
     gender: 'f',
@@ -552,13 +565,14 @@ workout: [
   },
   {
     id: 'natalia-mx',
+    heightCm: 168,
     name: 'Natalia MX',
     realName: 'Natalia García',
     gender: 'f',
     country: 'mx',
     previousVeladaWins: [],
-    birthDate: null,
-    age: null,
+    birthDate: '2000-04-01',
+    age: 26,
     youtubeChannelId: 'UCLmWjPj5qLmqSCcoL1FNf1Q',
     followersUpdatedAt: '2026-05-14',
     socials: [
@@ -583,12 +597,13 @@ workout: [
   },
   {
     id: 'plex',
+    heightCm: 197,
     name: 'Plex',
     realName: 'Daniel Alonso Góndez',
     gender: 'm',
     country: 'es',
     previousVeladaWins: [2024],
-    birthDate: null,
+    birthDate: '2001-09-20',
     age: 24,
     youtubeChannelId: 'UCl8bYBm0XAP23mReE11IBOA',
     followersUpdatedAt: '2026-05-14',
@@ -614,6 +629,7 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   },
   {
     id: 'roro',
+    heightCm: 150,
     name: 'RoRo',
     realName: 'Rocío López Bueno',
     gender: 'f',
@@ -653,6 +669,7 @@ workout: [
   },
   {
     id: 'samy-rivers',
+    heightCm: 158,
     name: 'Samy Rivers',
     realName: 'Samantha Guadalupe Rivera Treviño',
     gender: 'f',
@@ -717,12 +734,13 @@ que ahora tendrá que volver a demostrarlo golpe a golpe. 🥊
   },
   {
     id: 'tatiana-kaer',
+    heightCm: 165,
     name: 'Tatiana Käer',
     realName: 'Tatiana Käer',
     gender: 'f',
     country: 'es',
     previousVeladaWins: [],
-    birthDate: '2004',
+    birthDate: '2004-08-28',
     age: 21,
     youtubeChannelId: 'UCZh4XmGTOxSJAsjZLDkZArA',
     followersUpdatedAt: '2026-05-14',
@@ -742,6 +760,7 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   },
   {
     id: 'thegrefg',
+    heightCm: 178,
     name: 'TheGrefg',
     realName: 'David Cánovas Martínez',
     gender: 'm',
@@ -797,6 +816,7 @@ que ahora tendrá que volver a demostrarlo golpe a golpe. 🥊`,
   },
   {
     id: 'viruzz',
+    heightCm: 183,
     name: 'Viruzz',
     realName: 'Víctor Mélida Cambra',
     gender: 'm',
@@ -860,6 +880,29 @@ export function getBoxerHeroImages(boxer: Boxer): BoxerImageVariants {
     avif: `https://cdn.infolavelada.com/character-hero/${boxer.id}.avif`,
     webp: `https://cdn.infolavelada.com/character-hero/${boxer.id}.webp`,
   }
+}
+
+/** Anchos de las variantes responsive del recorte de hero. Deben coincidir con
+ *  los que genera `scripts/convert-character-images.mjs` y existir en el CDN. */
+export const BOXER_HERO_VARIANT_WIDTHS = [320, 480, 640, 960] as const
+/** Ancho real del recorte completo (`{id}.avif|webp`), que cierra el srcset. */
+export const BOXER_HERO_FULL_WIDTH = 1066
+
+/**
+ * `srcset` responsive del recorte de hero, pensado para la grid de
+ * `/boxeadores`, donde la imagen se muestra en tarjetas pequeñas (~165-330px).
+ * Sin esto el navegador descarga siempre el recorte completo (1066px). Cada
+ * variante `-{w}` la genera el script de conversión y debe estar subida al CDN;
+ * el tamaño completo cierra el srcset como mayor descriptor. */
+export function getBoxerHeroSrcset(boxer: Boxer): BoxerImageVariants {
+  const base = `https://cdn.infolavelada.com/character-hero/${boxer.id}`
+  const build = (ext: 'avif' | 'webp') =>
+    [
+      ...BOXER_HERO_VARIANT_WIDTHS.map((width) => `${base}-${width}.${ext} ${width}w`),
+      `${base}.${ext} ${BOXER_HERO_FULL_WIDTH}w`,
+    ].join(', ')
+
+  return { avif: build('avif'), webp: build('webp') }
 }
 
 /**

@@ -31,8 +31,10 @@ function getYouTubePosterFallbackSrc(videoId: string) {
   return `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`
 }
 
-function getPosterErrorHandler(videoId: string) {
-  return `if (this.dataset.posterFallbackUsed === 'true') { this.onerror=null; this.src='https://cdn.infolavelada.com/logo/logo.webp'; } else { this.dataset.posterFallbackUsed='true'; this.src='${getYouTubePosterFallbackSrc(videoId)}'; }`
+// Cadena de fallback para `data-img-fallback`: si falla el poster maxres se
+// prueba el hqdefault y, si tampoco, el logo. La gestiona `@/lib/image-fallback`.
+function getPosterFallbackChain(videoId: string) {
+  return `${getYouTubePosterFallbackSrc(videoId)}|https://cdn.infolavelada.com/logo/logo.webp`
 }
 ---
 
@@ -77,7 +79,7 @@ function getPosterErrorHandler(videoId: string) {
                   loading="lazy"
                   decoding="async"
                   class="h-full w-full object-cover"
-                  onerror={getPosterErrorHandler(featuredVideo.videoId)}
+                  data-img-fallback={getPosterFallbackChain(featuredVideo.videoId)}
                 />
               </picture>
 
@@ -138,7 +140,7 @@ function getPosterErrorHandler(videoId: string) {
                       data-video-id={video.videoId}
                       data-video-title={video.title}
                       aria-label={`Reproducir vídeo: ${video.title}`}
-                      class="group grid h-fit w-full cursor-pointer grid-cols-[5.25rem_1fr] gap-3 bg-theme-midnight/60 p-3 text-left transition duration-300 outline-none hover:bg-theme-navy/55 focus-visible:bg-theme-navy/55 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-inset sm:grid-cols-[6rem_1fr] sm:p-4 lg:grid-cols-[7.5rem_1fr]"
+                      class="group grid h-fit w-full cursor-pointer grid-cols-[5.25rem_1fr] gap-3 bg-theme-midnight p-3 text-left transition duration-300 outline-none hover:bg-theme-navy focus-visible:bg-theme-navy/55 focus-visible:ring-2 focus-visible:ring-theme-gold/60 focus-visible:ring-inset sm:grid-cols-[6rem_1fr] sm:p-4 lg:grid-cols-[7.5rem_1fr]"
                     >
                       <span class="relative block aspect-video overflow-hidden rounded-lg border border-white/10 bg-black/30">
                         <picture class="absolute inset-0 transition duration-500 group-hover:scale-105 group-focus-visible:scale-105">
@@ -149,7 +151,7 @@ function getPosterErrorHandler(videoId: string) {
                             loading="lazy"
                             decoding="async"
                             class="h-full w-full object-cover"
-                            onerror={getPosterErrorHandler(video.videoId)}
+                            data-img-fallback={getPosterFallbackChain(video.videoId)}
                           />
                         </picture>
                         <span
@@ -164,7 +166,7 @@ function getPosterErrorHandler(videoId: string) {
 
                       <span class="flex min-w-0 flex-col justify-between gap-3">
                         <span class="flex items-start justify-between gap-3">
-                          <span class="font-cinzel text-[0.62rem] font-black tracking-[0.16em] text-theme-gold/75">
+                          <span class="font-cinzel text-[0.62rem] font-black tracking-[0.16em] text-theme-gold">
                             {video.eyebrow ?? `VÍDEO ${String(index + 2).padStart(2, '0')}`}
                           </span>
                           <ChevronRightIcon

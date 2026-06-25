@@ -6,6 +6,7 @@ import CombatCard from '@/components/CombatCard.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
 import { battles } from '@/consts/battles'
 import { BOXERS_BY_ID, COUNTRY_NAMES, getBoxerHeroImages, type Boxer } from '@/consts/boxers'
+import { serializeJsonLd } from '@/utils/serialize-json-ld'
 
 const SITE_URL = 'https://www.infolavelada.com'
 const title = 'Combates | La Velada del Año VI'
@@ -57,7 +58,7 @@ const breadcrumbJsonLd = {
   <script
     type="application/ld+json"
     is:inline
-    set:html={JSON.stringify(breadcrumbJsonLd)}
+    set:html={serializeJsonLd(breadcrumbJsonLd)}
     slot="head"
   />
 
