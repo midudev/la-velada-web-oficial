@@ -6,6 +6,7 @@ import '@/styles/global.css'
 
 import { fixedTitle } from '@/consts/pageTitles'
 import Header from '@/sections/Header.astro'
+import { serializeJsonLd } from '@/utils/serialize-json-ld'
 
 const SITE_URL = 'https://www.infolavelada.com'
 const DEFAULT_OG_IMAGE = `https://cdn.infolavelada.com/og.jpg`
@@ -140,12 +141,12 @@ const organizationJsonLd = {
     <script
       type="application/ld+json"
       is:inline
-      set:html={JSON.stringify(websiteJsonLd)}
+      set:html={serializeJsonLd(websiteJsonLd)}
     />
     <script
       type="application/ld+json"
       is:inline
-      set:html={JSON.stringify(organizationJsonLd)}
+      set:html={serializeJsonLd(organizationJsonLd)}
     />
     <slot name="head" />
     <ClientRouter />

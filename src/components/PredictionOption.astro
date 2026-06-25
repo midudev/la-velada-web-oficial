@@ -10,22 +10,25 @@ interface Props {
   battleId: string
   option: PredictionOption
   selectedBoxerId?: string
+  leaderBoxerId?: string
 }
 
-const { battleId, option, selectedBoxerId } = Astro.props
+const { battleId, option, selectedBoxerId, leaderBoxerId } = Astro.props
 const isSelected = selectedBoxerId === option.boxer.id
 const isMuted = Boolean(selectedBoxerId) && !isSelected
+const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
 ---
 
 <button
   type="button"
-  class="poll-option group relative min-h-[8.75rem] w-full cursor-pointer overflow-hidden rounded-card border border-white/10 bg-white/[0.035] p-0 text-left text-theme-cream transition duration-300 hover:-translate-y-0.5 hover:border-theme-gold/55 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+  class:list={['tow-side', option.side]}
   data-battle-id={battleId}
   data-boxer-id={option.boxer.id}
   data-boxer-name={option.boxer.name}
   data-prediction-option
   data-selected={String(isSelected)}
   data-muted={String(isMuted)}
+  data-leader={String(isLeader)}
   data-side={option.side}
   data-vote-count={option.votes}
   data-vote-percentage={option.percentage}
@@ -33,374 +36,363 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
   aria-pressed={String(isSelected)}
   style={`--vote-share: ${option.percentage.toFixed(2)}%; --vote-color: ${option.color};`}
 >
-  <span aria-hidden="true" class="poll-vote-tag">Tu voto</span>
+  <picture class="tow-pic">
+    <source type="image/avif" srcset={option.heroImages.avif} />
+    <source type="image/webp" srcset={option.heroImages.webp} />
+    <img
+      src={option.heroImages.webp}
+      alt={`Recorte de ${option.boxer.name}`}
+      loading="lazy"
+      decoding="async"
+      width="320"
+      height="420"
+      class="tow-pic-img"
+    />
+  </picture>
 
-  <span class="relative z-10 flex min-h-[8.75rem] items-stretch gap-3 p-3 sm:gap-4 sm:p-4">
-    <span
-      class="poll-portrait relative flex w-24 shrink-0 items-end justify-center overflow-hidden rounded-card border border-white/10 bg-theme-navy/60 sm:w-28"
-    >
-      <picture>
-        <source type="image/avif" srcset={option.heroImages.avif} />
-        <source type="image/webp" srcset={option.heroImages.webp} />
-        <img
-          src={option.heroImages.webp}
-          alt={`Recorte de ${option.boxer.name}`}
-          loading="lazy"
-          decoding="async"
-          width="320"
-          height="420"
-          class="poll-portrait-img h-full w-full object-cover object-top transition duration-500 group-hover:scale-105 group-hover:saturate-125"
-        />
-      </picture>
+  <span aria-hidden="true" style="opacity: 0" class="tow-spot"></span>
+  <span aria-hidden="true" class="tow-veil"></span>
+  <span aria-hidden="true" class="tow-frame"></span>
 
-      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-tl"></span>
-      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-tr"></span>
-      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-bl"></span>
-      <span aria-hidden="true" class="poll-portrait-corner poll-portrait-corner-br"></span>
+  <span class="tow-caption">
+    <span aria-hidden="true" style="display: none" class="tow-yourvote font-cinzel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="tow-yourvote-check"><path d="M20 6 9 17l-5-5" /></svg>
+      Tu voto
     </span>
-
-    <span class="flex min-w-0 flex-1 flex-col justify-between gap-4 py-1">
-      <span>
-        <span
-          class="flex items-center gap-2 font-cinzel text-[0.6rem] font-black tracking-[0.18em] text-white/72 sm:text-[0.68rem]"
-        >
-          <CountryFlag country={option.boxer.country} size={14} decorative />
-          {option.countryName}
-        </span>
-        <span
-          class="mt-2 block font-cinzel text-2xl leading-tight font-black tracking-[0.06em] text-balance text-theme-cream uppercase sm:text-3xl"
-        >
-          {option.boxer.name}
-        </span>
-      </span>
-
-      <span class="grid gap-2">
-        <span class="flex items-end justify-between gap-3">
-          <span class="font-cinzel text-[0.6rem] font-black tracking-[0.18em] text-white/72">
-            Pronosticar
-          </span>
-          <span
-            class="font-cinzel text-3xl leading-none font-black text-theme-cream sm:text-4xl"
-            data-prediction-percent
-          >
-            {formatPredictionPercent(option.percentage)}
-          </span>
-        </span>
-        <span
-          class="h-1.5 overflow-hidden rounded-pill bg-black/34"
-          role="progressbar"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          aria-valuenow={Math.round(option.percentage)}
-          aria-label={`Apoyo a ${option.boxer.name}`}
-          data-prediction-bar
-        >
-          <span aria-hidden="true" class="poll-mini-bar block h-full rounded-pill"></span>
-        </span>
-        <span
-          class="font-cinzel text-[0.58rem] font-black tracking-[0.16em] text-white/72 sm:text-[0.62rem]"
-          data-prediction-votes
-        >
-          {formatPredictionSupport(option.votes)}
-        </span>
-      </span>
+    <span class="tow-percent font-cinzel" data-prediction-percent>
+      {formatPredictionPercent(option.percentage)}
+    </span>
+    <span class="tow-name font-cinzel">{option.boxer.name}</span>
+    <span class="tow-country font-cinzel">
+      <CountryFlag country={option.boxer.country} size={13} decorative class="tow-flag" />
+      <span>{option.countryName}</span>
+    </span>
+    <span class="tow-votes font-cinzel" data-prediction-votes>
+      {formatPredictionSupport(option.votes)}
     </span>
   </span>
+
+  <span aria-hidden="true" style="opacity: 0" class="tow-cue font-cinzel">Votar</span>
+
+  <span aria-hidden="true" class="tow-fill"></span>
 </button>
 
 <style>
-  .poll-option::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
+  /* static: el .tow-fill se ancla al .tow-stage (relative), no al botón,
+     para que la barra cruce de extremo a extremo las dos fotos. */
+  .tow-side {
+    position: static;
+    display: grid;
+    grid-template: 'stack' / 1fr;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: color-mix(in srgb, var(--color-theme-navy) 70%, black);
+    color: var(--color-theme-cream);
+    text-align: center;
+    transition:
+      opacity 300ms ease,
+      filter 300ms ease;
+  }
+  .tow-side:focus-visible {
+    outline: 2px solid var(--color-theme-gold);
+    outline-offset: -3px;
+  }
+
+  .tow-pic {
+    grid-area: stack;
+    z-index: 1;
+    display: block;
+    overflow: hidden;
+  }
+  .tow-pic-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: saturate(0.92) brightness(0.9);
+    transition:
+      scale 600ms ease,
+      filter 500ms ease;
+  }
+  .tow-side.b .tow-pic-img {
+    transform: scaleX(-1);
+  }
+  .tow-side:hover .tow-pic-img {
+    scale: 1.05;
+    filter: saturate(1.06) brightness(1.02);
+  }
+  .tow-side[data-selected='true'] .tow-pic-img {
+    filter: saturate(1.12) brightness(1.04);
+  }
+
+  /* Halo del líder: glow detrás del boxeador (z-0, se ve alrededor de la
+     figura recortada). Distinto del anillo dorado de "tu voto". */
+  .tow-spot {
+    grid-area: stack;
+    z-index: 0;
     background: radial-gradient(
-      ellipse 52% 80% at 0% 0%,
-      color-mix(in srgb, var(--vote-color) 14%, transparent),
+      72% 64% at 50% 40%,
+      color-mix(in srgb, var(--color-theme-cream) 55%, transparent),
+      color-mix(in srgb, var(--color-theme-gold) 22%, transparent) 46%,
       transparent 72%
     );
-    opacity: 0.72;
-    transition: opacity 300ms ease;
+    transition: opacity 340ms ease;
+  }
+  /* Oculto por style inline (opacity:0, evita el flash en dev). El líder lo
+     revela con !important para ganar al inline; mantiene el fundido. */
+  .tow-side[data-leader='true'] .tow-spot {
+    opacity: 0.55 !important;
+  }
+  .tow-side[data-leader='true'] .tow-pic-img {
+    filter: saturate(1.06) brightness(1.05);
   }
 
-  .poll-option::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    border: 1px solid transparent;
-    background:
-      linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--vote-color) 28%, transparent),
-        transparent 34%
-      ),
-      radial-gradient(
-        ellipse 54% 88% at 0% 50%,
-        color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
-        transparent 68%
-      );
-    opacity: 0;
-    transition:
-      opacity 320ms ease,
-      border-color 320ms ease,
-      box-shadow 320ms ease;
-  }
-
-  .poll-option[data-side='b']::before {
-    background: radial-gradient(
-      ellipse 52% 80% at 100% 0%,
-      color-mix(in srgb, var(--vote-color) 12%, transparent),
-      transparent 74%
+  .tow-veil {
+    grid-area: stack;
+    z-index: 2;
+    background: linear-gradient(
+      180deg,
+      transparent 50%,
+      rgba(5, 8, 15, 0.28) 74%,
+      rgba(5, 8, 15, 0.8) 100%
     );
   }
 
-  .poll-option[data-side='b']::after {
-    background:
-      linear-gradient(
-        270deg,
-        color-mix(in srgb, var(--vote-color) 26%, transparent),
-        transparent 34%
-      ),
-      radial-gradient(
-        ellipse 54% 88% at 100% 50%,
-        color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
-        transparent 68%
-      );
+  /* Marco dorado que aparece sobre la foto elegida. */
+  .tow-frame {
+    grid-area: stack;
+    z-index: 4;
+    pointer-events: none;
   }
-
-  .poll-option[data-selected='true'] {
-    border-color: var(--color-theme-gold);
-    background:
-      linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--vote-color) 14%, transparent),
-        color-mix(in srgb, var(--color-theme-midnight) 76%, black)
-      );
+  .tow-side[data-selected='true'] .tow-frame {
     box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, white 14%, transparent),
-      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 76%, transparent),
-      0 0 0 5px color-mix(in srgb, var(--color-theme-gold) 12%, transparent),
-      0 22px 48px rgba(0, 0, 0, 0.38),
-      0 0 42px color-mix(in srgb, var(--vote-color) 34%, transparent);
+      inset 0 0 0 3px var(--color-theme-gold),
+      inset 0 0 44px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
   }
 
-  .poll-option[data-selected='true']::after {
-    border-color: color-mix(in srgb, var(--color-theme-gold) 68%, transparent);
-    opacity: 1;
-    box-shadow: inset 0 0 24px color-mix(in srgb, var(--color-theme-gold) 13%, transparent);
+  .tow-caption {
+    grid-area: stack;
+    z-index: 3;
+    align-self: end;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.05rem;
+    padding: 0 0.7rem 2.4rem;
   }
 
-  .poll-option[data-muted='true'] {
-    opacity: 0.46;
-    filter: saturate(0.62) brightness(0.82);
-  }
-
-  .poll-option[data-selected='true']::before,
-  .poll-option:hover::before,
-  .poll-option:focus-visible::before {
-    opacity: 1;
-  }
-
-  .poll-vote-tag {
-    position: absolute;
-    top: 0.85rem;
-    right: 0.85rem;
-    z-index: 20;
-    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 64%, transparent);
-    border-radius: var(--radius-card);
-    background: color-mix(in srgb, var(--color-theme-midnight) 88%, black);
-    padding: 0.32rem 0.48rem;
-    color: var(--color-theme-gold);
-    font-family: var(--font-cinzel);
-    font-size: 0.52rem;
-    font-weight: 900;
-    letter-spacing: 0.22em;
-    opacity: 0;
-    transform: translateY(-0.4rem);
-    transition:
-      opacity 260ms ease,
-      transform 260ms ease;
-    text-transform: uppercase;
-  }
-
-  .poll-option[data-selected='true'] .poll-vote-tag {
-    opacity: 1;
-    transform: translateY(0);
-    border-color: var(--color-theme-gold);
+  /* Indicador explícito "Tu voto" en el boxeador elegido.
+     Oculto por style inline (display:none, evita el flash en dev mientras
+     cargan los estilos); se revela con !important solo cuando hay voto. */
+  .tow-yourvote {
+    align-self: center;
+    align-items: center;
+    gap: 0.28rem;
+    margin-bottom: 0.5rem;
+    padding: 0.24rem 0.65rem;
+    border-radius: 999px;
     background: var(--color-theme-gold);
     color: var(--color-theme-midnight);
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, white 24%, transparent),
-      0 10px 24px color-mix(in srgb, var(--color-theme-gold) 24%, transparent);
+    font-size: 0.5rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
+  }
+  .tow-yourvote-check {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+  .tow-side[data-selected='true'] .tow-yourvote {
+    display: inline-flex !important;
   }
 
-  .poll-portrait {
-    box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-      0 12px 28px rgba(0, 0, 0, 0.28);
+  .tow-percent {
+    font-size: clamp(1.85rem, 1rem + 3vw, 3rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-theme-cream);
+    text-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.95),
+      0 2px 16px rgba(0, 0, 0, 0.85);
     transition:
-      border-color 320ms ease,
-      box-shadow 320ms ease,
-      filter 320ms ease;
+      color 300ms ease,
+      text-shadow 300ms ease;
   }
-
-  .poll-option[data-selected='true'] .poll-portrait {
-    border-color: color-mix(in srgb, var(--color-theme-gold) 70%, white);
-    filter: saturate(1.14) contrast(1.08);
-    box-shadow:
-      inset 0 0 0 1px color-mix(in srgb, white 10%, transparent),
-      0 0 0 2px color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
-      0 16px 34px rgba(0, 0, 0, 0.42),
-      0 0 28px color-mix(in srgb, var(--vote-color) 32%, transparent);
-  }
-
-  .poll-portrait::after {
-    position: absolute;
-    inset: auto 0 0;
-    height: 48%;
-    content: '';
-    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
-  }
-
-  /* Esquinas decorativas doradas, estilo trading card (consistente con la
-     ventana de boxeadores). */
-  .poll-portrait-corner {
-    position: absolute;
-    z-index: 2;
-    width: 11px;
-    height: 11px;
-    border-style: solid;
-    border-width: 1.5px;
-    border-color: color-mix(in srgb, var(--color-theme-gold) 65%, transparent);
-    transition:
-      width 400ms ease,
-      height 400ms ease,
-      border-color 400ms ease;
-  }
-
-  .poll-portrait-corner-tl {
-    top: 6px;
-    left: 6px;
-    border-right-width: 0;
-    border-bottom-width: 0;
-  }
-  .poll-portrait-corner-tr {
-    top: 6px;
-    right: 6px;
-    border-left-width: 0;
-    border-bottom-width: 0;
-  }
-  .poll-portrait-corner-bl {
-    bottom: 6px;
-    left: 6px;
-    border-right-width: 0;
-    border-top-width: 0;
-  }
-  .poll-portrait-corner-br {
-    bottom: 6px;
-    right: 6px;
-    border-left-width: 0;
-    border-top-width: 0;
-  }
-
-  .poll-option:hover .poll-portrait-corner,
-  .poll-option:focus-visible .poll-portrait-corner,
-  .poll-option[data-selected='true'] .poll-portrait-corner {
-    width: 16px;
-    height: 16px;
-    border-color: var(--color-theme-gold);
-  }
-
-  .poll-option[data-selected='true'] [data-prediction-percent] {
+  .tow-side[data-selected='true'] .tow-percent {
     color: var(--color-theme-gold);
     text-shadow:
-      0 0 18px color-mix(in srgb, var(--color-theme-gold) 34%, transparent),
-      0 0 30px color-mix(in srgb, var(--vote-color) 22%, transparent);
+      0 0 20px color-mix(in srgb, var(--color-theme-gold) 42%, transparent),
+      0 0 34px color-mix(in srgb, var(--vote-color) 26%, transparent);
+  }
+  .tow-side[data-vote-changing] .tow-percent {
+    animation: tow-pop 680ms cubic-bezier(0.18, 0.86, 0.24, 1);
+  }
+  .tow-side[data-vote-changing='up'] .tow-percent {
+    color: var(--color-theme-gold);
   }
 
-  .poll-mini-bar {
+  .tow-name {
+    margin-top: 0.35rem;
+    font-size: clamp(0.92rem, 0.65rem + 1.1vw, 1.45rem);
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    line-height: 1.05;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.9),
+      0 2px 12px rgba(0, 0, 0, 0.7);
+  }
+  .tow-country {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin-top: 0.4rem;
+    font-size: 0.5rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 68%, transparent);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+  }
+  :global(.tow-flag) {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+  }
+  .tow-votes {
+    margin-top: 0.3rem;
+    font-size: 0.52rem;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 52%, transparent);
+  }
+
+  /* Vista limpia: ocultamos país y total de votos en todas las resoluciones. */
+  .tow-country,
+  .tow-votes {
+    display: none;
+  }
+
+  /* Pista de interacción: indica que se puede votar tocando la foto.
+     Sutil por defecto (visible en móvil sin hover), se realza al pasar/enfocar
+     y desaparece en cuanto hay voto en el combate. */
+  /* Marca de agua "VOTAR": gigante y tenue (20%), aparece al pasar/enfocar
+     sobre la foto. z-index 2 (encima de la foto, debajo de %/nombre). */
+  .tow-cue {
+    grid-area: stack;
+    z-index: 0;
+    align-self: center;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    color: var(--color-theme-cream);
+    font-size: clamp(1.9rem, 0.8rem + 5.5vw, 3.6rem);
+    font-weight: 900;
+    line-height: 0.82;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    pointer-events: none;
+    transition: opacity 260ms ease;
+  }
+  /* Pegada al borde exterior de cada foto (zona transparente, sin cuerpo). */
+  .tow-side.a .tow-cue {
+    justify-self: start;
+    padding-left: 0.15rem;
+  }
+  .tow-side.b .tow-cue {
+    justify-self: end;
+    padding-right: 0.15rem;
+  }
+  /* Oculta por style inline (opacity:0, evita el flash). Se revela al
+     pasar/enfocar con !important (gana al inline) y mantiene el fundido. */
+  .tow-side:hover .tow-cue,
+  .tow-side:focus-visible .tow-cue {
+    opacity: 0.4 !important;
+  }
+  /* Una vez votado (elegido o atenuado), ya no se muestra la pista. */
+  .tow-side[data-selected='true'] .tow-cue,
+  .tow-side[data-muted='true'] .tow-cue {
+    opacity: 0 !important;
+  }
+
+  /* Relleno de la barra tug-of-war (A desde izq, B desde der),
+     aclarando hacia el centro para llevar la mirada al pivote. */
+  .tow-fill {
+    position: absolute;
+    bottom: 0;
+    z-index: 5;
+    height: 14px;
     width: var(--vote-share);
-    position: relative;
-    overflow: hidden;
-    background: var(--vote-color);
-    box-shadow: 0 0 16px color-mix(in srgb, var(--vote-color) 42%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 0 18px color-mix(in srgb, var(--vote-color) 48%, transparent);
+    pointer-events: none;
     transition:
       width 820ms cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 420ms ease,
       filter 420ms ease;
     will-change: width;
   }
-
-  .poll-mini-bar::after {
-    content: '';
-    position: absolute;
-    inset: 0;
+  .tow-side.a .tow-fill {
+    left: 0;
+    /* El navy de marca es muy oscuro: lo aclaramos para que el azul se lea. */
     background: linear-gradient(
       90deg,
-      transparent,
-      rgba(255, 255, 255, 0.52),
-      transparent
+      color-mix(in srgb, var(--vote-color) 62%, white),
+      color-mix(in srgb, var(--vote-color) 38%, white)
     );
-    opacity: 0;
-    transform: translateX(-120%);
   }
-
-  .poll-option[data-vote-changing] .poll-mini-bar {
-    animation: vote-bar-flare 820ms ease-out;
+  .tow-side.b .tow-fill {
+    right: 0;
+    background: linear-gradient(
+      270deg,
+      var(--vote-color),
+      color-mix(in srgb, var(--vote-color) 70%, white)
+    );
+  }
+  /* Pivote: asa vertical dorada en el punto de corte. */
+  .tow-side.a .tow-fill::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: 50%;
+    z-index: 6;
+    width: 6px;
+    height: 26px;
+    transform: translateY(-50%);
+    border-radius: 999px;
+    background: linear-gradient(
+      180deg,
+      #fff,
+      var(--color-theme-gold) 55%,
+      color-mix(in srgb, var(--color-theme-gold) 65%, black)
+    );
     box-shadow:
-      0 0 14px color-mix(in srgb, var(--vote-color) 52%, transparent),
-      0 0 30px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
-    filter: saturate(1.28) brightness(1.14);
+      0 0 0 2px rgba(0, 0, 0, 0.45),
+      0 0 16px color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
+  }
+  .tow-side[data-vote-changing] .tow-fill {
+    filter: saturate(1.3) brightness(1.16);
   }
 
-  .poll-option[data-vote-changing] .poll-mini-bar::after {
-    animation: vote-bar-sheen 760ms ease-out;
+  /* Atenuamos solo la foto y el texto del lado no elegido; la barra de votos
+     (relleno del bando) se mantiene vívida porque representa a la comunidad. */
+  .tow-side[data-muted='true'] .tow-pic-img {
+    filter: saturate(0.6) brightness(0.6);
+  }
+  .tow-side[data-muted='true'] .tow-caption {
+    opacity: 0.6;
   }
 
-  .poll-option[data-vote-changing] [data-prediction-percent] {
-    animation: vote-number-pop 680ms cubic-bezier(0.18, 0.86, 0.24, 1);
-  }
-
-  .poll-option[data-vote-changing='up'] [data-prediction-percent] {
-    color: var(--color-theme-gold);
-    text-shadow:
-      0 0 16px color-mix(in srgb, var(--color-theme-gold) 48%, transparent),
-      0 0 34px color-mix(in srgb, var(--vote-color) 30%, transparent);
-  }
-
-  .poll-option[data-side='b'] .poll-mini-bar {
-    margin-left: auto;
-    transform-origin: right;
-    background: var(--vote-color);
-  }
-
-  @keyframes vote-bar-flare {
-    0%,
-    100% {
-      filter: saturate(1) brightness(1);
-    }
-    34% {
-      filter: saturate(1.42) brightness(1.28);
-    }
-  }
-
-  @keyframes vote-bar-sheen {
-    0% {
-      opacity: 0;
-      transform: translateX(-120%);
-    }
-    18% {
-      opacity: 0.86;
-    }
-    100% {
-      opacity: 0;
-      transform: translateX(150%);
-    }
-  }
-
-  @keyframes vote-number-pop {
+  @keyframes tow-pop {
     0%,
     100% {
       transform: translateY(0) scale(1);
@@ -410,30 +402,49 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
     }
   }
 
+  /* Móvil: texto más pequeño y alineado al borde EXTERIOR de cada foto, para
+     separarlo del centro (VS) y que no se sienta solapado. Sin tocar rejilla. */
   @media (max-width: 639px) {
-    .poll-option {
-      min-height: 8rem;
+    /* Fotos más altas (3/4) en móvil: más presencia y aire para la info. */
+    .tow-side {
+      aspect-ratio: 3 / 4;
+    }
+    /* El watermark "VOTAR" es un estado de hover (escritorio). En móvil no hay
+       hover fiable y se desborda; la guía la da la microcopy de arriba. */
+    .tow-cue {
+      display: none;
+    }
+    .tow-percent {
+      font-size: 1.7rem;
+    }
+    .tow-name {
+      font-size: 0.8rem;
     }
 
-    .poll-option > span:last-child {
-      min-height: 8.75rem;
+    .tow-side.a .tow-caption {
+      align-items: flex-start;
+      text-align: left;
+      padding-left: 0.55rem;
+      padding-right: 1.7rem;
     }
-
-    .poll-portrait {
-      width: 5.3rem;
+    .tow-side.b .tow-caption {
+      align-items: flex-end;
+      text-align: right;
+      padding-right: 0.55rem;
+      padding-left: 1.7rem;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .poll-option,
-    .poll-mini-bar,
-    .poll-portrait-img,
-    .poll-portrait,
-    .poll-portrait-corner,
-    .poll-mini-bar::after,
-    [data-prediction-percent] {
-      animation: none;
+    .tow-side,
+    .tow-pic-img,
+    .tow-fill,
+    .tow-percent {
       transition: none;
+      animation: none;
+    }
+    .tow-side:hover .tow-pic-img {
+      scale: 1;
     }
   }
 </style>

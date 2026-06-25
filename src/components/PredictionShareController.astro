@@ -17,6 +17,7 @@ const { isLoggedIn, totalFights } = Astro.props
       type="button"
       class="prediction-share-fab"
       data-prediction-share-fab
+      data-has-vote="false"
       aria-label="Compartir pronóstico"
     >
       <span aria-hidden="true" class="prediction-share-fab-corner prediction-share-fab-corner-tl" />
@@ -32,6 +33,10 @@ const { isLoggedIn, totalFights } = Astro.props
 }
 
 <style>
+  .prediction-share-fab[data-has-vote='false'] {
+    display: none;
+  }
+
   .prediction-share-fab {
     position: fixed;
     left: 50%;
@@ -205,14 +210,26 @@ const { isLoggedIn, totalFights } = Astro.props
 </style>
 
 <script>
-  import { $ } from '@/lib/dom-selector'
-  import { openPredictionShare } from '@/lib/prediction-completion'
+  import { $, $$ } from '@/lib/dom-selector'
+  import { getUserVotesFromDOM, openPredictionShare } from '@/lib/prediction-completion'
 
   function setupShareFab() {
     const fab = $<HTMLButtonElement>('[data-prediction-share-fab]')
     if (!fab) return
 
     fab.addEventListener('click', openPredictionShare)
+
+    const refreshVisibility = () => {
+      const votes = getUserVotesFromDOM()
+      fab.dataset.hasVote = String(Object.keys(votes).length > 0)
+    }
+
+    refreshVisibility()
+
+    const observer = new MutationObserver(refreshVisibility)
+    $$<HTMLButtonElement>('[data-prediction-option]').forEach((option) => {
+      observer.observe(option, { attributes: true, attributeFilter: ['data-selected'] })
+    })
   }
 
   document.addEventListener('astro:page-load', setupShareFab)
