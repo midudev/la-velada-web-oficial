@@ -46,9 +46,87 @@ const STATEMENTS = [
     name: 'user_votes_user_id_idx',
     sql: `CREATE INDEX IF NOT EXISTS user_votes_user_id_idx ON user_votes(user_id)`,
   },
+  // Tablas de better-auth. El esquema (nombres de columna camelCase y tipos)
+  // replica el que genera el adaptador Kysely de better-auth para SQLite, para
+  // que su introspección las reconozca sin intentar alterarlas. Persistirlas
+  // mantiene `user.id` estable entre sesiones (ver src/lib/auth.ts).
+  {
+    name: 'user',
+    sql: `
+      CREATE TABLE IF NOT EXISTS "user" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "name" TEXT NOT NULL,
+        "email" TEXT NOT NULL UNIQUE,
+        "emailVerified" INTEGER NOT NULL,
+        "image" TEXT,
+        "createdAt" DATE NOT NULL,
+        "updatedAt" DATE NOT NULL
+      )
+    `,
+  },
+  {
+    name: 'session',
+    sql: `
+      CREATE TABLE IF NOT EXISTS "session" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "expiresAt" DATE NOT NULL,
+        "token" TEXT NOT NULL UNIQUE,
+        "createdAt" DATE NOT NULL,
+        "updatedAt" DATE NOT NULL,
+        "ipAddress" TEXT,
+        "userAgent" TEXT,
+        "userId" TEXT NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
+      )
+    `,
+  },
+  {
+    name: 'account',
+    sql: `
+      CREATE TABLE IF NOT EXISTS "account" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "accountId" TEXT NOT NULL,
+        "providerId" TEXT NOT NULL,
+        "userId" TEXT NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE,
+        "accessToken" TEXT,
+        "refreshToken" TEXT,
+        "idToken" TEXT,
+        "accessTokenExpiresAt" DATE,
+        "refreshTokenExpiresAt" DATE,
+        "scope" TEXT,
+        "password" TEXT,
+        "createdAt" DATE NOT NULL,
+        "updatedAt" DATE NOT NULL
+      )
+    `,
+  },
+  {
+    name: 'verification',
+    sql: `
+      CREATE TABLE IF NOT EXISTS "verification" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "identifier" TEXT NOT NULL,
+        "value" TEXT NOT NULL,
+        "expiresAt" DATE NOT NULL,
+        "createdAt" DATE NOT NULL,
+        "updatedAt" DATE NOT NULL
+      )
+    `,
+  },
+  {
+    name: 'session_userId_idx',
+    sql: `CREATE INDEX IF NOT EXISTS "session_userId_idx" ON "session" ("userId")`,
+  },
+  {
+    name: 'account_userId_idx',
+    sql: `CREATE INDEX IF NOT EXISTS "account_userId_idx" ON "account" ("userId")`,
+  },
+  {
+    name: 'verification_identifier_idx',
+    sql: `CREATE INDEX IF NOT EXISTS "verification_identifier_idx" ON "verification" ("identifier")`,
+  },
 ]
 
-const EXPECTED_TABLES = ['predictions', 'user_votes']
+const EXPECTED_TABLES = ['predictions', 'user_votes', 'user', 'session', 'account', 'verification']
 
 async function runMigrations() {
   console.log('Running Turso migrations...')
