@@ -12,6 +12,7 @@ import {
   COUNTRY_NAMES,
   GENDER_LABELS,
   getBoxerHeroImages,
+  getBoxerHeroSrcset,
   type BoxerGender,
 } from '@/consts/boxers'
 import { serializeJsonLd } from '@/utils/serialize-json-ld'
@@ -64,6 +65,7 @@ const boxerCards = BOXERS.map((boxer) => {
   return {
     ...boxer,
     heroImages: getBoxerHeroImages(boxer),
+    heroSrcset: getBoxerHeroSrcset(boxer),
     battleNumber: battle?.number ?? 0,
     battleId: battle?.battleId ?? '',
     countryName: COUNTRY_NAMES[boxer.country] ?? boxer.country,
@@ -105,6 +107,11 @@ const genderFilters: Array<{ code: BoxerGender; name: string; count: number }> =
 const totalBoxers = BOXERS.length
 
 const cardImageEagerAmount = 4
+
+// Ancho aproximado de cada tarjeta por breakpoint (2 cols → 3 → 4), para que el
+// navegador elija la variante del srcset y no descargue el recorte de 1066px.
+const cardImageSizes =
+  '(min-width: 1280px) 240px, (min-width: 1024px) 300px, (min-width: 768px) 31vw, 47vw'
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
@@ -150,7 +157,6 @@ const cardImageEagerAmount = 4
         data-boxers-filters
         class="boxer-filters-panel relative w-full animate-fade-in-up animate-delay-300"
         aria-label="Filtros de boxeadores"
-        onsubmit="return false"
       >
         <span aria-hidden="true" class="boxer-filters-corner boxer-filters-corner-tl"></span>
         <span aria-hidden="true" class="boxer-filters-corner boxer-filters-corner-tr"></span>
@@ -342,8 +348,8 @@ const cardImageEagerAmount = 4
                   />
 
                   <picture>
-                    <source type="image/avif" srcset={b.heroImages.avif} />
-                    <source type="image/webp" srcset={b.heroImages.webp} />
+                    <source type="image/avif" srcset={b.heroSrcset.avif} sizes={cardImageSizes} />
+                    <source type="image/webp" srcset={b.heroSrcset.webp} sizes={cardImageSizes} />
                     <img
                       src={b.heroImages.webp}
                       alt={`Recorte fotográfico de ${b.name}`}
@@ -1465,6 +1471,10 @@ const cardImageEagerAmount = 4
     const sortBar = $<HTMLElement>('[data-boxers-sort]')
     if (!form || !grid) return
     const gridEl: HTMLElement = grid
+
+    // El filtrado es 100% en cliente: evitamos el envío del form (sustituye al
+    // antiguo `onsubmit="return false"` inline, incompatible con la CSP).
+    form.addEventListener('submit', (event) => event.preventDefault())
 
     const cards = Array.from($$<HTMLElement>('[data-boxer-card]', grid))
     const filterButtons = Array.from($$<HTMLButtonElement>('[data-filter]', form))

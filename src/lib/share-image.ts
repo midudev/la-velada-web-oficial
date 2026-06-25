@@ -147,6 +147,31 @@ export function openXIntent(shareText: string): void {
 }
 
 /**
+ * Abre WhatsApp (app en móvil, WhatsApp Web en escritorio) con el texto ya
+ * escrito. `wa.me` no permite adjuntar imágenes vía URL, así que el llamador
+ * debería copiar la imagen al portapapeles antes para que el usuario la pegue.
+ */
+export function openWhatsAppIntent(shareText: string): void {
+  const intentUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`
+  window.open(intentUrl, '_blank', 'noopener,noreferrer')
+}
+
+/**
+ * Copia una imagen al portapapeles. Devuelve `true` si lo consigue y `false`
+ * si el navegador no soporta `ClipboardItem` o el usuario deniega el permiso,
+ * para que el llamador pueda ofrecer un respaldo (p. ej. descargar la imagen).
+ */
+export async function copyImageToClipboard(blob: Blob): Promise<boolean> {
+  if (typeof ClipboardItem === 'undefined' || !navigator.clipboard?.write) return false
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
  * Comprueba si el navegador soporta compartir archivos con la Web Share API
  * nivel 2 (`navigator.share` + `navigator.canShare({ files })`). Es el camino
  * de un solo toque en móvil moderno: adjunta imagen + texto sin descargas

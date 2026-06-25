@@ -152,6 +152,13 @@ const organizationJsonLd = {
     <ClientRouter />
     <Analytics />
     <script>
+      import { initImageFallback } from '@/lib/image-fallback'
+
+      // Fallback de imágenes (avatares, posters de YouTube) sin `onerror` inline.
+      // `astro:page-load` cubre la carga inicial y cada navegación con view
+      // transitions; el listener global se registra una sola vez por dentro.
+      document.addEventListener('astro:page-load', initImageFallback)
+
       type AstroNavigationEvent = Event & {
         from: URL
         to: URL
