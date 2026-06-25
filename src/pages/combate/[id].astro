@@ -3,7 +3,7 @@ import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVi
 import CombatHero from '@/components/combat/CombatHero.astro'
 import CombatStatsSection from '@/components/combat/CombatStatsSection.astro'
 import LivePrediction from '@/components/LivePrediction.astro'
-import { battlesById } from '@/consts/battles'
+import { battles, battlesById } from '@/consts/battles'
 import { EVENT_DATE_TIME } from '@/consts/event'
 import {
   BOXERS_BY_ID,
@@ -15,6 +15,17 @@ import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 import { serializeJsonLd } from '@/utils/serialize-json-ld'
+import type { GetStaticPaths } from 'astro'
+
+// La ficha de combate solo usa datos estáticos (battlesById/BOXERS_BY_ID) y los
+// pronósticos se cargan en cliente vía <LivePrediction>. No hay nada por usuario
+// ni consultas a BD en el servidor, así que la prerenderizamos: se sirve desde
+// el CDN en lugar de renderizarse on-demand en cada visita.
+export const prerender = true
+
+export const getStaticPaths = (() => {
+  return battles.map((battle) => ({ params: { id: battle.id } }))
+}) satisfies GetStaticPaths
 
 const { id = '' } = Astro.params
 const battle = battlesById[id]
