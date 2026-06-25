@@ -1,203 +1,179 @@
 ---
-import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
 import PredictionOption from '@/components/PredictionOption.astro'
-import { formatPredictionPercent, type PredictionBattle } from '@/consts/predictions'
+import type { PredictionBattle } from '@/consts/predictions'
 
 interface Props {
   prediction: PredictionBattle
   selectedBoxerId?: string
+  index?: number
 }
 
-const { prediction, selectedBoxerId } = Astro.props
-const { battle, options, favorite } = prediction
+const { prediction, selectedBoxerId, index = 0 } = Astro.props
+// Entrada escalonada (mismo patrón que /combates).
+const animationDelay = `${index * 60}ms`
+const { battle, options } = prediction
+const [optionA, optionB] = options
+
+// Líder solo si hay votos y no es empate (si no, sin halo).
+const hasLeader = prediction.totalVotes > 0 && optionA.percentage !== optionB.percentage
+const leaderBoxerId = hasLeader ? prediction.leader.boxer.id : undefined
 ---
 
-<li id={battle.id} class="scroll-mt-28">
-  <article
-    class="prediction-fight relative overflow-hidden rounded-card border border-theme-gold/18 bg-theme-midnight/92 shadow-[0_24px_70px_rgba(0,0,0,0.34)]"
-    data-battle-id={battle.id}
-    data-prediction-fight
-  >
-    <div aria-hidden="true" class="prediction-fight-sheen pointer-events-none absolute inset-0">
-    </div>
+<li
+  class="tow-item scroll-mt-28 not-motion-reduce:animate-fade-in-up"
+  style={`animation-delay:${animationDelay}`}
+>
+  <article data-battle-id={battle.id} data-prediction-fight>
+    <h2 class="sr-only">
+      Combate {battle.number}: {optionA.boxer.name} ({optionA.countryName}) contra {
+        optionB.boxer.name
+      } ({optionB.countryName})
+    </h2>
 
-    <header
-      class="prediction-fight-header relative z-10 grid gap-4 border-b border-theme-gold/14 px-4 py-4 sm:px-5 md:grid-cols-[1fr_auto] md:items-center md:px-6"
-    >
-      <div>
-        <p
-          class="font-cinzel text-[0.58rem] font-black tracking-[0.26em] text-theme-gold/85 sm:text-[0.68rem]"
-        >
-          COMBATE {String(battle.number).padStart(2, '0')}
-        </p>
-        <h2
-          class="mt-2 font-cinzel text-xl font-black tracking-[0.08em] text-balance text-theme-cream uppercase sm:text-2xl md:text-3xl"
-        >
-          {battle.title}
-        </h2>
+    <div class="tow-stage">
+      <span class="tow-tag font-cinzel">Combate {String(battle.number).padStart(2, '0')}</span>
+
+      <PredictionOption
+        battleId={battle.id}
+        option={optionA}
+        selectedBoxerId={selectedBoxerId}
+        leaderBoxerId={leaderBoxerId}
+      />
+      <PredictionOption
+        battleId={battle.id}
+        option={optionB}
+        selectedBoxerId={selectedBoxerId}
+        leaderBoxerId={leaderBoxerId}
+      />
+
+      <span aria-hidden="true" class="tow-seam"></span>
+
+      <div class="tow-vs" aria-hidden="true">
+        <span class="tow-vs-medal font-cinzel"><b>VS</b></span>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2 md:justify-end">
-        <span
-          data-prediction-badge
-          class:list={[
-            'prediction-badge',
-            favorite ? 'prediction-badge-calm' : 'prediction-badge-hot',
-          ]}
-        >
-          {favorite ? `Favorito: ${favorite.boxer.name}` : 'A cara de perro'}
-        </span>
-        <a
-          href={battle.url}
-          class="prediction-fight-link group inline-flex min-h-10 items-center justify-center gap-2 rounded-card border border-white/12 px-3 py-2 font-cinzel text-[0.58rem] font-black tracking-[0.16em] text-white/78 transition duration-300 hover:border-theme-gold/55 hover:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold sm:text-[0.65rem]"
-        >
-          Combate
-          <ArrowRightIcon
-            class="size-3 transition-transform duration-300 group-hover:translate-x-0.5"
-            aria-hidden="true"
-          />
-        </a>
-      </div>
-    </header>
-
-    <div
-      class="prediction-body relative z-10 grid items-stretch gap-4 p-3 sm:gap-5 sm:p-5 md:p-6 lg:grid-cols-[minmax(0,1fr)_10rem_minmax(0,1fr)] lg:items-center"
-    >
-      {
-        options.map((option, optionIndex) => (
-          <>
-            {optionIndex === 1 && (
-              <div
-                class="duel-versus"
-                role="img"
-                data-prediction-versus
-                aria-label={`${options[0].boxer.name}: ${formatPredictionPercent(options[0].percentage)}. ${options[1].boxer.name}: ${formatPredictionPercent(options[1].percentage)}.`}
-              >
-                <span aria-hidden="true" class="duel-versus-text">
-                  VS
-                </span>
-              </div>
-            )}
-
-            <PredictionOption
-              battleId={battle.id}
-              option={option}
-              selectedBoxerId={selectedBoxerId}
-            />
-          </>
-        ))
-      }
+      <span aria-hidden="true" class="tow-track"></span>
     </div>
   </article>
 </li>
 
 <style>
-  .prediction-fight {
-    transition:
-      border-color 360ms ease,
-      box-shadow 360ms ease;
-  }
-
-  .prediction-fight:hover {
-    border-color: color-mix(in srgb, var(--color-theme-gold) 42%, transparent);
+  .tow-stage {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    border-radius: 10px;
     box-shadow:
-      0 28px 84px rgba(0, 0, 0, 0.44),
-      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 20%, transparent),
+      0 22px 60px rgba(0, 0, 0, 0.55);
   }
 
-  .prediction-fight-sheen {
-    background:
-      radial-gradient(
-        ellipse 42% 70% at 0% 50%,
-        color-mix(in srgb, var(--color-velada-blood) 16%, transparent),
-        transparent 66%
-      ),
-      radial-gradient(
-        ellipse 42% 70% at 100% 50%,
-        color-mix(in srgb, var(--color-theme-gold) 14%, transparent),
-        transparent 68%
-      ),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 42%);
-  }
-
-  .prediction-badge {
-    display: inline-flex;
-    min-height: 2.5rem;
-    align-items: center;
-    border-radius: var(--radius-card);
-    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 24%, transparent);
-    padding: 0.55rem 0.75rem;
-    font-family: var(--font-cinzel);
-    font-size: 0.58rem;
+  /* Etiqueta del número de combate, anclada a la esquina superior izquierda. */
+  .tow-tag {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    z-index: 7;
+    padding: 0.28rem 0.62rem;
+    font-size: 0.5rem;
     font-weight: 900;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 90%, white);
+    background: color-mix(in srgb, var(--color-theme-midnight) 52%, transparent);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+    border-radius: 0.3rem;
   }
 
-  .prediction-badge-hot {
-    background: color-mix(in srgb, var(--color-theme-maroon) 45%, transparent);
-    color: var(--color-theme-gold);
+  /* Línea divisora central (queda por DEBAJO del VS, z-index 6 < 7). */
+  .tow-seam {
+    position: absolute;
+    top: 0;
+    bottom: 14px;
+    left: 50%;
+    z-index: 6;
+    width: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      180deg,
+      transparent,
+      color-mix(in srgb, var(--color-theme-gold) 38%, transparent) 30%,
+      color-mix(in srgb, var(--color-theme-gold) 38%, transparent) 70%,
+      transparent
+    );
+    pointer-events: none;
   }
 
-  .prediction-badge-calm {
-    background: color-mix(in srgb, var(--color-theme-midnight) 68%, var(--color-velada-blood));
-    color: rgba(244, 228, 201, 0.82);
+  /* Carril de fondo de la barra tug-of-war. */
+  .tow-track {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 2;
+    height: 14px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
   }
 
-  .duel-versus {
+  /* Medalla VS centrada entre los combatientes (en la costura, a media
+     altura de las fotos, por encima de la barra). */
+  .tow-vs {
+    position: absolute;
+    left: 50%;
+    top: calc((100% - 14px) / 2);
+    z-index: 7;
+    transform: translate(-50%, -50%);
     display: grid;
     place-items: center;
+    pointer-events: none;
   }
-
-  .duel-versus-text {
+  .tow-vs-medal {
     display: grid;
-    width: 4rem;
-    height: 4rem;
     place-items: center;
-    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 62%, transparent);
-    border-radius: var(--radius-card);
+    width: 56px;
+    height: 56px;
+    transform: rotate(45deg);
+    border: 1px solid var(--color-theme-gold);
+    /* Base sólida opaca + tinte dorado encima: oculta la línea que pasa detrás. */
     background:
       radial-gradient(
-        circle at 50% 0%,
-        color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
-        transparent 68%
+        circle,
+        color-mix(in srgb, var(--color-theme-gold) 26%, transparent),
+        transparent 70%
       ),
-      color-mix(in srgb, var(--color-theme-midnight) 90%, black);
+      #0a1024;
     box-shadow:
-      0 10px 28px rgba(0, 0, 0, 0.48),
-      0 0 22px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
-    color: var(--color-theme-gold);
-    font-family: var(--font-cinzel);
-    font-size: 0.82rem;
+      0 12px 30px rgba(0, 0, 0, 0.55),
+      0 0 24px color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+  }
+  .tow-vs-medal b {
+    transform: rotate(-45deg);
     font-weight: 900;
-    letter-spacing: 0.12em;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
+  }
+  .tow-item:hover .tow-vs-medal {
+    background:
+      radial-gradient(
+        circle,
+        color-mix(in srgb, var(--color-theme-gold) 40%, transparent),
+        transparent 70%
+      ),
+      #0a1024;
   }
 
-  @media (max-width: 639px) {
-    .prediction-badge {
-      width: 100%;
-      justify-content: center;
-      text-align: center;
+  @media (max-width: 480px) {
+    .tow-vs-medal {
+      width: 44px;
+      height: 44px;
     }
-
-    .prediction-fight-link {
-      width: 100%;
-    }
-
-    .duel-versus {
-      margin-block: -0.15rem;
-    }
-
-    .duel-versus-text {
-      width: 3.65rem;
-      height: 3.65rem;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .prediction-fight,
-    .prediction-fight-link {
-      transition: none;
+    .tow-vs-medal b {
+      font-size: 0.8rem;
     }
   }
 </style>
