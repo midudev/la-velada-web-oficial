@@ -42,13 +42,6 @@ const closeBattles = predictionBattles.filter(({ isClose }) => isClose).length
 const userVotesByCombat = Object.fromEntries(
   storedUserVotes.map((vote) => [vote.combat_id, vote.fighter_id]),
 )
-
-/* Mostrar por cookie */
-const showPredictions = Astro.cookies.get('showPredictions')?.value === 'true'
-
-if (!showPredictions) {
-  return Astro.redirect('/')
-}
 ---
 
 <Layout title={title} description={description} canonical={canonical} robots="noindex, nofollow">
