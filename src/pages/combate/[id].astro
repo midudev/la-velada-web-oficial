@@ -2,7 +2,8 @@
 import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
 import CombatHero from '@/components/combat/CombatHero.astro'
 import CombatStatsSection from '@/components/combat/CombatStatsSection.astro'
-import { battlesById } from '@/consts/battles'
+import LivePrediction from '@/components/LivePrediction.astro'
+import { battles, battlesById } from '@/consts/battles'
 import { EVENT_DATE_TIME } from '@/consts/event'
 import {
   BOXERS_BY_ID,
@@ -13,6 +14,18 @@ import {
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
+import { serializeJsonLd } from '@/utils/serialize-json-ld'
+import type { GetStaticPaths } from 'astro'
+
+// La ficha de combate solo usa datos estáticos (battlesById/BOXERS_BY_ID) y los
+// pronósticos se cargan en cliente vía <LivePrediction>. No hay nada por usuario
+// ni consultas a BD en el servidor, así que la prerenderizamos: se sirve desde
+// el CDN en lugar de renderizarse on-demand en cada visita.
+export const prerender = true
+
+export const getStaticPaths = (() => {
+  return battles.map((battle) => ({ params: { id: battle.id } }))
+}) satisfies GetStaticPaths
 
 const { id = '' } = Astro.params
 const battle = battlesById[id]
@@ -116,13 +129,13 @@ const breadcrumbJsonLd = {
   <script
     type="application/ld+json"
     is:inline
-    set:html={JSON.stringify(sportsEventJsonLd)}
+    set:html={serializeJsonLd(sportsEventJsonLd)}
     slot="head"
   />
   <script
     type="application/ld+json"
     is:inline
-    set:html={JSON.stringify(breadcrumbJsonLd)}
+    set:html={serializeJsonLd(breadcrumbJsonLd)}
     slot="head"
   />
 
@@ -166,6 +179,19 @@ const breadcrumbJsonLd = {
       boxer2Select={boxer2Select}
       stats={stats}
     />
+
+    <section class="combat-prediction" aria-labelledby="combat-prediction-title">
+      <h2 id="combat-prediction-title" class="combat-prediction-title font-cinzel">
+        ¿Quién ganará?
+      </h2>
+      <LivePrediction
+        class="w-full max-w-3xl"
+        battleId={battle.id}
+        boxerA={{ id: boxer1.id, name: boxer1.name }}
+        boxerB={{ id: boxer2.id, name: boxer2.name }}
+      />
+    </section>
+
     <CombatFaceToFaceVideoSection
       title={`${battle.title} | Cara a cara`}
       videoUrl={battle.faceToFaceVideoUrl}
@@ -238,6 +264,34 @@ const breadcrumbJsonLd = {
         color-mix(in srgb, var(--color-theme-gold) 16%, transparent),
         transparent 68%
       );
+  }
+
+  .combat-prediction {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.4rem;
+    /* Padding horizontal igual al de la sección de stats (px-4 sm:px-6) para
+       que el ancho del bloque coincida con el de arriba. */
+    padding: 0.5rem 1rem 3.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .combat-prediction {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .combat-prediction-title {
+    font-size: clamp(1.1rem, 0.9rem + 1vw, 1.6rem);
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--color-theme-cream);
+    text-shadow: 0 2px 18px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
   }
 
   .sponsors-and-footer {

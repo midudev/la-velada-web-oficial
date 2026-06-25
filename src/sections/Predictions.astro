@@ -1,0 +1,115 @@
+---
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import LivePrediction from '@/components/LivePrediction.astro'
+import SectionHeader from '@/components/SectionHeader.astro'
+import { battles, type Battle } from '@/consts/battles'
+import { BOXERS_BY_ID } from '@/consts/boxers'
+
+// Combates más interesantes para la home; el resto se vota en /pronosticos.
+// Se resuelven por boxeador para no depender del orden de la pareja.
+const FEATURED_BOXER_IDS = ['thegrefg', 'plex', 'roro', 'viruzz']
+const featuredBattles = FEATURED_BOXER_IDS.map((boxerId) =>
+  battles.find((battle) => battle.boxerIds.includes(boxerId)),
+).filter((battle): battle is Battle => Boolean(battle))
+---
+
+<section
+  class="relative w-full px-4 py-20 sm:px-6 lg:py-28"
+  aria-labelledby="home-predictions-title"
+>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-80 bg-[radial-gradient(ellipse_at_top,_var(--color-theme-gold)_0%,_transparent_70%)] opacity-15"
+  >
+  </div>
+
+  <div class="mx-auto flex max-w-5xl flex-col items-center">
+    <SectionHeader
+      titleId="home-predictions-title"
+      eyebrow="En directo"
+      title="PRONÓSTICOS"
+      subtitle="Vota a tu ganador y sigue en tiempo real lo que pronostica la comunidad"
+      subtitleClass="mb-10 max-w-xl tracking-[0.16em] sm:mb-12 sm:text-sm"
+    />
+
+    <ul class="grid w-full list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 sm:gap-5" role="list">
+      {
+        featuredBattles.map((battle) => (
+          <li>
+            <LivePrediction
+              battleId={battle.id}
+              boxerA={{ id: battle.boxerIds[0], name: BOXERS_BY_ID[battle.boxerIds[0]].name }}
+              boxerB={{ id: battle.boxerIds[1], name: BOXERS_BY_ID[battle.boxerIds[1]].name }}
+            />
+          </li>
+        ))
+      }
+    </ul>
+
+    <a href="/pronosticos" class="home-predictions-cta font-cinzel mt-10 sm:mt-12">
+      <span>Ver todos los pronósticos</span>
+      <ArrowRightIcon class="home-predictions-cta-arrow" aria-hidden="true" />
+    </a>
+  </div>
+</section>
+
+<style>
+  .home-predictions-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 2.9rem;
+    padding: 0.7rem 1.6rem;
+    border-radius: 9999px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
+      var(--color-theme-gold) 65%,
+      color-mix(in srgb, var(--color-theme-gold) 75%, black) 100%
+    );
+    color: var(--color-theme-midnight);
+    font-size: 0.66rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      0 12px 32px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+    transition:
+      transform 250ms ease,
+      box-shadow 250ms ease;
+  }
+
+  .home-predictions-cta:hover,
+  .home-predictions-cta:focus-visible {
+    transform: translateY(-2px);
+    outline: none;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      0 16px 40px color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
+  }
+
+  .home-predictions-cta-arrow {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex-shrink: 0;
+    transition: transform 250ms ease;
+  }
+
+  .home-predictions-cta:hover .home-predictions-cta-arrow,
+  .home-predictions-cta:focus-visible .home-predictions-cta-arrow {
+    transform: translateX(3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-predictions-cta,
+    .home-predictions-cta-arrow {
+      transition: none;
+    }
+    .home-predictions-cta:hover,
+    .home-predictions-cta:focus-visible {
+      transform: none;
+    }
+  }
+</style>

@@ -32,6 +32,7 @@ const controllerConfig = JSON.stringify({
     areAllPredictionsComplete,
     dispatchPredictionsComplete,
   } from '@/lib/prediction-completion'
+  import { formatPredictionPercent, formatPredictionSupport } from '@/lib/format-votes'
 
   interface PredictionApiResponse {
     prediction?: {
@@ -72,18 +73,6 @@ const controllerConfig = JSON.stringify({
   let hasDispatchedComplete = false
   const latestVoteRequestByBattle = new Map<string, number>()
   const voteBarAnimationTimeouts = new WeakMap<HTMLElement, number>()
-  const compactFormatter = new Intl.NumberFormat('es-ES', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  })
-
-  const exactVotesFormatter = new Intl.NumberFormat('es-ES', {
-    maximumFractionDigits: 0,
-  })
-
-  const percentFormatter = new Intl.NumberFormat('es-ES', {
-    maximumFractionDigits: 1,
-  })
 
   function readConfig(): PredictionControllerConfig {
     const config = $<HTMLScriptElement>('#prediction-vote-config')
@@ -94,18 +83,6 @@ const controllerConfig = JSON.stringify({
     } catch {
       return { isLoggedIn: false, userVotes: {}, userReaction: null }
     }
-  }
-
-  function formatVotes(votes: number) {
-    return votes > 100_000 ? compactFormatter.format(votes) : exactVotesFormatter.format(votes)
-  }
-
-  function formatPercent(percentage: number) {
-    return `${percentFormatter.format(percentage)}%`
-  }
-
-  function formatSupport(votes: number) {
-    return `${formatVotes(votes)} ${votes === 1 ? 'voto' : 'votos'}`
   }
 
   function getPredictionFight(battleId: string) {
@@ -141,8 +118,8 @@ const controllerConfig = JSON.stringify({
     option.dataset.voteCount = String(safeVotes)
     option.dataset.votePercentage = String(safePercentage)
     option.style.setProperty('--vote-share', `${safePercentage.toFixed(2)}%`)
-    if (percentNode) percentNode.textContent = formatPercent(safePercentage)
-    if (votesNode) votesNode.textContent = formatSupport(safeVotes)
+    if (percentNode) percentNode.textContent = formatPredictionPercent(safePercentage)
+    if (votesNode) votesNode.textContent = formatPredictionSupport(safeVotes)
     if (barNode) barNode.setAttribute('aria-valuenow', String(Math.round(safePercentage)))
 
     const voteDelta = safeVotes - previousVotes
@@ -252,32 +229,23 @@ const controllerConfig = JSON.stringify({
 
       writeOptionPrediction(option, votes, percentage)
     })
-    updateFightBadge(fight)
+    setFightLeader(fight)
   }
 
-  function updateFightBadge(fight: HTMLElement) {
-    const badge = $<HTMLElement>('[data-prediction-badge]', fight)
-    if (!badge) return
-
+  // Marca al boxeador que va ganando (halo). Solo si hay votos y no hay empate.
+  function setFightLeader(fight: HTMLElement) {
     const options = Array.from($$<HTMLButtonElement>('[data-prediction-option]', fight))
-    const leader = options.reduce<HTMLButtonElement | null>((currentLeader, option) => {
-      if (!currentLeader) return option
-      return readVotePercentage(option) > readVotePercentage(currentLeader) ? option : currentLeader
-    }, null)
+    const totalVotes = options.reduce((total, option) => total + readVoteCount(option), 0)
+    const maxPercentage = Math.max(...options.map((option) => readVotePercentage(option)))
+    const leadersAtMax = options.filter((option) => readVotePercentage(option) === maxPercentage)
 
-    const leaderPercentage = leader ? readVotePercentage(leader) : 0
-    const favoriteName = leader?.dataset.boxerName
-
-    if (leader && favoriteName && leaderPercentage >= 60) {
-      badge.textContent = `Favorito: ${favoriteName}`
-      badge.classList.remove('prediction-badge-hot')
-      badge.classList.add('prediction-badge-calm')
-      return
-    }
-
-    badge.textContent = 'A cara de perro'
-    badge.classList.remove('prediction-badge-calm')
-    badge.classList.add('prediction-badge-hot')
+    options.forEach((option) => {
+      const isLeader =
+        totalVotes > 0 &&
+        leadersAtMax.length === 1 &&
+        readVotePercentage(option) === maxPercentage
+      option.dataset.leader = String(isLeader)
+    })
   }
 
   function announceVote(fight: HTMLElement, boxerId: string) {
@@ -289,7 +257,7 @@ const controllerConfig = JSON.stringify({
     if (!announcer || !option) return
 
     const name = option.dataset.boxerName ?? ''
-    announcer.textContent = `Has pronosticado a ${name}. Lleva el ${formatPercent(
+    announcer.textContent = `Has pronosticado a ${name}. Lleva el ${formatPredictionPercent(
       readVotePercentage(option),
     )} de los votos.`
   }
@@ -398,7 +366,7 @@ const controllerConfig = JSON.stringify({
 
       writeOptionPrediction(option, predictionOption.votes, predictionOption.percentage)
     })
-    updateFightBadge(fight)
+    setFightLeader(fight)
   }
 
   const AUTH_DOCK_MS = 660
@@ -501,6 +469,21 @@ const controllerConfig = JSON.stringify({
           restoreFightSnapshot(snapshot)
         }
         dockAuthToFight(battleId)
+        return
+      }
+
+      // El servidor limita los votos por usuario: revertimos el voto optimista
+      // y avisamos sin tratarlo como un error inesperado (no ensuciamos la
+      // consola, es una respuesta esperable ante ráfagas).
+      if (response.status === 429) {
+        if (latestVoteRequestByBattle.get(battleId) === requestId && snapshot) {
+          restoreFightSnapshot(snapshot)
+        }
+        const announcer = $<HTMLElement>('[data-prediction-announcer]')
+        if (announcer) {
+          announcer.textContent =
+            'Estás votando demasiado rápido. Espera unos segundos e inténtalo de nuevo.'
+        }
         return
       }
 
