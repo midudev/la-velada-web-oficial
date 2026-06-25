@@ -1,0 +1,435 @@
+---
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import { BOXERS_BY_ID, getBoxerSelectImages } from '@/consts/boxers'
+
+interface BoxerRef {
+  id: string
+  name: string
+}
+
+interface Props {
+  battleId: string
+  // Orden de combate: A = boxerIds[0] (navy), B = boxerIds[1] (oro), para que
+  // los colores coincidan con la página de /pronosticos.
+  boxerA: BoxerRef
+  boxerB: BoxerRef
+  href?: string
+  class?: string
+}
+
+const {
+  battleId,
+  boxerA,
+  boxerB,
+  href = `/pronosticos#pronostico-${battleId}`,
+  class: className,
+} = Astro.props
+
+// Recortes redondos de cada boxeador (mismos que usa la tarjeta VS).
+const imagesA = getBoxerSelectImages(BOXERS_BY_ID[boxerA.id])
+const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
+---
+
+<div
+  class:list={['live-pred', className]}
+  data-live-prediction
+  data-battle-id={battleId}
+  data-has-votes="false"
+  role="group"
+  aria-label={`Pronóstico de la comunidad: ${boxerA.name} contra ${boxerB.name}`}
+>
+  <div class="live-pred-top font-cinzel">
+    <span class="live-pred-eyebrow">Pronóstico de la comunidad</span>
+    <span class="live-pred-total"><span data-live-total>0</span> votos</span>
+  </div>
+
+  <div class="live-pred-scores font-cinzel">
+    <div class="live-pred-score a" data-live-side={boxerA.id}>
+      <picture class="live-pred-avatar">
+        <source type="image/avif" srcset={imagesA.avif} />
+        <source type="image/webp" srcset={imagesA.webp} />
+        <img
+          src={imagesA.webp}
+          alt=""
+          role="presentation"
+          loading="lazy"
+          decoding="async"
+          width="52"
+          height="52"
+        />
+      </picture>
+      <span class="live-pred-score-text">
+        <span class="live-pred-name">{boxerA.name}</span>
+        <span class="live-pred-pct" data-live-pct={boxerA.id}>—</span>
+      </span>
+    </div>
+    <div class="live-pred-score b" data-live-side={boxerB.id}>
+      <picture class="live-pred-avatar">
+        <source type="image/avif" srcset={imagesB.avif} />
+        <source type="image/webp" srcset={imagesB.webp} />
+        <img
+          src={imagesB.webp}
+          alt=""
+          role="presentation"
+          loading="lazy"
+          decoding="async"
+          width="52"
+          height="52"
+        />
+      </picture>
+      <span class="live-pred-score-text">
+        <span class="live-pred-name">{boxerB.name}</span>
+        <span class="live-pred-pct" data-live-pct={boxerB.id}>—</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="live-pred-track" aria-hidden="true">
+    <span class="live-pred-fill live-pred-fill-a" data-live-fill={boxerA.id}></span>
+    <span class="live-pred-fill live-pred-fill-b" data-live-fill={boxerB.id}></span>
+  </div>
+
+  <a class="live-pred-cta font-cinzel" href={href}>
+    <span>Haz tu pronóstico</span>
+    <ArrowRightIcon class="live-pred-cta-arrow" aria-hidden="true" />
+  </a>
+</div>
+
+<style>
+  .live-pred {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    width: 100%;
+    padding: 1rem 1.1rem 1.05rem;
+    border-radius: 1.1rem;
+    background: linear-gradient(180deg, rgba(15, 18, 36, 0.55) 0%, rgba(7, 10, 21, 0.66) 100%);
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 24%, transparent);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.4);
+  }
+
+  .live-pred-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .live-pred-eyebrow {
+    font-size: 0.5rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 82%, transparent);
+  }
+
+  .live-pred-total {
+    font-size: 0.5rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 52%, transparent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .live-pred-scores {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .live-pred-score {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+    transition: opacity 250ms ease;
+  }
+  .live-pred-score.b {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+
+  /* Recorte redondo del boxeador, con anillo dorado de marca. */
+  .live-pred-avatar {
+    position: relative;
+    display: block;
+    flex-shrink: 0;
+    width: 2.7rem;
+    height: 2.7rem;
+    border-radius: 9999px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+    transition: box-shadow 250ms ease;
+  }
+  .live-pred-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .live-pred-score.is-leader .live-pred-avatar {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 78%, transparent),
+      0 0 16px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+  }
+
+  .live-pred-score-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .live-pred-name {
+    overflow: hidden;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: color-mix(in srgb, var(--color-theme-cream) 78%, transparent);
+  }
+
+  .live-pred-pct {
+    font-size: 1.5rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-theme-cream);
+    transition:
+      color 250ms ease,
+      text-shadow 250ms ease;
+  }
+
+  /* El bando que va ganando se realza en oro. */
+  .live-pred-score.is-leader .live-pred-pct {
+    color: var(--color-theme-gold);
+    text-shadow: 0 0 18px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+  }
+  .live-pred[data-has-votes='true'] .live-pred-score:not(.is-leader) {
+    opacity: 0.78;
+  }
+
+  /* Barra tug-of-war: A crece desde la izquierda, B desde la derecha. */
+  .live-pred-track {
+    position: relative;
+    height: 12px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.45));
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .live-pred-fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    transition: width 760ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .live-pred-fill-a {
+    left: 0;
+    border-radius: 999px 0 0 999px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-theme-navy) 55%, white),
+      color-mix(in srgb, var(--color-theme-navy) 32%, white)
+    );
+  }
+  .live-pred-fill-b {
+    right: 0;
+    border-radius: 0 999px 999px 0;
+    background: linear-gradient(
+      270deg,
+      var(--color-theme-gold),
+      color-mix(in srgb, var(--color-theme-gold) 68%, white)
+    );
+  }
+
+  /* Sin votos todavía: barra apagada y centrada para invitar al primer voto. */
+  .live-pred[data-has-votes='false'] .live-pred-track {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--color-theme-gold) 14%, transparent) 50%,
+      transparent
+    );
+  }
+
+  .live-pred-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    align-self: center;
+    margin-top: 0.15rem;
+    padding: 0.5rem 1.15rem;
+    border-radius: 999px;
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-theme-gold);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 38%, transparent);
+    transition:
+      color 250ms ease,
+      box-shadow 250ms ease,
+      background-color 250ms ease,
+      transform 250ms ease;
+  }
+  .live-pred-cta:hover,
+  .live-pred-cta:focus-visible {
+    color: var(--color-theme-midnight);
+    background: var(--color-theme-gold);
+    box-shadow: inset 0 0 0 1px var(--color-theme-gold);
+    outline: none;
+    transform: translateY(-1px);
+  }
+
+  .live-pred-cta-arrow {
+    width: 0.85rem;
+    height: 0.85rem;
+    flex-shrink: 0;
+    transition: transform 250ms ease;
+  }
+  .live-pred-cta:hover .live-pred-cta-arrow,
+  .live-pred-cta:focus-visible .live-pred-cta-arrow {
+    transform: translateX(3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .live-pred-fill,
+    .live-pred-cta,
+    .live-pred-cta-arrow,
+    .live-pred-pct,
+    .live-pred-score {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { $$ } from '@/lib/dom-selector'
+  import { formatPredictionPercent, formatPredictionVotes } from '@/lib/format-votes'
+
+  interface ApiCombat {
+    combat_id: string
+    predictions: Array<{ fighter_id: string; votes: number; percentage: number }>
+    total_votes: number
+  }
+
+  const REFRESH_MS = 15_000
+
+  let timer: number | null = null
+  let abort: AbortController | null = null
+  let observer: IntersectionObserver | null = null
+  let anyVisible = false
+
+  function widgets() {
+    return Array.from($$<HTMLElement>('[data-live-prediction]'))
+  }
+
+  function updateWidget(el: HTMLElement, combat: ApiCombat) {
+    const total = combat.total_votes
+    const totalNode = el.querySelector<HTMLElement>('[data-live-total]')
+    if (totalNode) totalNode.textContent = formatPredictionVotes(total)
+    el.dataset.hasVotes = String(total > 0)
+
+    let leaderId = ''
+    let leaderPct = -1
+    let tie = false
+
+    combat.predictions.forEach((prediction) => {
+      const pctNode = el.querySelector<HTMLElement>(`[data-live-pct="${prediction.fighter_id}"]`)
+      const fillNode = el.querySelector<HTMLElement>(`[data-live-fill="${prediction.fighter_id}"]`)
+      if (pctNode) {
+        pctNode.textContent = total > 0 ? formatPredictionPercent(prediction.percentage) : '—'
+      }
+      if (fillNode) fillNode.style.width = `${total > 0 ? prediction.percentage : 0}%`
+
+      if (prediction.percentage > leaderPct) {
+        leaderPct = prediction.percentage
+        leaderId = prediction.fighter_id
+        tie = false
+      } else if (prediction.percentage === leaderPct) {
+        tie = true
+      }
+    })
+
+    el.querySelectorAll<HTMLElement>('[data-live-side]').forEach((side) => {
+      side.classList.toggle('is-leader', total > 0 && !tie && side.dataset.liveSide === leaderId)
+    })
+  }
+
+  async function refresh() {
+    if (!anyVisible || document.visibilityState !== 'visible') return
+
+    abort?.abort()
+    const controller = new AbortController()
+    abort = controller
+
+    try {
+      const response = await fetch('/api/predictions', { signal: controller.signal })
+      if (!response.ok) return
+
+      const data = (await response.json()) as { predictions?: ApiCombat[] }
+      if (controller.signal.aborted || !data.predictions) return
+
+      const byCombatId = new Map(data.predictions.map((combat) => [combat.combat_id, combat]))
+      widgets().forEach((el) => {
+        const combat = byCombatId.get(el.dataset.battleId ?? '')
+        if (combat) updateWidget(el, combat)
+      })
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return
+      console.error('No se pudo cargar el pronóstico en vivo:', error)
+    }
+  }
+
+  function handleVisibilityChange() {
+    if (document.visibilityState === 'visible') void refresh()
+  }
+
+  function teardown() {
+    if (timer !== null) {
+      window.clearInterval(timer)
+      timer = null
+    }
+    abort?.abort()
+    abort = null
+    observer?.disconnect()
+    observer = null
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }
+
+  function setup() {
+    teardown()
+
+    const els = widgets()
+    if (els.length === 0) return
+
+    anyVisible = false
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          ;(entry.target as HTMLElement).dataset.inview = String(entry.isIntersecting)
+        })
+        anyVisible = widgets().some((el) => el.dataset.inview === 'true')
+        if (anyVisible) void refresh()
+      },
+      { rootMargin: '160px' },
+    )
+    els.forEach((el) => observer?.observe(el))
+
+    timer = window.setInterval(() => void refresh(), REFRESH_MS)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+  }
+
+  document.addEventListener('astro:page-load', setup)
+</script>

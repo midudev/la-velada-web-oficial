@@ -5,18 +5,22 @@ import ShareIcon from '@/assets/svg/share.svg'
 interface Props {
   isLoggedIn: boolean
   totalFights: number
+  // 'fab' (por defecto): botón flotante + modal. 'top': botón en línea que solo
+  // aparece arriba cuando ya se han completado todos los pronósticos.
+  variant?: 'fab' | 'top'
 }
 
-const { isLoggedIn, totalFights } = Astro.props
+const { isLoggedIn, totalFights, variant = 'fab' } = Astro.props
 ---
 
-{isLoggedIn && <PredictionShareModal totalFights={totalFights} />}
+{variant === 'fab' && isLoggedIn && <PredictionShareModal totalFights={totalFights} />}
 {
-  isLoggedIn && (
+  isLoggedIn && variant === 'fab' && (
     <button
       type="button"
       class="prediction-share-fab"
       data-prediction-share-fab
+      data-prediction-share-trigger
       data-has-vote="false"
       aria-label="Compartir pronóstico"
     >
@@ -31,10 +35,89 @@ const { isLoggedIn, totalFights } = Astro.props
     </button>
   )
 }
+{
+  isLoggedIn && variant === 'top' && (
+    <button
+      type="button"
+      class="prediction-share-top"
+      data-prediction-share-top
+      data-prediction-share-trigger
+      data-complete="false"
+      aria-label="Compartir pronóstico"
+    >
+      <span class="prediction-share-fab-content">
+        <ShareIcon aria-hidden="true" class="prediction-share-fab-icon" />
+        <span>Compartir pronóstico</span>
+      </span>
+    </button>
+  )
+}
 
 <style>
   .prediction-share-fab[data-has-vote='false'] {
     display: none;
+  }
+
+  /* Variante superior: solo visible cuando se han completado todos los
+     pronósticos. En línea (no flotante), centrada por su contenedor. */
+  .prediction-share-top[data-complete='false'] {
+    display: none;
+  }
+
+  .prediction-share-top {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.9rem;
+    padding: 0.65rem 1.5rem;
+    border-radius: 9999px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
+      var(--color-theme-gold) 65%,
+      color-mix(in srgb, var(--color-theme-gold) 75%, black) 100%
+    );
+    color: var(--color-theme-midnight);
+    font-family: var(--font-cinzel);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
+      0 12px 30px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+    transition:
+      transform 250ms ease,
+      box-shadow 250ms ease;
+    animation: prediction-fab-enter-desktop 500ms cubic-bezier(0.34, 1.42, 0.5, 1) both;
+  }
+
+  .prediction-share-top:hover,
+  .prediction-share-top:focus-visible {
+    transform: translateY(-2px);
+    outline: none;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
+      0 16px 38px color-mix(in srgb, var(--color-theme-gold) 42%, transparent);
+  }
+
+  .prediction-share-top:active {
+    transform: translateY(-1px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .prediction-share-top {
+      animation: none;
+      transition: none;
+    }
+    .prediction-share-top:hover,
+    .prediction-share-top:focus-visible,
+    .prediction-share-top:active {
+      transform: none;
+    }
   }
 
   .prediction-share-fab {
@@ -151,25 +234,25 @@ const { isLoggedIn, totalFights } = Astro.props
   }
   .prediction-share-fab-corner-tl {
     top: -1px;
-    left: 1rem;
+    left: 1.85rem;
     border-right: 0;
     border-bottom: 0;
   }
   .prediction-share-fab-corner-tr {
     top: -1px;
-    right: 1rem;
+    right: 1.85rem;
     border-left: 0;
     border-bottom: 0;
   }
   .prediction-share-fab-corner-bl {
     bottom: -1px;
-    left: 1rem;
+    left: 1.85rem;
     border-right: 0;
     border-top: 0;
   }
   .prediction-share-fab-corner-br {
     bottom: -1px;
-    right: 1rem;
+    right: 1.85rem;
     border-left: 0;
     border-top: 0;
   }
@@ -211,17 +294,27 @@ const { isLoggedIn, totalFights } = Astro.props
 
 <script>
   import { $, $$ } from '@/lib/dom-selector'
-  import { getUserVotesFromDOM, openPredictionShare } from '@/lib/prediction-completion'
+  import {
+    areAllPredictionsComplete,
+    getUserVotesFromDOM,
+    openPredictionShare,
+  } from '@/lib/prediction-completion'
 
   function setupShareFab() {
-    const fab = $<HTMLButtonElement>('[data-prediction-share-fab]')
-    if (!fab) return
+    const triggers = $$<HTMLButtonElement>('[data-prediction-share-trigger]')
+    if (triggers.length === 0) return
 
-    fab.addEventListener('click', openPredictionShare)
+    triggers.forEach((trigger) => trigger.addEventListener('click', openPredictionShare))
+
+    // El FAB aparece en cuanto hay algún voto; el botón superior solo cuando
+    // están los 10 pronósticos completos.
+    const fab = $<HTMLButtonElement>('[data-prediction-share-fab]')
+    const topButton = $<HTMLButtonElement>('[data-prediction-share-top]')
 
     const refreshVisibility = () => {
       const votes = getUserVotesFromDOM()
-      fab.dataset.hasVote = String(Object.keys(votes).length > 0)
+      if (fab) fab.dataset.hasVote = String(Object.keys(votes).length > 0)
+      if (topButton) topButton.dataset.complete = String(areAllPredictionsComplete())
     }
 
     refreshVisibility()

@@ -8,6 +8,17 @@ interface Props {
 }
 
 const { user, callbackURL = '/pronosticos' } = Astro.props
+
+// Iniciales de respaldo para el avatar: si la imagen no carga (o no existe),
+// mostramos un círculo con las iniciales en lugar de un icono roto.
+const initials =
+  user?.name
+    ?.trim()
+    .split(/\s+/)
+    .map((part) => part.charAt(0))
+    .slice(0, 2)
+    .join('')
+    .toUpperCase() || 'V'
 ---
 
 {
@@ -18,15 +29,23 @@ const { user, callbackURL = '/pronosticos' } = Astro.props
       data-auth-button
       data-auth-callback-url={callbackURL}
     >
-      {user.image && (
-        <img
-          src={user.image}
-          alt={user.name}
-          width={32}
-          height={32}
-          class="h-8 w-8 rounded-pill border border-white/15 object-cover"
-        />
-      )}
+      <span
+        role="img"
+        aria-label={user.name}
+        class="relative grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-pill border border-white/15 bg-theme-navy font-cinzel text-[0.6rem] font-black tracking-[0.04em] text-theme-gold"
+      >
+        <span aria-hidden="true">{initials}</span>
+        {user.image && (
+          <img
+            src={user.image}
+            alt=""
+            width={32}
+            height={32}
+            class="absolute inset-0 h-full w-full object-cover"
+            onerror="this.remove()"
+          />
+        )}
+      </span>
       <span class="hidden font-cinzel text-[0.65rem] font-black tracking-[0.16em] text-theme-cream/85 sm:inline">
         {user.name}
       </span>
