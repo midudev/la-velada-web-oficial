@@ -7,18 +7,13 @@ import {
   type BoxerImageVariants,
 } from '@/consts/boxers'
 
-const compactFormatter = new Intl.NumberFormat('es-ES', {
-  notation: 'compact',
-  maximumFractionDigits: 1,
-})
-
-const exactVotesFormatter = new Intl.NumberFormat('es-ES', {
-  maximumFractionDigits: 0,
-})
-
-const percentFormatter = new Intl.NumberFormat('es-ES', {
-  maximumFractionDigits: 1,
-})
+// Reexportados desde `@/lib/format-votes` para no duplicar el formato con el
+// controlador de cliente; los componentes los siguen importando desde aquí.
+export {
+  formatPredictionVotes,
+  formatPredictionPercent,
+  formatPredictionSupport,
+} from '@/lib/format-votes'
 
 export type PredictionSide = 'a' | 'b'
 
@@ -48,18 +43,6 @@ export interface PredictionVotesInput {
     fighter_id: string
     votes: number
   }>
-}
-
-export function formatPredictionVotes(votes: number) {
-  return votes > 100_000 ? compactFormatter.format(votes) : exactVotesFormatter.format(votes)
-}
-
-export function formatPredictionPercent(percentage: number) {
-  return `${percentFormatter.format(percentage)}%`
-}
-
-export function formatPredictionSupport(votes: number) {
-  return `${formatPredictionVotes(votes)} ${votes === 1 ? 'voto' : 'votos'}`
 }
 
 const sideStyles: Record<PredictionSide, { color: string }> = {
