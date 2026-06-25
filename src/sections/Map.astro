@@ -57,7 +57,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
                   clip-rule="evenodd"></path>
               </svg>
             </span>
-            <p class="font-cinzel text-[0.6rem] font-black tracking-[0.26em] text-theme-gold/70">
+            <p class="font-cinzel text-[0.6rem] font-black tracking-[0.26em] text-theme-gold">
               RECINTO
             </p>
           </div>
@@ -93,7 +93,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
             </span>
             <div>
               <p
-                class="mb-[0.2rem] font-cinzel text-[0.55rem] font-black tracking-[0.22em] text-theme-gold/55 uppercase"
+                class="mb-[0.2rem] font-cinzel text-[0.55rem] font-black tracking-[0.22em] text-theme-gold/80 uppercase"
               >
                 Fecha
               </p>
@@ -123,7 +123,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
             </span>
             <div>
               <p
-                class="mb-[0.2rem] font-cinzel text-[0.55rem] font-black tracking-[0.22em] text-theme-gold/55 uppercase"
+                class="mb-[0.2rem] font-cinzel text-[0.55rem] font-black tracking-[0.22em] text-theme-gold/80 uppercase"
               >
                 Hora
               </p>
@@ -156,7 +156,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
             </span>
             <div>
               <p
-                class="mb-[0.2rem] font-cinzel text-[0.55rem] font-black tracking-[0.22em] text-theme-gold/55 uppercase"
+                class="mb-[0.2rem] font-cinzel text-[0.55rem] font-black tracking-[0.22em] text-theme-gold/80 uppercase"
               >
                 Aforo
               </p>
@@ -205,6 +205,7 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
           data-latitude={VENUE_COORDINATES.latitude}
           data-longitude={VENUE_COORDINATES.longitude}
           data-zoom={VENUE_COORDINATES.zoom}
+          role="region"
           aria-label="Mapa con la ubicación del Estadio de La Cartuja en Sevilla"
         >
         </div>
@@ -307,6 +308,9 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
   let mapInstance: any = null
   let mapObserver: IntersectionObserver | null = null
   let leafletCssLoaded = false
+  let mapContainer: HTMLElement | null = null
+  let onMapMouseEnter: (() => void) | null = null
+  let onMapMouseLeave: (() => void) | null = null
 
   // El CSS de Leaflet se inyecta solo cuando el mapa va a inicializarse, en
   // lugar de bloquear el render de la página entera desde el <head>.
@@ -334,6 +338,17 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
   }
 
   function destroyMap() {
+    if (mapContainer) {
+      if (onMapMouseEnter) {
+        mapContainer.removeEventListener('mouseenter', onMapMouseEnter)
+        onMapMouseEnter = null
+      }
+      if (onMapMouseLeave) {
+        mapContainer.removeEventListener('mouseleave', onMapMouseLeave)
+        onMapMouseLeave = null
+      }
+      mapContainer = null
+    }
     if (mapInstance) {
       mapInstance.remove()
       mapInstance = null
@@ -346,6 +361,16 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
 
       const container = $<HTMLElement>('#velada-map')
       if (!container) return
+
+      mapContainer = container
+      onMapMouseEnter = () => {
+        mapInstance?.scrollWheelZoom.enable()
+      }
+      onMapMouseLeave = () => {
+        mapInstance?.scrollWheelZoom.disable()
+      }
+      container.addEventListener('mouseenter', onMapMouseEnter)
+      container.addEventListener('mouseleave', onMapMouseLeave)
 
       const latitude = Number(container.dataset.latitude)
       const longitude = Number(container.dataset.longitude)

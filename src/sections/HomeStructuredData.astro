@@ -4,6 +4,7 @@ import { BOXERS, BOXERS_BY_ID, COUNTRY_NAMES, getBoxerPhoto } from '@/consts/box
 import { EVENT_END_ISO, EVENT_ISO } from '@/consts/event'
 import { HOME_FAQS } from '@/consts/home-faq'
 import { HOME_CANONICAL, HOME_DESCRIPTION, SITE_URL } from '@/consts/home-seo'
+import { serializeJsonLd } from '@/utils/serialize-json-ld'
 
 const sportsEventJsonLd = {
   '@context': 'https://schema.org',
@@ -103,5 +104,5 @@ const faqJsonLd = {
 }
 ---
 
-<script type="application/ld+json" is:inline set:html={JSON.stringify(sportsEventJsonLd)} />
-<script type="application/ld+json" is:inline set:html={JSON.stringify(faqJsonLd)} />
+<script type="application/ld+json" is:inline set:html={serializeJsonLd(sportsEventJsonLd)} />
+<script type="application/ld+json" is:inline set:html={serializeJsonLd(faqJsonLd)} />
