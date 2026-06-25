@@ -472,6 +472,21 @@ const controllerConfig = JSON.stringify({
         return
       }
 
+      // El servidor limita los votos por usuario: revertimos el voto optimista
+      // y avisamos sin tratarlo como un error inesperado (no ensuciamos la
+      // consola, es una respuesta esperable ante ráfagas).
+      if (response.status === 429) {
+        if (latestVoteRequestByBattle.get(battleId) === requestId && snapshot) {
+          restoreFightSnapshot(snapshot)
+        }
+        const announcer = $<HTMLElement>('[data-prediction-announcer]')
+        if (announcer) {
+          announcer.textContent =
+            'Estás votando demasiado rápido. Espera unos segundos e inténtalo de nuevo.'
+        }
+        return
+      }
+
       if (!response.ok) {
         throw new Error(`No se pudo registrar el voto: ${response.status}`)
       }
