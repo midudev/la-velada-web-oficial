@@ -146,6 +146,47 @@ export function openXIntent(shareText: string): void {
   window.open(intentUrl, '_blank', 'noopener,noreferrer')
 }
 
+/**
+ * Comprueba si el navegador soporta compartir archivos con la Web Share API
+ * nivel 2 (`navigator.share` + `navigator.canShare({ files })`). Es el camino
+ * de un solo toque en móvil moderno: adjunta imagen + texto sin descargas
+ * manuales. Devuelve `false` en desktop o donde no haya soporte de ficheros.
+ */
+export function canShareImageFile(): boolean {
+  if (typeof navigator === 'undefined') return false
+  if (typeof navigator.share !== 'function' || typeof navigator.canShare !== 'function') {
+    return false
+  }
+  try {
+    const probe = new File([new Uint8Array()], FILE_PROBE_NAME, { type: 'image/png' })
+    return navigator.canShare({ files: [probe] })
+  } catch {
+    return false
+  }
+}
+
+const FILE_PROBE_NAME = 'probe.png'
+
+/**
+ * Comparte la imagen del pronóstico de forma nativa (Web Share API nivel 2).
+ * El llamador debe haber verificado el soporte con {@link canShareImageFile}.
+ * Si el usuario cancela la hoja de compartir, el navegador lanza un
+ * `AbortError`; el llamador debe tratarlo como cancelación, no como fallo.
+ */
+export async function shareImageFile(
+  blob: Blob,
+  fileName: string,
+  shareText: string,
+): Promise<void> {
+  const file = new File([blob], fileName, { type: 'image/png' })
+  await navigator.share({ files: [file], text: shareText })
+}
+
+/** True cuando el rechazo del share nativo proviene de que el usuario lo canceló. */
+export function isShareAbort(error: unknown): boolean {
+  return error instanceof DOMException && error.name === 'AbortError'
+}
+
 export async function buildPredictionBlob(userVotes: Record<string, string>): Promise<Blob> {
   const canvas = await buildPredictionCanvas(userVotes)
   return canvasToBlob(canvas)
