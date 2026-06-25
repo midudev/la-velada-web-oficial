@@ -72,7 +72,7 @@ const breadcrumbJsonLd = {
                 class="artist-card-wrap animate-fade-in-up"
                 style={`animation-delay: ${index * 45}ms; --idx: ${index}`}
             >
-                <div class="artist-flip relative block w-full">
+                <div class="artist-flip relative block w-full cursor-not-allowed">
                 <span
                     aria-hidden="true"
                     class="artist-face artist-face-front absolute inset-0 grid place-items-center overflow-hidden rounded-md"
@@ -303,12 +303,12 @@ const breadcrumbJsonLd = {
 }
 
 @media (hover: hover) and (pointer: fine) {
-.artists-grid:hover .artist-card-wrap {
+.artists-grid:has(.artist-card-wrap:hover) > .artist-card-wrap {
     opacity: 0.45;
     filter: saturate(0.6) brightness(0.72);
 }
 
-.artists-grid:hover .artist-card-wrap:hover {
+.artists-grid:has(.artist-card-wrap:hover) > .artist-card-wrap:hover {
     opacity: 1;
     filter: saturate(1.08) brightness(1.05);
 }

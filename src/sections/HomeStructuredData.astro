@@ -1,0 +1,107 @@
+---
+import { battles } from '@/consts/battles'
+import { BOXERS, BOXERS_BY_ID, COUNTRY_NAMES, getBoxerPhoto } from '@/consts/boxers'
+import { EVENT_END_ISO, EVENT_ISO } from '@/consts/event'
+import { HOME_FAQS } from '@/consts/home-faq'
+import { HOME_CANONICAL, HOME_DESCRIPTION, SITE_URL } from '@/consts/home-seo'
+
+const sportsEventJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  '@id': `${SITE_URL}/#event`,
+  name: 'La Velada del Año VI',
+  alternateName: ['La Velada VI', 'La Velada del Año 6'],
+  description: HOME_DESCRIPTION,
+  url: HOME_CANONICAL,
+  image: ['https://cdn.infolavelada.com/og.jpg', `https://cdn.infolavelada.com/logo/logo.webp`],
+  sport: 'Boxing',
+  startDate: EVENT_ISO,
+  endDate: EVENT_END_ISO,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+  inLanguage: 'es-ES',
+  location: [
+    {
+      '@type': 'Place',
+      name: 'Estadio de La Cartuja',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Sevilla',
+        addressRegion: 'Andalucía',
+        addressCountry: 'ES',
+      },
+    },
+    {
+      '@type': 'VirtualLocation',
+      url: 'https://www.twitch.tv/ibai',
+    },
+  ],
+  organizer: {
+    '@type': 'Person',
+    name: 'Ibai Llanos',
+    url: 'https://www.twitch.tv/ibai',
+  },
+  performer: BOXERS.map((boxer) => ({
+    '@type': 'Person',
+    name: boxer.name,
+    url: `${SITE_URL}/boxeadores/${boxer.id}`,
+    nationality: {
+      '@type': 'Country',
+      name: COUNTRY_NAMES[boxer.country] ?? boxer.country,
+    },
+  })),
+  subEvent: battles.map((battle) => {
+    const [a, b] = battle.boxerIds
+    const boxer1 = BOXERS_BY_ID[a]
+    const boxer2 = BOXERS_BY_ID[b]
+    return {
+      '@type': 'SportsEvent',
+      name: battle.title,
+      url: `${SITE_URL}${battle.url}`,
+      sport: 'Boxing',
+      startDate: EVENT_ISO,
+      eventStatus: 'https://schema.org/EventScheduled',
+      eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+      location: {
+        '@type': 'Place',
+        name: 'Estadio de La Cartuja',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Sevilla',
+          addressCountry: 'ES',
+        },
+      },
+      competitor: [
+        {
+          '@type': 'Person',
+          name: boxer1.name,
+          image: `${SITE_URL}${getBoxerPhoto(boxer1)}`,
+          url: `${SITE_URL}/boxeadores/${boxer1.id}`,
+        },
+        {
+          '@type': 'Person',
+          name: boxer2.name,
+          image: `${SITE_URL}${getBoxerPhoto(boxer2)}`,
+          url: `${SITE_URL}/boxeadores/${boxer2.id}`,
+        },
+      ],
+    }
+  }),
+}
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: HOME_FAQS.map(({ question, answer }) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: answer,
+    },
+  })),
+}
+---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(sportsEventJsonLd)} />
+<script type="application/ld+json" is:inline set:html={JSON.stringify(faqJsonLd)} />
