@@ -132,14 +132,14 @@ const cardImageEagerAmount = 4
     <div class="boxers-layout mx-auto w-full max-w-7xl">
       <header class="boxers-page-header">
         <h1
-          class="boxers-page-title mb-3 font-cinzel text-3xl font-black tracking-[0.12em] text-theme-cream not-motion-reduce:animate-fade-in-up sm:text-4xl sm:tracking-[0.16em] md:text-6xl"
+          class="boxers-page-title mb-3 animate-fade-in-up font-cinzel text-3xl font-black tracking-[0.12em] text-theme-cream sm:text-4xl sm:tracking-[0.16em] md:text-6xl"
         >
           <SectionDivider class="boxers-page-header-ornament mb-8 w-full sm:mb-12" />
 
           BOXEADORES
         </h1>
         <p
-          class="boxers-page-lead mb-8 font-cinzel text-xs font-medium tracking-[0.14em] text-balance text-white/55 animate-delay-200 not-motion-reduce:animate-fade-in-up sm:mb-12 sm:text-sm"
+          class="boxers-page-lead mb-8 animate-fade-in-up font-cinzel text-xs font-medium tracking-[0.14em] text-balance text-white/55 animate-delay-200 sm:mb-12 sm:text-sm"
         >
           Los {totalBoxers} contendientes de La Velada del Año VI
         </p>
@@ -147,7 +147,7 @@ const cardImageEagerAmount = 4
 
       <form
         data-boxers-filters
-        class="boxer-filters-panel relative w-full not-motion-reduce:animate-fade-in-up not-motion-reduce:animate-delay-300"
+        class="boxer-filters-panel relative w-full animate-fade-in-up animate-delay-300"
         aria-label="Filtros de boxeadores"
         onsubmit="return false"
       >
@@ -268,7 +268,7 @@ const cardImageEagerAmount = 4
       <div class="boxers-results w-full">
         <div
           data-boxers-sort
-          class="boxer-sort-bar relative not-motion-reduce:animate-fade-in-up not-motion-reduce:animate-delay-300"
+          class="boxer-sort-bar relative animate-fade-in-up animate-delay-300"
           role="region"
           aria-label="Ordenar boxeadores"
         >
@@ -385,7 +385,7 @@ const cardImageEagerAmount = 4
                   <div class="boxer-card-caption absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-1 px-2.5 pt-12 pb-4 text-center sm:gap-1.5 sm:px-3 sm:pt-14 sm:pb-6">
                     <span
                       aria-hidden="true"
-                      class="boxer-card-divider mb-1 h-px w-8 bg-theme-gold/60 transition-all duration-500"
+                      class="boxer-card-divider mb-1 h-px w-8 bg-theme-gold/60 transition-[width] duration-500"
                     />
                     <h2 class="boxer-card-name font-cinzel text-[0.78rem] leading-[1.1] font-black tracking-[0.1em] text-balance text-theme-cream uppercase sm:text-base sm:tracking-[0.16em] md:text-lg">
                       {b.name}
@@ -722,6 +722,13 @@ const cardImageEagerAmount = 4
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .boxers-page-title,
+    .boxers-page-lead,
+    .boxer-filters-panel,
+    .boxer-sort-bar {
+      animation: none;
+    }
+
     .boxer-card,
     .boxer-card-img,
     .boxer-card-bg-gold,
@@ -764,7 +771,8 @@ const cardImageEagerAmount = 4
       gap: 2rem;
     }
 
-    /* Título en la misma columna que el grid (f4e0c631: justify-self center, no stretch). */
+    /* Cabecera a todo el ancho: título y subtítulo centrados respecto a la
+       página completa (no solo sobre la columna del grid). */
     .boxers-page-header {
       display: grid;
       grid-template-columns: var(--boxers-sidebar-width) minmax(0, 1fr);
@@ -774,7 +782,7 @@ const cardImageEagerAmount = 4
     }
 
     .boxers-page-header > * {
-      grid-column: 2;
+      grid-column: 1 / -1;
       justify-self: center;
     }
 

@@ -12,17 +12,17 @@ const { video } = Astro.props
   <picture class="combat-hero-video-fallback">
     <source
       type="image/avif"
-      srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
+      srcset="https://cdn.infolavelada.com/hero-bg/background-1280.avif 1280w, https://cdn.infolavelada.com/hero-bg/background-2048.avif 2048w, https://cdn.infolavelada.com/hero-bg/background.avif 3840w"
       sizes="100vw"
     />
     <source
       type="image/webp"
-      srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+      srcset="https://cdn.infolavelada.com/hero-bg/background-1280.webp 1280w, https://cdn.infolavelada.com/hero-bg/background-2048.webp 2048w, https://cdn.infolavelada.com/hero-bg/background.webp 3840w"
       sizes="100vw"
     />
     <img
-      src="/background.webp"
-      srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+      src="https://cdn.infolavelada.com/hero-bg/background.webp"
+      srcset="https://cdn.infolavelada.com/hero-bg/background-1280.webp 1280w, https://cdn.infolavelada.com/hero-bg/background-2048.webp 2048w, https://cdn.infolavelada.com/hero-bg/background.webp 3840w"
       sizes="100vw"
       alt=""
       role="presentation"
@@ -39,7 +39,7 @@ const { video } = Astro.props
         muted
         playsinline
         preload="metadata"
-        poster="/background.webp"
+        poster="https://cdn.infolavelada.com/hero-bg/background.webp"
         class="combat-hero-video"
       >
         <source src={video.desktop.webm} type="video/webm" media="(min-width: 768px)" />
@@ -50,6 +50,39 @@ const { video } = Astro.props
     )
   }
 </div>
+
+<script>
+  // Con el ClientRouter de Astro, el <video> entra en el DOM por swap (no por
+  // parseo de la página), y el navegador no respeta el atributo `autoplay` en
+  // ese caso. Lo arrancamos a mano en cada navegación.
+  function playCombatHeroVideo() {
+    const video = document.querySelector<HTMLVideoElement>('.combat-hero-video')
+    if (!video) return
+
+    // `muted` debe estar activo para que el autoplay sea permitido; el atributo
+    // a veces no se refleja a la propiedad tras un swap, así que lo forzamos.
+    video.muted = true
+
+    const playback = video.play()
+    if (!playback) return
+
+    playback.catch(() => {
+      // Tras un swap, las fuentes pueden quedar sin enganchar: recargamos y
+      // reintentamos una sola vez cuando el navegador tenga datos.
+      video.addEventListener(
+        'loadeddata',
+        () => {
+          const retry = video.play()
+          if (retry) retry.catch(() => {})
+        },
+        { once: true },
+      )
+      video.load()
+    })
+  }
+
+  document.addEventListener('astro:page-load', playCombatHeroVideo)
+</script>
 
 <style>
   .combat-hero-video-wrap {
