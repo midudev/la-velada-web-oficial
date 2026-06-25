@@ -73,9 +73,6 @@ const { totalFights } = Astro.props
           <ShareIcon class="prediction-share-pill-icon" aria-hidden="true" />
           Compartir pronóstico
         </button>
-        <p class="prediction-share-native-hint" data-native-share-hint>
-          Imagen y texto juntos, en un solo toque.
-        </p>
       </div>
 
       <!-- Camino manual (escritorio o navegadores sin Web Share de ficheros):
@@ -478,13 +475,13 @@ const { totalFights } = Astro.props
   .prediction-share-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.85rem;
   }
 
   .prediction-share-actions-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
+    gap: 0.65rem;
   }
 
   .prediction-share-actions-row .prediction-share-pill {
@@ -494,11 +491,16 @@ const { totalFights } = Astro.props
     font-size: 0.68rem;
   }
 
+  /* Acciones de utilidad (descargar/copiar): un escalón por debajo de compartir.
+     Una fina línea dorada las separa del grupo social para agrupar por intención. */
   .prediction-share-actions-secondary {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.6rem;
+    gap: 0.65rem;
+    margin-top: 0.2rem;
+    padding-top: 0.95rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-theme-gold) 14%, transparent);
   }
 
   .prediction-share-actions-secondary .prediction-share-pill {
@@ -533,6 +535,7 @@ const { totalFights } = Astro.props
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
+    margin-bottom: 1rem;
   }
 
   .prediction-share-native[hidden] {
@@ -957,12 +960,13 @@ const { totalFights } = Astro.props
       }
     }
 
-    // En navegadores con Web Share API nivel 2 (móvil moderno) ofrecemos el
-    // camino de un solo toque y ocultamos el flujo manual de descarga + X.
+    // En navegadores con Web Share API nivel 2 (móvil moderno) ofrecemos ADEMÁS
+    // el camino de un solo toque (imagen + texto). Pero mantenemos siempre
+    // visibles los botones explícitos (descargar, WhatsApp, X) para que se pueda
+    // elegir: en escritorio el share nativo suele abrir un menú poco útil.
     function enableNativeShareIfSupported() {
       if (!canShareImageFile()) return
       refs.nativeShare?.removeAttribute('hidden')
-      if (refs.shareSteps) refs.shareSteps.hidden = true
       if (refs.description) {
         refs.description.textContent = `Generamos una imagen con tus votos. ¡Compártela donde quieras!`
       }
