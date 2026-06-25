@@ -9,9 +9,9 @@ const PUBLIC_DIR = path.join(__dirname, '../public')
 const CHANNEL_ID = 'UC20NE0K97l6AsBeGKsAYtaA'
 const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
 const MAX_AGE_DAYS = 60
-const PODCAST_THUMBNAILS_DIR = path.join(PUBLIC_DIR, 'podcast/thumbnails')
+const PODCAST_THUMBNAILS_DIR = path.join(__dirname, '.cache/podcast-thumbs')
 
-const STATIC_THUMBNAILS = ['videos/thumbnails/presentacion.webp']
+const STATIC_THUMBNAILS = []
 
 function decodeHtmlEntities(value) {
   return value

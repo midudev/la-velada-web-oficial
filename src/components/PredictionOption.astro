@@ -19,7 +19,7 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
 
 <button
   type="button"
-  class="poll-option group relative min-h-[8.75rem] w-full cursor-pointer overflow-hidden rounded-lg border border-white/10 bg-white/[0.035] p-0 text-left text-theme-cream transition duration-300 hover:-translate-y-0.5 hover:border-theme-gold/55 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+  class="poll-option group relative min-h-[8.75rem] w-full cursor-pointer overflow-hidden rounded-card border border-white/10 bg-white/[0.035] p-0 text-left text-theme-cream transition duration-300 hover:-translate-y-0.5 hover:border-theme-gold/55 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
   data-battle-id={battleId}
   data-boxer-id={option.boxer.id}
   data-boxer-name={option.boxer.name}
@@ -37,7 +37,7 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
 
   <span class="relative z-10 flex min-h-[8.75rem] items-stretch gap-3 p-3 sm:gap-4 sm:p-4">
     <span
-      class="poll-portrait relative flex w-24 shrink-0 items-end justify-center overflow-hidden rounded-md border border-white/10 bg-theme-navy/60 sm:w-28"
+      class="poll-portrait relative flex w-24 shrink-0 items-end justify-center overflow-hidden rounded-card border border-white/10 bg-theme-navy/60 sm:w-28"
     >
       <picture>
         <source type="image/avif" srcset={option.heroImages.avif} />
@@ -87,7 +87,7 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
           </span>
         </span>
         <span
-          class="h-1.5 overflow-hidden rounded-full bg-black/34"
+          class="h-1.5 overflow-hidden rounded-pill bg-black/34"
           role="progressbar"
           aria-valuemin="0"
           aria-valuemax="100"
@@ -95,7 +95,7 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
           aria-label={`Apoyo a ${option.boxer.name}`}
           data-prediction-bar
         >
-          <span aria-hidden="true" class="poll-mini-bar block h-full rounded-full"></span>
+          <span aria-hidden="true" class="poll-mini-bar block h-full rounded-pill"></span>
         </span>
         <span
           class="font-cinzel text-[0.58rem] font-black tracking-[0.16em] text-white/72 sm:text-[0.62rem]"
@@ -209,7 +209,7 @@ const isMuted = Boolean(selectedBoxerId) && !isSelected
     right: 0.85rem;
     z-index: 20;
     border: 1px solid color-mix(in srgb, var(--color-theme-gold) 64%, transparent);
-    border-radius: 0.35rem;
+    border-radius: var(--radius-card);
     background: color-mix(in srgb, var(--color-theme-midnight) 88%, black);
     padding: 0.32rem 0.48rem;
     color: var(--color-theme-gold);

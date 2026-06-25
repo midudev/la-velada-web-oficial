@@ -22,6 +22,41 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
   medium: 'footer_link',
   content: 'infojobs',
 })
+
+const ibaiSocialLinks = [
+  {
+    href: 'https://twitch.tv/ibai',
+    brand: '#a970ff',
+    username: '/IBAI',
+    ariaLabel: 'Seguir a Ibai en Twitch (abre en nueva pestaña)',
+    icon: TwitchIcon,
+    iconColor: '#a970ff',
+  },
+  {
+    href: 'https://tiktok.com/@ibaillanos',
+    brand: '#00f2ea',
+    username: '/IBAILLANOS',
+    ariaLabel: 'Seguir a Ibai Llanos en TikTok (abre en nueva pestaña)',
+    icon: TikTokIcon,
+    iconColor: '#ffffff',
+  },
+  {
+    href: 'https://youtube.com/@IbaiLlanos',
+    brand: '#ff0000',
+    username: '/IBAILLANOS',
+    ariaLabel: 'Seguir a Ibai Llanos en YouTube (abre en nueva pestaña)',
+    icon: YoutubeIcon,
+    iconColor: '#ff0000',
+  },
+  {
+    href: 'https://x.com/IbaiLlanos',
+    brand: '#ffffff',
+    username: '/IBAILLANOS',
+    ariaLabel: 'Seguir a Ibai Llanos en X (abre en nueva pestaña)',
+    icon: XIcon,
+    iconColor: '#ffffff',
+  },
+]
 ---
 
 <footer class="relative isolate w-full px-4 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16">
@@ -31,17 +66,17 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
   >
     <source
       type="image/avif"
-      srcset="/background-1280.avif 1280w, /background-2048.avif 2048w, /background.avif 3840w"
+      srcset="https://cdn.infolavelada.com/hero-bg/background-1280.avif 1280w, https://cdn.infolavelada.com/hero-bg/background-2048.avif 2048w, https://cdn.infolavelada.com/hero-bg/background.avif 3840w"
       sizes="100vw"
     />
     <source
       type="image/webp"
-      srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+      srcset="https://cdn.infolavelada.com/hero-bg/background-1280.webp 1280w, https://cdn.infolavelada.com/hero-bg/background-2048.webp 2048w, https://cdn.infolavelada.com/hero-bg/background.webp 3840w"
       sizes="100vw"
     />
     <img
-      src="/background.webp"
-      srcset="/background-1280.webp 1280w, /background-2048.webp 2048w, /background.webp 3840w"
+      src="https://cdn.infolavelada.com/hero-bg/background.webp"
+      srcset="https://cdn.infolavelada.com/hero-bg/background-1280.webp 1280w, https://cdn.infolavelada.com/hero-bg/background-2048.webp 2048w, https://cdn.infolavelada.com/hero-bg/background.webp 3840w"
       sizes="100vw"
       alt=""
       role="presentation"
@@ -75,93 +110,33 @@ const INFOJOBS_FOOTER_URL = withUtm('https://www.infojobs.net/', {
         class="relative z-10 mx-auto w-full max-w-5xl gap-5 md:gap-3 py-6 flex flex-wrap justify-center md:justify-between"
         aria-label="Redes sociales de Ibai Llanos"
       >
-        <a
-          href="https://twitch.tv/ibai"
-          target="_blank"
-          rel="noopener noreferrer"
-          style="--brand: #a970ff;"
-          class="group relative flex min-h-11 items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
-          aria-label="Seguir a Ibai en Twitch (abre en nueva pestaña)"
-        >
-          <span
-            aria-hidden="true"
-            class="pointer-events-none absolute inset-x-8 top-1/2 -z-10 h-10 -translate-y-1/2 rounded-full bg-[var(--brand)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-30 group-focus-visible:opacity-30"
-          ></span>
-          <TwitchIcon
-            class="size-6 text-[#a970ff] transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:[filter:drop-shadow(0_0_12px_var(--brand))] sm:size-7"
-            aria-hidden="true"
-          />
-          <span
-            class="relative font-cinzel text-sm font-black tracking-wider text-white/95 transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-1/2 after:h-px after:w-0 after:-translate-x-1/2 after:bg-[var(--brand)] after:transition-all after:duration-300 group-hover:text-white group-hover:after:w-full sm:text-base"
-            >/IBAI</span
-          >
-        </a>
+        {
+          ibaiSocialLinks.map(({ href, brand, username, ariaLabel, icon: Icon, iconColor }) => (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={`--brand:${brand};`}
+              class="group relative flex min-h-11 items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
+              aria-label={ariaLabel}
+            >
+              <span
+                aria-hidden="true"
+                class="pointer-events-none absolute inset-x-8 top-1/2 -z-10 h-10 -translate-y-1/2 rounded-full bg-[var(--brand)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-30 group-focus-visible:opacity-30"
+              />
 
-        <a
-          href="https://tiktok.com/@ibaillanos"
-          target="_blank"
-          rel="noopener noreferrer"
-          style="--brand: #00f2ea;"
-          class="group relative flex min-h-11 items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
-          aria-label="Seguir a Ibai Llanos en TikTok (abre en nueva pestaña)"
-        >
-          <span
-            aria-hidden="true"
-            class="pointer-events-none absolute inset-x-8 top-1/2 -z-10 h-10 -translate-y-1/2 rounded-full bg-[var(--brand)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-30 group-focus-visible:opacity-30"
-          ></span>
-          <TikTokIcon
-            class="size-6 text-white transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:[filter:drop-shadow(0_0_12px_var(--brand))] sm:size-7"
-            aria-hidden="true"
-          />
-          <span
-            class="relative font-cinzel text-sm font-black tracking-wider text-white/95 transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-1/2 after:h-px after:w-0 after:-translate-x-1/2 after:bg-[var(--brand)] after:transition-all after:duration-300 group-hover:text-white group-hover:after:w-full sm:text-base"
-            >/IBAILLANOS</span
-          >
-        </a>
+              <Icon
+                class="size-6 transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:[filter:drop-shadow(0_0_12px_var(--brand))] sm:size-7"
+                style={`color:${iconColor};`}
+                aria-hidden="true"
+              />
 
-        <a
-          href="https://youtube.com/@IbaiLlanos"
-          target="_blank"
-          rel="noopener noreferrer"
-          style="--brand: #ff0000;"
-          class="group relative flex min-h-11 items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
-          aria-label="Seguir a Ibai Llanos en YouTube (abre en nueva pestaña)"
-        >
-          <span
-            aria-hidden="true"
-            class="pointer-events-none absolute inset-x-8 top-1/2 -z-10 h-10 -translate-y-1/2 rounded-full bg-[var(--brand)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-30 group-focus-visible:opacity-30"
-          ></span>
-          <YoutubeIcon
-            class="size-6 text-[#ff0000] transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:[filter:drop-shadow(0_0_12px_var(--brand))] sm:size-7"
-            aria-hidden="true"
-          />
-          <span
-            class="relative font-cinzel text-sm font-black tracking-wider text-white/95 transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-1/2 after:h-px after:w-0 after:-translate-x-1/2 after:bg-[var(--brand)] after:transition-all after:duration-300 group-hover:text-white group-hover:after:w-full sm:text-base"
-            >/IBAILLANOS</span
-          >
-        </a>
-
-        <a
-          href="https://x.com/IbaiLlanos"
-          target="_blank"
-          rel="noopener noreferrer"
-          style="--brand: #ffffff;"
-          class="group relative flex min-h-11 items-center justify-center gap-2 px-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/80"
-          aria-label="Seguir a Ibai Llanos en X (abre en nueva pestaña)"
-        >
-          <span
-            aria-hidden="true"
-            class="pointer-events-none absolute inset-x-8 top-1/2 -z-10 h-10 -translate-y-1/2 rounded-full bg-[var(--brand)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-30 group-focus-visible:opacity-30"
-          ></span>
-          <XIcon
-            class="size-6 text-white transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-110 group-hover:[filter:drop-shadow(0_0_12px_var(--brand))] sm:size-7"
-            aria-hidden="true"
-          />
-          <span
-            class="relative font-cinzel text-sm font-black tracking-wider text-white/95 transition-colors duration-300 after:absolute after:-bottom-1.5 after:left-1/2 after:h-px after:w-0 after:-translate-x-1/2 after:bg-[var(--brand)] after:transition-all after:duration-300 group-hover:text-white group-hover:after:w-full sm:text-base"
-            >/IBAILLANOS</span
-          >
-        </a>
+              <span class="relative font-cinzel text-sm font-black tracking-wider text-white/95 transition-colors duration-300 group-hover:text-white after:absolute after:-bottom-1.5 after:left-1/2 after:h-px after:w-0 after:-translate-x-1/2 after:bg-[var(--brand)] after:transition-[width] after:duration-300 group-hover:after:w-full sm:text-base">
+                {username}
+              </span>
+            </a>
+          ))
+        }
       </nav>
     </div>
 

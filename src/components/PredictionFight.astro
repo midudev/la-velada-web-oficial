@@ -14,7 +14,7 @@ const { battle, options, favorite } = prediction
 
 <li id={battle.id} class="scroll-mt-28">
   <article
-    class="prediction-fight relative overflow-hidden rounded-lg border border-theme-gold/18 bg-theme-midnight/92 shadow-[0_24px_70px_rgba(0,0,0,0.34)]"
+    class="prediction-fight relative overflow-hidden rounded-card border border-theme-gold/18 bg-theme-midnight/92 shadow-[0_24px_70px_rgba(0,0,0,0.34)]"
     data-battle-id={battle.id}
     data-prediction-fight
   >
@@ -49,7 +49,7 @@ const { battle, options, favorite } = prediction
         </span>
         <a
           href={battle.url}
-          class="prediction-fight-link group inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-white/12 px-3 py-2 font-cinzel text-[0.58rem] font-black tracking-[0.16em] text-white/78 transition duration-300 hover:border-theme-gold/55 hover:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold sm:text-[0.65rem]"
+          class="prediction-fight-link group inline-flex min-h-10 items-center justify-center gap-2 rounded-card border border-white/12 px-3 py-2 font-cinzel text-[0.58rem] font-black tracking-[0.16em] text-white/78 transition duration-300 hover:border-theme-gold/55 hover:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold sm:text-[0.65rem]"
         >
           Combate
           <ArrowRightIcon
@@ -109,7 +109,7 @@ const { battle, options, favorite } = prediction
     background:
       radial-gradient(
         ellipse 42% 70% at 0% 50%,
-        color-mix(in srgb, #c63030 16%, transparent),
+        color-mix(in srgb, var(--color-velada-blood) 16%, transparent),
         transparent 66%
       ),
       radial-gradient(
@@ -124,7 +124,7 @@ const { battle, options, favorite } = prediction
     display: inline-flex;
     min-height: 2.5rem;
     align-items: center;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-card);
     border: 1px solid color-mix(in srgb, var(--color-theme-gold) 24%, transparent);
     padding: 0.55rem 0.75rem;
     font-family: var(--font-cinzel);
@@ -140,7 +140,7 @@ const { battle, options, favorite } = prediction
   }
 
   .prediction-badge-calm {
-    background: color-mix(in srgb, var(--color-theme-midnight) 68%, #c63030);
+    background: color-mix(in srgb, var(--color-theme-midnight) 68%, var(--color-velada-blood));
     color: rgba(244, 228, 201, 0.82);
   }
 
@@ -155,7 +155,7 @@ const { battle, options, favorite } = prediction
     height: 4rem;
     place-items: center;
     border: 1px solid color-mix(in srgb, var(--color-theme-gold) 62%, transparent);
-    border-radius: 0.5rem;
+    border-radius: var(--radius-card);
     background:
       radial-gradient(
         circle at 50% 0%,
