@@ -1,10 +1,9 @@
 ---
 import AuthButton from '@/components/AuthButton.astro'
 import PredictionFight from '@/components/PredictionFight.astro'
-import PredictionHero from '@/components/PredictionHero.astro'
 import PredictionShareController from '@/components/PredictionShareController.astro'
 import PredictionVoteController from '@/components/PredictionVoteController.astro'
-import PredictionsBackground from '@/components/PredictionsBackground.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 import { createPredictionBattles } from '@/consts/predictions'
 import Layout from '@/layouts/Layout.astro'
 import { getAllPredictions, getUserVotes } from '@/lib/predictions'
@@ -14,8 +13,7 @@ import Sponsors from '@/sections/Sponsors.astro'
 export const prerender = false
 
 const title = 'Pronósticos - La Velada del Año VI'
-const description =
-  'Pronostica los ganadores de los combates de La Velada del Año VI con una interfaz de votación por barras.'
+const description = 'Pronostica los ganadores de los combates de La Velada del Año VI.'
 const canonical = 'https://www.infolavelada.com/pronosticos'
 const user = Astro.locals.user
 
@@ -37,8 +35,6 @@ if (user?.id) {
 }
 
 const predictionBattles = createPredictionBattles(storedPredictions)
-const totalVotes = predictionBattles.reduce((total, prediction) => total + prediction.totalVotes, 0)
-const closeBattles = predictionBattles.filter(({ isClose }) => isClose).length
 const userVotesByCombat = Object.fromEntries(
   storedUserVotes.map((vote) => [vote.combat_id, vote.fighter_id]),
 )
@@ -46,42 +42,63 @@ const userVotesByCombat = Object.fromEntries(
 
 <Layout title={title} description={description} canonical={canonical} robots="noindex, nofollow">
   <section
-    class="predictions-page relative isolate w-full overflow-x-clip bg-theme-midnight px-4 pt-20 pb-20 text-theme-cream sm:px-6 sm:pt-24 sm:pb-24"
+    class="relative isolate flex min-h-svh w-full flex-col items-center bg-theme-midnight px-3 pt-24 pb-20 text-theme-cream sm:px-6 sm:pt-32 sm:pb-24 md:pt-36"
     aria-labelledby="predictions-title"
   >
-    <PredictionsBackground />
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-96 bg-[radial-gradient(ellipse_at_top,_var(--color-theme-gold)_0%,_transparent_70%)] opacity-20"
+    >
+    </div>
 
-    <div class="mx-auto flex w-full max-w-7xl flex-col">
-      <PredictionHero
-        totalCombats={predictionBattles.length}
-        totalVotes={totalVotes}
-        closeBattles={closeBattles}
-      />
+    <SectionDivider class="mb-8 not-motion-reduce:animate-fade-in-up sm:mb-12" />
 
-      <div id="predictions-auth" class="mt-6 flex justify-center" data-predictions-auth>
+    <h1
+      id="predictions-title"
+      class="text-center font-cinzel text-3xl font-black tracking-[0.1em] text-theme-cream uppercase not-motion-reduce:animate-fade-in-up sm:text-4xl md:text-5xl"
+    >
+      Pronósticos
+    </h1>
+
+    <p
+      class="mt-3 text-center font-cinzel text-xs font-medium tracking-[0.16em] text-balance text-white/55 not-motion-reduce:animate-fade-in-up animate-delay-200 sm:text-sm sm:tracking-[0.25em]"
+    >
+      Vota a tu ganador en cada combate de La Velada del Año VI
+    </p>
+
+    <div class="mt-8 w-full max-w-5xl sm:mt-12">
+      <div id="predictions-auth" class="flex justify-center" data-predictions-auth>
         <AuthButton user={user} />
       </div>
 
-      <ol
-        class="prediction-list mt-14 grid gap-5 sm:mt-16 md:gap-6"
-        role="list"
-        data-prediction-list
-      >
+      <div class="mt-4 flex justify-center">
+        <PredictionShareController
+          variant="top"
+          isLoggedIn={Boolean(user)}
+          totalFights={predictionBattles.length}
+        />
+      </div>
+
+      <ol class="mt-5 grid gap-5 sm:gap-6" role="list" data-prediction-list>
         {
           predictionBattles
             .slice()
             .reverse()
-            .map((prediction) => (
+            .map((prediction, index) => (
               <PredictionFight
                 prediction={prediction}
                 selectedBoxerId={userVotesByCombat[prediction.battle.id]}
+                index={index}
               />
             ))
         }
       </ol>
 
       <div class="mt-10 flex justify-center sm:mt-12">
-        <PredictionShareController isLoggedIn={Boolean(user)} totalFights={predictionBattles.length} />
+        <PredictionShareController
+          isLoggedIn={Boolean(user)}
+          totalFights={predictionBattles.length}
+        />
       </div>
     </div>
   </section>
@@ -90,9 +107,3 @@ const userVotesByCombat = Object.fromEntries(
   <Sponsors />
   <Footer />
 </Layout>
-
-<style>
-  .predictions-page {
-    min-height: 100svh;
-  }
-</style>

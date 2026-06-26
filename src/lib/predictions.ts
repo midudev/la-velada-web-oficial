@@ -1,4 +1,4 @@
-import { battles, battlesById } from '@/consts/battles'
+import { battles, battlesById, type Battle } from '@/consts/battles'
 import { BOXERS_BY_ID } from '@/consts/boxers'
 import { turso } from '@/lib/database'
 
@@ -133,22 +133,18 @@ function createPredictionResponse(
   }
 }
 
-async function ensurePredictionRowsForCombat(combatId: string) {
-  const battle = battlesById[combatId]
-  if (!battle) {
-    throw new PredictionDataError('El combate especificado no existe', 404)
-  }
-
-  await turso.batch(
-    battle.boxerIds.map((fighterId) => ({
-      sql: `
-        INSERT OR IGNORE INTO predictions
-          (combat_id, fighter_id, votes, created_at, updated_at)
-        VALUES (?, ?, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-      `,
-      args: [combatId, fighterId],
-    })),
-  )
+// Sentencias para garantizar que existen las filas de `predictions` del combate
+// (no-op tras la primera vez). Se devuelven como sentencias para poder meterlas
+// en la misma transacción que el voto y ahorrar un round-trip a Turso.
+function ensurePredictionRowsStatements(battle: Battle) {
+  return battle.boxerIds.map((fighterId) => ({
+    sql: `
+      INSERT OR IGNORE INTO predictions
+        (combat_id, fighter_id, votes, created_at, updated_at)
+      VALUES (?, ?, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    `,
+    args: [battle.id, fighterId],
+  }))
 }
 
 function recalculatePredictionsForCombatStatement(combatId: string) {
@@ -270,10 +266,12 @@ export async function registerVote(
   userId: string,
 ): Promise<PredictionVote> {
   try {
-    assertValidPredictionTarget(combatId, fighterId)
-    await ensurePredictionRowsForCombat(combatId)
+    const battle = assertValidPredictionTarget(combatId, fighterId)
 
+    // Una sola transacción (un round-trip en vez de dos): garantizamos las filas
+    // del combate, registramos el voto y recalculamos los totales en orden.
     await turso.batch([
+      ...ensurePredictionRowsStatements(battle),
       {
         sql: `
           INSERT INTO user_votes (combat_id, fighter_id, user_id, created_at)
