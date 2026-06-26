@@ -42,3 +42,25 @@ export const auth = betterAuth({
     },
   },
 })
+
+/**
+ * Lee la sesión sin que una cookie corrupta o incompatible tumbe la página.
+ *
+ * Una cookie `better-auth.session_data` de un despliegue anterior puede tener
+ * un formato que el decodificador "compact" de better-auth no sabe leer y, a
+ * diferencia de las estrategias `jwe`/`jwt`, esa rama no captura el error: lanza
+ * un INTERNAL_SERVER_ERROR. Como el middleware consulta la sesión en cada página
+ * dinámica, eso provocaba un 500 (p. ej. en /pronosticos). Aquí lo tratamos como
+ * "sin sesión" y devolvemos `failed: true` para que quien llama pueda limpiar
+ * las cookies y permitir que el usuario vuelva a iniciar sesión limpiamente.
+ */
+export async function getSessionFromHeaders(
+  headers: Headers,
+): Promise<{ session: Awaited<ReturnType<typeof auth.api.getSession>>; failed: boolean }> {
+  try {
+    return { session: await auth.api.getSession({ headers }), failed: false }
+  } catch (error) {
+    console.error('No se pudo leer la sesión de better-auth (cookie inválida):', error)
+    return { session: null, failed: true }
+  }
+}
