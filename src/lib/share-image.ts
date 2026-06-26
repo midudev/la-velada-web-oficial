@@ -146,6 +146,72 @@ export function openXIntent(shareText: string): void {
   window.open(intentUrl, '_blank', 'noopener,noreferrer')
 }
 
+/**
+ * Abre WhatsApp (app en móvil, WhatsApp Web en escritorio) con el texto ya
+ * escrito. `wa.me` no permite adjuntar imágenes vía URL, así que el llamador
+ * debería copiar la imagen al portapapeles antes para que el usuario la pegue.
+ */
+export function openWhatsAppIntent(shareText: string): void {
+  const intentUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`
+  window.open(intentUrl, '_blank', 'noopener,noreferrer')
+}
+
+/**
+ * Copia una imagen al portapapeles. Devuelve `true` si lo consigue y `false`
+ * si el navegador no soporta `ClipboardItem` o el usuario deniega el permiso,
+ * para que el llamador pueda ofrecer un respaldo (p. ej. descargar la imagen).
+ */
+export async function copyImageToClipboard(blob: Blob): Promise<boolean> {
+  if (typeof ClipboardItem === 'undefined' || !navigator.clipboard?.write) return false
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Comprueba si el navegador soporta compartir archivos con la Web Share API
+ * nivel 2 (`navigator.share` + `navigator.canShare({ files })`). Es el camino
+ * de un solo toque en móvil moderno: adjunta imagen + texto sin descargas
+ * manuales. Devuelve `false` en desktop o donde no haya soporte de ficheros.
+ */
+export function canShareImageFile(): boolean {
+  if (typeof navigator === 'undefined') return false
+  if (typeof navigator.share !== 'function' || typeof navigator.canShare !== 'function') {
+    return false
+  }
+  try {
+    const probe = new File([new Uint8Array()], FILE_PROBE_NAME, { type: 'image/png' })
+    return navigator.canShare({ files: [probe] })
+  } catch {
+    return false
+  }
+}
+
+const FILE_PROBE_NAME = 'probe.png'
+
+/**
+ * Comparte la imagen del pronóstico de forma nativa (Web Share API nivel 2).
+ * El llamador debe haber verificado el soporte con {@link canShareImageFile}.
+ * Si el usuario cancela la hoja de compartir, el navegador lanza un
+ * `AbortError`; el llamador debe tratarlo como cancelación, no como fallo.
+ */
+export async function shareImageFile(
+  blob: Blob,
+  fileName: string,
+  shareText: string,
+): Promise<void> {
+  const file = new File([blob], fileName, { type: 'image/png' })
+  await navigator.share({ files: [file], text: shareText })
+}
+
+/** True cuando el rechazo del share nativo proviene de que el usuario lo canceló. */
+export function isShareAbort(error: unknown): boolean {
+  return error instanceof DOMException && error.name === 'AbortError'
+}
+
 export async function buildPredictionBlob(userVotes: Record<string, string>): Promise<Blob> {
   const canvas = await buildPredictionCanvas(userVotes)
   return canvasToBlob(canvas)
