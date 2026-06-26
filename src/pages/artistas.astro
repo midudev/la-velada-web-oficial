@@ -15,7 +15,7 @@ export const prerender = true
 
 // El cartel de artistas todavía no se ha anunciado: mostramos cards
 // de marcador de posición que no revelan ningún nombre ni cantidad real.
-const PLACEHOLDER_COUNT = 8
+const PLACEHOLDER_COUNT = 5
 
 const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
@@ -63,14 +63,14 @@ const breadcrumbJsonLd = {
         </header>
 
         <ul
-        class="artists-grid grid w-full grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5"
+        class="artists-grid mx-auto flex w-full max-w-4xl flex-wrap justify-center gap-3 sm:gap-4 lg:gap-5"
         role="list"
         aria-label="Artistas por anunciar"
         >
         {
             Array.from({ length: PLACEHOLDER_COUNT }).map((_, index) => (
             <li
-                class="artist-card-wrap animate-fade-in-up"
+                class="artist-card-wrap animate-fade-in-up basis-[calc(50%-0.375rem)] sm:basis-[calc(33.333%-0.667rem)] lg:basis-[calc(33.333%-0.834rem)]"
                 style={`animation-delay: ${index * 45}ms; --idx: ${index}`}
             >
                 <div class="artist-flip relative block w-full cursor-not-allowed">
