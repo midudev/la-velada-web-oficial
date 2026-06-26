@@ -105,15 +105,19 @@ async function fetchThumbnail(videoId) {
 }
 
 async function getRecentPodcastEpisodes() {
-  const response = await fetch(FEED_URL)
-  if (!response.ok) {
-    throw new Error(`El feed respondió con ${response.status} ${response.statusText}`)
+  try {
+    const response = await fetch(FEED_URL)
+    if (!response.ok) {
+      throw new Error(`El feed respondió con ${response.status} ${response.statusText}`)
+    }
+
+    const xml = await response.text()
+    const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000
+
+    return parseFeed(xml).filter((entry) => new Date(entry.published).getTime() >= cutoff)
+  } catch (error) {
+    throw new Error(`No se pudo obtener el feed del podcast: ${error.message}`)
   }
-
-  const xml = await response.text()
-  const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000
-
-  return parseFeed(xml).filter((entry) => new Date(entry.published).getTime() >= cutoff)
 }
 
 async function generatePodcastThumbnails() {
@@ -149,6 +153,18 @@ async function generatePodcastThumbnails() {
 }
 
 await generateStaticThumbnails()
-await generatePodcastThumbnails()
+
+try {
+  await generatePodcastThumbnails()
+} catch (error) {
+  console.warn(`\n⚠ No se pudieron regenerar las miniaturas del podcast: ${error.message}`)
+  console.warn('  Se mantienen las miniaturas existentes en caché.')
+
+  const cachedFiles = await fs.readdir(PODCAST_THUMBNAILS_DIR).catch(() => [])
+  if (cachedFiles.length === 0) {
+    console.error('  No hay miniaturas en caché; abortando.')
+    process.exit(1)
+  }
+}
 
 console.log('\n✔ Miniaturas listas')
