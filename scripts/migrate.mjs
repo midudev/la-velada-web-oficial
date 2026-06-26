@@ -46,6 +46,10 @@ const STATEMENTS = [
     name: 'user_votes_user_id_idx',
     sql: `CREATE INDEX IF NOT EXISTS user_votes_user_id_idx ON user_votes(user_id)`,
   },
+  {
+    name: 'user_votes_combat_fighter_idx',
+    sql: `CREATE INDEX IF NOT EXISTS user_votes_combat_fighter_idx ON user_votes(combat_id, fighter_id)`,
+  },
   // Tablas de better-auth. El esquema (nombres de columna camelCase y tipos)
   // replica el que genera el adaptador Kysely de better-auth para SQLite, para
   // que su introspección las reconozca sin intentar alterarlas. Persistirlas

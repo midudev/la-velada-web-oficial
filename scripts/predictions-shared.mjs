@@ -59,6 +59,14 @@ export async function ensurePredictionsSchema() {
       UNIQUE(combat_id, user_id)
     )
   `)
+
+  // Índice de cobertura para el recálculo de votos: permite resolver
+  // `COUNT(*) WHERE combat_id = ? AND fighter_id = ?` directamente sobre el
+  // índice, sin escanear la tabla (ver recalculateBattleStatement).
+  await turso.execute(`
+    CREATE INDEX IF NOT EXISTS user_votes_combat_fighter_idx
+      ON user_votes(combat_id, fighter_id)
+  `)
 }
 
 export function predictionRowStatement(combatId, fighterId) {
