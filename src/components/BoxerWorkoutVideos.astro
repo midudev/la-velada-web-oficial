@@ -111,11 +111,11 @@ function getPosterFallbackChain(videoId: string) {
                 </span>
               </span>
 
-              <div class="relative mt-auto flex w-full flex-col gap-2 p-5 sm:p-8">
-                <h3 class="line-clamp-3 max-w-3xl font-cinzel text-2xl leading-tight font-black tracking-[0.04em] text-balance text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl xl:text-5xl">
+              <div class="relative mt-auto flex w-full flex-col gap-3 p-4 sm:p-8">
+                <h3 class="line-clamp-3 max-w-3xl font-cinzel text-xl leading-tight font-black tracking-[0.04em] text-balance text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl">
                   {featuredVideo.title}
                 </h3>
-                <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
+                <span class="inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
                   VER VÍDEO
                   <ArrowRightIcon
                     class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
@@ -193,9 +193,9 @@ function getPosterFallbackChain(videoId: string) {
       <dialog
         data-workout-video-dialog
         aria-labelledby={dialogTitleId}
-        class="m-0 w-screen max-w-none bg-transparent p-0 backdrop:bg-black/85 backdrop:backdrop-blur-sm backdrop:backdrop-contrast-125 backdrop:backdrop-saturate-150 open:flex open:h-screen open:items-center open:justify-center"
+        class="m-0 h-screen w-screen max-w-none bg-transparent p-0 backdrop:bg-black/85 backdrop:backdrop-blur-sm backdrop:backdrop-contrast-125 backdrop:backdrop-saturate-150"
       >
-        <div class="relative mx-4 w-full max-w-5xl">
+        <div class="absolute inset-0 m-auto h-min w-[92%] max-w-5xl">
           <div class="mb-4 flex items-center justify-between gap-4">
             <h3
               id={dialogTitleId}
@@ -206,7 +206,7 @@ function getPosterFallbackChain(videoId: string) {
               type="button"
               data-workout-video-dialog-close
               aria-label="Cerrar vídeo"
-              class="inline-flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white transition outline-none hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
+              class="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white transition outline-none hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
             >
               <CloseIcon class="size-5" aria-hidden="true" />
             </button>
