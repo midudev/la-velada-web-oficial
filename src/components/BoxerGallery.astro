@@ -64,7 +64,7 @@ const images = getBoxerGallery(boxerId, boxerName)
             type="button"
             data-gallery-close
             class="boxer-gallery-btn boxer-gallery-close"
-            aria-label="Cerrar"
+            aria-label="Cerrar galería"
           >
             ✕
           </button>
@@ -86,6 +86,7 @@ const images = getBoxerGallery(boxerId, boxerName)
             ›
           </button>
           <span data-gallery-counter class="boxer-gallery-counter" aria-hidden="true" />
+          <span data-gallery-announcement class="sr-only" aria-live="polite" aria-atomic="true" />
         </div>
       </dialog>
     </section>
@@ -100,6 +101,7 @@ const images = getBoxerGallery(boxerId, boxerName)
     const dialog = gallery.querySelector('[data-gallery-dialog]') as HTMLDialogElement | null
     const dialogImg = gallery.querySelector('[data-gallery-dialog-img]') as HTMLImageElement | null
     const counter = gallery.querySelector('[data-gallery-counter]') as HTMLElement | null
+    const announcement = gallery.querySelector('[data-gallery-announcement]') as HTMLElement | null
     const items = Array.from(gallery.querySelectorAll('[data-gallery-item]')) as HTMLElement[]
     if (!dialog || !dialogImg || items.length === 0) return
 
@@ -128,10 +130,12 @@ const images = getBoxerGallery(boxerId, boxerName)
         dialogImg.src = webp
       }
       dialogImg.src = btn.dataset.mdAvif ?? webp
-      dialogImg.alt = btn.dataset.alt ?? ''
+      const altText = btn.dataset.alt ?? ''
+      dialogImg.alt = altText
       // Imagen en caché: `load` puede no dispararse, así que revelamos ya.
       if (dialogImg.complete && dialogImg.naturalWidth) reveal()
       if (counter) counter.textContent = `${current + 1} / ${items.length}`
+      if (announcement) announcement.textContent = `Foto ${current + 1} de ${items.length}: ${altText}`
     }
 
     // FLIP: la miniatura clicada crece hasta la posición de la imagen ampliada.
@@ -171,8 +175,8 @@ const images = getBoxerGallery(boxerId, boxerName)
     items.forEach((btn, i) =>
       btn.addEventListener('click', () => {
         const fromRect = btn.querySelector('img')?.getBoundingClientRect() ?? null
-        show(i)
         dialog.showModal()
+        show(i)
         document.documentElement.style.overflow = 'hidden'
         if (fromRect && !prefersReducedMotion) {
           animateFromThumb(fromRect)
