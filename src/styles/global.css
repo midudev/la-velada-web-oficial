@@ -236,28 +236,47 @@ html {
 
 
 body:has(dialog[open]) {
-    overflow: hidden;
-
-      .overlay{
-          display: block;
-      }
- }
-
+  overflow: hidden;
+}
 
 dialog {
-    scale: 0;
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    display 200ms allow-discrete,
+    overlay 200ms allow-discrete,
+    opacity 200ms,
+    transform 200ms;
+  transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+  will-change: transform, opacity;
+}
 
-    transition: scale .4s ease, display .4s ease allow-discrete;
+dialog[open] {
+  opacity: 1;
+  transform: scale(1);
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 
-    &[open] {
-        scale: 1;
-        display: flex;
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
 
-        @starting-style {
-            scale: 0;
-        }
-    }
-  
+dialog::backdrop {
+  opacity: 0;
+  transition:
+    display 200ms allow-discrete,
+    opacity 200ms;
+  transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+dialog[open]::backdrop {
+  opacity: 1;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+
+  @starting-style {
+    opacity: 0;
+  }
 }
 
 .font-cinzel {
@@ -266,7 +285,17 @@ dialog {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { 
+  html {
     scroll-behavior: auto;
+  }
+
+  dialog,
+  dialog::backdrop {
+    transition: none;
+  }
+
+  dialog,
+  dialog[open] {
+    transform: none;
   }
 }

@@ -1,4 +1,6 @@
 ---
+import ShareIcon from '@/assets/svg/share.svg'
+
 interface Props {
   totalFights: number
 }
@@ -34,34 +36,86 @@ const { totalFights } = Astro.props
       </svg>
     </button>
 
-    <h2 class="prediction-share-title animate-fade-in-up animate-delay-300">
-      ¡Hiciste tu pronóstico para la velada!
-    </h2>
+    <figure class="prediction-share-figure" data-share-figure aria-hidden="true">
+      <div class="prediction-share-figure-frame">
+        <img class="prediction-share-figure-img" data-share-preview-img alt="" />
+        <span class="prediction-share-figure-loading">Preparando tu imagen…</span>
+      </div>
+      <figcaption class="prediction-share-figure-caption">Así se verá tu pronóstico</figcaption>
+    </figure>
 
-    <p class="prediction-share-description animate-fade-in animate-delay-500">
-      Generamos una imagen con tus {totalFights} votos. Descárgala y compártela en X.
-    </p>
+    <div class="prediction-share-main">
+      <h2 class="prediction-share-title animate-fade-in-up animate-delay-300">
+        ¡Hiciste tu pronóstico para la velada!
+      </h2>
 
-    <div class="prediction-share-steps" data-share-steps>
-      <div
-        class="prediction-share-step animate-fade-in-up animate-delay-700"
-        data-step="1"
-        data-state="active"
+      <p
+        class="prediction-share-description animate-fade-in animate-delay-500"
+        data-share-description
+        data-total-fights={totalFights}
       >
-        <div class="prediction-share-step-header">
-          <span class="prediction-share-step-number">1</span>
-          <span class="prediction-share-step-label">Guarda la imagen</span>
-        </div>
+        Generamos una imagen con tus {totalFights} votos. Compártela en X o WhatsApp.
+      </p>
 
-        <div class="prediction-share-step-actions">
+      <!-- Camino nativo (Web Share API nivel 2): imagen + texto en un solo toque.
+         Oculto por defecto; el script lo revela solo donde el navegador soporta
+         compartir ficheros (móvil moderno) y oculta el flujo de pasos. -->
+      <div
+        class="prediction-share-native animate-fade-in-up animate-delay-700"
+        data-native-share
+        hidden
+      >
+        <button
+          type="button"
+          class="prediction-share-pill prediction-share-pill-primary prediction-share-pill-rounded prediction-share-native-btn"
+          data-native-share-btn
+        >
+          <ShareIcon class="prediction-share-pill-icon" aria-hidden="true" />
+          Compartir pronóstico
+        </button>
+      </div>
+
+      <!-- Camino manual (escritorio o navegadores sin Web Share de ficheros):
+         botones de compartir directo. X y WhatsApp copian la imagen al
+         portapapeles y abren la app con el texto listo en un clic. -->
+      <div class="prediction-share-actions" data-share-steps>
+        <div class="prediction-share-actions-row">
           <button
             type="button"
-            class="prediction-share-pill prediction-share-pill-primary"
+            class="prediction-share-pill prediction-share-pill-rounded prediction-share-pill-primary prediction-share-pill-x animate-fade-in-up animate-delay-700"
+            data-share-x
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+              ></path>
+            </svg>
+            Compartir en X
+          </button>
+
+          <button
+            type="button"
+            class="prediction-share-pill prediction-share-pill-rounded prediction-share-pill-whatsapp animate-fade-in-up animate-delay-900"
+            data-share-whatsapp
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+              ></path>
+            </svg>
+            WhatsApp
+          </button>
+        </div>
+
+        <div class="prediction-share-actions-secondary animate-fade-in animate-delay-1100">
+          <button
+            type="button"
+            class="prediction-share-pill prediction-share-pill-rounded"
             data-download-btn
           >
             <svg
-              width="18"
-              height="18"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -70,18 +124,18 @@ const { totalFights } = Astro.props
             >
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
             </svg>
-            Descargar imagen
+            Descargar
           </button>
 
           <button
             type="button"
-            class="prediction-share-pill"
+            class="prediction-share-pill prediction-share-pill-rounded"
             data-copy-btn
             aria-label="Copiar imagen al portapapeles"
           >
             <svg
-              width="16"
-              height="16"
+              width="15"
+              height="15"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -94,87 +148,20 @@ const { totalFights } = Astro.props
             Copiar
           </button>
         </div>
+
+        <p class="prediction-share-actions-hint">
+          Copiamos la imagen a tu portapapeles: pégala en el post con
+          <kbd class="prediction-share-kbd">Ctrl/Cmd&nbsp;+&nbsp;V</kbd>.
+        </p>
       </div>
 
-      <div
-        class="prediction-share-step animate-fade-in-up animate-delay-900"
-        data-step="2"
-        data-state="locked"
+      <p
+        class="prediction-share-status animate-fade-in animate-delay-1100"
+        data-share-status
+        aria-live="polite"
       >
-        <div class="prediction-share-step-header">
-          <span class="prediction-share-step-number">2</span>
-          <span class="prediction-share-step-label">Compartí en X</span>
-          <span class="prediction-share-step-lock" data-step-lock-badge aria-hidden="true">
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0110 0v4"></path>
-            </svg>
-            Descarga primero
-          </span>
-        </div>
-
-        <div class="prediction-share-preview" data-share-preview>
-          <div class="prediction-share-preview-header">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path
-                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-              ></path>
-            </svg>
-            <span>X / Twitter</span>
-          </div>
-
-          <p class="prediction-share-preview-text" data-share-text>
-            Estas son mis predicciones para <strong>#LaVeladaDelAñoVI</strong> 🥊
-          </p>
-
-          <div class="prediction-share-preview-hint" aria-hidden="true">
-            <span class="prediction-share-preview-attachment">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"
-                ></path>
-              </svg>
-              <span data-attachment-label>Adjunta la imagen descargada</span>
-            </span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          class="prediction-share-pill prediction-share-pill-x"
-          data-share-btn
-          disabled
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path
-              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-            ></path>
-          </svg>
-          Abrir X con el texto listo
-        </button>
-      </div>
+      </p>
     </div>
-
-    <p
-      class="prediction-share-status animate-fade-in animate-delay-1100"
-      data-share-status
-      aria-live="polite"
-    >
-    </p>
   </div>
 </dialog>
 
@@ -217,7 +204,7 @@ const { totalFights } = Astro.props
   .prediction-share-modal[data-closing] .prediction-share-eyebrow,
   .prediction-share-modal[data-closing] .prediction-share-title,
   .prediction-share-modal[data-closing] .prediction-share-description,
-  .prediction-share-modal[data-closing] .prediction-share-step,
+  .prediction-share-modal[data-closing] .prediction-share-actions,
   .prediction-share-modal[data-closing] .prediction-share-status {
     animation: fade-out 200ms ease-out both;
   }
@@ -262,6 +249,106 @@ const { totalFights } = Astro.props
   @media (min-width: 640px) {
     .prediction-share-content {
       padding: 2.75rem 2rem 2rem;
+    }
+  }
+
+  /* ── Vista previa de la imagen a compartir ──
+     Oculta en móvil (el modal ya es alto); en escritorio se muestra en un
+     lateral para que se vea exactamente lo que se va a compartir. */
+  .prediction-share-figure {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .prediction-share-content {
+      max-width: 52rem;
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
+      gap: 2.25rem;
+      align-items: center;
+    }
+
+    .prediction-share-figure {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+  }
+
+  .prediction-share-figure-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 718 / 828;
+    border-radius: 0.4rem;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--color-theme-midnight) 85%, black);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 30%, transparent),
+      0 18px 44px rgba(0, 0, 0, 0.5);
+  }
+
+  .prediction-share-figure-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+
+  .prediction-share-figure[data-ready] .prediction-share-figure-img {
+    opacity: 1;
+  }
+
+  .prediction-share-figure-loading {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    text-align: center;
+    font-family: var(--font-cinzel);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
+    animation: prediction-share-pulse 1.4s ease-in-out infinite;
+  }
+
+  .prediction-share-figure[data-ready] .prediction-share-figure-loading,
+  .prediction-share-figure[data-error] .prediction-share-figure-loading {
+    display: none;
+  }
+
+  .prediction-share-figure-caption {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-cinzel);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 72%, transparent);
+  }
+
+  @keyframes prediction-share-pulse {
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .prediction-share-figure-img {
+      transition: none;
+    }
+    .prediction-share-figure-loading {
+      animation: none;
     }
   }
 
@@ -385,96 +472,95 @@ const { totalFights } = Astro.props
     color: color-mix(in srgb, var(--color-theme-cream) 72%, transparent);
   }
 
-  .prediction-share-steps {
+  .prediction-share-actions {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.85rem;
   }
 
-  .prediction-share-step {
-    position: relative;
-    border-radius: var(--radius-sharp);
-    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
-    background: color-mix(in srgb, var(--color-theme-midnight) 60%, transparent);
-    padding: 0.9rem 1rem;
-    transition:
-      border-color 300ms,
-      opacity 300ms;
-  }
-
-  .prediction-share-step[data-state='unlocked'] {
-    border-color: color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
-    box-shadow: 0 0 24px color-mix(in srgb, var(--color-theme-gold) 10%, transparent);
-  }
-
-  .prediction-share-step-header {
+  .prediction-share-actions-row {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .prediction-share-actions-row .prediction-share-pill {
+    flex: 1 1 0;
+    min-width: 8.5rem;
+    padding: 0.8rem 1rem;
+    font-size: 0.68rem;
+  }
+
+  /* Acciones de utilidad (descargar/copiar): un escalón por debajo de compartir.
+     Una fina línea dorada las separa del grupo social para agrupar por intención. */
+  .prediction-share-actions-secondary {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.65rem;
+    margin-top: 0.2rem;
+    padding-top: 0.95rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-theme-gold) 14%, transparent);
+  }
+
+  .prediction-share-actions-secondary .prediction-share-pill {
+    flex: 1 1 0;
+    min-width: 7rem;
+  }
+
+  .prediction-share-actions-hint {
+    margin: 0.15rem 0 0;
+    font-family: var(--font-fallback);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    text-transform: none;
+    text-align: center;
+    color: color-mix(in srgb, var(--color-theme-cream) 58%, transparent);
+  }
+
+  .prediction-share-kbd {
+    display: inline-block;
+    padding: 0.05rem 0.4rem;
+    border-radius: 0.3rem;
+    background: color-mix(in srgb, var(--color-theme-midnight) 70%, black);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+    color: color-mix(in srgb, var(--color-theme-cream) 82%, transparent);
+    font-family: var(--font-fallback);
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .prediction-share-native {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.6rem;
-    margin-bottom: 0.85rem;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
   }
 
-  .prediction-share-step-number {
-    display: grid;
-    place-items: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: var(--radius-pill);
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
-      var(--color-theme-gold) 65%,
-      color-mix(in srgb, var(--color-theme-gold) 75%, black) 100%
-    );
-    color: var(--color-theme-midnight);
-    font-family: var(--font-cinzel);
-    font-size: 0.7rem;
-    font-weight: 900;
-    box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
-      0 4px 12px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
-  }
-
-  .prediction-share-step[data-state='locked'] .prediction-share-step-number {
-    background: color-mix(in srgb, var(--color-theme-midnight) 78%, black);
-    color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
-  }
-
-  .prediction-share-step-label {
-    font-family: var(--font-cinzel);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-theme-cream);
-  }
-
-  .prediction-share-step-lock {
-    margin-left: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.2rem 0.55rem;
-    border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--color-theme-maroon) 35%, transparent);
-    color: color-mix(in srgb, var(--color-theme-gold) 88%, var(--color-theme-cream));
-    font-family: var(--font-cinzel);
-    font-size: 0.5rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
-  }
-
-  .prediction-share-step[data-state='unlocked'] .prediction-share-step-lock {
+  .prediction-share-native[hidden] {
     display: none;
   }
 
-  .prediction-share-step-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+  .prediction-share-native-btn {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    font-size: 0.72rem;
+  }
+
+  .prediction-share-pill-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  .prediction-share-native-hint {
+    margin: 0;
+    font-family: var(--font-fallback);
+    font-size: 0.78rem;
+    text-transform: none;
+    text-align: center;
+    color: color-mix(in srgb, var(--color-theme-cream) 62%, transparent);
   }
 
   .prediction-share-pill {
@@ -536,67 +622,38 @@ const { totalFights } = Astro.props
     transform: translateY(-1px);
   }
 
-  .prediction-share-preview {
-    margin-bottom: 0.85rem;
-    border-radius: var(--radius-sharp);
-    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 14%, transparent);
-    background: color-mix(in srgb, var(--color-theme-midnight) 85%, black);
-    padding: 0.75rem 0.85rem;
+  /* Mismo lenguaje de "píldora" redondeada que el botón de la página de
+     Pronósticos (PredictionShareController), para que compartir se vea
+     idéntico en todo el sitio. */
+  .prediction-share-pill-rounded {
+    border-radius: 9999px;
   }
 
-  .prediction-share-preview-header {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-bottom: 0.5rem;
-    padding: 0.15rem 0.5rem;
-    border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--color-theme-midnight) 60%, transparent);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
-    color: color-mix(in srgb, var(--color-theme-cream) 80%, transparent);
-    font-family: var(--font-cinzel);
-    font-size: 0.5rem;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+  /* Botón de X: pastilla dorada (acción principal de escritorio, un clic copia
+     la imagen y abre X) con el logotipo de la marca en oscuro. */
+  .prediction-share-pill-x svg {
+    /* El logo de X ocupa todo su viewBox, así que lo agrandamos un pelín. */
+    width: 17px;
+    height: 17px;
   }
 
-  .prediction-share-preview-text {
-    margin: 0 0 0.6rem;
-    font-family: var(--font-fallback);
-    font-size: 0.88rem;
-    line-height: 1.45;
-    text-transform: none;
+  /* Botón de WhatsApp: pastilla oscura con un acento verde de marca (anillo +
+     icono) para que sea reconocible sin romper la estética dorada del sitio. */
+  .prediction-share-pill-whatsapp {
     color: var(--color-theme-cream);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, #25d366 55%, transparent);
   }
 
-  .prediction-share-preview-text strong {
-    color: var(--color-theme-gold);
-    font-weight: 700;
+  .prediction-share-pill-whatsapp svg {
+    color: #25d366;
   }
 
-  .prediction-share-preview-hint {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding-top: 0.55rem;
-    border-top: 1px dashed color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
-  }
-
-  .prediction-share-preview-attachment {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-fallback);
-    font-size: 0.72rem;
-    text-transform: none;
-    color: color-mix(in srgb, var(--color-theme-cream) 60%, transparent);
-  }
-
-  .prediction-share-pill-x {
-    width: 100%;
-    padding: 0.7rem 1rem;
-    font-size: 0.7rem;
+  .prediction-share-pill-whatsapp:hover:not(:disabled),
+  .prediction-share-pill-whatsapp:focus-visible:not(:disabled) {
+    color: var(--color-theme-cream);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, #25d366 90%, white),
+      0 6px 18px color-mix(in srgb, #25d366 30%, transparent);
   }
 
   .prediction-share-status {
@@ -619,7 +676,6 @@ const { totalFights } = Astro.props
 
   @media (prefers-reduced-motion: reduce) {
     .prediction-share-pill,
-    .prediction-share-step,
     .prediction-share-close {
       transition: none;
     }
@@ -635,7 +691,7 @@ const { totalFights } = Astro.props
     .prediction-share-modal[data-closing] .prediction-share-eyebrow,
     .prediction-share-modal[data-closing] .prediction-share-title,
     .prediction-share-modal[data-closing] .prediction-share-description,
-    .prediction-share-modal[data-closing] .prediction-share-step,
+    .prediction-share-modal[data-closing] .prediction-share-actions,
     .prediction-share-modal[data-closing] .prediction-share-status {
       animation: none;
     }
@@ -648,7 +704,16 @@ const { totalFights } = Astro.props
 
 <script>
   import { $, $$ } from '@/lib/dom-selector'
-  import { buildPredictionBlob, downloadBlob, openXIntent } from '@/lib/share-image'
+  import {
+    buildPredictionBlob,
+    canShareImageFile,
+    copyImageToClipboard,
+    downloadBlob,
+    isShareAbort,
+    openWhatsAppIntent,
+    openXIntent,
+    shareImageFile,
+  } from '@/lib/share-image'
   import {
     PREDICTION_SHARE_OPEN_EVENT,
     PREDICTION_COMPLETE_EVENT,
@@ -656,6 +721,10 @@ const { totalFights } = Astro.props
   } from '@/lib/prediction-completion'
 
   const SHARE_TEXT = 'Estas son mis predicciones para #LaVeladaDelAñoVI 🥊'
+  const SHARE_URL = 'https://www.infolavelada.com/pronosticos'
+  // WhatsApp muestra preview del enlace, así que añadimos la URL para que el
+  // mensaje sea clicable; X se queda solo con el texto (la imagen es la estrella).
+  const WHATSAPP_TEXT = `${SHARE_TEXT}\n${SHARE_URL}`
   const FILE_NAME = 'mis-predicciones-velada.png'
   const EXIT_ANIM_MS = 320
 
@@ -664,22 +733,32 @@ const { totalFights } = Astro.props
   interface ModalRefs {
     downloadBtn: HTMLButtonElement | null
     copyBtn: HTMLButtonElement | null
-    shareBtn: HTMLButtonElement | null
+    shareXBtn: HTMLButtonElement | null
+    whatsappBtn: HTMLButtonElement | null
     status: HTMLElement | null
-    step2: HTMLElement | null
     content: HTMLElement | null
-    attachmentLabel: HTMLElement | null
+    nativeShare: HTMLElement | null
+    nativeShareBtn: HTMLButtonElement | null
+    shareSteps: HTMLElement | null
+    description: HTMLElement | null
+    figure: HTMLElement | null
+    previewImg: HTMLImageElement | null
   }
 
   function collectRefs(modal: HTMLDialogElement): ModalRefs {
     return {
       downloadBtn: $<HTMLButtonElement>('[data-download-btn]', modal),
       copyBtn: $<HTMLButtonElement>('[data-copy-btn]', modal),
-      shareBtn: $<HTMLButtonElement>('[data-share-btn]', modal),
+      shareXBtn: $<HTMLButtonElement>('[data-share-x]', modal),
+      whatsappBtn: $<HTMLButtonElement>('[data-share-whatsapp]', modal),
       status: $<HTMLElement>('[data-share-status]', modal),
-      step2: $<HTMLElement>('[data-step="2"]', modal),
       content: $<HTMLElement>('.prediction-share-content', modal),
-      attachmentLabel: $<HTMLElement>('[data-attachment-label]', modal),
+      nativeShare: $<HTMLElement>('[data-native-share]', modal),
+      nativeShareBtn: $<HTMLButtonElement>('[data-native-share-btn]', modal),
+      shareSteps: $<HTMLElement>('[data-share-steps]', modal),
+      description: $<HTMLElement>('[data-share-description]', modal),
+      figure: $<HTMLElement>('[data-share-figure]', modal),
+      previewImg: $<HTMLImageElement>('[data-share-preview-img]', modal),
     }
   }
 
@@ -759,18 +838,31 @@ const { totalFights } = Astro.props
     const close = createModalCloser(modal, refs.content)
 
     let cachedBlob: Blob | null = null
+    let previewObjectUrl: string | null = null
 
     function resetModalState() {
       cachedBlob = null
-      if (refs.step2) refs.step2.dataset.state = 'locked'
-      if (refs.shareBtn) refs.shareBtn.disabled = true
+      // Volvemos el preview a su estado de carga para regenerarlo al abrir.
+      refs.figure?.removeAttribute('data-ready')
+      refs.figure?.removeAttribute('data-error')
       setStatus('', 'info')
     }
 
-    function unlockStep2(attachmentLabel: string) {
-      if (refs.step2) refs.step2.dataset.state = 'unlocked'
-      if (refs.shareBtn) refs.shareBtn.disabled = false
-      if (refs.attachmentLabel) refs.attachmentLabel.textContent = attachmentLabel
+    // Genera la imagen real y la muestra en el lateral del modal (escritorio),
+    // así se ve exactamente lo que se va a compartir. Reutiliza el mismo blob
+    // cacheado que usan descargar/copiar, por lo que no duplica trabajo.
+    async function renderPreview() {
+      if (!refs.previewImg || !refs.figure) return
+      try {
+        const blob = await getImageBlob()
+        if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl)
+        previewObjectUrl = URL.createObjectURL(blob)
+        refs.previewImg.src = previewObjectUrl
+        refs.figure.setAttribute('data-ready', '')
+      } catch (err) {
+        refs.figure.setAttribute('data-error', '')
+        console.error(err)
+      }
     }
 
     async function getImageBlob(): Promise<Blob> {
@@ -786,8 +878,7 @@ const { totalFights } = Astro.props
       try {
         const blob = await getImageBlob()
         downloadBlob(blob, FILE_NAME)
-        unlockStep2('Imagen descargada ✓')
-        setStatus('¡Imagen descargada! Ahora podés compartirla.', 'success')
+        setStatus('¡Imagen descargada! Ya podés compartirla.', 'success')
       } catch (err) {
         setStatus('Hubo un error descargando la imagen.', 'error')
         console.error(err)
@@ -803,12 +894,9 @@ const { totalFights } = Astro.props
       setStatus('Copiando imagen...', 'info')
       try {
         const blob = await getImageBlob()
-        if (!('ClipboardItem' in window)) {
-          throw new Error('ClipboardItem no soportado')
-        }
-        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
-        unlockStep2('Imagen copiada al portapapeles ✓')
-        setStatus('¡Imagen copiada! Pegala directo en X.', 'success')
+        const copied = await copyImageToClipboard(blob)
+        if (!copied) throw new Error('Portapapeles no soportado')
+        setStatus('¡Imagen copiada! Pegala donde quieras.', 'success')
       } catch (err) {
         setStatus('No se pudo copiar. Descargá la imagen manualmente.', 'error')
         console.error(err)
@@ -818,16 +906,69 @@ const { totalFights } = Astro.props
       }
     }
 
-    function handleShare() {
-      setBusy(refs.shareBtn, true)
+    // Compartir directo de escritorio: copiamos la imagen al portapapeles para
+    // que el usuario solo tenga que pegarla y abrimos la plataforma con el
+    // texto ya escrito. Si el portapapeles no está disponible, descargamos la
+    // imagen como respaldo para que no se quede sin ella.
+    async function shareToPlatform(
+      button: HTMLButtonElement | null,
+      openIntent: () => void,
+      label: string,
+    ) {
+      setBusy(button, true)
+      setStatus(`Preparando para compartir en ${label}...`, 'info')
       try {
-        openXIntent(SHARE_TEXT)
-        setStatus('X abierto. Pegá la imagen descargada en el post.', 'success')
+        const blob = await getImageBlob()
+        const copied = await copyImageToClipboard(blob)
+        // El intent se abre tras copiar (la activación de usuario sigue viva).
+        openIntent()
+        if (copied) {
+          setStatus(`Imagen copiada ✓ Pégala en ${label} con Ctrl/Cmd + V.`, 'success')
+        } else {
+          downloadBlob(blob, FILE_NAME)
+          setStatus(`Descargamos la imagen: adjúntala en tu post de ${label}.`, 'success')
+        }
       } catch (err) {
-        setStatus('Hubo un error abriendo X.', 'error')
+        setStatus(`Hubo un error abriendo ${label}.`, 'error')
         console.error(err)
       } finally {
-        setBusy(refs.shareBtn, false)
+        setBusy(button, false)
+      }
+    }
+
+    const handleShareX = () => shareToPlatform(refs.shareXBtn, () => openXIntent(SHARE_TEXT), 'X')
+    const handleShareWhatsApp = () =>
+      shareToPlatform(refs.whatsappBtn, () => openWhatsAppIntent(WHATSAPP_TEXT), 'WhatsApp')
+
+    async function handleNativeShare() {
+      setBusy(refs.nativeShareBtn, true)
+      setStatus('Preparando para compartir...', 'info')
+      try {
+        const blob = await getImageBlob()
+        await shareImageFile(blob, FILE_NAME, SHARE_TEXT)
+        setStatus('¡Listo! Gracias por compartir tu pronóstico.', 'success')
+      } catch (err) {
+        // Cancelar la hoja de compartir no es un error: limpiamos el estado.
+        if (isShareAbort(err)) {
+          setStatus('', 'info')
+        } else {
+          setStatus('No se pudo compartir. Probá descargando la imagen.', 'error')
+          console.error(err)
+        }
+      } finally {
+        setBusy(refs.nativeShareBtn, false)
+      }
+    }
+
+    // En navegadores con Web Share API nivel 2 (móvil moderno) ofrecemos ADEMÁS
+    // el camino de un solo toque (imagen + texto). Pero mantenemos siempre
+    // visibles los botones explícitos (descargar, WhatsApp, X) para que se pueda
+    // elegir: en escritorio el share nativo suele abrir un menú poco útil.
+    function enableNativeShareIfSupported() {
+      if (!canShareImageFile()) return
+      refs.nativeShare?.removeAttribute('hidden')
+      if (refs.description) {
+        refs.description.textContent = `Generamos una imagen con tus votos. ¡Compártela donde quieras!`
       }
     }
 
@@ -838,11 +979,18 @@ const { totalFights } = Astro.props
       // El foco inicial debe aterrizar en un control real, no en el backdrop
       // (SC 2.4.3). El botón de cierre es el primer paso lógico del modal.
       $<HTMLButtonElement>('.prediction-share-close', modal)?.focus()
+      // Generamos la vista previa en cuanto se abre (también precalienta el
+      // blob, dejando la descarga lista al instante).
+      void renderPreview()
     }
 
     refs.downloadBtn?.addEventListener('click', () => void handleDownload())
     refs.copyBtn?.addEventListener('click', () => void handleCopy())
-    refs.shareBtn?.addEventListener('click', handleShare)
+    refs.shareXBtn?.addEventListener('click', () => void handleShareX())
+    refs.whatsappBtn?.addEventListener('click', () => void handleShareWhatsApp())
+    refs.nativeShareBtn?.addEventListener('click', () => void handleNativeShare())
+
+    enableNativeShareIfSupported()
 
     document.addEventListener(PREDICTION_COMPLETE_EVENT, openModal)
     document.addEventListener(PREDICTION_SHARE_OPEN_EVENT, openModal)
