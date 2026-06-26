@@ -49,110 +49,111 @@ const { totalFights } = Astro.props
         ¡Hiciste tu pronóstico para la velada!
       </h2>
 
-    <p
-      class="prediction-share-description animate-fade-in animate-delay-500"
-      data-share-description
-      data-total-fights={totalFights}
-    >
-      Generamos una imagen con tus {totalFights} votos. Compártela en X o WhatsApp.
-    </p>
+      <p
+        class="prediction-share-description animate-fade-in animate-delay-500"
+        data-share-description
+        data-total-fights={totalFights}
+      >
+        Generamos una imagen con tus {totalFights} votos. Compártela en X o WhatsApp.
+      </p>
 
-    <!-- Camino nativo (Web Share API nivel 2): imagen + texto en un solo toque.
+      <!-- Camino nativo (Web Share API nivel 2): imagen + texto en un solo toque.
          Oculto por defecto; el script lo revela solo donde el navegador soporta
          compartir ficheros (móvil moderno) y oculta el flujo de pasos. -->
-    <div class="prediction-share-native animate-fade-in-up animate-delay-700" data-native-share hidden>
-      <button
-        type="button"
-        class="prediction-share-pill prediction-share-pill-primary prediction-share-pill-rounded prediction-share-native-btn"
-        data-native-share-btn
+      <div
+        class="prediction-share-native animate-fade-in-up animate-delay-700"
+        data-native-share
+        hidden
       >
-        <ShareIcon class="prediction-share-pill-icon" aria-hidden="true" />
-        Compartir pronóstico
-      </button>
-      <p class="prediction-share-native-hint" data-native-share-hint>
-        Imagen y texto juntos, en un solo toque.
-      </p>
-    </div>
+        <button
+          type="button"
+          class="prediction-share-pill prediction-share-pill-primary prediction-share-pill-rounded prediction-share-native-btn"
+          data-native-share-btn
+        >
+          <ShareIcon class="prediction-share-pill-icon" aria-hidden="true" />
+          Compartir pronóstico
+        </button>
+      </div>
 
-    <!-- Camino manual (escritorio o navegadores sin Web Share de ficheros):
+      <!-- Camino manual (escritorio o navegadores sin Web Share de ficheros):
          botones de compartir directo. X y WhatsApp copian la imagen al
          portapapeles y abren la app con el texto listo en un clic. -->
-    <div class="prediction-share-actions" data-share-steps>
-      <div class="prediction-share-actions-row">
-        <button
-          type="button"
-          class="prediction-share-pill prediction-share-pill-rounded prediction-share-pill-primary prediction-share-pill-x animate-fade-in-up animate-delay-700"
-          data-share-x
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path
-              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-            ></path>
-          </svg>
-          Compartir en X
-        </button>
-
-        <button
-          type="button"
-          class="prediction-share-pill prediction-share-pill-rounded prediction-share-pill-whatsapp animate-fade-in-up animate-delay-900"
-          data-share-whatsapp
-        >
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path
-              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
-            ></path>
-          </svg>
-          WhatsApp
-        </button>
-      </div>
-
-      <div class="prediction-share-actions-secondary animate-fade-in animate-delay-1100">
-        <button
-          type="button"
-          class="prediction-share-pill prediction-share-pill-rounded"
-          data-download-btn
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
+      <div class="prediction-share-actions" data-share-steps>
+        <div class="prediction-share-actions-row">
+          <button
+            type="button"
+            class="prediction-share-pill prediction-share-pill-rounded prediction-share-pill-primary prediction-share-pill-x animate-fade-in-up animate-delay-700"
+            data-share-x
           >
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
-          </svg>
-          Descargar
-        </button>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+              ></path>
+            </svg>
+            Compartir en X
+          </button>
 
-        <button
-          type="button"
-          class="prediction-share-pill prediction-share-pill-rounded"
-          data-copy-btn
-          aria-label="Copiar imagen al portapapeles"
-        >
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
+          <button
+            type="button"
+            class="prediction-share-pill prediction-share-pill-rounded prediction-share-pill-whatsapp animate-fade-in-up animate-delay-900"
+            data-share-whatsapp
           >
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
-          </svg>
-          Copiar
-        </button>
-      </div>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+              ></path>
+            </svg>
+            WhatsApp
+          </button>
+        </div>
 
-      <p class="prediction-share-actions-hint">
-        Copiamos la imagen a tu portapapeles: pégala en el post con
-        <kbd class="prediction-share-kbd">Ctrl/Cmd&nbsp;+&nbsp;V</kbd>.
-      </p>
-    </div>
+        <div class="prediction-share-actions-secondary animate-fade-in animate-delay-1100">
+          <button
+            type="button"
+            class="prediction-share-pill prediction-share-pill-rounded"
+            data-download-btn
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+            </svg>
+            Descargar
+          </button>
+
+          <button
+            type="button"
+            class="prediction-share-pill prediction-share-pill-rounded"
+            data-copy-btn
+            aria-label="Copiar imagen al portapapeles"
+          >
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+            </svg>
+            Copiar
+          </button>
+        </div>
+
+        <p class="prediction-share-actions-hint">
+          Copiamos la imagen a tu portapapeles: pégala en el post con
+          <kbd class="prediction-share-kbd">Ctrl/Cmd&nbsp;+&nbsp;V</kbd>.
+        </p>
+      </div>
 
       <p
         class="prediction-share-status animate-fade-in animate-delay-1100"
@@ -474,13 +475,13 @@ const { totalFights } = Astro.props
   .prediction-share-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.85rem;
   }
 
   .prediction-share-actions-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
+    gap: 0.65rem;
   }
 
   .prediction-share-actions-row .prediction-share-pill {
@@ -490,11 +491,16 @@ const { totalFights } = Astro.props
     font-size: 0.68rem;
   }
 
+  /* Acciones de utilidad (descargar/copiar): un escalón por debajo de compartir.
+     Una fina línea dorada las separa del grupo social para agrupar por intención. */
   .prediction-share-actions-secondary {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.6rem;
+    gap: 0.65rem;
+    margin-top: 0.2rem;
+    padding-top: 0.95rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-theme-gold) 14%, transparent);
   }
 
   .prediction-share-actions-secondary .prediction-share-pill {
@@ -529,6 +535,7 @@ const { totalFights } = Astro.props
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
+    margin-bottom: 1rem;
   }
 
   .prediction-share-native[hidden] {
@@ -953,16 +960,15 @@ const { totalFights } = Astro.props
       }
     }
 
-    // En navegadores con Web Share API nivel 2 (móvil moderno) ofrecemos el
-    // camino de un solo toque y ocultamos el flujo manual de descarga + X.
+    // En navegadores con Web Share API nivel 2 (móvil moderno) ofrecemos ADEMÁS
+    // el camino de un solo toque (imagen + texto). Pero mantenemos siempre
+    // visibles los botones explícitos (descargar, WhatsApp, X) para que se pueda
+    // elegir: en escritorio el share nativo suele abrir un menú poco útil.
     function enableNativeShareIfSupported() {
       if (!canShareImageFile()) return
       refs.nativeShare?.removeAttribute('hidden')
-      if (refs.shareSteps) refs.shareSteps.hidden = true
       if (refs.description) {
-        const totalFights = refs.description.dataset.totalFights ?? ''
-        const votos = totalFights ? `tus ${totalFights} votos` : 'tus votos'
-        refs.description.textContent = `Generamos una imagen con ${votos}. Compartila donde quieras en un solo toque.`
+        refs.description.textContent = `Generamos una imagen con tus votos. ¡Compártela donde quieras!`
       }
     }
 

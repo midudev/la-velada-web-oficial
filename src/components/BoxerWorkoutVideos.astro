@@ -54,10 +54,10 @@ function getPosterFallbackChain(videoId: string) {
           subtitleClass="mb-10 max-w-xl tracking-[0.16em] sm:mb-14 sm:text-sm"
         />
 
-        <div class="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-theme-navy/30 shadow-[0_25px_60px_-30px_rgba(0,0,0,0.8)]">
+        <div class="relative w-full overflow-hidden rounded-2xl bg-theme-navy/30 shadow-[0_25px_60px_-30px_rgba(0,0,0,0.8)]">
           <div
             class:list={[
-              '@container grid gap-px bg-white/10',
+              '@container grid gap-px bg-white/10 p-px',
               secondaryVideos.length > 0
                 ? 'lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]'
                 : 'lg:grid-cols-1',
@@ -69,7 +69,7 @@ function getPosterFallbackChain(videoId: string) {
               data-video-id={featuredVideo.videoId}
               data-video-title={featuredVideo.title}
               aria-label={`Reproducir entrenamiento destacado: ${featuredVideo.title}`}
-              class="group relative isolate flex aspect-video w-full cursor-pointer self-start overflow-hidden border border-white/10 bg-theme-navy/40 text-left transition duration-500 outline-none hover:border-theme-gold/50 hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 lg:aspect-auto lg:h-[31.5cqw]"
+              class="group relative isolate flex aspect-video w-full cursor-pointer self-start overflow-hidden rounded-tl-2xl rounded-tr-2xl bg-theme-navy/40 text-left transition duration-500 outline-none hover:shadow-[0_18px_60px_-20px_rgba(199,168,107,0.55)] hover:ring-1 hover:ring-theme-gold/60 focus-visible:ring-1 focus-visible:ring-theme-gold/60 lg:aspect-auto lg:h-[31.5cqw] lg:rounded-tr-none lg:rounded-bl-2xl"
             >
               <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
                 <img
@@ -111,11 +111,11 @@ function getPosterFallbackChain(videoId: string) {
                 </span>
               </span>
 
-              <div class="relative mt-auto flex w-full flex-col gap-2 p-5 sm:p-8">
-                <h3 class="line-clamp-3 max-w-3xl font-cinzel text-2xl leading-tight font-black tracking-[0.04em] text-balance text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl lg:text-4xl xl:text-5xl">
+              <div class="relative mt-auto flex w-full flex-col gap-3 p-4 sm:p-8">
+                <h3 class="line-clamp-3 max-w-3xl font-cinzel text-xl leading-tight font-black tracking-[0.04em] text-balance text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:text-3xl">
                   {featuredVideo.title}
                 </h3>
-                <span class="mt-2 inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
+                <span class="inline-flex w-fit items-center gap-2 font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-white/70 transition duration-500 group-hover:text-theme-gold group-focus-visible:text-theme-gold sm:text-xs">
                   VER VÍDEO
                   <ArrowRightIcon
                     class="size-3 transition-transform duration-500 group-hover:translate-x-1 group-focus-visible:translate-x-1"
@@ -193,9 +193,9 @@ function getPosterFallbackChain(videoId: string) {
       <dialog
         data-workout-video-dialog
         aria-labelledby={dialogTitleId}
-        class="m-0 w-screen max-w-none bg-transparent p-0 backdrop:bg-black/85 backdrop:backdrop-blur-sm backdrop:backdrop-contrast-125 backdrop:backdrop-saturate-150 open:flex open:h-screen open:items-center open:justify-center"
+        class="m-0 h-screen w-screen max-w-none bg-transparent p-0 backdrop:bg-black/85 backdrop:backdrop-blur-sm backdrop:backdrop-contrast-125 backdrop:backdrop-saturate-150"
       >
-        <div class="relative mx-4 w-full max-w-5xl">
+        <div class="absolute inset-0 m-auto h-min w-[92%] max-w-5xl">
           <div class="mb-4 flex items-center justify-between gap-4">
             <h3
               id={dialogTitleId}
@@ -206,7 +206,7 @@ function getPosterFallbackChain(videoId: string) {
               type="button"
               data-workout-video-dialog-close
               aria-label="Cerrar vídeo"
-              class="inline-flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white transition outline-none hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
+              class="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white transition outline-none hover:border-theme-gold/70 hover:bg-theme-gold/15 focus-visible:border-theme-gold/70 focus-visible:ring-2 focus-visible:ring-theme-gold/60 sm:size-11"
             >
               <CloseIcon class="size-5" aria-hidden="true" />
             </button>
