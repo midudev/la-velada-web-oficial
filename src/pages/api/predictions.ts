@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth'
+import { getSessionFromHeaders } from '@/lib/auth'
 import {
   getAllPredictions,
   getPredictionsByCombat,
@@ -34,9 +34,7 @@ function json(data: unknown, status = 200, headers: Record<string, string> = {})
 }
 
 async function getUserId(request: Request) {
-  const session = await auth.api.getSession({
-    headers: request.headers,
-  })
+  const { session } = await getSessionFromHeaders(request.headers)
 
   return session?.user?.id ?? null
 }
