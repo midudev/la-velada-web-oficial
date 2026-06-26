@@ -6,15 +6,29 @@ import {
   PredictionDataError,
   registerVote,
 } from '@/lib/predictions'
+import { rateLimit } from '@/lib/rate-limit'
 import type { APIRoute } from 'astro'
 
 export const prerender = false
 
-function json(data: unknown, status = 200) {
+// Un usuario honesto pronostica 10 combates y rara vez cambia de opinión más de
+// un par de veces; 20 votos por minuto deja margen de sobra y corta los bucles.
+const VOTE_RATE_LIMIT = { limit: 20, windowMs: 60_000 }
+
+// Las predicciones públicas las pollea cada cliente cada 15s: dejamos que el CDN
+// de Vercel sirva la respuesta desde el edge durante 10s y revalide en segundo
+// plano, de modo que millones de polls se traducen en muy pocos hits a Turso.
+// `stale-while-revalidate` evita que ninguna petición espere a la base de datos.
+const PUBLIC_CACHE_HEADERS = {
+  'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=30',
+}
+
+function json(data: unknown, status = 200, headers: Record<string, string> = {}) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       'Content-Type': 'application/json',
+      ...headers,
     },
   })
 }
@@ -48,10 +62,10 @@ export const GET: APIRoute = async ({ request, url }) => {
         return json({ error: 'Combate no encontrado' }, 404)
       }
 
-      return json(prediction)
+      return json(prediction, 200, PUBLIC_CACHE_HEADERS)
     }
 
-    return json({ predictions: await getAllPredictions() })
+    return json({ predictions: await getAllPredictions() }, 200, PUBLIC_CACHE_HEADERS)
   } catch (error) {
     console.error('Error en GET /api/predictions:', error)
     return json({ error: 'Error al obtener predicciones' }, 500)
@@ -64,6 +78,16 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (!userId) {
       return json({ error: 'Usuario no autenticado' }, 401)
+    }
+
+    const { allowed, retryAfter } = rateLimit(`predictions:${userId}`, VOTE_RATE_LIMIT)
+
+    if (!allowed) {
+      return json(
+        { error: 'Demasiados votos en poco tiempo. Espera unos segundos e inténtalo de nuevo.' },
+        429,
+        { 'Retry-After': String(retryAfter) },
+      )
     }
 
     const body = await request.json().catch(() => null)

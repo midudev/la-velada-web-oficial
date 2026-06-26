@@ -10,6 +10,7 @@ import BoxerSocials from '@/components/BoxerSocials.astro'
 import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
 import BoxerWorkoutVideos from '@/components/BoxerWorkoutVideos.astro'
 import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
+import LivePrediction from '@/components/LivePrediction.astro'
 import { battles } from '@/consts/battles'
 import { EVENT_DATE_TIME } from '@/consts/event'
 import {
@@ -25,6 +26,7 @@ import { formatFollowers } from '@/lib/socials'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
+import { serializeJsonLd } from '@/utils/serialize-json-ld'
 
 export const prerender = true
 
@@ -202,13 +204,13 @@ const breadcrumbJsonLd = {
   <script
     type="application/ld+json"
     is:inline
-    set:html={JSON.stringify(personJsonLd)}
+    set:html={serializeJsonLd(personJsonLd)}
     slot="head"
   />
   <script
     type="application/ld+json"
     is:inline
-    set:html={JSON.stringify(breadcrumbJsonLd)}
+    set:html={serializeJsonLd(breadcrumbJsonLd)}
     slot="head"
   />
 
@@ -294,7 +296,8 @@ const breadcrumbJsonLd = {
         <div class="boxer-info relative flex flex-col items-start md:order-2 md:mt-8 lg:mt-12">
           <h1
             id="boxer-name"
-            class="boxer-detail-name animate-fade-in-up font-cinzel text-5xl leading-[0.92] font-black tracking-[0.02em] text-balance uppercase sm:text-6xl md:text-[clamp(2.5rem,5.6vw,4.5rem)]"
+            class="boxer-detail-name animate-fade-in-up font-cinzel leading-[0.92] font-black tracking-[0.02em] text-balance uppercase sm:text-6xl md:text-[clamp(2.5rem,5.6vw,4.5rem)] hyphens-auto"
+            class:list={[boxer.name === 'Fernanfloo' ? 'text-[2.688rem]' : 'text-5xl']}
           >
             {boxer.name}
           </h1>
@@ -311,6 +314,7 @@ const breadcrumbJsonLd = {
 
           {
             opponent && opponentSelectImages && battle && (
+              <>
               <div class="boxer-versus-card mt-8 animate-fade-in-up animate-delay-500">
                 <a
                   href={`/boxeadores/${opponent.id}`}
@@ -361,6 +365,20 @@ const breadcrumbJsonLd = {
                   />
                 </a>
               </div>
+
+              <LivePrediction
+                class="mt-4 w-full max-w-[34rem] animate-fade-in-up animate-delay-700"
+                battleId={battle.id}
+                boxerA={{
+                  id: battle.boxerIds[0],
+                  name: BOXERS_BY_ID[battle.boxerIds[0]].name,
+                }}
+                boxerB={{
+                  id: battle.boxerIds[1],
+                  name: BOXERS_BY_ID[battle.boxerIds[1]].name,
+                }}
+              />
+              </>
             )
           }
         </div>

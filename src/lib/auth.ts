@@ -1,10 +1,20 @@
 import { LibsqlDialect } from '@libsql/kysely-libsql'
 import { betterAuth } from 'better-auth'
 
-const secret =
-  import.meta.env.BETTER_AUTH_SECRET || process.env.BETTER_AUTH_SECRET || 'astro-local-dev-secret'
-const baseURL =
-  import.meta.env.BETTER_AUTH_URL || process.env.BETTER_AUTH_URL || 'http://localhost:3000'
+const isProduction = import.meta.env.PROD
+
+// El secreto firma/cifra las cookies de sesión: en producción NUNCA debe caer a
+// un valor por defecto (sería público y permitiría forjar sesiones). Solo en
+// desarrollo se permite un fallback para no bloquear el arranque local.
+const secret = import.meta.env.BETTER_AUTH_SECRET || process.env.BETTER_AUTH_SECRET
+if (!secret && isProduction) {
+  throw new Error('BETTER_AUTH_SECRET es obligatorio en producción')
+}
+
+const baseURL = import.meta.env.BETTER_AUTH_URL || process.env.BETTER_AUTH_URL
+if (!baseURL && isProduction) {
+  throw new Error('BETTER_AUTH_URL es obligatorio en producción')
+}
 
 // Persistimos usuarios, cuentas y sesiones en Turso. Sin una base de datos,
 // better-auth usa un adaptador en memoria: en serverless la memoria es efímera
@@ -17,8 +27,10 @@ const dialect = new LibsqlDialect({
 
 export const auth = betterAuth({
   database: { dialect, type: 'sqlite' },
-  secret,
-  baseURL,
+  // En este punto, en producción `secret`/`baseURL` están garantizados; los
+  // fallbacks solo se usan en desarrollo local.
+  secret: secret || 'astro-local-dev-secret',
+  baseURL: baseURL || 'http://localhost:3000',
   socialProviders: {
     twitch: {
       clientId: import.meta.env.TWITCH_CLIENT_ID,
