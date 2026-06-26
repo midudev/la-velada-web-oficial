@@ -22,7 +22,9 @@ const isCurrentNavItem = (href: string) =>
   variant === 'desktop' ? (
     <nav class="hidden md:block" aria-label="Navegación principal">
       <ul class="flex items-stretch gap-1 sm:gap-2">
-        {NAV_ITEMS.map((item) => (
+        {NAV_ITEMS.map((item) => {
+          const current = isCurrentNavItem(item.href)
+          return (
           <li>
             {item.disabled ? (
               <div class="flex flex-col items-center justify-center gap-1 px-3 sm:px-4">
@@ -42,10 +44,15 @@ const isCurrentNavItem = (href: string) =>
               </div>
             ) : (
               <a
-                href={item.href}
+                href={current ? undefined : item.href}
                 data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
-                aria-current={isCurrentNavItem(item.href) ? 'page' : undefined}
-                class="group/nav relative inline-flex h-full flex-col items-center justify-center px-3 font-cinzel text-[0.65rem] leading-none font-black tracking-[0.16em] text-white/85 transition-colors duration-150 ease-out outline-none focus-visible:text-theme-cream sm:px-4 sm:text-xs [@media(hover:hover)_and_(pointer:fine)]:hover:text-theme-cream [@media(hover:hover)_and_(pointer:fine)]:hover:delay-125"
+                aria-current={current ? 'page' : undefined}
+                class:list={[
+                  'group/nav relative inline-flex h-full flex-col items-center justify-center px-3 font-cinzel text-[0.65rem] leading-none font-black tracking-[0.16em] transition-colors duration-150 ease-out outline-none focus-visible:text-theme-cream sm:px-4 sm:text-xs',
+                  current
+                    ? 'pointer-events-none cursor-default text-theme-cream'
+                    : 'text-white/85 [@media(hover:hover)_and_(pointer:fine)]:hover:text-theme-cream [@media(hover:hover)_and_(pointer:fine)]:hover:delay-125',
+                ]}
               >
                 <div
                   aria-hidden="true"
@@ -59,13 +66,16 @@ const isCurrentNavItem = (href: string) =>
               </a>
             )}
           </li>
-        ))}
+          )
+        })}
       </ul>
     </nav>
   ) : (
     <nav aria-label="Menú principal móvil" class="relative w-full max-w-sm">
       <ul class="flex flex-col items-center gap-6">
-        {NAV_ITEMS.map((item) => (
+        {NAV_ITEMS.map((item) => {
+          const current = isCurrentNavItem(item.href)
+          return (
           <li class="w-full">
             {item.disabled ? (
               <span
@@ -83,11 +93,16 @@ const isCurrentNavItem = (href: string) =>
               </span>
             ) : (
               <a
-                href={item.href}
+                href={current ? undefined : item.href}
                 data-astro-reload={shouldReloadNavItem(item.href) ? true : undefined}
-                aria-current={isCurrentNavItem(item.href) ? 'page' : undefined}
+                aria-current={current ? 'page' : undefined}
                 data-mobile-menu-link
-                class="relative flex items-center justify-center rounded-2xl border border-theme-gold/40 bg-theme-midnight/80 px-5 py-5 text-center font-cinzel text-lg font-black tracking-[0.16em] text-theme-cream transition duration-300 outline-none focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-theme-gold active:border-theme-gold active:bg-theme-midnight [a[aria-current=page]]:border-theme-gold/75"
+                class:list={[
+                  'relative flex items-center justify-center rounded-2xl border border-theme-gold/40 bg-theme-midnight/80 px-5 py-5 text-center font-cinzel text-lg font-black tracking-[0.16em] text-theme-cream transition duration-300 outline-none focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-theme-gold [a[aria-current=page]]:border-theme-gold/75',
+                  current
+                    ? 'pointer-events-none cursor-default'
+                    : 'active:border-theme-gold active:bg-theme-midnight',
+                ]}
               >
                 <div
                   aria-hidden="true"
@@ -97,7 +112,8 @@ const isCurrentNavItem = (href: string) =>
               </a>
             )}
           </li>
-        ))}
+          )
+        })}
       </ul>
     </nav>
   )
