@@ -1498,7 +1498,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     return thumb.dataset.photoWebp
   }
 
-  function setupMobileInfiniteSlider(root: HTMLElement) {
+  function setupMobileInfiniteSlider(root: HTMLElement, signal: AbortSignal) {
     const slider = $<HTMLElement>('[data-mobile-slider]', root)
     const track = $<HTMLElement>('[data-mobile-track]', root)
     if (!slider || !track || slider.dataset.initialized === 'true') return
@@ -1608,19 +1608,34 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       )
     }
 
-    window.addEventListener('resize', () =>
-      requestAnimationFrame(() => {
-        moveToMiddleSet()
-        updateFocus()
-      }),
+    window.addEventListener(
+      'resize',
+      () =>
+        requestAnimationFrame(() => {
+          moveToMiddleSet()
+          updateFocus()
+        }),
+      { signal },
     )
   }
 
+  // Listeners a nivel `window`/`document` de la navegación anterior. Como
+  // initBoxerSelector se re-ejecuta en cada `astro:page-load` (SPA) y el DOM se
+  // reemplaza, sin esto el `resize` y el `pointerdown` se acumulaban en cada
+  // visita a la home apuntando a nodos ya desechados. Un AbortController los corta.
+  let selectorAbort: AbortController | null = null
+
   function initBoxerSelector() {
+    selectorAbort?.abort()
+    selectorAbort = null
+
     const root = $<HTMLElement>('[data-boxer-selector]')
     if (!root) return
 
-    setupMobileInfiniteSlider(root)
+    selectorAbort = new AbortController()
+    const { signal } = selectorAbort
+
+    setupMobileInfiniteSlider(root, signal)
 
     const image = $<HTMLImageElement>('[data-active-image]', root)
     const sourceAvif = $<HTMLSourceElement>(
@@ -1912,11 +1927,15 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 
     // Tap/click fuera de la sección (especialmente útil en móvil/táctil):
     // resetea al estado por defecto.
-    document.addEventListener('pointerdown', (event) => {
-      const target = event.target as Node | null
-      if (target && root!.contains(target)) return
-      showDefault()
-    })
+    document.addEventListener(
+      'pointerdown',
+      (event) => {
+        const target = event.target as Node | null
+        if (target && root!.contains(target)) return
+        showDefault()
+      },
+      { signal },
+    )
 
     root.addEventListener('keydown', (event) => {
       const target = event.target as HTMLElement | null
