@@ -275,7 +275,7 @@ pero que ahora tendrá que demostrarlo todo bajo los focos del ring. 🥊
     followersUpdatedAt: '2026-06-27',
     socials: [
       { platform: 'youtube', username: 'Fernanfloo', followers: 50_400_000 },
-      { platform: 'tiktok', username: 'fernanfloo', followers: 16_500_000 },
+      { platform: 'tiktok', username: 'fernanfloo', followers: 18_700_000 },
       { platform: 'instagram', username: 'fernanfloo', followers: 11_500_000 },
       { platform: 'youtube', username: 'Fernan', followers: 4_000_000 },
       { platform: 'twitch', username: 'fernanfloo', followers: 3_500_000 },
@@ -359,7 +359,7 @@ pero que ahora tendrá que responder golpe a golpe. 🥊`,
       { platform: 'instagram', username: 'geroooo_arias2.0', followers: 5_800_000 },
       { platform: 'youtube', username: 'geroariass', followers: 3_830_000 },
       { platform: 'tiktok', username: 'geroariass2.0', followers: 3_100_000 },
-      { platform: 'kick', username: 'gerooo_arias', followers: 242_000 },
+      { platform: 'kick', username: 'gerooo_arias', followers: 242_700 },
     ],
     ficha: `Gero Arias es creador de contenido argentino y una de las figuras más virales dentro del fitness y los retos físicos en redes sociales. Su crecimiento ha venido impulsado por su disciplina, su constancia y su capacidad para enganchar a la audiencia con desafíos exigentes y contenido motivacional.
 A lo largo de su trayectoria ha construido una comunidad muy sólida, especialmente en TikTok e Instagram, donde comparte entrenamientos, retos personales y evolución física, lo que le ha permitido posicionarse como uno de los perfiles fitness más reconocidos del panorama digital.
