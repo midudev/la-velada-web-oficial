@@ -64,7 +64,13 @@ type SessionResult = Awaited<ReturnType<typeof auth.api.getSession>>
 // Limitaciones asumidas (igual que el rate-limiter en memoria): el estado vive
 // por instancia serverless y una revocación de sesión puede tardar hasta
 // SESSION_CACHE_TTL_MS en reflejarse. Asumible para una web de votaciones.
-const SESSION_CACHE_TTL_MS = 5_000
+//
+// Con 5s el hit-rate era bajo: better-auth resuelve la sesión con DOS lecturas
+// secuenciales a Turso (session por token + user por id) y, repartido entre las
+// muchas instancias serverless de Vercel, casi cada carga de página dinámica
+// (y cada POST de voto) volvía a pagar esos dos round-trips. Subir la ventana a
+// 30s multiplica el hit-rate sin que la latencia de revocación importe aquí.
+const SESSION_CACHE_TTL_MS = 30_000
 const MAX_SESSION_CACHE_ENTRIES = 10_000
 
 const sessionCache = new Map<string, { session: SessionResult; expiresAt: number }>()
