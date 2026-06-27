@@ -52,13 +52,14 @@ export const BOXERS: Boxer[] = [
     birthDate: '2001-10-30',
     age: 24,
     youtubeChannelId: 'UCMhJtoft9mSZ_T1FEV__LXA',
-    followersUpdatedAt: '2026-05-14',
+    followersUpdatedAt: '2026-06-27',
     socials: [
+      { platform: 'tiktok', username: 'pastelera27', followers: 5_900_000 },
       { platform: 'twitch', username: 'alondrissa', followers: 1_800_000 },
       { platform: 'tiktok', username: 'alondrisaa', followers: 1_800_000 },
       { platform: 'instagram', username: 'alondraa.michellee', followers: 1_500_000 },
       { platform: 'youtube', username: 'AlondrissaOfficial', followers: 1_240_000 },
-      { platform: 'kick', username: 'alondrissa', followers: 617_100 },
+      { platform: 'kick', username: 'alondrissa', followers: 626_862 },
       { platform: 'youtube', username: 'AlondraMichelleVlogs', followers: 351_000 },
     ],
     ficha: `Alondrissa es creadora de contenido puertorriqueña y una de las streamers más 
