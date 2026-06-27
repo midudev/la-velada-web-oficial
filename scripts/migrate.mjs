@@ -169,6 +169,15 @@ const STATEMENTS = [
     name: 'account_userId_idx',
     sql: `CREATE INDEX IF NOT EXISTS "account_userId_idx" ON "account" ("userId")`,
   },
+  // En cada inicio de sesión OAuth, better-auth localiza la cuenta vinculada con
+  // `WHERE accountId = ? AND providerId = ?`. Sin este índice esa búsqueda hacía
+  // un SCAN completo de `account` (decenas de miles de filas por login), lo que
+  // disparaba la latencia del login y las "rows read" de Turso. El índice
+  // compuesto la resuelve con un seek directo.
+  {
+    name: 'account_provider_account_idx',
+    sql: `CREATE INDEX IF NOT EXISTS "account_provider_account_idx" ON "account" ("providerId", "accountId")`,
+  },
   {
     name: 'verification_identifier_idx',
     sql: `CREATE INDEX IF NOT EXISTS "verification_identifier_idx" ON "verification" ("identifier")`,
