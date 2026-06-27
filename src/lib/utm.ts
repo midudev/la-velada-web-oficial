@@ -40,6 +40,13 @@ export function withUtm(
   try {
     const target = new URL(url)
 
+    // Solo enlaces web. `new URL` acepta `javascript:`, `data:`, etc.; aunque
+    // hoy las entradas son URLs de patrocinadores de confianza, rechazar otros
+    // esquemas evita un open-redirect/XSS si en el futuro llega input dinámico.
+    if (target.protocol !== 'http:' && target.protocol !== 'https:') {
+      return url
+    }
+
     const setIfMissing = (key: string, value: string | undefined) => {
       if (!value) return
       if (target.searchParams.has(key)) return
