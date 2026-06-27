@@ -52,13 +52,15 @@ export const BOXERS: Boxer[] = [
     birthDate: '2001-10-30',
     age: 24,
     youtubeChannelId: 'UCMhJtoft9mSZ_T1FEV__LXA',
-    followersUpdatedAt: '2026-05-14',
+    followersUpdatedAt: '2026-06-27',
     socials: [
+      { platform: 'tiktok', username: 'pastelera27', followers: 5_900_000 },
       { platform: 'twitch', username: 'alondrissa', followers: 1_800_000 },
       { platform: 'tiktok', username: 'alondrisaa', followers: 1_800_000 },
       { platform: 'instagram', username: 'alondraa.michellee', followers: 1_500_000 },
       { platform: 'youtube', username: 'AlondrissaOfficial', followers: 1_240_000 },
-      { platform: 'kick', username: 'alondrissa', followers: 617_100 },
+      { platform: 'youtube', username: 'AlondrissaPluss', followers: 1_010_000 },
+      { platform: 'kick', username: 'alondrissa', followers: 633_700 },
       { platform: 'youtube', username: 'AlondraMichelleVlogs', followers: 351_000 },
     ],
     ficha: `Alondrissa es creadora de contenido puertorriqueña y una de las streamers más 
@@ -172,7 +174,8 @@ export const BOXERS: Boxer[] = [
     workout: [
       {
         videoId: 'qAVys_o4cD4',
-        title: 'ENTRENO con el EQUIPO NACIONAL de BOXEO ESPAÑOL | Edu Aguirre, camino a La Velada #12',
+        title:
+          'ENTRENO con el EQUIPO NACIONAL de BOXEO ESPAÑOL | Edu Aguirre, camino a La Velada #12',
       },
       {
         videoId: 'XmlJ4gxeylw',
@@ -269,10 +272,12 @@ pero que ahora tendrá que demostrarlo todo bajo los focos del ring. 🥊
     birthDate: '1993-07-07',
     age: 32,
     youtubeChannelId: 'UCV4xOVpbcV8SdueDCOxLXtQ',
-    followersUpdatedAt: '2026-05-14',
+    followersUpdatedAt: '2026-06-27',
     socials: [
       { platform: 'youtube', username: 'Fernanfloo', followers: 50_400_000 },
+      { platform: 'tiktok', username: 'fernanfloo', followers: 18_700_000 },
       { platform: 'instagram', username: 'fernanfloo', followers: 11_500_000 },
+      { platform: 'youtube', username: 'Fernan', followers: 4_000_000 },
       { platform: 'twitch', username: 'fernanfloo', followers: 3_500_000 },
     ],
     ficha: `Fernanfloo es creador de contenido salvadoreño y una de las mayores leyendas de YouTube en habla hispana. Su impacto en la plataforma ha sido masivo, acumulando decenas de millones de suscriptores y convirtiéndose en uno de los canales más influyentes de toda Latinoamérica.
@@ -349,11 +354,12 @@ pero que ahora tendrá que responder golpe a golpe. 🥊`,
     birthDate: '2003-04-01',
     age: 23,
     youtubeChannelId: 'UClYcutwIFo-UoNRw2_3Kwaw',
-    followersUpdatedAt: '2026-05-14',
+    followersUpdatedAt: '2026-06-27',
     socials: [
       { platform: 'instagram', username: 'geroooo_arias2.0', followers: 5_800_000 },
       { platform: 'youtube', username: 'geroariass', followers: 3_830_000 },
       { platform: 'tiktok', username: 'geroariass2.0', followers: 3_100_000 },
+      { platform: 'kick', username: 'gerooo_arias', followers: 242_700 },
     ],
     ficha: `Gero Arias es creador de contenido argentino y una de las figuras más virales dentro del fitness y los retos físicos en redes sociales. Su crecimiento ha venido impulsado por su disciplina, su constancia y su capacidad para enganchar a la audiencia con desafíos exigentes y contenido motivacional.
 A lo largo de su trayectoria ha construido una comunidad muy sólida, especialmente en TikTok e Instagram, donde comparte entrenamientos, retos personales y evolución física, lo que le ha permitido posicionarse como uno de los perfiles fitness más reconocidos del panorama digital.
@@ -556,7 +562,7 @@ La Velada VI marca su salto a un terreno completamente distinto, donde tendrá q
 De las redes sociales y los eventos… a un combate real.
 Un perfil acostumbrado al foco mediático y a la presión constante…
 pero que ahora tendrá que demostrarlo dentro del ring. 🥊`,
-workout: [
+    workout: [
       {
         videoId: 'plWZbt_DFCw',
         title: 'MI RUTINA PARA LA VELADA *Episodio 1* - Marta Diaz',
@@ -588,7 +594,7 @@ De las redes sociales… al ring.
 La Velada VI supone para Natalia MX un cambio radical, donde tendrá que someterse a meses de preparación física y mental para competir en un deporte totalmente nuevo para ella. Sin experiencia previa en el boxeo, el reto será adaptarse a la exigencia del combate y demostrar disciplina dentro del cuadrilátero.
 Un perfil con gran presencia mediática, acostumbrado a estar en el foco…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
-workout: [
+    workout: [
       {
         videoId: 'b7KZHgHpsWI',
         title: 'ENTRENANDO PARA LA VELADA DEL AÑO || VLOG',
@@ -652,7 +658,7 @@ De las recetas… al ring.
 La Velada VI supone para Roro un reto totalmente nuevo, donde tendrá que enfrentarse a meses de preparación física y mental para competir en un deporte exigente y desconocido para ella. Sin experiencia previa en el boxeo, el desafío será adaptarse al ritmo del combate y demostrar disciplina dentro del cuadrilátero.
 Un perfil acostumbrado a la exposición constante y a la presión de las redes…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
-workout: [
+    workout: [
       {
         videoId: 'b4YZtb6lkpI',
         title: 'Rivers... voy a por ti.',
@@ -770,12 +776,13 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     age: 29,
     fightWeightKg: 77,
     youtubeChannelId: 'UCCEmjNPpJYhGDgaEqeeA4HA',
-    followersUpdatedAt: '2026-05-14',
+    followersUpdatedAt: '2026-06-27',
     socials: [
       { platform: 'youtube', username: 'TheGrefg', followers: 19_700_000 },
       { platform: 'twitch', username: 'thegrefg', followers: 12_300_000 },
       { platform: 'tiktok', username: 'thegrefg', followers: 9_600_000 },
       { platform: 'instagram', username: 'thegrefg', followers: 7_500_000 },
+      { platform: 'kick', username: 'thegrefg', followers: 380_000 },
     ],
     ficha: `Uno de los creadores de contenido más influyentes de España.
 TheGrefg ha marcado una era en YouTube y Twitch, batiendo récords históricos y construyendo una de las comunidades más grandes del mundo hispanohablante.
@@ -825,12 +832,13 @@ que ahora tendrá que volver a demostrarlo golpe a golpe. 🥊`,
     birthDate: '1992-05-01',
     age: 34,
     youtubeChannelId: 'UCvGiJYBPgVP7W1ypE3DKOqA',
-    followersUpdatedAt: '2026-05-14',
+    followersUpdatedAt: '2026-06-27',
     socials: [
       { platform: 'youtube', username: 'byViruZz', followers: 6_210_000 },
       { platform: 'instagram', username: 'victormelida', followers: 1_800_000 },
-      { platform: 'twitch', username: 'byviruzz', followers: 433_441 },
       { platform: 'tiktok', username: 'victormelida', followers: 1_700_000 },
+      { platform: 'x', username: 'byViruZz', followers: 1_000_000 },
+      { platform: 'twitch', username: 'byviruzz', followers: 433_441 },
     ],
     ficha: `Viruzz es creador de contenido español y una de las figuras más destacadas del panorama streamer en España. Su trayectoria en redes ha estado marcada por el contenido gaming, entretenimiento y una evolución muy fuerte hacia el deporte de contacto en los últimos años.
 A diferencia de otros participantes, Viruzz ya cuenta con experiencia previa en el boxeo tras su paso por varias ediciones de La Velada, donde ha demostrado un alto nivel de preparación, adaptación y competitividad dentro del ring.

@@ -827,12 +827,24 @@ const { totalFights } = Astro.props
     )
   }
 
+  // Listeners a nivel de `document` de la página anterior. Como setupModal se
+  // re-ejecuta en cada `astro:page-load` (navegación SPA) y `openModal` es un
+  // closure nuevo cada vez, sin esto se acumulaban suscripciones y el modal
+  // podía dispararse por duplicado. Un AbortController los corta de golpe.
+  let modalAbort: AbortController | null = null
+
   function setupModal() {
+    modalAbort?.abort()
+    modalAbort = null
+
     const modal = $<HTMLDialogElement>('[data-prediction-share-modal]')
     if (!modal) return
 
     const refs = collectRefs(modal)
     if (!refs.content) return
+
+    modalAbort = new AbortController()
+    const { signal } = modalAbort
 
     const setStatus = createStatusController(refs.status)
     const close = createModalCloser(modal, refs.content)
@@ -992,8 +1004,8 @@ const { totalFights } = Astro.props
 
     enableNativeShareIfSupported()
 
-    document.addEventListener(PREDICTION_COMPLETE_EVENT, openModal)
-    document.addEventListener(PREDICTION_SHARE_OPEN_EVENT, openModal)
+    document.addEventListener(PREDICTION_COMPLETE_EVENT, openModal, { signal })
+    document.addEventListener(PREDICTION_SHARE_OPEN_EVENT, openModal, { signal })
 
     wireCloseHandlers(modal, close)
   }

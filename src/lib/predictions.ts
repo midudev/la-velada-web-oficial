@@ -147,24 +147,6 @@ function ensurePredictionRowsStatements(battle: Battle) {
   }))
 }
 
-function recalculatePredictionsForCombatStatement(combatId: string) {
-  return {
-    sql: `
-      UPDATE predictions
-      SET
-        votes = (
-          SELECT COUNT(*)
-          FROM user_votes
-          WHERE user_votes.combat_id = predictions.combat_id
-            AND user_votes.fighter_id = predictions.fighter_id
-        ),
-        updated_at = CURRENT_TIMESTAMP
-      WHERE combat_id = ?
-    `,
-    args: [combatId],
-  }
-}
-
 /**
  * Obtiene las predicciones para un combate específico.
  */
@@ -264,12 +246,15 @@ export async function registerVote(
   combatId: string,
   fighterId: string,
   userId: string,
-): Promise<PredictionVote> {
+): Promise<{ vote: PredictionVote; prediction: PredictionResponse | null }> {
   try {
     const battle = assertValidPredictionTarget(combatId, fighterId)
 
-    // Una sola transacción (un round-trip en vez de dos): garantizamos las filas
-    // del combate, registramos el voto y recalculamos los totales en orden.
+    // Una sola transacción (un round-trip): garantizamos las filas del combate y
+    // registramos el voto. Los totales de `predictions` los mantienen ahora los
+    // triggers `user_votes_after_*` de forma incremental (+1/-1), así que ya no
+    // recontamos todos los votos del combate en cada voto (lo que disparaba las
+    // "rows read" de Turso de forma cuadrática).
     await turso.batch([
       ...ensurePredictionRowsStatements(battle),
       {
@@ -283,19 +268,21 @@ export async function registerVote(
         `,
         args: [combatId, fighterId, userId],
       },
-      recalculatePredictionsForCombatStatement(combatId),
     ])
     invalidateCache(combatId)
 
-    const updatedPrediction = await getPredictionsByCombat(combatId)
-    const fighterPrediction = updatedPrediction?.predictions.find(
-      (prediction) => prediction.fighter_id === fighterId,
+    const prediction = await getPredictionsByCombat(combatId)
+    const fighterPrediction = prediction?.predictions.find(
+      (entry) => entry.fighter_id === fighterId,
     )
 
     return {
-      combat_id: combatId,
-      fighter_id: fighterId,
-      votes: fighterPrediction?.votes ?? 0,
+      vote: {
+        combat_id: combatId,
+        fighter_id: fighterId,
+        votes: fighterPrediction?.votes ?? 0,
+      },
+      prediction,
     }
   } catch (error) {
     if (error instanceof PredictionDataError) throw error

@@ -17,22 +17,23 @@ const description = 'Pronostica los ganadores de los combates de La Velada del A
 const canonical = 'https://www.infolavelada.com/pronosticos'
 const user = Astro.locals.user
 
-let storedPredictions: Awaited<ReturnType<typeof getAllPredictions>> = []
-let storedUserVotes: Awaited<ReturnType<typeof getUserVotes>> = []
-
-try {
-  storedPredictions = await getAllPredictions()
-} catch (error) {
-  console.error('Error al cargar predicciones:', error)
-}
-
-if (user?.id) {
-  try {
-    storedUserVotes = await getUserVotes(user.id)
-  } catch (error) {
-    console.error('Error al cargar votos del usuario:', error)
-  }
-}
+// Lanzamos las dos lecturas a Turso en paralelo: los votos del usuario no
+// dependen de las predicciones globales, así que encadenarlas con dos `await`
+// sumaba dos round-trips a la BD en el TTFB de cada carga con sesión iniciada
+// (la página es `prerender = false` y el render espera a ambas). Con
+// `Promise.all` el render solo espera a la más lenta de las dos.
+const [storedPredictions, storedUserVotes] = await Promise.all([
+  getAllPredictions().catch((error) => {
+    console.error('Error al cargar predicciones:', error)
+    return [] as Awaited<ReturnType<typeof getAllPredictions>>
+  }),
+  user?.id
+    ? getUserVotes(user.id).catch((error) => {
+        console.error('Error al cargar votos del usuario:', error)
+        return [] as Awaited<ReturnType<typeof getUserVotes>>
+      })
+    : Promise.resolve([] as Awaited<ReturnType<typeof getUserVotes>>),
+])
 
 const predictionBattles = createPredictionBattles(storedPredictions)
 const userVotesByCombat = Object.fromEntries(
