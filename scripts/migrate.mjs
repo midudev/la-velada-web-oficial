@@ -50,6 +50,51 @@ const STATEMENTS = [
     name: 'user_votes_combat_fighter_idx',
     sql: `CREATE INDEX IF NOT EXISTS user_votes_combat_fighter_idx ON user_votes(combat_id, fighter_id)`,
   },
+  // Triggers que mantienen `predictions.votes` de forma incremental (+1/-1) a
+  // partir de los cambios en `user_votes`. Sustituyen al recálculo con COUNT(*)
+  // en cada voto, que leía todas las filas del combate por voto y disparaba el
+  // total de "rows read" de Turso de forma cuadrática. Deben mantenerse
+  // idénticos a los de scripts/predictions-shared.mjs (ensurePredictionTriggers).
+  {
+    name: 'user_votes_after_insert',
+    sql: `
+      CREATE TRIGGER IF NOT EXISTS user_votes_after_insert
+      AFTER INSERT ON user_votes
+      BEGIN
+        UPDATE predictions
+        SET votes = votes + 1, updated_at = CURRENT_TIMESTAMP
+        WHERE combat_id = NEW.combat_id AND fighter_id = NEW.fighter_id;
+      END
+    `,
+  },
+  {
+    name: 'user_votes_after_update',
+    sql: `
+      CREATE TRIGGER IF NOT EXISTS user_votes_after_update
+      AFTER UPDATE OF fighter_id ON user_votes
+      WHEN OLD.fighter_id <> NEW.fighter_id
+      BEGIN
+        UPDATE predictions
+        SET votes = votes - 1, updated_at = CURRENT_TIMESTAMP
+        WHERE combat_id = OLD.combat_id AND fighter_id = OLD.fighter_id;
+        UPDATE predictions
+        SET votes = votes + 1, updated_at = CURRENT_TIMESTAMP
+        WHERE combat_id = NEW.combat_id AND fighter_id = NEW.fighter_id;
+      END
+    `,
+  },
+  {
+    name: 'user_votes_after_delete',
+    sql: `
+      CREATE TRIGGER IF NOT EXISTS user_votes_after_delete
+      AFTER DELETE ON user_votes
+      BEGIN
+        UPDATE predictions
+        SET votes = votes - 1, updated_at = CURRENT_TIMESTAMP
+        WHERE combat_id = OLD.combat_id AND fighter_id = OLD.fighter_id;
+      END
+    `,
+  },
   // Tablas de better-auth. El esquema (nombres de columna camelCase y tipos)
   // replica el que genera el adaptador Kysely de better-auth para SQLite, para
   // que su introspección las reconozca sin intentar alterarlas. Persistirlas

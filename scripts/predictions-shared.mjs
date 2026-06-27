@@ -67,6 +67,55 @@ export async function ensurePredictionsSchema() {
     CREATE INDEX IF NOT EXISTS user_votes_combat_fighter_idx
       ON user_votes(combat_id, fighter_id)
   `)
+
+  await ensurePredictionTriggers()
+}
+
+// Triggers que mantienen el contador `predictions.votes` de forma incremental
+// (+1/-1) a partir de los cambios en `user_votes`. Sustituyen al recálculo con
+// `COUNT(*)` en cada voto, que era O(N) en lecturas por voto y disparaba el
+// total de "rows read" de Turso de forma cuadrática. Cada voto pasa a tocar
+// solo la fila de `predictions` afectada, resuelta por `UNIQUE(combat_id,
+// fighter_id)`. Las sentencias deben mantenerse idénticas a las de migrate.mjs.
+export async function ensurePredictionTriggers() {
+  await turso.execute(`
+    CREATE TRIGGER IF NOT EXISTS user_votes_after_insert
+    AFTER INSERT ON user_votes
+    BEGIN
+      UPDATE predictions
+      SET votes = votes + 1, updated_at = CURRENT_TIMESTAMP
+      WHERE combat_id = NEW.combat_id AND fighter_id = NEW.fighter_id;
+    END
+  `)
+
+  // Cambiar el voto (mismo usuario, otro luchador) resta al anterior y suma al
+  // nuevo. El guard `WHEN` evita tocar el contador cuando se revota lo mismo
+  // (el upsert siempre reescribe fighter_id/created_at y dispararía el trigger).
+  await turso.execute(`
+    CREATE TRIGGER IF NOT EXISTS user_votes_after_update
+    AFTER UPDATE OF fighter_id ON user_votes
+    WHEN OLD.fighter_id <> NEW.fighter_id
+    BEGIN
+      UPDATE predictions
+      SET votes = votes - 1, updated_at = CURRENT_TIMESTAMP
+      WHERE combat_id = OLD.combat_id AND fighter_id = OLD.fighter_id;
+      UPDATE predictions
+      SET votes = votes + 1, updated_at = CURRENT_TIMESTAMP
+      WHERE combat_id = NEW.combat_id AND fighter_id = NEW.fighter_id;
+    END
+  `)
+
+  // Mantiene el contador correcto si algún día se borran votos (p. ej. limpieza
+  // de inactivos documentada en DATABASE_PREDICTIONS.md).
+  await turso.execute(`
+    CREATE TRIGGER IF NOT EXISTS user_votes_after_delete
+    AFTER DELETE ON user_votes
+    BEGIN
+      UPDATE predictions
+      SET votes = votes - 1, updated_at = CURRENT_TIMESTAMP
+      WHERE combat_id = OLD.combat_id AND fighter_id = OLD.fighter_id;
+    END
+  `)
 }
 
 export function predictionRowStatement(combatId, fighterId) {

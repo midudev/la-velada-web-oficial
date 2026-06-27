@@ -96,8 +96,7 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ error: 'combat_id y fighter_id son obligatorios' }, 400)
     }
 
-    const vote = await registerVote(combatId, fighterId, userId)
-    const prediction = await getPredictionsByCombat(combatId)
+    const { vote, prediction } = await registerVote(combatId, fighterId, userId)
 
     return json({ vote, prediction })
   } catch (error) {
