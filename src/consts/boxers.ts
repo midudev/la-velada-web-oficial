@@ -60,7 +60,7 @@ export const BOXERS: Boxer[] = [
       { platform: 'instagram', username: 'alondraa.michellee', followers: 1_500_000 },
       { platform: 'youtube', username: 'AlondrissaOfficial', followers: 1_240_000 },
       { platform: 'youtube', username: 'AlondrissaPluss', followers: 1_010_000 },
-      { platform: 'kick', username: 'alondrissa', followers: 626_862 },
+      { platform: 'kick', username: 'alondrissa', followers: 633_700 },
       { platform: 'youtube', username: 'AlondraMichelleVlogs', followers: 351_000 },
     ],
     ficha: `Alondrissa es creadora de contenido puertorriqueña y una de las streamers más 
