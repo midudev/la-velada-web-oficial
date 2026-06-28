@@ -106,8 +106,10 @@ export const BOXERS: Boxer[] = [
     followersUpdatedAt: '2026-05-14',
     socials: [
       { platform: 'youtube', username: 'AngieVelasco', followers: 6_140_000 },
+      { platform: 'youtube', username: 'angievelasco2.0', followers: 342_000 },
       { platform: 'tiktok', username: 'angievelasco98', followers: 4_900_000 },
       { platform: 'instagram', username: 'angievelasco08', followers: 2_200_000 },
+      { platform: 'x', username: 'AngieVelasco08', followers: 1_800_000 },
     ],
     ficha: `Angie Velasco es creadora de contenido argentina y una de las youtubers más reconocidas dentro del panorama digital en Latinoamérica. Su crecimiento ha venido impulsado por su estilo cercano, su espontaneidad y su capacidad para conectar con millones de seguidores a través de contenido variado y entretenido.
             A lo largo de su trayectoria ha construido una comunidad masiva, especialmente en YouTube, donde acumula millones de suscriptores gracias a sus vlogs, retos y experiencias personales que la han convertido en una figura muy influyente en redes.
