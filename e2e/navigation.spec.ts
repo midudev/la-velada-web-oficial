@@ -19,6 +19,9 @@ test.describe('Navegación principal', () => {
   test('el logo devuelve al inicio', async ({ page }) => {
     await page.goto('/combates')
     await page.getByRole('link', { name: 'La Velada del Año VI - Inicio' }).click()
-    await expect(page).toHaveURL(/\/$/)
+    // El logo debe llevar exactamente a la raíz, no a cualquier ruta que acabe
+    // en "/". `toHaveURL('/')` la resuelve contra baseURL y exige coincidencia
+    // exacta, manteniendo además la espera automática de Playwright.
+    await expect(page).toHaveURL('/')
   })
 })

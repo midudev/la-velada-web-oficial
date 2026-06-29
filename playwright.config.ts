@@ -1,7 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const PORT = 4321
-const BASE_URL = `http://localhost:${PORT}`
+import { BASE_URL, PORT } from './e2e/base-url'
 
 // Variables mínimas para que el dev server arranque sin servicios externos.
 // Los tests E2E solo cubren rutas que NO consultan Turso ni OAuth (home,

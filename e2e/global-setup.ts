@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:4321'
+import { BASE_URL } from './base-url'
 
 // Astro compila cada ruta la primera vez que se solicita en modo dev. Si los
 // tests arrancan en paralelo contra un servidor "en frío", esa compilación
