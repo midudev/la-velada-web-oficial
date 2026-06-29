@@ -4,7 +4,9 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { fighterGallery } from '@/utils/get-image-count'
 
-const FIXTURE_ID = '__vitest_gallery_fixture__'
+// ID único por ejecución para no colisionar con boxeadores reales ni con
+// restos de ejecuciones anteriores que hubieran abortado antes del afterAll.
+const FIXTURE_ID = `__vitest_gallery_fixture_${process.pid}__`
 const fixtureDir = path.join(process.cwd(), 'public', 'images', 'fighters', 'gallery', FIXTURE_ID)
 
 describe('fighterGallery', () => {

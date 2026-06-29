@@ -33,6 +33,6 @@ describe('Constantes del evento', () => {
   })
 
   it('EVENT_HOUR tiene formato HH:MM', () => {
-    expect(EVENT_HOUR).toMatch(/^\d{2}:\d{2}$/)
+    expect(EVENT_HOUR).toMatch(/^([01]\d|2[0-3]):[0-5]\d$/)
   })
 })
