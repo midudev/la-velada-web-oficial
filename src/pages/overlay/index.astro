@@ -1,0 +1,610 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import Footer from '@/sections/Footer.astro'
+import { battles } from '@/consts/battles'
+import { BOXERS_BY_ID } from '@/consts/boxers'
+
+export const prerender = true
+
+const title = 'Overlay de pronósticos para OBS | La Velada del Año VI'
+const description =
+  'Genera un overlay con los votos de los pronósticos de La Velada del Año VI en tiempo real para usar como Browser Source en OBS, Streamlabs o tu programa de directo favorito.'
+
+// Opciones del desplegable de combate (orden ascendente por número).
+const combatOptions = [...battles]
+  .sort((a, b) => a.number - b.number)
+  .map((battle) => {
+    const [aId, bId] = battle.boxerIds
+    return {
+      value: String(battle.number),
+      label: `Combate ${String(battle.number).padStart(2, '0')} — ${BOXERS_BY_ID[aId].name} vs ${BOXERS_BY_ID[bId].name}`,
+    }
+  })
+---
+
+<Layout title={title} description={description} robots="noindex, nofollow">
+  <section class="ovc-page">
+    <div class="ovc-bg" aria-hidden="true"></div>
+
+    <div class="ovc-wrap">
+      <header class="ovc-header">
+        <p class="ovc-eyebrow">Para streamers · Browser Source</p>
+        <h1 class="ovc-title">Overlay de pronósticos</h1>
+        <p class="ovc-sub">
+          Muestra en tu directo los <strong>votos de los pronósticos en tiempo real</strong> de La
+          Velada del Año VI. Personalízalo, copia la URL y pégala en OBS como
+          <strong>Fuente de navegador</strong>. Fondo transparente y datos que se actualizan solos.
+        </p>
+      </header>
+
+      <div class="ovc-grid">
+        <!-- Panel de controles -->
+        <form class="ovc-panel ovc-controls" id="ovc-form">
+          <h2 class="ovc-panel-title">Personalización</h2>
+
+          <label class="ovc-field">
+            <span class="ovc-label">¿Qué combates mostrar?</span>
+            <select id="ovc-combate" class="ovc-select">
+              <option value="todos">Todos los combates (rotando)</option>
+              {combatOptions.map((opt) => <option value={opt.value}>{opt.label}</option>)}
+            </select>
+          </label>
+
+          <label class="ovc-field" id="ovc-rotacion-field">
+            <span class="ovc-label">
+              Rotar cada <span class="ovc-value" id="ovc-rotacion-val">8s</span>
+            </span>
+            <input
+              id="ovc-rotacion"
+              class="ovc-range"
+              type="range"
+              min="2"
+              max="30"
+              step="1"
+              value="8"
+            />
+            <span class="ovc-hint">Solo aplica cuando muestras todos los combates.</span>
+          </label>
+
+          <div class="ovc-field">
+            <span class="ovc-label">Posición en pantalla</span>
+            <div class="ovc-segment" role="radiogroup" aria-label="Posición">
+              <label class="ovc-seg">
+                <input type="radio" name="posicion" value="superior" />
+                <span>Arriba</span>
+              </label>
+              <label class="ovc-seg">
+                <input type="radio" name="posicion" value="centro" />
+                <span>Centro</span>
+              </label>
+              <label class="ovc-seg">
+                <input type="radio" name="posicion" value="inferior" checked />
+                <span>Abajo</span>
+              </label>
+            </div>
+          </div>
+
+          <label class="ovc-field">
+            <span class="ovc-label">
+              Tamaño <span class="ovc-value" id="ovc-escala-val">100%</span>
+            </span>
+            <input
+              id="ovc-escala"
+              class="ovc-range"
+              type="range"
+              min="0.6"
+              max="2"
+              step="0.05"
+              value="1"
+            />
+          </label>
+
+          <label class="ovc-toggle">
+            <input id="ovc-avatar" type="checkbox" checked />
+            <span class="ovc-toggle-track"><span class="ovc-toggle-thumb"></span></span>
+            <span class="ovc-toggle-text">Mostrar avatar de los combatientes</span>
+          </label>
+        </form>
+
+        <!-- Vista previa + URL -->
+        <div class="ovc-panel ovc-preview-panel">
+          <div class="ovc-preview-head">
+            <h2 class="ovc-panel-title">Vista previa</h2>
+            <span class="ovc-preview-note">Votos reales · fondo transparente</span>
+          </div>
+
+          <div class="ovc-preview-stage">
+            <iframe
+              id="ovc-preview"
+              title="Vista previa del overlay"
+              src="/overlay/obs?combate=todos&rotacion=8&avatar=si&posicion=inferior&escala=1"
+              loading="lazy"></iframe>
+          </div>
+
+          <label class="ovc-label ovc-url-label" for="ovc-url">URL para OBS</label>
+          <div class="ovc-url-row">
+            <input id="ovc-url" class="ovc-url" type="text" readonly value="" />
+            <button type="button" id="ovc-copy" class="ovc-btn ovc-btn-copy">Copiar</button>
+          </div>
+          <div class="ovc-url-actions">
+            <a id="ovc-open" class="ovc-link" href="/overlay/obs" target="_blank" rel="noopener">
+              Abrir overlay en una pestaña ↗
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instrucciones -->
+      <div class="ovc-panel ovc-steps">
+        <h2 class="ovc-panel-title">Cómo añadirlo en OBS</h2>
+        <ol class="ovc-steps-list">
+          <li>Personaliza el overlay arriba y pulsa <strong>Copiar</strong>.</li>
+          <li>
+            En OBS, en <strong>Fuentes</strong>, pulsa <strong>+</strong> y elige
+            <strong>Navegador</strong> (Browser).
+          </li>
+          <li>Pega la URL copiada en el campo <strong>URL</strong>.</li>
+          <li>
+            Ancho <strong>1920</strong> y alto <strong>1080</strong> (o el de tu escena). El fondo
+            es transparente.
+          </li>
+          <li>Acepta y coloca el overlay donde quieras dentro de tu escena.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<script>
+  const form = document.getElementById('ovc-form')
+  const combate = document.getElementById('ovc-combate') as HTMLSelectElement | null
+  const rotacion = document.getElementById('ovc-rotacion') as HTMLInputElement | null
+  const rotacionField = document.getElementById('ovc-rotacion-field')
+  const rotacionVal = document.getElementById('ovc-rotacion-val')
+  const escala = document.getElementById('ovc-escala') as HTMLInputElement | null
+  const escalaVal = document.getElementById('ovc-escala-val')
+  const avatar = document.getElementById('ovc-avatar') as HTMLInputElement | null
+  const urlField = document.getElementById('ovc-url') as HTMLInputElement | null
+  const preview = document.getElementById('ovc-preview') as HTMLIFrameElement | null
+  const openLink = document.getElementById('ovc-open') as HTMLAnchorElement | null
+  const copyBtn = document.getElementById('ovc-copy') as HTMLButtonElement | null
+
+  if (form && combate && rotacion && escala && avatar && urlField && preview) {
+    const getPosicion = () =>
+      (document.querySelector('input[name="posicion"]:checked') as HTMLInputElement | null)?.value ??
+      'inferior'
+
+    const buildUrl = () => {
+      const isTodos = combate.value === 'todos'
+      const params = new URLSearchParams()
+      params.set('combate', combate.value)
+      if (isTodos) params.set('rotacion', rotacion.value)
+      params.set('avatar', avatar.checked ? 'si' : 'no')
+      params.set('posicion', getPosicion())
+      params.set('escala', escala.value)
+      return `${window.location.origin}/overlay/obs?${params.toString()}`
+    }
+
+    let previewTimer: number | undefined
+    const refreshPreview = (url: string) => {
+      // El relativo basta para el iframe; recargar reinicia la rotación con el
+      // nuevo intervalo. Se hace con debounce para no recargar al arrastrar.
+      window.clearTimeout(previewTimer)
+      previewTimer = window.setTimeout(() => {
+        preview.src = url.replace(window.location.origin, '')
+      }, 250)
+    }
+
+    const sync = ({ reloadPreview = true } = {}) => {
+      const isTodos = combate.value === 'todos'
+      if (rotacionField) rotacionField.classList.toggle('is-disabled', !isTodos)
+      rotacion.disabled = !isTodos
+      if (rotacionVal) rotacionVal.textContent = `${rotacion.value}s`
+      if (escalaVal) escalaVal.textContent = `${Math.round(Number(escala.value) * 100)}%`
+
+      const url = buildUrl()
+      urlField.value = url
+      if (openLink) openLink.href = url
+      if (reloadPreview) refreshPreview(url)
+    }
+
+    // Los rangos actualizan etiquetas en cada "input" pero solo recargan el
+    // preview al soltar, para que arrastrar sea fluido.
+    rotacion.addEventListener('input', () => sync({ reloadPreview: false }))
+    escala.addEventListener('input', () => sync({ reloadPreview: false }))
+    rotacion.addEventListener('change', () => sync())
+    escala.addEventListener('change', () => sync())
+    combate.addEventListener('change', () => sync())
+    avatar.addEventListener('change', () => sync())
+    form.querySelectorAll('input[name="posicion"]').forEach((el) => {
+      el.addEventListener('change', () => sync())
+    })
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(urlField.value)
+        } catch {
+          urlField.select()
+          document.execCommand('copy')
+        }
+        const original = copyBtn.textContent
+        copyBtn.textContent = '¡Copiado!'
+        copyBtn.classList.add('is-done')
+        window.setTimeout(() => {
+          copyBtn.textContent = original
+          copyBtn.classList.remove('is-done')
+        }, 1600)
+      })
+    }
+
+    sync({ reloadPreview: false })
+  }
+</script>
+
+<style>
+  .ovc-page {
+    position: relative;
+    isolation: isolate;
+    min-height: 100svh;
+    padding: 7rem 1rem 4rem;
+    color: var(--color-theme-cream);
+    overflow-x: clip;
+  }
+
+  @media (min-width: 640px) {
+    .ovc-page {
+      padding: 9rem 1.5rem 5rem;
+    }
+  }
+
+  .ovc-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(
+        ellipse 70% 50% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 16%, transparent) 0%,
+        transparent 60%
+      ),
+      linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
+  }
+
+  .ovc-wrap {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 76rem;
+  }
+
+  .ovc-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .ovc-eyebrow {
+    margin: 0 0 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 90%, white);
+  }
+  .ovc-title {
+    margin: 0 0 0.7rem;
+    font-family: var(--font-cinzel);
+    font-size: clamp(2rem, 1.4rem + 3vw, 3.6rem);
+    font-weight: 900;
+    letter-spacing: 0.08em;
+  }
+  .ovc-sub {
+    margin: 0 auto;
+    max-width: 44rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--color-theme-cream) 78%, transparent);
+  }
+  .ovc-sub strong {
+    color: var(--color-theme-cream);
+  }
+
+  .ovc-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+  @media (min-width: 920px) {
+    .ovc-grid {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      align-items: start;
+    }
+  }
+
+  .ovc-panel {
+    border-radius: 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 24%, transparent);
+    background: linear-gradient(180deg, rgba(12, 19, 48, 0.72) 0%, rgba(6, 10, 29, 0.82) 100%);
+    box-shadow: 0 1rem 2.4rem rgba(0, 0, 0, 0.35);
+    padding: 1.4rem;
+  }
+  @media (min-width: 640px) {
+    .ovc-panel {
+      padding: 1.7rem;
+    }
+  }
+
+  .ovc-panel-title {
+    margin: 0 0 1.1rem;
+    font-family: var(--font-cinzel);
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-theme-gold);
+  }
+
+  .ovc-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+  .ovc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .ovc-field.is-disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .ovc-label {
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    color: var(--color-theme-cream);
+  }
+  .ovc-value {
+    color: var(--color-theme-gold);
+    font-variant-numeric: tabular-nums;
+  }
+  .ovc-hint {
+    font-size: 0.72rem;
+    color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
+  }
+
+  .ovc-select {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.55rem;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    background: rgba(5, 8, 15, 0.7);
+    color: var(--color-theme-cream);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .ovc-select:focus-visible {
+    outline: 2px solid var(--color-theme-gold);
+    outline-offset: 2px;
+  }
+
+  .ovc-range {
+    width: 100%;
+    accent-color: var(--color-theme-gold);
+    cursor: pointer;
+  }
+
+  .ovc-segment {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+    padding: 0.3rem;
+    border-radius: 0.6rem;
+    background: rgba(5, 8, 15, 0.6);
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+  }
+  .ovc-seg {
+    position: relative;
+    cursor: pointer;
+  }
+  .ovc-seg input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+  }
+  .ovc-seg span {
+    display: block;
+    text-align: center;
+    padding: 0.5rem 0.4rem;
+    border-radius: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    color: color-mix(in srgb, var(--color-theme-cream) 70%, transparent);
+    transition:
+      background 200ms ease,
+      color 200ms ease;
+  }
+  .ovc-seg input:checked + span {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 90%, white),
+      var(--color-theme-gold)
+    );
+    color: #05080f;
+  }
+  .ovc-seg input:focus-visible + span {
+    outline: 2px solid var(--color-theme-cream);
+    outline-offset: 2px;
+  }
+
+  .ovc-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .ovc-toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .ovc-toggle-track {
+    flex: none;
+    position: relative;
+    width: 3rem;
+    height: 1.65rem;
+    border-radius: 999px;
+    background: rgba(5, 8, 15, 0.8);
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    transition: background 220ms ease;
+  }
+  .ovc-toggle-thumb {
+    position: absolute;
+    top: 0.18rem;
+    left: 0.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-theme-cream) 70%, transparent);
+    transition:
+      transform 220ms ease,
+      background 220ms ease;
+  }
+  .ovc-toggle input:checked + .ovc-toggle-track {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-theme-gold) 92%, white), var(--color-theme-gold));
+  }
+  .ovc-toggle input:checked + .ovc-toggle-track .ovc-toggle-thumb {
+    transform: translateX(1.35rem);
+    background: #05080f;
+  }
+  .ovc-toggle input:focus-visible + .ovc-toggle-track {
+    outline: 2px solid var(--color-theme-cream);
+    outline-offset: 2px;
+  }
+  .ovc-toggle-text {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-theme-cream);
+  }
+
+  .ovc-preview-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .ovc-preview-note {
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 50%, transparent);
+  }
+
+  .ovc-preview-stage {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    border-radius: 0.6rem;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
+    /* Tablero de ajedrez para evidenciar la transparencia real del overlay. */
+    background-color: #2a2f3a;
+    background-image:
+      linear-gradient(45deg, #20242e 25%, transparent 25%),
+      linear-gradient(-45deg, #20242e 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #20242e 75%),
+      linear-gradient(-45deg, transparent 75%, #20242e 75%);
+    background-size: 24px 24px;
+    background-position:
+      0 0,
+      0 12px,
+      12px -12px,
+      -12px 0;
+  }
+  .ovc-preview-stage iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: transparent;
+  }
+
+  .ovc-url-label {
+    display: block;
+    margin: 1.2rem 0 0.5rem;
+  }
+  .ovc-url-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .ovc-url {
+    flex: 1;
+    min-width: 0;
+    padding: 0.7rem 0.85rem;
+    border-radius: 0.55rem;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+    background: rgba(5, 8, 15, 0.8);
+    color: var(--color-theme-cream);
+    font-family: ui-monospace, monospace;
+    font-size: 0.78rem;
+  }
+  .ovc-btn {
+    flex: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 0.55rem;
+    border: 1px solid var(--color-theme-gold);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-theme-gold) 92%, white), var(--color-theme-gold));
+    color: #05080f;
+    font-family: inherit;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: filter 200ms ease;
+  }
+  .ovc-btn:hover {
+    filter: brightness(1.08);
+  }
+  .ovc-btn.is-done {
+    filter: none;
+    background: var(--color-velada-forest, #1d3524);
+    color: var(--color-theme-cream);
+    border-color: var(--color-theme-cream);
+  }
+  .ovc-url-actions {
+    margin-top: 0.8rem;
+  }
+  .ovc-link {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--color-theme-gold);
+    text-decoration: none;
+  }
+  .ovc-link:hover {
+    text-decoration: underline;
+  }
+
+  .ovc-steps {
+    margin-top: 1.2rem;
+  }
+  .ovc-steps-list {
+    margin: 0;
+    padding-left: 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--color-theme-cream) 82%, transparent);
+  }
+  .ovc-steps-list strong {
+    color: var(--color-theme-cream);
+  }
+</style>
