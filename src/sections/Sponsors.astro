@@ -4,6 +4,7 @@ import AlsaLogo from '@/assets/sponsors/alsa.svg'
 import CeraveLogo from '@/assets/sponsors/cerave.svg'
 import CocaColaLogo from '@/assets/sponsors/cocacola.svg'
 import GrefusaLogo from '@/assets/sponsors/grefusa.svg'
+import GshockLogo from '@/assets/sponsors/gshock.svg'
 import IdealoLogo from '@/assets/sponsors/idealo.svg'
 import InfojobsLogo from '@/assets/sponsors/infojobs.svg'
 import MahouLogo from '@/assets/sponsors/mahou.svg'
@@ -155,6 +156,14 @@ const SPONSORS: Sponsor[] = [
     Logo: AlsaLogo,
     logoClass: 'w-[60%] max-w-[110px]',
   },
+  {
+    name: 'G-SHOCK',
+    slug: 'gshock',
+    url: 'https://www.casio.com/es/watches/gshock/',
+    label: 'Ir a la página web de G-SHOCK',
+    Logo: GshockLogo,
+    logoClass: 'w-[72%] max-w-[160px]',
+  },
 ]
 ---
 
@@ -297,24 +306,14 @@ const SPONSORS: Sponsor[] = [
   }
 
   /**
-   * En desktop tenemos 11 patrocinadores. Usamos un grid de 30 columnas
-   * (mínimo común múltiplo de 5 y 6) para que la primera fila aloje
-   * 5 tarjetas (span 6 cada una = 30) y la segunda fila aloje 6
-   * (span 5 cada una = 30). Quedan dos filas perfectamente simétricas
+   * En desktop tenemos 12 patrocinadores. Con un grid de 6 columnas
+   * quedan dos filas perfectamente simétricas de 6 tarjetas cada una,
    * con todas las tarjetas en igualdad visual.
    */
   @media (min-width: 1024px) {
     .sponsors-grid {
-      grid-template-columns: repeat(30, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 1rem;
-    }
-
-    .sponsors-grid > li {
-      grid-column: span 6;
-    }
-
-    .sponsors-grid > li:nth-child(n + 6) {
-      grid-column: span 5;
     }
   }
 
