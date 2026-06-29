@@ -30,6 +30,15 @@
 - **Crea una nueva rama**: Antes de empezar a trabajar en tus cambios, crea una nueva rama utilizando `git switch -c nombre-de-tu-rama`.
 - **Desarrolla tus cambios**: Implementa tus cambios o mejoras en tu rama local. Asegúrate de seguir las prácticas y estándares de código del proyecto.
 - **Prueba tus cambios**: Ejecuta `pnpm run dev` para iniciar el servidor de desarrollo de Astro y revisa tus cambios en el navegador.
+- **Ejecuta los tests E2E**: El proyecto incluye una suite de tests end-to-end con [Playwright](https://playwright.dev) que verifica los flujos críticos de navegación (home, boxeadores, combates, artistas, 404), el SEO y la accesibilidad básica. La primera vez, instala el navegador; luego ejecuta la suite (Playwright levanta el servidor de desarrollo automáticamente):
+
+  ```sh
+  pnpm exec playwright install chromium   # solo la primera vez
+  pnpm test:e2e                            # ejecuta la suite
+  pnpm test:e2e:ui                         # modo interactivo (UI)
+  ```
+
+  Si cambias páginas, navegación, cabecera o metadatos, ejecuta los tests E2E antes de enviar tus cambios.
 
 #### 3. Envía tus cambios
 
