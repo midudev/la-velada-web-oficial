@@ -30,6 +30,14 @@
 - **Crea una nueva rama**: Antes de empezar a trabajar en tus cambios, crea una nueva rama utilizando `git switch -c nombre-de-tu-rama`.
 - **Desarrolla tus cambios**: Implementa tus cambios o mejoras en tu rama local. Asegúrate de seguir las prácticas y estándares de código del proyecto.
 - **Prueba tus cambios**: Ejecuta `pnpm run dev` para iniciar el servidor de desarrollo de Astro y revisa tus cambios en el navegador.
+- **Ejecuta los tests**: El proyecto incluye una suite de tests con [Vitest](https://vitest.dev) que cubre la lógica pura (formato de votos, serialización de JSON-LD, conteo de imágenes) y la integridad de los datos (boxeadores, combates y evento). Antes de enviar tus cambios, asegúrate de que siguen en verde:
+
+  ```sh
+  pnpm test        # ejecuta la suite una vez
+  pnpm test:watch  # modo interactivo mientras desarrollas
+  ```
+
+  Si modificas datos en `src/consts` (boxeadores, combates, etc.) o cualquier utilidad de `src/utils` o `src/lib`, ejecuta los tests para detectar errores como ids duplicados o combates que referencian a boxeadores inexistentes. Si añades funcionalidad, acompáñala de su test correspondiente.
 
 #### 3. Envía tus cambios
 
