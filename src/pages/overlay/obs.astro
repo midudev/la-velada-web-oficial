@@ -1,0 +1,668 @@
+---
+import { battles, type Battle } from '@/consts/battles'
+import { BOXERS_BY_ID, COUNTRY_NAMES, getBoxerSelectImages } from '@/consts/boxers'
+
+// Esta página es la que se pega como "Browser Source" en OBS. Es totalmente
+// autónoma (no usa el Layout global ni global.css) porque necesita un fondo
+// transparente y nada de chrome del sitio. Muestra los VOTOS DE LOS PRONÓSTICOS
+// EN TIEMPO REAL (porcentaje por combatiente, barra "tira de la cuerda", total y
+// líder), actualizándose por polling a /api/predictions. Se configura por query
+// params desde el panel de control de /overlay. Es SSR (sin prerender) para leer
+// los parámetros en cada petición.
+export const prerender = false
+
+const params = Astro.url.searchParams
+
+// --- combate: "todos" | número de combate (1-N) | id del combate ---
+const combateParam = (params.get('combate') ?? 'todos').toLowerCase().trim()
+
+function selectBattles(value: string): Battle[] {
+  if (value === '' || value === 'todos' || value === 'all') return battles
+  const asNumber = Number(value)
+  if (Number.isInteger(asNumber)) {
+    const byNumber = battles.filter((b) => b.number === asNumber)
+    if (byNumber.length > 0) return byNumber
+  }
+  const byId = battles.filter((b) => b.id === value)
+  if (byId.length > 0) return byId
+  return battles // fallback: si no se reconoce, mostramos todos
+}
+
+const selected = selectBattles(combateParam)
+
+// --- rotacion: segundos entre combates (solo aplica si hay más de uno) ---
+const rotacionRaw = Number(params.get('rotacion') ?? 8)
+const rotacionSeg = Number.isFinite(rotacionRaw)
+  ? Math.min(60, Math.max(2, Math.round(rotacionRaw)))
+  : 8
+
+// --- avatar: "si" (por defecto) | "no" ---
+const showAvatar = (params.get('avatar') ?? 'si').toLowerCase() !== 'no'
+
+// --- posicion vertical dentro del canvas de OBS ---
+const posicionParam = (params.get('posicion') ?? 'inferior').toLowerCase()
+const posicion = ['superior', 'centro', 'inferior'].includes(posicionParam)
+  ? posicionParam
+  : 'inferior'
+
+// --- escala: tamaño del overlay (mantiene nitidez sin reescalar en OBS) ---
+const escalaRaw = Number(params.get('escala') ?? 1)
+const escala = Number.isFinite(escalaRaw) ? Math.min(2.5, Math.max(0.5, escalaRaw)) : 1
+
+interface OverlayBoxer {
+  id: string
+  name: string
+  country: string
+  countryName: string
+  avatarAvif: string
+  avatarWebp: string
+}
+
+function toOverlayBoxer(id: string): OverlayBoxer {
+  const boxer = BOXERS_BY_ID[id]
+  const images = getBoxerSelectImages(boxer)
+  return {
+    id: boxer.id,
+    name: boxer.name,
+    country: boxer.country,
+    countryName: COUNTRY_NAMES[boxer.country] ?? boxer.country,
+    avatarAvif: images.avif,
+    avatarWebp: images.webp,
+  }
+}
+
+const cards = selected.map((battle) => {
+  const [aId, bId] = battle.boxerIds
+  return {
+    id: battle.id,
+    number: battle.number,
+    a: toOverlayBoxer(aId),
+    b: toOverlayBoxer(bId),
+  }
+})
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Overlay OBS · Pronósticos en vivo · La Velada del Año VI</title>
+    <link
+      rel="preload"
+      href="https://cdn.infolavelada.com/fonts/cinzel-black.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      href="https://cdn.infolavelada.com/fonts/cinzel-medium.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class:list={['ov-root', `ov-pos-${posicion}`]}>
+      <div class="ov-stage" data-rotacion={rotacionSeg} style={`--ov-scale:${escala}`}>
+        {
+          cards.map((card, index) => (
+            <article
+              class:list={['ov-card', { 'is-active': index === 0 }]}
+              data-live-prediction
+              data-battle-id={card.id}
+              data-has-votes="false"
+            >
+              <div class="ov-top">
+                <span class="ov-combate">
+                  Combate {String(card.number).padStart(2, '0')}
+                </span>
+                <span class="ov-total">
+                  <span data-live-total>0</span> votos
+                </span>
+              </div>
+
+              <div class:list={['ov-body', { 'no-avatar': !showAvatar }]}>
+                <div class="ov-side ov-a" data-live-side={card.a.id}>
+                  {showAvatar && (
+                    <span class="ov-avatarwrap">
+                      <picture class="ov-avatar">
+                        <source type="image/avif" srcset={card.a.avatarAvif} />
+                        <source type="image/webp" srcset={card.a.avatarWebp} />
+                        <img src={card.a.avatarWebp} alt={card.a.name} width="160" height="160" />
+                      </picture>
+                      <img
+                        class="ov-flag"
+                        src={`https://cdn.infolavelada.com/flags/${card.a.country}.svg`}
+                        alt={card.a.countryName}
+                        width="22"
+                        height="22"
+                      />
+                    </span>
+                  )}
+                  <div class="ov-meta">
+                    {!showAvatar && (
+                      <img
+                        class="ov-flag-chip"
+                        src={`https://cdn.infolavelada.com/flags/${card.a.country}.svg`}
+                        alt={card.a.countryName}
+                        width="22"
+                        height="22"
+                      />
+                    )}
+                    <span class="ov-name">{card.a.name}</span>
+                  </div>
+                  <span class="ov-pct ov-pct-a" data-live-pct={card.a.id}>
+                    —
+                  </span>
+                </div>
+
+                <div class="ov-vs" aria-hidden="true">
+                  <svg class="ov-logo" fill="none" viewBox="0 0 206 224">
+                    <path
+                      d="m206 0-29 13-18 10c-12 9-23 21-32 35l-14 25-10-15-10 14-14-24a111 111 0 0 0-50-45L0 0l74 112L0 224l29-13 18-10c12-9 23-21 32-35l14-25 10 15 10-15 14 25a111 111 0 0 0 50 45l29 13-74-112zm-73 62a103 103 0 0 1 47-42l7-4-59 90-11-17zM19 16l7 4c6 2 12 5 17 9q18 12 30 33l16 27-11 17zm84 128-6-9 6-10 6 10zm84 64-7-4h-1l-16-9q-18-12-30-33l-16-27-11-19-3-5-2 5-12 19-16 27a103 103 0 0 1-47 42l-7 3 62-92 17-26 5-9 6 9 17 26z"
+                      style="fill:currentColor"></path>
+                  </svg>
+                </div>
+
+                <div class="ov-side ov-b" data-live-side={card.b.id}>
+                  {showAvatar && (
+                    <span class="ov-avatarwrap">
+                      <picture class="ov-avatar">
+                        <source type="image/avif" srcset={card.b.avatarAvif} />
+                        <source type="image/webp" srcset={card.b.avatarWebp} />
+                        <img src={card.b.avatarWebp} alt={card.b.name} width="160" height="160" />
+                      </picture>
+                      <img
+                        class="ov-flag"
+                        src={`https://cdn.infolavelada.com/flags/${card.b.country}.svg`}
+                        alt={card.b.countryName}
+                        width="22"
+                        height="22"
+                      />
+                    </span>
+                  )}
+                  <div class="ov-meta">
+                    {!showAvatar && (
+                      <img
+                        class="ov-flag-chip"
+                        src={`https://cdn.infolavelada.com/flags/${card.b.country}.svg`}
+                        alt={card.b.countryName}
+                        width="22"
+                        height="22"
+                      />
+                    )}
+                    <span class="ov-name">{card.b.name}</span>
+                  </div>
+                  <span class="ov-pct ov-pct-b" data-live-pct={card.b.id}>
+                    —
+                  </span>
+                </div>
+              </div>
+
+              <div class="ov-track" aria-hidden="true">
+                <span class="ov-fill ov-fill-a" data-live-fill={card.a.id} />
+                <span class="ov-fill ov-fill-b" data-live-fill={card.b.id} />
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+
+    {/* Inline a propósito: el script se emite tal cual en el HTML y se ejecuta
+        UNA sola vez por carga. Así evitamos que el bundling/HMR de Astro lo
+        re-evalúe y acumule temporizadores. */}
+    <script is:inline>
+      ;(function () {
+        var stage = document.querySelector('.ov-stage')
+        var cards = Array.prototype.slice.call(document.querySelectorAll('.ov-card'))
+        var seconds = Number((stage && stage.dataset.rotacion) || 0)
+        if (!stage || cards.length < 2 || !(seconds > 0)) return
+
+        // Rotación dirigida por reloj (no por contador): en cada tick calculamos
+        // qué combate toca según el tiempo transcurrido. Así es idempotente: si
+        // este script se llegara a evaluar varias veces (HMR en dev, etc.), todos
+        // los temporizadores convergen en la MISMA card en lugar de adelantarse.
+        var step = seconds * 1000
+        if (!window.__ovStart) window.__ovStart = Date.now()
+        var start = window.__ovStart
+        var shown = -1
+
+        function render() {
+          var idx = Math.floor((Date.now() - start) / step) % cards.length
+          if (idx === shown) return
+          for (var k = 0; k < cards.length; k++) {
+            cards[k].classList.toggle('is-active', k === idx)
+          }
+          shown = idx
+        }
+
+        if (window.__ovRotateTimer) window.clearInterval(window.__ovRotateTimer)
+        window.__ovRotateTimer = window.setInterval(render, 200)
+        render()
+      })()
+    </script>
+
+    {/* Votos en tiempo real: pollea /api/predictions (cacheado en el edge ~10s)
+        y actualiza porcentajes, barras, total y líder de TODAS las tarjetas.
+        Idempotente: las actualizaciones fijan valores exactos del servidor, así
+        que aunque el poller corriera dos veces no se corrompe nada. */}
+    <script is:inline>
+      ;(function () {
+        var REFRESH_MS = 9000
+        var votesFmt, votesCompactFmt, pctFmt
+        try {
+          votesFmt = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 0 })
+          votesCompactFmt = new Intl.NumberFormat('es-ES', {
+            notation: 'compact',
+            maximumFractionDigits: 1,
+          })
+          pctFmt = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 1 })
+        } catch (e) {
+          /* navegadores muy viejos: caemos a String() */
+        }
+
+        function fmtVotes(n) {
+          n = Number(n) || 0
+          if (n > 100000 && votesCompactFmt) return votesCompactFmt.format(n)
+          return votesFmt ? votesFmt.format(n) : String(n)
+        }
+        function fmtPct(p) {
+          return (pctFmt ? pctFmt.format(p) : String(p)) + '%'
+        }
+
+        function updateCard(el, combat) {
+          var total = Number(combat.total_votes) || 0
+          var totalNode = el.querySelector('[data-live-total]')
+          if (totalNode) totalNode.textContent = fmtVotes(total)
+          el.setAttribute('data-has-votes', String(total > 0))
+
+          var preds = combat.predictions || []
+          var leaderId = ''
+          var leaderPct = -1
+          var tie = false
+
+          for (var i = 0; i < preds.length; i++) {
+            var p = preds[i]
+            var pctNode = el.querySelector('[data-live-pct="' + p.fighter_id + '"]')
+            var fillNode = el.querySelector('[data-live-fill="' + p.fighter_id + '"]')
+            if (pctNode) pctNode.textContent = total > 0 ? fmtPct(p.percentage) : '—'
+            if (fillNode) fillNode.style.width = (total > 0 ? p.percentage : 0) + '%'
+            if (p.percentage > leaderPct) {
+              leaderPct = p.percentage
+              leaderId = p.fighter_id
+              tie = false
+            } else if (p.percentage === leaderPct) {
+              tie = true
+            }
+          }
+
+          var sides = el.querySelectorAll('[data-live-side]')
+          for (var s = 0; s < sides.length; s++) {
+            var isLeader = total > 0 && !tie && sides[s].getAttribute('data-live-side') === leaderId
+            sides[s].classList.toggle('is-leader', isLeader)
+          }
+        }
+
+        var ctrl = null
+        function refresh() {
+          if (ctrl) ctrl.abort()
+          ctrl = new AbortController()
+          fetch('/api/predictions', { signal: ctrl.signal })
+            .then(function (r) {
+              return r.ok ? r.json() : null
+            })
+            .then(function (data) {
+              if (!data || !data.predictions) return
+              var byId = {}
+              for (var i = 0; i < data.predictions.length; i++) {
+                byId[data.predictions[i].combat_id] = data.predictions[i]
+              }
+              var els = document.querySelectorAll('[data-live-prediction]')
+              for (var j = 0; j < els.length; j++) {
+                var combat = byId[els[j].getAttribute('data-battle-id')]
+                if (combat) updateCard(els[j], combat)
+              }
+            })
+            .catch(function () {
+              /* error de red puntual: reintentaremos en el siguiente tick */
+            })
+        }
+
+        if (window.__ovPollTimer) window.clearInterval(window.__ovPollTimer)
+        window.__ovPollTimer = window.setInterval(refresh, REFRESH_MS)
+        refresh()
+      })()
+    </script>
+
+    <style is:global>
+      @font-face {
+        font-family: 'Cinzel';
+        src: url('https://cdn.infolavelada.com/fonts/cinzel-medium.woff2') format('woff2');
+        font-weight: 500;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Cinzel';
+        src: url('https://cdn.infolavelada.com/fonts/cinzel-black.woff2') format('woff2');
+        font-weight: 900;
+        font-display: swap;
+      }
+
+      :root {
+        --ov-gold: #c7a86b;
+        --ov-cream: #f4e4c9;
+        --ov-navy: #6f86c9;
+        --ov-ink: #05080f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        /* Fondo transparente: OBS muestra el directo por detrás. */
+        background: transparent;
+        overflow: hidden;
+        font-family: 'Cinzel', Georgia, serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .ov-root {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        padding: 4vh 4vw;
+      }
+      .ov-pos-superior {
+        align-items: flex-start;
+      }
+      .ov-pos-centro {
+        align-items: center;
+      }
+      .ov-pos-inferior {
+        align-items: flex-end;
+      }
+
+      .ov-stage {
+        position: relative;
+        /* Toda la maqueta usa em para que --ov-scale ajuste el tamaño sin
+           perder nitidez (mejor que reescalar la fuente del navegador en OBS). */
+        font-size: calc(16px * var(--ov-scale, 1));
+        width: 54em;
+        max-width: 100%;
+        /* min-width:0 evita que, como item flex, el ancho mínimo automático
+           (min-content de los nombres en nowrap) ensanche el stage más allá de
+           su width y se salga del canvas. */
+        min-width: 0;
+        min-height: 9em;
+      }
+
+      .ov-card {
+        position: absolute;
+        inset-inline: 0;
+        bottom: 0;
+        opacity: 0;
+        transform: translateY(0.9em) scale(0.985);
+        transition:
+          opacity 600ms ease,
+          transform 600ms ease;
+        pointer-events: none;
+        border-radius: 0.7em;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(12, 19, 48, 0.92) 0%, rgba(6, 10, 29, 0.95) 100%);
+        box-shadow:
+          0 0 0 1px color-mix(in srgb, var(--ov-gold) 55%, transparent),
+          0 1.4em 3em rgba(0, 0, 0, 0.55),
+          0 0 2.2em color-mix(in srgb, var(--ov-gold) 18%, transparent);
+      }
+      /* La tarjeta activa se muestra; las demás esperan ocultas. */
+      .ov-card.is-active {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      .ov-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1em;
+        padding: 0.5em 1.1em;
+        background: linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--ov-gold) 20%, transparent),
+          transparent
+        );
+        border-bottom: 1px solid color-mix(in srgb, var(--ov-gold) 45%, transparent);
+      }
+      .ov-combate {
+        font-weight: 900;
+        font-size: 0.72em;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: color-mix(in srgb, var(--ov-gold) 92%, white);
+      }
+      .ov-total {
+        flex: none;
+        font-weight: 900;
+        font-size: 0.62em;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: color-mix(in srgb, var(--ov-cream) 60%, transparent);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      .ov-body {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 1.1em;
+        padding: 0.85em 1.2em 0.7em;
+      }
+
+      .ov-side {
+        display: flex;
+        align-items: center;
+        gap: 0.6em;
+        min-width: 0;
+        transition: opacity 250ms ease;
+      }
+      .ov-b {
+        flex-direction: row-reverse;
+      }
+      /* Cuando hay votos, el bando que pierde se atenúa un poco. */
+      .ov-card[data-has-votes='true'] .ov-side:not(.is-leader) {
+        opacity: 0.72;
+      }
+
+      .ov-avatarwrap {
+        position: relative;
+        flex: none;
+        width: 3.4em;
+        height: 3.4em;
+      }
+      .ov-avatar {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 999px;
+        overflow: hidden;
+        border: 0.13em solid color-mix(in srgb, var(--ov-gold) 55%, transparent);
+        box-shadow: 0 0.2em 0.7em rgba(0, 0, 0, 0.55);
+        background: radial-gradient(
+          70% 70% at 50% 25%,
+          color-mix(in srgb, var(--ov-gold) 28%, transparent),
+          rgba(6, 10, 29, 0.9)
+        );
+        transition: border-color 250ms ease, box-shadow 250ms ease;
+      }
+      .ov-side.is-leader .ov-avatar {
+        border-color: color-mix(in srgb, var(--ov-gold) 95%, white);
+        box-shadow:
+          0 0.2em 0.7em rgba(0, 0, 0, 0.55),
+          0 0 0.9em color-mix(in srgb, var(--ov-gold) 45%, transparent);
+      }
+      .ov-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
+      }
+
+      .ov-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.28em;
+        min-width: 0;
+        flex: 1 1 auto;
+        text-align: center;
+      }
+      /* Con avatar, el nombre se pega a su avatar (lado exterior). Sin avatar se
+         queda centrado (la regla base de arriba). */
+      .ov-body:not(.no-avatar) .ov-a .ov-meta {
+        align-items: flex-start;
+        text-align: left;
+      }
+      .ov-body:not(.no-avatar) .ov-b .ov-meta {
+        align-items: flex-end;
+        text-align: right;
+      }
+      .ov-name {
+        max-width: 100%;
+        font-weight: 900;
+        font-size: 1.3em;
+        line-height: 1.05;
+        letter-spacing: 0.01em;
+        color: var(--ov-cream);
+        text-shadow: 0 0.05em 0.18em rgba(0, 0, 0, 0.85);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Bandera como insignia en la esquina superior del avatar: arriba-izquierda
+         para el primero (A) y arriba-derecha para el segundo (B). */
+      .ov-flag {
+        position: absolute;
+        top: -0.15em;
+        width: 1.25em;
+        height: 1.25em;
+        object-fit: cover;
+      }
+      .ov-a .ov-flag {
+        left: -0.18em;
+      }
+      .ov-b .ov-flag {
+        right: -0.18em;
+      }
+      /* Sin avatar: la bandera va centrada sobre el nombre. */
+      .ov-flag-chip {
+        width: 1.7em;
+        height: 1.7em;
+        border-radius: 0.22em;
+        object-fit: cover;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+      }
+
+      /* Porcentaje, mirando al centro (junto al VS). */
+      .ov-pct {
+        flex: none;
+        font-weight: 900;
+        font-size: 1.6em;
+        line-height: 1;
+        letter-spacing: 0.01em;
+        font-variant-numeric: tabular-nums;
+        color: var(--ov-cream);
+        text-shadow: 0 0.05em 0.2em rgba(0, 0, 0, 0.85);
+        transition: color 250ms ease, text-shadow 250ms ease;
+      }
+      .ov-side.is-leader .ov-pct {
+        color: color-mix(in srgb, var(--ov-gold) 95%, white);
+        text-shadow: 0 0 0.55em color-mix(in srgb, var(--ov-gold) 45%, transparent);
+      }
+
+      .ov-vs {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ov-logo {
+        width: 1.9em;
+        height: 1.9em;
+        color: var(--ov-gold);
+        filter: drop-shadow(0 0.05em 0.25em rgba(0, 0, 0, 0.6));
+      }
+
+      /* Barra "tira de la cuerda": A crece desde la izquierda (navy), B desde la
+         derecha (oro). Refleja el reparto de votos del pronóstico. */
+      .ov-track {
+        position: relative;
+        height: 0.55em;
+        margin: 0 1.2em 1em;
+        border-radius: 999px;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.45));
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.55);
+      }
+      .ov-fill {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 0;
+        transition: width 760ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .ov-fill-a {
+        left: 0;
+        border-radius: 999px 0 0 999px;
+        background: linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--ov-navy) 85%, white),
+          var(--ov-navy)
+        );
+      }
+      .ov-fill-b {
+        right: 0;
+        border-radius: 0 999px 999px 0;
+        background: linear-gradient(270deg, var(--ov-gold), color-mix(in srgb, var(--ov-gold) 68%, white));
+      }
+      /* Sin votos todavía: barra apagada y centrada. */
+      .ov-card[data-has-votes='false'] .ov-track {
+        background: linear-gradient(
+          90deg,
+          transparent,
+          color-mix(in srgb, var(--ov-gold) 16%, transparent) 50%,
+          transparent
+        );
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .ov-card,
+        .ov-fill,
+        .ov-pct,
+        .ov-side,
+        .ov-live-dot {
+          transition: none;
+          animation: none;
+        }
+        .ov-card.is-active {
+          transform: none;
+        }
+      }
+    </style>
+  </body>
+</html>
