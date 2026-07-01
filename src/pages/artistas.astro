@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets'
 import SectionDivider from '@/components/SectionDivider.astro'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
@@ -75,13 +76,11 @@ const breadcrumbJsonLd = {
                     aria-hidden="true"
                     class="artist-face artist-face-front absolute inset-0 grid place-items-end overflow-hidden rounded-md"
                 >
-                    <img
+                    <Image
                     src={artist.image}
                     alt={artist.name}
                     loading="lazy"
                     decoding="async"
-                    width="300"
-                    height="400"
                     class="absolute inset-0 size-full object-cover"
                     />
                     <span class="artist-card-shade pointer-events-none absolute inset-0" />
