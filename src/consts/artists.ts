@@ -1,10 +1,12 @@
 import type { Artist } from '@/types/artists'
 
+import YandelImage from '@/assets/artists/yandel.webp'
+
 export const ARTISTS: Artist[] = [
   {
-    id: 'aitana',
-    name: 'Aitana',
-    image: '/images/artists/aitana.webp',
+    id: '0eHQ9o50hj6ZDNBt6Ys1sD',
+    name: 'Yandel',
+    image: YandelImage,
   },
   {
     id: 'delarose',
