@@ -1,6 +1,7 @@
 import type { Artist } from '@/types/artists'
 
 import YandelImage from '@/assets/artists/yandel.webp'
+import JuanesImage from '@/assets/artists/juanes.webp'
 
 export const ARTISTS: Artist[] = [
   {
