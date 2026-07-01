@@ -3,19 +3,16 @@ import SectionDivider from '@/components/SectionDivider.astro'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
+import { ARTISTS } from '@/consts/artists'
 import { serializeJsonLd } from '@/utils/serialize-json-ld'
 
 const SITE_URL = 'https://www.infolavelada.com'
 const title = 'Artistas | La Velada del Año VI'
 const description =
-    'El cartel musical de La Velada del Año VI, el evento de boxeo de Ibai Llanos en Sevilla el 25 de julio de 2026, se anunciará muy pronto.'
+    'El cartel musical de La Velada del Año VI, el evento de boxeo de Ibai Llanos en Sevilla el 25 de julio de 2026: Yandel, Juanes, Lucho RK & La Pantera, Bad Gyal y Anuel AA y más artistas sorpresa.'
 const canonical = `${SITE_URL}/artistas`
 
 export const prerender = true
-
-// El cartel de artistas todavía no se ha anunciado: mostramos cards
-// de marcador de posición que no revelan ningún nombre ni cantidad real.
-const PLACEHOLDER_COUNT = 5
 
 const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
@@ -53,39 +50,48 @@ const breadcrumbJsonLd = {
         <p
             class="artists-soon-badge mb-5 animate-fade-in-up font-cinzel text-xs font-bold tracking-[0.3em] text-theme-gold uppercase animate-delay-200 sm:text-sm"
         >
-            Muy pronto
+            Cartel confirmado
         </p>
         <p
             class="mb-12 max-w-xl animate-fade-in-up font-cinzel text-xs font-medium tracking-[0.16em] text-balance text-white/55 animate-delay-300 sm:mb-16 sm:text-sm sm:tracking-[0.25em]"
         >
-            El cartel musical de La Velada del Año VI se anunciará muy pronto
+            El cartel musical de La Velada del Año VI
         </p>
         </header>
 
         <ul
         class="artists-grid mx-auto flex w-full max-w-4xl flex-wrap justify-center gap-3 sm:gap-4 lg:gap-5"
         role="list"
-        aria-label="Artistas por anunciar"
+        aria-label="Artistas confirmados"
         >
         {
-            Array.from({ length: PLACEHOLDER_COUNT }).map((_, index) => (
+            ARTISTS.map((artist, index) => (
             <li
                 class="artist-card-wrap animate-fade-in-up basis-[calc(50%-0.375rem)] sm:basis-[calc(33.333%-0.667rem)] lg:basis-[calc(33.333%-0.834rem)]"
                 style={`animation-delay: ${index * 45}ms; --idx: ${index}`}
             >
-                <div class="artist-flip relative block w-full cursor-not-allowed">
+                <div class="artist-flip relative block w-full">
                 <span
                     aria-hidden="true"
-                    class="artist-face artist-face-front absolute inset-0 grid place-items-center overflow-hidden rounded-md"
+                    class="artist-face artist-face-front absolute inset-0 grid place-items-end overflow-hidden rounded-md"
                 >
-                    <span class="artist-card-bg-gold pointer-events-none absolute inset-0" />
-                    <span class="artist-front-mark font-cinzel">?</span>
-                    <span class="artist-front-sheen pointer-events-none" />
+                    <img
+                    src={artist.image}
+                    alt={artist.name}
+                    loading="lazy"
+                    decoding="async"
+                    width="300"
+                    height="400"
+                    class="absolute inset-0 size-full object-cover"
+                    />
+                    <span class="artist-card-shade pointer-events-none absolute inset-0" />
+                    <span class="artist-front-name relative z-[2] w-full px-2 pb-2.5 text-center font-cinzel text-[0.65rem] font-bold tracking-[0.08em] text-theme-cream sm:pb-3 sm:text-xs sm:tracking-[0.1em]">
+                    {artist.name}
+                    </span>
                     <span class="artist-card-corner artist-card-corner-tl" />
                     <span class="artist-card-corner artist-card-corner-tr" />
                     <span class="artist-card-corner artist-card-corner-bl" />
                     <span class="artist-card-corner artist-card-corner-br" />
-                    <span class="artist-front-flicker pointer-events-none" />
                 </span>
                 </div>
             </li>
@@ -152,48 +158,21 @@ const breadcrumbJsonLd = {
     transition: box-shadow 400ms ease;
 }
 
-.artist-front-mark {
-    position: relative;
-    z-index: 2;
-    font-weight: 700;
-    font-size: clamp(2.4rem, 1.4rem + 5vw, 4rem);
-    line-height: 1;
-    color: color-mix(in srgb, var(--color-theme-gold) 80%, var(--color-theme-cream));
-    text-shadow: 0 0 22px color-mix(in srgb, var(--color-theme-gold) 42%, transparent);
-}
-
-.artist-front-sheen {
-    position: absolute;
-    inset: 0;
-    z-index: 3;
+.artist-card-shade {
+    z-index: 1;
     background: linear-gradient(
-        105deg,
-        transparent 38%,
-        color-mix(in srgb, var(--color-theme-gold) 30%, transparent) 50%,
-        transparent 62%
+        180deg,
+        transparent 30%,
+        rgba(3, 5, 15, 0.55) 55%,
+        rgba(3, 5, 15, 0.88) 78%,
+        rgba(3, 5, 15, 0.97) 100%
     );
-    transform: translateX(-120%) rotate(8deg);
-    animation: artistFrontSheen 6s ease-in-out infinite;
-    animation-delay: calc(var(--idx, 0) * 600ms);
 }
 
-@keyframes artistCardFlicker {
-    0%, 100% { opacity: 0; }
-    2% { opacity: 0.38; }
-    4% { opacity: 0; }
-    6% { opacity: 0.22; }
-    8% { opacity: 0; }
-    52% { opacity: 0; }
-    54% { opacity: 0.34; }
-    56% { opacity: 0; }
-    58% { opacity: 0.18; }
-    60% { opacity: 0; }
-}
-@keyframes artistFrontSheen {
-    0% { transform: translateX(-120%) rotate(8deg); opacity: 0; }
-    6% { opacity: 0.5; }
-    20% { transform: translateX(120%) rotate(8deg); opacity: 0; }
-    100% { transform: translateX(120%) rotate(8deg); opacity: 0; }
+.artist-front-name {
+    text-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.9),
+        0 0 10px rgba(0, 0, 0, 0.6);
 }
 
 .artist-flip:hover .artist-face-front {
@@ -203,43 +182,15 @@ const breadcrumbJsonLd = {
         0 0 30px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
 }
 
-.artist-front-flicker {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    background: #060a1d;
-    opacity: 0;
-    animation: artistCardFlicker 5s ease-in-out infinite;
-    animation-delay: calc(var(--idx, 0) * -0.7s);
-}
-
-.artist-flip:hover .artist-face-front .artist-card-bg-gold {
-    opacity: 1;
-}
-
-.artist-flip:hover .artist-front-flicker {
-    animation: none;
-    opacity: 0;
-}
-
 .artist-flip:hover .artist-face-front .artist-card-corner {
     width: 24px;
     height: 24px;
     border-color: var(--color-theme-gold);
 }
 
-.artist-card-bg-gold {
-    background: radial-gradient(
-        ellipse 90% 65% at 50% 38%,
-        color-mix(in srgb, var(--color-theme-gold) 26%, transparent) 0%,
-        transparent 70%
-    );
-    opacity: 0.5;
-    transition: opacity 500ms ease;
-}
-
 .artist-card-corner {
     position: absolute;
+    z-index: 3;
     width: 16px;
     height: 16px;
     border-style: solid;
@@ -312,16 +263,6 @@ const breadcrumbJsonLd = {
 .artists-grid:has(.artist-card-wrap:hover) > .artist-card-wrap:hover {
     opacity: 1;
     filter: saturate(1.08) brightness(1.05);
-}
-}
-
-@media (prefers-reduced-motion: reduce) {
-.artist-front-sheen,
-.artist-front-flicker {
-    animation: none !important;
-}
-.artist-front-flicker {
-    display: none;
 }
 }
 </style>
