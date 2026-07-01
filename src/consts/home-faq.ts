@@ -76,6 +76,6 @@ export const HOME_FAQS = [
   {
     question: '¿Habrá artistas invitados?',
     answer:
-      'Sí: Yandel, Juanes, Lucho RK & La Pantera, Bad Gyal y Anuel AA ya forman parte del cartel.',
+      'Sí: Yandel, Juanes, Lucho RK & La Pantera, Bad Gyal y Anuel AA ya forman parte del cartel y más artistas sorpresa.',
   },
 ] as const satisfies readonly HomeFaqItem[]
