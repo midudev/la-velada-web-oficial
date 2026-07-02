@@ -307,7 +307,6 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
 
   let mapInstance: any = null
   let mapObserver: IntersectionObserver | null = null
-  let leafletCssLoaded = false
   let mapContainer: HTMLElement | null = null
   let onMapMouseEnter: (() => void) | null = null
   let onMapMouseLeave: (() => void) | null = null
@@ -315,9 +314,6 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
   // El CSS de Leaflet se inyecta solo cuando el mapa va a inicializarse, en
   // lugar de bloquear el render de la página entera desde el <head>.
   function loadLeafletCss() {
-    if (leafletCssLoaded) return
-    leafletCssLoaded = true
-
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
