@@ -1,10 +1,11 @@
 ---
-import { Image } from 'astro:assets'
+import { getImage, Image } from 'astro:assets'
 import SectionDivider from '@/components/SectionDivider.astro'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 import { ARTISTS } from '@/consts/artists'
+import { EVENT_END_ISO, EVENT_ISO } from '@/consts/event'
 import { serializeJsonLd } from '@/utils/serialize-json-ld'
 
 const SITE_URL = 'https://www.infolavelada.com'
@@ -23,6 +24,61 @@ const breadcrumbJsonLd = {
     { '@type': 'ListItem', position: 2, name: 'Artistas', item: canonical },
     ],
 }
+
+// Imagen de cada artista optimizada, reutilizada tanto como og:image de sus
+// tarjetas de rendimiento (Open Graph solo admite una por página, así que
+// aquí sirve para el JSON-LD) como para el `image` de cada `MusicGroup`.
+const artistImages = await Promise.all(
+    ARTISTS.map((artist) => getImage({ src: artist.image, format: 'webp' })),
+)
+
+const musicEventJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'MusicEvent',
+    '@id': `${canonical}/#event`,
+    name: 'Actuaciones musicales de La Velada del Año VI',
+    description,
+    url: canonical,
+    startDate: EVENT_ISO,
+    endDate: EVENT_END_ISO,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+    inLanguage: 'es-ES',
+    superEvent: {
+    '@type': 'SportsEvent',
+    '@id': `${SITE_URL}/#event`,
+    name: 'La Velada del Año VI',
+    },
+    location: [
+    {
+        '@type': 'Place',
+        name: 'Estadio de La Cartuja',
+        address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Sevilla',
+        addressRegion: 'Andalucía',
+        addressCountry: 'ES',
+        },
+    },
+    {
+        '@type': 'VirtualLocation',
+        url: 'https://www.twitch.tv/ibai',
+    },
+    ],
+    organizer: {
+    '@type': 'Person',
+    name: 'Ibai Llanos',
+    url: 'https://www.twitch.tv/ibai',
+    },
+    performer: ARTISTS.map((artist, index) => ({
+    '@type': 'MusicGroup',
+    name: artist.name,
+    url: `${SITE_URL}/artistas/${artist.id}`,
+    image: `${SITE_URL}${artistImages[index].src}`,
+    genre: artist.genres,
+    sameAs: artist.spotifyLinks.map((link) => link.url),
+    })),
+}
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
@@ -30,6 +86,12 @@ const breadcrumbJsonLd = {
     type="application/ld+json"
     is:inline
     set:html={serializeJsonLd(breadcrumbJsonLd)}
+    slot="head"
+    />
+    <script
+    type="application/ld+json"
+    is:inline
+    set:html={serializeJsonLd(musicEventJsonLd)}
     slot="head"
     />
 
