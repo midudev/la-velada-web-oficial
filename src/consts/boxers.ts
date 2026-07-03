@@ -643,6 +643,10 @@ Un perfil con gran presencia mediática, acostumbrado a estar en el foco…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     workout: [
       {
+        videoId: 'oPQ59GGchi4',
+        title: 'BOXEANDO CON ALANA PARA LA VELADA',
+      },
+      {
         videoId: 'b7KZHgHpsWI',
         title: 'ENTRENANDO PARA LA VELADA DEL AÑO || VLOG',
       },
