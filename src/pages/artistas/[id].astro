@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro'
 import { getImage, Image } from 'astro:assets'
 
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
+import ArtistNextCard from '@/components/ArtistNextCard.astro'
 import ArtistPerformancePlaceholder from '@/components/ArtistPerformancePlaceholder.astro'
 import ArtistShareButtons from '@/components/ArtistShareButtons.astro'
 import ArtistStatsCard from '@/components/ArtistStatsCard.astro'
@@ -35,6 +36,14 @@ if (!artist) return Astro.redirect('/404')
 // Los dúos/grupos guardan un id compuesto (uno por miembro, unidos con "-").
 const isGroup = artist.id.includes('-')
 const topTracks = artist.topTracks ?? []
+
+// Navegación al artista anterior/siguiente según su orden en el cartel.
+// No es cíclica: el primero no tiene anterior y el último no tiene siguiente
+// (el hueco correspondiente se deja vacío en vez de dar la vuelta).
+const currentIndex = ARTISTS.findIndex((a) => a.id === artist.id)
+const prevArtist = currentIndex > 0 ? ARTISTS[currentIndex - 1] : null
+const nextArtist = currentIndex < ARTISTS.length - 1 ? ARTISTS[currentIndex + 1] : null
+const hasArtistNav = prevArtist !== null || nextArtist !== null
 
 const SITE_URL = 'https://www.infolavelada.com'
 const canonical = `${SITE_URL}/artistas/${artist.id}`
@@ -168,7 +177,7 @@ const breadcrumbJsonLd = {
           </h1>
 
           <ArtistShareButtons
-            class="mt-5 animate-fade-in-up animate-delay-250 justify-center sm:justify-start"
+            class="mt-5 animate-fade-in-up animate-delay-200 justify-center sm:justify-start"
             artistName={artist.name}
             url={canonical}
           />
@@ -193,6 +202,16 @@ const breadcrumbJsonLd = {
       </div>
 
       <ArtistPerformancePlaceholder class="mt-10 w-full animate-fade-in-up animate-delay-500 sm:mt-12" />
+
+      {
+        hasArtistNav && (
+          <ArtistNextCard
+            class="mt-6 w-full animate-fade-in-up animate-delay-500"
+            prevArtist={prevArtist}
+            nextArtist={nextArtist}
+          />
+        )
+      }
     </div>
   </section>
 
