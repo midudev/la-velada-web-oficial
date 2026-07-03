@@ -682,6 +682,10 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
         videoId: 'FYUozoDoN9c',
         title: 'GREFG VS PLEX | VELADA DEL AÑO 6',
       },
+      {
+        videoId: 'jvY9C2rwQ4M',
+        title: 'Detrás De Cámaras Presentación De La Velada Del Año VI',
+      },
     ],
   },
   {
