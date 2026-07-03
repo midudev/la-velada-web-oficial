@@ -176,6 +176,14 @@ export const BOXERS: Boxer[] = [
           pero que ahora tendrá que demostrarlo con guantes puestos. 🥊`,
     workout: [
       {
+        videoId: 'Ri41stA8eaA',
+        title: 'Entrenando con THEGREFG | Edu Aguirre, camino a La Velada #14',
+      },
+      {
+        videoId: 'oNExZ6xDjXk',
+        title: '¿ALFREDO DURO me REVIENTA? | Edu Aguirre, camino a La Velada #13',
+      },
+      {
         videoId: 'qAVys_o4cD4',
         title:
           'ENTRENO con el EQUIPO NACIONAL de BOXEO ESPAÑOL | Edu Aguirre, camino a La Velada #12',
