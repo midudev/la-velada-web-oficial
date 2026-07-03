@@ -860,6 +860,10 @@ Un perfil acostumbrado a la presión, al foco mediático y a competir frente a m
 que ahora tendrá que volver a demostrarlo golpe a golpe. 🥊`,
     workout: [
       {
+        videoId: 'E7CRMa1TFMk',
+        title: 'GREFG VS EDU AGUIRRE | LA VELADA DEL AÑO 6',
+      },
+      {
         videoId: 'URCFTAXdkgY',
         title: 'Entrenando con Marta, Fabiana y Roro para la Velada - TheGrefg',
       },
