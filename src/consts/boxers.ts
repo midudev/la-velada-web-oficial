@@ -247,20 +247,24 @@ pero que ahora tendrá que demostrarlo todo bajo los focos del ring. 🥊
 `,
     workout: [
       {
-        videoId: '-IvaT8PKc1w',
-        title: 'Así fue mi presentación de LA VELADA DEL AÑO VI',
+        videoId: 'AE4StCGLEcA',
+        title: 'LA VELADA - Queda un mes | Capítulo 4',
       },
       {
-        videoId: 'JWqJ22YGvjM',
-        title: 'LA VELADA - Yo amargá no voy a ir | Capítulo 1',
+        videoId: 'wkWbbHspRzM',
+        title: 'LA VELADA - Primeros sparrings | Capítulo 3',
       },
       {
         videoId: 'Zv9QJf8uAOM',
         title: 'LA VELADA - Bien, mal, cansada | Capítulo 2',
       },
       {
-        videoId: 'wkWbbHspRzM',
-        title: 'LA VELADA - Primeros sparrings | Capítulo 3',
+        videoId: 'JWqJ22YGvjM',
+        title: 'LA VELADA - Yo amargá no voy a ir | Capítulo 1',
+      },
+      {
+        videoId: '-IvaT8PKc1w',
+        title: 'Así fue mi presentación de LA VELADA DEL AÑO VI',
       },
     ],
   },
