@@ -466,6 +466,10 @@ Un perfil acostumbrado al foco y a la exposición constante…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     workout: [
       {
+        videoId: 'TWNy3wwEv3k',
+        title: 'QUEDAN 30 DÍAS 🗓️ - LA VELADA #5',
+      },
+      {
         videoId: 'UVJ16oc3zaI',
         title: 'SI TE CAES, TE LEVANTAS 🦍 - LA VELADA #4',
       },
