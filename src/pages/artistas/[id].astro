@@ -4,6 +4,7 @@ import { getImage, Image } from 'astro:assets'
 
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArtistPerformancePlaceholder from '@/components/ArtistPerformancePlaceholder.astro'
+import ArtistShareButtons from '@/components/ArtistShareButtons.astro'
 import ArtistStatsCard from '@/components/ArtistStatsCard.astro'
 import ArtistTopTracks from '@/components/ArtistTopTracks.astro'
 import { ARTISTS } from '@/consts/artists'
@@ -165,6 +166,12 @@ const breadcrumbJsonLd = {
           >
             {artist.name}
           </h1>
+
+          <ArtistShareButtons
+            class="mt-5 animate-fade-in-up animate-delay-250 justify-center sm:justify-start"
+            artistName={artist.name}
+            url={canonical}
+          />
 
           <ArtistStatsCard
             class="mt-6 animate-fade-in-up animate-delay-300"
