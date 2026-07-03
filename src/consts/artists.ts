@@ -1,39 +1,35 @@
 import type { Artist } from '@/types/artists'
 
+import YandelImage from '@/assets/artists/yandel.webp'
+import JuanesImage from '@/assets/artists/juanes.webp'
+import LuchoRkLaPanteraImage from '@/assets/artists/luchork-pantera.webp'
+import BadGyalImage from '@/assets/artists/badgyal.webp'
+import AnuelAAImage from '@/assets/artists/anuel-aa.webp'
+
 export const ARTISTS: Artist[] = [
   {
-    id: 'aitana',
-    name: 'Aitana',
-    image: '/images/artists/aitana.webp',
+    id: '0eHQ9o50hj6ZDNBt6Ys1sD',
+    name: 'Yandel',
+    image: YandelImage,
   },
   {
-    id: 'delarose',
-    name: 'Delarose',
-    image: '/images/artists/delarose.webp',
+    id: '0UWZUmn7sybxMCqrw9tGa7',
+    name: 'Juanes',
+    image: JuanesImage,
   },
   {
-    id: 'eladiocarrion',
-    name: 'Eladio Carrion',
-    image: '/images/artists/eladiocarrion.webp',
+    id: ['1y6tVxTqgNfqxTayfohSKJ', '0IEzMvarfVycBJAXjjEZOL'].join('-'),
+    name: 'Lucho Rk & La Pantera',
+    image: LuchoRkLaPanteraImage,
   },
   {
-    id: 'grupofrontera',
-    name: 'Grupo Frontera',
-    image: '/images/artists/grupofrontera.webp',
+    id: '4F4pp8NUW08JuXwnoxglpN',
+    name: 'Bad Gyal',
+    image: BadGyalImage,
   },
   {
-    id: 'losdelrio',
-    name: 'Los Del Río',
-    image: '/images/artists/losdelrio.webp',
-  },
-  {
-    id: 'melendi',
-    name: 'Melendi',
-    image: '/images/artists/melendi.webp',
-  },
-  {
-    id: 'myketowers',
-    name: 'Myke Towers',
-    image: '/images/artists/myketowers.webp',
+    id: '2R21vXR83lH98kGeO99Y66',
+    name: 'Anuel AA',
+    image: AnuelAAImage,
   },
 ]
