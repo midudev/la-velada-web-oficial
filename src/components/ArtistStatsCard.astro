@@ -1,0 +1,133 @@
+---
+import SpotifyIcon from '@/assets/svg/spotify.svg'
+import type { ArtistSpotifyLink } from '@/types/artists'
+import { formatArtistFollowers } from '@/lib/artists'
+
+interface Props {
+  class?: string
+  followers: number
+  genres: string[]
+  popularity: number
+  spotifyLinks: ArtistSpotifyLink[]
+}
+
+const { class: className, followers, genres, popularity, spotifyLinks } = Astro.props
+const followersLabel = formatArtistFollowers(followers)
+const isGroup = spotifyLinks.length > 1
+---
+
+<div
+  class:list={[
+    'relative isolate w-full overflow-hidden rounded-[1.4rem] border border-theme-gold/44 p-4 pb-[1.1rem] backdrop-blur-[14px] sm:w-[min(100%,34rem)]',
+    'bg-[linear-gradient(180deg,rgba(15,18,36,0.84)_0%,rgba(7,10,21,0.95)_100%)]',
+    'shadow-[inset_0_0_0_1px_rgba(255,255,255,0.07),0_18px_44px_rgba(0,0,0,0.35),0_0_36px_color-mix(in_srgb,var(--color-theme-gold)_16%,transparent)]',
+    "before:pointer-events-none before:absolute before:inset-0 before:[mix-blend-mode:screen] before:content-['']",
+    'before:bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.12),transparent_30%),radial-gradient(circle_at_82%_14%,color-mix(in_srgb,var(--color-theme-gold)_28%,transparent),transparent_34%),linear-gradient(115deg,transparent_0%,rgba(255,255,255,0.06)_50%,transparent_72%)]',
+    className,
+  ]}
+>
+  <div
+    class="relative z-[1] flex items-center justify-between gap-[0.35rem] border-b border-theme-gold/22 pb-[0.85rem] text-center"
+  >
+    <span class="font-cinzel text-[0.72rem] font-black tracking-[0.2em] text-theme-cream/62">
+      Oyentes mensuales
+    </span>
+    <span
+      class="font-cinzel text-[clamp(1.7rem,2.7vw,2.4rem)] leading-[0.95] font-black tracking-[0.06em] text-theme-cream [text-shadow:0_0_18px_color-mix(in_srgb,var(--color-theme-gold)_42%,transparent),0_2px_16px_rgba(0,0,0,0.6)]"
+    >
+      {followersLabel}
+    </span>
+  </div>
+
+  {
+    genres.length > 0 && (
+      <ul
+        class="relative z-[1] m-0 mt-[0.9rem] flex list-none flex-wrap gap-[0.4rem] p-0"
+        aria-label="Géneros"
+      >
+        {genres.map((genre) => (
+          <li class="rounded-full bg-theme-gold/12 px-[0.75rem] py-[0.3rem] [font-family:'Cinzel',var(--font-fallback)] text-[0.6rem] font-bold tracking-[0.08em] text-theme-cream/85 capitalize ring-1 ring-theme-gold/35 ring-inset">
+            {genre}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  <div class="relative z-[1] mt-4">
+    <div class="mb-[0.4rem] flex items-baseline justify-between">
+      <span class="font-cinzel text-[0.55rem] font-black tracking-[0.2em] text-theme-cream/48">
+        Popularidad
+      </span>
+    </div>
+    <div
+      class="h-[0.4rem] rounded-full bg-white/8 ring-1 ring-theme-gold/25 ring-inset"
+      role="meter"
+      aria-valuenow={popularity}
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-label="Popularidad en Spotify"
+    >
+      <div
+        class="h-full w-0 rounded-full bg-[linear-gradient(90deg,color-mix(in_srgb,var(--color-theme-gold)_70%,transparent)_0%,var(--color-theme-gold)_100%)] shadow-[0_0_12px_color-mix(in_srgb,var(--color-theme-gold)_55%,transparent)] transition-[width] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
+        data-artist-meter-fill
+        data-meter-target={`${popularity}%`}
+      >
+      </div>
+    </div>
+  </div>
+
+  <div class="relative z-[1] mt-[1.1rem] flex flex-wrap gap-[0.6rem]">
+    {
+      spotifyLinks.map((link) => (
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-full bg-[#1db954]/16 px-4 py-[0.55rem] font-cinzel text-[0.7rem] font-black tracking-[0.05em] text-theme-cream normal-case no-underline ring-1 ring-[#1db954]/55 transition duration-200 ease-out outline-none ring-inset hover:-translate-y-px hover:ring-[#1db954] focus-visible:-translate-y-px focus-visible:ring-[#1db954]"
+          aria-label={`Escuchar a ${link.name} en Spotify`}
+        >
+          <SpotifyIcon class="size-4 text-[#1db954]" aria-hidden="true" />
+          <span>{isGroup ? `Escuchar a ${link.name}` : 'Escuchar en Spotify'}</span>
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { $$ } from '@/lib/dom-selector'
+
+  // Anima el relleno de "popularidad" de 0 hasta su valor real la primera
+  // vez que entra en el viewport, en vez de aparecer ya lleno.
+  function initArtistMeters() {
+    const fills = $$<HTMLElement>('[data-artist-meter-fill]')
+    if (fills.length === 0) return
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const reveal = (el: HTMLElement) => {
+      el.style.width = el.dataset.meterTarget ?? '0'
+    }
+
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      fills.forEach(reveal)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          reveal(entry.target as HTMLElement)
+          obs.unobserve(entry.target)
+        })
+      },
+      { threshold: 0.4 },
+    )
+
+    fills.forEach((el) => observer.observe(el))
+  }
+
+  document.addEventListener('astro:page-load', initArtistMeters)
+</script>
