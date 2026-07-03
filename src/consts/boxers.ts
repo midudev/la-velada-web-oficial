@@ -387,6 +387,30 @@ Un perfil acostumbrado al esfuerzo, a la disciplina y a superarse constantemente
 pero que ahora tendrá que demostrarlo bajo presión y frente a un rival. 🥊`,
     workout: [
       {
+        videoId: 'gYFAIm9fo5M',
+        title: 'Puse a Prueba el Limite de Belcast',
+      },
+      {
+        videoId: 'HzZ5j6Lm8aU',
+        title: 'Acepté una PELEA ILEGAL antes de LA VELADA',
+      },
+      {
+        videoId: 'WSB2fbqqzSw',
+        title: 'Puse a Prueba el Limite de Rivers',
+      },
+      {
+        videoId: 'Uu9ncwoUBus',
+        title: 'Boxee en el Barrio más Peligroso de México',
+      },
+      {
+        videoId: '8b63j6136RI',
+        title: 'Sobreviví 72h en un Campamento de Boxeo con Milica',
+      },
+      {
+        videoId: 'fvIVHMDXvgs',
+        title: 'Peleé Contra un Campeón Mundial de Boxeo',
+      },
+      {
         videoId: 'lrUJJaolMf0',
         title: 'Lo que no se vió en la Presentación de la Velada Del Año 6',
       },
