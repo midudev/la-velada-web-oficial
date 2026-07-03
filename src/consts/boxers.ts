@@ -715,6 +715,14 @@ Un perfil acostumbrado a la exposición constante y a la presión de las redes�
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     workout: [
       {
+        videoId: 'evCr5q9v69A',
+        title: 'Así es mi vida a 20 días de La Velada...',
+      },
+      {
+        videoId: 'V6xAOfEPdpE',
+        title: 'Mi vida a un mes de pelear en La Velada...',
+      },
+      {
         videoId: 'b4YZtb6lkpI',
         title: 'Rivers... voy a por ti.',
       },
