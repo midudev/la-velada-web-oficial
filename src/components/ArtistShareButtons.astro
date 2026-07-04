@@ -1,0 +1,81 @@
+---
+import ShareIcon from '@/assets/svg/share.svg'
+import XIcon from '@/assets/svg/x.svg'
+
+interface Props {
+  class?: string
+  artistName: string
+  /** URL absoluta y canónica de la ficha del artista. */
+  url: string
+}
+
+const { class: className, artistName, url } = Astro.props
+
+const shareText = `Que ganas de ver a ${artistName} en La Velada del Año VI 🎤🔥`
+const xShareUrl = `https://twitter.com/intent/tweet?${new URLSearchParams({ text: shareText, url }).toString()}`
+---
+
+<div class:list={['flex flex-wrap items-center gap-2', className]}>
+  <button
+    type="button"
+    data-artist-copy-link
+    data-copy-url={url}
+    class="inline-flex items-center gap-2 rounded-full bg-theme-gold/10 px-4 py-[0.55rem] font-cinzel text-[0.7rem] font-black tracking-[0.05em] text-theme-cream ring-1 ring-inset ring-theme-gold/40 transition duration-200 ease-out outline-none hover:-translate-y-px hover:ring-theme-gold focus-visible:-translate-y-px focus-visible:ring-theme-gold"
+  >
+    <ShareIcon class="size-4 shrink-0" aria-hidden="true" />
+    <span data-artist-copy-label>Copiar enlace</span>
+  </button>
+
+  <a
+    href={xShareUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="inline-flex items-center gap-2 rounded-full bg-white/6 px-4 py-[0.55rem] font-cinzel text-[0.7rem] font-black tracking-[0.05em] text-theme-cream no-underline ring-1 ring-inset ring-white/25 transition duration-200 ease-out outline-none hover:-translate-y-px hover:ring-white/60 focus-visible:-translate-y-px focus-visible:ring-white/60"
+    aria-label={`Compartir a ${artistName} en X`}
+  >
+    <XIcon class="size-3.5 shrink-0" aria-hidden="true" />
+    <span>Compartir en X</span>
+  </a>
+</div>
+
+<script>
+  import { $$ } from '@/lib/dom-selector'
+
+  const COPIED_LABEL = '¡Copiado!'
+  const COPIED_RESET_MS = 1600
+
+  function initArtistShareButtons() {
+    const buttons = $$<HTMLButtonElement>('[data-artist-copy-link]')
+
+    buttons.forEach((button) => {
+      const label = button.querySelector<HTMLElement>('[data-artist-copy-label]')
+      const url = button.dataset.copyUrl
+      if (!label || !url) return
+
+      const originalLabel = label.textContent
+
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(url)
+        } catch {
+          // Fallback para navegadores sin permisos/soporte de Clipboard API.
+          const helper = document.createElement('textarea')
+          helper.value = url
+          helper.style.position = 'fixed'
+          helper.style.opacity = '0'
+          document.body.appendChild(helper)
+          helper.select()
+          document.execCommand('copy')
+          helper.remove()
+        }
+
+        label.textContent = COPIED_LABEL
+        window.setTimeout(() => {
+          label.textContent = originalLabel
+        }, COPIED_RESET_MS)
+      })
+    })
+  }
+
+  document.addEventListener('astro:page-load', initArtistShareButtons)
+</script>
