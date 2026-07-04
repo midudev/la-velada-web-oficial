@@ -1,0 +1,45 @@
+---
+import ThumbnailPlaceholder from '@/components/ThumbnailPlaceholder.astro'
+
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<div
+  aria-label="La actuación. Próximamente."
+  aria-disabled="true"
+  class:list={[
+    'group relative isolate flex aspect-video w-full cursor-not-allowed overflow-hidden rounded-xl border border-theme-gold/15 bg-theme-midnight/90 text-left',
+    className,
+  ]}
+>
+  <ThumbnailPlaceholder iconClass="size-16 sm:size-20 md:size-28 lg:size-36" />
+
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
+  />
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_rgba(199,168,107,0.08),_transparent_60%)]"
+  />
+
+  <div
+    class="relative flex h-full w-full flex-col items-center justify-between px-5 py-6 text-center sm:px-6 sm:py-7 md:px-10 md:py-10 lg:px-14 lg:py-14"
+  >
+    <h3
+      class="font-cinzel text-2xl leading-tight font-black tracking-[0.08em] text-theme-cream/90 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:text-3xl md:text-5xl lg:text-6xl"
+    >
+      LA ACTUACIÓN
+    </h3>
+
+    <span
+      class="font-cinzel text-[0.55rem] font-black tracking-[0.26em] text-theme-cream/90 sm:text-[0.65rem] md:text-sm lg:text-base"
+    >
+      PRÓXIMAMENTE
+    </span>
+  </div>
+</div>
