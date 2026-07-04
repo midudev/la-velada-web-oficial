@@ -1,0 +1,84 @@
+---
+import { Image } from 'astro:assets'
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import type { Artist } from '@/types/artists'
+
+interface Props {
+  class?: string
+  /** `null` cuando el artista actual es el primero del cartel: no hay anterior. */
+  prevArtist: Artist | null
+  /** `null` cuando el artista actual es el último del cartel: no hay siguiente. */
+  nextArtist: Artist | null
+}
+
+const { class: className, prevArtist, nextArtist } = Astro.props
+
+// Cada tarjeta es un elemento independiente (no un wrapper con borde común):
+// así, cuando no hay anterior/siguiente, ese lado del grid queda vacío de
+// verdad (sin caja, sin borde) en vez de mostrar un hueco "de mentira".
+const cardClass =
+  'group flex items-center gap-3 rounded-2xl border border-theme-gold/24 bg-[linear-gradient(180deg,rgba(15,18,36,0.5)_0%,rgba(7,10,21,0.62)_100%)] px-4 py-4 transition-colors duration-200 ease-out outline-none hover:bg-theme-gold/9 hover:border-theme-gold/45 focus-visible:bg-theme-gold/9 focus-visible:border-theme-gold/45'
+---
+
+<nav
+  class:list={['grid w-full grid-cols-1 gap-3 sm:grid-cols-2', className]}
+  aria-label="Navegación entre artistas"
+>
+  {
+    prevArtist && (
+      // `sm:col-start-1` fija esta tarjeta a la mitad izquierda aunque sea la
+      // única presente, para que el hueco de la derecha quede vacío en vez de
+      // recolocarse al centro.
+      <a
+        href={`/artistas/${prevArtist.id}`}
+        class:list={[cardClass, 'sm:col-start-1']}
+        aria-label={`Ver la ficha de ${prevArtist.name}, artista anterior`}
+      >
+        <span class="relative size-11 shrink-0 overflow-hidden rounded-full ring-1 ring-inset ring-theme-gold/30 sm:size-12">
+          <Image src={prevArtist.image} alt="" class="size-full object-cover" loading="lazy" decoding="async" />
+        </span>
+        <span class="flex min-w-0 flex-1 flex-col gap-[0.1rem]">
+          <span class="font-cinzel text-[0.5rem] font-black tracking-[0.16em] text-theme-cream/55 uppercase">
+            Artista anterior
+          </span>
+          <span class="truncate font-cinzel text-[0.85rem] font-black tracking-[0.06em] text-theme-cream transition-colors duration-200 ease-out group-hover:text-theme-gold">
+            {prevArtist.name}
+          </span>
+        </span>
+        <ArrowRightIcon
+          class="size-4 shrink-0 text-theme-gold/60 transition-transform duration-200 ease-out group-hover:translate-x-1"
+          aria-hidden="true"
+        />
+      </a>
+    )
+  }
+
+  {
+    nextArtist && (
+      // `sm:col-start-2` fija esta tarjeta a la mitad derecha aunque sea la
+      // única presente, para que el hueco de la izquierda quede vacío en vez
+      // de recolocarse al centro.
+      <a
+        href={`/artistas/${nextArtist.id}`}
+        class:list={[cardClass, 'sm:col-start-2']}
+        aria-label={`Ver la ficha de ${nextArtist.name}, siguiente artista`}
+      >
+        <span class="relative size-11 shrink-0 overflow-hidden rounded-full ring-1 ring-inset ring-theme-gold/30 sm:size-12">
+          <Image src={nextArtist.image} alt="" class="size-full object-cover" loading="lazy" decoding="async" />
+        </span>
+        <span class="flex min-w-0 flex-1 flex-col gap-[0.1rem]">
+          <span class="font-cinzel text-[0.5rem] font-black tracking-[0.16em] text-theme-cream/55 uppercase">
+            Siguiente artista
+          </span>
+          <span class="truncate font-cinzel text-[0.85rem] font-black tracking-[0.06em] text-theme-cream transition-colors duration-200 ease-out group-hover:text-theme-gold">
+            {nextArtist.name}
+          </span>
+        </span>
+        <ArrowRightIcon
+          class="size-4 shrink-0 text-theme-gold/60 transition-transform duration-200 ease-out group-hover:translate-x-1"
+          aria-hidden="true"
+        />
+      </a>
+    )
+  }
+</nav>
