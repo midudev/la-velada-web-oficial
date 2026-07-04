@@ -3,9 +3,11 @@ import VeladaLogo from '@/assets/svg/logo.svg'
 
 interface Props {
   class?: string
+  /** Permite agrandar el logo cuando la tarjeta ocupa más espacio (p. ej. a ancho completo en desktop). */
+  iconClass?: string
 }
 
-const { class: className } = Astro.props
+const { class: className, iconClass = 'size-16 sm:size-20' } = Astro.props
 ---
 
 <div
@@ -23,5 +25,10 @@ const { class: className } = Astro.props
     class="absolute inset-0 bg-linear-to-br from-theme-navy/70 via-theme-midnight to-black"
   >
   </div>
-  <VeladaLogo class="relative size-16 text-theme-cream/75 drop-shadow-[0_0_28px_rgba(247,238,211,0.14)] sm:size-20" />
+  <VeladaLogo
+    class:list={[
+      'relative text-theme-cream/75 drop-shadow-[0_0_28px_rgba(247,238,211,0.14)]',
+      iconClass,
+    ]}
+  />
 </div>
