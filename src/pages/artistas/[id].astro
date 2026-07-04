@@ -1,0 +1,220 @@
+---
+import type { GetStaticPaths } from 'astro'
+import { getImage, Image } from 'astro:assets'
+
+import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
+import ArtistNextCard from '@/components/ArtistNextCard.astro'
+import ArtistPerformancePlaceholder from '@/components/ArtistPerformancePlaceholder.astro'
+import ArtistShareButtons from '@/components/ArtistShareButtons.astro'
+import ArtistStatsCard from '@/components/ArtistStatsCard.astro'
+import ArtistTopTracks from '@/components/ArtistTopTracks.astro'
+import { ARTISTS } from '@/consts/artists'
+import { EVENT_DATE_TIME } from '@/consts/event'
+import Layout from '@/layouts/Layout.astro'
+import Footer from '@/sections/Footer.astro'
+import Sponsors from '@/sections/Sponsors.astro'
+import { serializeJsonLd } from '@/utils/serialize-json-ld'
+
+export const prerender = true
+
+export const getStaticPaths = (() => {
+  return ARTISTS.map((artist) => ({
+    params: { id: artist.id },
+    props: { artistId: artist.id },
+  }))
+}) satisfies GetStaticPaths
+
+interface Props {
+  artistId: string
+}
+
+const { artistId } = Astro.props
+const artist = ARTISTS.find((a) => a.id === artistId)
+
+if (!artist) return Astro.redirect('/404')
+
+// Los dúos/grupos guardan un id compuesto (uno por miembro, unidos con "-").
+const isGroup = artist.id.includes('-')
+const topTracks = artist.topTracks ?? []
+
+// Navegación al artista anterior/siguiente según su orden en el cartel.
+// No es cíclica: el primero no tiene anterior y el último no tiene siguiente
+// (el hueco correspondiente se deja vacío en vez de dar la vuelta).
+const currentIndex = ARTISTS.findIndex((a) => a.id === artist.id)
+const prevArtist = currentIndex > 0 ? ARTISTS[currentIndex - 1] : null
+const nextArtist = currentIndex < ARTISTS.length - 1 ? ARTISTS[currentIndex + 1] : null
+const hasArtistNav = prevArtist !== null || nextArtist !== null
+
+const SITE_URL = 'https://www.infolavelada.com'
+const canonical = `${SITE_URL}/artistas/${artist.id}`
+const title = `${artist.name} | Artistas de La Velada del Año VI`
+const description = isGroup
+  ? `Conoce a ${artist.name}, parte del cartel musical de La Velada del Año VI, el evento de boxeo de Ibai Llanos en Sevilla el 25 de julio de 2026.`
+  : `Conoce a ${artist.name}, artista confirmado en el cartel musical de La Velada del Año VI, el evento de boxeo de Ibai Llanos en Sevilla el 25 de julio de 2026.`
+
+const ogImageAsset = await getImage({ src: artist.image, format: 'webp' })
+const ogImage = `${SITE_URL}${ogImageAsset.src}`
+const ogImageAlt = `${artist.name}, artista de La Velada del Año VI`
+
+const artistJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MusicGroup',
+  name: artist.name,
+  image: ogImage,
+  url: canonical,
+  genre: artist.genres,
+  sameAs: artist.spotifyLinks.map((link) => link.url),
+  performerIn: {
+    '@type': 'SportsEvent',
+    name: 'La Velada del Año VI',
+    startDate: EVENT_DATE_TIME,
+    location: {
+      '@type': 'Place',
+      name: 'Estadio de La Cartuja',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Sevilla',
+        addressCountry: 'ES',
+      },
+    },
+    organizer: {
+      '@type': 'Person',
+      name: 'Ibai Llanos',
+    },
+  },
+}
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Artistas', item: `${SITE_URL}/artistas` },
+    { '@type': 'ListItem', position: 3, name: artist.name, item: canonical },
+  ],
+}
+---
+
+<Layout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogImage={ogImage}
+  ogImageAlt={ogImageAlt}
+  ogUrl={canonical}
+  ogType="profile"
+>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={serializeJsonLd(artistJsonLd)}
+    slot="head"
+  />
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={serializeJsonLd(breadcrumbJsonLd)}
+    slot="head"
+  />
+
+  <section
+    class="relative isolate min-h-screen w-full overflow-x-clip bg-theme-midnight px-4 pt-24 pb-24 text-theme-cream sm:px-6 sm:pt-28 md:pt-32"
+    aria-labelledby="artist-name"
+  >
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_70%_45%_at_50%_0%,color-mix(in_srgb,var(--color-theme-gold)_16%,transparent)_0%,transparent_65%),linear-gradient(180deg,var(--color-theme-midnight)_0%,#050816_100%)]"
+    >
+    </div>
+
+    <div class="mx-auto flex w-full max-w-6xl flex-col">
+      <a
+        href="/artistas"
+        class="group inline-flex w-fit items-center gap-2 font-cinzel text-[0.72rem] font-bold tracking-[0.14em] text-theme-cream/72 no-underline transition-colors duration-200 hover:text-theme-gold focus-visible:text-theme-gold"
+      >
+        <ArrowLeftIcon
+          class="size-3 transition-transform duration-200 group-hover:-translate-x-[3px] group-focus-visible:-translate-x-[3px]"
+          aria-hidden="true"
+        />
+        <span>Volver a artistas</span>
+      </a>
+
+      <div
+        class="artist-hero mt-8 grid items-start gap-10 sm:mt-10 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1fr)] md:gap-10 lg:gap-14"
+      >
+        <div class="relative mx-auto flex w-full max-w-[26rem] flex-col items-center">
+          <span
+            aria-hidden="true"
+            class="pointer-events-none absolute -top-[10%] -inset-x-[10%] h-[60%] rounded-full bg-[radial-gradient(ellipse_60%_60%_at_50%_30%,color-mix(in_srgb,var(--color-theme-gold)_24%,transparent)_0%,transparent_70%)] blur-[20px]"
+          ></span>
+
+          <div class="relative z-10 aspect-[3/4] w-full overflow-hidden rounded-2xl ring-1 ring-theme-gold/45 shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
+            <Image
+              src={artist.image}
+              alt={`Foto de ${artist.name}`}
+              class="h-full w-full object-cover"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+            <span class="absolute top-3 left-3 z-[2] size-5 border-2 border-r-0 border-b-0 border-theme-gold/75" />
+            <span class="absolute top-3 right-3 z-[2] size-5 border-2 border-b-0 border-l-0 border-theme-gold/75" />
+            <span class="absolute bottom-3 left-3 z-[2] size-5 border-2 border-t-0 border-r-0 border-theme-gold/75" />
+            <span class="absolute right-3 bottom-3 z-[2] size-5 border-2 border-t-0 border-l-0 border-theme-gold/75" />
+          </div>
+        </div>
+
+        <div class="relative flex w-full flex-col items-center text-center sm:w-auto sm:items-start sm:text-left">
+          <p class="relative w-fit animate-fade-in-up rounded-full border border-theme-gold/45 bg-theme-gold/8 px-[1.1rem] py-[0.4rem] font-cinzel text-xs font-bold tracking-[0.3em] text-theme-gold uppercase shadow-[0_0_24px_color-mix(in_srgb,var(--color-theme-gold)_18%,transparent)]">
+            Cartel confirmado
+          </p>
+
+          <h1
+            id="artist-name"
+            class="mt-3 animate-fade-in-up animate-delay-200 font-cinzel text-[2.6rem] leading-[0.95] font-black tracking-[0.02em] text-balance uppercase sm:text-6xl md:text-[clamp(2.5rem,5.6vw,4.5rem)]"
+          >
+            {artist.name}
+          </h1>
+
+          <ArtistShareButtons
+            class="mt-5 animate-fade-in-up animate-delay-200 justify-center sm:justify-start"
+            artistName={artist.name}
+            url={canonical}
+          />
+
+          <ArtistStatsCard
+            class="mt-6 animate-fade-in-up animate-delay-300"
+            followers={artist.followers}
+            genres={artist.genres}
+            popularity={artist.popularity}
+            spotifyLinks={artist.spotifyLinks}
+          />
+
+          {
+            topTracks.length > 0 && (
+              <ArtistTopTracks
+                class="mt-6 animate-fade-in-up animate-delay-400"
+                tracks={topTracks}
+              />
+            )
+          }
+        </div>
+      </div>
+
+      <ArtistPerformancePlaceholder class="mt-10 w-full animate-fade-in-up animate-delay-500 sm:mt-12" />
+
+      {
+        hasArtistNav && (
+          <ArtistNextCard
+            class="mt-6 w-full animate-fade-in-up animate-delay-500"
+            prevArtist={prevArtist}
+            nextArtist={nextArtist}
+          />
+        )
+      }
+    </div>
+  </section>
+
+  <Sponsors />
+  <Footer />
+</Layout>

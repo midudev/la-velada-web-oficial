@@ -1,10 +1,11 @@
 ---
-import { Image } from 'astro:assets'
+import { getImage, Image } from 'astro:assets'
 import SectionDivider from '@/components/SectionDivider.astro'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 import { ARTISTS } from '@/consts/artists'
+import { EVENT_END_ISO, EVENT_ISO } from '@/consts/event'
 import { serializeJsonLd } from '@/utils/serialize-json-ld'
 
 const SITE_URL = 'https://www.infolavelada.com'
@@ -23,6 +24,61 @@ const breadcrumbJsonLd = {
     { '@type': 'ListItem', position: 2, name: 'Artistas', item: canonical },
     ],
 }
+
+// Imagen de cada artista optimizada, reutilizada tanto como og:image de sus
+// tarjetas de rendimiento (Open Graph solo admite una por página, así que
+// aquí sirve para el JSON-LD) como para el `image` de cada `MusicGroup`.
+const artistImages = await Promise.all(
+    ARTISTS.map((artist) => getImage({ src: artist.image, format: 'webp' })),
+)
+
+const musicEventJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'MusicEvent',
+    '@id': `${canonical}/#event`,
+    name: 'Actuaciones musicales de La Velada del Año VI',
+    description,
+    url: canonical,
+    startDate: EVENT_ISO,
+    endDate: EVENT_END_ISO,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+    inLanguage: 'es-ES',
+    superEvent: {
+    '@type': 'SportsEvent',
+    '@id': `${SITE_URL}/#event`,
+    name: 'La Velada del Año VI',
+    },
+    location: [
+    {
+        '@type': 'Place',
+        name: 'Estadio de La Cartuja',
+        address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Sevilla',
+        addressRegion: 'Andalucía',
+        addressCountry: 'ES',
+        },
+    },
+    {
+        '@type': 'VirtualLocation',
+        url: 'https://www.twitch.tv/ibai',
+    },
+    ],
+    organizer: {
+    '@type': 'Person',
+    name: 'Ibai Llanos',
+    url: 'https://www.twitch.tv/ibai',
+    },
+    performer: ARTISTS.map((artist, index) => ({
+    '@type': 'MusicGroup',
+    name: artist.name,
+    url: `${SITE_URL}/artistas/${artist.id}`,
+    image: `${SITE_URL}${artistImages[index].src}`,
+    genre: artist.genres,
+    sameAs: artist.spotifyLinks.map((link) => link.url),
+    })),
+}
 ---
 
 <Layout title={title} description={description} canonical={canonical}>
@@ -32,12 +88,24 @@ const breadcrumbJsonLd = {
     set:html={serializeJsonLd(breadcrumbJsonLd)}
     slot="head"
     />
+    <script
+    type="application/ld+json"
+    is:inline
+    set:html={serializeJsonLd(musicEventJsonLd)}
+    slot="head"
+    />
 
     <section
-    class="artists-page relative isolate w-full overflow-x-clip bg-theme-midnight px-3 pt-24 pb-20 text-theme-cream sm:px-6 sm:pt-32 sm:pb-24 md:pt-36"
+    class="relative isolate min-h-screen w-full overflow-x-clip bg-theme-midnight px-3 pt-24 pb-20 text-theme-cream sm:px-6 sm:pt-32 sm:pb-24 md:pt-36"
     >
-    <div aria-hidden="true" class="artists-bg absolute inset-0 -z-20"></div>
-    <div aria-hidden="true" class="artists-grain pointer-events-none absolute inset-0 -z-10"></div>
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_70%_45%_at_50%_0%,color-mix(in_srgb,var(--color-theme-gold)_16%,transparent)_0%,transparent_65%),linear-gradient(180deg,var(--color-theme-midnight)_0%,#050816_100%)]"
+    ></div>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(rgba(199,168,107,0.05)_1px,transparent_1px)] bg-[length:22px_22px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_85%)]"
+    ></div>
 
     <div class="mx-auto w-full max-w-7xl">
         <header class="flex flex-col items-center text-center">
@@ -49,7 +117,7 @@ const breadcrumbJsonLd = {
             ARTISTAS
         </h1>
         <p
-            class="artists-soon-badge mb-5 animate-fade-in-up font-cinzel text-xs font-bold tracking-[0.3em] text-theme-gold uppercase animate-delay-200 sm:text-sm"
+            class="relative mb-5 animate-fade-in-up rounded-full border border-theme-gold/45 bg-theme-gold/8 px-[1.1rem] py-[0.4rem] font-cinzel text-xs font-bold tracking-[0.3em] text-theme-gold uppercase shadow-[0_0_24px_color-mix(in_srgb,var(--color-theme-gold)_18%,transparent)] animate-delay-200 sm:text-sm"
         >
             Cartel confirmado
         </p>
@@ -68,31 +136,37 @@ const breadcrumbJsonLd = {
         {
             ARTISTS.map((artist, index) => (
             <li
-                class="artist-card-wrap animate-fade-in-up basis-[calc(50%-0.375rem)] sm:basis-[calc(33.333%-0.667rem)] lg:basis-[calc(33.333%-0.834rem)]"
-                style={`animation-delay: ${index * 45}ms; --idx: ${index}`}
+                class="artist-card-wrap animate-fade-in-up basis-[calc(50%-0.375rem)] transition-[opacity,filter] duration-[400ms] sm:basis-[calc(33.333%-0.667rem)] lg:basis-[calc(33.333%-0.834rem)]"
+                style={`animation-delay: ${index * 45}ms`}
             >
-                <div class="artist-flip relative block w-full">
+                <a
+                    href={`/artistas/${artist.id}`}
+                    aria-label={`Ver la ficha de ${artist.name}`}
+                    class="group relative block aspect-[4/5] w-full outline-offset-4 focus-visible:outline-2 focus-visible:outline-theme-gold sm:aspect-[3/4]"
+                >
                 <span
                     aria-hidden="true"
-                    class="artist-face artist-face-front absolute inset-0 grid place-items-end overflow-hidden rounded-md"
+                    class="absolute inset-0 grid [backface-visibility:hidden] place-items-end overflow-hidden rounded-md bg-[linear-gradient(180deg,#0c1330_0%,#060a1d_100%)] shadow-[0_0_0_1px_color-mix(in_srgb,var(--color-theme-gold)_22%,transparent),0_12px_30px_rgba(0,0,0,0.4)] transition-shadow duration-[400ms] group-hover:shadow-[0_0_0_1px_color-mix(in_srgb,var(--color-theme-gold)_70%,transparent),0_28px_60px_rgba(0,0,0,0.6),0_0_30px_color-mix(in_srgb,var(--color-theme-gold)_35%,transparent)]"
                 >
                     <Image
                     src={artist.image}
-                    alt={artist.name}
+                    alt=""
                     loading="lazy"
                     decoding="async"
                     class="absolute inset-0 size-full object-cover"
                     />
-                    <span class="artist-card-shade pointer-events-none absolute inset-0" />
-                    <span class="artist-front-name relative z-[2] w-full px-2 pb-2.5 text-center font-cinzel text-[0.65rem] font-bold tracking-[0.08em] text-theme-cream sm:pb-3 sm:text-xs sm:tracking-[0.1em]">
+                    <span
+                      class="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,transparent_30%,rgba(3,5,15,0.55)_55%,rgba(3,5,15,0.88)_78%,rgba(3,5,15,0.97)_100%)]"
+                    />
+                    <span class="relative z-[2] w-full px-2 pb-2.5 text-center font-cinzel text-[0.65rem] font-bold tracking-[0.08em] text-theme-cream [text-shadow:0_1px_3px_rgba(0,0,0,0.9),0_0_10px_rgba(0,0,0,0.6)] sm:pb-3 sm:text-xs sm:tracking-[0.1em]">
                     {artist.name}
                     </span>
-                    <span class="artist-card-corner artist-card-corner-tl" />
-                    <span class="artist-card-corner artist-card-corner-tr" />
-                    <span class="artist-card-corner artist-card-corner-bl" />
-                    <span class="artist-card-corner artist-card-corner-br" />
+                    <span class="absolute top-2 left-2 z-[3] size-3 border-[1.5px] border-r-0 border-b-0 border-theme-gold/65 transition-[width,height,border-color] duration-[400ms] group-hover:size-6 group-hover:border-theme-gold sm:top-2.5 sm:left-2.5 sm:size-4" />
+                    <span class="absolute top-2 right-2 z-[3] size-3 border-[1.5px] border-b-0 border-l-0 border-theme-gold/65 transition-[width,height,border-color] duration-[400ms] group-hover:size-6 group-hover:border-theme-gold sm:top-2.5 sm:right-2.5 sm:size-4" />
+                    <span class="absolute bottom-2 left-2 z-[3] size-3 border-[1.5px] border-t-0 border-r-0 border-theme-gold/65 transition-[width,height,border-color] duration-[400ms] group-hover:size-6 group-hover:border-theme-gold sm:bottom-2.5 sm:left-2.5 sm:size-4" />
+                    <span class="absolute right-2 bottom-2 z-[3] size-3 border-[1.5px] border-t-0 border-l-0 border-theme-gold/65 transition-[width,height,border-color] duration-[400ms] group-hover:size-6 group-hover:border-theme-gold sm:right-2.5 sm:bottom-2.5 sm:size-4" />
                 </span>
-                </div>
+                </a>
             </li>
             ))
         }
@@ -105,163 +179,22 @@ const breadcrumbJsonLd = {
 </Layout>
 
 <style>
-.artists-page {
-    min-height: 100svh;
-}
-
-.artists-bg {
-    background:
-        radial-gradient(
-        ellipse 70% 45% at 50% 0%,
-        color-mix(in srgb, var(--color-theme-gold) 16%, transparent) 0%,
-        transparent 65%
-        ),
-        linear-gradient(180deg, var(--color-theme-midnight) 0%, #050816 100%);
-}
-
-.artists-grain {
-    background-image: radial-gradient(rgba(199, 168, 107, 0.05) 1px, transparent 1px);
-    background-size: 22px 22px;
-    mask-image: radial-gradient(ellipse at center, black 30%, transparent 85%);
-}
-
-.artists-soon-badge {
-    position: relative;
-    padding: 0.4rem 1.1rem;
-    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
-    border-radius: 9999px;
-    background: color-mix(in srgb, var(--color-theme-gold) 8%, transparent);
-    box-shadow: 0 0 24px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
-}
-
-.artist-card-wrap {
-    transition:
-        opacity 400ms ease,
-        filter 400ms ease;
-}
-
-.artist-flip {
-    aspect-ratio: 3 / 4;
-}
-
-.artist-face {
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-}
-
-.artist-face-front {
-    background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
-    box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
-        0 12px 30px rgba(0, 0, 0, 0.4);
-    transition: box-shadow 400ms ease;
-}
-
-.artist-card-shade {
-    z-index: 1;
-    background: linear-gradient(
-        180deg,
-        transparent 30%,
-        rgba(3, 5, 15, 0.55) 55%,
-        rgba(3, 5, 15, 0.88) 78%,
-        rgba(3, 5, 15, 0.97) 100%
-    );
-}
-
-.artist-front-name {
-    text-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.9),
-        0 0 10px rgba(0, 0, 0, 0.6);
-}
-
-.artist-flip:hover .artist-face-front {
-    box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 70%, transparent),
-        0 28px 60px rgba(0, 0, 0, 0.6),
-        0 0 30px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
-}
-
-.artist-flip:hover .artist-face-front .artist-card-corner {
-    width: 24px;
-    height: 24px;
-    border-color: var(--color-theme-gold);
-}
-
-.artist-card-corner {
-    position: absolute;
-    z-index: 3;
-    width: 16px;
-    height: 16px;
-    border-style: solid;
-    border-width: 1.5px;
-    border-color: color-mix(in srgb, var(--color-theme-gold) 65%, transparent);
-    transition:
-    width 400ms ease,
-    height 400ms ease,
-    border-color 400ms ease;
-}
-
-.artist-card-corner-tl {
-    top: 10px;
-    left: 10px;
-    border-right-width: 0;
-    border-bottom-width: 0;
-}
-.artist-card-corner-tr {
-    top: 10px;
-    right: 10px;
-    border-left-width: 0;
-    border-bottom-width: 0;
-}
-.artist-card-corner-bl {
-    bottom: 10px;
-    left: 10px;
-    border-right-width: 0;
-    border-top-width: 0;
-}
-.artist-card-corner-br {
-    bottom: 10px;
-    right: 10px;
-    border-left-width: 0;
-    border-top-width: 0;
-}
-
-@media (max-width: 639px) {
-    .artist-flip {
-    aspect-ratio: 4 / 5;
-    }
-
-.artist-card-corner {
-    width: 12px;
-    height: 12px;
-}
-.artist-card-corner-tl {
-    top: 8px;
-    left: 8px;
-}
-.artist-card-corner-tr {
-    top: 8px;
-    right: 8px;
-}
-.artist-card-corner-bl {
-    bottom: 8px;
-    left: 8px;
-}
-.artist-card-corner-br {
-    bottom: 8px;
-    right: 8px;
-}
-}
-
+/*
+  Único bloque que se queda en CSS: atenuar el resto de tarjetas cuando se
+  pasa el ratón por una de ellas. Requiere `:has()` apuntando a un hermano
+  desde el contenedor padre, algo que las variantes de Tailwind no cubren
+  de forma fiable (no hay un equivalente directo a "atenúa mis hermanos
+  menos a mí" sin arrastrar problemas de orden/especificidad).
+*/
 @media (hover: hover) and (pointer: fine) {
-.artists-grid:has(.artist-card-wrap:hover) > .artist-card-wrap {
+  .artists-grid:has(.artist-card-wrap:hover) > .artist-card-wrap {
     opacity: 0.45;
     filter: saturate(0.6) brightness(0.72);
-}
+  }
 
-.artists-grid:has(.artist-card-wrap:hover) > .artist-card-wrap:hover {
+  .artists-grid:has(.artist-card-wrap:hover) > .artist-card-wrap:hover {
     opacity: 1;
     filter: saturate(1.08) brightness(1.05);
-}
+  }
 }
 </style>
