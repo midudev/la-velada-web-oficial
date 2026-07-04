@@ -176,6 +176,14 @@ export const BOXERS: Boxer[] = [
           pero que ahora tendrá que demostrarlo con guantes puestos. 🥊`,
     workout: [
       {
+        videoId: 'Ri41stA8eaA',
+        title: 'Entrenando con THEGREFG | Edu Aguirre, camino a La Velada #14',
+      },
+      {
+        videoId: 'oNExZ6xDjXk',
+        title: '¿ALFREDO DURO me REVIENTA? | Edu Aguirre, camino a La Velada #13',
+      },
+      {
         videoId: 'qAVys_o4cD4',
         title:
           'ENTRENO con el EQUIPO NACIONAL de BOXEO ESPAÑOL | Edu Aguirre, camino a La Velada #12',
@@ -247,20 +255,24 @@ pero que ahora tendrá que demostrarlo todo bajo los focos del ring. 🥊
 `,
     workout: [
       {
-        videoId: '-IvaT8PKc1w',
-        title: 'Así fue mi presentación de LA VELADA DEL AÑO VI',
+        videoId: 'AE4StCGLEcA',
+        title: 'LA VELADA - Queda un mes | Capítulo 4',
       },
       {
-        videoId: 'JWqJ22YGvjM',
-        title: 'LA VELADA - Yo amargá no voy a ir | Capítulo 1',
+        videoId: 'wkWbbHspRzM',
+        title: 'LA VELADA - Primeros sparrings | Capítulo 3',
       },
       {
         videoId: 'Zv9QJf8uAOM',
         title: 'LA VELADA - Bien, mal, cansada | Capítulo 2',
       },
       {
-        videoId: 'wkWbbHspRzM',
-        title: 'LA VELADA - Primeros sparrings | Capítulo 3',
+        videoId: 'JWqJ22YGvjM',
+        title: 'LA VELADA - Yo amargá no voy a ir | Capítulo 1',
+      },
+      {
+        videoId: '-IvaT8PKc1w',
+        title: 'Así fue mi presentación de LA VELADA DEL AÑO VI',
       },
     ],
   },
@@ -375,6 +387,30 @@ Un perfil acostumbrado al esfuerzo, a la disciplina y a superarse constantemente
 pero que ahora tendrá que demostrarlo bajo presión y frente a un rival. 🥊`,
     workout: [
       {
+        videoId: 'gYFAIm9fo5M',
+        title: 'Puse a Prueba el Limite de Belcast',
+      },
+      {
+        videoId: 'HzZ5j6Lm8aU',
+        title: 'Acepté una PELEA ILEGAL antes de LA VELADA',
+      },
+      {
+        videoId: 'WSB2fbqqzSw',
+        title: 'Puse a Prueba el Limite de Rivers',
+      },
+      {
+        videoId: 'Uu9ncwoUBus',
+        title: 'Boxee en el Barrio más Peligroso de México',
+      },
+      {
+        videoId: '8b63j6136RI',
+        title: 'Sobreviví 72h en un Campamento de Boxeo con Milica',
+      },
+      {
+        videoId: 'fvIVHMDXvgs',
+        title: 'Peleé Contra un Campeón Mundial de Boxeo',
+      },
+      {
         videoId: 'lrUJJaolMf0',
         title: 'Lo que no se vió en la Presentación de la Velada Del Año 6',
       },
@@ -429,6 +465,10 @@ De entretener a miles en streaming… a competir bajo presión real.
 Un perfil acostumbrado al foco y a la exposición constante…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     workout: [
+      {
+        videoId: 'TWNy3wwEv3k',
+        title: 'QUEDAN 30 DÍAS 🗓️ - LA VELADA #5',
+      },
       {
         videoId: 'UVJ16oc3zaI',
         title: 'SI TE CAES, TE LEVANTAS 🦍 - LA VELADA #4',
@@ -603,6 +643,10 @@ Un perfil con gran presencia mediática, acostumbrado a estar en el foco…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     workout: [
       {
+        videoId: 'oPQ59GGchi4',
+        title: 'BOXEANDO CON ALANA PARA LA VELADA',
+      },
+      {
         videoId: 'b7KZHgHpsWI',
         title: 'ENTRENANDO PARA LA VELADA DEL AÑO || VLOG',
       },
@@ -638,6 +682,10 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
         videoId: 'FYUozoDoN9c',
         title: 'GREFG VS PLEX | VELADA DEL AÑO 6',
       },
+      {
+        videoId: 'jvY9C2rwQ4M',
+        title: 'Detrás De Cámaras Presentación De La Velada Del Año VI',
+      },
     ],
   },
   {
@@ -666,6 +714,14 @@ La Velada VI supone para Roro un reto totalmente nuevo, donde tendrá que enfren
 Un perfil acostumbrado a la exposición constante y a la presión de las redes…
 pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     workout: [
+      {
+        videoId: 'evCr5q9v69A',
+        title: 'Así es mi vida a 20 días de La Velada...',
+      },
+      {
+        videoId: 'V6xAOfEPdpE',
+        title: 'Mi vida a un mes de pelear en La Velada...',
+      },
       {
         videoId: 'b4YZtb6lkpI',
         title: 'Rivers... voy a por ti.',
@@ -803,6 +859,10 @@ Es rendir al máximo nivel.
 Un perfil acostumbrado a la presión, al foco mediático y a competir frente a millones…
 que ahora tendrá que volver a demostrarlo golpe a golpe. 🥊`,
     workout: [
+      {
+        videoId: 'E7CRMa1TFMk',
+        title: 'GREFG VS EDU AGUIRRE | LA VELADA DEL AÑO 6',
+      },
       {
         videoId: 'URCFTAXdkgY',
         title: 'Entrenando con Marta, Fabiana y Roro para la Velada - TheGrefg',
