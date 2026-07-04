@@ -284,6 +284,8 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
   import { EVENT_HOUR } from '@/consts/event'
   import { $ } from '@/lib/dom-selector'
 
+  const LEAFLET_CSS_URL = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+
   const PIN_SVG = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 54" width="40" height="54">
       <defs>
@@ -307,7 +309,6 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
 
   let mapInstance: any = null
   let mapObserver: IntersectionObserver | null = null
-  let leafletCssLoaded = false
   let mapContainer: HTMLElement | null = null
   let onMapMouseEnter: (() => void) | null = null
   let onMapMouseLeave: (() => void) | null = null
@@ -315,14 +316,17 @@ const VENUE_WEB_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${VEN
   // El CSS de Leaflet se inyecta solo cuando el mapa va a inicializarse, en
   // lugar de bloquear el render de la página entera desde el <head>.
   function loadLeafletCss() {
-    if (leafletCssLoaded) return
-    leafletCssLoaded = true
+    const existingStyles = $<HTMLLinkElement>(
+      `link[data-leaflet-css="true"], link[href="${LEAFLET_CSS_URL}"]`,
+    )
+    if (existingStyles) return
 
     const link = document.createElement('link')
     link.rel = 'stylesheet'
-    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+    link.href = LEAFLET_CSS_URL
     link.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY='
     link.crossOrigin = 'anonymous'
+    link.dataset.leafletCss = 'true'
     document.head.appendChild(link)
   }
 
