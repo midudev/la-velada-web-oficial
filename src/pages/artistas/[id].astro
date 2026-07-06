@@ -17,11 +17,13 @@ import { serializeJsonLd } from '@/utils/serialize-json-ld'
 
 export const prerender = true
 
+// Cada artista es accesible tanto por su id de Spotify (compatibilidad con
+// enlaces existentes) como por un slug legible (p. ej. "anuel-aa").
 export const getStaticPaths = (() => {
-  return ARTISTS.map((artist) => ({
-    params: { id: artist.id },
-    props: { artistId: artist.id },
-  }))
+  return ARTISTS.flatMap((artist) => [
+    { params: { id: artist.id }, props: { artistId: artist.id } },
+    { params: { id: artist.slug }, props: { artistId: artist.slug } },
+  ])
 }) satisfies GetStaticPaths
 
 interface Props {
@@ -29,7 +31,7 @@ interface Props {
 }
 
 const { artistId } = Astro.props
-const artist = ARTISTS.find((a) => a.id === artistId)
+const artist = ARTISTS.find((a) => a.id === artistId || a.slug === artistId)
 
 if (!artist) return Astro.redirect('/404')
 
@@ -46,7 +48,7 @@ const nextArtist = currentIndex < ARTISTS.length - 1 ? ARTISTS[currentIndex + 1]
 const hasArtistNav = prevArtist !== null || nextArtist !== null
 
 const SITE_URL = 'https://www.infolavelada.com'
-const canonical = `${SITE_URL}/artistas/${artist.id}`
+const canonical = `${SITE_URL}/artistas/${artist.slug}`
 const title = `${artist.name} | Artistas de La Velada del Año VI`
 const description = isGroup
   ? `Conoce a ${artist.name}, parte del cartel musical de La Velada del Año VI, el evento de boxeo de Ibai Llanos en Sevilla el 25 de julio de 2026.`
