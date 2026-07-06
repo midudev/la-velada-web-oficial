@@ -17,6 +17,8 @@ export interface ArtistSpotifyLink {
 
 export interface Artist {
   id: string
+  /** Slug legible usado en la URL (p. ej. "anuel-aa"), alternativo al id de Spotify. */
+  slug: string
   name: string
   image: ImageMetadata
   /** Seguidores (agregados si es un dúo/grupo). */

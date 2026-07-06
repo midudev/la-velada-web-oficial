@@ -73,7 +73,7 @@ const musicEventJsonLd = {
     performer: ARTISTS.map((artist, index) => ({
     '@type': 'MusicGroup',
     name: artist.name,
-    url: `${SITE_URL}/artistas/${artist.id}`,
+    url: `${SITE_URL}/artistas/${artist.slug}`,
     image: `${SITE_URL}${artistImages[index].src}`,
     genre: artist.genres,
     sameAs: artist.spotifyLinks.map((link) => link.url),
@@ -140,7 +140,7 @@ const musicEventJsonLd = {
                 style={`animation-delay: ${index * 45}ms`}
             >
                 <a
-                    href={`/artistas/${artist.id}`}
+                    href={`/artistas/${artist.slug}`}
                     aria-label={`Ver la ficha de ${artist.name}`}
                     class="group relative block aspect-[4/5] w-full outline-offset-4 focus-visible:outline-2 focus-visible:outline-theme-gold sm:aspect-[3/4]"
                 >
