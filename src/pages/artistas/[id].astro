@@ -142,15 +142,30 @@ const breadcrumbJsonLd = {
       </a>
 
       <div
-        class="artist-hero mt-8 grid items-start gap-10 sm:mt-10 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1fr)] md:gap-10 lg:gap-14"
+        class="artist-hero relative mt-8 grid items-start gap-10 sm:mt-10 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1fr)] md:gap-10 lg:gap-14"
       >
-        <div class="relative mx-auto flex w-full max-w-[26rem] flex-col items-center">
+        {/*
+          Sentinel invisible que marca dónde estaría el retrato si NO fuera
+          sticky. El script lo observa para saber, con el offset real que
+          aplica el CSS (`top`), cuándo el retrato se ha "enganchado" arriba,
+          y así intensificar su halo/sombra en `data-stuck="true"`.
+        */}
+        <span
+          data-artist-portrait-sentinel
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-x-0 top-0 hidden h-px md:block"
+        ></span>
+
+        <div
+          data-artist-portrait
+          class="group/portrait relative mx-auto flex w-full max-w-[26rem] flex-col items-center md:sticky md:top-28"
+        >
           <span
             aria-hidden="true"
-            class="pointer-events-none absolute -top-[10%] -inset-x-[10%] h-[60%] rounded-full bg-[radial-gradient(ellipse_60%_60%_at_50%_30%,color-mix(in_srgb,var(--color-theme-gold)_24%,transparent)_0%,transparent_70%)] blur-[20px]"
+            class="artist-portrait-aura pointer-events-none absolute -top-[10%] -inset-x-[10%] h-[60%] rounded-full bg-[radial-gradient(ellipse_60%_60%_at_50%_30%,color-mix(in_srgb,var(--color-theme-gold)_24%,transparent)_0%,transparent_70%)] blur-[20px] transition-[filter,transform] duration-500 ease-out motion-reduce:transition-none group-data-[stuck=true]/portrait:scale-110 group-data-[stuck=true]/portrait:blur-[28px]"
           ></span>
 
-          <div class="relative z-10 aspect-[3/4] w-full overflow-hidden rounded-2xl ring-1 ring-theme-gold/45 shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
+          <div class="relative z-10 aspect-[3/4] w-full overflow-hidden rounded-2xl ring-1 ring-theme-gold/45 shadow-[0_24px_60px_rgba(0,0,0,0.5)] transition-[box-shadow,transform] duration-500 ease-out motion-reduce:transition-none group-data-[stuck=true]/portrait:scale-[1.02] group-data-[stuck=true]/portrait:shadow-[0_32px_80px_rgba(0,0,0,0.6),0_0_50px_color-mix(in_srgb,var(--color-theme-gold)_32%,transparent)]">
             <Image
               src={artist.image}
               alt={`Foto de ${artist.name}`}
@@ -221,3 +236,41 @@ const breadcrumbJsonLd = {
   <Sponsors />
   <Footer />
 </Layout>
+
+<script>
+  import { $$ } from '@/lib/dom-selector'
+
+  // Debe coincidir con el breakpoint `md:` de Tailwind: el retrato solo es
+  // sticky (y por tanto solo "se engancha") a partir de esta anchura. En
+  // mobile el retrato sigue en flujo normal, tal cual estaba antes.
+  const DESKTOP_QUERY = '(min-width: 768px)'
+
+  function initStickyArtistPortrait() {
+    if (!('IntersectionObserver' in window)) return
+    if (!window.matchMedia(DESKTOP_QUERY).matches) return
+
+    const portraits = $$<HTMLElement>('[data-artist-portrait]')
+
+    portraits.forEach((portrait) => {
+      const sentinel = portrait.parentElement?.querySelector<HTMLElement>(
+        '[data-artist-portrait-sentinel]',
+      )
+      if (!sentinel) return
+
+      // Leemos el `top` real que aplica el CSS (`md:top-28`, etc.) para que
+      // el margen del observer coincida exactamente con el punto en el que
+      // el retrato se queda fijo, sin duplicar el valor a mano en JS.
+      const topOffset = Number.parseFloat(window.getComputedStyle(portrait).top) || 0
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          portrait.dataset.stuck = String(!entry.isIntersecting)
+        },
+        { rootMargin: `-${topOffset + 1}px 0px 0px 0px`, threshold: 0 },
+      )
+      observer.observe(sentinel)
+    })
+  }
+
+  document.addEventListener('astro:page-load', initStickyArtistPortrait)
+</script>
