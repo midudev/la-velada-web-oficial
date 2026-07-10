@@ -153,6 +153,7 @@ const musicEventJsonLd = {
                     alt=""
                     loading="lazy"
                     decoding="async"
+                    transition:name={`artist-hero-${artist.id}`}
                     class="absolute inset-0 size-full object-cover"
                     />
                     <span
@@ -196,5 +197,19 @@ const musicEventJsonLd = {
     opacity: 1;
     filter: saturate(1.08) brightness(1.05);
   }
+}
+
+/*
+  Al volver desde la ficha de un artista, la imagen ya está haciendo la
+  view transition de morph (misma `transition:name`); si además le
+  aplicásemos la animación de entrada `animate-fade-in-up` quedaría un
+  doble movimiento (la card "cae" mientras la imagen todavía está
+  volando a su sitio). `Layout.astro` marca este atributo en el
+  `<html>` entrante durante `astro:before-swap` cuando detecta que
+  venimos de `/artistas/[slug]` hacia `/artistas`.
+*/
+html[data-skip-artists-enter] .artist-card-wrap {
+  animation: none;
+  opacity: 1;
 }
 </style>
