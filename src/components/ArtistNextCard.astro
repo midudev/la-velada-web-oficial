@@ -30,12 +30,19 @@ const cardClass =
       // única presente, para que el hueco de la derecha quede vacío en vez de
       // recolocarse al centro.
       <a
-        href={`/artistas/${prevArtist.id}`}
+        href={`/artistas/${prevArtist.slug}`}
         class:list={[cardClass, 'sm:col-start-1']}
         aria-label={`Ver la ficha de ${prevArtist.name}, artista anterior`}
       >
         <span class="relative size-11 shrink-0 overflow-hidden rounded-full ring-1 ring-inset ring-theme-gold/30 sm:size-12">
-          <Image src={prevArtist.image} alt="" class="size-full object-cover" loading="lazy" decoding="async" />
+          <Image
+            src={prevArtist.image}
+            alt=""
+            class="size-full object-cover"
+            loading="lazy"
+            decoding="async"
+            transition:name={`artist-hero-${prevArtist.id}`}
+          />
         </span>
         <span class="flex min-w-0 flex-1 flex-col gap-[0.1rem]">
           <span class="font-cinzel text-[0.5rem] font-black tracking-[0.16em] text-theme-cream/55 uppercase">
@@ -59,12 +66,19 @@ const cardClass =
       // única presente, para que el hueco de la izquierda quede vacío en vez
       // de recolocarse al centro.
       <a
-        href={`/artistas/${nextArtist.id}`}
+        href={`/artistas/${nextArtist.slug}`}
         class:list={[cardClass, 'sm:col-start-2']}
         aria-label={`Ver la ficha de ${nextArtist.name}, siguiente artista`}
       >
         <span class="relative size-11 shrink-0 overflow-hidden rounded-full ring-1 ring-inset ring-theme-gold/30 sm:size-12">
-          <Image src={nextArtist.image} alt="" class="size-full object-cover" loading="lazy" decoding="async" />
+          <Image
+            src={nextArtist.image}
+            alt=""
+            class="size-full object-cover"
+            loading="lazy"
+            decoding="async"
+            transition:name={`artist-hero-${nextArtist.id}`}
+          />
         </span>
         <span class="flex min-w-0 flex-1 flex-col gap-[0.1rem]">
           <span class="font-cinzel text-[0.5rem] font-black tracking-[0.16em] text-theme-cream/55 uppercase">
