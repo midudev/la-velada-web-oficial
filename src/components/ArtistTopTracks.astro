@@ -11,7 +11,7 @@ interface Props {
 const { class: className, tracks } = Astro.props
 ---
 
-<div class:list={['w-[min(100%,34rem)]', className]}>
+<div class:list={['w-full sm:w-[min(100%,34rem)]', className]}>
   <p class="m-0 mb-[0.6rem] font-cinzel text-[0.65rem] font-black tracking-[0.2em] text-theme-cream/55">
     Canciones más populares
   </p>
@@ -37,11 +37,11 @@ const { class: className, tracks } = Astro.props
                 {track.album}
               </span>
             </span>
-            <span class="flex shrink-0 flex-col items-end gap-[0.1rem]">
+            <span class="flex min-w-0 shrink flex-col items-end gap-[0.1rem]">
               <span class="tabular-nums text-[0.75rem] text-theme-cream/60">
                 {formatTrackDuration(track.durationMs)}
               </span>
-              <span class="whitespace-nowrap tabular-nums text-[0.62rem] text-theme-cream/45">
+              <span class="overflow-hidden text-ellipsis whitespace-nowrap tabular-nums text-[0.62rem] text-theme-cream/45">
                 {formatTrackStreams(track.streams)} reproducciones
               </span>
             </span>
