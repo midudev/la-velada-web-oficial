@@ -9,6 +9,7 @@ import AnuelAAImage from '@/assets/artists/anuel-aa.webp'
 export const ARTISTS: Artist[] = [
   {
     id: '0eHQ9o50hj6ZDNBt6Ys1sD',
+    slug: 'yandel',
     name: 'Yandel',
     image: YandelImage,
     followers: 24_562_821,
@@ -50,6 +51,7 @@ export const ARTISTS: Artist[] = [
   },
   {
     id: '0UWZUmn7sybxMCqrw9tGa7',
+    slug: 'juanes',
     name: 'Juanes',
     image: JuanesImage,
     followers: 20_114_452,
@@ -93,6 +95,7 @@ export const ARTISTS: Artist[] = [
     // Dúo: id compuesto (uno por cada miembro) para poder enlazar a una
     // única ficha; seguidores sumados y popularidad media de ambos.
     id: ['1y6tVxTqgNfqxTayfohSKJ', '0IEzMvarfVycBJAXjjEZOL'].join('-'),
+    slug: 'lucho-rk-la-pantera',
     name: 'Lucho Rk & La Pantera',
     image: LuchoRkLaPanteraImage,
     followers: 332_320,
@@ -135,6 +138,7 @@ export const ARTISTS: Artist[] = [
   },
   {
     id: '4F4pp8NUW08JuXwnoxglpN',
+    slug: 'bad-gyal',
     name: 'Bad Gyal',
     image: BadGyalImage,
     followers: 13_381_846,
@@ -176,6 +180,7 @@ export const ARTISTS: Artist[] = [
   },
   {
     id: '2R21vXR83lH98kGeO99Y66',
+    slug: 'anuel-aa',
     name: 'Anuel AA',
     image: AnuelAAImage,
     followers: 43_957_388,

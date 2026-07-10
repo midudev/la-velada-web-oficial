@@ -73,7 +73,7 @@ const musicEventJsonLd = {
     performer: ARTISTS.map((artist, index) => ({
     '@type': 'MusicGroup',
     name: artist.name,
-    url: `${SITE_URL}/artistas/${artist.id}`,
+    url: `${SITE_URL}/artistas/${artist.slug}`,
     image: `${SITE_URL}${artistImages[index].src}`,
     genre: artist.genres,
     sameAs: artist.spotifyLinks.map((link) => link.url),
@@ -140,7 +140,7 @@ const musicEventJsonLd = {
                 style={`animation-delay: ${index * 45}ms`}
             >
                 <a
-                    href={`/artistas/${artist.id}`}
+                    href={`/artistas/${artist.slug}`}
                     aria-label={`Ver la ficha de ${artist.name}`}
                     class="group relative block aspect-[4/5] w-full outline-offset-4 focus-visible:outline-2 focus-visible:outline-theme-gold sm:aspect-[3/4]"
                 >
@@ -153,6 +153,7 @@ const musicEventJsonLd = {
                     alt=""
                     loading="lazy"
                     decoding="async"
+                    transition:name={`artist-hero-${artist.id}`}
                     class="absolute inset-0 size-full object-cover"
                     />
                     <span
@@ -196,5 +197,19 @@ const musicEventJsonLd = {
     opacity: 1;
     filter: saturate(1.08) brightness(1.05);
   }
+}
+
+/*
+  Al volver desde la ficha de un artista, la imagen ya está haciendo la
+  view transition de morph (misma `transition:name`); si además le
+  aplicásemos la animación de entrada `animate-fade-in-up` quedaría un
+  doble movimiento (la card "cae" mientras la imagen todavía está
+  volando a su sitio). `Layout.astro` marca este atributo en el
+  `<html>` entrante durante `astro:before-swap` cuando detecta que
+  venimos de `/artistas/[slug]` hacia `/artistas`.
+*/
+html[data-skip-artists-enter] .artist-card-wrap {
+  animation: none;
+  opacity: 1;
 }
 </style>
