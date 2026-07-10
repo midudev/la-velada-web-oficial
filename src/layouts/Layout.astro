@@ -173,6 +173,14 @@ const organizationJsonLd = {
       const COMBATS_INDEX_PATH = '/combates'
       const BOXER_DETAIL_PATH_RE = /^\/boxeadores\/[^/]+$/
 
+      // Mismo mecanismo que los boxeadores, pero para la ficha de artista:
+      // su imagen comparte `transition:name="artist-hero-*"` con la card del
+      // listado, y sin este flag la card recibiría a la vez el morph de la
+      // view transition y su animación de entrada `animate-fade-in-up`.
+      const SKIP_ARTISTS_ENTER_ATTR = 'data-skip-artists-enter'
+      const ARTISTS_INDEX_PATH = '/artistas'
+      const ARTIST_DETAIL_PATH_RE = /^\/artistas\/[^/]+$/
+
       // Imágenes que comparten `transition:name="boxer-hero-*"` entre páginas:
       // los recortes de los combates y las tarjetas del listado de boxeadores.
       const SHARED_HERO_SELECTOR = '.boxer-pic, .boxer-card-img'
@@ -188,6 +196,13 @@ const organizationJsonLd = {
         const toPath = getNormalizedPathname(event.to)
 
         return toPath === BOXERS_INDEX_PATH && BOXER_DETAIL_PATH_RE.test(fromPath)
+      }
+
+      const isReturningFromArtistDetail = (event: AstroNavigationEvent) => {
+        const fromPath = getNormalizedPathname(event.from)
+        const toPath = getNormalizedPathname(event.to)
+
+        return toPath === ARTISTS_INDEX_PATH && ARTIST_DETAIL_PATH_RE.test(fromPath)
       }
 
       // Navegación directa entre los dos listados (combates ↔ boxeadores). Ahí
@@ -222,10 +237,15 @@ const organizationJsonLd = {
       document.addEventListener('astro:before-swap', (event) => {
         const transitionEvent = event as AstroBeforeSwapEvent
         const shouldSkipBoxersEnter = isReturningFromBoxerDetail(transitionEvent)
+        const shouldSkipArtistsEnter = isReturningFromArtistDetail(transitionEvent)
 
         transitionEvent.newDocument.documentElement.toggleAttribute(
           SKIP_BOXERS_ENTER_ATTR,
           shouldSkipBoxersEnter,
+        )
+        transitionEvent.newDocument.documentElement.toggleAttribute(
+          SKIP_ARTISTS_ENTER_ATTR,
+          shouldSkipArtistsEnter,
         )
 
         // Y la página entrante se limpia antes de capturar el snapshot «nuevo».
