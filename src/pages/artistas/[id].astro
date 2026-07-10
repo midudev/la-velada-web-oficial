@@ -142,7 +142,7 @@ const breadcrumbJsonLd = {
       </a>
 
       <div
-        class="artist-hero relative mt-8 grid items-start gap-10 sm:mt-10 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1fr)] md:gap-10 lg:gap-14"
+        class="artist-hero relative mt-8 grid grid-cols-1 items-start gap-10 sm:mt-10 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1fr)] md:gap-10 lg:gap-14"
       >
         {/*
           Sentinel invisible que marca dónde estaría el retrato si NO fuera
@@ -173,6 +173,7 @@ const breadcrumbJsonLd = {
               loading="eager"
               fetchpriority="high"
               decoding="async"
+              transition:name={`artist-hero-${artist.id}`}
             />
             <span class="absolute top-3 left-3 z-[2] size-5 border-2 border-r-0 border-b-0 border-theme-gold/75" />
             <span class="absolute top-3 right-3 z-[2] size-5 border-2 border-b-0 border-l-0 border-theme-gold/75" />
