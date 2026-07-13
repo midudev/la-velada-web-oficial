@@ -598,16 +598,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     text-transform: uppercase;
     color: transparent;
 
-    background-image: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-theme-cream) 14%, transparent) 0%,
-      color-mix(in srgb, var(--color-theme-gold) 10%, transparent) 55%,
-      transparent 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-
     text-shadow:
       0 0 24px color-mix(in srgb, var(--color-theme-gold) 14%, transparent),
       0 1px 0 color-mix(in srgb, var(--color-theme-cream) 3%, transparent);
@@ -626,6 +616,17 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   .boxer-watermark-track {
     display: flex;
     width: max-content;
+
+    background-image: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-cream) 14%, transparent) 0%,
+      color-mix(in srgb, var(--color-theme-gold) 10%, transparent) 55%,
+      transparent 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
     animation: boxer-watermark-marquee 32s linear infinite;
     will-change: transform;
   }
