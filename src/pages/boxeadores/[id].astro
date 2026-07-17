@@ -19,9 +19,9 @@ import {
   COUNTRY_NAMES,
   GENDER_LABELS,
   getBoxerHeroImages,
-  getBoxerPhoto,
   getBoxerSelectImages,
 } from '@/consts/boxers'
+import { getBoxerMainPhotoUrl } from '@/consts/boxer-gallery'
 import { formatFollowers } from '@/lib/socials'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
@@ -83,7 +83,6 @@ const boxer = BOXERS_BY_ID[boxerId]
 if (!boxer) return Astro.redirect('/404')
 
 const heroImages = getBoxerHeroImages(boxer)
-const photo = getBoxerPhoto(boxer)
 const countryName = COUNTRY_NAMES[boxer.country] ?? boxer.country
 const genderLabel = GENDER_LABELS[boxer.gender]
 
@@ -132,7 +131,7 @@ const totalFollowersLabel = formatFollowers(totalFollowers)
 
 // Usamos la foto principal del boxeador como og:image cuando exista,
 // con fallback al hero recortado.
-const ogImage = `${SITE_URL}${photo}`
+const ogImage = getBoxerMainPhotoUrl(boxer.id)
 const ogImageAlt = `${boxer.name}, ${role} de La Velada del Año VI`
 
 const personJsonLd = {
