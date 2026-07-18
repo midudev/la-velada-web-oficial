@@ -1,0 +1,2102 @@
+---
+import ShareIcon from '@/assets/svg/share.svg'
+import ResetIcon from '@/assets/svg/reset.svg'
+import InstagramIcon from '@/assets/svg/instagram.svg'
+import XIcon from '@/assets/svg/x.svg'
+import {
+  DEFAULT_TEMPLATE_ID,
+  TIER_TEMPLATES,
+  TIER_TEMPLATES_BY_ID,
+  type TierTemplate,
+} from '@/consts/tier-list'
+import { BOXERS, getBoxerSelectImage } from '@/consts/boxers'
+
+interface BoxerPayload {
+  id: string
+  name: string
+  imageUrl: string
+}
+
+const boxers: BoxerPayload[] = BOXERS.map((b) => ({
+  id: b.id,
+  name: b.name,
+  imageUrl: getBoxerSelectImage(b),
+}))
+
+const defaultTemplateId = DEFAULT_TEMPLATE_ID
+const defaultTemplate: TierTemplate =
+  TIER_TEMPLATES_BY_ID[defaultTemplateId] ?? TIER_TEMPLATES[0]!
+---
+
+<div class="tier-list-app" data-tier-list-app data-default-template={defaultTemplateId}>
+  <!-- Selector de plantillas -->
+  <div class="tier-templates" role="tablist" aria-label="Plantillas de tier list">
+    {
+      TIER_TEMPLATES.map((template: TierTemplate) => (
+        <button
+          type="button"
+          class="tier-template-chip"
+          role="tab"
+          data-template-id={template.id}
+          aria-selected={template.id === defaultTemplateId ? 'true' : 'false'}
+        >
+          <span class="tier-template-emoji" aria-hidden="true">
+            {template.emoji}
+          </span>
+          <span class="tier-template-label">{template.shortLabel}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <p class="tier-template-desc" data-template-desc aria-live="polite">
+    {defaultTemplate.description}
+  </p>
+
+  <!-- Título editable -->
+  <div class="tier-title-wrap">
+    <label class="sr-only" for="tier-list-title">Título del tier list</label>
+    <input
+      id="tier-list-title"
+      class="tier-title-input"
+      type="text"
+      data-tier-title
+      value={defaultTemplate.title}
+      maxlength="48"
+      autocomplete="off"
+      spellcheck="false"
+    />
+  </div>
+
+  <!-- Board de tiers (SSR: visible sin JS; el script rehidrata / reordena) -->
+  <div class="tier-board" data-tier-board role="list" aria-label="Filas del tier list">
+    {
+      defaultTemplate.tiers.map((tier) => (
+        <div class="tier-row" role="listitem" data-tier-id={tier.id}>
+          <div
+            class="tier-row-label"
+            style={`background:${tier.color};color:${tier.textColor ?? '#1a1208'}`}
+          >
+            <span class="tier-row-label-text">{tier.label}</span>
+            {tier.hint && <span class="tier-row-hint">{tier.hint}</span>}
+          </div>
+          <div
+            class="tier-row-drop"
+            data-drop-zone={tier.id}
+            role="list"
+            aria-label={`Tier ${tier.label}${tier.hint ? `: ${tier.hint}` : ''}`}
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Pool de luchadores -->
+  <section class="tier-pool-section" aria-labelledby="tier-pool-title">
+    <div class="tier-pool-header">
+      <h2 id="tier-pool-title" class="tier-pool-title">Luchadores</h2>
+      <p class="tier-pool-hint" data-pool-hint>
+        Arrastra a una fila o tócalo y elige el tier
+      </p>
+    </div>
+    <div
+      class="tier-pool"
+      data-tier-pool
+      data-drop-zone="pool"
+      role="list"
+      aria-label="Luchadores sin clasificar"
+    >
+      {
+        boxers.map((boxer) => (
+          <button
+            type="button"
+            class="tier-fighter"
+            draggable="true"
+            data-boxer-id={boxer.id}
+            aria-label={boxer.name}
+            role="listitem"
+          >
+            <img src={boxer.imageUrl} alt="" loading="lazy" draggable="false" />
+            <span class="tier-fighter-name">{boxer.name}</span>
+          </button>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Acciones -->
+  <div class="tier-actions">
+    <button type="button" class="tier-btn tier-btn-ghost" data-tier-reset>
+      <ResetIcon class="tier-btn-icon" aria-hidden="true" />
+      Reiniciar
+    </button>
+    <button type="button" class="tier-btn tier-btn-primary" data-tier-share>
+      <ShareIcon class="tier-btn-icon" aria-hidden="true" />
+      Compartir imagen
+    </button>
+  </div>
+
+  <!-- Selector de tier (móvil / click) -->
+  <div class="tier-pick" data-tier-pick hidden>
+    <div class="tier-pick-panel" role="dialog" aria-modal="true" aria-labelledby="tier-pick-title">
+      <p id="tier-pick-title" class="tier-pick-title">
+        ¿Dónde va <strong data-tier-pick-name></strong>?
+      </p>
+      <div class="tier-pick-options" data-tier-pick-options></div>
+      <button type="button" class="tier-btn tier-btn-ghost tier-pick-cancel" data-tier-pick-cancel>
+        Cancelar
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal de compartir -->
+  <dialog class="tier-share-modal" data-tier-share-modal>
+    <div class="tier-share-backdrop" data-share-close></div>
+    <div class="tier-share-content">
+      <button type="button" class="tier-share-close" data-share-close aria-label="Cerrar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <header class="tier-share-header">
+        <h2 class="tier-share-heading">Compartir tier list</h2>
+        <div class="tier-share-formats" role="group" aria-label="Formato de imagen">
+          <button type="button" class="tier-format-btn" data-share-format="instagram" aria-pressed="true">
+            <InstagramIcon class="tier-format-icon" aria-hidden="true" />
+            <span class="tier-format-label">Instagram</span>
+            <span class="tier-format-ratio">4:5</span>
+          </button>
+          <button
+            type="button"
+            class="tier-format-btn tier-format-btn-x"
+            data-share-format="x"
+            aria-pressed="false"
+            aria-label="Formato X 16:9"
+          >
+            <XIcon class="tier-format-icon tier-format-icon-x" aria-hidden="true" />
+            <span class="tier-format-ratio">16:9</span>
+          </button>
+          <button type="button" class="tier-format-btn" data-share-format="square" aria-pressed="false">
+            <span class="tier-format-icon tier-format-icon-square" aria-hidden="true"></span>
+            <span class="tier-format-label">Cuadrado</span>
+            <span class="tier-format-ratio">1:1</span>
+          </button>
+        </div>
+      </header>
+
+      <figure class="tier-share-figure" data-share-figure>
+        <div class="tier-share-frame">
+          <img class="tier-share-preview" data-share-preview alt="Vista previa del tier list" />
+          <span class="tier-share-loading" data-share-loading>Generando imagen…</span>
+        </div>
+      </figure>
+
+      <div class="tier-share-toolbar">
+        <div class="tier-share-actions" data-share-steps>
+          <button type="button" class="tier-btn tier-btn-primary tier-share-main" data-native-share-btn data-native-share hidden>
+            <ShareIcon class="tier-btn-icon" aria-hidden="true" />
+            Compartir
+          </button>
+          <button
+            type="button"
+            class="tier-btn tier-btn-ghost tier-share-x"
+            data-share-x
+            aria-label="Compartir en X"
+            title="Compartir en X"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+              ></path>
+            </svg>
+          </button>
+          <button type="button" class="tier-btn tier-btn-ghost" data-share-download>
+            Descargar
+          </button>
+          <button type="button" class="tier-btn tier-btn-ghost" data-share-copy>
+            Copiar
+          </button>
+        </div>
+        <p class="tier-share-hint">
+          Copiada al portapapeles · pega con <kbd data-paste-shortcut>Ctrl + V</kbd>
+        </p>
+        <p class="tier-share-status" data-share-status aria-live="polite"></p>
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<style>
+  .tier-list-app {
+    width: 100%;
+    max-width: 56rem;
+    margin-inline: auto;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ── Templates ── */
+  .tier-templates {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .tier-template-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+    background: color-mix(in srgb, var(--color-theme-midnight) 70%, black);
+    color: color-mix(in srgb, var(--color-theme-cream) 78%, transparent);
+    font-family: var(--font-cinzel);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      border-color 200ms,
+      background 200ms,
+      color 200ms,
+      box-shadow 200ms;
+  }
+
+  .tier-template-chip:hover,
+  .tier-template-chip:focus-visible {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    color: var(--color-theme-cream);
+    outline: none;
+  }
+
+  .tier-template-chip[aria-selected='true'] {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 22%, var(--color-theme-midnight)),
+      color-mix(in srgb, var(--color-theme-midnight) 90%, black)
+    );
+    color: var(--color-theme-gold);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+  }
+
+  .tier-template-emoji {
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  .tier-template-desc {
+    margin: 0 0 1.25rem;
+    text-align: center;
+    font-family: var(--font-fallback);
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--color-theme-cream) 58%, transparent);
+    min-height: 1.3em;
+  }
+
+  /* ── Title ── */
+  .tier-title-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .tier-title-input {
+    width: min(100%, 28rem);
+    padding: 0.55rem 1rem;
+    border: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+    background: transparent;
+    color: var(--color-theme-cream);
+    font-family: var(--font-cinzel);
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+    outline: none;
+    transition: border-color 200ms, box-shadow 200ms;
+  }
+
+  .tier-title-input:focus {
+    border-bottom-color: var(--color-theme-gold);
+    box-shadow: 0 1px 0 0 var(--color-theme-gold);
+  }
+
+  @media (min-width: 640px) {
+    .tier-title-input {
+      font-size: 1.4rem;
+    }
+  }
+
+  /* ── Board ── */
+  .tier-board {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.35rem;
+    overflow: hidden;
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 18%, transparent),
+      0 18px 48px rgba(0, 0, 0, 0.35);
+  }
+
+  :global(.tier-row) {
+    display: grid;
+    grid-template-columns: 4.25rem 1fr;
+    min-height: 3.75rem;
+    align-items: stretch;
+    background: color-mix(in srgb, var(--color-velada-navy) 55%, var(--color-theme-midnight));
+  }
+
+  @media (min-width: 640px) {
+    :global(.tier-row) {
+      grid-template-columns: 5.25rem 1fr;
+      min-height: 4.25rem;
+    }
+  }
+
+  /* En personalizado la columna de etiqueta se ensancha si el texto es largo. */
+  :global(.tier-row[data-editable-labels='true']) {
+    grid-template-columns: minmax(4.5rem, 6.75rem) 1fr;
+  }
+
+  @media (min-width: 640px) {
+    :global(.tier-row[data-editable-labels='true']) {
+      grid-template-columns: minmax(5.25rem, 7.5rem) 1fr;
+    }
+  }
+
+  :global(.tier-row-label) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    gap: 0.1rem;
+    padding: 0.25rem 0.2rem;
+    font-family: var(--font-cinzel);
+    font-weight: 900;
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
+    color: #1a1208;
+    text-align: center;
+    user-select: none;
+    word-break: break-word;
+    line-height: 1.05;
+    min-width: 0;
+    height: 100%;
+  }
+
+  @media (min-width: 640px) {
+    :global(.tier-row-label) {
+      font-size: 1.4rem;
+    }
+  }
+
+  /* Con subtítulo: letra un poco más compacta, bloque siempre centrado en vertical. */
+  :global(.tier-row-label:has(.tier-row-hint) .tier-row-label-text) {
+    font-size: 1rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 640px) {
+    :global(.tier-row-label:has(.tier-row-hint) .tier-row-label-text) {
+      font-size: 1.2rem;
+    }
+  }
+
+  /* Texto libre largo (plantilla personalizado sin letra): 2 líneas, más pequeño. */
+  :global(.tier-row-label[data-long='true']) {
+    font-size: 0.62rem;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+  }
+
+  @media (min-width: 640px) {
+    :global(.tier-row-label[data-long='true']) {
+      font-size: 0.72rem;
+    }
+  }
+
+  :global(.tier-row-label-text) {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  :global(.tier-row-label[data-long='true'] .tier-row-label-text) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+
+  :global(button.tier-row-label) {
+    border: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  :global(.tier-row-label--editable) {
+    cursor: pointer;
+    transition:
+      filter 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  :global(.tier-row-label--editable:hover),
+  :global(.tier-row-label--editable:focus-visible) {
+    filter: brightness(1.06);
+    box-shadow: inset 0 0 0 2px rgba(26, 18, 8, 0.28);
+    outline: none;
+  }
+
+  :global(.tier-row-label-input) {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    padding: 0.15rem 0.2rem;
+    border: none;
+    border-radius: 0.2rem;
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow: inset 0 0 0 1px rgba(26, 18, 8, 0.25);
+    color: #1a1208;
+    font-family: var(--font-cinzel);
+    font-weight: 900;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    text-align: center;
+    line-height: 1.15;
+    outline: none;
+  }
+
+  @media (min-width: 640px) {
+    :global(.tier-row-label-input) {
+      font-size: 0.82rem;
+    }
+  }
+
+  :global(.tier-row-hint) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    font-family: var(--font-fallback);
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    opacity: 0.82;
+    line-height: 1.15;
+    max-width: 100%;
+    width: 100%;
+    padding-inline: 0.1rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+    text-overflow: unset;
+  }
+
+  @media (min-width: 640px) {
+    :global(.tier-row-hint) {
+      font-size: 0.55rem;
+    }
+  }
+
+  :global(.tier-row-drop) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    gap: 0.3rem;
+    padding: 0.3rem;
+    min-height: 100%;
+    border-left: 1px solid color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
+    transition: background 150ms, box-shadow 150ms;
+  }
+
+  :global(.tier-row-drop[data-drag-over='true']) {
+    background: color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
+  }
+
+  /* ── Fighter chip ── */
+  :global(.tier-fighter) {
+    position: relative;
+    width: 3.35rem;
+    height: 3.35rem;
+    flex-shrink: 0;
+    border-radius: 0.3rem;
+    overflow: hidden;
+    cursor: grab;
+    touch-action: none;
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 30%, transparent),
+      0 4px 12px rgba(0, 0, 0, 0.35);
+    transition:
+      transform 150ms ease,
+      box-shadow 150ms ease,
+      opacity 150ms ease;
+    background: var(--color-theme-midnight);
+  }
+
+  @media (min-width: 640px) {
+    :global(.tier-fighter) {
+      width: 3.75rem;
+      height: 3.75rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :global(.tier-fighter) {
+      width: 4rem;
+      height: 4rem;
+    }
+  }
+
+  :global(.tier-fighter:hover),
+  :global(.tier-fighter:focus-visible) {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 60%, transparent),
+      0 8px 20px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
+    outline: none;
+    z-index: 1;
+  }
+
+  :global(.tier-fighter:active) {
+    cursor: grabbing;
+  }
+
+  :global(.tier-fighter[data-dragging='true']) {
+    opacity: 0.45;
+    transform: scale(0.95);
+  }
+
+  :global(.tier-fighter img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  :global(.tier-fighter-name) {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: 0.75rem 0.15rem 0.15rem;
+    background: linear-gradient(to top, rgba(5, 8, 18, 0.94), transparent);
+    color: var(--color-theme-cream);
+    font-family: var(--font-cinzel);
+    font-size: 0.45rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 1.1;
+    pointer-events: none;
+  }
+
+  @media (min-width: 640px) {
+    :global(.tier-fighter-name) {
+      font-size: 0.5rem;
+      padding-top: 0.9rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :global(.tier-fighter-name) {
+      font-size: 0.52rem;
+    }
+  }
+
+  /* En el pool las celdas del grid ya marcan el tamaño; el nombre crece un poco. */
+  :global(.tier-pool .tier-fighter-name) {
+    font-size: 0.5rem;
+    padding-top: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    :global(.tier-pool .tier-fighter-name) {
+      font-size: 0.55rem;
+    }
+  }
+
+  /* ── Pool ── */
+  .tier-pool-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .tier-pool-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.35rem 1rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .tier-pool-title {
+    margin: 0;
+    font-family: var(--font-cinzel);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-theme-gold);
+  }
+
+  .tier-pool-hint {
+    margin: 0;
+    font-family: var(--font-fallback);
+    font-size: 0.75rem;
+    color: color-mix(in srgb, var(--color-theme-cream) 50%, transparent);
+  }
+
+  /*
+   * Grid fija para repartir 20 luchadores en filas iguales:
+   *  - móvil: 5 por fila (4 filas)
+   *  - desktop: 10 por fila (2 filas)
+   * Las miniaturas ocupan todo el hueco → más grandes y simétricas.
+   */
+  .tier-pool {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.5rem;
+    min-height: 5rem;
+    padding: 0.85rem;
+    border-radius: 0.35rem;
+    background: color-mix(in srgb, var(--color-theme-midnight) 60%, black);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 16%, transparent);
+    transition: background 150ms, box-shadow 150ms;
+  }
+
+  @media (min-width: 640px) {
+    .tier-pool {
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+      gap: 0.55rem;
+      padding: 1rem;
+    }
+  }
+
+  .tier-pool[data-drag-over='true'] {
+    background: color-mix(in srgb, var(--color-theme-gold) 8%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
+  }
+
+  /* En el pool, la miniatura crece al 100% de la celda del grid. */
+  :global(.tier-pool .tier-fighter) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    max-width: none;
+  }
+
+  .tier-pool:empty::after {
+    content: '¡Todos clasificados! 🥊';
+    grid-column: 1 / -1;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 3.5rem;
+    font-family: var(--font-cinzel);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
+  }
+
+  /* ── Actions ── */
+  .tier-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .tier-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+    padding: 0.55rem 1.15rem;
+    border-radius: 9999px;
+    border: none;
+    font-family: var(--font-cinzel);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      transform 200ms ease,
+      box-shadow 200ms ease,
+      background 200ms ease,
+      color 200ms ease;
+  }
+
+  .tier-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .tier-btn-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  .tier-btn-primary {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
+      var(--color-theme-gold) 65%,
+      color-mix(in srgb, var(--color-theme-gold) 75%, black) 100%
+    );
+    color: var(--color-theme-midnight);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      0 10px 28px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+  }
+
+  .tier-btn-primary:hover:not(:disabled),
+  .tier-btn-primary:focus-visible:not(:disabled) {
+    transform: translateY(-2px);
+    outline: none;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      0 14px 34px color-mix(in srgb, var(--color-theme-gold) 42%, transparent);
+  }
+
+  .tier-btn-ghost {
+    background: color-mix(in srgb, var(--color-theme-midnight) 70%, black);
+    color: color-mix(in srgb, var(--color-theme-cream) 85%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+  }
+
+  .tier-btn-ghost:hover:not(:disabled),
+  .tier-btn-ghost:focus-visible:not(:disabled) {
+    color: var(--color-theme-cream);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    outline: none;
+  }
+
+  /* ── Pick overlay ── */
+  .tier-pick {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: grid;
+    place-items: end center;
+    padding: 1rem;
+    background: rgba(10, 16, 36, 0.72);
+    backdrop-filter: blur(6px);
+  }
+
+  .tier-pick[hidden] {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .tier-pick {
+      place-items: center;
+    }
+  }
+
+  .tier-pick-panel {
+    width: min(100%, 22rem);
+    padding: 1.25rem;
+    border-radius: 0.75rem 0.75rem 0.35rem 0.35rem;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-velada-navy) 40%, var(--color-theme-midnight)),
+      color-mix(in srgb, var(--color-theme-midnight) 94%, black)
+    );
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 30%, transparent),
+      0 24px 60px rgba(0, 0, 0, 0.55);
+  }
+
+  .tier-pick-title {
+    margin: 0 0 1rem;
+    text-align: center;
+    font-family: var(--font-fallback);
+    font-size: 0.95rem;
+    color: var(--color-theme-cream);
+  }
+
+  .tier-pick-title strong {
+    color: var(--color-theme-gold);
+    font-family: var(--font-cinzel);
+  }
+
+  .tier-pick-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.45rem;
+    margin-bottom: 0.85rem;
+  }
+
+  :global(.tier-pick-option) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    min-height: 3.25rem;
+    padding: 0.4rem;
+    border: none;
+    border-radius: 0.35rem;
+    font-family: var(--font-cinzel);
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: #1a1208;
+    cursor: pointer;
+    transition: transform 150ms ease;
+  }
+
+  :global(.tier-pick-option:hover),
+  :global(.tier-pick-option:focus-visible) {
+    transform: scale(1.04);
+    outline: none;
+  }
+
+  :global(.tier-pick-option-hint) {
+    font-family: var(--font-fallback);
+    font-size: 0.55rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  :global(.tier-pick-option-pool) {
+    grid-column: 1 / -1;
+    background: color-mix(in srgb, var(--color-theme-midnight) 80%, black) !important;
+    color: var(--color-theme-cream) !important;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+  }
+
+  .tier-pick-cancel {
+    width: 100%;
+  }
+
+  /* ── Share modal ── */
+  .tier-share-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tier-share-modal::backdrop {
+    background: transparent;
+  }
+
+  .tier-share-modal[open] {
+    display: flex;
+  }
+
+  .tier-share-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 16, 36, 0.88);
+    backdrop-filter: blur(10px);
+  }
+
+  .tier-share-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 1.5rem);
+    max-width: 34rem;
+    max-height: min(94dvh, 920px);
+    margin: 0.75rem;
+    padding: 1rem 1rem 0.85rem;
+    border-radius: var(--radius-sharp);
+    background:
+      radial-gradient(
+        ellipse 80% 40% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 10%, transparent),
+        transparent 70%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-velada-navy) 35%, var(--color-theme-midnight)) 0%,
+        color-mix(in srgb, var(--color-theme-midnight) 94%, black) 100%
+      );
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 30%, transparent),
+      0 32px 80px rgba(0, 0, 0, 0.6);
+  }
+
+  @media (min-width: 640px) {
+    .tier-share-content {
+      max-width: 38rem;
+      padding: 1.15rem 1.25rem 1rem;
+    }
+  }
+
+  .tier-share-close {
+    position: absolute;
+    top: 0.45rem;
+    right: 0.45rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
+    background: color-mix(in srgb, var(--color-theme-midnight) 80%, transparent);
+    color: var(--color-theme-cream);
+    opacity: 0.65;
+    cursor: pointer;
+  }
+
+  .tier-share-close:hover,
+  .tier-share-close:focus-visible {
+    opacity: 1;
+    outline: none;
+  }
+
+  .tier-share-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.55rem;
+    margin-bottom: 0.65rem;
+    padding-right: 1.75rem;
+  }
+
+  .tier-share-heading {
+    margin: 0;
+    font-family: var(--font-cinzel);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+  }
+
+  .tier-share-formats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--color-theme-midnight) 55%, black);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 16%, transparent);
+  }
+
+  .tier-format-btn {
+    /* Fila única: icono · label · ratio, todos en el mismo eje vertical */
+    --tier-format-h: 2rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.28rem;
+    height: var(--tier-format-h);
+    min-height: var(--tier-format-h);
+    min-width: 0;
+    margin: 0;
+    padding: 0 0.55rem;
+    border: none;
+    border-radius: 9999px;
+    background: transparent;
+    color: color-mix(in srgb, var(--color-theme-cream) 62%, transparent);
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background 150ms ease,
+      color 150ms ease;
+  }
+
+  .tier-format-icon {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+    display: block;
+    margin: 0;
+    padding: 0;
+    /* Evita que el SVG se desplace por la baseline de texto */
+    overflow: visible;
+  }
+
+  .tier-format-icon-x {
+    /* viewBox del logo X no es cuadrado; centrarlo ópticamente */
+    width: 13px;
+    height: 12px;
+    flex-basis: 13px;
+  }
+
+  /* Placeholder visual alineado con los logos (cuadrado vacío con borde) */
+  .tier-format-icon-square {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 12px;
+    border: 1.5px solid currentColor;
+    border-radius: 2px;
+    opacity: 0.9;
+    box-sizing: border-box;
+  }
+
+  .tier-format-label,
+  .tier-format-ratio {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .tier-format-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--font-cinzel);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .tier-format-ratio {
+    flex-shrink: 0;
+    font-family: var(--font-cinzel);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    opacity: 0.72;
+  }
+
+  .tier-format-btn[aria-pressed='true'] {
+    background: color-mix(in srgb, var(--color-theme-gold) 18%, var(--color-theme-midnight));
+    color: var(--color-theme-gold);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
+  }
+
+  .tier-format-btn[aria-pressed='true'] .tier-format-ratio {
+    opacity: 0.9;
+  }
+
+  /* Preview: prioriza espacio vertical; la barra de acciones queda compacta abajo. */
+  .tier-share-figure {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    margin: 0 0 0.65rem;
+  }
+
+  .tier-share-frame {
+    position: relative;
+    width: 100%;
+    max-height: min(58dvh, 560px);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .tier-share-frame[data-format='x'] {
+    aspect-ratio: 16 / 9;
+    max-height: min(42dvh, 420px);
+  }
+
+  .tier-share-frame[data-format='square'] {
+    aspect-ratio: 1 / 1;
+    max-height: min(52dvh, 480px);
+  }
+
+  .tier-share-preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 300ms ease;
+    /* Sin caja/borde: la propia imagen se integra en el modal */
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .tier-share-figure[data-ready] .tier-share-preview {
+    opacity: 1;
+  }
+
+  .tier-share-loading {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-cinzel);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
+  }
+
+  .tier-share-figure[data-ready] .tier-share-loading {
+    display: none;
+  }
+
+  .tier-share-toolbar {
+    flex-shrink: 0;
+  }
+
+  .tier-share-actions {
+    display: flex;
+    align-items: stretch;
+    gap: 0.4rem;
+  }
+
+  .tier-share-actions .tier-btn {
+    min-height: 2.35rem;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    padding-inline: 0.45rem;
+  }
+
+  /* Compartir nativo: protagonista cuando está disponible. */
+  .tier-share-main {
+    flex: 1.55 1 0;
+    min-width: 0;
+  }
+
+  .tier-share-main[hidden] {
+    display: none;
+  }
+
+  /* X: solo icono, compacto. */
+  .tier-share-x {
+    flex: 0 0 2.35rem;
+    width: 2.35rem;
+    min-width: 2.35rem;
+    padding-inline: 0;
+    gap: 0;
+  }
+
+  .tier-share-x svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .tier-share-actions .tier-btn:not(.tier-share-main):not(.tier-share-x) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .tier-share-hint {
+    margin: 0.45rem 0 0;
+    text-align: center;
+    font-family: var(--font-fallback);
+    font-size: 0.7rem;
+    line-height: 1.35;
+    color: color-mix(in srgb, var(--color-theme-cream) 52%, transparent);
+  }
+
+  .tier-share-hint kbd {
+    display: inline-block;
+    padding: 0.05rem 0.3rem;
+    border-radius: 0.25rem;
+    background: color-mix(in srgb, var(--color-theme-midnight) 70%, black);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
+    font-size: 0.65rem;
+  }
+
+  .tier-share-status {
+    margin: 0.3rem 0 0;
+    min-height: 1rem;
+    text-align: center;
+    font-family: var(--font-fallback);
+    font-size: 0.72rem;
+    color: var(--color-theme-gold);
+  }
+
+  .tier-share-status[data-status='error'] {
+    color: #ff6b6b;
+  }
+
+  .tier-share-status[data-status='success'] {
+    color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tier-btn,
+    :global(.tier-fighter),
+    .tier-template-chip {
+      transition: none;
+    }
+
+    .tier-btn:hover:not(:disabled),
+    .tier-btn-primary:hover:not(:disabled),
+    :global(.tier-fighter:hover) {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+  import {
+    DEFAULT_TEMPLATE_ID,
+    POOL_ID,
+    TIER_TEMPLATES,
+    createEmptyPlacement,
+    createPlacementFromPreset,
+    type TierDefinition,
+    type TierPlacement,
+    type TierTemplate,
+  } from '@/consts/tier-list'
+  import { BOXERS, getBoxerSelectImage } from '@/consts/boxers'
+  import {
+    buildTierListBlob,
+    placementForImage,
+    type ShareFormat,
+    type TierListImageBoxer,
+  } from '@/lib/tier-list-image'
+  import {
+    canShareImageFile,
+    copyImageToClipboard,
+    downloadBlob,
+    isShareAbort,
+    openXIntent,
+    shareImageFile,
+  } from '@/lib/share-image'
+
+  interface BoxerPayload {
+    id: string
+    name: string
+    imageUrl: string
+  }
+
+  const STORAGE_KEY = 'velada-tier-list-v1'
+  const SHARE_URL = 'https://www.infolavelada.com/tier-list'
+  const FILE_NAME = 'tier-list-la-velada-vi.png'
+
+  // Datos importados directamente (sin embebido JSON en el HTML, que fallaba
+  // al parsear y dejaba currentTemplate en undefined).
+  const templates: TierTemplate[] = TIER_TEMPLATES
+  const boxers: BoxerPayload[] = BOXERS.map((b) => ({
+    id: b.id,
+    name: b.name,
+    imageUrl: getBoxerSelectImage(b),
+  }))
+
+  /** macOS / iOS → ⌘; Windows y Linux → Ctrl. */
+  function isApplePlatform(): boolean {
+    const nav = navigator as Navigator & { userAgentData?: { platform?: string } }
+    const platform = nav.userAgentData?.platform ?? nav.platform ?? ''
+    if (/mac|iphone|ipad|ipod/i.test(platform)) return true
+    // Safari a veces deja platform genérico; el UA sigue siendo fiable.
+    return /Mac OS X|Macintosh|iPhone|iPad|iPod/i.test(nav.userAgent)
+  }
+
+  const PASTE_SHORTCUT = isApplePlatform() ? 'Cmd + V' : 'Ctrl + V'
+
+  let appAbort: AbortController | null = null
+  let bootstrappedRoot: HTMLElement | null = null
+
+  function inContext<T extends Element>(selector: string, ctx: Element | null): T | null {
+    if (!ctx) return null
+    return $<T>(selector, ctx)
+  }
+
+  function resolveTemplate(id: string | undefined): TierTemplate {
+    const fromId = id ? templates.find((t) => t.id === id) : undefined
+    const fallback = templates[0]
+    if (!fromId && !fallback) {
+      throw new Error('[tier-list] No hay plantillas definidas')
+    }
+    return fromId ?? fallback!
+  }
+
+  function setupApp() {
+    const root = $<HTMLElement>('[data-tier-list-app]')
+    if (!root) return
+
+    // Evita re-inicializar el mismo nodo tras un page-load duplicado.
+    if (bootstrappedRoot === root && root.dataset.tierReady === 'true') return
+
+    if (!templates.length || !boxers.length) {
+      console.error('[tier-list] Faltan plantillas o luchadores')
+      return
+    }
+
+    appAbort?.abort()
+    appAbort = null
+
+    const boxerIds = boxers.map((b) => b.id)
+    const boxersById = Object.fromEntries(boxers.map((b) => [b.id, b]))
+    const defaultTemplateId = root.dataset.defaultTemplate || DEFAULT_TEMPLATE_ID
+
+    appAbort = new AbortController()
+    const { signal } = appAbort
+
+    const board = inContext<HTMLElement>('[data-tier-board]', root)
+    const pool = inContext<HTMLElement>('[data-tier-pool]', root)
+    const titleInput = inContext<HTMLInputElement>('[data-tier-title]', root)
+    const descEl = inContext<HTMLElement>('[data-template-desc]', root)
+    const pickOverlay = inContext<HTMLElement>('[data-tier-pick]', root)
+    const pickName = inContext<HTMLElement>('[data-tier-pick-name]', root)
+    const pickOptions = inContext<HTMLElement>('[data-tier-pick-options]', root)
+    const shareModal = inContext<HTMLDialogElement>('[data-tier-share-modal]', root)
+    const shareFigure = inContext<HTMLElement>('[data-share-figure]', shareModal)
+    const sharePreview = inContext<HTMLImageElement>('[data-share-preview]', shareModal)
+    const shareFrame = inContext<HTMLElement>('.tier-share-frame', shareModal)
+    const shareStatus = inContext<HTMLElement>('[data-share-status]', shareModal)
+    const nativeShareBtn = inContext<HTMLButtonElement>('[data-native-share-btn]', shareModal)
+    const pasteShortcutEl = inContext<HTMLElement>('[data-paste-shortcut]', shareModal)
+    if (pasteShortcutEl) pasteShortcutEl.textContent = PASTE_SHORTCUT
+
+    if (!board || !pool || !titleInput) return
+
+    let currentTemplate: TierTemplate = resolveTemplate(defaultTemplateId)
+    let placement: TierPlacement = createEmptyPlacement(
+      boxerIds,
+      currentTemplate.tiers.map((t) => t.id),
+    )
+    let dragBoxerId: string | null = null
+    /** Tras un drag, ignoramos el click residual. Se limpia siempre en drop/dragend. */
+    let suppressClickUntil = 0
+    let pickBoxerId: string | null = null
+    let shareFormat: ShareFormat = 'instagram'
+    let cachedBlob: Blob | null = null
+    let previewUrl: string | null = null
+    let blobCacheKey = ''
+
+    const CUSTOM_TEMPLATE_ID = 'custom'
+    const LABEL_MAX_LEN = 18
+
+    function isCustomTemplate(): boolean {
+      return currentTemplate.id === CUSTOM_TEMPLATE_ID
+    }
+
+    /** Clona la plantilla para poder editar labels sin mutar las constantes. */
+    function cloneTemplate(template: TierTemplate): TierTemplate {
+      return {
+        ...template,
+        tiers: template.tiers.map((t) => ({ ...t })),
+      }
+    }
+
+    function applyTierLabels(
+      template: TierTemplate,
+      labels?: Record<string, string> | null,
+    ): TierTemplate {
+      const next = cloneTemplate(template)
+      if (!labels) return next
+      for (const tier of next.tiers) {
+        const custom = labels[tier.id]
+        if (typeof custom === 'string' && custom.trim()) {
+          tier.label = custom.trim().slice(0, LABEL_MAX_LEN)
+          tier.hint = undefined
+        }
+      }
+      return next
+    }
+
+    // ── Persistence ──
+    function saveState() {
+      try {
+        const tierLabels = isCustomTemplate()
+          ? Object.fromEntries(currentTemplate.tiers.map((t) => [t.id, t.label]))
+          : undefined
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            templateId: currentTemplate.id,
+            title: titleInput!.value,
+            placement,
+            tierLabels,
+          }),
+        )
+      } catch {
+        // ignore quota / private mode
+      }
+    }
+
+    function loadState(): boolean {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY)
+        if (!raw) return false
+        const data = JSON.parse(raw) as {
+          templateId?: string
+          title?: string
+          placement?: TierPlacement
+          tierLabels?: Record<string, string>
+        }
+        const tpl = templates.find((t) => t.id === data.templateId)
+        if (!tpl || !data.placement) return false
+        currentTemplate = applyTierLabels(tpl, data.tierLabels)
+        titleInput!.value = data.title || tpl.title
+        // Reconciliar ids por si cambió el cartel
+        const tierIds = currentTemplate.tiers.map((t) => t.id)
+        const next = createEmptyPlacement(boxerIds, tierIds)
+        const seen = new Set<string>()
+        for (const tierId of [...tierIds, POOL_ID]) {
+          const ids = (data.placement[tierId] ?? []).filter(
+            (id) => boxerIds.includes(id) && !seen.has(id),
+          )
+          next[tierId] = ids
+          for (const id of ids) seen.add(id)
+        }
+        next[POOL_ID] = boxerIds.filter((id) => !seen.has(id))
+        placement = next
+        return true
+      } catch {
+        return false
+      }
+    }
+
+    // ── DOM builders ──
+    function fighterEl(id: string): HTMLElement {
+      const boxer = boxersById[id]!
+      const btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'tier-fighter'
+      btn.draggable = true
+      btn.dataset.boxerId = id
+      btn.setAttribute('aria-label', boxer.name)
+      btn.setAttribute('role', 'listitem')
+
+      const img = document.createElement('img')
+      img.src = boxer.imageUrl
+      img.alt = ''
+      img.loading = 'lazy'
+      img.draggable = false
+      btn.appendChild(img)
+
+      const name = document.createElement('span')
+      name.className = 'tier-fighter-name'
+      name.textContent = boxer.name
+      btn.appendChild(name)
+
+      return btn
+    }
+
+    function escapeHtml(text: string): string {
+      return text
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+    }
+
+    function renderBoard() {
+      board!.replaceChildren()
+      const editable = isCustomTemplate()
+
+      for (const tier of currentTemplate.tiers) {
+        const row = document.createElement('div')
+        row.className = 'tier-row'
+        row.setAttribute('role', 'listitem')
+        row.dataset.tierId = tier.id
+        if (editable) row.dataset.editableLabels = 'true'
+
+        const label = document.createElement(editable ? 'button' : 'div')
+        label.className = 'tier-row-label'
+        if (editable) {
+          ;(label as HTMLButtonElement).type = 'button'
+          label.classList.add('tier-row-label--editable')
+          label.setAttribute('data-edit-tier-label', tier.id)
+          label.setAttribute(
+            'aria-label',
+            `Editar nombre del tier ${tier.label}. Clic para cambiar el texto.`,
+          )
+          label.title = 'Clic para editar el texto'
+        }
+        label.style.background = tier.color
+        label.style.color = tier.textColor ?? '#1a1208'
+        if (tier.label.length > 2) label.dataset.long = 'true'
+        label.innerHTML = `<span class="tier-row-label-text">${escapeHtml(tier.label)}</span>${
+          tier.hint ? `<span class="tier-row-hint">${escapeHtml(tier.hint)}</span>` : ''
+        }`
+
+        const drop = document.createElement('div')
+        drop.className = 'tier-row-drop'
+        drop.dataset.dropZone = tier.id
+        drop.setAttribute('role', 'list')
+        drop.setAttribute('aria-label', `Tier ${tier.label}${tier.hint ? `: ${tier.hint}` : ''}`)
+
+        for (const id of placement[tier.id] ?? []) {
+          drop.appendChild(fighterEl(id))
+        }
+
+        row.append(label, drop)
+        board!.appendChild(row)
+      }
+    }
+
+    function renderPool() {
+      pool!.replaceChildren()
+      for (const id of placement[POOL_ID] ?? []) {
+        pool!.appendChild(fighterEl(id))
+      }
+    }
+
+    function renderAll() {
+      renderBoard()
+      renderPool()
+      updateTemplateChips()
+      if (descEl) descEl.textContent = currentTemplate.description
+      saveState()
+      cachedBlob = null
+    }
+
+    function updateTemplateChips() {
+      $$<HTMLButtonElement>('[data-template-id]', root).forEach((chip) => {
+        chip.setAttribute(
+          'aria-selected',
+          chip.dataset.templateId === currentTemplate.id ? 'true' : 'false',
+        )
+      })
+    }
+
+    function applyTemplate(template: TierTemplate, resetPlacement = true) {
+      currentTemplate = cloneTemplate(template)
+      titleInput!.value = template.title
+      if (resetPlacement) {
+        placement = createPlacementFromPreset(
+          boxerIds,
+          currentTemplate.tiers.map((t) => t.id),
+          template.preset,
+        )
+      }
+      renderAll()
+    }
+
+    function setTierLabel(tierId: string, nextLabel: string) {
+      const tier = currentTemplate.tiers.find((t) => t.id === tierId)
+      if (!tier) return
+      const cleaned = nextLabel.trim().slice(0, LABEL_MAX_LEN) || tier.label
+      tier.label = cleaned
+      tier.hint = undefined
+      renderAll()
+    }
+
+    function beginEditTierLabel(tierId: string, labelEl: HTMLElement) {
+      if (!isCustomTemplate()) return
+      if (labelEl.dataset.editing === 'true') return
+
+      const tier = currentTemplate.tiers.find((t) => t.id === tierId)
+      if (!tier) return
+
+      labelEl.dataset.editing = 'true'
+      labelEl.replaceChildren()
+
+      const input = document.createElement('input')
+      input.type = 'text'
+      input.className = 'tier-row-label-input'
+      input.value = tier.label
+      input.maxLength = LABEL_MAX_LEN
+      input.setAttribute('aria-label', 'Nombre del tier')
+      input.autocomplete = 'off'
+      input.spellcheck = false
+
+      let finished = false
+      const finish = (commit: boolean) => {
+        if (finished) return
+        finished = true
+        if (commit) setTierLabel(tierId, input.value)
+        else renderBoard()
+      }
+
+      input.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter') {
+          ev.preventDefault()
+          finish(true)
+        } else if (ev.key === 'Escape') {
+          ev.preventDefault()
+          finish(false)
+        }
+      })
+      input.addEventListener('blur', () => finish(true))
+
+      labelEl.appendChild(input)
+      input.focus()
+      input.select()
+    }
+
+    // ── Placement mutations ──
+    function findZoneOf(boxerId: string): string | null {
+      for (const [zone, ids] of Object.entries(placement)) {
+        if (ids.includes(boxerId)) return zone
+      }
+      return null
+    }
+
+    function moveBoxer(boxerId: string, toZone: string, beforeId?: string | null) {
+      const fromZone = findZoneOf(boxerId)
+      if (!fromZone) return
+      placement[fromZone] = (placement[fromZone] ?? []).filter((id) => id !== boxerId)
+
+      const target = [...(placement[toZone] ?? [])].filter((id) => id !== boxerId)
+      if (beforeId && target.includes(beforeId)) {
+        const idx = target.indexOf(beforeId)
+        target.splice(idx, 0, boxerId)
+      } else {
+        target.push(boxerId)
+      }
+      placement[toZone] = target
+      renderAll()
+    }
+
+    // ── Drag & drop ──
+    function getDropZone(el: EventTarget | null): HTMLElement | null {
+      if (!(el instanceof Element)) return null
+      return el.closest<HTMLElement>('[data-drop-zone]')
+    }
+
+    function markDragJustFinished() {
+      // Ventana corta para tragar el click residual del drop.
+      // Importante: no usar un booleano sticky — si `dragend` no llega
+      // (el nodo se destruye en `renderAll`), el flag quedaría true para siempre.
+      suppressClickUntil = Date.now() + 150
+      dragBoxerId = null
+    }
+
+    function onDragStart(e: DragEvent) {
+      const fighter = (e.target as Element).closest<HTMLElement>('.tier-fighter')
+      if (!fighter?.dataset.boxerId || !e.dataTransfer) return
+      dragBoxerId = fighter.dataset.boxerId
+      fighter.dataset.dragging = 'true'
+      e.dataTransfer.effectAllowed = 'move'
+      e.dataTransfer.setData('text/plain', dragBoxerId)
+      // Fantasma más limpio
+      try {
+        e.dataTransfer.setDragImage(fighter, fighter.offsetWidth / 2, fighter.offsetHeight / 2)
+      } catch {
+        // algunos navegadores son estrictos
+      }
+    }
+
+    function onDragEnd() {
+      $$<HTMLElement>('.tier-fighter[data-dragging]', root).forEach((el) => {
+        el.removeAttribute('data-dragging')
+      })
+      $$<HTMLElement>('[data-drag-over]', root).forEach((el) => {
+        el.removeAttribute('data-drag-over')
+      })
+      markDragJustFinished()
+    }
+
+    function onDragOver(e: DragEvent) {
+      const zone = getDropZone(e.target)
+      if (!zone || !dragBoxerId) return
+      e.preventDefault()
+      e.dataTransfer && (e.dataTransfer.dropEffect = 'move')
+      $$<HTMLElement>('[data-drag-over]', root).forEach((el) => {
+        if (el !== zone) el.removeAttribute('data-drag-over')
+      })
+      zone.dataset.dragOver = 'true'
+    }
+
+    function onDragLeave(e: DragEvent) {
+      const zone = getDropZone(e.target)
+      if (!zone) return
+      const related = e.relatedTarget as Node | null
+      if (related && zone.contains(related)) return
+      zone.removeAttribute('data-drag-over')
+    }
+
+    function onDrop(e: DragEvent) {
+      e.preventDefault()
+      const zone = getDropZone(e.target)
+      const boxerId = dragBoxerId ?? e.dataTransfer?.getData('text/plain')
+      if (!zone || !boxerId) return
+      zone.removeAttribute('data-drag-over')
+
+      const overFighter = (e.target as Element).closest<HTMLElement>('.tier-fighter')
+      const beforeId =
+        overFighter?.dataset.boxerId && overFighter.dataset.boxerId !== boxerId
+          ? overFighter.dataset.boxerId
+          : null
+
+      // Marcar ANTES de re-render: al reemplazar el DOM, `dragend` a veces no llega.
+      markDragJustFinished()
+      moveBoxer(boxerId, zone.dataset.dropZone!, beforeId)
+    }
+
+    // ── Click-to-place (móvil / teclado) ──
+    function openPick(boxerId: string) {
+      pickBoxerId = boxerId
+      if (pickName) pickName.textContent = boxersById[boxerId]?.name ?? boxerId
+      if (pickOptions) {
+        pickOptions.replaceChildren()
+        for (const tier of currentTemplate.tiers) {
+          const btn = document.createElement('button')
+          btn.type = 'button'
+          btn.className = 'tier-pick-option'
+          btn.style.background = tier.color
+          btn.dataset.pickZone = tier.id
+          btn.innerHTML = `<span>${tier.label}</span>${
+            tier.hint ? `<span class="tier-pick-option-hint">${tier.hint}</span>` : ''
+          }`
+          pickOptions.appendChild(btn)
+        }
+        const poolBtn = document.createElement('button')
+        poolBtn.type = 'button'
+        poolBtn.className = 'tier-pick-option tier-pick-option-pool'
+        poolBtn.dataset.pickZone = POOL_ID
+        poolBtn.textContent = 'Volver al pool'
+        pickOptions.appendChild(poolBtn)
+      }
+      pickOverlay?.removeAttribute('hidden')
+      if (pickOverlay) $<HTMLButtonElement>('.tier-pick-option', pickOverlay)?.focus()
+    }
+
+    function closePick() {
+      pickBoxerId = null
+      pickOverlay?.setAttribute('hidden', '')
+    }
+
+    function onFighterActivate(e: Event) {
+      const fighter = (e.target as Element).closest<HTMLElement>('.tier-fighter')
+      if (!fighter?.dataset.boxerId) return
+      // En drag real (o el click residual al soltar) no disparamos el pick
+      if (dragBoxerId || Date.now() < suppressClickUntil) return
+      e.preventDefault()
+      openPick(fighter.dataset.boxerId)
+    }
+
+    // ── Share ──
+    function setStatus(text: string, kind: 'info' | 'success' | 'error' = 'info') {
+      if (!shareStatus) return
+      shareStatus.textContent = text
+      if (kind === 'info') shareStatus.removeAttribute('data-status')
+      else shareStatus.dataset.status = kind
+    }
+
+    function rankedCount(): number {
+      return boxerIds.length - (placement[POOL_ID]?.length ?? 0)
+    }
+
+    function shareText(): string {
+      const title = titleInput!.value.trim() || currentTemplate.title
+      return `Mi tier list «${title}» de #LaVeladaDelAñoVI 🥊\n${SHARE_URL}`
+    }
+
+    function imageInput() {
+      return {
+        title: titleInput!.value.trim() || currentTemplate.title,
+        tiers: currentTemplate.tiers as TierDefinition[],
+        placement: placementForImage(placement),
+        boxers: boxers as TierListImageBoxer[],
+        format: shareFormat,
+      }
+    }
+
+    async function getBlob(): Promise<Blob> {
+      const key = JSON.stringify({
+        t: titleInput!.value,
+        p: placement,
+        f: shareFormat,
+        tpl: currentTemplate.id,
+      })
+      if (cachedBlob && blobCacheKey === key) return cachedBlob
+      cachedBlob = await buildTierListBlob(imageInput())
+      blobCacheKey = key
+      return cachedBlob
+    }
+
+    async function renderPreview() {
+      if (!sharePreview || !shareFigure) return
+      shareFigure.removeAttribute('data-ready')
+      try {
+        const blob = await getBlob()
+        if (previewUrl) URL.revokeObjectURL(previewUrl)
+        previewUrl = URL.createObjectURL(blob)
+        sharePreview.src = previewUrl
+        shareFigure.setAttribute('data-ready', '')
+      } catch (err) {
+        setStatus('No se pudo generar la imagen.', 'error')
+        console.error(err)
+      }
+    }
+
+    function openShareModal() {
+      if (!shareModal) return
+      if (rankedCount() === 0) {
+        // Permitimos compartir vacío pero avisamos
+        setStatus('Coloca al menos un luchador para un mejor resultado.', 'info')
+      } else {
+        setStatus('', 'info')
+      }
+      shareFigure?.removeAttribute('data-ready')
+      shareModal.showModal()
+      if (canShareImageFile()) nativeShareBtn?.removeAttribute('hidden')
+      else nativeShareBtn?.setAttribute('hidden', '')
+      void renderPreview()
+    }
+
+    function closeShareModal() {
+      shareModal?.close()
+      setStatus('', 'info')
+    }
+
+    async function handleDownload() {
+      setStatus('Descargando…', 'info')
+      try {
+        const blob = await getBlob()
+        downloadBlob(blob, FILE_NAME)
+        setStatus('¡Imagen descargada!', 'success')
+      } catch (err) {
+        setStatus('Error al descargar.', 'error')
+        console.error(err)
+      }
+    }
+
+    async function handleCopy() {
+      setStatus('Copiando…', 'info')
+      try {
+        const blob = await getBlob()
+        const ok = await copyImageToClipboard(blob)
+        if (!ok) throw new Error('clipboard')
+        setStatus('¡Imagen copiada! Pégala donde quieras.', 'success')
+      } catch (err) {
+        setStatus('No se pudo copiar. Prueba a descargar.', 'error')
+        console.error(err)
+      }
+    }
+
+    async function handleShareX() {
+      setStatus('Preparando para X…', 'info')
+      try {
+        const blob = await getBlob()
+        const ok = await copyImageToClipboard(blob)
+        openXIntent(shareText())
+        if (ok) setStatus(`Imagen copiada ✓ Pégala en X con ${PASTE_SHORTCUT}.`, 'success')
+        else {
+          downloadBlob(blob, FILE_NAME)
+          setStatus('Descargamos la imagen: adjúntala en tu post de X.', 'success')
+        }
+      } catch (err) {
+        setStatus('Error al compartir en X.', 'error')
+        console.error(err)
+      }
+    }
+
+    async function handleNativeShare() {
+      setStatus('Preparando…', 'info')
+      try {
+        const blob = await getBlob()
+        await shareImageFile(blob, FILE_NAME, shareText())
+        setStatus('¡Gracias por compartir!', 'success')
+      } catch (err) {
+        if (isShareAbort(err)) setStatus('', 'info')
+        else {
+          setStatus('No se pudo compartir. Prueba a descargar.', 'error')
+          console.error(err)
+        }
+      }
+    }
+
+    // ── Events ──
+    root.addEventListener('dragstart', onDragStart, { signal })
+    root.addEventListener('dragend', onDragEnd, { signal })
+    root.addEventListener('dragover', onDragOver, { signal })
+    root.addEventListener('dragleave', onDragLeave, { signal })
+    root.addEventListener('drop', onDrop, { signal })
+
+    root.addEventListener(
+      'click',
+      (e) => {
+        const target = e.target as Element
+
+        const templateBtn = target.closest<HTMLButtonElement>('[data-template-id]')
+        if (templateBtn?.dataset.templateId) {
+          const tpl = templates.find((t) => t.id === templateBtn.dataset.templateId)
+          if (tpl && tpl.id !== currentTemplate.id) {
+            const hasWork = rankedCount() > 0
+            if (
+              hasWork &&
+              !confirm('¿Cambiar de plantilla? Se reiniciará la clasificación actual.')
+            ) {
+              return
+            }
+            applyTemplate(tpl, true)
+          }
+          return
+        }
+
+        const editLabelBtn = target.closest<HTMLElement>('[data-edit-tier-label]')
+        if (editLabelBtn?.dataset.editTierLabel) {
+          beginEditTierLabel(editLabelBtn.dataset.editTierLabel, editLabelBtn)
+          return
+        }
+
+        if (target.closest('[data-tier-reset]')) {
+          if (rankedCount() > 0 && !confirm('¿Reiniciar el tier list?')) return
+          // Al reiniciar en personalizado también restauramos las letras S–F.
+          if (isCustomTemplate()) {
+            const base = templates.find((t) => t.id === CUSTOM_TEMPLATE_ID)
+            if (base) currentTemplate = cloneTemplate(base)
+          }
+          placement = createEmptyPlacement(
+            boxerIds,
+            currentTemplate.tiers.map((t) => t.id),
+          )
+          titleInput!.value = currentTemplate.title
+          renderAll()
+          return
+        }
+
+        if (target.closest('[data-tier-share]')) {
+          openShareModal()
+          return
+        }
+
+        if (target.closest('.tier-fighter')) {
+          onFighterActivate(e)
+          return
+        }
+
+        // Pick options
+        const pickZone = target.closest<HTMLElement>('[data-pick-zone]')
+        if (pickZone?.dataset.pickZone && pickBoxerId) {
+          moveBoxer(pickBoxerId, pickZone.dataset.pickZone)
+          closePick()
+          return
+        }
+
+        if (target.closest('[data-tier-pick-cancel]') || target === pickOverlay) {
+          closePick()
+          return
+        }
+
+        // Share modal
+        if (target.closest('[data-share-close]')) {
+          closeShareModal()
+          return
+        }
+
+        const formatBtn = target.closest<HTMLButtonElement>('[data-share-format]')
+        if (formatBtn?.dataset.shareFormat) {
+          shareFormat = formatBtn.dataset.shareFormat as ShareFormat
+          if (shareModal) {
+            $$<HTMLButtonElement>('[data-share-format]', shareModal).forEach((b) => {
+              b.setAttribute(
+                'aria-pressed',
+                b.dataset.shareFormat === shareFormat ? 'true' : 'false',
+              )
+            })
+          }
+          shareFrame?.setAttribute('data-format', shareFormat)
+          cachedBlob = null
+          void renderPreview()
+          return
+        }
+
+        if (target.closest('[data-share-download]')) {
+          void handleDownload()
+          return
+        }
+        if (target.closest('[data-share-copy]')) {
+          void handleCopy()
+          return
+        }
+        if (target.closest('[data-share-x]')) {
+          void handleShareX()
+          return
+        }
+        if (target.closest('[data-native-share-btn]')) {
+          void handleNativeShare()
+          return
+        }
+      },
+      { signal },
+    )
+
+    titleInput.addEventListener(
+      'input',
+      () => {
+        saveState()
+        cachedBlob = null
+      },
+      { signal },
+    )
+
+    shareModal?.addEventListener(
+      'keydown',
+      (e) => {
+        if (e.key === 'Escape') {
+          e.preventDefault()
+          closeShareModal()
+        }
+      },
+      { signal, capture: true },
+    )
+
+    document.addEventListener(
+      'keydown',
+      (e) => {
+        if (e.key === 'Escape' && pickOverlay && !pickOverlay.hasAttribute('hidden')) {
+          closePick()
+        }
+      },
+      { signal },
+    )
+
+    // Init
+    if (!loadState()) {
+      applyTemplate(currentTemplate, true)
+    } else {
+      renderAll()
+    }
+
+    bootstrappedRoot = root
+    root.dataset.tierReady = 'true'
+  }
+
+  // Con ClientRouter, el listener de page-load cubre la 1ª carga y las
+  // navegaciones SPA. Además, invocamos al cargar el módulo por si el evento
+  // ya se disparó antes de que el script se evaluara (race en SPA).
+  document.addEventListener('astro:page-load', setupApp)
+  setupApp()
+</script>
