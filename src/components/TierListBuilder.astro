@@ -227,7 +227,7 @@ const defaultTemplate: TierTemplate =
   </dialog>
 </div>
 
-<style>
+<style is:inline>
   .tier-list-app {
     width: 100%;
     max-width: 56rem;
@@ -358,7 +358,7 @@ const defaultTemplate: TierTemplate =
       0 18px 48px rgba(0, 0, 0, 0.35);
   }
 
-  :global(.tier-row) {
+  .tier-row {
     display: grid;
     grid-template-columns: 4.25rem 1fr;
     min-height: 3.75rem;
@@ -367,24 +367,24 @@ const defaultTemplate: TierTemplate =
   }
 
   @media (min-width: 640px) {
-    :global(.tier-row) {
+    .tier-row {
       grid-template-columns: 5.25rem 1fr;
       min-height: 4.25rem;
     }
   }
 
   /* En personalizado la columna de etiqueta se ensancha si el texto es largo. */
-  :global(.tier-row[data-editable-labels='true']) {
+  .tier-row[data-editable-labels='true'] {
     grid-template-columns: minmax(4.5rem, 6.75rem) 1fr;
   }
 
   @media (min-width: 640px) {
-    :global(.tier-row[data-editable-labels='true']) {
+    .tier-row[data-editable-labels='true'] {
       grid-template-columns: minmax(5.25rem, 7.5rem) 1fr;
     }
   }
 
-  :global(.tier-row-label) {
+  .tier-row-label {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -406,45 +406,45 @@ const defaultTemplate: TierTemplate =
   }
 
   @media (min-width: 640px) {
-    :global(.tier-row-label) {
+    .tier-row-label {
       font-size: 1.4rem;
     }
   }
 
   /* Con subtítulo: letra un poco más compacta, bloque siempre centrado en vertical. */
-  :global(.tier-row-label:has(.tier-row-hint) .tier-row-label-text) {
+  .tier-row-label:has(.tier-row-hint) .tier-row-label-text {
     font-size: 1rem;
     line-height: 1;
     flex-shrink: 0;
   }
 
   @media (min-width: 640px) {
-    :global(.tier-row-label:has(.tier-row-hint) .tier-row-label-text) {
+    .tier-row-label:has(.tier-row-hint) .tier-row-label-text {
       font-size: 1.2rem;
     }
   }
 
   /* Texto libre largo (plantilla personalizado sin letra): 2 líneas, más pequeño. */
-  :global(.tier-row-label[data-long='true']) {
+  .tier-row-label[data-long='true'] {
     font-size: 0.62rem;
     letter-spacing: 0.02em;
     line-height: 1.15;
   }
 
   @media (min-width: 640px) {
-    :global(.tier-row-label[data-long='true']) {
+    .tier-row-label[data-long='true'] {
       font-size: 0.72rem;
     }
   }
 
-  :global(.tier-row-label-text) {
+  .tier-row-label-text {
     display: block;
     max-width: 100%;
     overflow-wrap: anywhere;
     hyphens: auto;
   }
 
-  :global(.tier-row-label[data-long='true'] .tier-row-label-text) {
+  .tier-row-label[data-long='true'] .tier-row-label-text {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -452,27 +452,27 @@ const defaultTemplate: TierTemplate =
     overflow: hidden;
   }
 
-  :global(button.tier-row-label) {
+  button.tier-row-label {
     border: none;
     appearance: none;
     -webkit-appearance: none;
   }
 
-  :global(.tier-row-label--editable) {
+  .tier-row-label--editable {
     cursor: pointer;
     transition:
       filter 150ms ease,
       box-shadow 150ms ease;
   }
 
-  :global(.tier-row-label--editable:hover),
-  :global(.tier-row-label--editable:focus-visible) {
+  .tier-row-label--editable:hover,
+  .tier-row-label--editable:focus-visible {
     filter: brightness(1.06);
     box-shadow: inset 0 0 0 2px rgba(26, 18, 8, 0.28);
     outline: none;
   }
 
-  :global(.tier-row-label-input) {
+  .tier-row-label-input {
     width: 100%;
     min-width: 0;
     max-width: 100%;
@@ -493,12 +493,12 @@ const defaultTemplate: TierTemplate =
   }
 
   @media (min-width: 640px) {
-    :global(.tier-row-label-input) {
+    .tier-row-label-input {
       font-size: 0.82rem;
     }
   }
 
-  :global(.tier-row-hint) {
+  .tier-row-hint {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -521,12 +521,12 @@ const defaultTemplate: TierTemplate =
   }
 
   @media (min-width: 640px) {
-    :global(.tier-row-hint) {
+    .tier-row-hint {
       font-size: 0.55rem;
     }
   }
 
-  :global(.tier-row-drop) {
+  .tier-row-drop {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -538,13 +538,13 @@ const defaultTemplate: TierTemplate =
     transition: background 150ms, box-shadow 150ms;
   }
 
-  :global(.tier-row-drop[data-drag-over='true']) {
+  .tier-row-drop[data-drag-over='true'] {
     background: color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
   }
 
   /* ── Fighter chip ── */
-  :global(.tier-fighter) {
+  .tier-fighter {
     position: relative;
     width: 3.35rem;
     height: 3.35rem;
@@ -564,21 +564,21 @@ const defaultTemplate: TierTemplate =
   }
 
   @media (min-width: 640px) {
-    :global(.tier-fighter) {
+    .tier-fighter {
       width: 3.75rem;
       height: 3.75rem;
     }
   }
 
   @media (min-width: 1024px) {
-    :global(.tier-fighter) {
+    .tier-fighter {
       width: 4rem;
       height: 4rem;
     }
   }
 
-  :global(.tier-fighter:hover),
-  :global(.tier-fighter:focus-visible) {
+  .tier-fighter:hover,
+  .tier-fighter:focus-visible {
     transform: translateY(-2px) scale(1.04);
     box-shadow:
       inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 60%, transparent),
@@ -587,16 +587,16 @@ const defaultTemplate: TierTemplate =
     z-index: 1;
   }
 
-  :global(.tier-fighter:active) {
+  .tier-fighter:active {
     cursor: grabbing;
   }
 
-  :global(.tier-fighter[data-dragging='true']) {
+  .tier-fighter[data-dragging='true'] {
     opacity: 0.45;
     transform: scale(0.95);
   }
 
-  :global(.tier-fighter img) {
+  .tier-fighter img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -605,7 +605,7 @@ const defaultTemplate: TierTemplate =
     user-select: none;
   }
 
-  :global(.tier-fighter-name) {
+  .tier-fighter-name {
     position: absolute;
     inset-inline: 0;
     bottom: 0;
@@ -623,26 +623,26 @@ const defaultTemplate: TierTemplate =
   }
 
   @media (min-width: 640px) {
-    :global(.tier-fighter-name) {
+    .tier-fighter-name {
       font-size: 0.5rem;
       padding-top: 0.9rem;
     }
   }
 
   @media (min-width: 1024px) {
-    :global(.tier-fighter-name) {
+    .tier-fighter-name {
       font-size: 0.52rem;
     }
   }
 
   /* En el pool las celdas del grid ya marcan el tamaño; el nombre crece un poco. */
-  :global(.tier-pool .tier-fighter-name) {
+  .tier-pool .tier-fighter-name {
     font-size: 0.5rem;
     padding-top: 1rem;
   }
 
   @media (min-width: 640px) {
-    :global(.tier-pool .tier-fighter-name) {
+    .tier-pool .tier-fighter-name {
       font-size: 0.55rem;
     }
   }
@@ -710,7 +710,7 @@ const defaultTemplate: TierTemplate =
   }
 
   /* En el pool, la miniatura crece al 100% de la celda del grid. */
-  :global(.tier-pool .tier-fighter) {
+  .tier-pool .tier-fighter {
     width: 100%;
     height: auto;
     aspect-ratio: 1;
@@ -864,7 +864,7 @@ const defaultTemplate: TierTemplate =
     margin-bottom: 0.85rem;
   }
 
-  :global(.tier-pick-option) {
+  .tier-pick-option {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -882,13 +882,13 @@ const defaultTemplate: TierTemplate =
     transition: transform 150ms ease;
   }
 
-  :global(.tier-pick-option:hover),
-  :global(.tier-pick-option:focus-visible) {
+  .tier-pick-option:hover,
+  .tier-pick-option:focus-visible {
     transform: scale(1.04);
     outline: none;
   }
 
-  :global(.tier-pick-option-hint) {
+  .tier-pick-option-hint {
     font-family: var(--font-fallback);
     font-size: 0.55rem;
     font-weight: 700;
@@ -896,7 +896,7 @@ const defaultTemplate: TierTemplate =
     opacity: 0.8;
   }
 
-  :global(.tier-pick-option-pool) {
+  .tier-pick-option-pool {
     grid-column: 1 / -1;
     background: color-mix(in srgb, var(--color-theme-midnight) 80%, black) !important;
     color: var(--color-theme-cream) !important;
@@ -1268,14 +1268,14 @@ const defaultTemplate: TierTemplate =
 
   @media (prefers-reduced-motion: reduce) {
     .tier-btn,
-    :global(.tier-fighter),
+    .tier-fighter,
     .tier-template-chip {
       transition: none;
     }
 
     .tier-btn:hover:not(:disabled),
     .tier-btn-primary:hover:not(:disabled),
-    :global(.tier-fighter:hover) {
+    .tier-fighter:hover {
       transform: none;
     }
   }
