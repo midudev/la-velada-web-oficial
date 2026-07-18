@@ -18,18 +18,18 @@ const { isLoggedIn, totalFights, variant = 'fab' } = Astro.props
   isLoggedIn && variant === 'fab' && (
     <button
       type="button"
-      class="prediction-share-fab"
+      class="prediction-share-btn prediction-share-fab"
       data-prediction-share-fab
       data-prediction-share-trigger
       data-has-vote="false"
       aria-label="Compartir pronóstico"
     >
-      <span aria-hidden="true" class="prediction-share-fab-corner prediction-share-fab-corner-tl" />
-      <span aria-hidden="true" class="prediction-share-fab-corner prediction-share-fab-corner-tr" />
-      <span aria-hidden="true" class="prediction-share-fab-corner prediction-share-fab-corner-bl" />
-      <span aria-hidden="true" class="prediction-share-fab-corner prediction-share-fab-corner-br" />
-      <span class="prediction-share-fab-content">
-        <ShareIcon aria-hidden="true" class="prediction-share-fab-icon" />
+      <span aria-hidden="true" class="prediction-share-corner prediction-share-corner-tl" />
+      <span aria-hidden="true" class="prediction-share-corner prediction-share-corner-tr" />
+      <span aria-hidden="true" class="prediction-share-corner prediction-share-corner-bl" />
+      <span aria-hidden="true" class="prediction-share-corner prediction-share-corner-br" />
+      <span class="prediction-share-content">
+        <ShareIcon aria-hidden="true" class="prediction-share-icon" />
         <span>Compartir pronóstico</span>
       </span>
     </button>
@@ -39,14 +39,18 @@ const { isLoggedIn, totalFights, variant = 'fab' } = Astro.props
   isLoggedIn && variant === 'top' && (
     <button
       type="button"
-      class="prediction-share-top"
+      class="prediction-share-btn prediction-share-top"
       data-prediction-share-top
       data-prediction-share-trigger
       data-complete="false"
       aria-label="Compartir pronóstico"
     >
-      <span class="prediction-share-fab-content">
-        <ShareIcon aria-hidden="true" class="prediction-share-fab-icon" />
+      <span aria-hidden="true" class="prediction-share-corner prediction-share-corner-tl" />
+      <span aria-hidden="true" class="prediction-share-corner prediction-share-corner-tr" />
+      <span aria-hidden="true" class="prediction-share-corner prediction-share-corner-bl" />
+      <span aria-hidden="true" class="prediction-share-corner prediction-share-corner-br" />
+      <span class="prediction-share-content">
+        <ShareIcon aria-hidden="true" class="prediction-share-icon" />
         <span>Compartir pronóstico</span>
       </span>
     </button>
@@ -64,131 +68,102 @@ const { isLoggedIn, totalFights, variant = 'fab' } = Astro.props
     display: none;
   }
 
-  .prediction-share-top {
+  /* Skin compartido — mismo lenguaje que AuthButton y las trading cards de
+     boxeadores: vidrio oscuro con tinte dorado, borde dorado fino, esquinas
+     decorativas y tipografía Cinzel. Sin gradiente brillante ni glow, para
+     integrarse con el resto de la web en lugar de competir con ella. */
+  .prediction-share-btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 2.9rem;
-    padding: 0.65rem 1.5rem;
-    border-radius: 9999px;
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
-      var(--color-theme-gold) 65%,
-      color-mix(in srgb, var(--color-theme-gold) 75%, black) 100%
-    );
-    color: var(--color-theme-midnight);
+    padding: 0.7rem 1.6rem;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
+    color: var(--color-theme-cream);
     font-family: var(--font-cinzel);
     font-size: 0.66rem;
     font-weight: 800;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
-      0 12px 30px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 12%, transparent);
     transition:
       transform 250ms ease,
-      box-shadow 250ms ease;
-    animation: prediction-fab-enter-desktop 500ms cubic-bezier(0.34, 1.42, 0.5, 1) both;
+      border-color 250ms ease,
+      background-color 250ms ease,
+      box-shadow 250ms ease,
+      color 250ms ease;
   }
 
-  .prediction-share-top:hover,
-  .prediction-share-top:focus-visible {
-    transform: translateY(-2px);
+  .prediction-share-btn:hover,
+  .prediction-share-btn:focus-visible {
     outline: none;
+    border-color: var(--color-theme-gold);
+    background: color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+    color: white;
     box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
-      0 16px 38px color-mix(in srgb, var(--color-theme-gold) 42%, transparent);
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 30%, transparent),
+      0 8px 22px color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
   }
 
-  .prediction-share-top:active {
-    transform: translateY(-1px);
+  .prediction-share-btn:focus-visible {
+    outline: 2px solid var(--color-theme-gold);
+    outline-offset: 4px;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .prediction-share-top {
-      animation: none;
-      transition: none;
-    }
-    .prediction-share-top:hover,
-    .prediction-share-top:focus-visible,
-    .prediction-share-top:active {
-      transform: none;
-    }
-  }
-
+  /* Posicionamiento del FAB: flotante centrado abajo en móvil/tablet, en línea
+     en escritorio (queda dentro del contenedor del final de la lista). */
   .prediction-share-fab {
     position: fixed;
     left: 50%;
     bottom: 1.25rem;
     z-index: 60;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 2.75rem;
-    padding: 0.5rem 1.15rem;
-    border-radius: 9999px;
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
-      var(--color-theme-gold) 65%,
-      color-mix(in srgb, var(--color-theme-gold) 75%, black) 100%
-    );
-    color: var(--color-theme-midnight);
-    font-family: var(--font-cinzel);
-    font-size: 0.62rem;
-    font-weight: 800;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    cursor: pointer;
     transform: translateX(-50%);
-    box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
-      0 12px 32px color-mix(in srgb, var(--color-theme-gold) 38%, transparent),
-      0 0 24px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
-    transition:
-      transform 250ms ease,
-      box-shadow 250ms ease;
-    animation: prediction-fab-enter 500ms cubic-bezier(0.34, 1.42, 0.5, 1) both;
+    animation: prediction-share-enter 500ms cubic-bezier(0.34, 1.42, 0.5, 1) both;
   }
 
   @media (min-width: 640px) and (max-width: 1023px) {
     .prediction-share-fab {
       bottom: 1.5rem;
-      min-height: 3rem;
-      padding: 0.65rem 1.4rem;
-      font-size: 0.68rem;
     }
   }
 
   @media (min-width: 1024px) {
     .prediction-share-fab {
-      position: static;
+      position: relative;
       left: auto;
       bottom: auto;
       transform: none;
-      min-height: 3rem;
-      padding: 0.65rem 1.4rem;
-      font-size: 0.68rem;
-      animation: prediction-fab-enter-desktop 500ms cubic-bezier(0.34, 1.42, 0.5, 1) both;
+      /* En escritorio el FAB va en flujo normal (sin centrado por translateX),
+         así que usamos la animación inline: el keyframe móvil mantiene
+         translate(-50%) con fill-mode both y, al ganar a `transform: none`,
+         dejaría el botón desplazado media anchura a la izquierda. */
+      animation: prediction-share-enter-inline 500ms cubic-bezier(0.34, 1.42, 0.5, 1) both;
     }
+  }
+
+  .prediction-share-top {
+    animation: prediction-share-enter-inline 500ms cubic-bezier(0.34, 1.42, 0.5, 1) both;
+  }
+
+  /* Elevación sutil en hover/focus (sin alterar el centrado del FAB). */
+  .prediction-share-top:hover,
+  .prediction-share-top:focus-visible {
+    transform: translateY(-2px);
+  }
+  .prediction-share-top:active {
+    transform: translateY(-1px);
   }
 
   .prediction-share-fab:hover,
   .prediction-share-fab:focus-visible {
     transform: translate(-50%, -2px);
-    outline: none;
-    box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
-      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
-      0 16px 40px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
-      0 0 32px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
   }
-
   .prediction-share-fab:active {
     transform: translate(-50%, -1px);
   }
@@ -198,95 +173,99 @@ const { isLoggedIn, totalFights, variant = 'fab' } = Astro.props
     .prediction-share-fab:focus-visible {
       transform: translateY(-2px);
     }
-
     .prediction-share-fab:active {
       transform: translateY(-1px);
     }
   }
 
-  .prediction-share-fab-content {
+  .prediction-share-content {
     display: inline-flex;
     align-items: center;
     gap: 0.55rem;
   }
 
-  .prediction-share-fab-icon {
-    width: 0.95rem;
-    height: 0.95rem;
+  .prediction-share-icon {
+    width: 1rem;
+    height: 1rem;
     flex-shrink: 0;
+    color: var(--color-theme-gold);
+    transition: color 250ms ease;
   }
 
-  @media (min-width: 640px) {
-    .prediction-share-fab-icon {
-      width: 1rem;
-      height: 1rem;
-    }
+  .prediction-share-btn:hover .prediction-share-icon,
+  .prediction-share-btn:focus-visible .prediction-share-icon {
+    color: var(--color-theme-cream);
   }
 
-  /* Esquinas doradas decorativas (mismo lenguaje que el modal y los
-     paneles de boxeadores.astro). Refuerzan la identidad del sitio. */
-  .prediction-share-fab-corner {
+  /* Esquinas doradas decorativas — mismo lenguaje que el modal y las trading
+     cards de boxeadores. Refuerzan la identidad del sitio. */
+  .prediction-share-corner {
     position: absolute;
-    width: 7px;
-    height: 7px;
-    border: 1px solid color-mix(in srgb, var(--color-theme-midnight) 65%, transparent);
+    width: 8px;
+    height: 8px;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 60%, transparent);
     pointer-events: none;
+    transition: border-color 250ms ease;
   }
-  .prediction-share-fab-corner-tl {
+  .prediction-share-btn:hover .prediction-share-corner,
+  .prediction-share-btn:focus-visible .prediction-share-corner {
+    border-color: var(--color-theme-gold);
+  }
+  .prediction-share-corner-tl {
     top: -1px;
-    left: 1.85rem;
+    left: -1px;
     border-right: 0;
     border-bottom: 0;
   }
-  .prediction-share-fab-corner-tr {
+  .prediction-share-corner-tr {
     top: -1px;
-    right: 1.85rem;
+    right: -1px;
     border-left: 0;
     border-bottom: 0;
   }
-  .prediction-share-fab-corner-bl {
+  .prediction-share-corner-bl {
     bottom: -1px;
-    left: 1.85rem;
+    left: -1px;
     border-right: 0;
     border-top: 0;
   }
-  .prediction-share-fab-corner-br {
+  .prediction-share-corner-br {
     bottom: -1px;
-    right: 1.85rem;
+    right: -1px;
     border-left: 0;
     border-top: 0;
   }
 
-  @keyframes prediction-fab-enter {
+  @keyframes prediction-share-enter {
     from {
       opacity: 0;
-      transform: translate(-50%, 20px) scale(0.94);
+      transform: translate(-50%, 16px);
     }
     to {
       opacity: 1;
-      transform: translate(-50%, 0) scale(1);
+      transform: translate(-50%, 0);
     }
   }
 
-  @keyframes prediction-fab-enter-desktop {
+  @keyframes prediction-share-enter-inline {
     from {
       opacity: 0;
-      transform: translateY(12px) scale(0.96);
+      transform: translateY(10px);
     }
     to {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .prediction-share-fab {
+    .prediction-share-btn {
       animation: none;
       transition: none;
     }
-    .prediction-share-fab:hover,
-    .prediction-share-fab:focus-visible,
-    .prediction-share-fab:active {
+    .prediction-share-btn:hover,
+    .prediction-share-btn:focus-visible,
+    .prediction-share-btn:active {
       transform: none;
     }
   }
