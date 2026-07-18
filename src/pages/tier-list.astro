@@ -1,0 +1,80 @@
+---
+import TierListBuilder from '@/components/TierListBuilder.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
+import Layout from '@/layouts/Layout.astro'
+import Footer from '@/sections/Footer.astro'
+import Sponsors from '@/sections/Sponsors.astro'
+import { serializeJsonLd } from '@/utils/serialize-json-ld'
+
+export const prerender = true
+
+const SITE_URL = 'https://www.infolavelada.com'
+const title = 'Tier List de luchadores | La Velada del Año VI'
+const description =
+  'Crea tu tier list de los boxeadores y boxeadoras de La Velada del Año VI. Plantillas de hype, míticos, cómo te caen y más. Descarga y comparte en Instagram y X.'
+const canonical = `${SITE_URL}/tier-list`
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Tier List', item: canonical },
+  ],
+}
+
+const webPageJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: canonical,
+  isPartOf: { '@id': `${SITE_URL}/#website` },
+  about: {
+    '@type': 'SportsEvent',
+    name: 'La Velada del Año VI',
+  },
+}
+---
+
+<Layout title={title} description={description} canonical={canonical}>
+  <script
+    type="application/ld+json"
+    slot="head"
+    is:inline
+    set:html={serializeJsonLd(breadcrumbJsonLd)}
+  />
+  <script
+    type="application/ld+json"
+    slot="head"
+    is:inline
+    set:html={serializeJsonLd(webPageJsonLd)}
+  />
+
+  <section
+    class="relative isolate flex min-h-svh w-full flex-col items-center bg-theme-midnight px-3 pt-24 pb-16 text-theme-cream sm:px-6 sm:pt-32 sm:pb-20 md:pt-36"
+    aria-labelledby="tier-list-page-title"
+  >
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-96 bg-[radial-gradient(ellipse_at_top,_var(--color-theme-gold)_0%,_transparent_70%)] opacity-20"
+    >
+    </div>
+
+    <SectionDivider class="mb-8 not-motion-reduce:animate-fade-in-up sm:mb-12" />
+
+    <h1
+      id="tier-list-page-title"
+      class="text-center font-cinzel text-3xl font-black tracking-[0.1em] text-theme-cream uppercase not-motion-reduce:animate-fade-in-up sm:text-4xl md:text-5xl"
+    >
+      Tier List
+    </h1>
+
+    <div class="relative z-1 mt-8 w-full max-w-5xl sm:mt-10">
+      <TierListBuilder />
+    </div>
+  </section>
+
+  <Sponsors />
+  <Footer />
+</Layout>
