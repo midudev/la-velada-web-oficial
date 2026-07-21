@@ -88,13 +88,17 @@ const invalidateCache = (combatId?: string) => {
   memoryCache.allPredictions = null
 }
 
+// `combatId`/`fighterId` vienen del cliente: consultarlos con `obj[id]` a secas
+// resolvería también propiedades heredadas del prototipo (`constructor`,
+// `__proto__`...), que son truthy y colarían un "combate" que no es un Battle.
+// `Object.hasOwn` limita el lookup a las claves reales del allowlist.
 function assertValidPredictionTarget(combatId: string, fighterId: string) {
-  const battle = battlesById[combatId]
+  const battle = Object.hasOwn(battlesById, combatId) ? battlesById[combatId] : undefined
   if (!battle) {
     throw new PredictionDataError('El combate especificado no existe', 404)
   }
 
-  if (!BOXERS_BY_ID[fighterId]) {
+  if (!Object.hasOwn(BOXERS_BY_ID, fighterId)) {
     throw new PredictionDataError('El boxeador especificado no existe', 404)
   }
 
@@ -157,7 +161,8 @@ export async function getPredictionsByCombat(combatId: string): Promise<Predicti
   }
 
   try {
-    if (!battlesById[combatId]) return null
+    // `Object.hasOwn` y no `battlesById[combatId]`: ver assertValidPredictionTarget.
+    if (!Object.hasOwn(battlesById, combatId)) return null
 
     const result = await turso.execute({
       sql: `
