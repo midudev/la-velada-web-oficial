@@ -151,6 +151,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         <li class="flex items-baseline">
           <time
             datetime={EVENT_DATE_TIME}
+            data-local-time
             class="font-cinzel text-xs font-black tracking-[0.16em] text-theme-cream sm:text-sm"
           >
             {EVENT_DISPLAY_TIME_SHORT}
@@ -1970,5 +1971,35 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     })
   }
 
+  // Reformatea el horario del evento (originalmente en CEST) al huso horario
+  // del navegador manteniendo el formato "HH:MMH ABBR". El primer pintado es
+  // SSR en CEST; este paso sólo se ejecuta ya cargado el cliente.
+  function initLocalEventTime() {
+    const el = $<HTMLTimeElement>('[data-local-time]')
+    if (!el || !el.dateTime) return
+
+    const date = new Date(el.dateTime)
+    if (Number.isNaN(date.getTime())) return
+
+    try {
+      const parts = new Intl.DateTimeFormat(undefined, {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZoneName: 'short',
+      }).formatToParts(date)
+
+      const hour = parts.find((p) => p.type === 'hour')?.value
+      const minute = parts.find((p) => p.type === 'minute')?.value
+      const tz = parts.find((p) => p.type === 'timeZoneName')?.value
+      if (!hour || !minute || !tz) return
+
+      el.textContent = `${hour}:${minute}H ${tz}`
+    } catch {
+      // Si el navegador no soporta timeZoneName, mantenemos el render SSR.
+    }
+  }
+
   document.addEventListener('astro:page-load', initBoxerSelector)
+  document.addEventListener('astro:page-load', initLocalEventTime)
 </script>
