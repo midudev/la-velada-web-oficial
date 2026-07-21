@@ -35,8 +35,9 @@ export interface Boxer {
  *  - `/public/character-select/{id}.webp` (miniatura del selector)
  *  - `/public/character-hero/{id}.webp` (recorte grande mostrado en el
  *    hero al hacer hover sobre la miniatura del selector)
- *  - `/public/photos/{id}/01.webp` (foto principal usada en la ficha
- *    del combate)
+ *  - `cdn.infolavelada.com/boxeadores/{slug}/01-md.webp` (foto principal
+ *    para og:image y JSON-LD; el slug del CDN puede diferir del id — el
+ *    mapeo vive en `boxer-gallery.ts`)
  *
  * Cualquier renombrado debe mantener esa convención.
  */
@@ -988,11 +989,6 @@ export function getBoxerHeroSrcset(boxer: Boxer): BoxerImageVariants {
  */
 export function getBoxerHeroImage(boxer: Boxer): string {
   return getBoxerHeroImages(boxer).webp
-}
-
-/** Devuelve la ruta a la foto principal del boxeador (01.webp). */
-export function getBoxerPhoto(boxer: Boxer): string {
-  return `/photos/${boxer.id}/01.webp`
 }
 
 /** Mapa rápido para acceder a un boxer por su id. */

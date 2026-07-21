@@ -2,45 +2,14 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
+import { getRecentPodcastEpisodes } from './podcast-feed.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const PUBLIC_DIR = path.join(__dirname, '../public')
 
-const CHANNEL_ID = 'UC20NE0K97l6AsBeGKsAYtaA'
-const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
-const MAX_AGE_DAYS = 60
 const PODCAST_THUMBNAILS_DIR = path.join(__dirname, '.cache/podcast-thumbs')
 
 const STATIC_THUMBNAILS = []
-
-function decodeHtmlEntities(value) {
-  return value
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&apos;/g, "'")
-}
-
-function parseFeed(xml) {
-  const entries = []
-  const entryRegex = /<entry>([\s\S]*?)<\/entry>/g
-  let match
-  while ((match = entryRegex.exec(xml)) !== null) {
-    const entry = match[1]
-    const videoId = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1]
-    const rawTitle = entry.match(/<title>([^<]+)<\/title>/)?.[1]
-    const published = entry.match(/<published>([^<]+)<\/published>/)?.[1]
-    if (!videoId || !rawTitle || !published) continue
-    entries.push({
-      videoId,
-      title: decodeHtmlEntities(rawTitle),
-      published,
-    })
-  }
-  return entries
-}
 
 async function fileExists(filePath) {
   return fs.access(filePath).then(
@@ -102,22 +71,6 @@ async function fetchThumbnail(videoId) {
   }
 
   throw new Error(`No se pudo descargar una miniatura válida para ${videoId}`)
-}
-
-async function getRecentPodcastEpisodes() {
-  try {
-    const response = await fetch(FEED_URL)
-    if (!response.ok) {
-      throw new Error(`El feed respondió con ${response.status} ${response.statusText}`)
-    }
-
-    const xml = await response.text()
-    const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000
-
-    return parseFeed(xml).filter((entry) => new Date(entry.published).getTime() >= cutoff)
-  } catch (error) {
-    throw new Error(`No se pudo obtener el feed del podcast: ${error.message}`)
-  }
 }
 
 async function generatePodcastThumbnails() {

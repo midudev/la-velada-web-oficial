@@ -4,8 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 import vercel from '@astrojs/vercel'
 import sitemap from '@astrojs/sitemap'
 
-import react from '@astrojs/react'
-
 export default defineConfig({
   output: 'server',
 
@@ -14,12 +12,16 @@ export default defineConfig({
   },
 
   build: {
-    inlineStylesheets: 'always',
+    inlineStylesheets: 'auto',
   },
 
-  adapter: vercel(),
+  // imageService: las pocas imágenes de astro:assets (artistas) se optimizan
+  // vía Vercel Image Optimization en lugar de sharp, que pesaba ~16 MB dentro
+  // de la función serverless solo para el endpoint runtime /_image que ninguna
+  // ruta usa (todas las páginas con imágenes locales son prerender).
+  adapter: vercel({ imageService: true }),
 
-  integrations: [react(), sitemap()],
+  integrations: [sitemap()],
 
   site: 'https://www.infolavelada.com/',
 })

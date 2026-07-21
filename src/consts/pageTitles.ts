@@ -7,3 +7,5 @@ export const combates: string = `Combates - ${fixedTitle}`
 export const combate = (fighter1: string | undefined, fighter2: string | undefined): string => `${fighter1} vs ${fighter2} - ${fixedTitle}`
 
 export const entradas: string = `Entradas - ${fixedTitle}`
+
+export const tierList: string = `Tier List - ${fixedTitle}`
