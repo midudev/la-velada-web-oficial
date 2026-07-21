@@ -1475,18 +1475,27 @@ const defaultTemplate: TierTemplate =
         if (!tpl || !data.placement) return false
         currentTemplate = applyTierLabels(tpl, data.tierLabels)
         titleInput!.value = data.title || tpl.title
-        // Reconciliar ids por si cambió el cartel
+        // Reconciliar ids por si cambió el cartel.
+        // Solo las filas de tier consumen ids; el pool se rellena con el resto
+        // (si incluíamos POOL_ID en el bucle, al marcar esos ids como vistos y
+        // luego reasignar el pool a "no vistos", el pool quedaba vacío).
         const tierIds = currentTemplate.tiers.map((t) => t.id)
         const next = createEmptyPlacement(boxerIds, tierIds)
         const seen = new Set<string>()
-        for (const tierId of [...tierIds, POOL_ID]) {
+        for (const tierId of tierIds) {
           const ids = (data.placement[tierId] ?? []).filter(
             (id) => boxerIds.includes(id) && !seen.has(id),
           )
           next[tierId] = ids
           for (const id of ids) seen.add(id)
         }
-        next[POOL_ID] = boxerIds.filter((id) => !seen.has(id))
+        // Mantener el orden del pool guardado; añadir huérfanos al final.
+        const savedPool = (data.placement[POOL_ID] ?? []).filter(
+          (id) => boxerIds.includes(id) && !seen.has(id),
+        )
+        for (const id of savedPool) seen.add(id)
+        const orphans = boxerIds.filter((id) => !seen.has(id))
+        next[POOL_ID] = [...savedPool, ...orphans]
         placement = next
         return true
       } catch {
