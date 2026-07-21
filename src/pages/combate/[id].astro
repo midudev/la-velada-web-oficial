@@ -11,6 +11,7 @@ import {
   getBoxerHeroImages,
   getBoxerSelectImages,
 } from '@/consts/boxers'
+import { getBoxerMainPhotoUrl } from '@/consts/boxer-gallery'
 import Layout from '@/layouts/Layout.astro'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
@@ -90,7 +91,7 @@ const sportsEventJsonLd = {
   superEvent: { '@type': 'SportsEvent', name: 'La Velada del Año VI', url: `${SITE_URL}/` },
   location: {
     '@type': 'Place',
-    name: 'Estadio de La Cartuja',
+    name: 'Estadio La Cartuja',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Sevilla',
@@ -104,13 +105,13 @@ const sportsEventJsonLd = {
       '@type': 'Person',
       name: boxer1.name,
       url: `${SITE_URL}/boxeadores/${boxer1.id}`,
-      image: `${SITE_URL}/photos/${boxer1.id}/01.webp`,
+      image: getBoxerMainPhotoUrl(boxer1.id),
     },
     {
       '@type': 'Person',
       name: boxer2.name,
       url: `${SITE_URL}/boxeadores/${boxer2.id}`,
-      image: `${SITE_URL}/photos/${boxer2.id}/01.webp`,
+      image: getBoxerMainPhotoUrl(boxer2.id),
     },
   ],
 }

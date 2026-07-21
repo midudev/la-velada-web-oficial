@@ -99,7 +99,7 @@ export const ARTISTS: Artist[] = [
     name: 'Lucho Rk & La Pantera',
     image: LuchoRkLaPanteraImage,
     followers: 332_320,
-    genres: ['trap peruano', 'reggaeton'],
+    genres: ['trap canario', 'reggaeton'],
     popularity: 54,
     topTracks: [
       {
