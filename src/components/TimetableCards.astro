@@ -1,0 +1,370 @@
+---
+import CountryFlag from '@/components/CountryFlag.astro'
+import { getBoxerSelectImages } from '@/consts/boxers'
+import { TIMETABLE } from '@/consts/running-order'
+
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+
+const entries = TIMETABLE.map((entry) => ({
+  ...entry,
+  a: { ...entry.a, images: getBoxerSelectImages(entry.a) },
+  b: { ...entry.b, images: getBoxerSelectImages(entry.b) },
+}))
+---
+
+<ol data-timetable-cards class:list={['flex w-full flex-col gap-4', className]}>
+  {
+    entries.map(({ order, url, featured, a, b }, i) => (
+      <li data-timetable-card style={`--card-index:${i}`} class:list={['relative list-none', featured && 'is-featured']}>
+        {featured && (
+          <span class="fight-badge">{order === TIMETABLE.length ? 'Main Event' : 'Co-estelar'}</span>
+        )}
+
+        <a href={url} class="fight-ticket" aria-label={`Ir al combate ${order}: ${a.name} contra ${b.name}`}>
+          <span aria-hidden="true" class="fight-number">{String(order).padStart(2, '0')}</span>
+
+          <span aria-hidden="true" class="fight-corner tl" />
+          <span aria-hidden="true" class="fight-corner br" />
+
+          <span class="fighter side-a">
+            <span aria-hidden="true" class="fighter-glow" />
+            <picture class="fighter-pic">
+              <source type="image/avif" srcset={a.images.avif} />
+              <source type="image/webp" srcset={a.images.webp} />
+              <img
+                src={a.images.webp}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                width="200"
+                height="200"
+                class="fighter-img"
+              />
+            </picture>
+            <span class="fighter-label">
+              <CountryFlag country={a.country} size={16} decorative class="fighter-flag" />
+              <span class="fighter-name">{a.name}</span>
+            </span>
+          </span>
+
+          <span aria-hidden="true" class="vs-medal">
+            <span>VS</span>
+          </span>
+
+          <span class="fighter side-b">
+            <span aria-hidden="true" class="fighter-glow" />
+            <picture class="fighter-pic">
+              <source type="image/avif" srcset={b.images.avif} />
+              <source type="image/webp" srcset={b.images.webp} />
+              <img
+                src={b.images.webp}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                width="200"
+                height="200"
+                class="fighter-img"
+              />
+            </picture>
+            <span class="fighter-label">
+              <span class="fighter-name">{b.name}</span>
+              <CountryFlag country={b.country} size={16} decorative class="fighter-flag" />
+            </span>
+          </span>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="18"
+            height="18"
+            aria-hidden="true"
+            class="fight-chevron"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .fight-ticket {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    overflow: hidden;
+    padding: 0.9rem 1.1rem;
+    border-radius: var(--radius-card, 0.75rem);
+    background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
+    transition:
+      transform 350ms ease,
+      box-shadow 350ms ease;
+  }
+
+  @media (min-width: 640px) {
+    .fight-ticket {
+      gap: 1.25rem;
+      padding: 1.1rem 1.5rem;
+    }
+  }
+
+  .fight-ticket:hover,
+  .fight-ticket:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 65%, transparent);
+    outline: none;
+  }
+
+  .is-featured .fight-ticket {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 10%, #0c1330) 0%,
+      #060a1d 100%
+    );
+  }
+
+  .is-featured {
+    margin-top: 0.7rem;
+  }
+
+  .fight-number {
+    flex-shrink: 0;
+    font-family: var(--font-cinzel, inherit);
+    font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2.1rem);
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    color: color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+    -webkit-text-stroke: 1px color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
+    line-height: 1;
+  }
+
+  .fight-corner {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 350ms ease;
+  }
+  .fight-corner.tl {
+    top: 8px;
+    left: 8px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .fight-corner.br {
+    bottom: 8px;
+    right: 8px;
+    border-left: 0;
+    border-top: 0;
+  }
+  .fight-ticket:hover .fight-corner,
+  .fight-ticket:focus-visible .fight-corner {
+    opacity: 1;
+  }
+
+  .fighter {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  @media (min-width: 640px) {
+    .fighter.side-a {
+      flex-direction: row-reverse;
+      justify-content: flex-start;
+    }
+    .fighter.side-b {
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+  }
+
+  .fighter-glow {
+    position: absolute;
+    top: -6px;
+    inset-inline: 0;
+    z-index: 0;
+    height: 3.6rem;
+    margin-inline: auto;
+    width: 3.6rem;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-theme-gold) 30%, transparent),
+      transparent 70%
+    );
+    opacity: 0.6;
+  }
+
+  .fighter-pic {
+    position: relative;
+    z-index: 1;
+    display: block;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 1.5px solid color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  }
+
+  @media (min-width: 640px) {
+    .fighter-pic {
+      width: 3.75rem;
+      height: 3.75rem;
+    }
+  }
+
+  .fighter-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: saturate(0.95) brightness(0.96);
+  }
+
+  .fight-ticket:hover .fighter-img,
+  .fight-ticket:focus-visible .fighter-img {
+    filter: saturate(1.1) brightness(1.05);
+  }
+
+  .fighter-label {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .fighter-name {
+    overflow: hidden;
+    font-family: var(--font-cinzel, inherit);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--color-theme-cream);
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 640px) {
+    .fighter-name {
+      font-size: 0.75rem;
+    }
+  }
+
+  .fighter-flag {
+    flex-shrink: 0;
+    border-radius: 2px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+  }
+
+  .vs-medal {
+    --size: 2.2rem;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--size);
+    block-size: var(--size);
+    font-family: var(--font-cinzel, inherit);
+    font-weight: 900;
+    font-size: 0.6rem;
+    color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
+    border: 1px solid var(--color-theme-gold);
+    border-radius: 4px;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-theme-gold) 24%, transparent),
+      #05080fd9
+    );
+    transform: rotate(45deg);
+  }
+
+  @media (min-width: 640px) {
+    .vs-medal {
+      --size: 2.6rem;
+      font-size: 0.68rem;
+    }
+  }
+
+  .vs-medal span {
+    transform: rotate(-45deg);
+  }
+
+  .fight-badge {
+    position: absolute;
+    top: -0.6rem;
+    left: 50%;
+    z-index: 4;
+    transform: translateX(-50%);
+    padding: 0.25rem 0.9rem;
+    font-family: var(--font-cinzel, inherit);
+    font-size: 0.55rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    color: var(--color-theme-midnight, #05080f);
+    text-transform: uppercase;
+    background: var(--color-theme-gold);
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .fight-chevron {
+    display: none;
+    flex-shrink: 0;
+    color: color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    transition:
+      transform 300ms ease,
+      color 300ms ease;
+  }
+
+  @media (min-width: 900px) {
+    .fight-chevron {
+      display: block;
+    }
+  }
+
+  .fight-ticket:hover .fight-chevron,
+  .fight-ticket:focus-visible .fight-chevron {
+    transform: translateX(3px);
+    color: var(--color-theme-gold);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fight-ticket,
+    .fighter-img,
+    .fight-corner,
+    .fight-chevron {
+      transition: none;
+    }
+    .fight-ticket:hover,
+    .fight-ticket:focus-visible {
+      transform: none;
+    }
+  }
+</style>
