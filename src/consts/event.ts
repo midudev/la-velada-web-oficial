@@ -10,3 +10,8 @@ export const EVENT_END_ISO = new Date(
 export const EVENT_HOUR = '19:00'
 export const EVENT_DISPLAY_TIME = `${EVENT_HOUR}H (españa peninsular)`
 export const EVENT_DISPLAY_TIME_SHORT = `${EVENT_HOUR}H CEST`
+
+// Canal de YouTube de Ibai Llanos, desde donde se retransmite el evento en
+// directo. El embed `live_stream` carga automáticamente lo que esté en
+// directo en el canal en cada momento, sin necesitar el ID del vídeo.
+export const EVENT_LIVE_YOUTUBE_CHANNEL_ID = 'UCaY_-ksFSQtTGk0y1HA_3YQ'
