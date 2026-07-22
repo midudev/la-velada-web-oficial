@@ -4,6 +4,7 @@ import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 import CombatCard from '@/components/CombatCard.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
+import TimetableCards from '@/components/TimetableCards.astro'
 import { battles } from '@/consts/battles'
 import { BOXERS_BY_ID, COUNTRY_NAMES, getBoxerHeroImages, type Boxer } from '@/consts/boxers'
 import { serializeJsonLd } from '@/utils/serialize-json-ld'
@@ -127,6 +128,16 @@ const breadcrumbJsonLd = {
           </>
         )
       }
+
+      <div class="combates-seclabel">
+        <span class="size-1.5 rotate-45 bg-theme-gold/80" aria-hidden="true" />
+      </div>
+      <h2
+        class="mb-6 text-center font-cinzel text-lg font-black tracking-[0.1em] text-theme-cream sm:text-xl"
+      >
+        Orden de combates
+      </h2>
+      <TimetableCards class="mx-auto mb-4 max-w-3xl" />
     </div>
   </section>
 
