@@ -1,0 +1,481 @@
+---
+import CloseIcon from '@/assets/svg/close.svg'
+import { EVENT_DATE, EVENT_END_ISO, EVENT_LIVE_YOUTUBE_CHANNEL_ID } from '@/consts/event'
+
+const eventStart = EVENT_DATE.getTime()
+const eventEnd = new Date(EVENT_END_ISO).getTime()
+---
+
+<dialog
+  id="event-live-modal"
+  class="event-live-modal"
+  data-event-live-modal
+  data-start={eventStart}
+  data-end={eventEnd}
+  data-channel={EVENT_LIVE_YOUTUBE_CHANNEL_ID}
+  aria-labelledby="event-live-modal-title"
+>
+  <div class="event-live-backdrop" data-modal-close></div>
+
+  <div class="event-live-content">
+    <span aria-hidden="true" class="event-live-corner event-live-corner-tl"></span>
+    <span aria-hidden="true" class="event-live-corner event-live-corner-tr"></span>
+    <span aria-hidden="true" class="event-live-corner event-live-corner-bl"></span>
+    <span aria-hidden="true" class="event-live-corner event-live-corner-br"></span>
+
+    <div class="event-live-eyebrow" aria-hidden="true">
+      <span class="event-live-eyebrow-dot"></span>
+      <span>EN DIRECTO</span>
+      <span class="event-live-eyebrow-dot"></span>
+    </div>
+
+    <button
+      type="button"
+      class="event-live-close"
+      data-modal-close
+      aria-label="Cerrar el directo del evento"
+    >
+      <CloseIcon class="size-5" aria-hidden="true" />
+    </button>
+
+    <h2 id="event-live-modal-title" class="event-live-title">
+      ¡La Velada del Año VI ya está en directo!
+    </h2>
+
+    <div class="event-live-video">
+      <div data-event-live-frame class="event-live-iframe-wrap"></div>
+    </div>
+  </div>
+</dialog>
+
+<button
+  type="button"
+  class="event-live-fab"
+  data-event-live-fab
+  hidden
+  aria-label="Abrir el directo del evento"
+>
+  <span class="event-live-fab-dot" aria-hidden="true"></span>
+  EN DIRECTO
+</button>
+
+<style>
+  .event-live-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .event-live-modal::backdrop {
+    background: transparent;
+  }
+
+  .event-live-modal[open] {
+    display: flex;
+  }
+
+  .event-live-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 16, 36, 0.88);
+    backdrop-filter: blur(10px);
+  }
+
+  .event-live-content {
+    position: relative;
+    z-index: 1;
+    width: calc(100% - 2rem);
+    max-width: 48rem;
+    margin: 1rem;
+    padding: 2rem 1.25rem 1.5rem;
+    border-radius: var(--radius-sharp);
+    background:
+      radial-gradient(
+        ellipse 80% 50% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 10%, transparent),
+        transparent 70%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-velada-navy) 35%, var(--color-theme-midnight)) 0%,
+        color-mix(in srgb, var(--color-theme-midnight) 94%, black) 100%
+      );
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 30%, transparent),
+      0 32px 80px rgba(0, 0, 0, 0.6),
+      0 0 60px color-mix(in srgb, var(--color-theme-gold) 10%, transparent);
+  }
+
+  @media (min-width: 640px) {
+    .event-live-content {
+      padding: 2.25rem 2rem 2rem;
+    }
+  }
+
+  .event-live-corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid color-mix(in srgb, var(--color-theme-gold) 80%, transparent);
+    pointer-events: none;
+  }
+  .event-live-corner-tl {
+    top: -1px;
+    left: -1px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .event-live-corner-tr {
+    top: -1px;
+    right: -1px;
+    border-left: 0;
+    border-bottom: 0;
+  }
+  .event-live-corner-bl {
+    bottom: -1px;
+    left: -1px;
+    border-right: 0;
+    border-top: 0;
+  }
+  .event-live-corner-br {
+    bottom: -1px;
+    right: -1px;
+    border-left: 0;
+    border-top: 0;
+  }
+
+  .event-live-eyebrow {
+    position: absolute;
+    top: -0.7rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-velada-navy) 35%, var(--color-theme-midnight)) 0%,
+      color-mix(in srgb, var(--color-theme-midnight) 95%, black) 100%
+    );
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-velada-blood) 55%, transparent);
+    color: var(--color-theme-cream);
+    font-family: var(--font-cinzel);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .event-live-eyebrow-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--color-velada-blood);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--color-velada-blood) 70%, transparent);
+    animation: event-live-pulse 1.6s ease-in-out infinite;
+  }
+
+  .event-live-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-sharp);
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
+    background: color-mix(in srgb, var(--color-theme-midnight) 80%, transparent);
+    color: var(--color-theme-cream);
+    opacity: 0.6;
+    cursor: pointer;
+    transition:
+      opacity 200ms,
+      border-color 200ms;
+  }
+
+  .event-live-close:hover,
+  .event-live-close:focus-visible {
+    opacity: 1;
+    border-color: color-mix(in srgb, var(--color-theme-gold) 50%, transparent);
+  }
+
+  .event-live-title {
+    margin: 0.25rem 0 1.25rem;
+    font-family: var(--font-cinzel);
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    text-align: center;
+    color: var(--color-theme-cream);
+  }
+
+  @media (min-width: 640px) {
+    .event-live-title {
+      font-size: 1.3rem;
+    }
+  }
+
+  .event-live-video {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 0.4rem;
+    background: black;
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 25%, transparent),
+      0 18px 44px rgba(0, 0, 0, 0.5);
+  }
+
+  .event-live-iframe-wrap {
+    position: absolute;
+    inset: 0;
+  }
+
+  @keyframes event-live-pulse {
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: scale(0.9);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .event-live-eyebrow-dot {
+      animation: none;
+    }
+  }
+
+  /* ── Botón flotante para reabrir el directo ──
+     Visible mientras el evento esté en directo y el usuario haya cerrado
+     el modal. Mismo lenguaje visual "píldora dorada" que el resto del
+     sitio, con un punto rojo pulsante para distinguirlo de otros FABs. */
+  .event-live-fab {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 1.15rem;
+    border-radius: 9999px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
+      var(--color-theme-gold) 65%,
+      color-mix(in srgb, var(--color-theme-gold) 75%, black) 100%
+    );
+    color: var(--color-theme-midnight);
+    font-family: var(--font-cinzel);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
+      0 12px 32px color-mix(in srgb, var(--color-theme-gold) 38%, transparent),
+      0 0 24px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+    transition:
+      transform 250ms ease,
+      box-shadow 250ms ease;
+    animation: event-live-fab-enter 500ms cubic-bezier(0.34, 1.42, 0.5, 1) both;
+  }
+
+  .event-live-fab[hidden] {
+    display: none;
+  }
+
+  .event-live-fab:hover,
+  .event-live-fab:focus-visible {
+    transform: translateY(-2px);
+    outline: none;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
+      0 16px 40px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
+      0 0 32px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
+  }
+
+  .event-live-fab:active {
+    transform: translateY(-1px);
+  }
+
+  .event-live-fab-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    background: var(--color-velada-blood);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--color-velada-blood) 80%, transparent);
+    animation: event-live-pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes event-live-fab-enter {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .event-live-fab {
+      animation: none;
+      transition: none;
+    }
+    .event-live-fab:hover,
+    .event-live-fab:focus-visible,
+    .event-live-fab:active {
+      transform: none;
+    }
+    .event-live-fab-dot {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import { $ } from '@/lib/dom-selector'
+
+  // Con qué frecuencia se comprueba si ya ha empezado/terminado el directo.
+  // No hace falta la precisión del countdown de segundos: basta con
+  // reaccionar en un plazo razonable tras cruzar el inicio/fin del evento.
+  const CHECK_INTERVAL_MS = 15_000
+  // Una vez cerrado por el usuario mientras el evento está en directo, no
+  // se vuelve a abrir solo: queda el botón flotante para reabrirlo.
+  const DISMISS_KEY = 'velada-event-live-dismissed'
+
+  let intervalId = 0
+  let modalAbort: AbortController | null = null
+
+  function setupEventLiveModal() {
+    modalAbort?.abort()
+    modalAbort = null
+    clearInterval(intervalId)
+
+    const modal = $<HTMLDialogElement>('[data-event-live-modal]')
+    const fab = $<HTMLButtonElement>('[data-event-live-fab]')
+    if (!modal || !fab) return
+
+    const frame = $<HTMLElement>('[data-event-live-frame]', modal)
+    if (!frame) return
+
+    const start = Number(modal.dataset.start)
+    const end = Number(modal.dataset.end)
+    const channel = modal.dataset.channel
+    if (!Number.isFinite(start) || !Number.isFinite(end) || !channel) return
+
+    modalAbort = new AbortController()
+    const { signal } = modalAbort
+
+    const isLiveNow = () => {
+      const now = Date.now()
+      return now >= start && now <= end
+    }
+
+    function mountIframe() {
+      if (frame!.childElementCount > 0) return
+      const iframe = document.createElement('iframe')
+      iframe.src = `https://www.youtube-nocookie.com/embed/live_stream?channel=${encodeURIComponent(channel!)}&autoplay=1&playsinline=1`
+      iframe.allow =
+        'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+      iframe.setAttribute('allowfullscreen', '')
+      iframe.title = 'La Velada del Año VI en directo'
+      iframe.className = 'h-full w-full border-0'
+      frame!.replaceChildren(iframe)
+    }
+
+    function openModal() {
+      if (modal!.open) return
+      mountIframe()
+      modal!.showModal()
+    }
+
+    function closeModal() {
+      if (!modal!.open) return
+      modal!.close()
+    }
+
+    // Al cerrarse (botón, backdrop o Escape, que <dialog> ya soporta de
+    // forma nativa) quitamos el iframe para cortar el audio en background,
+    // y si el evento seguía en directo recordamos que el usuario ya lo
+    // cerró para no volver a auto-abrirlo.
+    modal.addEventListener(
+      'close',
+      () => {
+        frame!.replaceChildren()
+        if (isLiveNow()) localStorage.setItem(DISMISS_KEY, '1')
+      },
+      { signal },
+    )
+
+    modal.querySelectorAll('[data-modal-close]').forEach((btn) => {
+      btn.addEventListener('click', closeModal, { signal })
+    })
+
+    modal.addEventListener(
+      'click',
+      (e) => {
+        if (e.target === modal) closeModal()
+      },
+      { signal },
+    )
+
+    fab.addEventListener('click', openModal, { signal })
+
+    function sync() {
+      const live = isLiveNow()
+      fab!.hidden = !live
+
+      if (!live) {
+        closeModal()
+        return
+      }
+
+      if (!modal!.open && localStorage.getItem(DISMISS_KEY) !== '1') {
+        openModal()
+      }
+    }
+
+    sync()
+    intervalId = window.setInterval(sync, CHECK_INTERVAL_MS)
+
+    document.addEventListener(
+      'astro:before-preparation',
+      () => {
+        clearInterval(intervalId)
+      },
+      { once: true, signal },
+    )
+  }
+
+  document.addEventListener('astro:page-load', setupEventLiveModal)
+</script>

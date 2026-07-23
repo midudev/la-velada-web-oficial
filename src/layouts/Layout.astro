@@ -4,6 +4,7 @@ import Analytics from '@vercel/analytics/astro'
 
 import '@/styles/global.css'
 
+import EventLiveModal from '@/components/EventLiveModal.astro'
 import { fixedTitle } from '@/consts/pageTitles'
 import Header from '@/sections/Header.astro'
 import { serializeJsonLd } from '@/utils/serialize-json-ld'
@@ -266,5 +267,6 @@ const organizationJsonLd = {
     <main id="main-content">
       <slot />
     </main>
+    <EventLiveModal />
   </body>
 </html>
