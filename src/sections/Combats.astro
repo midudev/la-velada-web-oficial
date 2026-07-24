@@ -1,0 +1,651 @@
+---
+import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import SectionHeader from '@/components/SectionHeader.astro'
+import { battles } from '@/consts/battles'
+import {
+  BOXERS_BY_ID,
+  getBoxerHeroImages,
+  getBoxerHeroSrcset,
+  type Boxer,
+} from '@/consts/boxers'
+
+const total = battles.length
+
+function toFighter(boxer: Boxer) {
+  return {
+    id: boxer.id,
+    name: boxer.name,
+    hero: getBoxerHeroImages(boxer),
+    srcset: getBoxerHeroSrcset(boxer),
+  }
+}
+
+const combatRows = battles.map((battle) => {
+  const [idA, idB] = battle.boxerIds
+  const isMainEvent = battle.number === total
+  const isCoMain = battle.number === total - 1
+  // Co-estelar y main event van a ancho completo: el half-portrait es
+  // ~mucho más grande que en la grid de 2 columnas. Si reutilizamos el
+  // `sizes` pequeño, el browser elige el srcset de 320px y se ve pixelado.
+  const featured = isMainEvent || isCoMain
+  const imageSizes = featured
+    ? '(min-width: 1024px) 30vw, (min-width: 700px) 45vw, 48vw'
+    : '(min-width: 1024px) 14vw, (min-width: 700px) 22vw, 48vw'
+
+  return {
+    number: battle.number,
+    url: battle.url,
+    title: battle.title,
+    isMainEvent,
+    isCoMain,
+    imageSizes,
+    a: toFighter(BOXERS_BY_ID[idA]),
+    b: toFighter(BOXERS_BY_ID[idB]),
+  }
+})
+---
+
+<section
+  id="combates"
+  class="relative w-full overflow-x-clip px-4 py-20 sm:px-6 lg:py-28"
+  aria-labelledby="home-combats-title"
+>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-96 bg-[radial-gradient(ellipse_at_top,_var(--color-theme-gold)_0%,_transparent_68%)] opacity-15"
+  >
+  </div>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 bottom-0 -z-0 h-72 bg-[radial-gradient(ellipse_at_bottom,_var(--color-theme-navy)_0%,_transparent_70%)] opacity-55"
+  >
+  </div>
+
+  <div class="relative mx-auto flex max-w-6xl flex-col items-center">
+    <SectionHeader
+      titleId="home-combats-title"
+      eyebrow="Cartelera oficial"
+      title="COMBATES"
+      subtitle="El orden de la noche en La Velada del Año VI"
+      subtitleClass="mb-10 max-w-xl tracking-[0.16em] sm:mb-12 sm:text-sm"
+    />
+
+    <ol class="combats-grid w-full list-none p-0" role="list">
+      {
+        combatRows.map((combat, index) => (
+          <li
+            class:list={[
+              'combats-item animate-fade-in-up',
+              { 'is-main': combat.isMainEvent, 'is-co': combat.isCoMain },
+            ]}
+            style={`animation-delay:${index * 35}ms`}
+          >
+            <a
+              href={combat.url}
+              class="combats-card"
+              aria-label={`Combate ${combat.number}: ${combat.title}`}
+            >
+              <span class="combats-num" aria-hidden="true">
+                {String(combat.number).padStart(2, '0')}
+              </span>
+
+              <div class="combats-stage">
+                <span aria-hidden="true" class="combats-corner tl" />
+                <span aria-hidden="true" class="combats-corner tr" />
+                <span aria-hidden="true" class="combats-corner bl" />
+                <span aria-hidden="true" class="combats-corner br" />
+
+                {[
+                  { fighter: combat.a, side: 'a' as const },
+                  { fighter: combat.b, side: 'b' as const },
+                ].map(({ fighter, side }) => (
+                  <div class:list={['combats-fighter', side]}>
+                    <span aria-hidden="true" class="combats-spot" />
+                    <picture class="combats-pic">
+                      <source
+                        type="image/avif"
+                        srcset={fighter.srcset.avif}
+                        sizes={combat.imageSizes}
+                      />
+                      <source
+                        type="image/webp"
+                        srcset={fighter.srcset.webp}
+                        sizes={combat.imageSizes}
+                      />
+                      <img
+                        src={fighter.hero.webp}
+                        alt=""
+                        width="640"
+                        height="960"
+                        loading="lazy"
+                        decoding="async"
+                        class="combats-img"
+                      />
+                    </picture>
+                    <span aria-hidden="true" class="combats-veil" />
+                    <span class="combats-name">{fighter.name}</span>
+                  </div>
+                ))}
+
+                <span class="combats-vs" aria-hidden="true">
+                  <span>VS</span>
+                </span>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+
+    <a href="/combates" class="combats-all font-cinzel mt-10 sm:mt-12">
+      <span>Ver cartelera completa</span>
+      <ArrowRightIcon class="combats-all-arrow" aria-hidden="true" />
+    </a>
+  </div>
+</section>
+
+<style>
+  .combats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  @media (min-width: 700px) {
+    .combats-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .combats-item.is-co,
+    .combats-item.is-main {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .combats-grid {
+      gap: 1.15rem;
+    }
+  }
+
+  .combats-item {
+    position: relative;
+    min-width: 0;
+  }
+
+  .combats-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+    background: linear-gradient(180deg, #0c1330 0%, #060a1d 100%);
+    color: inherit;
+    text-decoration: none;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 8%, transparent),
+      0 14px 36px rgba(0, 0, 0, 0.4);
+    transition:
+      transform 360ms ease,
+      border-color 360ms ease,
+      box-shadow 360ms ease;
+  }
+
+  .combats-card:hover,
+  .combats-card:focus-visible {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--color-theme-gold) 58%, transparent);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 35%, transparent),
+      0 22px 48px rgba(0, 0, 0, 0.55),
+      0 0 32px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+  }
+
+  .combats-card:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
+    outline-offset: 3px;
+  }
+
+  /* Co-estelar: un peldaño por encima, más brillo y tamaño. */
+  .combats-item.is-co .combats-card {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 38%, transparent);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 16%, transparent),
+      0 18px 44px rgba(0, 0, 0, 0.48),
+      0 0 36px color-mix(in srgb, var(--color-theme-gold) 14%, transparent);
+  }
+
+  .combats-item.is-co .combats-stage {
+    aspect-ratio: 2.15 / 1;
+  }
+
+  /* Main event: el más grande y con más presencia dorada. */
+  .combats-item.is-main .combats-card {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 62%, transparent);
+    background:
+      radial-gradient(
+        ellipse 90% 80% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 16%, transparent),
+        transparent 60%
+      ),
+      linear-gradient(180deg, #141c3c 0%, #060a1a 100%);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 28%, transparent),
+      0 24px 56px rgba(0, 0, 0, 0.55),
+      0 0 52px color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
+  }
+
+  .combats-item.is-main .combats-stage {
+    aspect-ratio: 2.05 / 1;
+  }
+
+  .combats-item.is-main .combats-card:hover,
+  .combats-item.is-main .combats-card:focus-visible {
+    border-color: color-mix(in srgb, var(--color-theme-gold) 88%, white);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 50%, transparent),
+      0 28px 64px rgba(0, 0, 0, 0.62),
+      0 0 64px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+  }
+
+  .combats-num {
+    position: absolute;
+    top: 0.55rem;
+    left: 0.55rem;
+    z-index: 8;
+    display: grid;
+    place-items: center;
+    min-width: 1.9rem;
+    height: 1.55rem;
+    padding-inline: 0.35rem;
+    border-radius: 0.2rem;
+    font-family: var(--font-cinzel), var(--font-fallback);
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    color: var(--color-theme-midnight);
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-theme-gold) 90%, white) 0%,
+      var(--color-theme-gold) 55%,
+      color-mix(in srgb, var(--color-theme-gold) 72%, #6b4f1e) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      0 4px 12px color-mix(in srgb, var(--color-theme-gold) 30%, transparent);
+  }
+
+  .combats-item.is-co .combats-num {
+    min-width: 2.15rem;
+    height: 1.7rem;
+    font-size: 0.7rem;
+  }
+
+  .combats-item.is-main .combats-num {
+    top: 0.7rem;
+    left: 0.7rem;
+    min-width: 2.45rem;
+    height: 1.95rem;
+    font-size: 0.82rem;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 40%, transparent),
+      0 6px 18px color-mix(in srgb, var(--color-theme-gold) 42%, transparent);
+  }
+
+  .combats-stage {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    aspect-ratio: 2.35 / 1;
+    overflow: hidden;
+  }
+
+  .combats-corner {
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    z-index: 7;
+    border: 1.5px solid color-mix(in srgb, var(--color-theme-gold) 65%, transparent);
+    opacity: 0.55;
+    pointer-events: none;
+    transition:
+      opacity 360ms ease,
+      transform 360ms ease;
+  }
+
+  .combats-card:hover .combats-corner,
+  .combats-card:focus-visible .combats-corner {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+
+  .combats-corner.tl {
+    top: 8px;
+    left: 8px;
+    border-right: 0;
+    border-bottom: 0;
+    transform-origin: top left;
+  }
+
+  .combats-corner.tr {
+    top: 8px;
+    right: 8px;
+    border-left: 0;
+    border-bottom: 0;
+    transform-origin: top right;
+  }
+
+  .combats-corner.bl {
+    bottom: 8px;
+    left: 8px;
+    border-right: 0;
+    border-top: 0;
+    transform-origin: bottom left;
+  }
+
+  .combats-corner.br {
+    bottom: 8px;
+    right: 8px;
+    border-left: 0;
+    border-top: 0;
+    transform-origin: bottom right;
+  }
+
+  .combats-item.is-main .combats-corner {
+    width: 14px;
+    height: 14px;
+    opacity: 0.75;
+  }
+
+  .combats-fighter {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  .combats-spot {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(
+      70% 60% at 50% 18%,
+      color-mix(in srgb, var(--color-theme-gold) 24%, transparent),
+      transparent 62%
+    );
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .combats-item.is-main .combats-spot {
+    opacity: 0.7;
+  }
+
+  .combats-pic {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: block;
+  }
+
+  .combats-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: saturate(0.92) brightness(0.9);
+    transition:
+      filter 450ms ease,
+      transform 500ms ease;
+  }
+
+  .combats-card:hover .combats-img,
+  .combats-card:focus-visible .combats-img {
+    filter: saturate(1.08) brightness(1.04);
+    transform: scale(1.04);
+  }
+
+  .combats-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background:
+      linear-gradient(
+        180deg,
+        transparent 38%,
+        rgba(5, 8, 15, 0.45) 68%,
+        rgba(5, 8, 15, 0.94) 100%
+      ),
+      linear-gradient(
+        90deg,
+        transparent 0%,
+        transparent 72%,
+        rgba(5, 8, 15, 0.35) 100%
+      );
+    pointer-events: none;
+  }
+
+  .combats-fighter.b .combats-veil {
+    background:
+      linear-gradient(
+        180deg,
+        transparent 38%,
+        rgba(5, 8, 15, 0.45) 68%,
+        rgba(5, 8, 15, 0.94) 100%
+      ),
+      linear-gradient(
+        270deg,
+        transparent 0%,
+        transparent 72%,
+        rgba(5, 8, 15, 0.35) 100%
+      );
+  }
+
+  .combats-name {
+    position: absolute;
+    inset-inline: 0.35rem;
+    bottom: 0.55rem;
+    z-index: 4;
+    font-family: var(--font-cinzel), var(--font-fallback);
+    font-size: clamp(0.68rem, 0.52rem + 0.7vw, 0.95rem);
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    line-height: 1.1;
+    text-align: center;
+    color: var(--color-theme-cream);
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.95),
+      0 2px 14px rgba(0, 0, 0, 0.75);
+  }
+
+  .combats-fighter.a .combats-name {
+    padding-right: 0.85rem;
+  }
+
+  .combats-fighter.b .combats-name {
+    padding-left: 0.85rem;
+  }
+
+  .combats-item.is-co .combats-name {
+    font-size: clamp(0.82rem, 0.6rem + 0.85vw, 1.2rem);
+    bottom: 0.7rem;
+  }
+
+  .combats-item.is-main .combats-name {
+    font-size: clamp(0.95rem, 0.7rem + 1.1vw, 1.55rem);
+    bottom: 0.85rem;
+    letter-spacing: 0.04em;
+  }
+
+  .combats-vs {
+    --size: 2.35rem;
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    margin: auto;
+    display: grid;
+    place-items: center;
+    width: var(--size);
+    height: var(--size);
+    border: 1px solid var(--color-theme-gold);
+    border-radius: var(--radius-sharp);
+    transform: rotate(45deg);
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-theme-gold) 28%, transparent),
+      #05080fe6 72%
+    );
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, #05080f 70%, transparent),
+      0 8px 22px rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+  }
+
+  .combats-vs span {
+    transform: rotate(-45deg);
+    font-family: var(--font-cinzel), var(--font-fallback);
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    color: color-mix(in srgb, var(--color-theme-gold) 92%, white);
+  }
+
+  .combats-item.is-co .combats-vs {
+    --size: 2.75rem;
+  }
+
+  .combats-item.is-co .combats-vs span {
+    font-size: 0.72rem;
+  }
+
+  .combats-item.is-main .combats-vs {
+    --size: 3.35rem;
+    border-width: 1.5px;
+    box-shadow:
+      0 0 0 5px color-mix(in srgb, #05080f 65%, transparent),
+      0 0 28px color-mix(in srgb, var(--color-theme-gold) 35%, transparent),
+      0 10px 28px rgba(0, 0, 0, 0.6);
+  }
+
+  .combats-item.is-main .combats-vs span {
+    font-size: 0.88rem;
+  }
+
+  .combats-card:hover .combats-vs,
+  .combats-card:focus-visible .combats-vs {
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-theme-gold) 42%, transparent),
+      #05080ff2 72%
+    );
+  }
+
+  .combats-all {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 2.9rem;
+    padding: 0.7rem 1.6rem;
+    border-radius: 9999px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
+      var(--color-theme-gold) 65%,
+      color-mix(in srgb, var(--color-theme-gold) 75%, black) 100%
+    );
+    color: var(--color-theme-midnight);
+    font-size: 0.66rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      0 12px 32px color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+    transition:
+      transform 250ms ease,
+      box-shadow 250ms ease,
+      filter 250ms ease;
+  }
+
+  .combats-all:hover,
+  .combats-all:focus-visible {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 40%, transparent),
+      0 16px 36px color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
+  }
+
+  .combats-all:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
+    outline-offset: 3px;
+  }
+
+  .combats-all-arrow {
+    width: 0.95rem;
+    height: 0.95rem;
+    transition: transform 250ms ease;
+  }
+
+  .combats-all:hover .combats-all-arrow,
+  .combats-all:focus-visible .combats-all-arrow {
+    transform: translateX(3px);
+  }
+
+  @media (min-width: 700px) {
+    .combats-item.is-co .combats-stage {
+      aspect-ratio: 2.6 / 1;
+    }
+
+    .combats-item.is-main .combats-stage {
+      aspect-ratio: 2.45 / 1;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .combats-stage {
+      aspect-ratio: 2.2 / 1;
+    }
+
+    .combats-item.is-co .combats-stage {
+      aspect-ratio: 2.75 / 1;
+    }
+
+    .combats-item.is-main .combats-stage {
+      aspect-ratio: 2.55 / 1;
+    }
+
+    .combats-name {
+      inset-inline: 0.6rem;
+      bottom: 0.7rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .combats-item {
+      animation: none;
+    }
+
+    .combats-card,
+    .combats-img,
+    .combats-corner,
+    .combats-all,
+    .combats-all-arrow {
+      transition: none;
+    }
+
+    .combats-card:hover,
+    .combats-card:focus-visible,
+    .combats-all:hover,
+    .combats-all:focus-visible {
+      transform: none;
+    }
+
+    .combats-card:hover .combats-img,
+    .combats-card:focus-visible .combats-img {
+      transform: none;
+    }
+  }
+</style>
