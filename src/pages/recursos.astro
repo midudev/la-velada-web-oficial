@@ -1,0 +1,474 @@
+---
+import GithubIcon from '@/assets/svg/github.svg'
+import SectionDivider from '@/components/SectionDivider.astro'
+import Layout from '@/layouts/Layout.astro'
+import Footer from '@/sections/Footer.astro'
+import Sponsors from '@/sections/Sponsors.astro'
+import { serializeJsonLd } from '@/utils/serialize-json-ld'
+
+export const prerender = true
+
+const SITE_URL = 'https://www.infolavelada.com'
+const title = 'Recursos y kit de prensa | La Velada del Año VI'
+const description =
+  'Logo, colores, tipografía y fondos oficiales de La Velada del Año VI. Descarga los recursos de marca para hablar del evento sin liarla.'
+const canonical = `${SITE_URL}/recursos`
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${SITE_URL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Recursos', item: canonical },
+  ],
+}
+
+const webPageJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: canonical,
+  isPartOf: { '@id': `${SITE_URL}/#website` },
+  about: {
+    '@type': 'SportsEvent',
+    name: 'La Velada del Año VI',
+  },
+}
+
+const QUICK_LINKS = [
+  { href: '#logotipo', label: 'Logotipo' },
+  { href: '#colores', label: 'Colores' },
+  { href: '#tipografia', label: 'Tipografía' },
+  { href: '#fondos', label: 'Fondos' },
+  { href: '#normas', label: 'Normas de uso' },
+  { href: '#codigo-abierto', label: 'Código abierto' },
+] as const
+
+const BRAND_COLORS = [
+  { name: 'Cream', hex: '#f4e4c9' },
+  { name: 'Gold', hex: '#c7a86b' },
+  { name: 'Maroon', hex: '#480f0e' },
+  { name: 'Forest', hex: '#1d3524' },
+  { name: 'Navy', hex: '#142346' },
+  { name: 'Midnight', hex: '#0a1024' },
+] as const
+
+const DOWNLOAD_LINK_CLASS =
+  'inline-flex items-center gap-2 rounded-pill bg-theme-gold/10 px-5 py-2.5 font-cinzel text-[0.7rem] font-black tracking-[0.14em] text-theme-cream no-underline ring-1 ring-inset ring-theme-gold/40 transition duration-200 ease-out outline-none hover:-translate-y-px hover:ring-theme-gold focus-visible:-translate-y-px focus-visible:ring-theme-gold'
+
+const DO_ITEMS = [
+  'Usa el logo sobre fondos oscuros (midnight o navy) para que se lea bien.',
+  'Deja aire alrededor del logo, no lo pegues a bordes ni a otros elementos.',
+  'Enlaza a infolavelada.com cuando compartas contenido sobre el evento.',
+]
+
+const DONT_ITEMS = [
+  'No estires, rotes ni deformes el logo bajo ningún concepto.',
+  'No cambies el color del logo fuera de sus variantes oficiales.',
+]
+---
+
+<Layout title={title} description={description} canonical={canonical}>
+  <script
+    type="application/ld+json"
+    slot="head"
+    is:inline
+    set:html={serializeJsonLd(breadcrumbJsonLd)}
+  />
+  <script
+    type="application/ld+json"
+    slot="head"
+    is:inline
+    set:html={serializeJsonLd(webPageJsonLd)}
+  />
+
+  <section
+    class="relative isolate flex min-h-svh w-full flex-col items-center bg-theme-midnight px-3 pt-24 pb-20 text-theme-cream sm:px-6 sm:pt-32 sm:pb-24 md:pt-36"
+    aria-labelledby="recursos-page-title"
+  >
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-96 bg-[radial-gradient(ellipse_at_top,_var(--color-theme-gold)_0%,_transparent_70%)] opacity-20"
+    >
+    </div>
+
+    <SectionDivider class="mb-8 not-motion-reduce:animate-fade-in-up sm:mb-12" />
+
+    <p
+      class="mb-3 text-center font-cinzel text-[0.6rem] font-black tracking-[0.24em] text-theme-gold/80 not-motion-reduce:animate-fade-in-up sm:text-xs"
+    >
+      KIT DE PRENSA Y MARCA
+    </p>
+
+    <h1
+      id="recursos-page-title"
+      class="text-center font-cinzel text-3xl font-black tracking-[0.1em] text-theme-cream uppercase not-motion-reduce:animate-fade-in-up sm:text-4xl md:text-5xl"
+    >
+      Recursos
+    </h1>
+
+    <p
+      class="mt-4 max-w-xl text-center font-cinzel text-xs font-medium tracking-[0.14em] text-balance text-white/55 animate-delay-200 not-motion-reduce:animate-fade-in-up sm:text-sm"
+    >
+      Logo, colores, tipografía y fondos oficiales de La Velada del Año VI. Todo lo que necesitas
+      para hablar del evento sin liarla.
+    </p>
+
+    <nav
+      aria-label="Secciones de recursos"
+      class="mt-8 flex w-full max-w-3xl flex-wrap items-center justify-center gap-2 animate-delay-300 not-motion-reduce:animate-fade-in-up sm:mt-10 sm:gap-3"
+    >
+      {
+        QUICK_LINKS.map((link) => (
+          <a
+            href={link.href}
+            class="rounded-pill border border-white/15 px-4 py-2 font-cinzel text-[0.65rem] font-black tracking-[0.1em] text-white/70 no-underline transition duration-200 ease-out hover:-translate-y-px hover:border-theme-gold/60 hover:text-theme-cream focus-visible:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-theme-gold sm:text-xs"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="mt-16 flex w-full max-w-4xl flex-col gap-20 sm:mt-20 sm:gap-24">
+      {/* Logotipo */}
+      <div id="logotipo" class="scroll-mt-24">
+        <h2
+          class="mb-2 text-center font-cinzel text-xl font-black tracking-[0.12em] text-theme-cream uppercase sm:text-2xl"
+        >
+          Logotipo
+        </h2>
+        <p
+          class="mx-auto mb-8 max-w-md text-center font-cinzel text-xs font-medium text-balance text-white/55"
+        >
+          El escudo oficial de La Velada del Año VI, listo para usar sobre fondos oscuros.
+        </p>
+
+        <div
+          class="relative flex flex-col items-center gap-8 overflow-hidden rounded-3xl border border-theme-gold/25 bg-linear-to-b from-theme-navy/60 to-theme-midnight px-6 py-12 sm:px-10 sm:py-16"
+        >
+          <div
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-0 -z-0 bg-[radial-gradient(ellipse_at_center,_var(--color-theme-gold)_0%,_transparent_65%)] opacity-15"
+          >
+          </div>
+
+          <picture class="relative z-1 w-full max-w-[260px]">
+            <source type="image/avif" srcset="https://cdn.infolavelada.com/logo/logo.avif" />
+            <img
+              src="https://cdn.infolavelada.com/logo/logo.webp"
+              alt="Logo de La Velada del Año VI"
+              class="h-auto w-full"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
+
+          <div class="relative z-1 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="https://cdn.infolavelada.com/logo/logo.webp"
+              target="_blank"
+              rel="noopener noreferrer"
+              class={DOWNLOAD_LINK_CLASS}
+            >
+              Descargar WEBP
+            </a>
+            <a
+              href="https://cdn.infolavelada.com/logo/logo.avif"
+              target="_blank"
+              rel="noopener noreferrer"
+              class={DOWNLOAD_LINK_CLASS}
+            >
+              Descargar AVIF
+            </a>
+            <a
+              href="/favicon.svg"
+              target="_blank"
+              rel="noopener noreferrer"
+              class={DOWNLOAD_LINK_CLASS}
+            >
+              Icono de marca (SVG)
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Colores */}
+      <div id="colores" class="scroll-mt-24">
+        <h2
+          class="mb-2 text-center font-cinzel text-xl font-black tracking-[0.12em] text-theme-cream uppercase sm:text-2xl"
+        >
+          Colores oficiales
+        </h2>
+        <p
+          class="mx-auto mb-8 max-w-md text-center font-cinzel text-xs font-medium text-balance text-white/55"
+        >
+          La paleta que usamos en toda la web. Toca un color para copiar su código hexadecimal.
+        </p>
+
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+          {
+            BRAND_COLORS.map((color) => (
+              <button
+                type="button"
+                data-copy-value={color.hex}
+                class="group relative flex cursor-crosshair flex-col overflow-hidden rounded-2xl border border-theme-gold/40 transition duration-200 ease-out outline-none hover:-translate-y-1 hover:border-theme-gold focus-visible:-translate-y-1 focus-visible:border-theme-gold"
+              >
+                <span
+                  aria-hidden="true"
+                  class="h-20 w-full sm:h-24"
+                  style={`background-color:${color.hex}`}
+                />
+                <span class="flex flex-col gap-1 bg-white/5 px-4 py-3 text-left">
+                  <span class="font-cinzel text-xs font-black tracking-[0.1em] text-theme-cream uppercase">
+                    {color.name}
+                  </span>
+                  <span
+                    data-copy-label
+                    class="font-cinzel text-[0.62rem] tracking-[0.08em] text-white/55 uppercase"
+                  >
+                    {color.hex}
+                  </span>
+                </span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      {/* Tipografía */}
+      <div id="tipografia" class="scroll-mt-24">
+        <h2
+          class="mb-2 text-center font-cinzel text-xl font-black tracking-[0.12em] text-theme-cream uppercase sm:text-2xl"
+        >
+          Tipografía
+        </h2>
+        <p
+          class="mx-auto mb-8 max-w-md text-center font-cinzel text-xs font-medium text-balance text-white/55"
+        >
+          Toda la web está compuesta en Cinzel, una tipografía abierta disponible en Google Fonts.
+        </p>
+
+        <div
+          class="flex flex-col items-center gap-6 rounded-3xl border border-white/10 bg-white/3 px-6 py-10 sm:px-10"
+        >
+          <p
+            class="font-cinzel text-4xl font-medium tracking-[0.08em] text-theme-cream sm:text-5xl"
+          >
+            Cinzel Medium
+          </p>
+          <p class="font-cinzel text-4xl font-black tracking-[0.08em] text-theme-cream sm:text-5xl">
+            Cinzel Black
+          </p>
+
+          <a
+            href="https://fonts.google.com/specimen/Cinzel"
+            target="_blank"
+            rel="noopener noreferrer"
+            class={DOWNLOAD_LINK_CLASS}
+          >
+            Ver en Google Fonts
+          </a>
+        </div>
+      </div>
+
+      {/* Fondos */}
+      <div id="fondos" class="scroll-mt-24">
+        <h2
+          class="mb-2 text-center font-cinzel text-xl font-black tracking-[0.12em] text-theme-cream uppercase sm:text-2xl"
+        >
+          Fondos para redes
+        </h2>
+        <p
+          class="mx-auto mb-8 max-w-md text-center font-cinzel text-xs font-medium text-balance text-white/55"
+        >
+          El fondo oficial del evento, listo para portadas y publicaciones en redes sociales.
+        </p>
+
+        <div
+          class="relative flex flex-col items-center gap-6 overflow-hidden rounded-3xl border border-theme-gold/25 px-6 py-12 sm:px-10"
+        >
+          <picture aria-hidden="true" class="pointer-events-none absolute inset-0 -z-0 block">
+            <source
+              type="image/avif"
+              srcset="https://cdn.infolavelada.com/hero-bg/background-1280.avif"
+            />
+            <img
+              src="https://cdn.infolavelada.com/hero-bg/background-1280.webp"
+              alt=""
+              role="presentation"
+              class="h-full w-full object-cover opacity-50"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
+          <div
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-0 -z-0 bg-linear-to-b from-theme-midnight/40 via-theme-midnight/70 to-theme-midnight"
+          >
+          </div>
+
+          <div class="relative z-1 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="https://cdn.infolavelada.com/hero-bg/background-2048.webp"
+              target="_blank"
+              rel="noopener noreferrer"
+              class={DOWNLOAD_LINK_CLASS}
+            >
+              Descargar WEBP (2048px)
+            </a>
+            <a
+              href="https://cdn.infolavelada.com/hero-bg/background-2048.avif"
+              target="_blank"
+              rel="noopener noreferrer"
+              class={DOWNLOAD_LINK_CLASS}
+            >
+              Descargar AVIF (2048px)
+            </a>
+          </div>
+
+          <a
+            href="https://cdn.infolavelada.com/hero-bg/background.webp"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="relative z-1 font-cinzel text-[0.65rem] font-black tracking-[0.12em] text-white/60 underline underline-offset-4 transition hover:text-theme-cream"
+          >
+            También en máxima resolución (3840px)
+          </a>
+        </div>
+      </div>
+
+      {/* Normas de uso */}
+      <div id="normas" class="scroll-mt-24">
+        <h2
+          class="mb-2 text-center font-cinzel text-xl font-black tracking-[0.12em] text-theme-cream uppercase sm:text-2xl"
+        >
+          Normas de uso
+        </h2>
+        <p
+          class="mx-auto mb-8 max-w-md text-center font-cinzel text-xs font-medium text-balance text-white/55"
+        >
+          Cuatro reglas para que la marca se vea bien la use quien la use.
+        </p>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <ul
+            class="flex flex-col gap-3 rounded-2xl border border-theme-forest/60 bg-theme-forest/10 p-5"
+          >
+            {
+              DO_ITEMS.map((item) => (
+                <li class="flex items-start gap-3 font-cinzel text-xs leading-relaxed text-white/80">
+                  <span
+                    aria-hidden="true"
+                    class="mt-0.5 shrink-0 text-sm font-black text-theme-cream"
+                  >
+                    ✓
+                  </span>
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+
+          <ul
+            class="flex flex-col gap-3 rounded-2xl border border-velada-blood/60 bg-velada-blood/15 p-5"
+          >
+            {
+              DONT_ITEMS.map((item) => (
+                <li class="flex items-start gap-3 font-cinzel text-xs leading-relaxed text-white/80">
+                  <span
+                    aria-hidden="true"
+                    class="mt-0.5 shrink-0 text-sm font-black text-theme-cream"
+                  >
+                    ✕
+                  </span>
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      {/* Código abierto */}
+      <div id="codigo-abierto" class="scroll-mt-24">
+        <h2
+          class="mb-2 text-center font-cinzel text-xl font-black tracking-[0.12em] text-theme-cream uppercase sm:text-2xl"
+        >
+          Código abierto
+        </h2>
+        <p
+          class="mx-auto mb-8 max-w-md text-center font-cinzel text-xs font-medium text-balance text-white/55"
+        >
+          Esta web la construye midudev y su comunidad. Todo el código está publicado en GitHub, así
+          que puedes revisarlo, reportar un fallo o echar una mano.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="https://github.com/midudev/la-velada-web-oficial"
+            target="_blank"
+            rel="noopener noreferrer"
+            class={DOWNLOAD_LINK_CLASS}
+          >
+            <GithubIcon class="size-4 shrink-0" aria-hidden="true" />
+            Ver repositorio
+          </a>
+          <a
+            href="https://github.com/midudev/la-velada-web-oficial/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            class={DOWNLOAD_LINK_CLASS}
+          >
+            Reportar un error
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Sponsors />
+  <Footer />
+</Layout>
+
+<script>
+  import { $$ } from '@/lib/dom-selector'
+
+  const COPIED_LABEL = '¡Copiado!'
+  const COPIED_RESET_MS = 1400
+
+  function initResourceColorCopy() {
+    const buttons = $$<HTMLButtonElement>('[data-copy-value]')
+
+    buttons.forEach((button) => {
+      const label = button.querySelector<HTMLElement>('[data-copy-label]')
+      const value = button.dataset.copyValue
+      if (!label || !value) return
+
+      const originalLabel = label.textContent
+
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(value)
+        } catch {
+          const helper = document.createElement('textarea')
+          helper.value = value
+          helper.style.position = 'fixed'
+          helper.style.opacity = '0'
+          document.body.appendChild(helper)
+          helper.select()
+          document.execCommand('copy')
+          helper.remove()
+        }
+
+        label.textContent = COPIED_LABEL
+        window.setTimeout(() => {
+          label.textContent = originalLabel
+        }, COPIED_RESET_MS)
+      })
+    })
+  }
+
+  document.addEventListener('astro:page-load', initResourceColorCopy)
+</script>
