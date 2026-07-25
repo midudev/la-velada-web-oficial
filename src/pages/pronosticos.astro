@@ -1,5 +1,7 @@
 ---
+import AuthButton from '@/components/AuthButton.astro'
 import PredictionFight from '@/components/PredictionFight.astro'
+import PredictionUserVotes from '@/components/PredictionUserVotes.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
 import { createPredictionBattles } from '@/consts/predictions'
 import Layout from '@/layouts/Layout.astro'
@@ -7,8 +9,9 @@ import { loadBuildTimePredictions } from '@/lib/predictions'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 
-// La votación está cerrada (evento en curso): la página es estática y los
-// totales se fijan en build desde Turso. Sin SSR, sin auth y sin polling.
+// Totales de la comunidad fijados en build. La sesión y los votos propios se
+// hidratan en cliente (AuthButton + GET /api/predictions?mine=1). La votación
+// está cerrada: solo se pueden ver, no cambiar.
 export const prerender = true
 
 const title = 'Pronósticos - La Velada del Año VI'
@@ -47,7 +50,17 @@ const predictionBattles = createPredictionBattles(storedPredictions)
     </p>
 
     <div class="mt-8 w-full max-w-5xl sm:mt-12">
-      <ol class="mt-5 grid gap-5 sm:gap-6" role="list">
+      <div id="predictions-auth" class="flex justify-center" data-predictions-auth>
+        <AuthButton />
+      </div>
+
+      <p
+        class="mt-4 text-center font-cinzel text-[0.58rem] font-medium tracking-[0.14em] text-white/40 uppercase"
+      >
+        La votación está cerrada · solo puedes consultar tus pronósticos
+      </p>
+
+      <ol class="mt-5 grid gap-5 sm:gap-6" role="list" data-prediction-list>
         {
           predictionBattles
             .slice()
@@ -60,6 +73,7 @@ const predictionBattles = createPredictionBattles(storedPredictions)
     </div>
   </section>
 
+  <PredictionUserVotes />
   <Sponsors />
   <Footer />
 </Layout>

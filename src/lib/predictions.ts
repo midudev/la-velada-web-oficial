@@ -254,10 +254,21 @@ let buildTimePredictionsPromise: Promise<CombatPrediction[]> | null = null
  */
 export function loadBuildTimePredictions(): Promise<CombatPrediction[]> {
   if (!buildTimePredictionsPromise) {
-    buildTimePredictionsPromise = getAllPredictions().catch((error) => {
-      console.error('Error al cargar predicciones en build:', error)
-      return [] as CombatPrediction[]
-    })
+    buildTimePredictionsPromise = (async () => {
+      if (!import.meta.env.TURSO_DATABASE_URL) {
+        console.warn(
+          'TURSO_DATABASE_URL no definida: se generan pronósticos sin totales de votos.',
+        )
+        return [] as CombatPrediction[]
+      }
+
+      try {
+        return await getAllPredictions()
+      } catch (error) {
+        console.error('Error al cargar predicciones en build:', error)
+        return [] as CombatPrediction[]
+      }
+    })()
   }
 
   return buildTimePredictionsPromise

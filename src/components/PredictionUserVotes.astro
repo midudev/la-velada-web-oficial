@@ -1,0 +1,114 @@
+---
+/**
+ * Hidrata en cliente los votos propios del usuario (GET ?mine=1) y marca
+ * visualmente "Tu voto". La votación está cerrada: no hay POST ni cambios.
+ */
+---
+
+<!-- Anuncia a lectores de pantalla al cargar los votos propios (SC 4.1.3). -->
+<div class="sr-only" role="status" aria-live="polite" data-prediction-user-announcer></div>
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  let hydration: Promise<void> | null = null
+  let authListenerBound = false
+
+  function getPredictionFight(battleId: string) {
+    return $<HTMLElement>(`[data-prediction-fight][data-battle-id="${battleId}"]`)
+  }
+
+  function setBattleVote(battleId: string, boxerId: string | null) {
+    const fight = getPredictionFight(battleId)
+    if (!fight) return
+
+    $$<HTMLElement>('[data-prediction-option]', fight).forEach((option) => {
+      const isSelected = option.dataset.boxerId === boxerId
+
+      option.dataset.selected = String(isSelected)
+      option.dataset.muted = String(Boolean(boxerId) && !isSelected)
+    })
+  }
+
+  function applyUserVotes(votes: Record<string, string>) {
+    Object.entries(votes).forEach(([battleId, boxerId]) => {
+      setBattleVote(battleId, boxerId)
+    })
+
+    const count = Object.keys(votes).length
+    const announcer = $<HTMLElement>('[data-prediction-user-announcer]')
+    if (announcer) {
+      announcer.textContent =
+        count > 0
+          ? `Se han cargado tus ${count} pronósticos. La votación está cerrada.`
+          : 'No tienes pronósticos registrados. La votación está cerrada.'
+    }
+  }
+
+  function clearUserVotes() {
+    $$<HTMLElement>('[data-prediction-fight]').forEach((fight) => {
+      const battleId = fight.dataset.battleId
+      if (battleId) setBattleVote(battleId, null)
+    })
+  }
+
+  function hydrateUserVotes() {
+    if (hydration) return hydration
+
+    hydration = (async () => {
+      try {
+        const response = await fetch('/api/predictions?mine=1', {
+          credentials: 'same-origin',
+          headers: { Accept: 'application/json' },
+        })
+
+        if (response.status === 401) {
+          clearUserVotes()
+          return
+        }
+
+        if (!response.ok) return
+
+        const data = (await response.json()) as {
+          votes?: Array<{ combat_id: string; fighter_id: string }>
+        }
+        const userVotes = Object.fromEntries(
+          (data.votes ?? []).map((vote) => [vote.combat_id, vote.fighter_id]),
+        )
+        applyUserVotes(userVotes)
+      } catch (error) {
+        console.error('No se pudieron cargar los votos del usuario:', error)
+      } finally {
+        hydration = null
+      }
+    })()
+
+    return hydration
+  }
+
+  function handleAuthSession(event: Event) {
+    const detail = (event as CustomEvent<{ user?: unknown }>).detail
+    if (!detail?.user) {
+      clearUserVotes()
+      return
+    }
+
+    void hydrateUserVotes()
+  }
+
+  function setup() {
+    if (!authListenerBound) {
+      document.addEventListener('auth:session', handleAuthSession)
+      authListenerBound = true
+    }
+
+    // Si AuthButton ya hidrató antes de que este script se registrara,
+    // pedimos los votos al montar cuando la sesión ya está marcada.
+    const authRoot = $<HTMLElement>('[data-auth-button]')
+    if (authRoot?.dataset.authState === 'in') {
+      void hydrateUserVotes()
+    }
+  }
+
+  document.addEventListener('astro:page-load', setup)
+</script>
