@@ -22,11 +22,38 @@ function expireBetterAuthCookies(request: Request, response: Response) {
   }
 }
 
+function hasSessionTokenCookie(request: Request): boolean {
+  const cookieHeader = request.headers.get("cookie")
+  if (!cookieHeader) return false
+  return cookieHeader.includes("session_token")
+}
+
+// GET público de predicciones: lo cachea el CDN y no necesita sesión. Resolver
+// sesión aquí (2 lecturas a Turso en miss) multiplica la carga bajo el polling
+// del evento y además un Set-Cookie por cookie corrupta invalidaría el cache.
+function isPublicPredictionsGet(context: { request: Request; url: URL }): boolean {
+  return (
+    context.request.method === "GET" &&
+    context.url.pathname === "/api/predictions" &&
+    context.url.searchParams.get("mine") !== "1"
+  )
+}
+
 export const onRequest = defineMiddleware(async (context, next) => {
   // Prerendered routes (e.g. combates, 404) are built statically and have no
   // real request, so reading `context.request.headers` there is meaningless
   // and makes Astro emit a warning. Skip the session lookup for them.
   if (context.isPrerendered) {
+    context.locals.user = null
+    context.locals.session = null
+    return next()
+  }
+
+  const publicPredictionsGet = isPublicPredictionsGet(context)
+
+  // Sin token de sesión no hay nada que resolver en Turso. El GET público de
+  // predicciones tampoco lo necesita (aunque el navegador mande otras cookies).
+  if (publicPredictionsGet || !hasSessionTokenCookie(context.request)) {
     context.locals.user = null
     context.locals.session = null
     return next()
@@ -41,8 +68,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   // Si la cookie de sesión era ilegible, la caducamos para que el navegador se
   // recupere. No tocamos las rutas de auth: ahí better-auth gestiona sus propias
-  // cookies y no queremos pisar sus `Set-Cookie`.
-  if (failed && !context.url.pathname.startsWith("/api/auth")) {
+  // cookies y no queremos pisar sus `Set-Cookie`. Tampoco tocamos el GET público
+  // de predicciones: un Set-Cookie impediría cachearlo en el CDN de Vercel.
+  if (
+    failed &&
+    !context.url.pathname.startsWith("/api/auth") &&
+    !publicPredictionsGet
+  ) {
     try {
       expireBetterAuthCookies(context.request, response)
     } catch (error) {

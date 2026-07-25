@@ -247,13 +247,15 @@ const cards = selected.map((battle) => {
       })()
     </script>
 
-    {/* Votos en tiempo real: pollea /api/predictions (cacheado en el edge ~10s)
+    {/* Votos en tiempo real: pollea /api/predictions (cacheado en el edge ~15s)
         y actualiza porcentajes, barras, total y líder de TODAS las tarjetas.
         Idempotente: las actualizaciones fijan valores exactos del servidor, así
         que aunque el poller corriera dos veces no se corrompe nada. */}
     <script is:inline>
       ;(function () {
-        var REFRESH_MS = 9000
+        // Un poco por encima del s-maxage del CDN (15s) para no forzar
+        // revalidaciones innecesarias al origen bajo carga.
+        var REFRESH_MS = 20000
         var votesFmt, votesCompactFmt, pctFmt
         try {
           votesFmt = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 0 })
@@ -312,7 +314,7 @@ const cards = selected.map((battle) => {
         function refresh() {
           if (ctrl) ctrl.abort()
           ctrl = new AbortController()
-          fetch('/api/predictions', { signal: ctrl.signal })
+          fetch('/api/predictions', { signal: ctrl.signal, credentials: 'omit' })
             .then(function (r) {
               return r.ok ? r.json() : null
             })
