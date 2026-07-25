@@ -4,41 +4,19 @@ import PredictionFight from '@/components/PredictionFight.astro'
 import PredictionShareController from '@/components/PredictionShareController.astro'
 import PredictionVoteController from '@/components/PredictionVoteController.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
-import { createPredictionBattles } from '@/consts/predictions'
+import { predictionBattles } from '@/consts/predictions'
 import Layout from '@/layouts/Layout.astro'
-import { getAllPredictions, getUserVotes } from '@/lib/predictions'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 
-export const prerender = false
+// Shell estático: combates y UI salen del CDN. Los totales en vivo y los votos
+// del usuario se hidratan en cliente vía /api/predictions (público + ?mine=1).
+// Así esta ruta deja de abrir funciones serverless + Turso en cada visita.
+export const prerender = true
 
 const title = 'Pronósticos - La Velada del Año VI'
 const description = 'Pronostica los ganadores de los combates de La Velada del Año VI.'
 const canonical = 'https://www.infolavelada.com/pronosticos'
-const user = Astro.locals.user
-
-// Lanzamos las dos lecturas a Turso en paralelo: los votos del usuario no
-// dependen de las predicciones globales, así que encadenarlas con dos `await`
-// sumaba dos round-trips a la BD en el TTFB de cada carga con sesión iniciada
-// (la página es `prerender = false` y el render espera a ambas). Con
-// `Promise.all` el render solo espera a la más lenta de las dos.
-const [storedPredictions, storedUserVotes] = await Promise.all([
-  getAllPredictions().catch((error) => {
-    console.error('Error al cargar predicciones:', error)
-    return [] as Awaited<ReturnType<typeof getAllPredictions>>
-  }),
-  user?.id
-    ? getUserVotes(user.id).catch((error) => {
-        console.error('Error al cargar votos del usuario:', error)
-        return [] as Awaited<ReturnType<typeof getUserVotes>>
-      })
-    : Promise.resolve([] as Awaited<ReturnType<typeof getUserVotes>>),
-])
-
-const predictionBattles = createPredictionBattles(storedPredictions)
-const userVotesByCombat = Object.fromEntries(
-  storedUserVotes.map((vote) => [vote.combat_id, vote.fighter_id]),
-)
 ---
 
 <Layout title={title} description={description} canonical={canonical} robots="noindex, nofollow">
@@ -69,15 +47,11 @@ const userVotesByCombat = Object.fromEntries(
 
     <div class="mt-8 w-full max-w-5xl sm:mt-12">
       <div id="predictions-auth" class="flex justify-center" data-predictions-auth>
-        <AuthButton user={user} />
+        <AuthButton />
       </div>
 
       <div class="mt-4 flex justify-center">
-        <PredictionShareController
-          variant="top"
-          isLoggedIn={Boolean(user)}
-          totalFights={predictionBattles.length}
-        />
+        <PredictionShareController variant="top" totalFights={predictionBattles.length} />
       </div>
 
       <ol class="mt-5 grid gap-5 sm:gap-6" role="list" data-prediction-list>
@@ -86,25 +60,18 @@ const userVotesByCombat = Object.fromEntries(
             .slice()
             .reverse()
             .map((prediction, index) => (
-              <PredictionFight
-                prediction={prediction}
-                selectedBoxerId={userVotesByCombat[prediction.battle.id]}
-                index={index}
-              />
+              <PredictionFight prediction={prediction} index={index} />
             ))
         }
       </ol>
 
       <div class="mt-10 flex justify-center sm:mt-12">
-        <PredictionShareController
-          isLoggedIn={Boolean(user)}
-          totalFights={predictionBattles.length}
-        />
+        <PredictionShareController totalFights={predictionBattles.length} />
       </div>
     </div>
   </section>
 
-  <PredictionVoteController isLoggedIn={Boolean(user)} userVotes={userVotesByCombat} user={user} />
+  <PredictionVoteController />
   <Sponsors />
   <Footer />
 </Layout>
