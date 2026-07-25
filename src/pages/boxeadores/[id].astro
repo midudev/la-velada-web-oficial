@@ -124,8 +124,6 @@ const description = opponent
   ? `Conoce a ${boxer.name}, ${role} de ${countryName} en La Velada del Año VI. Se enfrenta a ${opponent.name} en el combate ${String(battle!.number).padStart(2, '0')} el 25 de julio de 2026.`
   : `Conoce a ${boxer.name}, ${role} de ${countryName} en La Velada del Año VI, el 25 de julio de 2026.`
 
-const fightWeight = boxer.fightWeightKg ?? boxer.weightKg
-const fightWeightLabel = fightWeight != null ? `${fightWeight} kg` : null
 const totalFollowers = boxer.socials.reduce((sum, social) => sum + (social.followers ?? 0), 0)
 const totalFollowersLabel = formatFollowers(totalFollowers)
 
@@ -303,7 +301,9 @@ const breadcrumbJsonLd = {
 
           <BoxerHeroStatsCard
             class="mt-6 animate-fade-in-up animate-delay-200"
-            fightWeightLabel={fightWeightLabel}
+            height={boxer.heightCm}
+            weight={boxer.weightKg}
+            fightWeight={boxer.fightWeightKg}
             countryName={countryName}
             countryCode={boxer.country}
             totalFollowers={totalFollowersLabel}
