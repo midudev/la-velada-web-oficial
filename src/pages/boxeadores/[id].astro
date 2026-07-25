@@ -24,6 +24,7 @@ import {
 import { getBoxerMainPhotoUrl } from '@/consts/boxer-gallery'
 import { formatFollowers } from '@/lib/socials'
 import Layout from '@/layouts/Layout.astro'
+import { loadBuildTimePredictions } from '@/lib/predictions'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 import { serializeJsonLd } from '@/utils/serialize-json-ld'
@@ -101,6 +102,9 @@ const battle = battles.find((b) => b.boxerIds.includes(boxer.id))
 const opponentId = battle?.boxerIds.find((id) => id !== boxer.id)
 const opponent = opponentId ? BOXERS_BY_ID[opponentId] : null
 const opponentSelectImages = opponent ? getBoxerSelectImages(opponent) : null
+const combatPrediction = battle
+  ? (await loadBuildTimePredictions()).find((prediction) => prediction.combat_id === battle.id)
+  : undefined
 
 const boxerWorkoutVideos: WorkoutVideo[] = boxer.workout ?? []
 const hasBoxerWorkoutVideos = boxerWorkoutVideos.length > 0
@@ -376,6 +380,8 @@ const breadcrumbJsonLd = {
                   id: battle.boxerIds[1],
                   name: BOXERS_BY_ID[battle.boxerIds[1]].name,
                 }}
+                sides={combatPrediction?.predictions}
+                totalVotes={combatPrediction?.total_votes ?? 0}
               />
               </>
             )
