@@ -1,0 +1,48 @@
+---
+/** ID del directo de YouTube (https://www.youtube.com/live/IskkmNPJdUk). */
+const LIVE_VIDEO_ID = 'IskkmNPJdUk'
+
+const embedSrc = new URL(`https://www.youtube-nocookie.com/embed/${LIVE_VIDEO_ID}`)
+embedSrc.searchParams.set('autoplay', '1')
+embedSrc.searchParams.set('mute', '1')
+embedSrc.searchParams.set('playsinline', '1')
+embedSrc.searchParams.set('rel', '0')
+---
+
+<section
+  id="directo"
+  class="relative w-full border-b border-theme-gold/20 bg-theme-midnight pt-16 sm:pt-20"
+  aria-labelledby="live-stream-title"
+>
+  <div class="mx-auto w-full max-w-5xl px-4 py-4 sm:px-6 sm:py-6 lg:max-w-6xl">
+    <div class="mb-3 flex items-center gap-3 sm:mb-4">
+      <span
+        class="inline-flex size-2.5 shrink-0 rounded-full bg-velada-blood shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-velada-blood)_35%,transparent)]"
+        aria-hidden="true"
+      >
+      </span>
+      <h2
+        id="live-stream-title"
+        class="font-cinzel text-sm font-black tracking-[0.2em] text-theme-cream sm:text-base"
+      >
+        EN DIRECTO
+      </h2>
+    </div>
+
+    <!-- Contenedor con ratio fijo: evita CLS y mantiene el embed responsivo. -->
+    <div
+      class="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_18px_60px_-24px_rgba(0,0,0,0.85)]"
+    >
+      <iframe
+        src={embedSrc.toString()}
+        title="La Velada del Año VI en directo en YouTube"
+        class="absolute inset-0 h-full w-full border-0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+        allowfullscreen
+        loading="eager"
+        referrerpolicy="strict-origin-when-cross-origin"
+      >
+      </iframe>
+    </div>
+  </div>
+</section>
