@@ -562,7 +562,9 @@ const controllerConfig = JSON.stringify({
   // ── Refresco en vivo de los pronósticos ───────────────────────────────
   // Polling de cliente: funciona igual en SSG y SSR, y queda aislado en
   // refreshPredictions para poder cambiar a SSE más adelante.
-  const LIVE_REFRESH_INTERVAL_MS = 15_000
+  // Alineado con s-maxage del CDN (~15s). credentials:omit evita mandar la
+  // cookie de sesión en un GET público que no la necesita.
+  const LIVE_REFRESH_INTERVAL_MS = 30_000
 
   let liveRefreshTimer: number | null = null
   let liveRefreshAbort: AbortController | null = null
@@ -581,7 +583,10 @@ const controllerConfig = JSON.stringify({
     liveRefreshAbort = abort
 
     try {
-      const response = await fetch('/api/predictions', { signal: abort.signal })
+      const response = await fetch('/api/predictions', {
+        signal: abort.signal,
+        credentials: 'omit',
+      })
       if (!response.ok) return
 
       const data = (await response.json()) as {

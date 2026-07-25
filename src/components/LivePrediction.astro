@@ -324,7 +324,9 @@ const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
     total_votes: number
   }
 
-  const REFRESH_MS = 15_000
+  // Alineado con s-maxage del CDN (~15s): no tiene sentido martillar origen
+  // más a menudo; con credentials:omit los polls reutilizan la respuesta edge.
+  const REFRESH_MS = 30_000
 
   let timer: number | null = null
   let abort: AbortController | null = null
@@ -375,7 +377,10 @@ const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
     abort = controller
 
     try {
-      const response = await fetch('/api/predictions', { signal: controller.signal })
+      const response = await fetch('/api/predictions', {
+        signal: controller.signal,
+        credentials: 'omit',
+      })
       if (!response.ok) return
 
       const data = (await response.json()) as { predictions?: ApiCombat[] }

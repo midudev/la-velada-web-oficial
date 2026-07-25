@@ -1,4 +1,5 @@
 import { LibsqlDialect } from '@libsql/kysely-libsql'
+import { TimeoutError, withTimeout } from '@/lib/with-timeout'
 import { betterAuth } from 'better-auth'
 
 const isProduction = import.meta.env.PROD
@@ -73,6 +74,11 @@ type SessionResult = Awaited<ReturnType<typeof auth.api.getSession>>
 const SESSION_CACHE_TTL_MS = 30_000
 const MAX_SESSION_CACHE_ENTRIES = 10_000
 
+// Si Turso no responde a tiempo preferimos "sin sesión" a colgar la función
+// serverless hasta el timeout de Vercel (que es lo que infla el % de Timeouts
+// en Analytics con Error Rate ~0%).
+const SESSION_LOOKUP_TIMEOUT_MS = 2_500
+
 const sessionCache = new Map<string, { session: SessionResult; expiresAt: number }>()
 
 // La clave es la(s) cookie(s) `session_token` que identifican la credencial:
@@ -116,7 +122,11 @@ export async function getSessionFromHeaders(
   }
 
   try {
-    const session = await auth.api.getSession({ headers })
+    const session = await withTimeout(
+      auth.api.getSession({ headers }),
+      SESSION_LOOKUP_TIMEOUT_MS,
+      'Timeout al leer la sesión de better-auth',
+    )
 
     // Solo cacheamos lecturas correctas (nunca el caso `failed`, que debe seguir
     // limpiando cookies en cada request) y solo cuando hay token de sesión.
@@ -127,6 +137,13 @@ export async function getSessionFromHeaders(
 
     return { session, failed: false }
   } catch (error) {
+    // Turso lento/saturado: degradamos a anónimo sin borrar cookies (no es una
+    // cookie corrupta). Así la siguiente petición puede recuperar la sesión.
+    if (error instanceof TimeoutError) {
+      console.error('Timeout al leer la sesión de better-auth (Turso lento):', error)
+      return { session: null, failed: false }
+    }
+
     console.error('No se pudo leer la sesión de better-auth (cookie inválida):', error)
     return { session: null, failed: true }
   }

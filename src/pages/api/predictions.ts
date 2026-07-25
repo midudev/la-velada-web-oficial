@@ -15,12 +15,16 @@ export const prerender = false
 // un par de veces; 20 votos por minuto deja margen de sobra y corta los bucles.
 const VOTE_RATE_LIMIT = { limit: 20, windowMs: 60_000 }
 
-// Las predicciones públicas las pollea cada cliente cada 15s: dejamos que el CDN
-// de Vercel sirva la respuesta desde el edge durante 10s y revalide en segundo
+// Las predicciones públicas las pollea cada cliente cada ~30s: dejamos que el CDN
+// de Vercel sirva la respuesta desde el edge durante 15s y revalide en segundo
 // plano, de modo que millones de polls se traducen en muy pocos hits a Turso.
 // `stale-while-revalidate` evita que ninguna petición espere a la base de datos.
+// `Vercel-CDN-Cache-Control` fuerza la política en el CDN aunque el navegador
+// mande cookies (los polls públicos van con credentials: 'omit').
 const PUBLIC_CACHE_HEADERS = {
-  'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=30',
+  'Cache-Control': 'public, s-maxage=15, stale-while-revalidate=60',
+  'Vercel-CDN-Cache-Control': 'public, s-maxage=15, stale-while-revalidate=60',
+  'CDN-Cache-Control': 'public, s-maxage=15, stale-while-revalidate=60',
 }
 
 // Las respuestas por-usuario (sus votos) NUNCA deben cachearse en un proxy/CDN
@@ -110,6 +114,15 @@ export const GET: APIRoute = async ({ request, url }) => {
 
     return json({ predictions: await getAllPredictions() }, 200, PUBLIC_CACHE_HEADERS)
   } catch (error) {
+    // 503 en saturación de Turso: el cliente reintenta en el siguiente poll y
+    // el CDN puede seguir sirviendo la respuesta stale-while-revalidate previa.
+    if (error instanceof PredictionDataError) {
+      return json({ error: error.message }, error.status, {
+        'Cache-Control': 'no-store',
+        'Retry-After': '5',
+      })
+    }
+
     console.error('Error en GET /api/predictions:', error)
     return json({ error: 'Error al obtener predicciones' }, 500)
   }

@@ -1,6 +1,7 @@
 import { battles, battlesById, type Battle } from '@/consts/battles'
 import { BOXERS_BY_ID } from '@/consts/boxers'
 import { turso } from '@/lib/database'
+import { TimeoutError, withTimeout } from '@/lib/with-timeout'
 
 interface CacheEntry<T> {
   data: T
@@ -19,6 +20,12 @@ interface PredictionRow {
 }
 
 const CACHE_DURATION = 30 * 1000
+
+// Lecturas públicas bajo el polling del evento: si Turso tarda más que esto,
+// devolvemos caché stale (si hay) o fallamos rápido. Evita que la función
+// serverless se quede colgada hasta el timeout de Vercel (~25% en picos).
+const TURSO_READ_TIMEOUT_MS = 2_500
+const TURSO_WRITE_TIMEOUT_MS = 4_000
 
 let memoryCache: MemoryCache = {
   predictionsByCombat: {},
@@ -164,15 +171,19 @@ export async function getPredictionsByCombat(combatId: string): Promise<Predicti
     // `Object.hasOwn` y no `battlesById[combatId]`: ver assertValidPredictionTarget.
     if (!Object.hasOwn(battlesById, combatId)) return null
 
-    const result = await turso.execute({
-      sql: `
-        SELECT combat_id, fighter_id, votes
-        FROM predictions
-        WHERE combat_id = ?
-        ORDER BY fighter_id
-      `,
-      args: [combatId],
-    })
+    const result = await withTimeout(
+      turso.execute({
+        sql: `
+          SELECT combat_id, fighter_id, votes
+          FROM predictions
+          WHERE combat_id = ?
+          ORDER BY fighter_id
+        `,
+        args: [combatId],
+      }),
+      TURSO_READ_TIMEOUT_MS,
+      'Timeout al leer predicciones por combate',
+    )
 
     const predictionData = createPredictionResponse(
       combatId,
@@ -192,7 +203,16 @@ export async function getPredictionsByCombat(combatId: string): Promise<Predicti
 
     return predictionData
   } catch (error) {
+    // Instancia caliente con dato previo: mejor servir stale que tumbar el poll.
+    if (cachedData) {
+      console.error('Turso lento/error; sirviendo predicción stale por combate:', error)
+      return cachedData.data
+    }
+
     console.error('Error al obtener predicciones por combate:', error)
+    if (error instanceof TimeoutError) {
+      throw new PredictionDataError('Servicio de predicciones saturado, reintenta', 503)
+    }
     throw new Error('Error al obtener predicciones por combate')
   }
 }
@@ -201,18 +221,23 @@ export async function getPredictionsByCombat(combatId: string): Promise<Predicti
  * Obtiene todas las predicciones agrupadas por combate.
  */
 export async function getAllPredictions(): Promise<CombatPrediction[]> {
-  if (memoryCache.allPredictions && isCacheValid(memoryCache.allPredictions.timestamp)) {
-    return memoryCache.allPredictions.data
+  const cachedAll = memoryCache.allPredictions
+  if (cachedAll && isCacheValid(cachedAll.timestamp)) {
+    return cachedAll.data
   }
 
   try {
-    const result = await turso.execute({
-      sql: `
-        SELECT combat_id, fighter_id, votes
-        FROM predictions
-        ORDER BY combat_id, fighter_id
-      `,
-    })
+    const result = await withTimeout(
+      turso.execute({
+        sql: `
+          SELECT combat_id, fighter_id, votes
+          FROM predictions
+          ORDER BY combat_id, fighter_id
+        `,
+      }),
+      TURSO_READ_TIMEOUT_MS,
+      'Timeout al leer todas las predicciones',
+    )
 
     const rowsByCombat = new Map<string, PredictionRow[]>()
     result.rows.forEach((row) => {
@@ -239,7 +264,15 @@ export async function getAllPredictions(): Promise<CombatPrediction[]> {
 
     return allPredictionsData
   } catch (error) {
+    if (cachedAll) {
+      console.error('Turso lento/error; sirviendo predicciones stale:', error)
+      return cachedAll.data
+    }
+
     console.error('Error al obtener todas las predicciones:', error)
+    if (error instanceof TimeoutError) {
+      throw new PredictionDataError('Servicio de predicciones saturado, reintenta', 503)
+    }
     throw new Error('Error al obtener todas las predicciones')
   }
 }
@@ -260,20 +293,24 @@ export async function registerVote(
     // triggers `user_votes_after_*` de forma incremental (+1/-1), así que ya no
     // recontamos todos los votos del combate en cada voto (lo que disparaba las
     // "rows read" de Turso de forma cuadrática).
-    await turso.batch([
-      ...ensurePredictionRowsStatements(battle),
-      {
-        sql: `
-          INSERT INTO user_votes (combat_id, fighter_id, user_id, created_at)
-          VALUES (?, ?, ?, CURRENT_TIMESTAMP)
-          ON CONFLICT(combat_id, user_id)
-          DO UPDATE SET
-            fighter_id = excluded.fighter_id,
-            created_at = CURRENT_TIMESTAMP
-        `,
-        args: [combatId, fighterId, userId],
-      },
-    ])
+    await withTimeout(
+      turso.batch([
+        ...ensurePredictionRowsStatements(battle),
+        {
+          sql: `
+            INSERT INTO user_votes (combat_id, fighter_id, user_id, created_at)
+            VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(combat_id, user_id)
+            DO UPDATE SET
+              fighter_id = excluded.fighter_id,
+              created_at = CURRENT_TIMESTAMP
+          `,
+          args: [combatId, fighterId, userId],
+        },
+      ]),
+      TURSO_WRITE_TIMEOUT_MS,
+      'Timeout al registrar voto',
+    )
     invalidateCache(combatId)
 
     const prediction = await getPredictionsByCombat(combatId)
@@ -291,6 +328,9 @@ export async function registerVote(
     }
   } catch (error) {
     if (error instanceof PredictionDataError) throw error
+    if (error instanceof TimeoutError) {
+      throw new PredictionDataError('Servicio de predicciones saturado, reintenta', 503)
+    }
 
     console.error('Error al registrar voto:', error)
     throw new Error('Error al registrar voto')
@@ -309,15 +349,19 @@ export async function getCombatStats(combatId: string): Promise<CombatPrediction
  */
 export async function getUserVotes(userId: string): Promise<UserPredictionVote[]> {
   try {
-    const result = await turso.execute({
-      sql: `
-        SELECT combat_id, fighter_id, created_at
-        FROM user_votes
-        WHERE user_id = ?
-        ORDER BY created_at DESC
-      `,
-      args: [userId],
-    })
+    const result = await withTimeout(
+      turso.execute({
+        sql: `
+          SELECT combat_id, fighter_id, created_at
+          FROM user_votes
+          WHERE user_id = ?
+          ORDER BY created_at DESC
+        `,
+        args: [userId],
+      }),
+      TURSO_READ_TIMEOUT_MS,
+      'Timeout al leer votos del usuario',
+    )
 
     return result.rows.map((row) => ({
       combat_id: row.combat_id as string,
@@ -326,6 +370,9 @@ export async function getUserVotes(userId: string): Promise<UserPredictionVote[]
     }))
   } catch (error) {
     console.error('Error al obtener votos del usuario:', error)
+    if (error instanceof TimeoutError) {
+      throw new PredictionDataError('Servicio de predicciones saturado, reintenta', 503)
+    }
     throw new Error('Error al obtener votos del usuario')
   }
 }
