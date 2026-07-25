@@ -32,6 +32,10 @@ let memoryCache: MemoryCache = {
   allPredictions: null,
 }
 
+// Coalesce concurrent cache-misses in the same isolate: under a CDN revalidation
+// stampede, N parallel GETs would otherwise open N identical Turso reads.
+let allPredictionsInFlight: Promise<CombatPrediction[]> | null = null
+
 export class PredictionDataError extends Error {
   status: number
 
@@ -217,15 +221,9 @@ export async function getPredictionsByCombat(combatId: string): Promise<Predicti
   }
 }
 
-/**
- * Obtiene todas las predicciones agrupadas por combate.
- */
-export async function getAllPredictions(): Promise<CombatPrediction[]> {
-  const cachedAll = memoryCache.allPredictions
-  if (cachedAll && isCacheValid(cachedAll.timestamp)) {
-    return cachedAll.data
-  }
-
+async function fetchAllPredictionsFromDb(
+  stale: CacheEntry<CombatPrediction[]> | null,
+): Promise<CombatPrediction[]> {
   try {
     const result = await withTimeout(
       turso.execute({
@@ -264,9 +262,9 @@ export async function getAllPredictions(): Promise<CombatPrediction[]> {
 
     return allPredictionsData
   } catch (error) {
-    if (cachedAll) {
+    if (stale) {
       console.error('Turso lento/error; sirviendo predicciones stale:', error)
-      return cachedAll.data
+      return stale.data
     }
 
     console.error('Error al obtener todas las predicciones:', error)
@@ -275,6 +273,24 @@ export async function getAllPredictions(): Promise<CombatPrediction[]> {
     }
     throw new Error('Error al obtener todas las predicciones')
   }
+}
+
+/**
+ * Obtiene todas las predicciones agrupadas por combate.
+ */
+export async function getAllPredictions(): Promise<CombatPrediction[]> {
+  const cachedAll = memoryCache.allPredictions
+  if (cachedAll && isCacheValid(cachedAll.timestamp)) {
+    return cachedAll.data
+  }
+
+  if (!allPredictionsInFlight) {
+    allPredictionsInFlight = fetchAllPredictionsFromDb(cachedAll).finally(() => {
+      allPredictionsInFlight = null
+    })
+  }
+
+  return allPredictionsInFlight
 }
 
 /**
