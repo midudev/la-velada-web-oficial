@@ -36,11 +36,10 @@ const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
 
     <!--
       Contenedor con ratio fijo: evita CLS.
-      El iframe NO va en el HTML inicial: un YouTube autoplay eager arriba del
-      todo compite con el resto de la home (CSS, hero, roster) y en móviles
-      con poca memoria puede dejar la pestaña en blanco / colgada.
-      Montamos el embed tras el primer pintado (o al pulsar), y lo persistimos
-      en view transitions para no capturar un snapshot vacío del iframe.
+      Nunca metemos el iframe de YouTube en el HTML inicial ni lo autoinyectamos:
+      en iPhone (sobre todo con Low Power Mode) el player autoplay arriba de la
+      home puede tumbar WebKit y dejar la pestaña en blanco. Solo se monta al
+      pulsar; `transition:persist` evita snapshots vacíos con ClientRouter.
     -->
     <div
       class="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_18px_60px_-24px_rgba(0,0,0,0.85)]"
@@ -61,7 +60,7 @@ const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
           role="presentation"
           class="absolute inset-0 h-full w-full object-cover opacity-80 transition duration-300 group-hover:opacity-90 group-hover:saturate-110"
           decoding="async"
-          fetchpriority="high"
+          fetchpriority="low"
         />
         <span
           class="relative z-10 inline-flex size-16 items-center justify-center rounded-full border border-white/25 bg-black/55 text-theme-cream shadow-[0_10px_40px_rgba(0,0,0,0.55)] backdrop-blur-sm transition duration-300 group-hover:scale-105 group-hover:border-theme-gold/50 group-hover:bg-theme-midnight/80 sm:size-20"
@@ -116,21 +115,6 @@ const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
 
     const facade = $<HTMLButtonElement>('[data-live-facade]', root)
     facade?.addEventListener('click', () => mountLiveIframe(root), { once: true })
-
-    // Dos rAF: espera al primer pintado. Luego idle (con tope) para no
-    // aplastar el LCP del hero si el hilo principal sigue ocupado.
-    const scheduleIdle =
-      (
-        window as Window & {
-          requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number
-        }
-      ).requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 1))
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        scheduleIdle(() => mountLiveIframe(root), { timeout: 1200 })
-      })
-    })
   }
 
   document.addEventListener('astro:page-load', initLiveStream)
