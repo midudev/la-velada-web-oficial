@@ -13,15 +13,14 @@ import {
 } from '@/consts/boxers'
 import { getBoxerMainPhotoUrl } from '@/consts/boxer-gallery'
 import Layout from '@/layouts/Layout.astro'
+import { loadBuildTimePredictions } from '@/lib/predictions'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 import { serializeJsonLd } from '@/utils/serialize-json-ld'
 import type { GetStaticPaths } from 'astro'
 
-// La ficha de combate solo usa datos estáticos (battlesById/BOXERS_BY_ID) y los
-// pronósticos se cargan en cliente vía <LivePrediction>. No hay nada por usuario
-// ni consultas a BD en el servidor, así que la prerenderizamos: se sirve desde
-// el CDN en lugar de renderizarse on-demand en cada visita.
+// Página estática: boxeadores + pronósticos fijados en build. Sin SSR ni
+// polling de /api/predictions en el cliente.
 export const prerender = true
 
 export const getStaticPaths = (() => {
@@ -38,6 +37,9 @@ const [boxer1Id, boxer2Id] = battle.boxerIds
 const boxer1 = BOXERS_BY_ID[boxer1Id]
 const boxer2 = BOXERS_BY_ID[boxer2Id]
 const battleVideo = battle.video
+const combatPrediction = (await loadBuildTimePredictions()).find(
+  (prediction) => prediction.combat_id === battle.id,
+)
 const boxer1Hero = getBoxerHeroImages(boxer1)
 const boxer2Hero = getBoxerHeroImages(boxer2)
 const boxer1Select = getBoxerSelectImages(boxer1)
@@ -190,6 +192,8 @@ const breadcrumbJsonLd = {
         battleId={battle.id}
         boxerA={{ id: boxer1.id, name: boxer1.name }}
         boxerB={{ id: boxer2.id, name: boxer2.name }}
+        sides={combatPrediction?.predictions}
+        totalVotes={combatPrediction?.total_votes ?? 0}
       />
     </section>
 

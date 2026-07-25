@@ -4,11 +4,10 @@ import type { PredictionBattle } from '@/consts/predictions'
 
 interface Props {
   prediction: PredictionBattle
-  selectedBoxerId?: string
   index?: number
 }
 
-const { prediction, selectedBoxerId, index = 0 } = Astro.props
+const { prediction, index = 0 } = Astro.props
 // Entrada escalonada (mismo patrón que /combates).
 const animationDelay = `${index * 60}ms`
 const { battle, options } = prediction
@@ -34,18 +33,8 @@ const leaderBoxerId = hasLeader ? prediction.leader.boxer.id : undefined
     <div class="tow-stage">
       <span class="tow-tag font-cinzel">Combate {String(battle.number).padStart(2, '0')}</span>
 
-      <PredictionOption
-        battleId={battle.id}
-        option={optionA}
-        selectedBoxerId={selectedBoxerId}
-        leaderBoxerId={leaderBoxerId}
-      />
-      <PredictionOption
-        battleId={battle.id}
-        option={optionB}
-        selectedBoxerId={selectedBoxerId}
-        leaderBoxerId={leaderBoxerId}
-      />
+      <PredictionOption battleId={battle.id} option={optionA} leaderBoxerId={leaderBoxerId} />
+      <PredictionOption battleId={battle.id} option={optionB} leaderBoxerId={leaderBoxerId} />
 
       <span aria-hidden="true" class="tow-seam"></span>
 

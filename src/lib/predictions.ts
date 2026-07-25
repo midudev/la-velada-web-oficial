@@ -244,6 +244,25 @@ export async function getAllPredictions(): Promise<CombatPrediction[]> {
   }
 }
 
+// Una sola lectura a Turso por proceso de build: las páginas estáticas
+// (home, /pronosticos, fichas) reutilizan la misma promesa y evitan N queries.
+let buildTimePredictionsPromise: Promise<CombatPrediction[]> | null = null
+
+/**
+ * Predicciones fijadas en build para servir HTML estático sin llamar a la API
+ * en el cliente. Si Turso no está disponible, devolvemos lista vacía.
+ */
+export function loadBuildTimePredictions(): Promise<CombatPrediction[]> {
+  if (!buildTimePredictionsPromise) {
+    buildTimePredictionsPromise = getAllPredictions().catch((error) => {
+      console.error('Error al cargar predicciones en build:', error)
+      return [] as CombatPrediction[]
+    })
+  }
+
+  return buildTimePredictionsPromise
+}
+
 /**
  * Registra o actualiza el voto activo de un usuario para un combate.
  */
