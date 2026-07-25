@@ -3,19 +3,19 @@ import PredictionShareModal from './PredictionShareModal.astro'
 import ShareIcon from '@/assets/svg/share.svg'
 
 interface Props {
-  isLoggedIn: boolean
   totalFights: number
   // 'fab' (por defecto): botón flotante + modal. 'top': botón en línea que solo
   // aparece arriba cuando ya se han completado todos los pronósticos.
   variant?: 'fab' | 'top'
 }
 
-const { isLoggedIn, totalFights, variant = 'fab' } = Astro.props
+const { totalFights, variant = 'fab' } = Astro.props
 ---
 
-{variant === 'fab' && isLoggedIn && <PredictionShareModal totalFights={totalFights} />}
+{/* Siempre en el HTML (página estática): visibilidad vía data-has-vote / data-complete. */}
+{variant === 'fab' && <PredictionShareModal totalFights={totalFights} />}
 {
-  isLoggedIn && variant === 'fab' && (
+  variant === 'fab' && (
     <button
       type="button"
       class="prediction-share-fab"
@@ -36,7 +36,7 @@ const { isLoggedIn, totalFights, variant = 'fab' } = Astro.props
   )
 }
 {
-  isLoggedIn && variant === 'top' && (
+  variant === 'top' && (
     <button
       type="button"
       class="prediction-share-top"

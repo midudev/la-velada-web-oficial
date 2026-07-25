@@ -1,14 +1,16 @@
 ---
 interface Props {
-  isLoggedIn: boolean
-  userVotes: Record<string, string>
+  isLoggedIn?: boolean
+  userVotes?: Record<string, string>
   user?: {
     name?: string | null
     image?: string | null
   } | null
 }
 
-const { isLoggedIn, userVotes, user } = Astro.props
+// Por defecto vacío: en la página estática la sesión y los votos propios se
+// hidratan en cliente (GET /api/predictions?mine=1 + evento auth:session).
+const { isLoggedIn = false, userVotes = {}, user = null } = Astro.props
 const controllerConfig = JSON.stringify({
   isLoggedIn,
   userVotes,
@@ -55,6 +57,14 @@ const controllerConfig = JSON.stringify({
     } | null
   }
 
+  // Estado mutable: el HTML estático arranca sin sesión y lo rellenamos al hidratar.
+  let runtimeConfig: PredictionControllerConfig = {
+    isLoggedIn: false,
+    userVotes: {},
+    userReaction: null,
+  }
+  let userVotesHydration: Promise<void> | null = null
+
   interface PredictionOptionSnapshot {
     boxerId: string
     isSelected: boolean
@@ -83,6 +93,83 @@ const controllerConfig = JSON.stringify({
     } catch {
       return { isLoggedIn: false, userVotes: {}, userReaction: null }
     }
+  }
+
+  function persistConfig(config: PredictionControllerConfig) {
+    runtimeConfig = config
+    const node = $<HTMLScriptElement>('#prediction-vote-config')
+    if (node) node.textContent = JSON.stringify(config)
+  }
+
+  function applyUserVotes(votes: Record<string, string>) {
+    Object.entries(votes).forEach(([battleId, boxerId]) => {
+      setBattleVote(battleId, boxerId)
+    })
+
+    // Si ya tenía todos los pronósticos al hidratar, no reabrir el modal solo.
+    if (areAllPredictionsComplete()) {
+      hasDispatchedComplete = true
+    }
+  }
+
+  function hydrateUserVotes() {
+    if (userVotesHydration) return userVotesHydration
+
+    userVotesHydration = (async () => {
+      try {
+        const response = await fetch('/api/predictions?mine=1', {
+          credentials: 'same-origin',
+          headers: { Accept: 'application/json' },
+        })
+
+        if (response.status === 401) {
+          persistConfig({
+            ...runtimeConfig,
+            isLoggedIn: false,
+            userVotes: {},
+          })
+          return
+        }
+
+        if (!response.ok) return
+
+        const data = (await response.json()) as {
+          votes?: Array<{ combat_id: string; fighter_id: string }>
+        }
+        const userVotes = Object.fromEntries(
+          (data.votes ?? []).map((vote) => [vote.combat_id, vote.fighter_id]),
+        )
+
+        persistConfig({
+          ...runtimeConfig,
+          isLoggedIn: true,
+          userVotes,
+        })
+        applyUserVotes(userVotes)
+      } catch (error) {
+        console.error('No se pudieron hidratar los votos del usuario:', error)
+      } finally {
+        userVotesHydration = null
+      }
+    })()
+
+    return userVotesHydration
+  }
+
+  function handleAuthSession(event: Event) {
+    const detail = (event as CustomEvent<{ user?: { name: string; image: string | null } }>)
+      .detail
+    if (!detail?.user) return
+
+    persistConfig({
+      ...runtimeConfig,
+      isLoggedIn: true,
+      userReaction: {
+        name: detail.user.name,
+        image: detail.user.image,
+      },
+    })
+    void hydrateUserVotes()
   }
 
   function getPredictionFight(battleId: string) {
@@ -525,19 +612,11 @@ const controllerConfig = JSON.stringify({
   function setupPredictionVotes() {
     predictionsAbort?.abort()
     predictionsAbort = new AbortController()
+    hasDispatchedComplete = false
+    userVotesHydration = null
 
-    const config = readConfig()
-    Object.entries(config.userVotes).forEach(([battleId, boxerId]) => {
-      setBattleVote(battleId, boxerId)
-    })
-
-    // Si el usuario ya tenía las 10 predicciones al cargar la página,
-    // marcamos el flag para que un cambio posterior no re-dispare el modal.
-    // El modal sólo debe abrirse cuando se completa la décima desde un estado
-    // incompleto, o cuando el usuario hace click en el FAB.
-    if (areAllPredictionsComplete()) {
-      hasDispatchedComplete = true
-    }
+    runtimeConfig = readConfig()
+    applyUserVotes(runtimeConfig.userVotes)
 
     $$<HTMLButtonElement>('[data-prediction-option]').forEach((option) => {
       option.addEventListener(
@@ -546,16 +625,23 @@ const controllerConfig = JSON.stringify({
           const { battleId, boxerId } = option.dataset
           if (!battleId || !boxerId) return
 
-          if (!config.isLoggedIn) {
+          if (!runtimeConfig.isLoggedIn) {
             dockAuthToFight(battleId)
             return
           }
 
-          emitVoteReaction(option, event, config)
+          emitVoteReaction(option, event, runtimeConfig)
           void submitVote(battleId, boxerId)
         },
         { signal: predictionsAbort?.signal },
       )
+    })
+
+    // Página estática: AuthButton resuelve la cookie y emite `auth:session`.
+    // Solo entonces pedimos ?mine=1 (evita un 401 a Turso por cada anónimo).
+    document.removeEventListener('auth:session', handleAuthSession)
+    document.addEventListener('auth:session', handleAuthSession, {
+      signal: predictionsAbort.signal,
     })
   }
 
@@ -581,7 +667,10 @@ const controllerConfig = JSON.stringify({
     liveRefreshAbort = abort
 
     try {
-      const response = await fetch('/api/predictions', { signal: abort.signal })
+      const response = await fetch('/api/predictions', {
+        signal: abort.signal,
+        credentials: 'omit',
+      })
       if (!response.ok) return
 
       const data = (await response.json()) as {
