@@ -13,7 +13,7 @@ interface Video {
   videoId: string | null
   poster: {
     avif?: string
-    webp: string
+    webp?: string
     jpg?: string
   } | null
   active: boolean
@@ -26,8 +26,7 @@ const VIDEOS: Video[] = [
     title: 'El Pesaje',
     videoId: 'u8dSOKoNJp0',
     poster: {
-      webp: 'https://i.ytimg.com/vi_webp/u8dSOKoNJp0/maxresdefault.webp',
-      jpg: 'https://i.ytimg.com/vi/u8dSOKoNJp0/maxresdefault.jpg',
+      jpg: 'https://img.youtube.com/vi/u8dSOKoNJp0/maxresdefault.jpg',
     },
     active: true,
     span: 'big',
@@ -100,17 +99,17 @@ const SPAN_CLASSES: Record<Span, string> = {
               {active && poster ? (
                 <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
                   {poster.avif && <source srcset={poster.avif} type="image/avif" />}
-                  <source srcset={poster.webp} type="image/webp" />
+                  {poster.webp && <source srcset={poster.webp} type="image/webp" />}
                   <img
-                    src={poster.jpg ?? poster.webp}
+                    src={poster.jpg ?? poster.webp ?? poster.avif}
                     alt=""
                     aria-hidden="true"
                     loading="lazy"
                     decoding="async"
                     class="h-full w-full object-cover"
                     data-img-fallback={
-                      poster.jpg
-                        ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+                      poster.jpg && videoId
+                        ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
                         : undefined
                     }
                   />
