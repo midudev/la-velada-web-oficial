@@ -24,8 +24,10 @@ export const prerender = true
   <HomeStructuredData slot="head" />
   <HeroPreload slot="head" />
 
-  <LiveStream />
+  {/* Hero primero: LCP estático. El directo va después para no competir
+      por red/CPU en el primer viewport (causa de blancos en iOS). */}
   <Hero />
+  <LiveStream />
   <Predictions />
   <Combats />
   <Sponsors />

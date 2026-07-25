@@ -15,12 +15,13 @@ export const prerender = false
 // un par de veces; 20 votos por minuto deja margen de sobra y corta los bucles.
 const VOTE_RATE_LIMIT = { limit: 20, windowMs: 60_000 }
 
-// Las predicciones públicas las pollea cada cliente cada 15s: dejamos que el CDN
-// de Vercel sirva la respuesta desde el edge durante 10s y revalide en segundo
+// Las predicciones públicas las pollea cada cliente cada ~30s: dejamos que el CDN
+// de Vercel sirva la respuesta desde el edge durante 15s y revalide en segundo
 // plano, de modo que millones de polls se traducen en muy pocos hits a Turso.
 // `stale-while-revalidate` evita que ninguna petición espere a la base de datos.
 const PUBLIC_CACHE_HEADERS = {
-  'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=30',
+  'Cache-Control': 'public, s-maxage=15, stale-while-revalidate=60',
+  'Vercel-CDN-Cache-Control': 'public, s-maxage=15, stale-while-revalidate=60',
 }
 
 // Las respuestas por-usuario (sus votos) NUNCA deben cachearse en un proxy/CDN

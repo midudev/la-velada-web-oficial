@@ -5,18 +5,19 @@ import PlayIcon from '@/assets/svg/play.svg'
 const LIVE_VIDEO_ID = 'IskkmNPJdUk'
 
 const embedSrc = new URL(`https://www.youtube-nocookie.com/embed/${LIVE_VIDEO_ID}`)
-embedSrc.searchParams.set('autoplay', '1')
-embedSrc.searchParams.set('mute', '1')
+// Sin autoplay: el autoplay+mute en iPhone (Low Power Mode) puede tumbar WebKit
+// aunque el iframe se monte tras un click.
 embedSrc.searchParams.set('playsinline', '1')
 embedSrc.searchParams.set('rel', '0')
 
-const posterJpg = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/maxresdefault.jpg`
-const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
+const watchUrl = `https://www.youtube.com/watch?v=${LIVE_VIDEO_ID}`
+const posterJpg = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
+const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/mqdefault.jpg`
 ---
 
 <section
   id="directo"
-  class="relative w-full border-b border-theme-gold/20 bg-theme-midnight pt-16 sm:pt-20"
+  class="relative w-full border-b border-theme-gold/20 bg-theme-midnight"
   aria-labelledby="live-stream-title"
 >
   <div class="mx-auto w-full max-w-5xl px-4 py-4 sm:px-6 sm:py-6 lg:max-w-6xl">
@@ -35,17 +36,15 @@ const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
     </div>
 
     <!--
-      Contenedor con ratio fijo: evita CLS.
-      Nunca metemos el iframe de YouTube en el HTML inicial ni lo autoinyectamos:
-      en iPhone (sobre todo con Low Power Mode) el player autoplay arriba de la
-      home puede tumbar WebKit y dejar la pestaña en blanco. Solo se monta al
-      pulsar; `transition:persist` evita snapshots vacíos con ClientRouter.
+      Facade estática: ni iframe ni maxres en el HTML inicial.
+      En iOS abrimos YouTube en pestaña nueva (el embed sigue siendo frágil).
+      En el resto, montamos el iframe sin autoplay tras el click.
     -->
     <div
       class="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_18px_60px_-24px_rgba(0,0,0,0.85)]"
       data-live-root
       data-embed-src={embedSrc.toString()}
-      transition:persist="live-stream"
+      data-watch-url={watchUrl}
     >
       <button
         type="button"
@@ -58,8 +57,11 @@ const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
           data-img-fallback={posterFallback}
           alt=""
           role="presentation"
+          width="480"
+          height="360"
           class="absolute inset-0 h-full w-full object-cover opacity-80 transition duration-300 group-hover:opacity-90 group-hover:saturate-110"
           decoding="async"
+          loading="lazy"
           fetchpriority="low"
         />
         <span
@@ -71,15 +73,14 @@ const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
       </button>
 
       <noscript>
-        <iframe
-          src={embedSrc.toString()}
-          title="La Velada del Año VI en directo en YouTube"
-          class="absolute inset-0 h-full w-full border-0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-          allowfullscreen
-          referrerpolicy="strict-origin-when-cross-origin"
+        <a
+          href={watchUrl}
+          class="absolute inset-0 flex items-center justify-center bg-black font-cinzel text-sm font-black tracking-[0.16em] text-theme-cream underline"
+          rel="noopener noreferrer"
+          target="_blank"
         >
-        </iframe>
+          Ver en YouTube
+        </a>
       </noscript>
     </div>
   </div>
@@ -87,6 +88,11 @@ const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
 
 <script>
   import { $ } from '@/lib/dom-selector'
+
+  function isAppleMobile() {
+    const ua = navigator.userAgent || ''
+    return /iP(hone|ad|od)/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  }
 
   function mountLiveIframe(root: HTMLElement) {
     if ($('iframe', root)) return
@@ -109,12 +115,26 @@ const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
   function initLiveStream() {
     const root = $<HTMLElement>('[data-live-root]')
     if (!root) return
-
-    // Ya montado (p. ej. tras `transition:persist` al volver a la home).
     if ($('iframe', root)) return
 
     const facade = $<HTMLButtonElement>('[data-live-facade]', root)
-    facade?.addEventListener('click', () => mountLiveIframe(root), { once: true })
+    if (!facade || facade.dataset.bound === 'true') return
+    facade.dataset.bound = 'true'
+
+    facade.addEventListener(
+      'click',
+      () => {
+        // En iPhone/iPad el iframe de YouTube sigue provocando pestañas en
+        // blanco bajo carga: mejor sacar el vídeo a YouTube.
+        if (isAppleMobile()) {
+          const watchUrl = root.dataset.watchUrl
+          if (watchUrl) window.open(watchUrl, '_blank', 'noopener,noreferrer')
+          return
+        }
+        mountLiveIframe(root)
+      },
+      { once: true },
+    )
   }
 
   document.addEventListener('astro:page-load', initLiveStream)

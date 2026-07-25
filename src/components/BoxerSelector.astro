@@ -102,9 +102,7 @@ const positionedBoxers: Array<{
 // (sirve para que la primera imagen ya esté cargada en el primer hover y para
 // no dejar el panel vacío antes de que el JS reaccione a una interacción).
 const fallback = BOXERS[0]
-const fallbackHero = getBoxerHeroImages(fallback)
 const fallbackCountry = COUNTRY_NAMES[fallback.country] ?? fallback.country
-const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 ---
 
 <section
@@ -132,7 +130,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
               width="512"
               height="512"
               decoding="async"
-              fetchpriority="high"
             />
           </picture>
         </div>
@@ -203,30 +200,21 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       </span>
 
       <div class="boxer-portrait-layer pointer-events-none relative z-10 flex min-h-0 w-full flex-1 items-end justify-center">
+        {/*
+          Sin src inicial: el panel está opacity:0 en estado default y un
+          fetchpriority=high aquí competía con el LCP del hero y sumaba una
+          descarga grande en iPhone. El src se rellena al seleccionar.
+        */}
         <picture class="boxer-portrait-wrap relative block h-full">
-          <source
-            data-active-source-avif
-            type="image/avif"
-            srcset={fallbackHero.avif}
-          />
-          <source
-            data-active-source-webp
-            type="image/webp"
-            srcset={fallbackHero.webp}
-          />
+          <source data-active-source-avif type="image/avif" />
+          <source data-active-source-webp type="image/webp" />
           <img
             data-active-image
-            src={fallbackHero.webp}
-            alt={`Foto principal de ${fallback.name}`}
+            alt=""
             class="boxer-portrait relative z-10 h-full max-h-full w-auto max-w-full object-contain object-bottom transition-opacity duration-300"
             decoding="async"
-            fetchpriority="high"
+            loading="lazy"
           />
-          {/*
-            La capa de la imagen se posiciona por CSS como absolute para
-            poder extenderse por debajo del stage, hasta la franja de
-            selección, sin mover el resto de elementos del panel.
-          */}
         </picture>
       </div>
 
@@ -280,59 +268,57 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       >
         <div class="boxer-mobile-track" data-mobile-track>
           {
-            MOBILE_SLIDER_SETS.flatMap((setName) =>
-              positionedBoxers.map(({ boxer }, index) => {
-                const selectImages = getBoxerSelectImages(boxer)
-                const isAccessibleSet = setName === 'current'
+            /* Un solo set en el HTML (20 thumbs). previous/next se clonan en
+               idle para el carrusel infinito: SSR de 60 <img> saturaba HTTP/2
+               en iPhone y dejaba la pestaña en blanco. */
+            positionedBoxers.map(({ boxer }, index) => {
+              const selectImages = getBoxerSelectImages(boxer)
 
-                return (
-                  <a
-                    href={`/boxeadores/${boxer.id}`}
-                    data-mobile-thumb
-                    data-mobile-slide
-                    data-mobile-set={setName}
-                    data-id={boxer.id}
-                    aria-label={`Ver perfil de ${boxer.name}`}
-                    aria-hidden={isAccessibleSet ? undefined : 'true'}
-                    tabindex={isAccessibleSet ? undefined : -1}
-                    class="boxer-mobile-slide group relative aspect-[3/4] shrink-0 snap-center border border-theme-gold/35 bg-theme-midnight outline-none"
-                    style={`animation-delay: ${650 + index * 20}ms`}
-                  >
-                    <span class="boxer-mobile-slide-media absolute inset-0 overflow-hidden">
-                      <picture>
-                        <source type="image/avif" srcset={selectImages.avif} />
-                        <source type="image/webp" srcset={selectImages.webp} />
-                        <img
-                          src={selectImages.webp}
-                          alt=""
-                          role="presentation"
-                          loading="lazy"
-                          decoding="async"
-                          width="180"
-                          height="240"
-                          data-mirrored={MIRRORED_BOXER_IDS.has(boxer.id) ? 'true' : 'false'}
-                          class="boxer-mobile-slide-img absolute inset-0 h-full w-full object-cover object-top transition duration-500 group-active:scale-[1.03]"
-                        />
-                      </picture>
-                      <span
-                        aria-hidden="true"
-                        class="boxer-mobile-slide-name-bar pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-center px-2 pb-2.5 pt-10"
-                      >
-                        <span class="boxer-mobile-slide-name font-cinzel text-[0.66rem] font-black uppercase leading-[1.05] tracking-[0.08em] text-theme-cream text-balance">
-                          {boxer.name}
-                        </span>
+              return (
+                <a
+                  href={`/boxeadores/${boxer.id}`}
+                  data-mobile-thumb
+                  data-mobile-slide
+                  data-mobile-set="current"
+                  data-id={boxer.id}
+                  aria-label={`Ver perfil de ${boxer.name}`}
+                  class="boxer-mobile-slide group relative aspect-[3/4] shrink-0 snap-center border border-theme-gold/35 bg-theme-midnight outline-none"
+                  style={`animation-delay: ${650 + index * 20}ms`}
+                >
+                  <span class="boxer-mobile-slide-media absolute inset-0 overflow-hidden">
+                    <picture>
+                      <source type="image/avif" srcset={selectImages.avif} />
+                      <source type="image/webp" srcset={selectImages.webp} />
+                      <img
+                        src={selectImages.webp}
+                        alt=""
+                        role="presentation"
+                        loading="lazy"
+                        decoding="async"
+                        width="180"
+                        height="240"
+                        data-mirrored={MIRRORED_BOXER_IDS.has(boxer.id) ? 'true' : 'false'}
+                        class="boxer-mobile-slide-img absolute inset-0 h-full w-full object-cover object-top transition duration-500 group-active:scale-[1.03]"
+                      />
+                    </picture>
+                    <span
+                      aria-hidden="true"
+                      class="boxer-mobile-slide-name-bar pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-center px-2 pb-2.5 pt-10"
+                    >
+                      <span class="boxer-mobile-slide-name font-cinzel text-[0.66rem] font-black uppercase leading-[1.05] tracking-[0.08em] text-theme-cream text-balance">
+                        {boxer.name}
                       </span>
                     </span>
-                    <span aria-hidden="true" class="boxer-mobile-frame">
-                      <span class="bmf-corner bmf-tl" />
-                      <span class="bmf-corner bmf-tr" />
-                      <span class="bmf-corner bmf-bl" />
-                      <span class="bmf-corner bmf-br" />
-                    </span>
-                  </a>
-                )
-              }),
-            )
+                  </span>
+                  <span aria-hidden="true" class="boxer-mobile-frame">
+                    <span class="bmf-corner bmf-tl" />
+                    <span class="bmf-corner bmf-tr" />
+                    <span class="bmf-corner bmf-bl" />
+                    <span class="bmf-corner bmf-br" />
+                  </span>
+                </a>
+              )
+            })
           }
         </div>
       </div>
@@ -1478,120 +1464,138 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     const track = $<HTMLElement>('[data-mobile-track]', root)
     if (!slider || !track || slider.dataset.initialized === 'true') return
 
-    const slides = Array.from($$<HTMLElement>('[data-mobile-slide]', track))
-    const realSlideCount = slides.filter(
-      (slide) => slide.dataset.mobileSet === 'current',
-    ).length
-    if (slides.length < 2 || realSlideCount === 0) return
+    const currentSlides = Array.from(
+      $$<HTMLElement>('[data-mobile-slide][data-mobile-set="current"]', track),
+    )
+    if (currentSlides.length < 2) return
 
     slider.dataset.initialized = 'true'
 
-    const getSetWidth = () => {
-      const pitch = slides[1].offsetLeft - slides[0].offsetLeft
-      return pitch > 0 ? pitch * realSlideCount : track.scrollWidth / 3
-    }
+    const cloneSet = (setName: 'previous' | 'next') =>
+      currentSlides.map((slide) => {
+        const clone = slide.cloneNode(true) as HTMLElement
+        clone.dataset.mobileSet = setName
+        clone.setAttribute('aria-hidden', 'true')
+        clone.tabIndex = -1
+        // Los clones no deben competir en el prefetch del navegador al montar.
+        $$<HTMLImageElement>('img', clone).forEach((img) => {
+          img.loading = 'lazy'
+          img.removeAttribute('fetchpriority')
+        })
+        return clone
+      })
 
-    // Coloca al usuario en el set central conservando el offset relativo
-    // dentro del set. Como los 3 sets son idénticos, el salto es invisible.
-    const moveToMiddleSet = () => {
-      const setWidth = getSetWidth()
-      if (setWidth <= 0) return
-      const offsetInSet = ((slider.scrollLeft % setWidth) + setWidth) % setWidth
-      slider.scrollLeft = setWidth + offsetInSet
-    }
+    // Clonamos previous/next en idle (o al primer frame) para no triplicar
+    // las peticiones de imagen en el HTML inicial de la home.
+    const armInfiniteScroll = () => {
+      if (signal.aborted || track.querySelector('[data-mobile-set="previous"]')) return
 
-    // Reposiciona al usuario al set central cuando ha cruzado el umbral.
-    // CLAVE: solo lo hacemos cuando el scroll YA ha parado, no durante el
-    // momentum. Reasignar `scrollLeft` mientras hay inercia en iOS la corta
-    // bruscamente y se percibe como un parpadeo/reset.
-    const normalize = () => {
-      const setWidth = getSetWidth()
-      if (setWidth <= 0) return
+      const previous = cloneSet('previous')
+      const next = cloneSet('next')
+      track.prepend(...previous)
+      track.append(...next)
 
-      if (slider.scrollLeft < setWidth * 0.5) {
-        slider.scrollLeft += setWidth
-      } else if (slider.scrollLeft >= setWidth * 1.5) {
-        slider.scrollLeft -= setWidth
+      let slides = Array.from($$<HTMLElement>('[data-mobile-slide]', track))
+      const realSlideCount = currentSlides.length
+
+      const getSetWidth = () => {
+        const pitch = slides[1].offsetLeft - slides[0].offsetLeft
+        return pitch > 0 ? pitch * realSlideCount : track.scrollWidth / 3
       }
-    }
 
-    // Efecto "character select": la tarjeta más centrada en el viewport del
-    // carrusel se agranda y brilla, y las laterales se encogen/atenúan según su
-    // distancia al centro. Además, el marco de esquinas se funde de forma
-    // continua (--focus-frame) para que no aparezca de golpe. Se recalcula en
-    // cada frame de scroll (rAF) usando offsets (no getBoundingClientRect) para
-    // no forzar reflows por slide.
-    let focusRaf = 0
-    const updateFocus = () => {
-      focusRaf = 0
-      const half = slider.clientWidth / 2 || 1
-      const viewportCenter = slider.scrollLeft + half
-      for (const slide of slides) {
-        const slideCenter = slide.offsetLeft + slide.offsetWidth / 2
-        const ratio = Math.min(Math.abs(slideCenter - viewportCenter) / half, 1)
-        slide.style.setProperty('--focus-scale', (1.12 - ratio * 0.24).toFixed(3))
-        slide.style.setProperty('--focus-bright', (1.05 - ratio * 0.4).toFixed(3))
-        slide.style.setProperty('--focus-sat', (1.05 - ratio * 0.25).toFixed(3))
-        // Rango ancho (0.55) + smoothstep para que el marco entre/salga suave.
-        const t = Math.max(0, 1 - ratio / 0.55)
-        slide.style.setProperty('--focus-frame', (t * t * (3 - 2 * t)).toFixed(3))
+      const moveToMiddleSet = () => {
+        const setWidth = getSetWidth()
+        if (setWidth <= 0) return
+        const offsetInSet = ((slider.scrollLeft % setWidth) + setWidth) % setWidth
+        slider.scrollLeft = setWidth + offsetInSet
       }
-    }
-    const requestFocus = () => {
-      if (!focusRaf) focusRaf = requestAnimationFrame(updateFocus)
-    }
 
-    // Tras normalize() el scrollLeft salta un set completo, así que el slide
-    // centrado pasa a ser OTRO elemento (idéntico). Refrescamos las vars de
-    // foco al instante y sin transición, para que el nuevo slide central herede
-    // el realce sin parpadeo (el salto es invisible porque los sets son iguales).
-    const refreshFocusInstant = () => {
-      slider.classList.add('is-normalizing')
-      updateFocus()
-      requestAnimationFrame(() => slider.classList.remove('is-normalizing'))
-    }
+      const normalize = () => {
+        const setWidth = getSetWidth()
+        if (setWidth <= 0) return
 
-    slider.addEventListener('scroll', requestFocus, { passive: true })
+        if (slider.scrollLeft < setWidth * 0.5) {
+          slider.scrollLeft += setWidth
+        } else if (slider.scrollLeft >= setWidth * 1.5) {
+          slider.scrollLeft -= setWidth
+        }
+      }
 
-    requestAnimationFrame(() => {
-      moveToMiddleSet()
-      updateFocus()
-    })
+      let focusRaf = 0
+      const updateFocus = () => {
+        focusRaf = 0
+        slides = Array.from($$<HTMLElement>('[data-mobile-slide]', track))
+        const half = slider.clientWidth / 2 || 1
+        const viewportCenter = slider.scrollLeft + half
+        for (const slide of slides) {
+          const slideCenter = slide.offsetLeft + slide.offsetWidth / 2
+          const ratio = Math.min(Math.abs(slideCenter - viewportCenter) / half, 1)
+          slide.style.setProperty('--focus-scale', (1.12 - ratio * 0.24).toFixed(3))
+          slide.style.setProperty('--focus-bright', (1.05 - ratio * 0.4).toFixed(3))
+          slide.style.setProperty('--focus-sat', (1.05 - ratio * 0.25).toFixed(3))
+          const t = Math.max(0, 1 - ratio / 0.55)
+          slide.style.setProperty('--focus-frame', (t * t * (3 - 2 * t)).toFixed(3))
+        }
+      }
+      const requestFocus = () => {
+        if (!focusRaf) focusRaf = requestAnimationFrame(updateFocus)
+      }
 
-    // `scrollend` está disponible en Safari iOS 18.2+, Chrome 114+ y
-    // Firefox 109+. Cuando exista, normalizamos solo cuando todo el scroll
-    // (incluido el snap) ha terminado, evitando cualquier corte visual.
-    // Como fallback, debounce manual: ejecutamos `normalize` ~160ms después
-    // del último evento de scroll, tiempo de sobra para que termine el snap.
-    const normalizeAndRefresh = () => {
-      normalize()
-      refreshFocusInstant()
-    }
+      const refreshFocusInstant = () => {
+        slider.classList.add('is-normalizing')
+        updateFocus()
+        requestAnimationFrame(() => slider.classList.remove('is-normalizing'))
+      }
 
-    const supportsScrollEnd = 'onscrollend' in window
-    if (supportsScrollEnd) {
-      slider.addEventListener('scrollend', normalizeAndRefresh, { passive: true })
-    } else {
-      let scrollEndTimer: ReturnType<typeof setTimeout> | null = null
-      slider.addEventListener(
-        'scroll',
-        () => {
-          if (scrollEndTimer) clearTimeout(scrollEndTimer)
-          scrollEndTimer = setTimeout(normalizeAndRefresh, 160)
-        },
-        { passive: true },
+      slider.addEventListener('scroll', requestFocus, { passive: true, signal })
+
+      requestAnimationFrame(() => {
+        moveToMiddleSet()
+        updateFocus()
+      })
+
+      const normalizeAndRefresh = () => {
+        normalize()
+        refreshFocusInstant()
+      }
+
+      const supportsScrollEnd = 'onscrollend' in window
+      if (supportsScrollEnd) {
+        slider.addEventListener('scrollend', normalizeAndRefresh, { passive: true, signal })
+      } else {
+        let scrollEndTimer: ReturnType<typeof setTimeout> | null = null
+        slider.addEventListener(
+          'scroll',
+          () => {
+            if (scrollEndTimer) clearTimeout(scrollEndTimer)
+            scrollEndTimer = setTimeout(normalizeAndRefresh, 160)
+          },
+          { passive: true, signal },
+        )
+      }
+
+      window.addEventListener(
+        'resize',
+        () =>
+          requestAnimationFrame(() => {
+            moveToMiddleSet()
+            updateFocus()
+          }),
+        { signal },
       )
     }
 
-    window.addEventListener(
-      'resize',
-      () =>
-        requestAnimationFrame(() => {
-          moveToMiddleSet()
-          updateFocus()
-        }),
-      { signal },
-    )
+    const scheduleArm = () => {
+      if (typeof window.requestIdleCallback === 'function') {
+        const idleId = window.requestIdleCallback(() => armInfiniteScroll(), { timeout: 1200 })
+        signal.addEventListener('abort', () => window.cancelIdleCallback(idleId), { once: true })
+      } else {
+        const timer = window.setTimeout(armInfiniteScroll, 200)
+        signal.addEventListener('abort', () => window.clearTimeout(timer), { once: true })
+      }
+    }
+
+    scheduleArm()
   }
 
   // Listeners a nivel `window`/`document` de la navegación anterior. Como
@@ -1635,7 +1639,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     const vsName = $<HTMLElement>('[data-vs-name]', root)
     const grid = $<HTMLElement>('[data-boxer-grid]', root)
     const thumbs = Array.from($$<HTMLAnchorElement>('[data-thumb]', root))
-    const mobileThumbs = Array.from($$<HTMLAnchorElement>('[data-mobile-thumb]', root))
     if (!image || !nameNode || !grid || thumbs.length === 0) return
 
     // Antes precargábamos las 20 fotos hero en idle: en iPhone/Safari eso
@@ -1844,20 +1847,27 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       })
     })
 
-    mobileThumbs.forEach((thumb) => {
-      thumb.addEventListener('click', () => {
+    // Delegación: los clones previous/next del carrusel infinito se montan
+    // en idle y no existirían si engancháramos listeners solo al set inicial.
+    const mobileSlider = $<HTMLElement>('[data-mobile-slider]', root)
+    mobileSlider?.addEventListener(
+      'click',
+      (event) => {
+        const target = event.target
+        if (!(target instanceof Element)) return
+        const thumb = target.closest<HTMLAnchorElement>('[data-mobile-thumb]')
+        if (!thumb || !mobileSlider.contains(thumb)) return
+
         const id = thumb.dataset.id
         if (!id) return
 
-        const thumbImg = $<HTMLImageElement>(
-          '.boxer-mobile-slide-img',
-          thumb,
-        )
+        const thumbImg = $<HTMLImageElement>('.boxer-mobile-slide-img', thumb)
         if (thumbImg) {
           thumbImg.style.viewTransitionName = `boxer-hero-${id}`
         }
-      })
-    })
+      },
+      { signal },
+    )
 
     // Al salir con el ratón del grid, volvemos al estado por defecto,
     // salvo que haya un thumb con foco de teclado.
