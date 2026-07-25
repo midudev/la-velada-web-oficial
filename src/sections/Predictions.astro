@@ -4,13 +4,18 @@ import LivePrediction from '@/components/LivePrediction.astro'
 import SectionHeader from '@/components/SectionHeader.astro'
 import { battles, type Battle } from '@/consts/battles'
 import { BOXERS_BY_ID } from '@/consts/boxers'
+import { loadBuildTimePredictions } from '@/lib/predictions'
 
-// Combates más interesantes para la home; el resto se vota en /pronosticos.
+// Combates más interesantes para la home; el resto se ve en /pronosticos.
 // Se resuelven por boxeador para no depender del orden de la pareja.
 const FEATURED_BOXER_IDS = ['thegrefg', 'plex', 'roro', 'viruzz']
 const featuredBattles = FEATURED_BOXER_IDS.map((boxerId) =>
   battles.find((battle) => battle.boxerIds.includes(boxerId)),
 ).filter((battle): battle is Battle => Boolean(battle))
+
+const predictionsByBattle = new Map(
+  (await loadBuildTimePredictions()).map((prediction) => [prediction.combat_id, prediction]),
+)
 ---
 
 <section
@@ -26,23 +31,29 @@ const featuredBattles = FEATURED_BOXER_IDS.map((boxerId) =>
   <div class="mx-auto flex max-w-5xl flex-col items-center">
     <SectionHeader
       titleId="home-predictions-title"
-      eyebrow="En directo"
+      eyebrow="Comunidad"
       title="PRONÓSTICOS"
-      subtitle="Vota a tu ganador y sigue en tiempo real lo que pronostica la comunidad"
+      subtitle="Así pronosticó la comunidad los combates de La Velada del Año VI"
       subtitleClass="mb-10 max-w-xl tracking-[0.16em] sm:mb-12 sm:text-sm"
     />
 
     <ul class="grid w-full list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 sm:gap-5" role="list">
       {
-        featuredBattles.map((battle) => (
-          <li>
-            <LivePrediction
-              battleId={battle.id}
-              boxerA={{ id: battle.boxerIds[0], name: BOXERS_BY_ID[battle.boxerIds[0]].name }}
-              boxerB={{ id: battle.boxerIds[1], name: BOXERS_BY_ID[battle.boxerIds[1]].name }}
-            />
-          </li>
-        ))
+        featuredBattles.map((battle) => {
+          const prediction = predictionsByBattle.get(battle.id)
+
+          return (
+            <li>
+              <LivePrediction
+                battleId={battle.id}
+                boxerA={{ id: battle.boxerIds[0], name: BOXERS_BY_ID[battle.boxerIds[0]].name }}
+                boxerB={{ id: battle.boxerIds[1], name: BOXERS_BY_ID[battle.boxerIds[1]].name }}
+                sides={prediction?.predictions}
+                totalVotes={prediction?.total_votes ?? 0}
+              />
+            </li>
+          )
+        })
       }
     </ul>
 

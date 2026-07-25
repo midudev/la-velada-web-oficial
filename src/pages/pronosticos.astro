@@ -1,44 +1,26 @@
 ---
 import AuthButton from '@/components/AuthButton.astro'
 import PredictionFight from '@/components/PredictionFight.astro'
-import PredictionShareController from '@/components/PredictionShareController.astro'
-import PredictionVoteController from '@/components/PredictionVoteController.astro'
+import PredictionUserVotes from '@/components/PredictionUserVotes.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
 import { createPredictionBattles } from '@/consts/predictions'
 import Layout from '@/layouts/Layout.astro'
-import { getAllPredictions, getUserVotes } from '@/lib/predictions'
+import { loadBuildTimePredictions } from '@/lib/predictions'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 
-export const prerender = false
+// Totales de la comunidad fijados en build. La sesión y los votos propios se
+// hidratan en cliente (AuthButton + GET /api/predictions?mine=1). La votación
+// está cerrada: solo se pueden ver, no cambiar.
+export const prerender = true
 
 const title = 'Pronósticos - La Velada del Año VI'
-const description = 'Pronostica los ganadores de los combates de La Velada del Año VI.'
+const description =
+  'Consulta los pronósticos de la comunidad para los combates de La Velada del Año VI.'
 const canonical = 'https://www.infolavelada.com/pronosticos'
-const user = Astro.locals.user
 
-// Lanzamos las dos lecturas a Turso en paralelo: los votos del usuario no
-// dependen de las predicciones globales, así que encadenarlas con dos `await`
-// sumaba dos round-trips a la BD en el TTFB de cada carga con sesión iniciada
-// (la página es `prerender = false` y el render espera a ambas). Con
-// `Promise.all` el render solo espera a la más lenta de las dos.
-const [storedPredictions, storedUserVotes] = await Promise.all([
-  getAllPredictions().catch((error) => {
-    console.error('Error al cargar predicciones:', error)
-    return [] as Awaited<ReturnType<typeof getAllPredictions>>
-  }),
-  user?.id
-    ? getUserVotes(user.id).catch((error) => {
-        console.error('Error al cargar votos del usuario:', error)
-        return [] as Awaited<ReturnType<typeof getUserVotes>>
-      })
-    : Promise.resolve([] as Awaited<ReturnType<typeof getUserVotes>>),
-])
-
+const storedPredictions = await loadBuildTimePredictions()
 const predictionBattles = createPredictionBattles(storedPredictions)
-const userVotesByCombat = Object.fromEntries(
-  storedUserVotes.map((vote) => [vote.combat_id, vote.fighter_id]),
-)
 ---
 
 <Layout title={title} description={description} canonical={canonical} robots="noindex, nofollow">
@@ -64,21 +46,19 @@ const userVotesByCombat = Object.fromEntries(
     <p
       class="mt-3 text-center font-cinzel text-xs font-medium tracking-[0.16em] text-balance text-white/55 not-motion-reduce:animate-fade-in-up animate-delay-200 sm:text-sm sm:tracking-[0.25em]"
     >
-      Vota a tu ganador en cada combate de La Velada del Año VI
+      Así pronosticó la comunidad cada combate de La Velada del Año VI
     </p>
 
     <div class="mt-8 w-full max-w-5xl sm:mt-12">
       <div id="predictions-auth" class="flex justify-center" data-predictions-auth>
-        <AuthButton user={user} />
+        <AuthButton />
       </div>
 
-      <div class="mt-4 flex justify-center">
-        <PredictionShareController
-          variant="top"
-          isLoggedIn={Boolean(user)}
-          totalFights={predictionBattles.length}
-        />
-      </div>
+      <p
+        class="mt-4 text-center font-cinzel text-[0.58rem] font-medium tracking-[0.14em] text-white/40 uppercase"
+      >
+        La votación está cerrada · solo puedes consultar tus pronósticos
+      </p>
 
       <ol class="mt-5 grid gap-5 sm:gap-6" role="list" data-prediction-list>
         {
@@ -86,25 +66,14 @@ const userVotesByCombat = Object.fromEntries(
             .slice()
             .reverse()
             .map((prediction, index) => (
-              <PredictionFight
-                prediction={prediction}
-                selectedBoxerId={userVotesByCombat[prediction.battle.id]}
-                index={index}
-              />
+              <PredictionFight prediction={prediction} index={index} />
             ))
         }
       </ol>
-
-      <div class="mt-10 flex justify-center sm:mt-12">
-        <PredictionShareController
-          isLoggedIn={Boolean(user)}
-          totalFights={predictionBattles.length}
-        />
-      </div>
     </div>
   </section>
 
-  <PredictionVoteController isLoggedIn={Boolean(user)} userVotes={userVotesByCombat} user={user} />
+  <PredictionUserVotes />
   <Sponsors />
   <Footer />
 </Layout>
