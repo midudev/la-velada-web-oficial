@@ -84,6 +84,17 @@ const organizationJsonLd = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {/* Color de fondo crítico inline: el CSS completo (~150 KB) se descubre
+        tarde en el <head> (tras JSON-LD y scripts). Sin esto, iOS Safari
+        muestra el blanco por defecto del navegador hasta que llega la hoja
+        de estilos — y con la home pesada eso puede parecer “página en blanco”. */}
+    <style is:inline>
+      html,
+      body {
+        background: #0a1024;
+        color: #f4e4c9;
+      }
+    </style>
     <title>
       {title}
     </title>
