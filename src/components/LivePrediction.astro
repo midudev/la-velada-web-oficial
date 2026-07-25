@@ -324,12 +324,16 @@ const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
     total_votes: number
   }
 
-  const REFRESH_MS = 15_000
+  // Fail-soft: si la API cae, el HTML estático (— / 0%) se queda tal cual.
+  const REFRESH_MS = 30_000
+  const MAX_BACKOFF_MS = 120_000
 
   let timer: number | null = null
   let abort: AbortController | null = null
   let observer: IntersectionObserver | null = null
   let anyVisible = false
+  let failureStreak = 0
+  let nextAllowedAt = 0
 
   function widgets() {
     return Array.from($$<HTMLElement>('[data-live-prediction]'))
@@ -367,27 +371,57 @@ const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
     })
   }
 
+  function noteFailure() {
+    failureStreak += 1
+    const backoff = Math.min(MAX_BACKOFF_MS, REFRESH_MS * 2 ** Math.min(failureStreak, 3))
+    nextAllowedAt = Date.now() + backoff
+  }
+
+  function noteSuccess() {
+    failureStreak = 0
+    nextAllowedAt = 0
+  }
+
   async function refresh() {
     if (!anyVisible || document.visibilityState !== 'visible') return
+    if (Date.now() < nextAllowedAt) return
 
     abort?.abort()
     const controller = new AbortController()
     abort = controller
 
     try {
-      const response = await fetch('/api/predictions', { signal: controller.signal })
-      if (!response.ok) return
+      const response = await fetch('/api/predictions', {
+        signal: controller.signal,
+        credentials: 'omit',
+      })
+      if (!response.ok) {
+        noteFailure()
+        return
+      }
+
+      const contentType = response.headers.get('content-type') ?? ''
+      if (!contentType.includes('application/json')) {
+        noteFailure()
+        return
+      }
 
       const data = (await response.json()) as { predictions?: ApiCombat[] }
-      if (controller.signal.aborted || !data.predictions) return
+      if (controller.signal.aborted || !Array.isArray(data.predictions)) {
+        noteFailure()
+        return
+      }
 
       const byCombatId = new Map(data.predictions.map((combat) => [combat.combat_id, combat]))
       widgets().forEach((el) => {
         const combat = byCombatId.get(el.dataset.battleId ?? '')
         if (combat) updateWidget(el, combat)
       })
+      noteSuccess()
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') return
+      noteFailure()
+      // No tocamos el DOM: la UI estática / último valor bueno se mantiene.
       console.error('No se pudo cargar el pronóstico en vivo:', error)
     }
   }

@@ -238,7 +238,25 @@ const organizationJsonLd = {
       // El snapshot «antiguo» se captura al arrancar la view transition, antes
       // de `before-swap`, así que la página saliente hay que limpiarla aquí.
       document.addEventListener('astro:before-preparation', (event) => {
-        const navigationEvent = event as AstroNavigationEvent
+        const navigationEvent = event as AstroNavigationEvent & {
+          loader?: () => Promise<void>
+        }
+        const fromPath = getNormalizedPathname(navigationEvent.from)
+        const toPath = getNormalizedPathname(navigationEvent.to)
+
+        // La home es un documento muy pesado: el swap SPA de ClientRouter en
+        // iOS Safari deja pestañas en blanco con cierta frecuencia. Forzamos
+        // navegación completa al entrar o salir de `/`.
+        if (fromPath === '/' || toPath === '/') {
+          navigationEvent.loader = () => {
+            window.location.assign(navigationEvent.to.href)
+            return new Promise(() => {
+              /* la navegación completa corta el flujo de view transitions */
+            })
+          }
+          return
+        }
+
         if (isListingCrossfade(navigationEvent)) {
           dropSharedHeroNames(document)
         }
