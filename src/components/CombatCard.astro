@@ -1,10 +1,13 @@
 ---
 import CountryFlag from '@/components/CountryFlag.astro'
-import type { BoxerImageVariants } from '@/consts/boxers'
+import CombatResultStrip from '@/components/combat/CombatResultStrip.astro'
+import type { BattleResult } from '@/consts/battle-results'
+import type { BoxerGender, BoxerImageVariants } from '@/consts/boxers'
 
 interface CardBoxer {
   id: string
   name: string
+  gender: BoxerGender
   country: string
   countryName: string
   heroImages: BoxerImageVariants
@@ -17,6 +20,7 @@ interface Props {
   badge?: string
   a: CardBoxer
   b: CardBoxer
+  result?: BattleResult | null
   imageLoadingStrategy?: {
     loading?: astroHTML.JSX.ImgHTMLAttributes['loading']
     decoding?: astroHTML.JSX.ImgHTMLAttributes['decoding']
@@ -24,7 +28,16 @@ interface Props {
   }
 }
 
-const { number, url, featured = false, badge, a, b, imageLoadingStrategy } = Astro.props
+const {
+  number,
+  url,
+  featured = false,
+  badge,
+  a,
+  b,
+  result = null,
+  imageLoadingStrategy,
+} = Astro.props
 
 const { loading = 'lazy', decoding = 'async', fetchpriority = 'auto' } = imageLoadingStrategy || {}
 
@@ -33,17 +46,25 @@ const boxers: Array<CardBoxer & { side: 'a' | 'b' }> = [
   { ...b, side: 'b' },
 ]
 
+const winner = result
+  ? result.winnerId === a.id
+    ? a
+    : result.winnerId === b.id
+      ? b
+      : null
+  : null
+const loser = result && winner ? (winner.id === a.id ? b : a) : null
+
 const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b.countryName})`
+const ariaLabel = winner
+  ? `Ir al combate ${a.name} contra ${b.name}. ${winner.gender === 'f' ? 'Ganadora' : 'Ganador'}: ${winner.name}`
+  : `Ir al combate ${a.name} contra ${b.name}`
 ---
 
 <article class:list={['combat', { 'is-featured': featured }]}>
   <h2 class="sr-only">{title}</h2>
 
-  <a
-    class="absolute inset-0 z-10 text-[0px]"
-    href={url}
-    aria-label={`Ir al combate ${a.name} contra ${b.name}`}
-  >
+  <a class="absolute inset-0 z-10 text-[0px]" href={url} aria-label={ariaLabel}>
     <span aria-hidden="true">{title}</span>
   </a>
 
@@ -57,7 +78,9 @@ const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b
 
     {
       boxers.map((boxer) => (
-        <div class:list={['boxer', boxer.side]}>
+        <div
+          class:list={['boxer', boxer.side, { 'is-winner': winner?.id === boxer.id }]}
+        >
           <span aria-hidden="true" class="boxer-spot" />
           <picture class="boxer-pic" transition:name={`boxer-hero-${boxer.id}`}>
             <source type="image/avif" srcset={boxer.heroImages.avif} />
@@ -75,6 +98,14 @@ const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b
           </picture>
           <span aria-hidden="true" class="boxer-veil" />
           <div class="boxer-caption">
+            {winner?.id === boxer.id && (
+              <span class="boxer-winner-badge" aria-hidden="true">
+                <span class="boxer-winner-star">★</span>
+                <span class="boxer-winner-label">
+                  {boxer.gender === 'f' ? 'Ganadora' : 'Ganador'}
+                </span>
+              </span>
+            )}
             <h3 class="boxer-name">{boxer.name}</h3>
             <p class="boxer-country">
               <CountryFlag country={boxer.country} size={14} decorative class="boxer-flag" />
@@ -90,12 +121,22 @@ const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b
     </span>
   </div>
 
-  <span class="combat-footer">
-    <span class="combat-number">
-      Combate {String(number).padStart(2, '0')}
-    </span>
-    <span class="combat-cta">Ir al cara a cara</span>
-  </span>
+  {
+    result && winner && loser ? (
+      <CombatResultStrip
+        result={result}
+        winnerName={winner.name}
+        winnerGender={winner.gender}
+        loserId={loser.id}
+        loserName={loser.name}
+      />
+    ) : (
+      <span class="combat-footer">
+        <span class="combat-number">Combate {String(number).padStart(2, '0')}</span>
+        <span class="combat-cta">Ir al cara a cara</span>
+      </span>
+    )
+  }
 </article>
 
 <style>
@@ -219,6 +260,60 @@ const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b
     aspect-ratio: 4 / 5;
   }
 
+  .boxer.is-winner .boxer-spot {
+    opacity: 0.95;
+    background: radial-gradient(
+      75% 65% at 50% 18%,
+      color-mix(in srgb, var(--color-theme-gold) 48%, transparent),
+      transparent 64%
+    );
+  }
+
+  .boxer.is-winner .boxer-img {
+    filter: saturate(1.08) brightness(1.05);
+  }
+
+  .boxer.is-winner .boxer-name {
+    color: color-mix(in srgb, var(--color-theme-gold) 62%, var(--color-theme-cream));
+  }
+
+  .boxer-winner-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    max-width: 100%;
+    margin-bottom: 0.35rem;
+    padding: 0.28rem 0.55rem 0.28rem 0.38rem;
+    border-radius: 9999px;
+    color: var(--color-theme-midnight);
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-theme-gold) 92%, white) 0%,
+      var(--color-theme-gold) 55%,
+      color-mix(in srgb, var(--color-theme-gold) 72%, #6b4f1e) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      0 4px 14px color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
+  }
+
+  .boxer-winner-star {
+    flex-shrink: 0;
+    font-size: 0.68rem;
+    line-height: 1;
+  }
+
+  .boxer-winner-label {
+    font-family: var(--font-cinzel), var(--font-fallback);
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
   .boxer-spot {
     position: absolute;
     inset: 0;
@@ -264,6 +359,9 @@ const title = `Combate ${number}: ${a.name} (${a.countryName}) VS ${b.name} (${b
     inset-inline: 0;
     bottom: 0;
     z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 0.6rem 0.7rem 1rem;
     text-align: center;
   }
