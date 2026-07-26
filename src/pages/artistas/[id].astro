@@ -4,7 +4,7 @@ import { getImage, Image } from 'astro:assets'
 
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArtistNextCard from '@/components/ArtistNextCard.astro'
-import ArtistPerformancePlaceholder from '@/components/ArtistPerformancePlaceholder.astro'
+import ArtistPerformanceVideo from '@/components/ArtistPerformanceVideo.astro'
 import ArtistShareButtons from '@/components/ArtistShareButtons.astro'
 import ArtistStatsCard from '@/components/ArtistStatsCard.astro'
 import ArtistTopTracks from '@/components/ArtistTopTracks.astro'
@@ -219,7 +219,11 @@ const breadcrumbJsonLd = {
         </div>
       </div>
 
-      <ArtistPerformancePlaceholder class="mt-10 w-full animate-fade-in-up animate-delay-500 sm:mt-12" />
+      <ArtistPerformanceVideo
+        class="mt-10 w-full animate-fade-in-up animate-delay-500 sm:mt-12"
+        artistName={artist.name}
+        videoId={artist.videoId}
+      />
 
       {
         hasArtistNav && (
