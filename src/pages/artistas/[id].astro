@@ -5,9 +5,9 @@ import { getImage, Image } from 'astro:assets'
 import ArrowLeftIcon from '@/assets/svg/arrow-left.svg'
 import ArtistNextCard from '@/components/ArtistNextCard.astro'
 import ArtistPerformanceVideo from '@/components/ArtistPerformanceVideo.astro'
+import ArtistSetlist from '@/components/ArtistSetlist.astro'
 import ArtistShareButtons from '@/components/ArtistShareButtons.astro'
 import ArtistStatsCard from '@/components/ArtistStatsCard.astro'
-import ArtistTopTracks from '@/components/ArtistTopTracks.astro'
 import { ARTISTS } from '@/consts/artists'
 import { EVENT_DATE_TIME } from '@/consts/event'
 import Layout from '@/layouts/Layout.astro'
@@ -37,7 +37,7 @@ if (!artist) return Astro.redirect('/404')
 
 // Los dúos/grupos guardan un id compuesto (uno por miembro, unidos con "-").
 const isGroup = artist.id.includes('-')
-const topTracks = artist.topTracks ?? []
+const setlist = artist.setlist ?? []
 
 // Navegación al artista anterior/siguiente según su orden en el cartel.
 // No es cíclica: el primero no tiene anterior y el último no tiene siguiente
@@ -209,10 +209,11 @@ const breadcrumbJsonLd = {
           />
 
           {
-            topTracks.length > 0 && (
-              <ArtistTopTracks
+            setlist.length > 0 && (
+              <ArtistSetlist
                 class="mt-6 animate-fade-in-up animate-delay-400"
-                tracks={topTracks}
+                songs={setlist}
+                videoId={artist.videoId}
               />
             )
           }
