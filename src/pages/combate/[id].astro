@@ -1,8 +1,8 @@
 ---
-import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
 import CombatHero from '@/components/combat/CombatHero.astro'
 import CombatResultSection from '@/components/combat/CombatResultSection.astro'
 import CombatStatsSection from '@/components/combat/CombatStatsSection.astro'
+import CombatVideoSection from '@/components/combat/CombatVideoSection.astro'
 import LivePrediction from '@/components/LivePrediction.astro'
 import { battles, battlesById } from '@/consts/battles'
 import {
@@ -229,7 +229,14 @@ const breadcrumbJsonLd = {
       />
     </section>
 
-    <CombatFaceToFaceVideoSection
+    <CombatVideoSection
+      sectionId="combate-completo"
+      heading="COMBATE COMPLETO"
+      title={`${battle.title} | Combate completo`}
+      videoUrl={battle.fullFightVideoUrl}
+    />
+
+    <CombatVideoSection
       title={`${battle.title} | Cara a cara`}
       videoUrl={battle.faceToFaceVideoUrl}
     />
