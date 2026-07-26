@@ -213,7 +213,8 @@ const DONT_ITEMS = [
               <button
                 type="button"
                 data-copy-value={color.hex}
-                class="group relative flex cursor-crosshair flex-col overflow-hidden rounded-2xl border border-theme-gold/40 transition duration-200 ease-out outline-none hover:-translate-y-1 hover:border-theme-gold focus-visible:-translate-y-1 focus-visible:border-theme-gold"
+                aria-label={`Copiar color ${color.name} ${color.hex}`}
+                class="group relative flex cursor-crosshair flex-col overflow-hidden rounded-2xl border border-theme-gold/40 transition duration-200 ease-out outline-none hover:-translate-y-1 hover:border-theme-gold focus-visible:-translate-y-1 focus-visible:border-theme-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-theme-gold"
               >
                 <span
                   aria-hidden="true"
@@ -226,6 +227,7 @@ const DONT_ITEMS = [
                   </span>
                   <span
                     data-copy-label
+                    aria-live="polite"
                     class="font-cinzel text-[0.62rem] tracking-[0.08em] text-white/55 uppercase"
                   >
                     {color.hex}
@@ -349,7 +351,7 @@ const DONT_ITEMS = [
         <p
           class="mx-auto mb-8 max-w-md text-center font-cinzel text-xs font-medium text-balance text-white/55"
         >
-          Cuatro reglas para que la marca se vea bien la use quien la use.
+          Unas reglas sencillas para que la marca se vea bien la use quien la use.
         </p>
 
         <div class="grid gap-4 sm:grid-cols-2">
@@ -433,7 +435,7 @@ const DONT_ITEMS = [
 </Layout>
 
 <script>
-  import { $$ } from '@/lib/dom-selector'
+  import { $, $$ } from '@/lib/dom-selector'
 
   const COPIED_LABEL = '¡Copiado!'
   const COPIED_RESET_MS = 1400
@@ -442,13 +444,16 @@ const DONT_ITEMS = [
     const buttons = $$<HTMLButtonElement>('[data-copy-value]')
 
     buttons.forEach((button) => {
-      const label = button.querySelector<HTMLElement>('[data-copy-label]')
+      const label = $<HTMLElement>('[data-copy-label]', button)
       const value = button.dataset.copyValue
       if (!label || !value) return
 
       const originalLabel = label.textContent
+      let resetTimer: number | undefined
 
       button.addEventListener('click', async () => {
+        let copied = true
+
         try {
           await navigator.clipboard.writeText(value)
         } catch {
@@ -458,12 +463,15 @@ const DONT_ITEMS = [
           helper.style.opacity = '0'
           document.body.appendChild(helper)
           helper.select()
-          document.execCommand('copy')
+          copied = document.execCommand('copy')
           helper.remove()
         }
 
+        if (!copied) return
+
+        window.clearTimeout(resetTimer)
         label.textContent = COPIED_LABEL
-        window.setTimeout(() => {
+        resetTimer = window.setTimeout(() => {
           label.textContent = originalLabel
         }, COPIED_RESET_MS)
       })
