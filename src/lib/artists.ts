@@ -36,20 +36,20 @@ export function formatArtistFollowers(value: number): string {
   return formatCompactNumber(value)
 }
 
-/** Formatea reproducciones totales de una canción (p. ej. 807_526_554 → "807M"). */
-export function formatTrackStreams(value: number): string {
-  return formatCompactNumber(value)
+/** Convierte una marca de tiempo `m:ss` o `h:mm:ss` a segundos totales. */
+export function parseTimestampToSeconds(timestamp: string): number {
+  return timestamp
+    .split(':')
+    .map(Number)
+    .reduce((totalSeconds, part) => totalSeconds * 60 + part, 0)
+}
+
+/** Construye la URL del vídeo de YouTube de la actuación en el instante indicado. */
+export function getSetlistSongVideoUrl(videoId: string, timestamp: string): string {
+  return `https://www.youtube.com/watch?v=${videoId}&t=${parseTimestampToSeconds(timestamp)}s`
 }
 
 /** Construye la URL de Spotify de una canción a partir de su id. */
 export function getTrackSpotifyUrl(trackId: string): string {
   return `https://open.spotify.com/track/${trackId}`
-}
-
-/** Convierte una duración en milisegundos a `m:ss` (p. ej. 216706 → "3:37"). */
-export function formatTrackDuration(durationMs: number): string {
-  const totalSeconds = Math.round(durationMs / 1000)
-  const minutes = Math.floor(totalSeconds / 60)
-  const seconds = totalSeconds % 60
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`
 }
