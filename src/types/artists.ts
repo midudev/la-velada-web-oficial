@@ -1,12 +1,12 @@
 import type { ImageMetadata } from 'astro'
 
-export interface ArtistTrack {
-  id: string
+/** Canción del setlist real interpretado en la actuación. */
+export interface ArtistSetlistSong {
   name: string
-  album: string
-  durationMs: number
-  /** Reproducciones totales en Spotify. */
-  streams: number
+  /** Id de la canción en Spotify (open.spotify.com/track/{id}), si existe. */
+  spotifyId?: string
+  /** Marca de tiempo en el vídeo de la actuación, formato `m:ss` o `h:mm:ss`. */
+  timestamp: string
 }
 
 /** Enlace a Spotify de uno de los intérpretes (un dúo/grupo tiene varios). */
@@ -26,7 +26,7 @@ export interface Artist {
   genres: string[]
   /** 0-100. */
   popularity: number
-  topTracks?: ArtistTrack[]
+  setlist?: ArtistSetlistSong[]
   /** Un enlace por intérprete (2 en el caso de un dúo). */
   spotifyLinks: ArtistSpotifyLink[]
   videoId?: string
