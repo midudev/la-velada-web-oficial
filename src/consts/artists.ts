@@ -48,6 +48,7 @@ export const ARTISTS: Artist[] = [
     spotifyLinks: [
       { name: 'Yandel', url: 'https://open.spotify.com/artist/0eHQ9o50hj6ZDNBt6Ys1sD' },
     ],
+    videoId: 'GAwv_KL0BUc',
   },
   {
     id: '0UWZUmn7sybxMCqrw9tGa7',
@@ -90,6 +91,7 @@ export const ARTISTS: Artist[] = [
     spotifyLinks: [
       { name: 'Juanes', url: 'https://open.spotify.com/artist/0UWZUmn7sybxMCqrw9tGa7' },
     ],
+    videoId: 'zEWtFIG_JqM',
   },
   {
     // Dúo: id compuesto (uno por cada miembro) para poder enlazar a una
@@ -135,6 +137,7 @@ export const ARTISTS: Artist[] = [
       { name: 'Lucho RK', url: 'https://open.spotify.com/artist/1y6tVxTqgNfqxTayfohSKJ' },
       { name: 'La Pantera', url: 'https://open.spotify.com/artist/0IEzMvarfVycBJAXjjEZOL' },
     ],
+    videoId: 'zsb1D8Rb9nA',
   },
   {
     id: '4F4pp8NUW08JuXwnoxglpN',
@@ -177,6 +180,7 @@ export const ARTISTS: Artist[] = [
     spotifyLinks: [
       { name: 'Bad Gyal', url: 'https://open.spotify.com/artist/4F4pp8NUW08JuXwnoxglpN' },
     ],
+    videoId: 'NXjpaDPAh_U',
   },
   {
     id: '2R21vXR83lH98kGeO99Y66',
@@ -219,5 +223,6 @@ export const ARTISTS: Artist[] = [
     spotifyLinks: [
       { name: 'Anuel AA', url: 'https://open.spotify.com/artist/2R21vXR83lH98kGeO99Y66' },
     ],
+    videoId: 'EZ94kdYNbG4',
   },
 ]
