@@ -1,5 +1,6 @@
 ---
 import CountryFlag from '@/components/CountryFlag.astro'
+import { getWinnerWord } from '@/consts/battle-results'
 import {
   formatPredictionPercent,
   formatPredictionSupport,
@@ -10,10 +11,19 @@ interface Props {
   battleId: string
   option: PredictionOption
   leaderBoxerId?: string
+  winnerBoxerId?: string
 }
 
-const { battleId, option, leaderBoxerId } = Astro.props
+const { battleId, option, leaderBoxerId, winnerBoxerId } = Astro.props
 const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
+const isWinner = Boolean(winnerBoxerId) && winnerBoxerId === option.boxer.id
+const winnerWord = isWinner ? getWinnerWord(option.boxer.gender) : null
+const ariaLabel = [
+  `${option.boxer.name}: ${formatPredictionPercent(option.percentage)} (${formatPredictionSupport(option.votes)})`,
+  winnerWord ? `${winnerWord} oficial del combate.` : '',
+]
+  .filter(Boolean)
+  .join('. ')
 ---
 
 <div
@@ -25,11 +35,12 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
   data-selected="false"
   data-muted="false"
   data-leader={String(isLeader)}
+  data-winner={String(isWinner)}
   data-side={option.side}
   data-vote-count={option.votes}
   data-vote-percentage={option.percentage}
   role="group"
-  aria-label={`${option.boxer.name}: ${formatPredictionPercent(option.percentage)} (${formatPredictionSupport(option.votes)})`}
+  aria-label={ariaLabel}
   style={`--vote-share: ${option.percentage.toFixed(2)}%; --vote-color: ${option.color};`}
 >
   <picture class="tow-pic">
@@ -49,6 +60,14 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
   <span aria-hidden="true" style="opacity: 0" class="tow-spot"></span>
   <span aria-hidden="true" class="tow-veil"></span>
   <span aria-hidden="true" class="tow-frame"></span>
+
+  {
+    isWinner && winnerWord && (
+      <span class="tow-winner-badge font-cinzel" aria-hidden="true">
+        ★ {winnerWord}
+      </span>
+    )
+  }
 
   <span class="tow-caption">
     <span aria-hidden="true" style="display: none" class="tow-yourvote font-cinzel">
@@ -114,8 +133,7 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     transform: scaleX(-1);
   }
 
-  /* Halo del líder: glow detrás del boxeador (z-0, se ve alrededor de la
-     figura recortada). */
+  /* Halo del líder / ganador: glow detrás del boxeador (z-0). */
   .tow-spot {
     grid-area: stack;
     z-index: 0;
@@ -126,13 +144,62 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
       transparent 72%
     );
   }
-  /* Oculto por style inline (opacity:0, evita el flash en dev). El líder lo
-     revela con !important para ganar al inline. */
-  .tow-side[data-leader='true'] .tow-spot {
+  /* Oculto por style inline (opacity:0, evita el flash en dev). El líder o
+     ganador lo revela con !important para ganar al inline. */
+  .tow-side[data-leader='true'] .tow-spot,
+  .tow-side[data-winner='true'] .tow-spot {
     opacity: 0.55 !important;
   }
-  .tow-side[data-leader='true'] .tow-pic-img {
+  .tow-side[data-winner='true'] .tow-spot {
+    opacity: 0.72 !important;
+    background: radial-gradient(
+      75% 65% at 50% 36%,
+      color-mix(in srgb, var(--color-theme-gold) 52%, transparent),
+      color-mix(in srgb, var(--color-theme-gold) 18%, transparent) 48%,
+      transparent 72%
+    );
+  }
+  .tow-side[data-leader='true'] .tow-pic-img,
+  .tow-side[data-winner='true'] .tow-pic-img {
     filter: saturate(1.06) brightness(1.05);
+  }
+
+  /* Badge de resultado oficial (estático; no depende de sesión).
+     Vive en el mismo stack del lado: no usamos absolute porque .tow-side
+     es static a propósito (la barra .tow-fill ancla al .tow-stage). */
+  .tow-winner-badge {
+    grid-area: stack;
+    z-index: 7;
+    align-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
+    margin: 0.55rem;
+    padding: 0.28rem 0.62rem;
+    height: fit-content;
+    width: fit-content;
+    border-radius: 999px;
+    font-size: 0.48rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-theme-midnight);
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-theme-gold) 92%, white) 0%,
+      var(--color-theme-gold) 55%,
+      color-mix(in srgb, var(--color-theme-gold) 72%, #6b4f1e) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      0 4px 14px color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
+    pointer-events: none;
+  }
+  .tow-side.a .tow-winner-badge {
+    justify-self: end;
+  }
+  .tow-side.b .tow-winner-badge {
+    justify-self: start;
   }
 
   .tow-veil {
@@ -213,11 +280,15 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
       0 2px 16px rgba(0, 0, 0, 0.85);
   }
   .tow-side[data-leader='true'] .tow-percent,
+  .tow-side[data-winner='true'] .tow-percent,
   .tow-side[data-selected='true'] .tow-percent {
     color: var(--color-theme-gold);
     text-shadow:
       0 0 20px color-mix(in srgb, var(--color-theme-gold) 42%, transparent),
       0 0 34px color-mix(in srgb, var(--vote-color) 26%, transparent);
+  }
+  .tow-side[data-winner='true'] .tow-name {
+    color: color-mix(in srgb, var(--color-theme-gold) 62%, var(--color-theme-cream));
   }
   .tow-side[data-selected='true'] .tow-pic-img {
     filter: saturate(1.12) brightness(1.04);
@@ -329,6 +400,11 @@ const isLeader = Boolean(leaderBoxerId) && leaderBoxerId === option.boxer.id
     }
     .tow-name {
       font-size: 0.8rem;
+    }
+    .tow-winner-badge {
+      margin: 0.4rem;
+      font-size: 0.42rem;
+      padding: 0.22rem 0.5rem;
     }
 
     .tow-side.a .tow-caption {

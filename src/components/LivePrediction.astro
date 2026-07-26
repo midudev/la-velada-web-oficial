@@ -1,5 +1,10 @@
 ---
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import {
+  getBattleResult,
+  getDecisionLabel,
+  getWinnerWord,
+} from '@/consts/battle-results'
 import { BOXERS_BY_ID, getBoxerSelectImages } from '@/consts/boxers'
 import { formatPredictionPercent, formatPredictionVotes } from '@/lib/format-votes'
 
@@ -47,9 +52,29 @@ const isTie = hasVotes && percentageA === percentageB
 const leaderId =
   hasVotes && !isTie ? (percentageA > percentageB ? boxerA.id : boxerB.id) : ''
 
+const result = getBattleResult(battleId)
+const winnerBoxer = result
+  ? result.winnerId === boxerA.id
+    ? BOXERS_BY_ID[boxerA.id]
+    : result.winnerId === boxerB.id
+      ? BOXERS_BY_ID[boxerB.id]
+      : null
+  : null
+const winnerWord = winnerBoxer ? getWinnerWord(winnerBoxer.gender) : null
+const decisionLabel = result ? getDecisionLabel(result) : null
+
 // Recortes redondos de cada boxeador (mismos que usa la tarjeta VS).
 const imagesA = getBoxerSelectImages(BOXERS_BY_ID[boxerA.id])
 const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
+
+const ariaLabel = [
+  `Pronóstico de la comunidad: ${boxerA.name} contra ${boxerB.name}`,
+  winnerBoxer && winnerWord && decisionLabel
+    ? `${winnerWord}: ${winnerBoxer.name}. ${decisionLabel}`
+    : '',
+]
+  .filter(Boolean)
+  .join('. ')
 ---
 
 <div
@@ -58,7 +83,7 @@ const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
   data-battle-id={battleId}
   data-has-votes={String(hasVotes)}
   role="group"
-  aria-label={`Pronóstico de la comunidad: ${boxerA.name} contra ${boxerB.name}`}
+  aria-label={ariaLabel}
 >
   <div class="live-pred-top font-cinzel">
     <span class="live-pred-eyebrow">Pronóstico de la comunidad</span>
@@ -66,7 +91,13 @@ const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
   </div>
 
   <div class="live-pred-scores font-cinzel">
-    <div class:list={['live-pred-score', 'a', { 'is-leader': leaderId === boxerA.id }]}>
+    <div
+      class:list={[
+        'live-pred-score',
+        'a',
+        { 'is-leader': leaderId === boxerA.id, 'is-winner': result?.winnerId === boxerA.id },
+      ]}
+    >
       <picture class="live-pred-avatar">
         <source type="image/avif" srcset={imagesA.avif} />
         <source type="image/webp" srcset={imagesA.webp} />
@@ -85,7 +116,13 @@ const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
         <span class="live-pred-pct">{hasVotes ? formatPredictionPercent(percentageA) : '—'}</span>
       </span>
     </div>
-    <div class:list={['live-pred-score', 'b', { 'is-leader': leaderId === boxerB.id }]}>
+    <div
+      class:list={[
+        'live-pred-score',
+        'b',
+        { 'is-leader': leaderId === boxerB.id, 'is-winner': result?.winnerId === boxerB.id },
+      ]}
+    >
       <picture class="live-pred-avatar">
         <source type="image/avif" srcset={imagesB.avif} />
         <source type="image/webp" srcset={imagesB.webp} />
@@ -112,6 +149,16 @@ const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
     <span class="live-pred-fill live-pred-fill-b" style={`width: ${hasVotes ? percentageB : 0}%`}
     ></span>
   </div>
+
+  {
+    winnerBoxer && winnerWord && decisionLabel && (
+      <p class="live-pred-result font-cinzel">
+        <span class="live-pred-result-label">{winnerWord}</span>
+        <span class="live-pred-result-name">{winnerBoxer.name}</span>
+        <span class="live-pred-result-decision">{decisionLabel}</span>
+      </p>
+    )
+  }
 
   <a class="live-pred-cta font-cinzel" href={href}>
     <span>Ver pronóstico</span>
@@ -193,7 +240,8 @@ const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
     object-fit: cover;
     object-position: top center;
   }
-  .live-pred-score.is-leader .live-pred-avatar {
+  .live-pred-score.is-leader .live-pred-avatar,
+  .live-pred-score.is-winner .live-pred-avatar {
     box-shadow:
       inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 78%, transparent),
       0 0 16px color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
@@ -226,13 +274,53 @@ const imagesB = getBoxerSelectImages(BOXERS_BY_ID[boxerB.id])
     color: var(--color-theme-cream);
   }
 
-  /* El bando que va ganando se realza en oro. */
-  .live-pred-score.is-leader .live-pred-pct {
+  /* El favorito de la comunidad y el ganador oficial se realzan en oro. */
+  .live-pred-score.is-leader .live-pred-pct,
+  .live-pred-score.is-winner .live-pred-pct {
     color: var(--color-theme-gold);
     text-shadow: 0 0 18px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
   }
-  .live-pred[data-has-votes='true'] .live-pred-score:not(.is-leader) {
+  .live-pred-score.is-winner .live-pred-name {
+    color: color-mix(in srgb, var(--color-theme-gold) 70%, var(--color-theme-cream));
+  }
+  .live-pred[data-has-votes='true'] .live-pred-score:not(.is-leader):not(.is-winner) {
     opacity: 0.78;
+  }
+
+  .live-pred-result {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.25rem 0.45rem;
+    margin: 0;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .live-pred-result-label {
+    font-size: 0.48rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 85%, transparent);
+  }
+
+  .live-pred-result-name {
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+  }
+
+  .live-pred-result-decision {
+    width: 100%;
+    font-size: 0.48rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 52%, transparent);
   }
 
   /* Barra tug-of-war: A crece desde la izquierda, B desde la derecha. */
