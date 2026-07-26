@@ -29,4 +29,5 @@ export interface Artist {
   topTracks?: ArtistTrack[]
   /** Un enlace por intérprete (2 en el caso de un dúo). */
   spotifyLinks: ArtistSpotifyLink[]
+  videoId?: string
 }
