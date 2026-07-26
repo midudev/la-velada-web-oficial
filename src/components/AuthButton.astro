@@ -7,129 +7,162 @@ interface Props {
   callbackURL?: string
 }
 
-const { user, callbackURL = '/pronosticos' } = Astro.props
+const { user = null, callbackURL = '/pronosticos' } = Astro.props
 
 // Iniciales de respaldo para el avatar: si la imagen no carga (o no existe),
 // mostramos un círculo con las iniciales en lugar de un icono roto.
-const initials =
-  user?.name
-    ?.trim()
-    .split(/\s+/)
-    .map((part) => part.charAt(0))
-    .slice(0, 2)
-    .join('')
-    .toUpperCase() || 'V'
+function getInitials(name: string | null | undefined) {
+  return (
+    name
+      ?.trim()
+      .split(/\s+/)
+      .map((part) => part.charAt(0))
+      .slice(0, 2)
+      .join('')
+      .toUpperCase() || 'V'
+  )
+}
+
+const initials = getInitials(user?.name)
+// En páginas estáticas `user` llega null y la sesión se hidrata en cliente.
+const initialState = user ? 'in' : 'out'
 ---
 
-{
-  user ? (
-    <div
-      class="flex items-center gap-3 not-motion-reduce:animate-fade-in-up"
-      style="animation-delay:280ms"
-      data-auth-button
-      data-auth-callback-url={callbackURL}
+<div
+  class="contents"
+  data-auth-button
+  data-auth-callback-url={callbackURL}
+  data-auth-state={initialState}
+>
+  <div
+    class:list={[
+      'flex items-center gap-3 not-motion-reduce:animate-fade-in-up',
+      initialState !== 'in' && 'hidden',
+    ]}
+    style="animation-delay:280ms"
+    data-auth-signed-in
+  >
+    <span
+      role="img"
+      aria-label={user?.name ?? 'Usuario'}
+      class="relative grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-pill border border-white/15 bg-theme-navy font-cinzel text-[0.6rem] font-black tracking-[0.04em] text-theme-gold"
+      data-auth-avatar
     >
-      <span
-        role="img"
-        aria-label={user.name}
-        class="relative grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-pill border border-white/15 bg-theme-navy font-cinzel text-[0.6rem] font-black tracking-[0.04em] text-theme-gold"
-      >
-        <span aria-hidden="true">{initials}</span>
-        {user.image && (
+      <span aria-hidden="true" data-auth-initials>{initials}</span>
+      {
+        user?.image ? (
           <img
             src={user.image}
             alt=""
             width={32}
             height={32}
             class="absolute inset-0 h-full w-full object-cover"
+            data-auth-avatar-img
             data-img-fallback="remove"
           />
-        )}
-      </span>
-      <span class="hidden font-cinzel text-[0.65rem] font-black tracking-[0.16em] text-theme-cream/85 sm:inline">
-        {user.name}
-      </span>
+        ) : (
+          <img
+            alt=""
+            width={32}
+            height={32}
+            class="absolute inset-0 hidden h-full w-full object-cover"
+            data-auth-avatar-img
+            data-img-fallback="remove"
+          />
+        )
+      }
+    </span>
+    <span
+      class="hidden font-cinzel text-[0.65rem] font-black tracking-[0.16em] text-theme-cream/85 sm:inline"
+      data-auth-name
+    >
+      {user?.name ?? ''}
+    </span>
+    <button
+      type="button"
+      data-auth-sign-out
+      class="inline-flex min-h-11 cursor-pointer items-center rounded-pill border border-white/15 bg-black/20 px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-white/70 backdrop-blur-md transition duration-300 hover:border-theme-gold/60 hover:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+    >
+      SALIR
+    </button>
+  </div>
+
+  <div
+    class:list={[
+      'flex flex-wrap items-center justify-center gap-x-3 gap-y-2',
+      initialState !== 'out' && 'hidden',
+    ]}
+    data-auth-signed-out
+  >
+    <span
+      class="font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-theme-cream/55 uppercase not-motion-reduce:animate-fade-in-up"
+      style="animation-delay:280ms"
+      data-auth-prompt
+    >
+      Inicia sesión para ver tus votos
+    </span>
+
+    <div class="flex items-center gap-2">
       <button
         type="button"
-        data-auth-sign-out
-        class="inline-flex min-h-11 cursor-pointer items-center rounded-pill border border-white/15 bg-black/20 px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-white/70 backdrop-blur-md transition duration-300 hover:border-theme-gold/60 hover:text-theme-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+        data-auth-provider="twitch"
+        aria-label="Iniciar sesión con Twitch"
+        style="animation-delay:360ms"
+        class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-theme-gold/35 bg-theme-gold/10 px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 not-motion-reduce:animate-fade-in-up hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
       >
-        SALIR
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true"
+          class="shrink-0"
+        >
+          <path
+            d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"
+          ></path>
+        </svg>
+        Twitch
+      </button>
+
+      <button
+        type="button"
+        data-auth-provider="google"
+        aria-label="Iniciar sesión con Google"
+        style="animation-delay:440ms"
+        class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 not-motion-reduce:animate-fade-in-up hover:border-theme-gold/60 hover:bg-white/[0.1] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          class="shrink-0"
+        >
+          <path
+            fill="#4285F4"
+            d="M23.49 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47a5.54 5.54 0 0 1-2.4 3.64v2.98h3.83c2.24-2.06 3.54-5.1 3.54-8.86Z"
+          ></path>
+          <path
+            fill="#34A853"
+            d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.83-2.98c-1.07.72-2.43 1.14-4.11 1.14-3.15 0-5.82-2.13-6.78-4.99H1.26v3.07A12 12 0 0 0 12 24Z"
+          ></path>
+          <path
+            fill="#FBBC05"
+            d="M5.22 14.26a7.22 7.22 0 0 1 0-4.52V6.67H1.26a12 12 0 0 0 0 10.66l3.96-3.07Z"
+          ></path>
+          <path
+            fill="#EA4335"
+            d="M12 4.75c1.76 0 3.34.61 4.58 1.8l3.44-3.44A11.56 11.56 0 0 0 12 0 12 12 0 0 0 1.26 6.67l3.96 3.07C6.18 6.87 8.85 4.75 12 4.75Z"
+          ></path>
+        </svg>
+        Google
       </button>
     </div>
-  ) : (
-    <div
-      class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2"
-      data-auth-button
-      data-auth-callback-url={callbackURL}
-    >
-      <span
-        class="font-cinzel text-[0.6rem] font-black tracking-[0.16em] text-theme-cream/55 uppercase not-motion-reduce:animate-fade-in-up"
-        style="animation-delay:280ms"
-      >
-        Inicia sesión para votar
-      </span>
-
-      <div class="flex items-center gap-2">
-        <button
-          type="button"
-          data-auth-provider="twitch"
-          aria-label="Iniciar sesión con Twitch"
-          style="animation-delay:360ms"
-          class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-theme-gold/35 bg-theme-gold/10 px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 not-motion-reduce:animate-fade-in-up hover:border-theme-gold hover:bg-theme-gold/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-            class="shrink-0"
-          >
-            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
-          </svg>
-          Twitch
-        </button>
-
-        <button
-          type="button"
-          data-auth-provider="google"
-          aria-label="Iniciar sesión con Google"
-          style="animation-delay:440ms"
-          class="group inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 font-cinzel text-[0.6rem] font-black tracking-[0.14em] text-theme-cream transition duration-300 not-motion-reduce:animate-fade-in-up hover:border-theme-gold/60 hover:bg-white/[0.1] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            class="shrink-0"
-          >
-            <path
-              fill="#4285F4"
-              d="M23.49 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47a5.54 5.54 0 0 1-2.4 3.64v2.98h3.83c2.24-2.06 3.54-5.1 3.54-8.86Z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.83-2.98c-1.07.72-2.43 1.14-4.11 1.14-3.15 0-5.82-2.13-6.78-4.99H1.26v3.07A12 12 0 0 0 12 24Z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.22 14.26a7.22 7.22 0 0 1 0-4.52V6.67H1.26a12 12 0 0 0 0 10.66l3.96-3.07Z"
-            />
-            <path
-              fill="#EA4335"
-              d="M12 4.75c1.76 0 3.34.61 4.58 1.8l3.44-3.44A11.56 11.56 0 0 0 12 0 12 12 0 0 0 1.26 6.67l3.96 3.07C6.18 6.87 8.85 4.75 12 4.75Z"
-            />
-          </svg>
-          Google
-        </button>
-      </div>
-    </div>
-  )
-}
+  </div>
+</div>
 
 <script>
   import { $, $$ } from '@/lib/dom-selector'
@@ -137,9 +170,101 @@ const initials =
 
   const authClient = createAuthClient()
 
+  function initialsFromName(name: string | null | undefined) {
+    return (
+      name
+        ?.trim()
+        .split(/\s+/)
+        .map((part) => part.charAt(0))
+        .slice(0, 2)
+        .join('')
+        .toUpperCase() || 'V'
+    )
+  }
+
+  function setAuthState(
+    root: HTMLElement,
+    state: 'in' | 'out',
+    user?: { name?: string | null; image?: string | null } | null,
+  ) {
+    root.dataset.authState = state
+    const signedIn = $<HTMLElement>('[data-auth-signed-in]', root)
+    const signedOut = $<HTMLElement>('[data-auth-signed-out]', root)
+    signedIn?.classList.toggle('hidden', state !== 'in')
+    signedOut?.classList.toggle('hidden', state !== 'out')
+
+    if (state !== 'in' || !user) return
+
+    const name = user.name?.trim() || 'Usuario'
+    const avatar = $<HTMLElement>('[data-auth-avatar]', root)
+    const initials = $<HTMLElement>('[data-auth-initials]', root)
+    const nameNode = $<HTMLElement>('[data-auth-name]', root)
+    const image = $<HTMLImageElement>('[data-auth-avatar-img]', root)
+
+    if (avatar) avatar.setAttribute('aria-label', name)
+    if (initials) initials.textContent = initialsFromName(name)
+    if (nameNode) nameNode.textContent = name
+
+    if (image) {
+      if (user.image) {
+        image.src = user.image
+        image.classList.remove('hidden')
+      } else {
+        image.removeAttribute('src')
+        image.classList.add('hidden')
+      }
+    }
+  }
+
+  async function hydrateAuthButton(root: HTMLElement) {
+    // Si el HTML ya vino con sesión (SSR), no hace falta otra ida a /api/auth.
+    if (root.dataset.authState === 'in') {
+      root.dataset.authHydrated = 'true'
+      document.dispatchEvent(new CustomEvent('auth:session', { detail: { user: true } }))
+      return
+    }
+
+    root.dataset.authHydrated = 'false'
+    // Mientras resolvemos la cookie, ocultamos el CTA de login para no flashar
+    // "Inicia sesión" a quien ya tiene sesión en una página estática.
+    const signedOut = $<HTMLElement>('[data-auth-signed-out]', root)
+    signedOut?.classList.add('hidden')
+
+    try {
+      const { data } = await authClient.getSession()
+      if (!data?.user) {
+        setAuthState(root, 'out')
+        return
+      }
+
+      setAuthState(root, 'in', {
+        name: data.user.name,
+        image: data.user.image,
+      })
+      document.dispatchEvent(
+        new CustomEvent('auth:session', {
+          detail: {
+            user: {
+              name: data.user.name ?? 'Tú',
+              image: data.user.image ?? null,
+            },
+          },
+        }),
+      )
+    } catch (error) {
+      console.error('No se pudo hidratar la sesión de auth:', error)
+      setAuthState(root, 'out')
+    } finally {
+      root.dataset.authHydrated = 'true'
+    }
+  }
+
   function setupAuthButtons() {
     $$<HTMLElement>('[data-auth-button]').forEach((root) => {
-      if (root.dataset.authReady === 'true') return
+      if (root.dataset.authReady === 'true') {
+        void hydrateAuthButton(root)
+        return
+      }
 
       root.dataset.authReady = 'true'
       const callbackURL = root.dataset.authCallbackUrl || window.location.pathname
@@ -157,6 +282,8 @@ const initials =
         await authClient.signOut()
         window.location.reload()
       })
+
+      void hydrateAuthButton(root)
     })
   }
 

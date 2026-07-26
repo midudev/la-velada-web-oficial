@@ -1038,6 +1038,7 @@ export const COUNTRY_NAMES: Record<string, string> = {
   ar: 'Argentina',
   sv: 'El Salvador',
   pr: 'Puerto Rico',
+  me: 'Montenegro',
 }
 
 /** Etiqueta legible por género. */

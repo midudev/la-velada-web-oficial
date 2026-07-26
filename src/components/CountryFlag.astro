@@ -23,10 +23,15 @@ const {
 } = Astro.props
 
 const name = COUNTRY_NAMES[country] ?? country
+/** Banderas que aún no están en el CDN y se sirven desde `/public/flags`. */
+const LOCAL_FLAG_CODES = new Set(['me'])
+const src = LOCAL_FLAG_CODES.has(country)
+  ? `/flags/${country}.svg`
+  : `https://cdn.infolavelada.com/flags/${country}.svg`
 ---
 
 <img
-  src={`https://cdn.infolavelada.com/flags/${country}.svg`}
+  src={src}
   alt={decorative ? '' : `Bandera de ${name}`}
   width={size}
   height={size}
