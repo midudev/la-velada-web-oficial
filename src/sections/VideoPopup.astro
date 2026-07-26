@@ -2,16 +2,15 @@
 import CloseIcon from '@/assets/svg/close.svg'
 import PlayIcon from '@/assets/svg/play.svg'
 
-/** ID del vídeo de YouTube (https://www.youtube.com/live/IskkmNPJdUk). */
-const VIDEO_ID = 'IskkmNPJdUk'
+import { VELADA_VIDEO } from '@/consts/event'
 
-const embedSrc = new URL(`https://www.youtube-nocookie.com/embed/${VIDEO_ID}`)
+const embedSrc = new URL(`https://www.youtube-nocookie.com/embed/${VELADA_VIDEO}`)
 embedSrc.searchParams.set('autoplay', '1')
 embedSrc.searchParams.set('playsinline', '1')
 embedSrc.searchParams.set('rel', '0')
 
-const posterJpg = `https://i.ytimg.com/vi/${VIDEO_ID}/maxresdefault.jpg`
-const posterFallback = `https://i.ytimg.com/vi/${VIDEO_ID}/hqdefault.jpg`
+const posterJpg = `https://i.ytimg.com/vi/${VELADA_VIDEO}/maxresdefault.jpg`
+const posterFallback = `https://i.ytimg.com/vi/${VELADA_VIDEO}/hqdefault.jpg`
 ---
 
 <dialog
