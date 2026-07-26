@@ -1,0 +1,107 @@
+---
+import PlayIcon from '@/assets/svg/play.svg'
+
+/** ID del directo de YouTube (https://www.youtube.com/live/IskkmNPJdUk). */
+const LIVE_VIDEO_ID = 'IskkmNPJdUk'
+
+const embedSrc = new URL(`https://www.youtube-nocookie.com/embed/${LIVE_VIDEO_ID}`)
+embedSrc.searchParams.set('autoplay', '1')
+embedSrc.searchParams.set('mute', '1')
+embedSrc.searchParams.set('playsinline', '1')
+embedSrc.searchParams.set('rel', '0')
+
+const posterJpg = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/maxresdefault.jpg`
+const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
+---
+
+<section
+  id="directo"
+  class="relative w-full border-b border-theme-gold/20 bg-theme-midnight pt-16 sm:pt-20"
+  aria-label="Directo de La Velada del Año VI"
+>
+  <div class="mx-auto w-full max-w-5xl px-4 py-4 sm:px-6 sm:py-6 lg:max-w-6xl">
+    <!--
+      Contenedor con ratio fijo: evita CLS.
+      Nunca metemos el iframe de YouTube en el HTML inicial ni lo autoinyectamos:
+      en iPhone (sobre todo con Low Power Mode) el player autoplay arriba de la
+      home puede tumbar WebKit y dejar la pestaña en blanco. Solo se monta al
+      pulsar; `transition:persist` evita snapshots vacíos con ClientRouter.
+    -->
+    <div
+      class="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black shadow-[0_18px_60px_-24px_rgba(0,0,0,0.85)]"
+      data-live-root
+      data-embed-src={embedSrc.toString()}
+      transition:persist="live-stream"
+    >
+      <button
+        type="button"
+        data-live-facade
+        class="group absolute inset-0 flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        aria-label="Reproducir el directo de La Velada del Año VI en YouTube"
+      >
+        <img
+          src={posterJpg}
+          data-img-fallback={posterFallback}
+          alt=""
+          role="presentation"
+          class="absolute inset-0 h-full w-full object-cover opacity-80 transition duration-300 group-hover:opacity-90 group-hover:saturate-110"
+          decoding="async"
+          fetchpriority="low"
+        />
+        <span
+          class="relative z-10 inline-flex size-16 items-center justify-center rounded-full border border-white/25 bg-black/55 text-theme-cream shadow-[0_10px_40px_rgba(0,0,0,0.55)] backdrop-blur-sm transition duration-300 group-hover:scale-105 group-hover:border-theme-gold/50 group-hover:bg-theme-midnight/80 sm:size-20"
+          aria-hidden="true"
+        >
+          <PlayIcon class="ml-0.5 size-7 sm:size-8" />
+        </span>
+      </button>
+
+      <noscript>
+        <iframe
+          src={embedSrc.toString()}
+          title="La Velada del Año VI en directo en YouTube"
+          class="absolute inset-0 h-full w-full border-0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"
+        >
+        </iframe>
+      </noscript>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { $ } from '@/lib/dom-selector'
+
+  function mountLiveIframe(root: HTMLElement) {
+    if ($('iframe', root)) return
+
+    const src = root.dataset.embedSrc
+    if (!src) return
+
+    const iframe = document.createElement('iframe')
+    iframe.src = src
+    iframe.title = 'La Velada del Año VI en directo en YouTube'
+    iframe.className = 'absolute inset-0 h-full w-full border-0'
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+    iframe.setAttribute('allowfullscreen', '')
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin')
+
+    root.replaceChildren(iframe)
+  }
+
+  function initLiveStream() {
+    const root = $<HTMLElement>('[data-live-root]')
+    if (!root) return
+
+    // Ya montado (p. ej. tras `transition:persist` al volver a la home).
+    if ($('iframe', root)) return
+
+    const facade = $<HTMLButtonElement>('[data-live-facade]', root)
+    facade?.addEventListener('click', () => mountLiveIframe(root), { once: true })
+  }
+
+  document.addEventListener('astro:page-load', initLiveStream)
+</script>

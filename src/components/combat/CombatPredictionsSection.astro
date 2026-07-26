@@ -1,22 +1,13 @@
 ---
-import AuthButton from '@/components/AuthButton.astro'
 import PredictionFight from '@/components/PredictionFight.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
 import type { PredictionBattle } from '@/consts/predictions'
 
-interface AuthUser {
-  name: string
-  image?: string | null
-}
-
 interface Props {
   prediction: PredictionBattle | null
-  selectedBoxerId?: string
-  user: AuthUser | null
-  callbackURL: string
 }
 
-const { prediction, selectedBoxerId, user, callbackURL } = Astro.props
+const { prediction } = Astro.props
 ---
 
 {
@@ -36,12 +27,8 @@ const { prediction, selectedBoxerId, user, callbackURL } = Astro.props
           </h2>
         </div>
 
-        <div id="predictions-auth" class="mb-6 flex justify-center" data-predictions-auth>
-          <AuthButton user={user} callbackURL={callbackURL} />
-        </div>
-
-        <ol class="grid gap-5 md:gap-6" role="list" data-prediction-list>
-          <PredictionFight prediction={prediction} selectedBoxerId={selectedBoxerId} />
+        <ol class="grid gap-5 md:gap-6" role="list">
+          <PredictionFight prediction={prediction} />
         </ol>
       </div>
     </section>

@@ -1473,33 +1473,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 <script>
   import { $, $$ } from '@/lib/dom-selector'
 
-  // Data URIs muy pequeñas (2×2) usadas para detectar soporte de cada
-  // formato en el browser. Si la imagen carga sin error, el browser
-  // soporta ese formato.
-  const AVIF_TEST =
-    'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgANogQEAwgMg8f8D///8WfhwB8+ErK42A='
-  const WEBP_TEST =
-    'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA='
-
-  function detectFormat(dataUrl: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      const img = new Image()
-      img.onload = () => resolve(img.naturalWidth > 0)
-      img.onerror = () => resolve(false)
-      img.src = dataUrl
-    })
-  }
-
-  /** Devuelve la URL del mejor formato soportado para un thumb. */
-  function pickPhoto(
-    thumb: HTMLAnchorElement,
-    formats: { avif: boolean; webp: boolean },
-  ): string | undefined {
-    if (formats.avif && thumb.dataset.photoAvif) return thumb.dataset.photoAvif
-    if (formats.webp && thumb.dataset.photoWebp) return thumb.dataset.photoWebp
-    return thumb.dataset.photoWebp
-  }
-
   function setupMobileInfiniteSlider(root: HTMLElement, signal: AbortSignal) {
     const slider = $<HTMLElement>('[data-mobile-slider]', root)
     const track = $<HTMLElement>('[data-mobile-track]', root)
@@ -1665,28 +1638,10 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     const mobileThumbs = Array.from($$<HTMLAnchorElement>('[data-mobile-thumb]', root))
     if (!image || !nameNode || !grid || thumbs.length === 0) return
 
-    // Detección de formato + precarga en segundo plano. No bloqueamos
-    // el atado de listeners (un hover inmediato debe funcionar aunque
-    // todavía no sepamos qué formato usar para la precarga).
-    const idle =
-      (window as Window & { requestIdleCallback?: (cb: () => void) => number })
-        .requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 800))
-    void (async () => {
-      const [avifOk, webpOk] = await Promise.all([
-        detectFormat(AVIF_TEST),
-        detectFormat(WEBP_TEST),
-      ])
-      const formats = { avif: avifOk, webp: webpOk }
-      idle(() => {
-        thumbs.forEach((btn) => {
-          const url = pickPhoto(btn, formats)
-          if (!url) return
-          const img = new Image()
-          img.decoding = 'async'
-          img.src = url
-        })
-      })
-    })()
+    // Antes precargábamos las 20 fotos hero en idle: en iPhone/Safari eso
+    // sumaba decenas de peticiones HTTP/2 al CDN junto con el resto de la
+    // home y podía tumbar la conexión (“too many responses” / página en
+    // blanco). El <picture> del panel ya elige AVIF/WebP al seleccionar.
 
     const thumbsById = new Map<string, HTMLAnchorElement>()
     thumbs.forEach((btn) => {

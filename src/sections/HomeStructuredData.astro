@@ -1,5 +1,6 @@
 ---
 import { battles } from '@/consts/battles'
+import { getBattleResult } from '@/consts/battle-results'
 import { getBoxerMainPhotoUrl } from '@/consts/boxer-gallery'
 import { BOXERS, BOXERS_BY_ID, COUNTRY_NAMES } from '@/consts/boxers'
 import { EVENT_END_ISO, EVENT_ISO } from '@/consts/event'
@@ -19,7 +20,7 @@ const sportsEventJsonLd = {
   sport: 'Boxing',
   startDate: EVENT_ISO,
   endDate: EVENT_END_ISO,
-  eventStatus: 'https://schema.org/EventScheduled',
+  eventStatus: 'https://schema.org/EventCompleted',
   eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
   inLanguage: 'es-ES',
   location: [
@@ -56,13 +57,15 @@ const sportsEventJsonLd = {
     const [a, b] = battle.boxerIds
     const boxer1 = BOXERS_BY_ID[a]
     const boxer2 = BOXERS_BY_ID[b]
+    const result = getBattleResult(battle.id)
+    const winner = result ? BOXERS_BY_ID[result.winnerId] : null
     return {
       '@type': 'SportsEvent',
       name: battle.title,
       url: `${SITE_URL}${battle.url}`,
       sport: 'Boxing',
       startDate: EVENT_ISO,
-      eventStatus: 'https://schema.org/EventScheduled',
+      eventStatus: 'https://schema.org/EventCompleted',
       eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
       location: {
         '@type': 'Place',
@@ -87,6 +90,16 @@ const sportsEventJsonLd = {
           url: `${SITE_URL}/boxeadores/${boxer2.id}`,
         },
       ],
+      ...(winner
+        ? {
+            winner: {
+              '@type': 'Person',
+              name: winner.name,
+              image: getBoxerMainPhotoUrl(winner.id),
+              url: `${SITE_URL}/boxeadores/${winner.id}`,
+            },
+          }
+        : {}),
     }
   }),
 }
