@@ -1,14 +1,16 @@
 ---
 import { battles, type Battle } from '@/consts/battles'
 import { BOXERS_BY_ID, COUNTRY_NAMES, getBoxerSelectImages } from '@/consts/boxers'
+import { formatPredictionPercent, formatPredictionVotes } from '@/lib/format-votes'
+import { loadBuildTimePredictions } from '@/lib/predictions'
 
 // Esta página es la que se pega como "Browser Source" en OBS. Es totalmente
 // autónoma (no usa el Layout global ni global.css) porque necesita un fondo
-// transparente y nada de chrome del sitio. Muestra los VOTOS DE LOS PRONÓSTICOS
-// EN TIEMPO REAL (porcentaje por combatiente, barra "tira de la cuerda", total y
-// líder), actualizándose por polling a /api/predictions. Se configura por query
-// params desde el panel de control de /overlay. Es SSR (sin prerender) para leer
-// los parámetros en cada petición.
+// transparente y nada de chrome del sitio. Los totales de pronósticos van
+// embebidos en el HTML (misma fuente estática que /pronosticos): ya no hay
+// polling a /api/predictions. Se configura por query params desde el panel
+// de control de /overlay. Es SSR (sin prerender) para leer los parámetros
+// en cada petición.
 export const prerender = false
 
 const params = Astro.url.searchParams
@@ -56,9 +58,15 @@ interface OverlayBoxer {
   countryName: string
   avatarAvif: string
   avatarWebp: string
+  percentage: number
+  isLeader: boolean
 }
 
-function toOverlayBoxer(id: string): OverlayBoxer {
+function toOverlayBoxer(
+  id: string,
+  percentage: number,
+  isLeader: boolean,
+): OverlayBoxer {
   const boxer = BOXERS_BY_ID[id]
   const images = getBoxerSelectImages(boxer)
   return {
@@ -68,16 +76,35 @@ function toOverlayBoxer(id: string): OverlayBoxer {
     countryName: COUNTRY_NAMES[boxer.country] ?? boxer.country,
     avatarAvif: images.avif,
     avatarWebp: images.webp,
+    percentage,
+    isLeader,
   }
 }
 
+const predictionsByBattle = new Map(
+  (await loadBuildTimePredictions()).map((prediction) => [prediction.combat_id, prediction]),
+)
+
 const cards = selected.map((battle) => {
   const [aId, bId] = battle.boxerIds
+  const prediction = predictionsByBattle.get(battle.id)
+  const sideA = prediction?.predictions.find((side) => side.fighter_id === aId)
+  const sideB = prediction?.predictions.find((side) => side.fighter_id === bId)
+  const percentageA = sideA?.percentage ?? 0
+  const percentageB = sideB?.percentage ?? 0
+  const totalVotes = prediction?.total_votes ?? 0
+  const hasVotes = totalVotes > 0
+  const isTie = hasVotes && percentageA === percentageB
+  const leaderId =
+    hasVotes && !isTie ? (percentageA > percentageB ? aId : bId) : ''
+
   return {
     id: battle.id,
     number: battle.number,
-    a: toOverlayBoxer(aId),
-    b: toOverlayBoxer(bId),
+    totalVotes,
+    hasVotes,
+    a: toOverlayBoxer(aId, percentageA, leaderId === aId),
+    b: toOverlayBoxer(bId, percentageB, leaderId === bId),
   }
 })
 ---
@@ -88,7 +115,7 @@ const cards = selected.map((battle) => {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>Overlay OBS · Pronósticos en vivo · La Velada del Año VI</title>
+    <title>Overlay OBS · Pronósticos · La Velada del Año VI</title>
     <link
       rel="preload"
       href="https://cdn.infolavelada.com/fonts/cinzel-black.woff2"
@@ -114,19 +141,20 @@ const cards = selected.map((battle) => {
               class:list={['ov-card', { 'is-active': index === 0 }]}
               data-live-prediction
               data-battle-id={card.id}
-              data-has-votes="false"
+              data-has-votes={String(card.hasVotes)}
             >
               <div class="ov-top">
                 <span class="ov-combate">
                   Combate {String(card.number).padStart(2, '0')}
                 </span>
-                <span class="ov-total">
-                  <span data-live-total>0</span> votos
-                </span>
+                <span class="ov-total">{formatPredictionVotes(card.totalVotes)} votos</span>
               </div>
 
               <div class:list={['ov-body', { 'no-avatar': !showAvatar }]}>
-                <div class="ov-side ov-a" data-live-side={card.a.id}>
+                <div
+                  class:list={['ov-side', 'ov-a', { 'is-leader': card.a.isLeader }]}
+                  data-live-side={card.a.id}
+                >
                   {showAvatar && (
                     <span class="ov-avatarwrap">
                       <picture class="ov-avatar">
@@ -155,8 +183,8 @@ const cards = selected.map((battle) => {
                     )}
                     <span class="ov-name">{card.a.name}</span>
                   </div>
-                  <span class="ov-pct ov-pct-a" data-live-pct={card.a.id}>
-                    —
+                  <span class="ov-pct ov-pct-a">
+                    {card.hasVotes ? formatPredictionPercent(card.a.percentage) : '—'}
                   </span>
                 </div>
 
@@ -168,7 +196,10 @@ const cards = selected.map((battle) => {
                   </svg>
                 </div>
 
-                <div class="ov-side ov-b" data-live-side={card.b.id}>
+                <div
+                  class:list={['ov-side', 'ov-b', { 'is-leader': card.b.isLeader }]}
+                  data-live-side={card.b.id}
+                >
                   {showAvatar && (
                     <span class="ov-avatarwrap">
                       <picture class="ov-avatar">
@@ -197,15 +228,21 @@ const cards = selected.map((battle) => {
                     )}
                     <span class="ov-name">{card.b.name}</span>
                   </div>
-                  <span class="ov-pct ov-pct-b" data-live-pct={card.b.id}>
-                    —
+                  <span class="ov-pct ov-pct-b">
+                    {card.hasVotes ? formatPredictionPercent(card.b.percentage) : '—'}
                   </span>
                 </div>
               </div>
 
               <div class="ov-track" aria-hidden="true">
-                <span class="ov-fill ov-fill-a" data-live-fill={card.a.id} />
-                <span class="ov-fill ov-fill-b" data-live-fill={card.b.id} />
+                <span
+                  class="ov-fill ov-fill-a"
+                  style={`width: ${card.hasVotes ? card.a.percentage : 0}%`}
+                />
+                <span
+                  class="ov-fill ov-fill-b"
+                  style={`width: ${card.hasVotes ? card.b.percentage : 0}%`}
+                />
               </div>
             </article>
           ))
@@ -244,98 +281,6 @@ const cards = selected.map((battle) => {
         if (window.__ovRotateTimer) window.clearInterval(window.__ovRotateTimer)
         window.__ovRotateTimer = window.setInterval(render, 200)
         render()
-      })()
-    </script>
-
-    {/* Votos en tiempo real: pollea /api/predictions (cacheado en el edge ~10s)
-        y actualiza porcentajes, barras, total y líder de TODAS las tarjetas.
-        Idempotente: las actualizaciones fijan valores exactos del servidor, así
-        que aunque el poller corriera dos veces no se corrompe nada. */}
-    <script is:inline>
-      ;(function () {
-        var REFRESH_MS = 9000
-        var votesFmt, votesCompactFmt, pctFmt
-        try {
-          votesFmt = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 0 })
-          votesCompactFmt = new Intl.NumberFormat('es-ES', {
-            notation: 'compact',
-            maximumFractionDigits: 1,
-          })
-          pctFmt = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 1 })
-        } catch (e) {
-          /* navegadores muy viejos: caemos a String() */
-        }
-
-        function fmtVotes(n) {
-          n = Number(n) || 0
-          if (n > 100000 && votesCompactFmt) return votesCompactFmt.format(n)
-          return votesFmt ? votesFmt.format(n) : String(n)
-        }
-        function fmtPct(p) {
-          return (pctFmt ? pctFmt.format(p) : String(p)) + '%'
-        }
-
-        function updateCard(el, combat) {
-          var total = Number(combat.total_votes) || 0
-          var totalNode = el.querySelector('[data-live-total]')
-          if (totalNode) totalNode.textContent = fmtVotes(total)
-          el.setAttribute('data-has-votes', String(total > 0))
-
-          var preds = combat.predictions || []
-          var leaderId = ''
-          var leaderPct = -1
-          var tie = false
-
-          for (var i = 0; i < preds.length; i++) {
-            var p = preds[i]
-            var pctNode = el.querySelector('[data-live-pct="' + p.fighter_id + '"]')
-            var fillNode = el.querySelector('[data-live-fill="' + p.fighter_id + '"]')
-            if (pctNode) pctNode.textContent = total > 0 ? fmtPct(p.percentage) : '—'
-            if (fillNode) fillNode.style.width = (total > 0 ? p.percentage : 0) + '%'
-            if (p.percentage > leaderPct) {
-              leaderPct = p.percentage
-              leaderId = p.fighter_id
-              tie = false
-            } else if (p.percentage === leaderPct) {
-              tie = true
-            }
-          }
-
-          var sides = el.querySelectorAll('[data-live-side]')
-          for (var s = 0; s < sides.length; s++) {
-            var isLeader = total > 0 && !tie && sides[s].getAttribute('data-live-side') === leaderId
-            sides[s].classList.toggle('is-leader', isLeader)
-          }
-        }
-
-        var ctrl = null
-        function refresh() {
-          if (ctrl) ctrl.abort()
-          ctrl = new AbortController()
-          fetch('/api/predictions', { signal: ctrl.signal })
-            .then(function (r) {
-              return r.ok ? r.json() : null
-            })
-            .then(function (data) {
-              if (!data || !data.predictions) return
-              var byId = {}
-              for (var i = 0; i < data.predictions.length; i++) {
-                byId[data.predictions[i].combat_id] = data.predictions[i]
-              }
-              var els = document.querySelectorAll('[data-live-prediction]')
-              for (var j = 0; j < els.length; j++) {
-                var combat = byId[els[j].getAttribute('data-battle-id')]
-                if (combat) updateCard(els[j], combat)
-              }
-            })
-            .catch(function () {
-              /* error de red puntual: reintentaremos en el siguiente tick */
-            })
-        }
-
-        if (window.__ovPollTimer) window.clearInterval(window.__ovPollTimer)
-        window.__ovPollTimer = window.setInterval(refresh, REFRESH_MS)
-        refresh()
       })()
     </script>
 

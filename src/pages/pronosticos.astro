@@ -9,9 +9,9 @@ import { loadBuildTimePredictions } from '@/lib/predictions'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 
-// Totales de la comunidad fijados en build. La sesión y los votos propios se
-// hidratan en cliente (AuthButton + GET /api/predictions?mine=1). La votación
-// está cerrada: solo se pueden ver, no cambiar.
+// Totales de la comunidad fijados en build (HTML estático). La API solo se
+// usa si el usuario inicia sesión y quiere ver sus votos previos
+// (GET /api/predictions?mine=1). La votación está cerrada.
 export const prerender = true
 
 const title = 'Pronósticos - La Velada del Año VI'
