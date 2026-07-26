@@ -1,0 +1,69 @@
+---
+import PlayIcon from '@/assets/svg/play.svg'
+import SpotifyIcon from '@/assets/svg/spotify.svg'
+import { getSetlistSongVideoUrl, getTrackSpotifyUrl } from '@/lib/artists'
+import type { ArtistSetlistSong } from '@/types/artists'
+
+interface Props {
+  class?: string
+  songs: ArtistSetlistSong[]
+  videoId?: string
+}
+
+const { class: className, songs, videoId } = Astro.props
+---
+
+<div class:list={['w-full sm:w-[min(100%,34rem)]', className]}>
+  <p class="m-0 mb-[0.6rem] font-cinzel text-[0.65rem] font-black tracking-[0.2em] text-theme-cream/55">
+    Setlist de la actuación
+  </p>
+  <ol class="m-0 flex list-none flex-col divide-y divide-theme-gold/12 overflow-hidden rounded-2xl p-0 ring-1 ring-inset ring-theme-gold/22">
+    {
+      songs.map((song, index) => {
+        const spotifyUrl = song.spotifyId ? getTrackSpotifyUrl(song.spotifyId) : null
+        const videoUrl = videoId ? getSetlistSongVideoUrl(videoId, song.timestamp) : null
+
+        return (
+          <li class="flex items-center gap-[0.85rem] bg-theme-midnight/55 px-[0.9rem] py-[0.65rem]">
+            <span class="w-[1.2rem] shrink-0 text-center font-cinzel text-[0.8rem] font-black text-theme-gold/85">
+              {index + 1}
+            </span>
+            <span class="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap font-cinzel text-[0.82rem] font-bold tracking-[0.02em] text-theme-cream normal-case">
+              {song.name}
+            </span>
+
+            {videoUrl && (
+              <a
+                href={videoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex shrink-0 items-center gap-1 text-theme-cream/60 no-underline transition-colors duration-200 ease-out outline-none hover:text-theme-gold focus-visible:text-theme-gold"
+                aria-label={`Ver ${song.name} en el vídeo de la actuación (${song.timestamp})`}
+              >
+                <PlayIcon
+                  class="size-3.5 shrink-0 opacity-70 transition-opacity duration-200 ease-out group-hover:opacity-100"
+                  aria-hidden="true"
+                />
+              </a>
+            )}
+
+            {spotifyUrl && (
+              <a
+                href={spotifyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex shrink-0 items-center text-[#1db954] no-underline outline-none"
+                aria-label={`Escuchar ${song.name} en Spotify`}
+              >
+                <SpotifyIcon
+                  class="size-4 shrink-0 opacity-70 transition-opacity duration-200 ease-out group-hover:opacity-100"
+                  aria-hidden="true"
+                />
+              </a>
+            )}
+          </li>
+        )
+      })
+    }
+  </ol>
+</div>
