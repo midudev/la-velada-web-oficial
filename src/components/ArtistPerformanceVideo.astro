@@ -1,0 +1,134 @@
+---
+import ThumbnailPlaceholder from '@/components/ThumbnailPlaceholder.astro'
+import PlayIcon from '@/assets/svg/play.svg'
+
+interface Props {
+  class?: string
+  artistName: string
+  videoId?: string
+}
+
+const { class: className, artistName, videoId } = Astro.props
+
+const posterWebp = videoId ? `https://i.ytimg.com/vi_webp/${videoId}/maxresdefault.webp` : null
+const posterJpg = videoId ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg` : null
+const embedUrl = videoId
+  ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&playsinline=1`
+  : null
+---
+
+{
+  videoId && embedUrl ? (
+    <div
+      data-artist-video
+      class:list={[
+        'group relative isolate flex aspect-video w-full overflow-hidden rounded-xl border border-theme-gold/15 bg-theme-midnight/90 text-left',
+        className,
+      ]}
+    >
+      <button
+        type="button"
+        class="artist-video-trigger relative flex h-full w-full cursor-pointer border-0 bg-transparent p-0 text-left outline-none"
+        data-artist-video-trigger
+        data-artist-video-embed={embedUrl}
+        data-artist-video-title={`Actuación de ${artistName}`}
+        aria-label={`Reproducir la actuación de ${artistName}`}
+      >
+        <ThumbnailPlaceholder iconClass="size-16 sm:size-20 md:size-28 lg:size-36" />
+        <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">
+          {posterWebp && <source srcset={posterWebp} type="image/webp" />}
+          {posterJpg && (
+            <img
+              src={posterJpg}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover"
+              data-img-fallback={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+            />
+          )}
+        </picture>
+
+        <span
+          aria-hidden="true"
+          class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
+        />
+        <span
+          aria-hidden="true"
+          class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_rgba(199,168,107,0.08),_transparent_60%)] opacity-0 transition duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
+        />
+
+        <span aria-hidden="true" class="absolute inset-0 flex items-center justify-center">
+          <span class="flex size-14 items-center justify-center rounded-full border border-white/30 bg-black/40 backdrop-blur-md backdrop-contrast-125 backdrop-saturate-150 transition duration-500 group-hover:scale-110 group-hover:border-theme-gold/70 group-hover:bg-theme-gold/20 group-focus-visible:scale-110 group-focus-visible:border-theme-gold/70 group-focus-visible:bg-theme-gold/20 sm:size-16">
+            <PlayIcon
+              class="size-6 translate-x-[1px] text-white transition duration-500 group-hover:text-theme-cream group-focus-visible:text-theme-cream sm:size-7"
+              aria-hidden="true"
+            />
+          </span>
+        </span>
+      </button>
+    </div>
+  ) : (
+    <div
+      aria-label="La actuación. Próximamente."
+      aria-disabled="true"
+      class:list={[
+        'group relative isolate flex aspect-video w-full cursor-not-allowed overflow-hidden rounded-xl border border-theme-gold/15 bg-theme-midnight/90 text-left',
+        className,
+      ]}
+    >
+      <ThumbnailPlaceholder iconClass="size-16 sm:size-20 md:size-28 lg:size-36" />
+
+      <div
+        aria-hidden="true"
+        class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-black/20"
+      />
+      <div
+        aria-hidden="true"
+        class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_rgba(199,168,107,0.08),_transparent_60%)]"
+      />
+
+      <div class="relative flex h-full w-full flex-col items-center justify-between px-5 py-6 text-center sm:px-6 sm:py-7 md:px-10 md:py-10 lg:px-14 lg:py-14">
+        <h3 class="font-cinzel text-2xl leading-tight font-black tracking-[0.08em] text-theme-cream/90 drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:text-3xl md:text-5xl lg:text-6xl">
+          LA ACTUACIÓN
+        </h3>
+
+        <span class="font-cinzel text-[0.55rem] font-black tracking-[0.26em] text-theme-cream/90 sm:text-[0.65rem] md:text-sm lg:text-base">
+          PRÓXIMAMENTE
+        </span>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  import { $, $$ } from '@/lib/dom-selector'
+
+  function initArtistVideos() {
+    $$<HTMLElement>('[data-artist-video]').forEach((root) => {
+      if (root.dataset.artistVideoReady === 'true') return
+
+      const trigger = $<HTMLButtonElement>('[data-artist-video-trigger]', root)
+      if (!trigger) return
+
+      root.dataset.artistVideoReady = 'true'
+      trigger.addEventListener('click', () => {
+        const embedUrl = trigger.dataset.artistVideoEmbed
+        if (!embedUrl) return
+
+        const iframe = document.createElement('iframe')
+        iframe.src = embedUrl
+        iframe.allow =
+          'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+        iframe.setAttribute('allowfullscreen', '')
+        iframe.title = trigger.dataset.artistVideoTitle ?? 'La actuación'
+        iframe.className = 'h-full w-full border-0'
+
+        root.replaceChildren(iframe)
+      })
+    })
+  }
+
+  document.addEventListener('astro:page-load', initArtistVideos)
+</script>
