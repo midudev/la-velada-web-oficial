@@ -1,14 +1,18 @@
 ---
 import PredictionOption from '@/components/PredictionOption.astro'
+import {
+  getBattleResult,
+  getDecisionLabel,
+  getWinnerWord,
+} from '@/consts/battle-results'
 import type { PredictionBattle } from '@/consts/predictions'
 
 interface Props {
   prediction: PredictionBattle
-  selectedBoxerId?: string
   index?: number
 }
 
-const { prediction, selectedBoxerId, index = 0 } = Astro.props
+const { prediction, index = 0 } = Astro.props
 // Entrada escalonada (mismo patrón que /combates).
 const animationDelay = `${index * 60}ms`
 const { battle, options } = prediction
@@ -17,6 +21,16 @@ const [optionA, optionB] = options
 // Líder solo si hay votos y no es empate (si no, sin halo).
 const hasLeader = prediction.totalVotes > 0 && optionA.percentage !== optionB.percentage
 const leaderBoxerId = hasLeader ? prediction.leader.boxer.id : undefined
+
+const result = getBattleResult(battle.id)
+const winner =
+  result && (optionA.boxer.id === result.winnerId
+    ? optionA.boxer
+    : optionB.boxer.id === result.winnerId
+      ? optionB.boxer
+      : null)
+const winnerWord = winner ? getWinnerWord(winner.gender) : null
+const decisionLabel = result ? getDecisionLabel(result) : null
 ---
 
 <li
@@ -28,7 +42,11 @@ const leaderBoxerId = hasLeader ? prediction.leader.boxer.id : undefined
     <h2 class="sr-only">
       Combate {battle.number}: {optionA.boxer.name} ({optionA.countryName}) contra {
         optionB.boxer.name
-      } ({optionB.countryName})
+      } ({optionB.countryName}){
+        winner && winnerWord && decisionLabel
+          ? `. ${winnerWord}: ${winner.name}. ${decisionLabel}.`
+          : ''
+      }
     </h2>
 
     <div class="tow-stage">
@@ -37,14 +55,14 @@ const leaderBoxerId = hasLeader ? prediction.leader.boxer.id : undefined
       <PredictionOption
         battleId={battle.id}
         option={optionA}
-        selectedBoxerId={selectedBoxerId}
         leaderBoxerId={leaderBoxerId}
+        winnerBoxerId={result?.winnerId}
       />
       <PredictionOption
         battleId={battle.id}
         option={optionB}
-        selectedBoxerId={selectedBoxerId}
         leaderBoxerId={leaderBoxerId}
+        winnerBoxerId={result?.winnerId}
       />
 
       <span aria-hidden="true" class="tow-seam"></span>
@@ -55,6 +73,16 @@ const leaderBoxerId = hasLeader ? prediction.leader.boxer.id : undefined
 
       <span aria-hidden="true" class="tow-track"></span>
     </div>
+
+    {
+      winner && winnerWord && decisionLabel && (
+        <p class="tow-result font-cinzel" aria-hidden="true">
+          <span class="tow-result-label">{winnerWord}</span>
+          <span class="tow-result-name">{winner.name}</span>
+          <span class="tow-result-decision">{decisionLabel}</span>
+        </p>
+      )
+    }
   </article>
 </li>
 
@@ -176,5 +204,52 @@ const leaderBoxerId = hasLeader ? prediction.leader.boxer.id : undefined
     .tow-vs-medal b {
       font-size: 0.8rem;
     }
+  }
+
+  /* Resultado oficial bajo el tug-of-war (complementa el badge del ganador). */
+  .tow-result {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.3rem 0.55rem;
+    margin: 0.7rem 0 0;
+    padding: 0.55rem 0.75rem;
+    border-radius: 0.45rem;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-theme-gold) 12%, transparent),
+        color-mix(in srgb, #05080f 88%, transparent)
+      ),
+      #070b18;
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 26%, transparent);
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .tow-result-label {
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 85%, transparent);
+  }
+
+  .tow-result-name {
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+  }
+
+  .tow-result-decision {
+    width: 100%;
+    font-size: 0.52rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 52%, transparent);
   }
 </style>
