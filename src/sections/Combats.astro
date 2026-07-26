@@ -1,7 +1,9 @@
 ---
 import ArrowRightIcon from '@/assets/svg/arrow-right.svg'
+import CombatResultStrip from '@/components/combat/CombatResultStrip.astro'
 import SectionHeader from '@/components/SectionHeader.astro'
 import { battles } from '@/consts/battles'
+import { getBattleResult } from '@/consts/battle-results'
 import {
   BOXERS_BY_ID,
   getBoxerHeroImages,
@@ -15,6 +17,7 @@ function toFighter(boxer: Boxer) {
   return {
     id: boxer.id,
     name: boxer.name,
+    gender: boxer.gender,
     hero: getBoxerHeroImages(boxer),
     srcset: getBoxerHeroSrcset(boxer),
   }
@@ -31,6 +34,9 @@ const combatRows = battles.map((battle) => {
   const imageSizes = featured
     ? '(min-width: 1024px) 30vw, (min-width: 700px) 45vw, 48vw'
     : '(min-width: 1024px) 14vw, (min-width: 700px) 22vw, 48vw'
+  const result = getBattleResult(battle.id)
+  const winnerId = result?.winnerId
+  const loserId = winnerId ? (winnerId === idA ? idB : idA) : null
 
   return {
     number: battle.number,
@@ -39,6 +45,9 @@ const combatRows = battles.map((battle) => {
     isMainEvent,
     isCoMain,
     imageSizes,
+    result,
+    winnerId,
+    loserId,
     a: toFighter(BOXERS_BY_ID[idA]),
     b: toFighter(BOXERS_BY_ID[idB]),
   }
@@ -64,76 +73,121 @@ const combatRows = battles.map((battle) => {
   <div class="relative mx-auto flex max-w-6xl flex-col items-center">
     <SectionHeader
       titleId="home-combats-title"
-      eyebrow="Cartelera oficial"
+      eyebrow="Resultados oficiales"
       title="COMBATES"
-      subtitle="El orden de la noche en La Velada del Año VI"
+      subtitle="Ganadores y tarjetas de los jueces de La Velada del Año VI"
       subtitleClass="mb-10 max-w-xl tracking-[0.16em] sm:mb-12 sm:text-sm"
     />
 
     <ol class="combats-grid w-full list-none p-0" role="list">
       {
-        combatRows.map((combat, index) => (
-          <li
-            class:list={[
-              'combats-item animate-fade-in-up',
-              { 'is-main': combat.isMainEvent, 'is-co': combat.isCoMain },
-            ]}
-            style={`animation-delay:${index * 35}ms`}
-          >
-            <a
-              href={combat.url}
-              class="combats-card"
-              aria-label={`Combate ${combat.number}: ${combat.title}`}
+        combatRows.map((combat, index) => {
+          const winner =
+            combat.winnerId === combat.a.id
+              ? combat.a
+              : combat.winnerId === combat.b.id
+                ? combat.b
+                : null
+          const loser =
+            combat.loserId === combat.a.id
+              ? combat.a
+              : combat.loserId === combat.b.id
+                ? combat.b
+                : null
+          const ariaResult =
+            winner && combat.result
+              ? `. ${winner.gender === 'f' ? 'Ganadora' : 'Ganador'}: ${winner.name}, ${combat.result.votes[0]}-${combat.result.votes[1]}`
+              : ''
+
+          return (
+            <li
+              class:list={[
+                'combats-item animate-fade-in-up',
+                { 'is-main': combat.isMainEvent, 'is-co': combat.isCoMain },
+              ]}
+              style={`animation-delay:${index * 35}ms`}
             >
-              <span class="combats-num" aria-hidden="true">
-                {String(combat.number).padStart(2, '0')}
-              </span>
-
-              <div class="combats-stage">
-                <span aria-hidden="true" class="combats-corner tl" />
-                <span aria-hidden="true" class="combats-corner tr" />
-                <span aria-hidden="true" class="combats-corner bl" />
-                <span aria-hidden="true" class="combats-corner br" />
-
-                {[
-                  { fighter: combat.a, side: 'a' as const },
-                  { fighter: combat.b, side: 'b' as const },
-                ].map(({ fighter, side }) => (
-                  <div class:list={['combats-fighter', side]}>
-                    <span aria-hidden="true" class="combats-spot" />
-                    <picture class="combats-pic">
-                      <source
-                        type="image/avif"
-                        srcset={fighter.srcset.avif}
-                        sizes={combat.imageSizes}
-                      />
-                      <source
-                        type="image/webp"
-                        srcset={fighter.srcset.webp}
-                        sizes={combat.imageSizes}
-                      />
-                      <img
-                        src={fighter.hero.webp}
-                        alt=""
-                        width="640"
-                        height="960"
-                        loading="lazy"
-                        decoding="async"
-                        class="combats-img"
-                      />
-                    </picture>
-                    <span aria-hidden="true" class="combats-veil" />
-                    <span class="combats-name">{fighter.name}</span>
-                  </div>
-                ))}
-
-                <span class="combats-vs" aria-hidden="true">
-                  <span>VS</span>
+              <a
+                href={combat.url}
+                class="combats-card"
+                aria-label={`Combate ${combat.number}: ${combat.title}${ariaResult}`}
+              >
+                <span class="combats-num" aria-hidden="true">
+                  {String(combat.number).padStart(2, '0')}
                 </span>
-              </div>
-            </a>
-          </li>
-        ))
+
+                <div class="combats-stage">
+                  <span aria-hidden="true" class="combats-corner tl" />
+                  <span aria-hidden="true" class="combats-corner tr" />
+                  <span aria-hidden="true" class="combats-corner bl" />
+                  <span aria-hidden="true" class="combats-corner br" />
+
+                  {[
+                    { fighter: combat.a, side: 'a' as const },
+                    { fighter: combat.b, side: 'b' as const },
+                  ].map(({ fighter, side }) => (
+                    <div
+                      class:list={[
+                        'combats-fighter',
+                        side,
+                        { 'is-winner': combat.winnerId === fighter.id },
+                      ]}
+                    >
+                      <span aria-hidden="true" class="combats-spot" />
+                      <picture class="combats-pic">
+                        <source
+                          type="image/avif"
+                          srcset={fighter.srcset.avif}
+                          sizes={combat.imageSizes}
+                        />
+                        <source
+                          type="image/webp"
+                          srcset={fighter.srcset.webp}
+                          sizes={combat.imageSizes}
+                        />
+                        <img
+                          src={fighter.hero.webp}
+                          alt=""
+                          width="640"
+                          height="960"
+                          loading="lazy"
+                          decoding="async"
+                          class="combats-img"
+                        />
+                      </picture>
+                      <span aria-hidden="true" class="combats-veil" />
+                      <div class="combats-caption">
+                        {combat.winnerId === fighter.id && (
+                          <span class="combats-winner-badge" aria-hidden="true">
+                            <span class="combats-winner-star">★</span>
+                            <span class="combats-winner-label">
+                              {fighter.gender === 'f' ? 'Ganadora' : 'Ganador'}
+                            </span>
+                          </span>
+                        )}
+                        <span class="combats-name">{fighter.name}</span>
+                      </div>
+                    </div>
+                  ))}
+
+                  <span class="combats-vs" aria-hidden="true">
+                    <span>VS</span>
+                  </span>
+                </div>
+
+                {combat.result && winner && loser && (
+                  <CombatResultStrip
+                    result={combat.result}
+                    winnerName={winner.name}
+                    winnerGender={winner.gender}
+                    loserId={loser.id}
+                    loserName={loser.name}
+                  />
+                )}
+              </a>
+            </li>
+          )
+        })
       }
     </ol>
 
@@ -252,7 +306,7 @@ const combatRows = battles.map((battle) => {
   .combats-num {
     position: absolute;
     top: 0.55rem;
-    left: 0.55rem;
+    left: 50%;
     z-index: 8;
     display: grid;
     place-items: center;
@@ -260,6 +314,7 @@ const combatRows = battles.map((battle) => {
     height: 1.55rem;
     padding-inline: 0.35rem;
     border-radius: 0.2rem;
+    transform: translateX(-50%);
     font-family: var(--font-cinzel), var(--font-fallback);
     font-size: 0.62rem;
     font-weight: 900;
@@ -284,7 +339,6 @@ const combatRows = battles.map((battle) => {
 
   .combats-item.is-main .combats-num {
     top: 0.7rem;
-    left: 0.7rem;
     min-width: 2.45rem;
     height: 1.95rem;
     font-size: 0.82rem;
@@ -364,6 +418,74 @@ const combatRows = battles.map((battle) => {
     min-width: 0;
   }
 
+  .combats-fighter.is-winner .combats-spot {
+    opacity: 0.95;
+    background: radial-gradient(
+      75% 65% at 50% 18%,
+      color-mix(in srgb, var(--color-theme-gold) 48%, transparent),
+      transparent 64%
+    );
+  }
+
+  .combats-fighter.is-winner .combats-img {
+    filter: saturate(1.08) brightness(1.05);
+  }
+
+  .combats-fighter.is-winner .combats-name {
+    color: color-mix(in srgb, var(--color-theme-gold) 62%, var(--color-theme-cream));
+  }
+
+  .combats-winner-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.28rem;
+    max-width: 100%;
+    padding: 0.22rem 0.45rem 0.22rem 0.32rem;
+    border-radius: 9999px;
+    color: var(--color-theme-midnight);
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-theme-gold) 92%, white) 0%,
+      var(--color-theme-gold) 55%,
+      color-mix(in srgb, var(--color-theme-gold) 72%, #6b4f1e) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      0 4px 14px color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
+  }
+
+  .combats-winner-star {
+    flex-shrink: 0;
+    font-size: 0.62rem;
+    line-height: 1;
+  }
+
+  .combats-winner-label {
+    font-family: var(--font-cinzel), var(--font-fallback);
+    font-size: 0.52rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .combats-item.is-co .combats-winner-label,
+  .combats-item.is-main .combats-winner-label {
+    font-size: 0.58rem;
+  }
+
+  .combats-item.is-main .combats-winner-star {
+    font-size: 0.7rem;
+  }
+
+  @media (min-width: 700px) {
+    .combats-winner-label {
+      font-size: 0.56rem;
+    }
+  }
+
   .combats-spot {
     position: absolute;
     inset: 0;
@@ -405,6 +527,7 @@ const combatRows = battles.map((battle) => {
     transform: scale(1.04);
   }
 
+
   .combats-veil {
     position: absolute;
     inset: 0;
@@ -441,39 +564,52 @@ const combatRows = battles.map((battle) => {
       );
   }
 
-  .combats-name {
+  .combats-caption {
     position: absolute;
     inset-inline: 0.35rem;
     bottom: 0.55rem;
     z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.28rem;
+    text-align: center;
+  }
+
+  .combats-fighter.a .combats-caption {
+    padding-right: 0.85rem;
+  }
+
+  .combats-fighter.b .combats-caption {
+    padding-left: 0.85rem;
+  }
+
+  .combats-name {
     font-family: var(--font-cinzel), var(--font-fallback);
     font-size: clamp(0.68rem, 0.52rem + 0.7vw, 0.95rem);
     font-weight: 900;
     letter-spacing: 0.03em;
     line-height: 1.1;
-    text-align: center;
     color: var(--color-theme-cream);
     text-shadow:
       0 1px 2px rgba(0, 0, 0, 0.95),
       0 2px 14px rgba(0, 0, 0, 0.75);
   }
 
-  .combats-fighter.a .combats-name {
-    padding-right: 0.85rem;
-  }
-
-  .combats-fighter.b .combats-name {
-    padding-left: 0.85rem;
+  .combats-item.is-co .combats-caption {
+    bottom: 0.7rem;
   }
 
   .combats-item.is-co .combats-name {
     font-size: clamp(0.82rem, 0.6rem + 0.85vw, 1.2rem);
-    bottom: 0.7rem;
+  }
+
+  .combats-item.is-main .combats-caption {
+    bottom: 0.85rem;
   }
 
   .combats-item.is-main .combats-name {
     font-size: clamp(0.95rem, 0.7rem + 1.1vw, 1.55rem);
-    bottom: 0.85rem;
     letter-spacing: 0.04em;
   }
 
@@ -617,7 +753,7 @@ const combatRows = battles.map((battle) => {
       aspect-ratio: 2.55 / 1;
     }
 
-    .combats-name {
+    .combats-caption {
       inset-inline: 0.6rem;
       bottom: 0.7rem;
     }

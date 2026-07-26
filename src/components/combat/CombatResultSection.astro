@@ -1,0 +1,122 @@
+---
+import CombatJudgeVotes from '@/components/combat/CombatJudgeVotes.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
+import {
+  getDecisionLabel,
+  getWinnerWord,
+  type BattleResult,
+} from '@/consts/battle-results'
+import type { Boxer } from '@/consts/boxers'
+
+interface Props {
+  result: BattleResult
+  winner: Boxer
+  loser: Boxer
+}
+
+const { result, winner, loser } = Astro.props
+const winnerWord = getWinnerWord(winner.gender)
+const decision = getDecisionLabel(result)
+const score = `${result.votes[0]}-${result.votes[1]}`
+---
+
+<section class="combat-result px-4 sm:px-6" aria-labelledby="combat-result-title">
+  <div class="combat-result-inner">
+    <div class="mb-6 flex flex-col items-center gap-2 text-center">
+      <SectionDivider size="sm" class="w-full" />
+      <h2
+        id="combat-result-title"
+        class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm"
+      >
+        RESULTADO
+      </h2>
+    </div>
+
+    <div class="result-card">
+      <p class="result-eyebrow font-cinzel">{winnerWord}</p>
+      <p class="result-winner font-cinzel">{winner.name}</p>
+      <p class="result-decision font-cinzel">{decision}</p>
+      <p class="result-score font-cinzel" aria-hidden="true">{score}</p>
+
+      <CombatJudgeVotes
+        result={result}
+        winnerId={winner.id}
+        loserId={loser.id}
+        winnerName={winner.name}
+        loserName={loser.name}
+        variant="detail"
+        class="mt-5"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .combat-result {
+    position: relative;
+    z-index: 2;
+    padding-block: 1rem 2.5rem;
+  }
+
+  .combat-result-inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 40rem;
+  }
+
+  .result-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.4rem 1.1rem 1.5rem;
+    border-radius: var(--radius-card);
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 32%, transparent);
+    background:
+      radial-gradient(
+        ellipse 80% 70% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 16%, transparent),
+        transparent 65%
+      ),
+      linear-gradient(180deg, #101832 0%, #070b18 100%);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 10%, transparent),
+      0 18px 48px rgba(0, 0, 0, 0.45);
+    text-align: center;
+  }
+
+  .result-eyebrow {
+    margin: 0;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 88%, transparent);
+  }
+
+  .result-winner {
+    margin: 0.35rem 0 0;
+    font-size: clamp(1.55rem, 1.1rem + 2vw, 2.35rem);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+    text-shadow: 0 2px 24px color-mix(in srgb, var(--color-theme-gold) 35%, transparent);
+  }
+
+  .result-decision {
+    margin: 0.55rem 0 0;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 68%, transparent);
+  }
+
+  .result-score {
+    margin: 0.35rem 0 0;
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    color: var(--color-theme-gold);
+  }
+</style>

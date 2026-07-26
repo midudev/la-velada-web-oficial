@@ -5,13 +5,14 @@ import Sponsors from '@/sections/Sponsors.astro'
 import CombatCard from '@/components/CombatCard.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
 import { battles } from '@/consts/battles'
+import { getBattleResult } from '@/consts/battle-results'
 import { BOXERS_BY_ID, COUNTRY_NAMES, getBoxerHeroImages, type Boxer } from '@/consts/boxers'
 import { serializeJsonLd } from '@/utils/serialize-json-ld'
 
 const SITE_URL = 'https://www.infolavelada.com'
 const title = 'Combates | La Velada del Año VI'
 const description =
-  'La cartelera completa de La Velada del Año VI: combates estelares y undercard del evento de Ibai Llanos en Sevilla.'
+  'Resultados oficiales de La Velada del Año VI: ganadores, decisiones de los jueces y cartelera completa del evento de Ibai Llanos en Sevilla.'
 const canonical = `${SITE_URL}/combates`
 
 export const prerender = true
@@ -22,6 +23,7 @@ const MAIN_EVENT_COUNT = 2
 const toCard = (boxer: Boxer) => ({
   id: boxer.id,
   name: boxer.name,
+  gender: boxer.gender,
   country: boxer.country,
   countryName: COUNTRY_NAMES[boxer.country] ?? boxer.country,
   heroImages: getBoxerHeroImages(boxer),
@@ -36,6 +38,7 @@ const combatCards = [...battles].reverse().map((battle, index) => {
     position: battle.number,
     url: battle.url,
     featured: index < MAIN_EVENT_COUNT,
+    result: getBattleResult(battle.id),
     a: toCard(BOXERS_BY_ID[id1]),
     b: toCard(BOXERS_BY_ID[id2]),
   }
@@ -78,7 +81,7 @@ const breadcrumbJsonLd = {
         <p
           class="animate-fade-in-up font-cinzel text-xs font-medium tracking-[0.16em] text-balance text-white/55 animate-delay-200 sm:text-sm sm:tracking-[0.25em]"
         >
-          La cartelera de La Velada del Año VI
+          Resultados oficiales de La Velada del Año VI
         </p>
       </header>
 
@@ -98,6 +101,7 @@ const breadcrumbJsonLd = {
                     badge={i === 0 ? 'Main Event' : 'Co-estelar'}
                     a={c.a}
                     b={c.b}
+                    result={c.result}
                     imageLoadingStrategy={{
                       loading: 'eager',
                       decoding: 'auto',
@@ -120,7 +124,13 @@ const breadcrumbJsonLd = {
             <div class="combates-under">
               {combats.map((c, i) => (
                 <div class="animate-fade-in-up" style={`animation-delay:${i * 45}ms`}>
-                  <CombatCard number={c.position} url={c.url} a={c.a} b={c.b} />
+                  <CombatCard
+                    number={c.position}
+                    url={c.url}
+                    a={c.a}
+                    b={c.b}
+                    result={c.result}
+                  />
                 </div>
               ))}
             </div>
