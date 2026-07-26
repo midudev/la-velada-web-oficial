@@ -31,17 +31,22 @@
   }
 
   function applyUserVotes(votes: Record<string, string>) {
-    Object.entries(votes).forEach(([battleId, boxerId]) => {
+    const entries = Object.entries(votes)
+    // Sin votos previos: no marcamos nada en la UI (solo totales de comunidad).
+    if (entries.length === 0) {
+      clearUserVotes()
+      const emptyAnnouncer = $<HTMLElement>('[data-prediction-user-announcer]')
+      if (emptyAnnouncer) emptyAnnouncer.textContent = ''
+      return
+    }
+
+    entries.forEach(([battleId, boxerId]) => {
       setBattleVote(battleId, boxerId)
     })
 
-    const count = Object.keys(votes).length
     const announcer = $<HTMLElement>('[data-prediction-user-announcer]')
     if (announcer) {
-      announcer.textContent =
-        count > 0
-          ? `Se han cargado tus ${count} pronósticos. La votación está cerrada.`
-          : 'No tienes pronósticos registrados. La votación está cerrada.'
+      announcer.textContent = `Se han cargado tus ${entries.length} pronósticos. La votación está cerrada.`
     }
   }
 
