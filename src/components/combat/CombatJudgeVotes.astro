@@ -13,6 +13,11 @@ interface Props {
   loserId: string
   winnerName: string
   loserName: string
+  /**
+   * Id del boxeador a la izquierda en la tarjeta.
+   * En decisión dividida (compact), alinea las banderas con cada lado.
+   */
+  leftBoxerId?: string
   /** `compact` = solo banderas del ganador (y, si hay, las del perdedor atenuadas). */
   variant?: 'compact' | 'detail'
   class?: string
@@ -24,12 +29,39 @@ const {
   loserId,
   winnerName,
   loserName,
+  leftBoxerId,
   variant = 'detail',
   class: className,
 } = Astro.props
 
 const winnerJudges = getJudgeCountriesForBoxer(result, winnerId)
 const loserJudges = getJudgeCountriesForBoxer(result, loserId)
+const isSplit = loserJudges.length > 0
+
+type JudgeGroup = {
+  name: string
+  countries: JudgeCountry[]
+  isDissent: boolean
+}
+
+function groupFor(boxerId: string): JudgeGroup {
+  const isWinner = boxerId === winnerId
+  return {
+    name: isWinner ? winnerName : loserName,
+    countries: isWinner ? winnerJudges : loserJudges,
+    isDissent: !isWinner,
+  }
+}
+
+/**
+ * Unánime: solo el ganador.
+ * Dividida: banderas alineadas con el lado del boxeador (izq → der).
+ */
+const compactGroups: JudgeGroup[] = !isSplit
+  ? [groupFor(winnerId)]
+  : leftBoxerId != null
+    ? [groupFor(leftBoxerId), groupFor(leftBoxerId === winnerId ? loserId : winnerId)]
+    : [groupFor(winnerId), groupFor(loserId)]
 
 function judgeTitle(country: JudgeCountry, boxerName: string) {
   return `Juez de ${COUNTRY_NAMES[country] ?? country}: votó por ${boxerName}`
@@ -39,21 +71,14 @@ function judgeTitle(country: JudgeCountry, boxerName: string) {
 {
   variant === 'compact' ? (
     <div class:list={['judge-votes is-compact', className]} aria-label="Votos de los jueces">
-      <span class="judge-group" aria-label={`${winnerName}: ${winnerJudges.length} votos`}>
-            {winnerJudges.map((country) => (
-          <CountryFlag
-            country={country}
-            size={16}
-            class="judge-flag"
-            decorative
-          />
-        ))}
-      </span>
-      {loserJudges.length > 0 && (
-        <>
-          <span class="judge-sep" aria-hidden="true" />
-          <span class="judge-group is-dissent" aria-label={`${loserName}: ${loserJudges.length} votos`}>
-            {loserJudges.map((country) => (
+      {compactGroups.map((group, index) => (
+        <span class="judge-side">
+          {index > 0 && <span class="judge-sep" aria-hidden="true" />}
+          <span
+            class:list={['judge-group', { 'is-dissent': group.isDissent }]}
+            aria-label={`${group.name}: ${group.countries.length} votos`}
+          >
+            {group.countries.map((country) => (
               <CountryFlag
                 country={country}
                 size={16}
@@ -62,8 +87,8 @@ function judgeTitle(country: JudgeCountry, boxerName: string) {
               />
             ))}
           </span>
-        </>
-      )}
+        </span>
+      ))}
     </div>
   ) : (
     <div class:list={['judge-votes is-detail', className]}>
@@ -105,6 +130,10 @@ function judgeTitle(country: JudgeCountry, boxerName: string) {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
+  }
+
+  .judge-side {
+    display: contents;
   }
 
   .judge-group {
