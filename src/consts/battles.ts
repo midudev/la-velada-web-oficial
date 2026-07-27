@@ -4,6 +4,10 @@ import {
   battleFaceToFaceVideoUrlsById,
   type BattleFaceToFaceVideoUrl,
 } from '@/consts/battle-face-to-face-videos'
+import {
+  battleFullFightVideoUrlsById,
+  type BattleFullFightVideoUrl,
+} from '@/consts/battle-full-fight-videos'
 import { BOXERS_BY_ID } from '@/consts/boxers'
 
 export interface Battle {
@@ -14,6 +18,7 @@ export interface Battle {
   url: `/combate/${string}`
   video: BattleVideoSources | null
   faceToFaceVideoUrl: BattleFaceToFaceVideoUrl | null
+  fullFightVideoUrl: BattleFullFightVideoUrl | null
 }
 
 function getBoxerName(id: string): string {
@@ -33,6 +38,7 @@ export const battles: Battle[] = battlePairs.map(([boxer1Id, boxer2Id], index) =
     url: `/combate/${id}`,
     video: battleVideosById[id] ?? null,
     faceToFaceVideoUrl: battleFaceToFaceVideoUrlsById[id] ?? null,
+    fullFightVideoUrl: battleFullFightVideoUrlsById[id] ?? null,
   }
 })
 

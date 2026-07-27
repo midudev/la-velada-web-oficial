@@ -9,7 +9,7 @@ import BoxerHeroStatsCard from '@/components/BoxerHeroStatsCard.astro'
 import BoxerSocials from '@/components/BoxerSocials.astro'
 import BoxerWinsBadge from '@/components/BoxerWinsBadge.astro'
 import BoxerWorkoutVideos from '@/components/BoxerWorkoutVideos.astro'
-import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
+import CombatVideoSection from '@/components/combat/CombatVideoSection.astro'
 import LivePrediction from '@/components/LivePrediction.astro'
 import { battles } from '@/consts/battles'
 import { EVENT_DATE_TIME } from '@/consts/event'
@@ -397,7 +397,7 @@ const breadcrumbJsonLd = {
     <BoxerWorkoutVideos boxerId={boxer.id} boxerName={boxer.name} videos={workoutVideos} />
   )}
   {!hasBoxerWorkoutVideos && battle && faceToFaceVideoUrl && (
-    <CombatFaceToFaceVideoSection
+    <CombatVideoSection
       sectionId="workout"
       title={`${battle.title} | Cara a cara`}
       videoUrl={faceToFaceVideoUrl}
