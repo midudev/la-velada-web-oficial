@@ -13,6 +13,8 @@ interface Props {
   winnerGender: BoxerGender
   loserId: string
   loserName: string
+  /** Id del boxeador mostrado a la izquierda (para alinear votos en dividida). */
+  leftBoxerId?: string
   class?: string
 }
 
@@ -22,6 +24,7 @@ const {
   winnerGender,
   loserId,
   loserName,
+  leftBoxerId,
   class: className,
 } = Astro.props
 
@@ -43,6 +46,7 @@ const score = `${result.votes[0]}-${result.votes[1]}`
     loserId={loserId}
     winnerName={winnerName}
     loserName={loserName}
+    leftBoxerId={leftBoxerId}
     variant="compact"
     class="result-judges"
   />
