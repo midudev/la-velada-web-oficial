@@ -1,4 +1,4 @@
-import RevolutBanner from '@/assets/banners/revolut.webp'
+import RevolutBanner from '@/assets/banners/revolut-welcome.webp'
 import AlsaBanner from '@/assets/banners/alsa.webp'
 import type { Banner } from '@/types/bannerType'
 
@@ -6,12 +6,12 @@ export const BANNERS: Banner[] = [
   {
     id: 'revolut',
     name: 'Revolut',
-    url: 'https://get.revolut.com/z4lF/velada5nl',
+    url: 'https://www.revolut.com/revolut-banner-laveladavi/?geo-redirect',
     label: 'Ir a la promoción de Revolut',
     image: {
       logo: RevolutBanner,
-      width: 600,
-      height: 200,
+      width: 2032,
+      height: 300,
     },
   },
   {

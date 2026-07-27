@@ -35,8 +35,9 @@ export interface Boxer {
  *  - `/public/character-select/{id}.webp` (miniatura del selector)
  *  - `/public/character-hero/{id}.webp` (recorte grande mostrado en el
  *    hero al hacer hover sobre la miniatura del selector)
- *  - `/public/photos/{id}/01.webp` (foto principal usada en la ficha
- *    del combate)
+ *  - `cdn.infolavelada.com/boxeadores/{slug}/01-md.webp` (foto principal
+ *    para og:image y JSON-LD; el slug del CDN puede diferir del id — el
+ *    mapeo vive en `boxer-gallery.ts`)
  *
  * Cualquier renombrado debe mantener esa convención.
  */
@@ -44,6 +45,8 @@ export const BOXERS: Boxer[] = [
   {
     id: 'alondrissa',
     heightCm: 160,
+    weightKg: 49.8,
+    fightWeightKg: 50,
     name: 'Alondrissa',
     gender: 'f',
     realName: 'Alondra Michelle',
@@ -96,6 +99,8 @@ export const BOXERS: Boxer[] = [
   {
     id: 'angie-velasco',
     heightCm: 156,
+    weightKg: 49.3,
+    fightWeightKg: 50,
     name: 'Angie Velasco',
     gender: 'f',
     realName: 'Angie Rocío Velasco',
@@ -129,6 +134,8 @@ export const BOXERS: Boxer[] = [
   {
     id: 'clersss',
     heightCm: 167,
+    weightKg: 55.4,
+    fightWeightKg: 57,
     name: 'Clersss',
     realName: 'Clara Merino',
     country: 'es',
@@ -154,6 +161,8 @@ export const BOXERS: Boxer[] = [
   {
     id: 'edu-aguirre',
     heightCm: 180,
+    weightKg: 71.3,
+    fightWeightKg: 74,
     name: 'Edu Aguirre',
     realName: 'Eduardo Aguirre',
     country: 'es',
@@ -231,6 +240,8 @@ export const BOXERS: Boxer[] = [
   {
     id: 'fabiana-sevillano',
     heightCm: 165,
+    weightKg: 51.8,
+    fightWeightKg: 52.5,
     name: 'Fabiana Sevillano',
     realName: 'Fabiana Sevillano',
     country: 'es',
@@ -279,6 +290,8 @@ pero que ahora tendrá que demostrarlo todo bajo los focos del ring. 🥊
   {
     id: 'fernanfloo',
     heightCm: 186,
+    weightKg: 73.4,
+    fightWeightKg: 76,
     name: 'Fernanfloo',
     gender: 'm',
     realName: 'Luis Fernando Flores Alvarado',
@@ -310,10 +323,11 @@ pero que ahora tendría que demostrarlo golpe a golpe. 🥊`,
       },
     ],
   },
-
   {
     id: 'gaston-edul',
     heightCm: 170,
+    weightKg: 73.8,
+    fightWeightKg: 74,
     name: 'Gastón Edul',
     realName: 'Gastón Edul',
     gender: 'm',
@@ -357,10 +371,11 @@ pero que ahora tendrá que responder golpe a golpe. 🥊`,
       },
     ],
   },
-
   {
     id: 'gero-arias',
     heightCm: 172,
+    weightKg: 76.9,
+    fightWeightKg: 78,
     name: 'Gero Arias',
     realName: 'Gerónimo Arias',
     gender: 'm',
@@ -439,6 +454,8 @@ pero que ahora tendrá que demostrarlo bajo presión y frente a un rival. 🥊`,
   {
     id: 'illojuan',
     heightCm: 182,
+    weightKg: 76.7,
+    fightWeightKg: 77,
     name: 'IlloJuan',
     realName: 'Juan Alberto García Gámez',
     gender: 'm',
@@ -446,7 +463,6 @@ pero que ahora tendrá que demostrarlo bajo presión y frente a un rival. 🥊`,
     previousVeladaWins: [],
     birthDate: '1994-06-22',
     age: 31,
-    fightWeightKg: 77,
     youtubeChannelId: 'UCKvoBRFqMNqvuSvFBiNadgw',
     followersUpdatedAt: '2026-05-14',
     socials: [
@@ -490,6 +506,8 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   {
     id: 'kidd-keo',
     heightCm: 170,
+    weightKg: 65.7,
+    fightWeightKg: 67,
     name: 'Kidd Keo',
     realName: 'Padua Keoma Salas Sánchez',
     gender: 'm',
@@ -519,6 +537,8 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   {
     id: 'la-parce',
     heightCm: 158,
+    weightKg: 51.5,
+    fightWeightKg: 52.5,
     name: 'La Parce',
     realName: 'Valeria',
     gender: 'f',
@@ -551,6 +571,8 @@ Un perfil en pleno crecimiento, con ambición y proyección… pero que ahora te
   {
     id: 'lit-killah',
     heightCm: 172,
+    weightKg: 71.4,
+    fightWeightKg: 72,
     name: 'Lit Killah',
     realName: 'Mauro Román Monzón',
     gender: 'm',
@@ -587,6 +609,8 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   {
     id: 'marta-diaz',
     heightCm: 168,
+    weightKg: 56.4,
+    fightWeightKg: 57,
     name: 'Marta Díaz',
     realName: 'Marta Díaz García',
     gender: 'f',
@@ -619,6 +643,8 @@ pero que ahora tendrá que demostrarlo dentro del ring. 🥊`,
   {
     id: 'natalia-mx',
     heightCm: 168,
+    weightKg: 55.4,
+    fightWeightKg: 57,
     name: 'Natalia MX',
     realName: 'Natalia García',
     gender: 'f',
@@ -655,6 +681,8 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   {
     id: 'plex',
     heightCm: 197,
+    weightKg: 81.5,
+    fightWeightKg: 82,
     name: 'Plex',
     realName: 'Daniel Alonso Góndez',
     gender: 'm',
@@ -691,6 +719,8 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   {
     id: 'roro',
     heightCm: 150,
+    weightKg: 50.6,
+    fightWeightKg: 48,
     name: 'RoRo',
     realName: 'Rocío López Bueno',
     gender: 'f',
@@ -698,7 +728,6 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     previousVeladaWins: [],
     birthDate: '2002-03-01',
     age: 24,
-    fightWeightKg: 52,
     youtubeChannelId: 'UCrzySRaber8_-52PPh0GG2g',
     followersUpdatedAt: '2026-05-14',
     socials: [
@@ -739,6 +768,8 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   {
     id: 'samy-rivers',
     heightCm: 158,
+    weightKg: 50.6,
+    fightWeightKg: 52,
     name: 'Samy Rivers',
     realName: 'Samantha Guadalupe Rivera Treviño',
     gender: 'f',
@@ -746,7 +777,6 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     previousVeladaWins: [2023],
     birthDate: '1998-08-20',
     age: 27,
-    fightWeightKg: 52,
     youtubeChannelId: 'UCW3bX8K5LuQHw8cKc3U8iUg',
     followersUpdatedAt: '2026-05-14',
     socials: [
@@ -804,6 +834,8 @@ que ahora tendrá que volver a demostrarlo golpe a golpe. 🥊
   {
     id: 'tatiana-kaer',
     heightCm: 165,
+    weightKg: 56.4,
+    fightWeightKg: 57,
     name: 'Tatiana Käer',
     realName: 'Tatiana Käer',
     gender: 'f',
@@ -830,6 +862,8 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
   {
     id: 'thegrefg',
     heightCm: 178,
+    weightKg: 76.7,
+    fightWeightKg: 77,
     name: 'TheGrefg',
     realName: 'David Cánovas Martínez',
     gender: 'm',
@@ -837,7 +871,6 @@ pero que ahora tendrá que demostrarlo golpe a golpe. 🥊`,
     previousVeladaWins: [2025],
     birthDate: '1997-04-24',
     age: 29,
-    fightWeightKg: 77,
     youtubeChannelId: 'UCCEmjNPpJYhGDgaEqeeA4HA',
     followersUpdatedAt: '2026-06-29',
     socials: [
@@ -892,6 +925,8 @@ que ahora tendrá que volver a demostrarlo golpe a golpe. 🥊`,
   {
     id: 'viruzz',
     heightCm: 183,
+    weightKg: 77.3,
+    fightWeightKg: 78,
     name: 'Viruzz',
     realName: 'Víctor Mélida Cambra',
     gender: 'm',
@@ -990,11 +1025,6 @@ export function getBoxerHeroImage(boxer: Boxer): string {
   return getBoxerHeroImages(boxer).webp
 }
 
-/** Devuelve la ruta a la foto principal del boxeador (01.webp). */
-export function getBoxerPhoto(boxer: Boxer): string {
-  return `/photos/${boxer.id}/01.webp`
-}
-
 /** Mapa rápido para acceder a un boxer por su id. */
 export const BOXERS_BY_ID: Record<string, Boxer> = Object.fromEntries(
   BOXERS.map((boxer) => [boxer.id, boxer]),
@@ -1008,6 +1038,7 @@ export const COUNTRY_NAMES: Record<string, string> = {
   ar: 'Argentina',
   sv: 'El Salvador',
   pr: 'Puerto Rico',
+  me: 'Montenegro',
 }
 
 /** Etiqueta legible por género. */

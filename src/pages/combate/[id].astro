@@ -1,9 +1,15 @@
 ---
-import CombatFaceToFaceVideoSection from '@/components/combat/CombatFaceToFaceVideoSection.astro'
 import CombatHero from '@/components/combat/CombatHero.astro'
+import CombatResultSection from '@/components/combat/CombatResultSection.astro'
 import CombatStatsSection from '@/components/combat/CombatStatsSection.astro'
+import CombatVideoSection from '@/components/combat/CombatVideoSection.astro'
 import LivePrediction from '@/components/LivePrediction.astro'
 import { battles, battlesById } from '@/consts/battles'
+import {
+  getBattleResult,
+  getDecisionLabel,
+  getWinnerWord,
+} from '@/consts/battle-results'
 import { EVENT_DATE_TIME } from '@/consts/event'
 import {
   BOXERS_BY_ID,
@@ -11,16 +17,16 @@ import {
   getBoxerHeroImages,
   getBoxerSelectImages,
 } from '@/consts/boxers'
+import { getBoxerMainPhotoUrl } from '@/consts/boxer-gallery'
 import Layout from '@/layouts/Layout.astro'
+import { loadBuildTimePredictions } from '@/lib/predictions'
 import Footer from '@/sections/Footer.astro'
 import Sponsors from '@/sections/Sponsors.astro'
 import { serializeJsonLd } from '@/utils/serialize-json-ld'
 import type { GetStaticPaths } from 'astro'
 
-// La ficha de combate solo usa datos estáticos (battlesById/BOXERS_BY_ID) y los
-// pronósticos se cargan en cliente vía <LivePrediction>. No hay nada por usuario
-// ni consultas a BD en el servidor, así que la prerenderizamos: se sirve desde
-// el CDN en lugar de renderizarse on-demand en cada visita.
+// Página estática: boxeadores + pronósticos fijados en build. Sin SSR ni
+// polling de /api/predictions en el cliente.
 export const prerender = true
 
 export const getStaticPaths = (() => {
@@ -37,13 +43,26 @@ const [boxer1Id, boxer2Id] = battle.boxerIds
 const boxer1 = BOXERS_BY_ID[boxer1Id]
 const boxer2 = BOXERS_BY_ID[boxer2Id]
 const battleVideo = battle.video
+const combatPrediction = (await loadBuildTimePredictions()).find(
+  (prediction) => prediction.combat_id === battle.id,
+)
 const boxer1Hero = getBoxerHeroImages(boxer1)
 const boxer2Hero = getBoxerHeroImages(boxer2)
 const boxer1Select = getBoxerSelectImages(boxer1)
 const boxer2Select = getBoxerSelectImages(boxer2)
+const battleResult = getBattleResult(battle.id)
+const winner = battleResult
+  ? battleResult.winnerId === boxer1.id
+    ? boxer1
+    : boxer2
+  : null
+const loser = battleResult && winner ? (winner.id === boxer1.id ? boxer2 : boxer1) : null
 
 const title = `${battle.title} — Combate ${String(battle.number).padStart(2, '0')} de La Velada del Año VI`
-const description = `Toda la información del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} contra ${boxer2.name}. Fecha, horario y detalles en Sevilla.`
+const description =
+  winner && battleResult && loser
+    ? `${getWinnerWord(winner.gender)}: ${winner.name}. ${getDecisionLabel(battleResult)}. Resultado oficial del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} vs ${boxer2.name}.`
+    : `Toda la información del combate ${battle.number} de La Velada del Año VI: ${boxer1.name} contra ${boxer2.name}. Fecha, horario y detalles en Sevilla.`
 const canonical = `${SITE_URL}${battle.url}`
 
 const fmt = {
@@ -85,12 +104,12 @@ const sportsEventJsonLd = {
   url: canonical,
   sport: 'Boxing',
   startDate: EVENT_DATE_TIME,
-  eventStatus: 'https://schema.org/EventScheduled',
+  eventStatus: 'https://schema.org/EventCompleted',
   eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
   superEvent: { '@type': 'SportsEvent', name: 'La Velada del Año VI', url: `${SITE_URL}/` },
   location: {
     '@type': 'Place',
-    name: 'Estadio de La Cartuja',
+    name: 'Estadio La Cartuja',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Sevilla',
@@ -104,15 +123,25 @@ const sportsEventJsonLd = {
       '@type': 'Person',
       name: boxer1.name,
       url: `${SITE_URL}/boxeadores/${boxer1.id}`,
-      image: `${SITE_URL}/photos/${boxer1.id}/01.webp`,
+      image: getBoxerMainPhotoUrl(boxer1.id),
     },
     {
       '@type': 'Person',
       name: boxer2.name,
       url: `${SITE_URL}/boxeadores/${boxer2.id}`,
-      image: `${SITE_URL}/photos/${boxer2.id}/01.webp`,
+      image: getBoxerMainPhotoUrl(boxer2.id),
     },
   ],
+  ...(winner
+    ? {
+        winner: {
+          '@type': 'Person',
+          name: winner.name,
+          url: `${SITE_URL}/boxeadores/${winner.id}`,
+          image: getBoxerMainPhotoUrl(winner.id),
+        },
+      }
+    : {}),
 }
 
 const breadcrumbJsonLd = {
@@ -172,6 +201,12 @@ const breadcrumbJsonLd = {
     </picture>
     <div aria-hidden="true" class="combat-detail-bg-veil"></div>
 
+    {
+      battleResult && winner && loser && (
+        <CombatResultSection result={battleResult} winner={winner} loser={loser} />
+      )
+    }
+
     <CombatStatsSection
       boxer1={boxer1}
       boxer2={boxer2}
@@ -182,17 +217,26 @@ const breadcrumbJsonLd = {
 
     <section class="combat-prediction" aria-labelledby="combat-prediction-title">
       <h2 id="combat-prediction-title" class="combat-prediction-title font-cinzel">
-        ¿Quién ganará?
+        Pronóstico de la comunidad
       </h2>
       <LivePrediction
         class="w-full max-w-3xl"
         battleId={battle.id}
         boxerA={{ id: boxer1.id, name: boxer1.name }}
         boxerB={{ id: boxer2.id, name: boxer2.name }}
+        sides={combatPrediction?.predictions}
+        totalVotes={combatPrediction?.total_votes ?? 0}
       />
     </section>
 
-    <CombatFaceToFaceVideoSection
+    <CombatVideoSection
+      sectionId="combate-completo"
+      heading="COMBATE COMPLETO"
+      title={`${battle.title} | Combate completo`}
+      videoUrl={battle.fullFightVideoUrl}
+    />
+
+    <CombatVideoSection
       title={`${battle.title} | Cara a cara`}
       videoUrl={battle.faceToFaceVideoUrl}
     />

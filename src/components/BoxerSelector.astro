@@ -151,6 +151,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
         <li class="flex items-baseline">
           <time
             datetime={EVENT_DATE_TIME}
+            data-local-time
             class="font-cinzel text-xs font-black tracking-[0.16em] text-theme-cream sm:text-sm"
           >
             {EVENT_DISPLAY_TIME_SHORT}
@@ -168,7 +169,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
                 aria-hidden="true"
                 class="pointer-events-none absolute inset-x-0 -bottom-1 h-px origin-center scale-x-0 bg-theme-gold transition-transform duration-150 ease-out delay-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover/edition:scale-x-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover/edition:delay-125 group-focus-visible/edition:scale-x-100 group-focus-visible/edition:delay-125"
               />
-              Estadio de la Cartuja, Sevilla
+              Estadio La Cartuja, Sevilla
             </a>
           </span>
         </li>
@@ -1472,33 +1473,6 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 <script>
   import { $, $$ } from '@/lib/dom-selector'
 
-  // Data URIs muy pequeñas (2×2) usadas para detectar soporte de cada
-  // formato en el browser. Si la imagen carga sin error, el browser
-  // soporta ese formato.
-  const AVIF_TEST =
-    'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgANogQEAwgMg8f8D///8WfhwB8+ErK42A='
-  const WEBP_TEST =
-    'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA='
-
-  function detectFormat(dataUrl: string): Promise<boolean> {
-    return new Promise((resolve) => {
-      const img = new Image()
-      img.onload = () => resolve(img.naturalWidth > 0)
-      img.onerror = () => resolve(false)
-      img.src = dataUrl
-    })
-  }
-
-  /** Devuelve la URL del mejor formato soportado para un thumb. */
-  function pickPhoto(
-    thumb: HTMLAnchorElement,
-    formats: { avif: boolean; webp: boolean },
-  ): string | undefined {
-    if (formats.avif && thumb.dataset.photoAvif) return thumb.dataset.photoAvif
-    if (formats.webp && thumb.dataset.photoWebp) return thumb.dataset.photoWebp
-    return thumb.dataset.photoWebp
-  }
-
   function setupMobileInfiniteSlider(root: HTMLElement, signal: AbortSignal) {
     const slider = $<HTMLElement>('[data-mobile-slider]', root)
     const track = $<HTMLElement>('[data-mobile-track]', root)
@@ -1664,28 +1638,10 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     const mobileThumbs = Array.from($$<HTMLAnchorElement>('[data-mobile-thumb]', root))
     if (!image || !nameNode || !grid || thumbs.length === 0) return
 
-    // Detección de formato + precarga en segundo plano. No bloqueamos
-    // el atado de listeners (un hover inmediato debe funcionar aunque
-    // todavía no sepamos qué formato usar para la precarga).
-    const idle =
-      (window as Window & { requestIdleCallback?: (cb: () => void) => number })
-        .requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 800))
-    void (async () => {
-      const [avifOk, webpOk] = await Promise.all([
-        detectFormat(AVIF_TEST),
-        detectFormat(WEBP_TEST),
-      ])
-      const formats = { avif: avifOk, webp: webpOk }
-      idle(() => {
-        thumbs.forEach((btn) => {
-          const url = pickPhoto(btn, formats)
-          if (!url) return
-          const img = new Image()
-          img.decoding = 'async'
-          img.src = url
-        })
-      })
-    })()
+    // Antes precargábamos las 20 fotos hero en idle: en iPhone/Safari eso
+    // sumaba decenas de peticiones HTTP/2 al CDN junto con el resto de la
+    // home y podía tumbar la conexión (“too many responses” / página en
+    // blanco). El <picture> del panel ya elige AVIF/WebP al seleccionar.
 
     const thumbsById = new Map<string, HTMLAnchorElement>()
     thumbs.forEach((btn) => {
@@ -1970,5 +1926,35 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     })
   }
 
+  // Reformatea el horario del evento (originalmente en CEST) al huso horario
+  // del navegador manteniendo el formato "HH:MMH ABBR". El primer pintado es
+  // SSR en CEST; este paso sólo se ejecuta ya cargado el cliente.
+  function initLocalEventTime() {
+    const el = $<HTMLTimeElement>('[data-local-time]')
+    if (!el || !el.dateTime) return
+
+    const date = new Date(el.dateTime)
+    if (Number.isNaN(date.getTime())) return
+
+    try {
+      const parts = new Intl.DateTimeFormat(undefined, {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZoneName: 'short',
+      }).formatToParts(date)
+
+      const hour = parts.find((p) => p.type === 'hour')?.value
+      const minute = parts.find((p) => p.type === 'minute')?.value
+      const tz = parts.find((p) => p.type === 'timeZoneName')?.value
+      if (!hour || !minute || !tz) return
+
+      el.textContent = `${hour}:${minute}H ${tz}`
+    } catch {
+      // Si el navegador no soporta timeZoneName, mantenemos el render SSR.
+    }
+  }
+
   document.addEventListener('astro:page-load', initBoxerSelector)
+  document.addEventListener('astro:page-load', initLocalEventTime)
 </script>

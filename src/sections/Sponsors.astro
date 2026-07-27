@@ -1,4 +1,5 @@
 ---
+import type { ImageMetadata } from 'astro'
 import SectionHeader from '@/components/SectionHeader.astro'
 import AlsaLogo from '@/assets/sponsors/alsa.svg'
 import CeraveLogo from '@/assets/sponsors/cerave.svg'
@@ -12,6 +13,10 @@ import MaxibonLogo from '@/assets/sponsors/maxibon.svg'
 import McDonaldsLogo from '@/assets/sponsors/mcdonalds.svg'
 import RevolutLogo from '@/assets/sponsors/revolut.svg'
 import SpotifyLogo from '@/assets/sponsors/spotify.svg'
+import RevolutWelcomeAvif from '@/assets/banners/revolut-welcome.avif'
+import RevolutWelcomeWebp from '@/assets/banners/revolut-welcome.webp'
+import RevolutWelcomeMobileAvif from '@/assets/banners/revolut-welcome-mobile.avif'
+import RevolutWelcomeMobileWebp from '@/assets/banners/revolut-welcome-mobile.webp'
 import { withUtm } from '@/lib/utm'
 
 interface Sponsor {
@@ -30,27 +35,30 @@ interface PromoBanner {
   url: string
   label: string
   alt: string
-  avifSrc: string
-  webpSrc: string
-  mobileAvifSrc: string
-  mobileWebpSrc: string
+  avifSrc: string | ImageMetadata
+  webpSrc: string | ImageMetadata
+  mobileAvifSrc: string | ImageMetadata
+  mobileWebpSrc: string | ImageMetadata
   width: number
   height: number
 }
+
+const assetSrc = (asset: string | ImageMetadata) =>
+  typeof asset === 'string' ? asset : asset.src
 
 const PROMO_BANNERS: PromoBanner[] = [
   {
     name: 'Revolut',
     slug: 'revolut',
-    url: 'https://www.revolut.com/en-ES/velada-6-web-velada/',
-    label: 'Ir al sorteo de entradas de La Velada VI con Revolut',
-    alt: 'Únete a Revolut y entra en el sorteo de 4 entradas y 1.000 euros',
-    avifSrc: 'https://cdn.infolavelada.com/sponsor-banners/revolut-la-velada-vi.avif',
-    webpSrc: 'https://cdn.infolavelada.com/sponsor-banners/revolut-la-velada-vi.webp',
-    mobileAvifSrc: 'https://cdn.infolavelada.com/sponsor-banners/revolut-la-velada-vi-mobile.avif',
-    mobileWebpSrc: 'https://cdn.infolavelada.com/sponsor-banners/revolut-la-velada-vi-mobile.webp',
-    width: 1024,
-    height: 151,
+    url: 'https://www.revolut.com/revolut-banner-laveladavi/?geo-redirect',
+    label: 'Ir a la promoción de Revolut: 20€ de bienvenida',
+    alt: 'Únete a Revolut y consigue 20€ de bienvenida',
+    avifSrc: RevolutWelcomeAvif,
+    webpSrc: RevolutWelcomeWebp,
+    mobileAvifSrc: RevolutWelcomeMobileAvif,
+    mobileWebpSrc: RevolutWelcomeMobileWebp,
+    width: 2032,
+    height: 300,
   },
   {
     name: 'Alsa',
@@ -221,12 +229,20 @@ const SPONSORS: Sponsor[] = [
                 class="group relative block w-full overflow-hidden rounded-md bg-black shadow-[0_14px_40px_rgba(0,0,0,0.3)] ring-1 ring-white/10 transition-transform duration-500 outline-none hover:-translate-y-1 hover:ring-theme-gold/45 focus-visible:-translate-y-1 focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-theme-midnight"
               >
                 <picture>
-                  <source srcset={mobileAvifSrc} media="(max-width: 639px)" type="image/avif" />
-                  <source srcset={mobileWebpSrc} media="(max-width: 639px)" type="image/webp" />
-                  <source srcset={avifSrc} type="image/avif" />
-                  <source srcset={webpSrc} type="image/webp" />
+                  <source
+                    srcset={assetSrc(mobileAvifSrc)}
+                    media="(max-width: 639px)"
+                    type="image/avif"
+                  />
+                  <source
+                    srcset={assetSrc(mobileWebpSrc)}
+                    media="(max-width: 639px)"
+                    type="image/webp"
+                  />
+                  <source srcset={assetSrc(avifSrc)} type="image/avif" />
+                  <source srcset={assetSrc(webpSrc)} type="image/webp" />
                   <img
-                    src={webpSrc}
+                    src={assetSrc(webpSrc)}
                     alt={alt}
                     width={width}
                     height={height}

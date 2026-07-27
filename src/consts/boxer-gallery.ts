@@ -94,3 +94,16 @@ export function getBoxerGallery(boxerId: string, boxerName?: string): GalleryIma
 export function hasBoxerGallery(boxerId: string): boolean {
     return Object.hasOwn(GALLERY, boxerId)
 }
+
+/**
+ * URL absoluta (CDN) de la foto principal de un boxeador, para og:image y
+ * JSON-LD. Usa la variante `md` (1080×1620, ~50 KB): suficiente para las
+ * tarjetas de redes sin el peso de la variante `normal`.
+ *
+ * Vive aquí (y no en `boxers.ts`) porque es el único módulo que conoce los
+ * `slug` del CDN que no coinciden con el `id` del boxeador.
+ */
+export function getBoxerMainPhotoUrl(boxerId: string): string {
+    const slug = GALLERY[boxerId]?.slug ?? boxerId
+    return `${CDN}/${slug}/01-md.webp`
+}

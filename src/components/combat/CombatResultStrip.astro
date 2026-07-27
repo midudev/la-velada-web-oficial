@@ -1,0 +1,120 @@
+---
+import CombatJudgeVotes from '@/components/combat/CombatJudgeVotes.astro'
+import {
+  getDecisionLabel,
+  getWinnerWord,
+  type BattleResult,
+} from '@/consts/battle-results'
+import type { BoxerGender } from '@/consts/boxers'
+
+interface Props {
+  result: BattleResult
+  winnerName: string
+  winnerGender: BoxerGender
+  loserId: string
+  loserName: string
+  /** Id del boxeador mostrado a la izquierda (para alinear votos en dividida). */
+  leftBoxerId?: string
+  class?: string
+}
+
+const {
+  result,
+  winnerName,
+  winnerGender,
+  loserId,
+  loserName,
+  leftBoxerId,
+  class: className,
+} = Astro.props
+
+const winnerWord = getWinnerWord(winnerGender)
+const decision = getDecisionLabel(result)
+const score = `${result.votes[0]}-${result.votes[1]}`
+---
+
+<div class:list={['result-strip', className]}>
+  <p class="result-line">
+    <span class="result-label">{winnerWord}</span>
+    <span class="result-name">{winnerName}</span>
+    <span class="result-score" aria-hidden="true">{score}</span>
+  </p>
+  <p class="result-decision">{decision}</p>
+  <CombatJudgeVotes
+    result={result}
+    winnerId={result.winnerId}
+    loserId={loserId}
+    winnerName={winnerName}
+    loserName={loserName}
+    leftBoxerId={leftBoxerId}
+    variant="compact"
+    class="result-judges"
+  />
+</div>
+
+<style>
+  .result-strip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.55rem 0.7rem 0.65rem;
+    text-align: center;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-theme-gold) 14%, transparent),
+        color-mix(in srgb, #05080f 92%, transparent)
+      ),
+      #070b18;
+    border-top: 1px solid color-mix(in srgb, var(--color-theme-gold) 28%, transparent);
+  }
+
+  .result-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.35rem 0.5rem;
+    margin: 0;
+    font-family: var(--font-cinzel), var(--font-fallback);
+    line-height: 1.15;
+  }
+
+  .result-label {
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 85%, transparent);
+  }
+
+  .result-name {
+    font-size: clamp(0.78rem, 0.65rem + 0.5vw, 1rem);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+  }
+
+  .result-score {
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    color: var(--color-theme-gold);
+  }
+
+  .result-decision {
+    margin: 0;
+    font-family: var(--font-cinzel), var(--font-fallback);
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-cream) 55%, transparent);
+  }
+
+  .result-judges {
+    margin-top: 0.2rem;
+  }
+</style>

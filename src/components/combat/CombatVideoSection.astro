@@ -5,11 +5,13 @@ import PlayIcon from '@/assets/svg/play.svg'
 
 interface Props {
   sectionId?: string
+  heading?: string
   title: string
   videoUrl: string | null
 }
 
-const { sectionId, title, videoUrl } = Astro.props
+const { sectionId, heading = 'CARA A CARA', title, videoUrl } = Astro.props
+const headingId = `${sectionId ?? 'face-to-face'}-title`
 
 function getYouTubeVideoId(url: string) {
   try {
@@ -38,16 +40,16 @@ const embedUrl = videoId
     <section
       id={sectionId}
       class="combat-section px-4 py-16 sm:px-6 sm:py-20"
-      aria-labelledby="face-to-face-title"
+      aria-labelledby={headingId}
     >
       <div class="mx-auto w-full max-w-5xl">
         <div class="mb-8 flex flex-col items-center gap-2 text-center">
           <SectionDivider size="sm" class="w-full" />
           <h2
-            id="face-to-face-title"
+            id={headingId}
             class="font-cinzel text-xs font-bold tracking-[0.38em] text-theme-gold/85 sm:text-sm"
           >
-            CARA A CARA
+            {heading}
           </h2>
         </div>
 
@@ -58,7 +60,7 @@ const embedUrl = videoId
             data-face-video-trigger
             data-face-video-embed={embedUrl}
             data-face-video-title={title}
-            aria-label={`Reproducir cara a cara: ${title}`}
+            aria-label={`Reproducir vídeo: ${title}`}
           >
             <ThumbnailPlaceholder />
             <picture class="absolute inset-0 -z-10 scale-105 brightness-90 transition duration-700 ease-out group-hover:scale-110 group-hover:brightness-110 group-focus-visible:scale-110 group-focus-visible:brightness-110">

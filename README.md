@@ -159,7 +159,7 @@ Aquí tienes una guía rápida:
 
 Por favor, consulta nuestra [guía de contribución](https://github.com/midudev/la-velada-web-oficial/blob/main/CONTRIBUTING.md) para saber cómo puedes empezar de la mejor manera y siguiendo [buenas prácticas](https://github.com/midudev/la-velada-web-oficial/blob/main/CONTRIBUTING.md#buenas-prácticas-).
 
-### Contribuir desde Stackblitz
+### Contribuir desde Stackblitz.
 
 Si quieres contribuir de una manera mas sencilla, puedes iniciar este proyecto desde _Stackblitz_ usando tu cuenta de GitHub:
 

@@ -1,0 +1,238 @@
+---
+import CountryFlag from '@/components/CountryFlag.astro'
+import { COUNTRY_NAMES } from '@/consts/boxers'
+import {
+  getJudgeCountriesForBoxer,
+  type BattleResult,
+  type JudgeCountry,
+} from '@/consts/battle-results'
+
+interface Props {
+  result: BattleResult
+  winnerId: string
+  loserId: string
+  winnerName: string
+  loserName: string
+  /**
+   * Id del boxeador a la izquierda en la tarjeta.
+   * En decisión dividida (compact), alinea las banderas con cada lado.
+   */
+  leftBoxerId?: string
+  /** `compact` = solo banderas del ganador (y, si hay, las del perdedor atenuadas). */
+  variant?: 'compact' | 'detail'
+  class?: string
+}
+
+const {
+  result,
+  winnerId,
+  loserId,
+  winnerName,
+  loserName,
+  leftBoxerId,
+  variant = 'detail',
+  class: className,
+} = Astro.props
+
+const winnerJudges = getJudgeCountriesForBoxer(result, winnerId)
+const loserJudges = getJudgeCountriesForBoxer(result, loserId)
+const isSplit = loserJudges.length > 0
+
+type JudgeGroup = {
+  name: string
+  countries: JudgeCountry[]
+  isDissent: boolean
+}
+
+function groupFor(boxerId: string): JudgeGroup {
+  const isWinner = boxerId === winnerId
+  return {
+    name: isWinner ? winnerName : loserName,
+    countries: isWinner ? winnerJudges : loserJudges,
+    isDissent: !isWinner,
+  }
+}
+
+/**
+ * Unánime: solo el ganador.
+ * Dividida: banderas alineadas con el lado del boxeador (izq → der).
+ */
+const compactGroups: JudgeGroup[] = !isSplit
+  ? [groupFor(winnerId)]
+  : leftBoxerId != null
+    ? [groupFor(leftBoxerId), groupFor(leftBoxerId === winnerId ? loserId : winnerId)]
+    : [groupFor(winnerId), groupFor(loserId)]
+
+function judgeTitle(country: JudgeCountry, boxerName: string) {
+  return `Juez de ${COUNTRY_NAMES[country] ?? country}: votó por ${boxerName}`
+}
+---
+
+{
+  variant === 'compact' ? (
+    <div class:list={['judge-votes is-compact', className]} aria-label="Votos de los jueces">
+      {compactGroups.map((group, index) => (
+        <span class="judge-side">
+          {index > 0 && <span class="judge-sep" aria-hidden="true" />}
+          <span
+            class:list={['judge-group', { 'is-dissent': group.isDissent }]}
+            aria-label={`${group.name}: ${group.countries.length} votos`}
+          >
+            {group.countries.map((country) => (
+              <CountryFlag
+                country={country}
+                size={16}
+                class="judge-flag"
+                decorative
+              />
+            ))}
+          </span>
+        </span>
+      ))}
+    </div>
+  ) : (
+    <div class:list={['judge-votes is-detail', className]}>
+      <p class="judge-heading font-cinzel">Tarjetas de los jueces</p>
+      <ul class="judge-list" role="list">
+        <li class="judge-row">
+          <span class="judge-name">{winnerName}</span>
+          <span class="judge-count">{winnerJudges.length}</span>
+          <span class="judge-flags">
+            {winnerJudges.map((country) => (
+              <span class="judge-chip" title={judgeTitle(country, winnerName)}>
+                <CountryFlag country={country} size={22} decorative />
+                <span class="sr-only">{judgeTitle(country, winnerName)}</span>
+              </span>
+            ))}
+          </span>
+        </li>
+        {loserJudges.length > 0 && (
+          <li class="judge-row is-dissent">
+            <span class="judge-name">{loserName}</span>
+            <span class="judge-count">{loserJudges.length}</span>
+            <span class="judge-flags">
+              {loserJudges.map((country) => (
+                <span class="judge-chip" title={judgeTitle(country, loserName)}>
+                  <CountryFlag country={country} size={22} decorative />
+                  <span class="sr-only">{judgeTitle(country, loserName)}</span>
+                </span>
+              ))}
+            </span>
+          </li>
+        )}
+      </ul>
+    </div>
+  )
+}
+
+<style>
+  .judge-votes.is-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .judge-side {
+    display: contents;
+  }
+
+  .judge-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+  }
+
+  .judge-group.is-dissent {
+    opacity: 0.55;
+  }
+
+  .judge-sep {
+    width: 1px;
+    height: 0.85rem;
+    background: color-mix(in srgb, var(--color-theme-gold) 40%, transparent);
+  }
+
+  .judge-flag {
+    border-radius: 0.15rem;
+  }
+
+  .judge-votes.is-detail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    width: 100%;
+  }
+
+  .judge-heading {
+    margin: 0;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-theme-gold) 80%, transparent);
+  }
+
+  .judge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    width: 100%;
+    max-width: 28rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .judge-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.2fr);
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--radius-sharp);
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 22%, transparent);
+    background: color-mix(in srgb, var(--color-theme-midnight) 55%, transparent);
+  }
+
+  .judge-row.is-dissent {
+    border-color: color-mix(in srgb, white 12%, transparent);
+    opacity: 0.78;
+  }
+
+  .judge-name {
+    font-family: var(--font-cinzel), var(--font-fallback);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-theme-cream);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .judge-count {
+    font-family: var(--font-cinzel), var(--font-fallback);
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: var(--color-theme-gold);
+  }
+
+  .judge-row.is-dissent .judge-count {
+    color: color-mix(in srgb, var(--color-theme-cream) 70%, transparent);
+  }
+
+  .judge-flags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.3rem;
+  }
+
+  .judge-chip {
+    display: inline-flex;
+    line-height: 0;
+  }
+</style>

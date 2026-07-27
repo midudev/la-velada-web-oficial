@@ -88,13 +88,17 @@ const invalidateCache = (combatId?: string) => {
   memoryCache.allPredictions = null
 }
 
+// `combatId`/`fighterId` vienen del cliente: consultarlos con `obj[id]` a secas
+// resolvería también propiedades heredadas del prototipo (`constructor`,
+// `__proto__`...), que son truthy y colarían un "combate" que no es un Battle.
+// `Object.hasOwn` limita el lookup a las claves reales del allowlist.
 function assertValidPredictionTarget(combatId: string, fighterId: string) {
-  const battle = battlesById[combatId]
+  const battle = Object.hasOwn(battlesById, combatId) ? battlesById[combatId] : undefined
   if (!battle) {
     throw new PredictionDataError('El combate especificado no existe', 404)
   }
 
-  if (!BOXERS_BY_ID[fighterId]) {
+  if (!Object.hasOwn(BOXERS_BY_ID, fighterId)) {
     throw new PredictionDataError('El boxeador especificado no existe', 404)
   }
 
@@ -157,7 +161,8 @@ export async function getPredictionsByCombat(combatId: string): Promise<Predicti
   }
 
   try {
-    if (!battlesById[combatId]) return null
+    // `Object.hasOwn` y no `battlesById[combatId]`: ver assertValidPredictionTarget.
+    if (!Object.hasOwn(battlesById, combatId)) return null
 
     const result = await turso.execute({
       sql: `
@@ -237,6 +242,36 @@ export async function getAllPredictions(): Promise<CombatPrediction[]> {
     console.error('Error al obtener todas las predicciones:', error)
     throw new Error('Error al obtener todas las predicciones')
   }
+}
+
+// Una sola lectura a Turso por proceso de build: las páginas estáticas
+// (home, /pronosticos, fichas) reutilizan la misma promesa y evitan N queries.
+let buildTimePredictionsPromise: Promise<CombatPrediction[]> | null = null
+
+/**
+ * Predicciones fijadas en build para servir HTML estático sin llamar a la API
+ * en el cliente. Si Turso no está disponible, devolvemos lista vacía.
+ */
+export function loadBuildTimePredictions(): Promise<CombatPrediction[]> {
+  if (!buildTimePredictionsPromise) {
+    buildTimePredictionsPromise = (async () => {
+      if (!import.meta.env.TURSO_DATABASE_URL) {
+        console.warn(
+          'TURSO_DATABASE_URL no definida: se generan pronósticos sin totales de votos.',
+        )
+        return [] as CombatPrediction[]
+      }
+
+      try {
+        return await getAllPredictions()
+      } catch (error) {
+        console.error('Error al cargar predicciones en build:', error)
+        return [] as CombatPrediction[]
+      }
+    })()
+  }
+
+  return buildTimePredictionsPromise
 }
 
 /**
