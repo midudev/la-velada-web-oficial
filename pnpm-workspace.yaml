@@ -5,10 +5,16 @@ allowBuilds:
   esbuild: true
   sharp: true
 
+minimumReleaseAgeExclude:
+  - path-to-regexp@6.3.0
+
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
   - esbuild
   - sharp
+
+overrides:
+  path-to-regexp@>=4.0.0 <6.3.0: ^6.3.0
 
 peerDependencyRules:
   allowedVersions:
