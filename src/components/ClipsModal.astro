@@ -65,45 +65,46 @@
 	let $ytFrame = $(".yt-iframe")
 	const ytFrameCopy = $ytFrame
 
-	if (!$clipDialog) throw new Error("Clip dialog")
-
-	$clipDialog.addEventListener("close", () => {
-		if ($ytFrame !== null) {
-			$ytFrame.setAttribute("src", "")
-		} else {
-			ytFrameCopy?.setAttribute("src", "")
-		}
-	})
-
-	$closeButton?.addEventListener("click", () => {
-		$clipDialog.close()
-		if ($ytFrame !== null) {
-			$ytFrame.remove()
-		} else {
-			ytFrameCopy?.remove()
-		}
-	})
-
-	$clipDialog.addEventListener("click", (event) => {
-		const target = event.target as HTMLElement
-		if (target === $clipDialog) $clipDialog.close()
-	})
-
-	$clipContainer?.forEach((el) => {
-		el.addEventListener("click", async (event) => {
-			const currentTarget = event.currentTarget as HTMLElement
-			const { url } = currentTarget.dataset
-			if (!url) throw new Error("Url")
-			$ytFrame = $(".yt-iframe") as HTMLIFrameElement
+	// Clips modal markup is not present on every boxer page; skip setup when absent.
+	if ($clipDialog) {
+		$clipDialog.addEventListener("close", () => {
 			if ($ytFrame !== null) {
-				$ytFrame.setAttribute("src", `${url}&autoplay=1`)
+				$ytFrame.setAttribute("src", "")
 			} else {
-				if (ytFrameCopy) {
-					$clipDialog?.querySelector("div")?.prepend(ytFrameCopy)
-					ytFrameCopy.setAttribute("src", `${url}&autoplay=1`)
-				}
+				ytFrameCopy?.setAttribute("src", "")
 			}
-			$clipDialog.showModal()
 		})
-	})
+
+		$closeButton?.addEventListener("click", () => {
+			$clipDialog.close()
+			if ($ytFrame !== null) {
+				$ytFrame.remove()
+			} else {
+				ytFrameCopy?.remove()
+			}
+		})
+
+		$clipDialog.addEventListener("click", (event) => {
+			const target = event.target as HTMLElement
+			if (target === $clipDialog) $clipDialog.close()
+		})
+
+		$clipContainer?.forEach((el) => {
+			el.addEventListener("click", async (event) => {
+				const currentTarget = event.currentTarget as HTMLElement
+				const { url } = currentTarget.dataset
+				if (!url) return
+				$ytFrame = $(".yt-iframe") as HTMLIFrameElement
+				if ($ytFrame !== null) {
+					$ytFrame.setAttribute("src", `${url}&autoplay=1`)
+				} else {
+					if (ytFrameCopy) {
+						$clipDialog?.querySelector("div")?.prepend(ytFrameCopy)
+						ytFrameCopy.setAttribute("src", `${url}&autoplay=1`)
+					}
+				}
+				$clipDialog.showModal()
+			})
+		})
+	}
 </script>
