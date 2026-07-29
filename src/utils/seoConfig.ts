@@ -5,7 +5,7 @@ import type { ManifestOptions } from "vite-plugin-pwa"
  * Defines the default SEO configuration for the website.
  */
 export const seoConfig = {
-	baseURL: "https://www.infolavelada.com/", // Production URL.
+	baseURL: "https://2024.infolavelada.com/", // Production URL (2024 edition subdomain).
 	description:
 		"Web Oficial de La Velada del Año IV, evento de boxeo entre streamers y creadores de contenido, organizado por Ibai Llanos.",
 	type: "website",
