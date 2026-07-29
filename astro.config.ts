@@ -9,7 +9,7 @@ import { manifest, seoConfig } from "./src/utils/seoConfig"
 
 // https://astro.build/config
 export default defineConfig({
-	base: "/2024/",
+	// Hosted at https://2024.infolavelada.com (subdomain root, no path prefix).
 	build: {
 		inlineStylesheets: "always",
 	},
