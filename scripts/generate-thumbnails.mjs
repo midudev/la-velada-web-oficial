@@ -73,6 +73,42 @@ async function fetchThumbnail(videoId) {
   throw new Error(`No se pudo descargar una miniatura válida para ${videoId}`)
 }
 
+const PODCAST_CONCURRENCY = 6
+
+async function mapPool(items, concurrency, fn) {
+  const limit = Math.min(concurrency, items.length)
+  let nextIndex = 0
+
+  await Promise.all(
+    Array.from({ length: limit }, async () => {
+      while (nextIndex < items.length) {
+        const index = nextIndex++
+        await fn(items[index], index)
+      }
+    }),
+  )
+}
+
+async function processPodcastEpisode(episode) {
+  const outputBasePath = path.join(PODCAST_THUMBNAILS_DIR, episode.videoId)
+  const webpPath = `${outputBasePath}.webp`
+  const avifPath = `${outputBasePath}.avif`
+
+  if ((await fileExists(webpPath)) && (await fileExists(avifPath))) {
+    console.log(`  ${episode.videoId} · ya existe`)
+    return
+  }
+
+  const thumbnail = await fetchThumbnail(episode.videoId)
+  await writeModernFormats(thumbnail.buffer, outputBasePath)
+
+  console.log(
+    `  ${episode.videoId} · ${thumbnail.width}x${thumbnail.height} desde ${
+      new URL(thumbnail.source).pathname
+    }`,
+  )
+}
+
 async function generatePodcastThumbnails() {
   console.log('\n→ Miniaturas del podcast')
 
@@ -84,25 +120,7 @@ async function generatePodcastThumbnails() {
     return
   }
 
-  for (const episode of episodes) {
-    const outputBasePath = path.join(PODCAST_THUMBNAILS_DIR, episode.videoId)
-    const webpPath = `${outputBasePath}.webp`
-    const avifPath = `${outputBasePath}.avif`
-
-    if ((await fileExists(webpPath)) && (await fileExists(avifPath))) {
-      console.log(`  ${episode.videoId} · ya existe`)
-      continue
-    }
-
-    const thumbnail = await fetchThumbnail(episode.videoId)
-    await writeModernFormats(thumbnail.buffer, outputBasePath)
-
-    console.log(
-      `  ${episode.videoId} · ${thumbnail.width}x${thumbnail.height} desde ${
-        new URL(thumbnail.source).pathname
-      }`,
-    )
-  }
+  await mapPool(episodes, PODCAST_CONCURRENCY, processPodcastEpisode)
 }
 
 await generateStaticThumbnails()
