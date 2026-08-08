@@ -621,8 +621,10 @@ const cardImageSizes =
   /* Cuando la card tiene un badge de campeón, escondemos la esquina
      decorativa superior-izquierda para que no se cruce con el badge
      dorado. La esquina inferior-izquierda y las dos de la derecha
-     siguen visibles como marco visual. */
-  .boxer-card:has(:global(.wins-badge)) .boxer-card-corner-tl {
+     siguen visibles como marco visual.
+     `:global` envuelve todo el `:has(...)` porque Astro no transforma
+     `:global()` anidado dentro de `:has()` y lightningcss falla al minificar. */
+  :global(.boxer-card:has(.wins-badge)) .boxer-card-corner-tl {
     display: none;
   }
 
