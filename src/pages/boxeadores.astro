@@ -1560,24 +1560,25 @@ const cardImageSizes =
     const ANIM_CLASS = 'animate-fade-in-up'
     const ANIM_DELAY = 35
 
+    // Reinicia animaciones sin forzar reflow por card (`void offsetWidth` × N
+    // dentro del click era un clásico killer de INP en /boxeadores).
     function retriggerAnimations() {
-      let visibleIndex = 0
-
       if (reduceMotionQuery.matches) return
+
+      let visibleIndex = 0
+      const visibleCards: HTMLElement[] = []
 
       for (const card of Array.from(gridEl.children) as HTMLElement[]) {
         if (card.dataset.hidden === 'true') continue
-
         card.classList.remove(ANIM_CLASS)
-
-        void card.offsetWidth
-
         card.style.setProperty('--animation-delay', `${visibleIndex * ANIM_DELAY}ms`)
-
-        card.classList.add(ANIM_CLASS)
-
+        visibleCards.push(card)
         visibleIndex++
       }
+
+      requestAnimationFrame(() => {
+        for (const card of visibleCards) card.classList.add(ANIM_CLASS)
+      })
     }
 
     // Remueve el atributo 'data-skip-boxers-enter' añádido en el script de 'Layout.astro'
@@ -1627,14 +1628,14 @@ const cardImageSizes =
       return n
     }
 
-    // Animación visual al presionar un filtro.
+    // Animación visual al presionar un filtro (sin forzar reflow síncrono).
     function bump(el: HTMLElement | null) {
       if (!el) return
       el.classList.remove('is-bumping')
-      // Forzamos reflow para reiniciar la transición si se está pulsando rápido.
-      void el.offsetWidth
-      el.classList.add('is-bumping')
-      window.setTimeout(() => el.classList.remove('is-bumping'), 260)
+      requestAnimationFrame(() => {
+        el.classList.add('is-bumping')
+        window.setTimeout(() => el.classList.remove('is-bumping'), 260)
+      })
     }
 
     function applyFilters() {

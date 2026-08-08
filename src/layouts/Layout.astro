@@ -176,6 +176,7 @@ const organizationJsonLd = {
 
       type AstroBeforeSwapEvent = AstroNavigationEvent & {
         newDocument: Document
+        viewTransition?: { skipTransition?: () => void } | null
       }
 
       const SKIP_BOXERS_ENTER_ATTR = 'data-skip-boxers-enter'
@@ -191,15 +192,18 @@ const organizationJsonLd = {
       const ARTISTS_INDEX_PATH = '/artistas'
       const ARTIST_DETAIL_PATH_RE = /^\/artistas\/[^/]+$/
 
-      // Imágenes que comparten `transition:name="boxer-hero-*"` entre páginas:
-      // los recortes de los combates y las tarjetas del listado de boxeadores.
-      const SHARED_HERO_SELECTOR = '.boxer-pic, .boxer-card-img'
+      // Imágenes que comparten `transition:name="boxer-hero-*"` / artist entre
+      // páginas. En móvil capturar decenas de morphs retrasa el paint tras el tap (INP).
+      const SHARED_HERO_SELECTOR =
+        '.boxer-pic, .boxer-card-img, .boxer-mobile-slide-img, .boxer-thumb-img, [style*="view-transition-name"]'
 
       const getNormalizedPathname = (url: URL | string) => {
         const pathname =
           url instanceof URL ? url.pathname : new URL(url, window.location.href).pathname
         return pathname === '/' ? pathname : pathname.replace(/\/$/, '')
       }
+
+      const isNarrowViewport = () => window.matchMedia('(max-width: 1023px)').matches
 
       const isReturningFromBoxerDetail = (event: AstroNavigationEvent) => {
         const fromPath = getNormalizedPathname(event.from)
@@ -235,11 +239,14 @@ const organizationJsonLd = {
         })
       }
 
+      const shouldDropSharedHeroes = (event: AstroNavigationEvent) =>
+        isListingCrossfade(event) || isNarrowViewport()
+
       // El snapshot «antiguo» se captura al arrancar la view transition, antes
       // de `before-swap`, así que la página saliente hay que limpiarla aquí.
       document.addEventListener('astro:before-preparation', (event) => {
         const navigationEvent = event as AstroNavigationEvent
-        if (isListingCrossfade(navigationEvent)) {
+        if (shouldDropSharedHeroes(navigationEvent)) {
           dropSharedHeroNames(document)
         }
       })
@@ -262,8 +269,14 @@ const organizationJsonLd = {
         // (No tocamos la animación de entrada de las tarjetas: el listado de
         // boxeadores las revela con `animate-fade-in-up`, así que dejamos que
         // aparezcan con normalidad sobre el fundido.)
-        if (isListingCrossfade(transitionEvent)) {
+        if (shouldDropSharedHeroes(transitionEvent)) {
           dropSharedHeroNames(transitionEvent.newDocument)
+        }
+
+        // En viewport estrecho saltamos la animación VT: el swap SPA sigue,
+        // pero sin el coste de morph/animación que infla el INP móvil.
+        if (isNarrowViewport()) {
+          transitionEvent.viewTransition?.skipTransition?.()
         }
       })
     </script>

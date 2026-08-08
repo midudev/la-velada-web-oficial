@@ -119,8 +119,8 @@ const hostOffset = offsetIn(host.timeZone)
       subtitleClass="mb-6 max-w-xl tracking-[0.25em] sm:mb-7 sm:text-sm"
     />
 
-    {/* Pills rellenadas en cliente (mejora progresiva): cuenta atrás + tu hora */}
-    <div class="mb-8 flex flex-wrap items-center justify-center gap-3 sm:mb-10">
+    {/* min-h reserva la franja de pills: al revelarlas con JS no empujan la lista (CLS). */}
+    <div class="mb-8 flex min-h-9 flex-wrap items-center justify-center gap-3 sm:mb-10">
       <p
         data-countdown
         hidden
@@ -172,7 +172,7 @@ const hostOffset = offsetIn(host.timeZone)
         data-schedule-row
         data-time={hostTime}
         style="--row-index:0"
-        class="relative flex items-center gap-4 rounded-lg border border-theme-gold/50 bg-theme-gold/[0.06] px-4 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:gap-6 sm:px-6"
+        class="relative flex items-center gap-4 rounded-lg border border-theme-gold/50 bg-theme-gold/[0.06] px-4 py-4 pr-20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:gap-6 sm:px-6 sm:pr-24"
       >
         <div class="flex w-14 shrink-0 flex-col items-center sm:w-16">
           <span
@@ -212,7 +212,7 @@ const hostOffset = offsetIn(host.timeZone)
             data-schedule-row
             data-time={time}
             style={`--row-index:${i + 1}`}
-            class="flex items-center gap-4 rounded-lg border border-theme-gold/20 bg-theme-navy/50 px-4 py-4 transition-colors duration-300 hover:border-theme-gold/40 sm:gap-6 sm:px-6"
+            class="relative flex items-center gap-4 rounded-lg border border-theme-gold/20 bg-theme-navy/50 px-4 py-4 pr-20 transition-colors duration-300 hover:border-theme-gold/40 sm:gap-6 sm:px-6 sm:pr-24"
           >
             <div class="flex w-14 shrink-0 flex-col items-center sm:w-16">
               <span class="font-cinzel text-2xl font-bold tracking-wider text-theme-cream tabular-nums sm:text-3xl">
@@ -299,15 +299,17 @@ const hostOffset = offsetIn(host.timeZone)
 </style>
 
 <script>
+  import { $, $$ } from '@/lib/dom-selector'
+
   function initSchedules() {
-    const section = document.getElementById('horarios')
+    const section = $<HTMLElement>('#horarios')
     const iso = section?.dataset.eventIso
     if (!section || !iso) return
     const eventDate = new Date(iso)
 
     // 1) Cuenta atrás en días hasta el evento
-    const countdown = section.querySelector<HTMLElement>('[data-countdown]')
-    const countdownText = section.querySelector('[data-countdown-text]')
+    const countdown = $<HTMLElement>('[data-countdown]', section)
+    const countdownText = $('[data-countdown-text]', section)
     if (countdown && countdownText) {
       const days = Math.ceil((eventDate.getTime() - Date.now()) / 86_400_000)
       if (days > 1) countdownText.textContent = `Faltan ${days} días`
@@ -323,33 +325,32 @@ const hostOffset = offsetIn(host.timeZone)
       hour12: false,
     }).format(eventDate)
 
-    const timeEl = section.querySelector('[data-user-time]')
-    const note = section.querySelector<HTMLElement>('[data-user-note]')
+    const timeEl = $('[data-user-time]', section)
+    const note = $<HTMLElement>('[data-user-note]', section)
     if (timeEl) timeEl.textContent = userTime
     if (note) note.hidden = false
 
-    section
-      .querySelectorAll('[data-schedule-row][data-current]')
-      .forEach((el) => el.removeAttribute('data-current'))
-
-    const row = section.querySelector<HTMLElement>(
-      `[data-schedule-row][data-time="${userTime}"]`,
+    $$('[data-schedule-row][data-current]', section).forEach((el) =>
+      el.removeAttribute('data-current'),
     )
+
+    const row = $<HTMLElement>(`[data-schedule-row][data-time="${userTime}"]`, section)
     if (row) {
       row.setAttribute('data-current', 'true')
-      if (!row.querySelector('[data-user-pill]')) {
+      if (!$('[data-user-pill]', row)) {
         const pill = document.createElement('span')
         pill.dataset.userPill = ''
+        // Absolute: no empuja flags/nombres al insertarse (CLS horizontal).
         pill.className =
-          'ml-auto shrink-0 rounded-full border border-theme-gold/60 bg-theme-gold/15 px-2.5 py-[0.15rem] font-cinzel text-[0.5rem] font-bold tracking-[0.2em] text-theme-gold uppercase'
+          'absolute top-1/2 right-3 -translate-y-1/2 rounded-full border border-theme-gold/60 bg-theme-gold/15 px-2.5 py-[0.15rem] font-cinzel text-[0.5rem] font-bold tracking-[0.2em] text-theme-gold uppercase sm:right-4'
         pill.textContent = 'Tu hora'
         row.appendChild(pill)
       }
     }
 
     // 3) Entrada escalonada (respetando prefers-reduced-motion)
-    const list = section.querySelector<HTMLElement>('[data-schedule-list]')
-    const rows = section.querySelectorAll<HTMLElement>('[data-schedule-row]')
+    const list = $<HTMLElement>('[data-schedule-list]', section)
+    const rows = $$<HTMLElement>('[data-schedule-row]', section)
     const wantsMotion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (list && wantsMotion && 'IntersectionObserver' in window) {
       list.setAttribute('data-animate', '')
