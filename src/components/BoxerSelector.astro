@@ -152,7 +152,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
           <time
             datetime={EVENT_DATE_TIME}
             data-local-time
-            class="font-cinzel text-xs font-black tracking-[0.16em] text-theme-cream sm:text-sm"
+            class="inline-block min-w-[12ch] font-cinzel text-xs font-black tracking-[0.16em] text-theme-cream tabular-nums sm:text-sm"
           >
             {EVENT_DISPLAY_TIME_SHORT}
           </time>
@@ -781,24 +781,18 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
   .boxer-mobile-slide {
     /* Aísla el stacking context de cada slide: sin esto, el z-index del
        nombre (2) y de la imagen (1) se resuelven en el shell (que es
-       stacking context por su transform). Durante el scroll la imagen se
-       promociona a capa GPU (transition + filter) y se pinta sobre el
-       nombre hasta que la capa se degrada. `isolation` lo confina. */
+       stacking context por su transform). */
     isolation: isolate;
     width: var(--mobile-slide-width);
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 22%, transparent),
       0 12px 28px rgba(0, 0, 0, 0.35);
+    /* Entrada + foco con scale (no `filter`): brightness/saturate en ~60
+       slides por frame mataba el INP móvil tras el gesto. */
     opacity: 0;
-    /* La animación de entrada usa `translate`/`opacity` (no `transform`) para
-       dejar libre `transform` al efecto de foco del carrusel. */
     animation: boxer-mobile-slide-in 520ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    /* Foco "character select": el JS escribe --focus-* según la distancia al
-       centro. Defaults a 1 para que sin JS (o SSR) se vean normales. */
     transform: scale(var(--focus-scale, 1));
     transform-origin: center center;
-    filter: brightness(var(--focus-bright, 1)) saturate(var(--focus-sat, 1));
-    will-change: transform, filter;
   }
 
   /* Marco de esquinas estilo "character select" (igual que el cursor de la
@@ -829,8 +823,8 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     width: 26%;
     height: 22%;
     border: 2px solid var(--color-theme-gold);
-    filter: drop-shadow(0 0 4px color-mix(in srgb, var(--color-theme-gold) 70%, transparent));
-    animation: boxer-mobile-frame-breathe 1.9s ease-in-out infinite;
+    /* Sin filter/animación continua: menos trabajo GPU en el carrusel móvil. */
+    box-shadow: 0 0 6px color-mix(in srgb, var(--color-theme-gold) 45%, transparent);
   }
 
   .bmf-tl {
@@ -858,22 +852,9 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
     border-top: 0;
   }
 
-  @keyframes boxer-mobile-frame-breathe {
-    0%,
-    100% {
-      filter: drop-shadow(0 0 4px color-mix(in srgb, var(--color-theme-gold) 55%, transparent));
-    }
-    50% {
-      filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-theme-gold) 80%, transparent));
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .boxer-mobile-slide {
       transform: none;
-    }
-    .bmf-corner {
-      animation: none;
     }
   }
 
@@ -1515,26 +1496,35 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       }
     }
 
-    // Efecto "character select": la tarjeta más centrada en el viewport del
-    // carrusel se agranda y brilla, y las laterales se encogen/atenúan según su
-    // distancia al centro. Además, el marco de esquinas se funde de forma
-    // continua (--focus-frame) para que no aparezca de golpe. Se recalcula en
-    // cada frame de scroll (rAF) usando offsets (no getBoundingClientRect) para
-    // no forzar reflows por slide.
+    // Efecto "character select" ligero: scale + marco (sin `filter`).
+    // Solo reescribimos CSS vars cuando cambian — menos estilo por frame.
     let focusRaf = 0
+    let cachedSlideWidth = 0
+    const measureSlideWidth = () => {
+      cachedSlideWidth = slides[0]?.offsetWidth || 0
+    }
     const updateFocus = () => {
       focusRaf = 0
       const half = slider.clientWidth / 2 || 1
       const viewportCenter = slider.scrollLeft + half
+      if (!cachedSlideWidth) measureSlideWidth()
+      const halfSlide = (cachedSlideWidth || slides[0]?.offsetWidth || 0) / 2
+
       for (const slide of slides) {
-        const slideCenter = slide.offsetLeft + slide.offsetWidth / 2
+        const slideCenter = slide.offsetLeft + halfSlide
         const ratio = Math.min(Math.abs(slideCenter - viewportCenter) / half, 1)
-        slide.style.setProperty('--focus-scale', (1.12 - ratio * 0.24).toFixed(3))
-        slide.style.setProperty('--focus-bright', (1.05 - ratio * 0.4).toFixed(3))
-        slide.style.setProperty('--focus-sat', (1.05 - ratio * 0.25).toFixed(3))
-        // Rango ancho (0.55) + smoothstep para que el marco entre/salga suave.
+        const scale = (1.12 - ratio * 0.24).toFixed(3)
         const t = Math.max(0, 1 - ratio / 0.55)
-        slide.style.setProperty('--focus-frame', (t * t * (3 - 2 * t)).toFixed(3))
+        const frame = (t * t * (3 - 2 * t)).toFixed(3)
+
+        if (slide.dataset.focusScale !== scale) {
+          slide.dataset.focusScale = scale
+          slide.style.setProperty('--focus-scale', scale)
+        }
+        if (slide.dataset.focusFrame !== frame) {
+          slide.dataset.focusFrame = frame
+          slide.style.setProperty('--focus-frame', frame)
+        }
       }
     }
     const requestFocus = () => {
@@ -1555,6 +1545,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 
     requestAnimationFrame(() => {
       moveToMiddleSet()
+      measureSlideWidth()
       updateFocus()
     })
 
@@ -1587,6 +1578,7 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
       'resize',
       () =>
         requestAnimationFrame(() => {
+          cachedSlideWidth = 0
           moveToMiddleSet()
           updateFocus()
         }),
@@ -1846,13 +1838,15 @@ const MOBILE_SLIDER_SETS = ['previous', 'current', 'next'] as const
 
     mobileThumbs.forEach((thumb) => {
       thumb.addEventListener('click', () => {
+        // En móvil no asignamos view-transition-name: capturar morphs de
+        // retrato en listados retrasa el siguiente paint (INP). El Layout
+        // también limpia nombres compartidos en navegaciones estrechas.
+        if (window.matchMedia('(max-width: 1023px)').matches) return
+
         const id = thumb.dataset.id
         if (!id) return
 
-        const thumbImg = $<HTMLImageElement>(
-          '.boxer-mobile-slide-img',
-          thumb,
-        )
+        const thumbImg = $<HTMLImageElement>('.boxer-mobile-slide-img', thumb)
         if (thumbImg) {
           thumbImg.style.viewTransitionName = `boxer-hero-${id}`
         }

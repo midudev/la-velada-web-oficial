@@ -64,7 +64,7 @@ import HeaderNav from '@/components/HeaderNav.astro'
       type="button"
       data-mobile-menu-button
       class:list={[
-        'group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/20 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] backdrop-blur-md backdrop-contrast-125 backdrop-saturate-150 transition duration-300 outline-none hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden',
+        'group relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/55 text-theme-cream shadow-[0_0_30px_rgba(255,255,255,0.06)] transition duration-300 outline-none hover:border-theme-gold/60 hover:bg-theme-midnight/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-theme-gold md:hidden',
       ]}
       aria-controls="mobile-menu"
       aria-expanded="false"
@@ -92,7 +92,9 @@ import HeaderNav from '@/components/HeaderNav.astro'
     aria-hidden="true"
     inert
     class:list={[
-      'pointer-events-none fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 backdrop-blur-2xl backdrop-contrast-125 backdrop-saturate-150 transition duration-300 ease-out data-[open=true]:pointer-events-auto data-[open=true]:translate-y-0 data-[open=true]:opacity-100 md:hidden',
+      /* Sin backdrop-blur: en móvil difuminar el viewport entero retrasa el
+         siguiente paint tras el tap del menú (INP). bg-black/95 ya tapa bien. */
+      'pointer-events-none fixed inset-0 z-40 flex min-h-dvh translate-y-[-8px] items-center justify-center overflow-y-auto bg-black/95 px-6 py-28 opacity-0 transition duration-300 ease-out data-[open=true]:pointer-events-auto data-[open=true]:translate-y-0 data-[open=true]:opacity-100 md:hidden',
     ]}
   >
     <div

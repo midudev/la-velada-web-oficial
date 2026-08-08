@@ -44,6 +44,8 @@ const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
           data-img-fallback={posterFallback}
           alt=""
           role="presentation"
+          width="1280"
+          height="720"
           class="absolute inset-0 h-full w-full object-cover opacity-80 transition duration-300 group-hover:opacity-90 group-hover:saturate-110"
           decoding="async"
           fetchpriority="low"
@@ -100,7 +102,17 @@ const posterFallback = `https://i.ytimg.com/vi/${LIVE_VIDEO_ID}/hqdefault.jpg`
     if ($('iframe', root)) return
 
     const facade = $<HTMLButtonElement>('[data-live-facade]', root)
-    facade?.addEventListener('click', () => mountLiveIframe(root), { once: true })
+    // Feedback visual en el mismo frame; montar el iframe al siguiente evita
+    // bloquear el paint del tap (INP) con el arranque de YouTube.
+    facade?.addEventListener(
+      'click',
+      () => {
+        root.dataset.loading = 'true'
+        facade.setAttribute('aria-busy', 'true')
+        requestAnimationFrame(() => mountLiveIframe(root))
+      },
+      { once: true },
+    )
   }
 
   document.addEventListener('astro:page-load', initLiveStream)

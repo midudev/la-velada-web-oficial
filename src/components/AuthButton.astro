@@ -225,18 +225,20 @@ const initialState = user ? 'in' : 'out'
     }
 
     root.dataset.authHydrated = 'false'
-    // Mientras resolvemos la cookie, ocultamos el CTA de login para no flashar
-    // "Inicia sesión" a quien ya tiene sesión en una página estática.
+    // Mientras resolvemos la cookie, dejamos el CTA en el flujo (invisible) para
+    // no provocar CLS: `hidden` colapsaba ~44px y al reaparecer sumaba otro shift.
     const signedOut = $<HTMLElement>('[data-auth-signed-out]', root)
-    signedOut?.classList.add('hidden')
+    signedOut?.classList.add('invisible', 'pointer-events-none')
 
     try {
       const { data } = await authClient.getSession()
       if (!data?.user) {
+        signedOut?.classList.remove('invisible', 'pointer-events-none')
         setAuthState(root, 'out')
         return
       }
 
+      signedOut?.classList.remove('invisible', 'pointer-events-none')
       setAuthState(root, 'in', {
         name: data.user.name,
         image: data.user.image,
@@ -253,6 +255,7 @@ const initialState = user ? 'in' : 'out'
       )
     } catch (error) {
       console.error('No se pudo hidratar la sesión de auth:', error)
+      signedOut?.classList.remove('invisible', 'pointer-events-none')
       setAuthState(root, 'out')
     } finally {
       root.dataset.authHydrated = 'true'

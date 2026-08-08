@@ -5,7 +5,9 @@
   --font-fallback:
     'Cinzel Fallback', system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI',
     'Noto Sans', helvetica, arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
-  --font-cinzel: 'Cinzel';
+  /* Incluye el fallback con métricas: si solo va 'Cinzel', el swap usa la serif
+     del UA y el nav desktop se ensancha ~30–500px (CLS en CrUX/Search Console). */
+  --font-cinzel: 'Cinzel', var(--font-fallback);
 
   --color-velada-cream: #f4e4c9;
   --color-velada-gold: #c7a86b;
@@ -198,10 +200,14 @@
   }
 }
 
+/* Métricas afinadas midiendo el nav desktop (Georgia → Cinzel Black). */
 @font-face {
   font-family: 'Cinzel Fallback';
-  src: local(georgia);
-  size-adjust: 103%;
+  src: local(Georgia);
+  size-adjust: 111%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
 }
 
 @font-face {

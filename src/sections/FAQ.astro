@@ -131,8 +131,10 @@ const EVENT_TIMESTAMP = new Date(EVENT_DATE_TIME).getTime()
 </section>
 
 <script>
+  import { $ } from '@/lib/dom-selector'
+
   document.addEventListener('astro:page-load', () => {
-    const container = document.getElementById('faq-local-times')
+    const container = $<HTMLElement>('#faq-local-times')
     if (!container) return
 
     try {

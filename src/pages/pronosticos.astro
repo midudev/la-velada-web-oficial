@@ -50,7 +50,12 @@ const predictionBattles = createPredictionBattles(storedPredictions)
     </p>
 
     <div class="mt-8 w-full max-w-5xl sm:mt-12">
-      <div id="predictions-auth" class="flex justify-center" data-predictions-auth>
+      {/* min-h reserva el bloque de auth (CTA o sesión) para evitar CLS al hidratar */}
+      <div
+        id="predictions-auth"
+        class="flex min-h-11 justify-center"
+        data-predictions-auth
+      >
         <AuthButton />
       </div>
 
