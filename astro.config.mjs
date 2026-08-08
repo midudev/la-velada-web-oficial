@@ -3,12 +3,13 @@ import { defineConfig } from 'astro/config'
 import tailwindcss from '@tailwindcss/vite'
 import vercel from '@astrojs/vercel'
 import sitemap from '@astrojs/sitemap'
+import { archiveDirectoryIndexPlugin } from './scripts/archive/vite-plugin-archive-indexes.mjs'
 
 export default defineConfig({
   output: 'server',
 
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), archiveDirectoryIndexPlugin()],
   },
 
   build: {
