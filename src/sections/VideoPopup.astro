@@ -1,0 +1,470 @@
+---
+import CloseIcon from '@/assets/svg/close.svg'
+import PlayIcon from '@/assets/svg/play.svg'
+
+import { VELADA_VIDEO } from '@/consts/event'
+
+const embedSrc = new URL(`https://www.youtube-nocookie.com/embed/${VELADA_VIDEO}`)
+embedSrc.searchParams.set('autoplay', '1')
+embedSrc.searchParams.set('playsinline', '1')
+embedSrc.searchParams.set('rel', '0')
+
+const posterJpg = `https://i.ytimg.com/vi/${VELADA_VIDEO}/maxresdefault.jpg`
+const posterFallback = `https://i.ytimg.com/vi/${VELADA_VIDEO}/hqdefault.jpg`
+---
+
+<dialog
+  id="video-popup-modal"
+  class="video-popup-modal"
+  data-video-popup-modal
+  data-embed-src={embedSrc.toString()}
+  aria-labelledby="video-popup-title"
+>
+  <div class="video-popup-backdrop" data-modal-close></div>
+
+  <div class="video-popup-content">
+    <span aria-hidden="true" class="video-popup-corner video-popup-corner-tl"></span>
+    <span aria-hidden="true" class="video-popup-corner video-popup-corner-tr"></span>
+    <span aria-hidden="true" class="video-popup-corner video-popup-corner-bl"></span>
+    <span aria-hidden="true" class="video-popup-corner video-popup-corner-br"></span>
+
+    <div class="video-popup-eyebrow" aria-hidden="true">
+      <span class="video-popup-eyebrow-dot"></span>
+      <span>REVIVE LA VELADA</span>
+      <span class="video-popup-eyebrow-dot"></span>
+    </div>
+
+    <button
+      type="button"
+      class="video-popup-close"
+      data-modal-close
+      aria-label="Cerrar el vídeo de La Velada del Año"
+    >
+      <CloseIcon class="size-5" aria-hidden="true" />
+    </button>
+
+    <h2 id="video-popup-title" class="video-popup-title">Revive La Velada del Año VI</h2>
+
+    <div class="video-popup-video">
+      <!--
+        No metemos el iframe en el HTML inicial: en iPhone (sobre todo con
+        Low Power Mode) el player autoplay puede tumbar WebKit y dejar la
+        pestaña en blanco. Se monta solo al pulsar el facade. El facade va
+        después del frame en el DOM para quedar siempre por encima hasta
+        que el script lo oculta al montar el iframe.
+      -->
+      <div data-video-popup-frame class="video-popup-iframe-wrap"></div>
+
+      <button
+        type="button"
+        data-video-popup-facade
+        class="group absolute inset-0 flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-theme-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        aria-label="Reproducir el vídeo de La Velada del Año VI"
+      >
+        <img
+          src={posterJpg}
+          data-img-fallback={posterFallback}
+          alt=""
+          role="presentation"
+          class="absolute inset-0 h-full w-full object-cover opacity-80 transition duration-300 group-hover:opacity-90 group-hover:saturate-110"
+          decoding="async"
+          fetchpriority="low"
+        />
+        <span
+          class="relative z-10 inline-flex size-16 items-center justify-center rounded-full border border-white/25 bg-black/55 text-theme-cream shadow-[0_10px_40px_rgba(0,0,0,0.55)] backdrop-blur-sm transition duration-300 group-hover:scale-105 group-hover:border-theme-gold/50 group-hover:bg-theme-midnight/80 sm:size-20"
+          aria-hidden="true"
+        >
+          <PlayIcon class="ml-0.5 size-7 sm:size-8" />
+        </span>
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<button
+  type="button"
+  class="video-popup-fab"
+  data-video-popup-fab
+  hidden
+  aria-label="Volver a abrir el vídeo de La Velada del Año"
+>
+  <span class="video-popup-fab-dot" aria-hidden="true"></span>
+  REVIVE LA VELADA
+</button>
+
+<style>
+  .video-popup-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-popup-modal::backdrop {
+    background: transparent;
+  }
+
+  .video-popup-modal[open] {
+    display: flex;
+  }
+
+  .video-popup-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 16, 36, 0.88);
+    backdrop-filter: blur(10px);
+  }
+
+  .video-popup-content {
+    position: relative;
+    z-index: 1;
+    width: calc(100% - 2rem);
+    max-width: 48rem;
+    margin: 1rem;
+    padding: 2rem 1.25rem 1.5rem;
+    border-radius: var(--radius-sharp);
+    background:
+      radial-gradient(
+        ellipse 80% 50% at 50% 0%,
+        color-mix(in srgb, var(--color-theme-gold) 10%, transparent),
+        transparent 70%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-velada-navy) 35%, var(--color-theme-midnight)) 0%,
+        color-mix(in srgb, var(--color-theme-midnight) 94%, black) 100%
+      );
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 30%, transparent),
+      0 32px 80px rgba(0, 0, 0, 0.6),
+      0 0 60px color-mix(in srgb, var(--color-theme-gold) 10%, transparent);
+    animation: video-popup-content-enter 400ms ease both;
+  }
+
+  @keyframes video-popup-content-enter {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .video-popup-content {
+      animation: none;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .video-popup-content {
+      padding: 2.25rem 2rem 2rem;
+    }
+  }
+
+  .video-popup-corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid color-mix(in srgb, var(--color-theme-gold) 80%, transparent);
+    pointer-events: none;
+  }
+  .video-popup-corner-tl {
+    top: -1px;
+    left: -1px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .video-popup-corner-tr {
+    top: -1px;
+    right: -1px;
+    border-left: 0;
+    border-bottom: 0;
+  }
+  .video-popup-corner-bl {
+    bottom: -1px;
+    left: -1px;
+    border-right: 0;
+    border-top: 0;
+  }
+  .video-popup-corner-br {
+    bottom: -1px;
+    right: -1px;
+    border-left: 0;
+    border-top: 0;
+  }
+
+  .video-popup-eyebrow {
+    position: absolute;
+    top: -0.7rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-velada-navy) 35%, var(--color-theme-midnight)) 0%,
+      color-mix(in srgb, var(--color-theme-midnight) 95%, black) 100%
+    );
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 55%, transparent);
+    color: var(--color-theme-cream);
+    font-family: var(--font-cinzel);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .video-popup-eyebrow-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--color-theme-gold);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--color-theme-gold) 70%, transparent);
+  }
+
+  .video-popup-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-sharp);
+    border: 1px solid color-mix(in srgb, var(--color-theme-gold) 20%, transparent);
+    background: color-mix(in srgb, var(--color-theme-midnight) 80%, transparent);
+    color: var(--color-theme-cream);
+    opacity: 0.6;
+    cursor: pointer;
+    transition:
+      opacity 200ms,
+      border-color 200ms;
+  }
+
+  .video-popup-close:hover,
+  .video-popup-close:focus-visible {
+    opacity: 1;
+    border-color: color-mix(in srgb, var(--color-theme-gold) 50%, transparent);
+  }
+
+  .video-popup-title {
+    margin: 0.25rem 0 1.25rem;
+    font-family: var(--font-cinzel);
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    text-align: center;
+    color: var(--color-theme-cream);
+  }
+
+  @media (min-width: 640px) {
+    .video-popup-title {
+      font-size: 1.3rem;
+    }
+  }
+
+  .video-popup-video {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 0.4rem;
+    background: black;
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 25%, transparent),
+      0 18px 44px rgba(0, 0, 0, 0.5);
+  }
+
+  .video-popup-iframe-wrap {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* ── Botón flotante para reabrir el vídeo ──
+     Aparece cuando el usuario cierra el popup, con el mismo lenguaje
+     visual "píldora dorada" que el resto del sitio, para poder volver a
+     verlo sin recargar la página. */
+  .video-popup-fab {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 1.15rem;
+    border-radius: 9999px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-theme-gold) 95%, white) 0%,
+      var(--color-theme-gold) 65%,
+      color-mix(in srgb, var(--color-theme-gold) 75%, black) 100%
+    );
+    color: var(--color-theme-midnight);
+    font-family: var(--font-cinzel);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
+      0 12px 32px color-mix(in srgb, var(--color-theme-gold) 38%, transparent),
+      0 0 24px color-mix(in srgb, var(--color-theme-gold) 18%, transparent);
+    transition:
+      transform 250ms ease,
+      box-shadow 250ms ease;
+    animation: video-popup-fab-enter 500ms cubic-bezier(0.34, 1.42, 0.5, 1) both;
+  }
+
+  .video-popup-fab[hidden] {
+    display: none;
+  }
+
+  .video-popup-fab:hover,
+  .video-popup-fab:focus-visible {
+    transform: translateY(-2px);
+    outline: none;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 35%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-theme-gold) 100%, white),
+      0 16px 40px color-mix(in srgb, var(--color-theme-gold) 45%, transparent),
+      0 0 32px color-mix(in srgb, var(--color-theme-gold) 25%, transparent);
+  }
+
+  .video-popup-fab:active {
+    transform: translateY(-1px);
+  }
+
+  .video-popup-fab-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    background: var(--color-theme-midnight);
+  }
+
+  @keyframes video-popup-fab-enter {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .video-popup-fab {
+      animation: none;
+      transition: none;
+    }
+    .video-popup-fab:hover,
+    .video-popup-fab:focus-visible,
+    .video-popup-fab:active {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  import { $ } from '@/lib/dom-selector'
+
+  let modalAbort: AbortController | null = null
+
+  function mountIframe(frame: HTMLElement, facade: HTMLButtonElement, src: string) {
+    facade.hidden = true
+    if (frame.childElementCount > 0) return
+    const iframe = document.createElement('iframe')
+    iframe.src = src
+    iframe.title = 'Revive La Velada del Año VI'
+    iframe.className = 'absolute inset-0 h-full w-full border-0'
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen'
+    iframe.setAttribute('allowfullscreen', '')
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin')
+    frame.replaceChildren(iframe)
+  }
+
+  function setupVideoPopup() {
+    modalAbort?.abort()
+    modalAbort = null
+
+    const modal = $<HTMLDialogElement>('[data-video-popup-modal]')
+    const fab = $<HTMLButtonElement>('[data-video-popup-fab]')
+    if (!modal || !fab) return
+
+    const frame = $<HTMLElement>('[data-video-popup-frame]', modal)
+    const facade = $<HTMLButtonElement>('[data-video-popup-facade]', modal)
+    const embedSrc = modal.dataset.embedSrc
+    if (!frame || !facade || !embedSrc) return
+
+    modalAbort = new AbortController()
+    const { signal } = modalAbort
+
+    facade.addEventListener('click', () => mountIframe(frame, facade, embedSrc), { signal })
+
+    function openModal() {
+      if (modal!.open) return
+      fab!.hidden = true
+      modal!.showModal()
+    }
+
+    function closeModal() {
+      if (!modal!.open) return
+      modal!.close()
+    }
+
+    // Al cerrarse quitamos el iframe para cortar el audio en background y
+    // mostramos el FAB para poder volver a abrirlo sin recargar la página.
+    modal.addEventListener(
+      'close',
+      () => {
+        frame!.replaceChildren()
+        facade!.hidden = false
+        fab!.hidden = false
+      },
+      { signal },
+    )
+
+    modal.querySelectorAll('[data-modal-close]').forEach((btn) => {
+      btn.addEventListener('click', closeModal, { signal })
+    })
+
+    modal.addEventListener(
+      'click',
+      (e) => {
+        if (e.target === modal) closeModal()
+      },
+      { signal },
+    )
+
+    fab.addEventListener('click', openModal, { signal })
+
+    openModal()
+  }
+
+  document.addEventListener('astro:page-load', setupVideoPopup)
+</script>

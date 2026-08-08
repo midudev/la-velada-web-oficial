@@ -10,3 +10,5 @@ export const EVENT_END_ISO = new Date(
 export const EVENT_HOUR = '19:00'
 export const EVENT_DISPLAY_TIME = `${EVENT_HOUR}H (españa peninsular)`
 export const EVENT_DISPLAY_TIME_SHORT = `${EVENT_HOUR}H CEST`
+
+export const VELADA_VIDEO = 'IskkmNPJdUk'
