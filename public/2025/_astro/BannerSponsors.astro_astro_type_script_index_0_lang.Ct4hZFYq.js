@@ -1,0 +1,1 @@
+import{t as r}from"./index.D1l-cIE8.js";import{a}from"./dom-selector.D6JNpUYK.js";const o=a("#banners a");o.forEach(t=>{t.addEventListener("click",()=>{r("Product",{product:t.getAttribute("data-id")})})});
