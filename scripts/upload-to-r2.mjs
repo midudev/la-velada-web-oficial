@@ -8,17 +8,35 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
 const THUMBNAILS_DIR = path.join(__dirname, '.cache/podcast-thumbs')
 const CACHE_FILE = path.join(ROOT, '.r2-cache.json')
+const REQUIRED_ENV = ['R2_ACCOUNT_ID', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY']
 
-const { R2_ACCOUNT_ID, R2_BUCKET, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY } = process.env
-const MISSING_ENV = [
-  'R2_ACCOUNT_ID',
-  'R2_BUCKET',
-  'R2_ACCESS_KEY_ID',
-  'R2_SECRET_ACCESS_KEY',
-].filter((key) => !process.env[key])
-if (MISSING_ENV.length > 0) {
-  throw new Error(`Faltan variables de entorno de R2: ${MISSING_ENV.join(', ')}`)
+// Local only. On Vercel, process.env already has Project Settings vars.
+for (const name of ['.env', '.env.local']) {
+  try {
+    process.loadEnvFile(path.join(ROOT, name))
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error
+  }
 }
+
+function readEnv(key) {
+  const value = process.env[key]?.trim()
+  return value || undefined
+}
+
+const missingEnv = REQUIRED_ENV.filter((key) => !readEnv(key))
+if (missingEnv.length > 0) {
+  console.warn(`\n⚠ Saltando subida a R2: faltan ${missingEnv.join(', ')}`)
+  console.warn(
+    '  En Vercel deben estar en Project Settings → Environment Variables para Production y Preview (no solo Development), y disponibles en el Build Step.',
+  )
+  process.exit(0)
+}
+
+const R2_ACCOUNT_ID = readEnv('R2_ACCOUNT_ID')
+const R2_BUCKET = readEnv('R2_BUCKET')
+const R2_ACCESS_KEY_ID = readEnv('R2_ACCESS_KEY_ID')
+const R2_SECRET_ACCESS_KEY = readEnv('R2_SECRET_ACCESS_KEY')
 
 const ENDPOINT = `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`
 const CONTENT_TYPE = { '.webp': 'image/webp', '.avif': 'image/avif' }

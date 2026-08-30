@@ -4,7 +4,7 @@
   "version": "0.0.2",
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "pnpm generate:thumbnails && bun run upload:r2",
+    "prebuild": "pnpm generate:thumbnails && pnpm upload:r2",
     "build": "astro build",
     "preview": "astro preview",
     "start": "astro",
@@ -13,7 +13,7 @@
     "generate:thumbnails": "node scripts/generate-thumbnails.mjs",
     "generate:favicon": "node scripts/generate-favicon.mjs",
     "generate:character-images": "node scripts/convert-character-images.mjs",
-    "upload:r2": "node --env-file-if-exists=.env scripts/upload-to-r2.mjs",
+    "upload:r2": "node scripts/upload-to-r2.mjs",
     "db:migrate": "node scripts/migrate.mjs",
     "db:init": "node scripts/init-predictions-db.mjs",
     "db:check": "node scripts/check-predictions-db.mjs",
